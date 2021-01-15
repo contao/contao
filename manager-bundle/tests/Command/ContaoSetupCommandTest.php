@@ -54,26 +54,28 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', '--env=prod'], $flags)],
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags)],
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags)],
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags)],
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags)],
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'web', '--env=prod'], $flags)],
-            [array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'web', '--env=prod'], $flags)],
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'web', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'web', '--env=prod'], $flags),
         ];
 
-        $processFactory = $this->createMock(ProcessFactory::class);
-        $processFactory
-            ->expects($this->exactly(7))
-            ->method('create')
-            ->willReturn(...$processes)
-            ->withConsecutive(...$commandArguments)
-        ;
+        $invocationCount = 0;
 
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/web', $processFactory);
+        $createProcessHandler = static function (array $command) use (&$invocationCount, $commandArguments, $processes): Process {
+            self::assertEquals($commandArguments[$invocationCount], $command);
+
+            return $processes[$invocationCount++];
+        };
+
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/web', $createProcessHandler);
 
         (new CommandTester($command))->execute([], $options);
+
+        $this->assertSame(7, $invocationCount);
     }
 
     public function provideCommands(): \Generator

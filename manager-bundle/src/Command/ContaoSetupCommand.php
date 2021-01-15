@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Command;
 
-use Contao\ManagerBundle\Process\ProcessFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -32,9 +32,9 @@ class ContaoSetupCommand extends Command
     private $webDir;
 
     /**
-     * @var ProcessFactory
+     * @var \Closure(array<string>):Process
      */
-    private $processFactory;
+    private $createProcessHandler;
 
     /**
      * @var string|false
@@ -46,13 +46,18 @@ class ContaoSetupCommand extends Command
      */
     private $consolePath;
 
-    public function __construct(string $projectDir, string $webDir, ProcessFactory $processFactory = null)
+    /**
+     * @param (\Closure(array<string>):Process)|null $createProcessHandler
+     */
+    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null)
     {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
-        $this->processFactory = $processFactory ?? new ProcessFactory();
+        $this->createProcessHandler = $createProcessHandler ?? static function (array $command) {
+            return new Process($command);
+        };
 
         parent::__construct();
     }
@@ -107,7 +112,8 @@ class ContaoSetupCommand extends Command
      */
     private function executeCommand(array $command, OutputInterface $output): void
     {
-        $process = $this->processFactory->create($command);
+        /** @var Process $process */
+        $process = ($this->createProcessHandler)($command);
 
         // Increase the timeout according to contao/manager-bundle (see #54)
         $process->setTimeout(500);
