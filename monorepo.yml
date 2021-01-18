@@ -1,5 +1,5 @@
 monorepo_url: https://github.com/contao/contao.git
-branch_filter: /^(master|\d+\.\d+)$/
+branch_filter: /^\d+\.(x|\d+)$/
 
 composer:
     require:

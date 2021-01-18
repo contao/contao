@@ -43,8 +43,8 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
 Replace `<directory>` with the directory you want to install the Managed
-Edition in (use `.` for the current one). Replace `<branch>` with `dev-master`
-if you want to add a new feature or with `<lts-version>.x-dev` (currently
+Edition in (use `.` for the current one). Replace `<branch>` with `4.x-dev` if
+you want to add a new feature or with `<lts-version>.x-dev` (currently
 `4.9.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file so Composer
@@ -53,12 +53,12 @@ loads the monorepo instead of the individual bundles:
 ```json
 "require": {
     "php": "^7.2",
-    "contao/contao": "dev-master"
+    "contao/contao": "4.x-dev"
 },
 ```
 
-Again, use `dev-master` if you want to add a new feature or
-`<lts-version>.x-dev` if you want to fix a bug.
+Again, use `4.x-dev` if you want to add a new feature or `<lts-version>.x-dev`
+if you want to fix a bug.
 
 Next, install the dependencies:
 
