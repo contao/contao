@@ -288,7 +288,7 @@ jobs:
                   key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
-              run: composer global require contao/monorepo-tools:dev-master
+              run: composer global require contao/monorepo-tools:dev-main
 
             - name: Split the monorepo
               run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}
