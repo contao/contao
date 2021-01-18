@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -765,6 +766,34 @@ class InsertTags extends Controller
 					break;
 
 				// Images
+				case 'figure':
+					// Expected format: {{figure::<from>[?<key>=<value>,[&<key>=<value>]*]}}
+					list($from, $configuration) = $this->parseUrlWithQueryString($elements[1] ?? '');
+
+					if (null === $from || 2 !== \count($elements))
+					{
+						$arrCache[$strTag] = '';
+						break;
+					}
+
+					$size = $configuration['size'] ?? null;
+					$template = $configuration['template'] ?? '@ContaoCore/Image/Studio/figure.html.twig';
+
+					unset($configuration['size'], $configuration['template']);
+
+					// Render the figure
+					$figureRenderer = $container->get(FigureRenderer::class);
+
+					try
+					{
+						$arrCache[$strTag] = $figureRenderer->render($from, $size, $configuration, $template);
+					}
+					catch (\Throwable $e)
+					{
+						$arrCache[$strTag] = '';
+					}
+					break;
+
 				case 'image':
 				case 'picture':
 					$width = null;
@@ -1122,6 +1151,19 @@ class InsertTags extends Controller
 		}
 
 		return StringUtil::restoreBasicEntities($strBuffer);
+	}
+
+	/**
+	 * @return array<string|null, array>
+	 */
+	private function parseUrlWithQueryString(string $url): array
+	{
+		$base = parse_url($url, PHP_URL_PATH) ?: null;
+		$query = parse_url($url, PHP_URL_QUERY) ?: '';
+
+		parse_str($query, $attributes);
+
+		return array($base, $attributes);
 	}
 }
 

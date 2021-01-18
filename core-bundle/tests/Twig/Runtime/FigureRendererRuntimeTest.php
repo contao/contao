@@ -12,114 +12,41 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
-use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Figure;
-use Contao\CoreBundle\Image\Studio\FigureBuilder;
-use Contao\CoreBundle\Image\Studio\ImageResult;
-use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
-use Twig\Environment;
 
 class FigureRendererRuntimeTest extends TestCase
 {
-    public function testConfiguresBuilder(): void
+    public function testDelegatesCalls(): void
     {
-        $metadata = new Metadata([]);
-
-        $configuration = [
-            'metadata' => $metadata,
-            'disableMetadata' => true,
-            'locale' => 'de',
-            'linkAttributes' => ['foo' => 'bar'],
-            'linkHref' => 'foo',
-            'lightboxResourceOrUrl' => 'foobar',
-            'lightboxSize' => '_lightbox_size',
-            'lightboxGroupIdentifier' => '123',
-            'enableLightbox' => true,
-            'options' => ['foo' => 'bar'],
-        ];
-
-        $expectedFigureBuilderCalls = [
-            'from' => 'resource',
-            'setSize' => '_size',
-            'setMetadata' => $metadata,
-            'disableMetadata' => true,
-            'setLocale' => 'de',
-            'setLinkAttributes' => ['foo' => 'bar'],
-            'setLinkHref' => 'foo',
-            'setLightboxResourceOrUrl' => 'foobar',
-            'setLightboxSize' => '_lightbox_size',
-            'setLightboxGroupIdentifier' => '123',
-            'enableLightbox' => true,
-            'setOptions' => ['foo' => 'bar'],
-        ];
-
-        $runtime = $this->getRuntime($expectedFigureBuilderCalls);
-
-        $this->assertSame('<result>', $runtime->render('resource', '_size', $configuration));
-    }
-
-    /**
-     * @testWith ["metadata", "setMetadata"]
-     */
-    public function testAllowsDefiningMetadataAsArray(string $key): void
-    {
-        $metadata = [Metadata::VALUE_ALT => 'foo'];
-        $runtime = $this->getRuntime(['setMetadata' => new Metadata($metadata)]);
-
-        $this->assertSame('<result>', $runtime->render('resource', null, [$key => [Metadata::VALUE_ALT => 'foo']]));
-    }
-
-    public function testUsesCustomTemplate(): void
-    {
-        $runtime = $this->getRuntime([], '@App/custom_figure.html.twig');
-
-        $this->assertSame('<result>', $runtime->render(1, null, [], '@App/custom_figure.html.twig'));
-    }
-
-    public function testFailsWithInvalidConfiguration(): void
-    {
-        $runtime = $this->getRuntime();
-
-        $this->expectException(NoSuchPropertyException::class);
-
-        $runtime->render(1, null, ['invalid' => 'foobar']);
-    }
-
-    private function getRuntime(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRendererRuntime
-    {
-        $figure = new Figure($this->createMock(ImageResult::class));
-
-        $figureBuilder = $this->createMock(FigureBuilder::class);
-        $figureBuilder
-            ->method('build')
-            ->willReturn($figure)
-        ;
-
-        foreach ($figureBuilderCalls as $method => $value) {
-            $figureBuilder
-                ->expects($this->once())
-                ->method($method)
-                ->with($value)
-                ->willReturn($figureBuilder)
-            ;
-        }
-
-        $studio = $this->createMock(Studio::class);
-        $studio
-            ->method('createFigureBuilder')
-            ->willReturn($figureBuilder)
-        ;
-
-        $twig = $this->createMock(Environment::class);
-        $twig
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
+            ->expects($this->once())
             ->method('render')
-            ->with($expectedTemplate, ['figure' => $figure])
+            ->with('123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig')
             ->willReturn('<result>')
         ;
 
-        return new FigureRendererRuntime($studio, $twig);
+        $figureRendererRuntime = new FigureRendererRuntime($figureRenderer);
+
+        $result = $figureRendererRuntime->render(
+            '123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig'
+        );
+
+        $this->assertSame('<result>', $result);
+    }
+
+    public function testUsesFigureTemplateByDefault(): void
+    {
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
+            ->expects($this->once())
+            ->method('render')
+            ->with(1, null, [], '@ContaoCore/Image/Studio/figure.html.twig')
+            ->willReturn('<result>')
+        ;
+
+        (new FigureRendererRuntime($figureRenderer))->render(1, null);
     }
 }

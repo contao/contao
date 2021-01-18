@@ -12,43 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Figure;
-use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class FigureRendererRuntime implements RuntimeExtensionInterface
 {
     /**
-     * @var Studio
+     * @var FigureRenderer
      */
-    private $studio;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var PropertyAccessor
-     */
-    private $propertyAccessor;
+    private $figureRenderer;
 
     /**
      * @internal
      */
-    public function __construct(Studio $studio, Environment $twig)
+    public function __construct(FigureRenderer $figureRenderer)
     {
-        $this->studio = $studio;
-        $this->twig = $twig;
-
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+        $this->figureRenderer = $figureRenderer;
     }
 
     /**
@@ -64,29 +46,6 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
      */
     public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
     {
-        $configuration['from'] = $from;
-        $configuration['size'] = $size;
-
-        // Allow overwriting metadata on the fly
-        foreach (['metadata', 'setMetadata'] as $key) {
-            if (\is_array($configuration[$key] ?? null)) {
-                $configuration[$key] = new Metadata($configuration[$key]);
-            }
-        }
-
-        $figure = $this->buildFigure($configuration);
-
-        return $this->twig->render($template, ['figure' => $figure]);
-    }
-
-    private function buildFigure(array $configuration): Figure
-    {
-        $figureBuilder = $this->studio->createFigureBuilder();
-
-        foreach ($configuration as $property => $value) {
-            $this->propertyAccessor->setValue($figureBuilder, $property, $value);
-        }
-
-        return $figureBuilder->build();
+        return $this->figureRenderer->render($from, $size, $configuration, $template);
     }
 }

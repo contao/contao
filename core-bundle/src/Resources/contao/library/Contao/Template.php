@@ -11,16 +11,13 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use Contao\CoreBundle\Image\Studio\FigureBuilder;
-use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\VarDumper\VarDumper;
-use Webmozart\PathUtil\Path;
 
 /**
  * Parses and outputs template files
@@ -412,34 +409,7 @@ abstract class Template extends Controller
 	 */
 	public function figure($from, $size, $configuration = array(), $template = 'image')
 	{
-		$configuration['from'] = $from;
-		$configuration['size'] = $size;
-
-		/** @var FigureBuilder $figureBuilder */
-		$figureBuilder = System::getContainer()
-			->get(Studio::class)
-			->createFigureBuilder();
-
-		$propertyAccessor = PropertyAccess::createPropertyAccessor();
-
-		foreach ($configuration as $property => $value)
-		{
-			$propertyAccessor->setValue($figureBuilder, $property, $value);
-		}
-
-		$figure = $figureBuilder->build();
-
-		if ('twig' === Path::getExtension($template, true))
-		{
-			return System::getContainer()
-				->get('twig')
-				->render($template, array('figure' => $figure));
-		}
-
-		$imageTemplate = new FrontendTemplate($template);
-		$figure->applyLegacyTemplateData($imageTemplate);
-
-		return $imageTemplate->parse();
+		return System::getContainer()->get(FigureRenderer::class)->render($from, $size, $configuration, $template);
 	}
 
 	/**

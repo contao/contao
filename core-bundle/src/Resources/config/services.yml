@@ -363,6 +363,12 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
+    Contao\CoreBundle\Image\Studio\FigureRenderer:
+        arguments:
+            - '@Contao\CoreBundle\Image\Studio\Studio'
+            - '@twig'
+        public: true
+
     Contao\CoreBundle\Image\Studio\Studio:
         arguments:
             - '@Psr\Container\ContainerInterface'
@@ -852,8 +858,7 @@ services:
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
-            - '@Contao\CoreBundle\Image\Studio\Studio'
-            - '@twig'
+            - '@Contao\CoreBundle\Image\Studio\FigureRenderer'
 
     Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
         arguments:
