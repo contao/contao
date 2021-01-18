@@ -35,9 +35,6 @@
         "symfony/phpunit-bridge": "^5.2"
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "4.11.x-dev"
-        },
         "contao-manager-plugin": "Contao\\FaqBundle\\ContaoManager\\Plugin",
         "symfony": {
             "require": "4.4.* || ^5.2"

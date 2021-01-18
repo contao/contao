@@ -159,9 +159,6 @@
             "bin-links": false,
             "target-directory": "tools"
         },
-        "branch-alias": {
-            "dev-master": "4.11.x-dev"
-        },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
             "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
