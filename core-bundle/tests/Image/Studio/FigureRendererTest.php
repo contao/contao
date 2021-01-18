@@ -118,8 +118,8 @@ class FigureRendererTest extends TestCase
 
         // Make a template and image available at the temp dir
         $filesystem = new Filesystem();
-
         $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/foo.html5'), '<foo result>');
+
         $filesystem->symlink(
             Path::canonicalize(__DIR__.'/../../Fixtures/files'),
             Path::join($this->getTempDir(), 'files')
@@ -127,7 +127,6 @@ class FigureRendererTest extends TestCase
 
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-
         $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
@@ -138,9 +137,6 @@ class FigureRendererTest extends TestCase
         $figureRenderer = new FigureRenderer($studio, $twig);
 
         $this->assertSame('<foo result>', $figureRenderer->render('files/public/foo.jpg', null, [], 'foo'));
-
-        // Cleanup
-        $filesystem->remove($this->getTempDir());
     }
 
     public function testFailsWithInvalidConfiguration(): void

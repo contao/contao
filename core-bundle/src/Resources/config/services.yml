@@ -363,6 +363,12 @@ services:
             - '@?contao.image.resize_calculator'
         public: true
 
+    Contao\CoreBundle\Image\Studio\FigureRenderer:
+        arguments:
+            - '@Contao\CoreBundle\Image\Studio\Studio'
+            - '@twig'
+        public: true
+
     Contao\CoreBundle\Image\Studio\Studio:
         arguments:
             - '@Psr\Container\ContainerInterface'
@@ -373,12 +379,6 @@ services:
         tags:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
-
-    Contao\CoreBundle\Image\Studio\FigureRenderer:
-        arguments:
-            - '@Contao\CoreBundle\Image\Studio\Studio'
-            - '@twig'
-        public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:

@@ -773,7 +773,6 @@ class InsertTags extends Controller
 					if (null === $from || 2 !== \count($elements))
 					{
 						$arrCache[$strTag] = '';
-
 						break;
 					}
 
@@ -793,7 +792,6 @@ class InsertTags extends Controller
 					{
 						$arrCache[$strTag] = '';
 					}
-
 					break;
 
 				case 'image':
@@ -1156,7 +1154,7 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * @return array[string|null, array]
+	 * @return array<string|null, array>
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{

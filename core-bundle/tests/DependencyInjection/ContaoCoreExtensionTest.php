@@ -2164,6 +2164,25 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
+    public function testRegistersTheFigureRenderer(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(FigureRenderer::class));
+
+        $definition = $container->getDefinition(FigureRenderer::class);
+
+        $this->assertTrue($definition->isPublic());
+
+        $this->assertEquals(
+            [
+                new Reference(Studio::class),
+                new Reference('twig'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
     public function testRegistersTheImageStudio(): void
     {
         $container = $this->getContainerBuilder();
@@ -2192,25 +2211,6 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
-        );
-    }
-
-    public function testRegistersTheFigureRenderer(): void
-    {
-        $container = $this->getContainerBuilder();
-
-        $this->assertTrue($container->has(FigureRenderer::class));
-
-        $definition = $container->getDefinition(FigureRenderer::class);
-
-        $this->assertTrue($definition->isPublic());
-
-        $this->assertEquals(
-            [
-                new Reference(Studio::class),
-                new Reference('twig'),
-            ],
-            $definition->getArguments()
         );
     }
 

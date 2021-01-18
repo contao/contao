@@ -43,12 +43,11 @@ class FigureRenderer
     {
         $this->studio = $studio;
         $this->twig = $twig;
-
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
-     * Render a figure.
+     * Renders a figure.
      *
      * The provided configuration array is used to configure a FigureBuilder
      * object. If not explicitly set, the default figure template will be used

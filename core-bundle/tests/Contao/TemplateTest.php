@@ -269,7 +269,6 @@ EOF
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
-
         $container->set(FigureRenderer::class, $figureRenderer);
         $container->set('request_stack', $this->createMock(RequestStack::class));
 
@@ -289,7 +288,6 @@ EOF
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
-
         $container->set(FigureRenderer::class, $figureRenderer);
         $container->set('request_stack', $this->createMock(RequestStack::class));
 

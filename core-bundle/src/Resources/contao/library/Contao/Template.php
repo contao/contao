@@ -409,9 +409,7 @@ abstract class Template extends Controller
 	 */
 	public function figure($from, $size, $configuration = array(), $template = 'image')
 	{
-		return System::getContainer()
-			->get(FigureRenderer::class)
-			->render($from, $size, $configuration, $template);
+		return System::getContainer()->get(FigureRenderer::class)->render($from, $size, $configuration, $template);
 	}
 
 	/**

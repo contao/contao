@@ -34,9 +34,7 @@ class InsertTagsTest extends TestCase
             ->willReturn('<figure>foo</figure>')
         ;
 
-        $this->setContainerWithContaoConfiguration([
-            FigureRenderer::class => $figureRenderer,
-        ]);
+        $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
 
         $output = (new InsertTags())->replace($input, false);
 
@@ -98,9 +96,7 @@ class InsertTagsTest extends TestCase
             ->willThrowException(new \InvalidArgumentException('bad call'))
         ;
 
-        $this->setContainerWithContaoConfiguration([
-            FigureRenderer::class => $figureRenderer,
-        ]);
+        $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
 
         $output = (new InsertTags())->replace($input, false);
 
@@ -125,7 +121,6 @@ class InsertTagsTest extends TestCase
     private function setContainerWithContaoConfiguration(array $configuration = []): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-
         $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
