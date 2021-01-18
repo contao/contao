@@ -94,6 +94,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @property string        $strTable          The table name
  * @property string        $strField          The field name
  * @property string        $xlabel
+ * @property string        $customRgxp
+ * @property string        $errorMsg
  * @property integer       $currentRecord
  * @property integer       $rowClass
  * @property integer       $rowClassConfirm

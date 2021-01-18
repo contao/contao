@@ -44,11 +44,23 @@ services:
             - '@database_connection'
         public: true
 
+    Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener:
+        arguments:
+            - '@translator'
+
     Contao\CoreBundle\EventListener\FilterPageTypeListener:
         arguments:
             - '@database_connection'
         tags:
             - { name: kernel.event_listener }
+
+    Contao\CoreBundle\EventListener\Widget\CustomRgxpListener:
+        arguments:
+            - '@translator'
+
+    Contao\CoreBundle\EventListener\Widget\HttpUrlListener:
+        arguments:
+            - '@translator'
 
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener

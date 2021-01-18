@@ -53,6 +53,7 @@ use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
+use Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -81,6 +82,8 @@ use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
+use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Fragment\ForwardFragmentRenderer;
 use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
@@ -4162,6 +4165,60 @@ class ContaoCoreExtensionTest extends TestCase
                 ],
             ],
             $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheValidateCustomRgxpListener(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(ValidateCustomRgxpListener::class));
+
+        $definition = $container->getDefinition(ValidateCustomRgxpListener::class);
+
+        $this->assertNull($definition->getClass());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheCustomRgxpListener(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(CustomRgxpListener::class));
+
+        $definition = $container->getDefinition(CustomRgxpListener::class);
+
+        $this->assertNull($definition->getClass());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheHttpUrlListener(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(HttpUrlListener::class));
+
+        $definition = $container->getDefinition(HttpUrlListener::class);
+
+        $this->assertNull($definition->getClass());
+
+        $this->assertEquals(
+            [
+                new Reference('translator'),
+            ],
+            $definition->getArguments()
         );
     }
 

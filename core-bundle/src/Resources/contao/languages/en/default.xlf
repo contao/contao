@@ -251,6 +251,15 @@
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
       </trans-unit>
+      <trans-unit id="ERR.invalidHttpUrl">
+        <source>Please enter an absolute URL starting with https:// or http://!</source>
+      </trans-unit>
+      <trans-unit id="ERR.customRgxp">
+        <source>Please enter a value that matches %s!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidCustomRgxp">
+        <source>Invalid custom regular expression!</source>
+      </trans-unit>
       <trans-unit id="ERR.applicationCache">
         <source>Please run the "cache:clear" command or use the Contao Manager to rebuild your application cache.</source>
       </trans-unit>
