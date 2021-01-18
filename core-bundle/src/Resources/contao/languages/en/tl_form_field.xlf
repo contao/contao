@@ -122,17 +122,23 @@
       <trans-unit id="tl_form_field.custom.1">
         <source>Checks against a custom regular expression.</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.placeholder.0">
+        <source>Placeholder</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.placeholder.1">
+        <source>Show this text as long as the field is empty (requires HTML5).</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.1">
         <source>The custom regular expression including delimiters and modifiers.</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.placeholder.0">
-        <source>Placeholder</source>
+      <trans-unit id="tl_form_field.errorMsg.0">
+        <source>Error message</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.placeholder.1">
-        <source>Show this text as long as the field is empty (requires HTML5).</source>
+      <trans-unit id="tl_form_field.errorMsg.1">
+        <source>Show this error message in the front end if the user input is invalid.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.0">
         <source>Minimum length</source>
@@ -235,12 +241,6 @@
       </trans-unit>
       <trans-unit id="tl_form_field.tabindex.1">
         <source>The position of the form field in the tabbing order.</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.errorMsg.0">
-        <source>Error message</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.errorMsg.1">
-        <source>This optional error message will be shown in the front end if the form field does not validate.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.fSize.0">
         <source>Field size</source>
