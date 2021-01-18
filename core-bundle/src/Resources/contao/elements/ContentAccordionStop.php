@@ -35,6 +35,25 @@ class ContentAccordionStop extends ContentElement
 			$this->strTemplate = 'be_wildcard';
 			$this->Template = new BackendTemplate($this->strTemplate);
 		}
+
+		$this->Template->addWrapper = true;
+
+		$next = ContentModel::findOneBy(array(
+			'ptable = ?',
+			'pid = ?',
+			'sorting > ?',
+		), array(
+			$this->ptable,
+			$this->pid,
+			$this->sorting,
+		), array(
+			'order' => 'sorting ASC',
+		));
+
+		if (null !== $next && 'accordionStart' !== $next->type)
+		{
+			$this->Template->addWrapper = false;
+		}
 	}
 }
 

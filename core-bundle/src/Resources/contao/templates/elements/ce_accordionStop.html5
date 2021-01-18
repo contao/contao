@@ -2,4 +2,6 @@
     </div>
   </div>
 
-</section>
+<?php if ($this->addWrapper): ?>
+  </section>
+<?php endif; ?>
