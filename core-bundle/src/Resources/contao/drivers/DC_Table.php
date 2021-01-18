@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\UndoDescriptionEvent;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -1544,8 +1546,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->import(BackendUser::class, 'User');
 
-		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+		$event = new UndoDescriptionEvent($this->strTable, $data[$this->strTable][0]);
+		System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::UNDO_DESCRIPTION);
+
+		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data, description) VALUES (?, ?, ?, ?, ?, ?, ?)")
+									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data), $event->getDescription());
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -1586,6 +1591,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
 			{
+				// TODO: Improve log message as well
 				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, TL_GENERAL);
 			}
 		}

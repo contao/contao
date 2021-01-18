@@ -47,6 +47,10 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	// List
 	'list' => array
 	(
+		'undo' => array
+		(
+			'fields' => array('name')
+		),
 		'global_operations' => array
 		(
 			'new' => array

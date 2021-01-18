@@ -61,6 +61,10 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'child_record_callback'   => array('tl_newsletter_recipients', 'listRecipient')
 		),
+		'undo' => array
+		(
+			'fields'                  => array('email'),
+		),
 		'global_operations' => array
 		(
 			'import' => array

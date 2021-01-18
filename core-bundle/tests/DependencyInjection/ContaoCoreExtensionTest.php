@@ -81,6 +81,7 @@ use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\EventListener\SwitchUserListener;
 use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
+use Contao\CoreBundle\EventListener\Undo\UndoDescriptionListener;
 use Contao\CoreBundle\EventListener\UserSessionListener as EventUserSessionListener;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
@@ -1238,6 +1239,27 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'kernel.event_listener' => [
                     [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheUndoDescriptionListener(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has('contao.listener.undo_description'));
+
+        $definition = $container->getDefinition('contao.listener.undo_description');
+
+        $this->assertSame(UndoDescriptionListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertSame(
+            [
+                'kernel.event_listener' => [
+                    ['priority' => -256],
                 ],
             ],
             $definition->getTags()

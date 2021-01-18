@@ -69,6 +69,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'showColumns'             => true,
 			'label_callback'          => array('tl_user', 'addIcon')
 		),
+		'undo' => array
+		(
+			'fields' => array('username')
+		),
 		'global_operations' => array
 		(
 			'all' => array

@@ -55,6 +55,10 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'group_callback'          => array('tl_module', 'getGroupHeader')
 		),
+		'undo' => array
+		(
+			'fields' => array('name')
+		),
 		'global_operations' => array
 		(
 			'all' => array

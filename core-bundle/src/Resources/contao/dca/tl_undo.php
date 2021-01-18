@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\UserModel;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
@@ -47,14 +48,14 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('tstamp'),
-			'panelLayout'             => 'sort,search,limit'
+			'fields'                  => array('tstamp DESC'),
+			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'query'),
-			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span>%s',
-			'label_callback'          => array('tl_undo', 'ellipsis')
+			'fields'                  => array('tstamp', 'pid', 'fromTable', 'description'),
+			'showColumns'             => true,
+			'label_callback'          => array('tl_undo', 'labelCallback')
 		),
 		'operations' => array
 		(
@@ -81,6 +82,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'pid' => array
 		(
 			'sorting'                 => true,
+			'filter'                  => true,
 			'foreignKey'              => 'tl_user.name',
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
@@ -94,10 +96,18 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'fromTable' => array
 		(
 			'sorting'                 => true,
+			'filter'                  => true,
+			// TODO: Use display_name in filter drop down, e.g. via `reference`
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
 		(
+			'sql'                     => "text NULL"
+		),
+		'description' => array
+		(
+			'search'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['tl_undo']['description'],
 			'sql'                     => "text NULL"
 		),
 		'affectedRows' => array
@@ -216,16 +226,29 @@ class tl_undo extends Backend
 		return $data;
 	}
 
-	/**
-	 * Add the surrounding ellipsis layer
-	 *
-	 * @param array  $row
-	 * @param string $label
-	 *
-	 * @return string
-	 */
-	public function ellipsis($row, $label)
+	public function labelCallback($row, $label, DataContainer $dc, $args)
 	{
-		return '<div class="ellipsis">' . $label . '</div>';
+		$table = $args[2];
+		System::loadLanguageFile($table);
+
+		// Date
+		$args[0] = sprintf('<span style="color:#999;padding-right:3px">%s</span>', $args[0]);
+
+		// Username
+		$user = UserModel::findById($args[1]);
+
+		if ($user !== null)
+		{
+			$args[1] = $user->username;
+		}
+
+		// fromTable
+		$args[2] = '<strong>' . ($GLOBALS['TL_LANG'][$table]['display_name']) ?: $args[2] . '</strong>';
+
+		// Description
+		$description = htmlentities($args[3]);
+		$args[3] = sprintf('<span title="%s">%s</span>', $description, StringUtil::substr($description, 100));
+
+		return $args;
 	}
 }

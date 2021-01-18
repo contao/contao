@@ -75,6 +75,11 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_comments', 'listComments')
 		),
+		'undo' => array
+		(
+			'fields'                  => array('name', 'email'),
+			'format'				  => '%s (%s)'
+		),
 		'global_operations' => array
 		(
 			'all' => array

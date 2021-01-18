@@ -409,4 +409,18 @@ class tl_image_size_item extends Backend
 			$dc->invalidateCacheTags();
 		}
 	}
+
+	public function undoLabelCallback($row)
+	{
+		$parent = 'PID ' . $row['pid'];
+
+		$imageSize = ImageSizeModel::findById($row['pid']);
+
+		if ($imageSize !== null)
+		{
+			$parent = $imageSize->name;
+		}
+
+		return sprintf('%s (%s)', $row['media'], $parent);
+	}
 }

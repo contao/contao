@@ -76,4 +76,11 @@ final class ContaoCoreEvents
      * @see SlugValidCharactersEvent
      */
     public const SLUG_VALID_CHARACTERS = 'contao.slug_valid_characters';
+
+    /**
+     * The contao.generate_descriptor event is triggered when a data row is displayed in the restore section.
+     *
+     * @see UndoDescriptionEvent
+     */
+    public const UNDO_DESCRIPTION = 'contao.undo_description';
 }

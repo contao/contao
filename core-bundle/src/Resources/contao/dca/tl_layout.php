@@ -53,6 +53,10 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_layout', 'listLayout')
 		),
+		'undo' => array
+		(
+			'fields' => array('name')
+		),
 		'global_operations' => array
 		(
 			'all' => array

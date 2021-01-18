@@ -68,6 +68,10 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'format'                  => '%s',
 			'label_callback'          => array('tl_theme', 'addPreviewImage')
 		),
+		'undo' => array
+		(
+			'fields' => array('name')
+		),
 		'global_operations' => array
 		(
 			'importTheme' => array

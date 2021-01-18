@@ -26,6 +26,12 @@
       <trans-unit id="tl_undo.query.1">
         <source>Details of the undo step</source>
       </trans-unit>
+      <trans-unit id="tl_undo.description.0">
+        <source>Description</source>
+      </trans-unit>
+      <trans-unit id="tl_undo.description.1">
+        <source>Description of record</source>
+      </trans-unit>
       <trans-unit id="tl_undo.data.0">
         <source>Data</source>
       </trans-unit>

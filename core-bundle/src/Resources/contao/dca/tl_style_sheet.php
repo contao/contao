@@ -64,6 +64,10 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_style_sheet', 'listStyleSheet')
 		),
+		'undo' => array
+		(
+			'fields' => array('name')
+		),
 		'global_operations' => array
 		(
 			'import' => array
