@@ -264,7 +264,7 @@ class UserSessionListenerTest extends TestCase
 
         $listener($this->getRequestEvent($request));
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testDoesNotStoreTheSessionIfTheUserIsNotAContaoUser(): void
@@ -284,7 +284,7 @@ class UserSessionListenerTest extends TestCase
 
         $listener->write($this->getResponseEvent($request));
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
