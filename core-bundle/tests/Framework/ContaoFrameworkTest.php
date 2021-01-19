@@ -338,7 +338,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testOverridesTheErrorLevel(): void
@@ -438,7 +438,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function getInstallRoutes(): \Generator
