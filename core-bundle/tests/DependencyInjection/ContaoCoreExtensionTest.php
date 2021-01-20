@@ -523,9 +523,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheCustomElementTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.data_container.element_template_options_listener'));
+        $this->assertTrue($this->container->has('contao.listener.data_container.element_template_options'));
 
-        $definition = $this->container->getDefinition('contao.listener.data_container.element_template_options_listener');
+        $definition = $this->container->getDefinition('contao.listener.data_container.element_template_options');
 
         $this->assertTrue($definition->isPrivate());
 
@@ -540,19 +540,24 @@ class ContaoCoreExtensionTest extends TestCase
             $definition->getArguments()
         );
 
-        $this->assertSame([
-            'contao.callback' => [[
-                'table' => 'tl_content',
-                'target' => 'fields.customTpl.options',
-            ]],
-        ], $definition->getTags());
+        $this->assertSame(
+            [
+                'contao.callback' => [
+                    [
+                        'table' => 'tl_content',
+                        'target' => 'fields.customTpl.options',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheCustomModuleTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.data_container.module_template_options_listener'));
+        $this->assertTrue($this->container->has('contao.listener.data_container.module_template_options'));
 
-        $definition = $this->container->getDefinition('contao.listener.data_container.module_template_options_listener');
+        $definition = $this->container->getDefinition('contao.listener.data_container.module_template_options');
 
         $this->assertTrue($definition->isPrivate());
 
@@ -567,12 +572,17 @@ class ContaoCoreExtensionTest extends TestCase
             $definition->getArguments()
         );
 
-        $this->assertSame([
-            'contao.callback' => [[
-                'table' => 'tl_module',
-                'target' => 'fields.customTpl.options',
-            ]],
-        ], $definition->getTags());
+        $this->assertSame(
+            [
+                'contao.callback' => [
+                    [
+                        'table' => 'tl_module',
+                        'target' => 'fields.customTpl.options',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
     }
 
     public function testRegistersTheDoctrineSchemaListener(): void

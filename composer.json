@@ -236,10 +236,7 @@
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
-        },
-        "classmap": [
-            "core-bundle/tests/Fixtures/src/Resources/contao/"
-        ]
+        }
     },
     "bin": [
         "manager-bundle/bin/contao-console"

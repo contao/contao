@@ -15,12 +15,12 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\ContentProxy;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
+use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
+use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
 use Contao\DataContainer;
-use Contao\LegacyElement;
-use Contao\LegacyModule;
 use Contao\ModuleProxy;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,39 +56,82 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testReturnsTheDefaultElementTemplate(): void
     {
-        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener(
+            $this->getFramework(),
+            new RequestStack(),
+            [],
+            'ce_',
+            ContentProxy::class
+        );
 
-        $this->assertSame(['' => 'ce_fragment_element'], $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
+        $this->assertSame(
+            ['' => 'ce_fragment_element'],
+            $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element']))
+        );
     }
 
     public function testReturnsTheDefaultModuleTemplate(): void
     {
-        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), [], 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener(
+            $this->getFramework(),
+            new RequestStack(),
+            [],
+            'mod_',
+            ModuleProxy::class
+        );
 
-        $this->assertSame(['' => 'mod_fragment_module'], $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
+        $this->assertSame(
+            ['' => 'mod_fragment_module'],
+            $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module']))
+        );
     }
 
     public function testReturnsTheCustomElementTemplate(): void
     {
-        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_element' => 'ce_custom_fragment_template'], 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener(
+            $this->getFramework(),
+            new RequestStack(),
+            ['fragment_element' => 'ce_custom_fragment_template'],
+            'ce_',
+            ContentProxy::class
+        );
 
-        $this->assertSame(['' => 'ce_custom_fragment_template'], $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element'])));
-        $this->assertSame(['' => 'ce_custom_legacy_template'], $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_element'])));
+        $this->assertSame(
+            ['' => 'ce_custom_fragment_template'],
+            $callback($this->mockDataContainer('tl_content', ['type' => 'fragment_element']))
+        );
+
+        $this->assertSame(
+            ['' => 'ce_custom_legacy_template'],
+            $callback($this->mockDataContainer('tl_content', ['type' => 'legacy_element']))
+        );
     }
 
     public function testReturnsTheCustomModuleTemplate(): void
     {
-        $callback = new TemplateOptionsListener($this->getFramework(), new RequestStack(), ['fragment_module' => 'mod_custom_fragment_template'], 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener(
+            $this->getFramework(),
+            new RequestStack(),
+            ['fragment_module' => 'mod_custom_fragment_template'],
+            'mod_',
+            ModuleProxy::class
+        );
 
-        $this->assertSame(['' => 'mod_custom_fragment_template'], $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module'])));
-        $this->assertSame(['' => 'mod_custom_legacy_template'], $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_module'])));
+        $this->assertSame(
+            ['' => 'mod_custom_fragment_template'],
+            $callback($this->mockDataContainer('tl_module', ['type' => 'fragment_module']))
+        );
+
+        $this->assertSame(
+            ['' => 'mod_custom_legacy_template'],
+            $callback($this->mockDataContainer('tl_module', ['type' => 'legacy_module']))
+        );
     }
 
     public function testReturnsAllElementTemplatesInOverrideAllMode(): void
     {
-        $request = new Request(['act' => 'overrideAll']);
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request(['act' => 'overrideAll']));
 
         $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, [], 'ce_', ContentProxy::class);
 
@@ -97,15 +140,17 @@ class TemplateOptionsListenerTest extends TestCase
 
     public function testReturnsAllModuleTemplatesInOverrideAllMode(): void
     {
-        $request = new Request(['act' => 'overrideAll']);
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request(['act' => 'overrideAll']));
 
         $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, [], 'mod_', ModuleProxy::class);
 
         $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
     }
 
+    /**
+     * @return ContaoFramework&MockObject
+     */
     private function getFramework(array $adapters = []): ContaoFramework
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
@@ -126,6 +171,9 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->mockContaoFramework(array_merge([Controller::class => $controllerAdapter], $adapters));
     }
 
+    /**
+     * @return DataContainer&MockObject
+     */
     private function mockDataContainer(string $table, array $activeRecord = []): DataContainer
     {
         /** @var DataContainer&MockObject $dc */

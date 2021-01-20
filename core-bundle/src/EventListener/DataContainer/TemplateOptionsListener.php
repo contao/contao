@@ -56,7 +56,7 @@ class TemplateOptionsListener
         $this->proxyClass = $proxyClass;
     }
 
-    public function __invoke(DataContainer $dc)
+    public function __invoke(DataContainer $dc): array
     {
         if ($this->isOverrideAll()) {
             // Add a blank option that allows us to reset all custom templates to the default one
