@@ -472,7 +472,7 @@ class Automator extends System
 		foreach ($arrFiles as $strFile)
 		{
 			// Ignore Monolog log files (see #2579)
-			if (preg_match('/^[a-z]+-\d{4}-\d{2}-\d{2}\.log$/', $strFile))
+			if (preg_match('/-\d{4}-\d{2}-\d{2}\.log$/', $strFile))
 			{
 				continue;
 			}
