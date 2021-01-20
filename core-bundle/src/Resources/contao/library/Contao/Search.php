@@ -458,7 +458,7 @@ class Search
 			$arrValues = array_merge($arrValues, $arrWildcards);
 		}
 
-		$strQuery .= " FROM (SELECT word FROM tl_search_index WHERE (" . implode(' OR ', $arrAllKeywords) . ") GROUP BY word) words JOIN tl_search_index ON tl_search_index.word = words.word WHERE 1";
+		$strQuery .= " FROM (SELECT word FROM tl_search_index WHERE (" . (implode(' OR ', $arrAllKeywords) ?: "0") . ") GROUP BY word) words JOIN tl_search_index ON tl_search_index.word = words.word WHERE 1";
 
 		// Get phrases
 		if ($intPhrases)
