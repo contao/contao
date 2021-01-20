@@ -197,6 +197,24 @@ EOF;
         );
     }
 
+    public function testIgnoresAbsoluteUrlsWhileFixingTheFilePaths(): void
+    {
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
+
+        $css = <<<'EOF'
+test1 { background: url('/path/to/file.jpg') }
+test2 { background: url(https://example.com/file.jpg) }
+test3 { background: url('#foo') }
+EOF;
+
+        $this->assertSame(
+            $css,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+        );
+    }
+
     public function testCombinesScssFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.scss', '$color: red; @import "file1_sub";');
