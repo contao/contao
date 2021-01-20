@@ -1176,7 +1176,7 @@ class InsertTags extends Controller
 				return;
 			}
 
-			$value = htmlentities($value);
+			$value = StringUtil::specialchars($value);
 		});
 
 		return array($base, $attributes);
