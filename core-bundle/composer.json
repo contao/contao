@@ -70,7 +70,6 @@
         "ramsey/uuid": "^3.8",
         "scheb/2fa-backup-code": "^5.0",
         "scheb/2fa-bundle": "^5.0",
-        "scheb/2fa-totp": "^5.0",
         "scheb/2fa-trusted-device": "^5.0",
         "scssphp/scssphp": "^1.0",
         "simplepie/simplepie": "^1.3",
