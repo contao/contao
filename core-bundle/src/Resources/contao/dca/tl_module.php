@@ -238,6 +238,10 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Contao\Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_', array(), 'mod_' . $dc->activeRecord->type);
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'save_callback' => array
+			(
+				array('tl_module', 'resetTemplate')
+			),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'pages' => array
@@ -856,6 +860,31 @@ class tl_module extends Contao\Backend
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['mandatory'] = false;
 			unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['orderField']);
+		}
+
+		return $varValue;
+	}
+
+	/**
+	 * Reset the template if the module type does not match
+	 *
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function resetTemplate($varValue, Contao\DataContainer $dc)
+	{
+		if (!$varValue)
+		{
+			return '';
+		}
+
+		$template = 'mod_' . $dc->activeRecord->type;
+
+		if ($varValue != $template && strncmp($varValue, $template . '_', strlen($template . '_')) !== 0)
+		{
+			return '';
 		}
 
 		return $varValue;

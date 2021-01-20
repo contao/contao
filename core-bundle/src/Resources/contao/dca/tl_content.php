@@ -571,6 +571,10 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				return Contao\Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_', array(), 'ce_' . $dc->activeRecord->type);
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'save_callback' => array
+			(
+				array('tl_content', 'resetTemplate')
+			),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'playerSRC' => array
@@ -1887,6 +1891,31 @@ class tl_content extends Contao\Backend
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('allowedDownload');
 					break;
 			}
+		}
+
+		return $varValue;
+	}
+
+	/**
+	 * Reset the template if the element type does not match
+	 *
+	 * @param mixed                $varValue
+	 * @param Contao\DataContainer $dc
+	 *
+	 * @return mixed
+	 */
+	public function resetTemplate($varValue, Contao\DataContainer $dc)
+	{
+		if (!$varValue)
+		{
+			return '';
+		}
+
+		$template = 'ce_' . $dc->activeRecord->type;
+
+		if ($varValue != $template && strncmp($varValue, $template . '_', strlen($template . '_')) !== 0)
+		{
+			return '';
 		}
 
 		return $varValue;
