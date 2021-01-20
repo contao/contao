@@ -408,7 +408,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			{
 				return Contao\Controller::getTemplateGroup('analytics_');
 			},
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),
