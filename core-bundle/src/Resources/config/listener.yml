@@ -8,6 +8,10 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
+    Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener:
+        arguments:
+            - '@database_connection'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
