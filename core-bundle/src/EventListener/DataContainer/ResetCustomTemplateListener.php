@@ -35,32 +35,22 @@ class ResetCustomTemplateListener
     }
 
     /**
-     * Checks if we need to reset the template.
-     *
-     * @param mixed $varValue
-     *
-     * @return mixed
+     * Resets the custom template if the element type changes.
      */
     public function __invoke($varValue, DataContainer $dc)
     {
-        if ($dc->activeRecord->type !== $varValue) {
-            $GLOBALS['TL_DCA'][$dc->table]['onsubmit_callback'][] = function (DataContainer $dc): void {
-                $this->resetTemplate($dc);
-            };
+        if ($dc->activeRecord->type === $varValue) {
+            return $varValue;
         }
+
+        $GLOBALS['TL_DCA'][$dc->table]['config']['onsubmit_callback'][] = function (DataContainer $dc): void {
+            if (!$dc->id) {
+                return;
+            }
+
+            $this->connection->update($dc->table, ['customTpl' => ''], ['id' => $dc->id]);
+        };
 
         return $varValue;
-    }
-
-    /**
-     * Resets the template if the element type has changed.
-     */
-    private function resetTemplate(DataContainer $dc): void
-    {
-        if (!$dc->id) {
-            return;
-        }
-
-        $this->connection->update($dc->table, ['customTpl' => ''], ['id' => $dc->id]);
     }
 }
