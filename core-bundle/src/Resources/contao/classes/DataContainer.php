@@ -1309,7 +1309,7 @@ abstract class DataContainer extends Backend
 		$cacheManager->invalidateTags($tags);
 	}
 
-	private function addPtableTags($strTable, $intId, &$tags)
+	public function addPtableTags($strTable, $intId, &$tags)
 	{
 		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
 		{
@@ -1335,7 +1335,7 @@ abstract class DataContainer extends Backend
 		$this->addPtableTags($ptable, $objPid->pid, $tags);
 	}
 
-	private function addCtableTags($strTable, $intId, &$tags)
+	public function addCtableTags($strTable, $intId, &$tags)
 	{
 		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
 		{

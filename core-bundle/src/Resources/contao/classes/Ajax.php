@@ -398,7 +398,7 @@ class Ajax extends Backend
 
 					if (method_exists($dca, 'toggleFeatured'))
 					{
-						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1);
+						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1, $dc);
 					}
 				}
 
