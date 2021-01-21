@@ -25,10 +25,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			array('tl_content', 'filterContentElements'),
 			array('tl_content', 'preserveReferenced')
 		),
-		'onsubmit_callback'             => array
-		(
-			array('tl_content', 'resetTemplate')
-		),
 		'sql' => array
 		(
 			'keys' => array
@@ -177,10 +173,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_content', 'checkTemplate')
-			),
 			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
 		),
 		'headline' => array
@@ -868,11 +860,6 @@ if (in_array(Contao\Input::get('do'), array('article', 'page')))
  */
 class tl_content extends Contao\Backend
 {
-	/**
-	 * @var bool
-	 */
-	private $resetTemplate = false;
-
 	/**
 	 * Import the back end user object
 	 */
@@ -1903,40 +1890,6 @@ class tl_content extends Contao\Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Check if we need to reset the template
-	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function checkTemplate($varValue, Contao\DataContainer $dc)
-	{
-		if ($dc->activeRecord->type != $varValue)
-		{
-			$this->resetTemplate = true;
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Reset the template if the element type has changed
-	 *
-	 * @param Contao\DataContainer $dc
-	 */
-	public function resetTemplate(Contao\DataContainer $dc)
-	{
-		if (!$dc->id || !$this->resetTemplate)
-		{
-			return;
-		}
-
-		$this->Database->prepare("UPDATE tl_content SET customTpl='' WHERE id=?")
-					   ->execute($dc->id);
 	}
 
 	/**

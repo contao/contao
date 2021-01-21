@@ -22,10 +22,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			array('tl_module', 'checkPermission'),
 			array('tl_module', 'addCustomLayoutSectionReferences')
 		),
-		'onsubmit_callback'             => array
-		(
-			array('tl_module', 'resetTemplate')
-		),
 		'sql' => array
 		(
 			'keys' => array
@@ -176,10 +172,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'save_callback' => array
-			(
-				array('tl_module', 'checkTemplate')
-			),
 			'sql'                     => "varchar(64) NOT NULL default 'navigation'"
 		),
 		'levelOffset' => array
@@ -638,11 +630,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 class tl_module extends Contao\Backend
 {
 	/**
-	 * @var bool
-	 */
-	private $resetTemplate = false;
-
-	/**
 	 * Import the back end user object
 	 */
 	public function __construct()
@@ -872,39 +859,5 @@ class tl_module extends Contao\Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Check if we need to reset the template
-	 *
-	 * @param mixed                $varValue
-	 * @param Contao\DataContainer $dc
-	 *
-	 * @return mixed
-	 */
-	public function checkTemplate($varValue, Contao\DataContainer $dc)
-	{
-		if ($dc->activeRecord->type != $varValue)
-		{
-			$this->resetTemplate = true;
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Reset the template if the element type has changed
-	 *
-	 * @param Contao\DataContainer $dc
-	 */
-	public function resetTemplate(Contao\DataContainer $dc)
-	{
-		if (!$dc->id || !$this->resetTemplate)
-		{
-			return;
-		}
-
-		$this->Database->prepare("UPDATE tl_module SET customTpl='' WHERE id=?")
-					   ->execute($dc->id);
 	}
 }
