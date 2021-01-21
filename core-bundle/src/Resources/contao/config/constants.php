@@ -9,7 +9,7 @@
  */
 
 // Core version
-define('VERSION', '4.11');
+define('VERSION', '4.12');
 define('BUILD', '0-dev');
 define('LONG_TERM_SUPPORT', false);
 

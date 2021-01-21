@@ -44,6 +44,10 @@ services:
             - '@database_connection'
         public: true
 
+    Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener:
+        arguments:
+            - '@database_connection'
+
     Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener:
         arguments:
             - '@translator'

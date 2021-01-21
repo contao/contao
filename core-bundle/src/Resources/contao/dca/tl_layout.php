@@ -388,7 +388,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			{
 				return Controller::getTemplateGroup('analytics_');
 			},
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "text NULL"
 		),

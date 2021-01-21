@@ -349,7 +349,7 @@ abstract class Frontend extends Controller
 		else
 		{
 			$strUri = Environment::get('url') . '/';
-			$strError = 'No root page found (host "' . Environment::get('host') . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
+			$strError = 'No root page found (host "' . $host . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
 		}
 
 		try

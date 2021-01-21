@@ -15,6 +15,7 @@ use Contao\Comments;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
 use Contao\Config;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
@@ -47,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
-			array('tl_comments', 'invalidateSourceCacheTag')
+			array('tl_comments', 'invalidateSourceCacheTags')
 		),
 		'sql' => array
 		(
@@ -779,13 +780,17 @@ class tl_comments extends Backend
 	 *
 	 * @return array
 	 */
-	public function invalidateSourceCacheTag(DataContainer $dc, array $tags)
+	public function invalidateSourceCacheTags(DataContainer $dc, array $tags)
 	{
 		$commentModel = CommentsModel::findByPk($dc->id);
 
 		if (null !== $commentModel)
 		{
-			$tags[] = sprintf('contao.comments.%s.%s', $commentModel->source, $commentModel->parent);
+			Controller::loadDataContainer($commentModel->source);
+
+			$tags[] = sprintf('contao.db.%s.%s', $commentModel->source, $commentModel->parent);
+
+			$dc->addPtableTags($commentModel->source, $commentModel->parent, $tags);
 		}
 
 		return $tags;
