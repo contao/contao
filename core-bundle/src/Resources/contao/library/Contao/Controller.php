@@ -1733,15 +1733,17 @@ abstract class Controller extends System
 		// Image link
 		if (TL_MODE == 'FE' && $arrItem['imageUrl'])
 		{
-			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
+			$imageUrl = urldecode(self::replaceInsertTags($arrItem['imageUrl']));
+
+			$objTemplate->$strHrefKey = System::urlEncode($imageUrl);
 			$objTemplate->attributes = '';
 
 			if ($arrItem['fullsize'])
 			{
-				$blnIsExternal = strncmp($arrItem['imageUrl'], 'http://', 7) === 0 || strncmp($arrItem['imageUrl'], 'https://', 8) === 0;
+				$blnIsExternal = strncmp($imageUrl, 'http://', 7) === 0 || strncmp($imageUrl, 'https://', 8) === 0;
 
 				// Open images in the lightbox
-				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $arrItem['imageUrl']))
+				if (preg_match('/\.(' . strtr(preg_quote(Config::get('validImageTypes'), '/'), ',', '|') . ')$/i', $imageUrl))
 				{
 					// Do not add the TL_FILES_URL to external URLs (see #4923)
 					if (!$blnIsExternal)
@@ -1750,7 +1752,7 @@ abstract class Controller extends System
 						{
 							$projectDir = $container->getParameter('kernel.project_dir');
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $arrItem['imageUrl'], $lightboxSize);
+							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $imageUrl, $lightboxSize);
 
 							$objTemplate->lightboxPicture = array
 							(
@@ -1762,7 +1764,7 @@ abstract class Controller extends System
 						}
 						catch (\Exception $e)
 						{
-							$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($arrItem['imageUrl']));
+							$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($imageUrl));
 							$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
 						}
 					}
