@@ -3,11 +3,11 @@ tl_page:
       pid: 0
       sorting: 128
       tstamp: 1539696285
-      title: Domain with port
-      alias: domain-with-port
+      title: Localhost
+      alias: localhost
       type: root
       language: en
-      dns: domain-with-port.local:8080
+      dns: 127.0.0.1
       fallback: '1'
       includeLayout: '1'
       layout: 1

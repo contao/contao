@@ -42,13 +42,6 @@ class Comments extends Frontend
 
 		$objTemplate->comments = array(); // see #4064
 
-		// Tag the source record (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
-		}
-
 		// Pagination
 		if ($objConfig->perPage > 0)
 		{

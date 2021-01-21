@@ -413,6 +413,12 @@ class Automator extends System
 
 		foreach ($arrFiles as $strFile)
 		{
+			// Ignore Monolog log files (see #2579)
+			if (preg_match('/-\d{4}-\d{2}-\d{2}\.log$/', $strFile))
+			{
+				continue;
+			}
+
 			$objFile = new File('system/logs/' . $strFile . '.9');
 
 			// Delete the oldest file

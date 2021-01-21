@@ -467,7 +467,7 @@ class Combiner extends System
 				}
 
 				// Skip absolute links and embedded images (see #5082)
-				if (strncmp($strData, 'data:', 5) === 0 || strncmp($strData, 'http://', 7) === 0 || strncmp($strData, 'https://', 8) === 0 || strncmp($strData, '/', 1) === 0 || strncmp($strData, 'assets/css3pie/', 15) === 0)
+				if ($strData[0] == '/' || $strData[0] == '#' || strncmp($strData, 'data:', 5) === 0 || strncmp($strData, 'http://', 7) === 0 || strncmp($strData, 'https://', 8) === 0 || strncmp($strData, 'assets/css3pie/', 15) === 0)
 				{
 					return $matches[0];
 				}

@@ -990,12 +990,12 @@ class RoutingTest extends FunctionalTestCase
         ];
 
         yield 'Matches a hostname with port' => [
-            ['theme', 'domain-with-port'],
+            ['theme', 'localhost'],
             '/',
             200,
-            'Home - Domain with port',
+            'Home - Localhost',
             'en',
-            'domain-with-port.local:8080',
+            '127.0.0.1:8080',
         ];
 
         yield 'Renders the 404 page if no language matches' => [
