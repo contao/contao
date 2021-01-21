@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.6] (2021-01-21)
+
+**Fixed issues:**
+
+- [#2673] Correctly handle hosts with port number ([leofeyer])
+- [#2199] Do not encode HTML in metadata captions ([m-vo])
+- [#2632] Deserialize the image size when using maxWidth ([m-vo])
+- [#2639] Correctly match the language URL if there is no trailing slash ([aschempp])
+- [#2635] Loosen type constraint for `$rowData['fullsize']` ([m-vo])
+- [#2555] Do not return empty strings in the link_url insert tag ([leofeyer])
+- [#2475] Adjust the PictureInterface for Contao 5 ([leofeyer])
+- [#2601] Cast numeric identifiers to int in the FigureBuilder ([m-vo])
+- [#2603] Update the CONTRIBUTORS.md file ([leofeyer])
+
 ## [4.10.5] (2020-12-11)
 
 **Fixed issues:**
@@ -189,6 +203,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.6]: https://github.com/contao/contao/releases/tag/4.10.6
 [4.10.5]: https://github.com/contao/contao/releases/tag/4.10.5
 [4.10.4]: https://github.com/contao/contao/releases/tag/4.10.4
 [4.10.3]: https://github.com/contao/contao/releases/tag/4.10.3
@@ -210,6 +225,15 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2673]: https://github.com/contao/contao/pull/2673
+[#2199]: https://github.com/contao/contao/pull/2199
+[#2632]: https://github.com/contao/contao/pull/2632
+[#2639]: https://github.com/contao/contao/pull/2639
+[#2635]: https://github.com/contao/contao/pull/2635
+[#2555]: https://github.com/contao/contao/pull/2555
+[#2475]: https://github.com/contao/contao/pull/2475
+[#2601]: https://github.com/contao/contao/pull/2601
+[#2603]: https://github.com/contao/contao/pull/2603
 [#2553]: https://github.com/contao/contao/pull/2553
 [#2532]: https://github.com/contao/contao/pull/2532
 [#2524]: https://github.com/contao/contao/pull/2524
