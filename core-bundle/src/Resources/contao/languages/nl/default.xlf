@@ -185,6 +185,9 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Pagina alias &quot;%s&quot; bestaat reeds!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
       </trans-unit>
@@ -324,6 +327,18 @@
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
         <target>Wijs alle modules toe aan een kolom!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidHttpUrl">
+        <source>Please enter an absolute URL starting with https:// or http://!</source>
+      </trans-unit>
+      <trans-unit id="ERR.customRgxp">
+        <source>Please enter a value that matches %s!</source>
+      </trans-unit>
+      <trans-unit id="ERR.invalidCustomRgxp">
+        <source>Invalid custom regular expression!</source>
+      </trans-unit>
+      <trans-unit id="ERR.applicationCache">
+        <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1267,14 +1282,6 @@
         <source>Caption</source>
         <target>Bijschrift</target>
       </trans-unit>
-      <trans-unit id="MSC.aw_delete">
-        <source>Delete the language</source>
-        <target>Taal verwijderen</target>
-      </trans-unit>
-      <trans-unit id="MSC.aw_new">
-        <source>Add language</source>
-        <target>Taal toevoegen</target>
-      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>Titel</target>
@@ -1883,8 +1890,7 @@
         <target>Relatief pad</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
-        <target>Meta data</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2499,8 +2505,7 @@
         <target>Download %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>U dient een startpagina toe te voegen aan de site-structuur om meta-informatie op te kunnen slaan.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2577,14 +2582,11 @@
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
       </trans-unit>
-      <trans-unit id="MSC.twoFactorBackupCodesShow">
-        <source>Show backup codes</source>
-      </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
-        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <source>Make sure to copy the codes now. You will not be able to see them again!</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
@@ -2629,8 +2631,7 @@
         <target>Voorbeeld zoekresultaten van Google</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Hier kunt u een voorbeeld bekijken van de metagegevens in de zoekresultaten van Google. Andere zoekmachines kunnen langere teksten weergeven of op een andere positie bijsnijden.</target>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2656,6 +2657,15 @@
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+      </trans-unit>
+      <trans-unit id="MSC.copyURL">
+        <source>Copy URL</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

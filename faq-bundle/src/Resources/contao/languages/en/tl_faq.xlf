@@ -81,7 +81,7 @@
         <source>Answer</source>
       </trans-unit>
       <trans-unit id="tl_faq.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

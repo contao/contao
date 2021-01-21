@@ -41,6 +41,29 @@
         <source>Add an image to the FAQ.</source>
         <target>回答に画像を追加します。</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>メタタイトル</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>独自のメタタイトルを追加して、ページの題名の初期値を上書きできます。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>robotsタグ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>メタデスクリプション</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>エンクロージャーを追加</target>
@@ -80,6 +103,10 @@
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>
         <target>回答</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+        <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

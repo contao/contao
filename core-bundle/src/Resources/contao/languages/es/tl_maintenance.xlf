@@ -66,9 +66,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
         <source>Purge the crawl queue</source>
+        <target>Purgar la cola de rastreo</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Trunca la tabla &lt;code&gt;tl_crawl_queue&lt;/code&gt; que almacena toda la información de la cola de los procesos de rastreo.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -96,6 +98,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
         <source>Purge the search results cache</source>
+        <target>Purgar la caché de los resultados de búsqueda</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
@@ -127,39 +130,51 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
+        <target>Crawler</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.startCrawling">
         <source>Start crawling</source>
+        <target>Empieza con el crwaling</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.0">
         <source>Enabled features</source>
+        <target>Funciones habilitadas</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.1">
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>El crawler rastrea todas las URL que encuentra. Aquí puede decidir qué hacer con estos resultados.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
+        <target>Miembro front end</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Inicie sesión automáticamente en un miembro del frontend para indexar las páginas protegidas.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>El crawler está funcionando actualmente. Espere a que termine para ver los resultados.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
+        <target>Descarga el registro de depuración</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
         <source>Download the log</source>
+        <target>Descarga el registro</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
+        <target>Actualizar el índice de búsqueda</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
+        <target>Comprobar si hay enlaces rotos</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>No es posible rastrear mientras el modo de mantenimiento está habilitado.</target>
       </trans-unit>
     </body>
   </file>

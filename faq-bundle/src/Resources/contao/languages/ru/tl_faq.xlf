@@ -41,6 +41,29 @@
         <source>Add an image to the FAQ.</source>
         <target>Добавить изображение к ответу.</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>Мета-название</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Вы можете добавить собственный мета-заголовок, чтобы перезаписать заголовок страницы по умолчанию.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>Мета-описание</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Вы можете добавить собственное мета-описание, чтобы перезаписать описание страницы по умолчанию.</target>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>Добавить вложения</target>
@@ -80,6 +103,10 @@
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>
         <target>Ответ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+        <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

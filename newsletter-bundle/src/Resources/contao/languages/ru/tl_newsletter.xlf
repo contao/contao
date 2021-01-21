@@ -75,9 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Почтовый транспорт</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>
+        <target>Здесь можно переопределить транспорт почтовой рассылки канала по умолчанию.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>

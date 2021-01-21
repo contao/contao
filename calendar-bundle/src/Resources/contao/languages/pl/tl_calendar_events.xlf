@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Tutaj możesz nadpisać jak wyszukiwarki mają interpretować wydarzenie.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -246,9 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>Promuj wydarzenie</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>Pokaż wydarzenie na liście promowanych wydarzeń.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -315,8 +318,7 @@
         <target>Strona źródłowa</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta dane</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -376,6 +378,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
+        <target>Wyróżnij/nie wyróżniaj wydarzenia ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>

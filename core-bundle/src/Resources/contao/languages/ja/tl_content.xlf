@@ -42,12 +42,12 @@
         <target>ダウンロードのダイアログを開く代わりにブラウザーでファイルを表示します。</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
+        <source>Overwrite metadata</source>
         <target>メタデータを上書き</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
-        <target>ファイル管理からのメタデータを上書きします。</target>
+        <source>Overwrite the metadata from the file manager.</source>
+        <target>ファイル管理のメタデータを上書きします。</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -378,12 +378,12 @@
         <target>並べ替えの順序を選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
+        <source>Ignore files without metadata</source>
         <target>メタデータのないファイルを無視</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
-        <target>ページの言語に一致するメタデータのないファイルを表示しません。</target>
+        <source>Do not show files without metadata matching the page language.</source>
+        <target>ページの言語に合致するメタデータがないファイルを表示しません。</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>

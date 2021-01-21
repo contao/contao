@@ -61,6 +61,38 @@
         <source>The website is currently not available. Please come back later.</source>
         <target>現在、このウェブサイトは利用できません。後ほどお出でください。</target>
       </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.title">
+        <source>Unable to generate front end URL</source>
+        <target>フロントエンドのURLを生成できません。</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.matter">
+        <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>URLを生成できませんでした、なぜならルートに必須のパラメーターが指定されていません。追加の情報(例えば、ニュースのエイリアス)を指定しなければなりません。</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.explain">
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Symfonyのルートは可変のパラメーターを使用可能で、それらを正規表現で検証します。以下の構成を解決できませんでした:</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.path">
+        <source>Route path</source>
+        <target>ルートのパス</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterName">
+        <source>Name</source>
+        <target>名前</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
+        <source>Requirement (Regex)</source>
+        <target>必要条件(正規表現)</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterDefault">
+        <source>Default value</source>
+        <target>初期設定</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
+        <source>empty</source>
+        <target>空</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -38,8 +38,8 @@
         <target>此时不激活</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>如果需要在一个特定日期/时间前不激活用户组，请在这里录入。否则该字段留空。</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间后不激活用户组，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>

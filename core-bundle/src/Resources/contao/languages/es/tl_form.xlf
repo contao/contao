@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Transporte por correo</target>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>

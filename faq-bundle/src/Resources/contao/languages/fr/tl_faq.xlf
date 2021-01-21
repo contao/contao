@@ -41,6 +41,29 @@
         <source>Add an image to the FAQ.</source>
         <target>Ajouter une image à la réponse.</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta Titre</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Ajouter une méta-title personnalisé pour remplacer le titre de page par défaut.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Balises Robots</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>Meta description</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Ajouter une méta-description personnalisé pour remplacer la description de page par défaut.</target>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>Joindre des fichiers</target>
@@ -81,6 +104,10 @@
         <source>Answer</source>
         <target>Réponse</target>
       </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+        <target>Métadata</target>
+      </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
         <target>Paramètres d'image</target>
@@ -99,6 +126,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
         <source>New</source>
+        <target>Actualité</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
@@ -138,9 +166,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>Créer une nouvelle question au début</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>Créer une nouvelle question après la question ID %s</target>
       </trans-unit>
     </body>
   </file>

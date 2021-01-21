@@ -81,8 +81,7 @@
         <target>尺寸匹配情况下使用原始图片</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
-        <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
-        <target>注意，这种情况下，不会应用优化，如：剔除元数据或压缩JPEG</target>
+        <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>

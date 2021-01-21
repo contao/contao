@@ -89,6 +89,14 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>サイトのアクセス者の言語に合うページがない場合に、このページを表示します。</target>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+        <target>言語のリダイレクトを無効</target>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>ブラウザーの優先する言語に基づいたウェブサイトのルートのページにリダイレクトを行いません。</target>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
         <target>Favicon</target>
@@ -131,17 +139,19 @@
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>メールトランスポート</target>
       </trans-unit>
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+        <target>このウェブサイトで電子メールの送信に使用するメールトランスポートを上書きできます。</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>ウェブサイトの管理者の電子メールアドレス</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>申し込みの確認の電子メールのような、自動的に生成するメッセージはこのアドレスから送信します。</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>この電子メールアドレスはシステムメッセージの送信と受信に使用します。</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -185,39 +195,27 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.0">
         <source>URL prefix</source>
+        <target>URLのプリフィックス</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+        <target>このルートページでエイリアスの先頭に付加するURLのプリフィックス(例えば言語)を入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
+        <target>URLのサフィックス</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.createSitemap.0">
-        <source>Create an XML sitemap</source>
-        <target>XMLサイトマップの作成</target>
-      </trans-unit>
-      <trans-unit id="tl_page.createSitemap.1">
-        <source>Create a Google XML sitemap in the &lt;em&gt;share/&lt;/em&gt; directory.</source>
-        <target>&lt;em&gt;share/&lt;/em&gt;ディレクトリにGoogl XMLサイトマップを作成します。</target>
-      </trans-unit>
-      <trans-unit id="tl_page.sitemapName.0">
-        <source>Sitemap file name</source>
-        <target>サイトマップのファイル名</target>
-      </trans-unit>
-      <trans-unit id="tl_page.sitemapName.1">
-        <source>Please enter the name of the sitemap file without extension.</source>
-        <target>拡張子なしでサイトマップのファイル名を入力してください。</target>
+        <target>URLサフィックスを静的なドキュメントに見せるためにURI文字列に追加します。</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
-        <source>Use HTTPS</source>
-        <target>HTTPSを使用</target>
+        <source>Protocol</source>
+        <target>プロトコル</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>このウェブサイトはHTTPS経由で利用できます。</target>
+        <source>Here you can select which protocol to use for the website.</source>
+        <target>ウェブサイトで使用するプロトコルを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -432,7 +430,7 @@
         <target>名前と種類</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
@@ -445,6 +443,11 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+        <target>URLの設定</target>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
+        <target>言語の設定</target>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -567,7 +570,8 @@
         <target>ID %sのページのアーティクルを編集</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>古いルーティング方式を無効にして、この構成を有効にします。</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
@@ -643,8 +647,7 @@
       </trans-unit>
       <trans-unit id="CACHE.31536000">
         <source>1 year</source>
-        <target>1
-年</target>
+        <target>1年</target>
       </trans-unit>
     </body>
   </file>

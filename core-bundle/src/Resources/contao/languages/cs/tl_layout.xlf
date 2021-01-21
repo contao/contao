@@ -233,14 +233,6 @@
         <source>Load internal style sheets first</source>
         <target>Načíst interní kaskádovité styly jako první</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-        <target>Google web fonty</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>Zde můžete přidat Google web fonty na vaše webové stránky. Zvolte typ fontu bez URL (napr. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
         <target>Velikost obrázku v lightboxu</target>
@@ -329,14 +321,6 @@
         <source>Include the jQuery library in the layout.</source>
         <target>Zahrnout knihovnu jQuery do vzhledu.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.jSource.0">
-        <source>jQuery source</source>
-        <target>Zdroj jQuery</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.jSource.1">
-        <source>Here you can select from where to load the jQuery script.</source>
-        <target>Zde můžete zvolit, odkud se mají načíst skripty jQuery.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
         <target>Předlohy jQuery</target>
@@ -352,14 +336,6 @@
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
         <target>Zahrnout knihovnu MooTools do vzhledu.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.0">
-        <source>MooTools source</source>
-        <target>Zdroj MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.1">
-        <source>Here you can select from where to load the MooTools scripts.</source>
-        <target>Můžete použít lokálních skriptů MooTools nebo je nahrát z jiného zdroje na internetu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -441,10 +417,6 @@
         <source>Custom sections</source>
         <target>Vlastní prvky rozvržení stránky</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-        <target>Webová písma</target>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
         <target>Obrázkové rozměry</target>
@@ -473,33 +445,9 @@
         <source>jQuery</source>
         <target>jQuery</target>
       </trans-unit>
-      <trans-unit id="tl_layout.j_local">
-        <source>Local file</source>
-        <target>Místní soubor</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_googleapis">
-        <source>CDN (code.jquery.com)</source>
-        <target>CDN (code.jquery.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_fallback">
-        <source>CDN with local fallback</source>
-        <target>CDN z místního zdrojem</target>
-      </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
         <target>MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_local">
-        <source>Local file</source>
-        <target>Místní soubor</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_googleapis">
-        <source>CDN (googleapis.com)</source>
-        <target>CDN (googleapis.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_fallback">
-        <source>CDN with local fallback</source>
-        <target>CDN z místního zdrojem</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

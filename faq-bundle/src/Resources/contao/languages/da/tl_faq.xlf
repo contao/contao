@@ -41,6 +41,29 @@
         <source>Add an image to the FAQ.</source>
         <target>Tilføj et billede til svaret</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta title</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Her kan du tilføje en brugerdefineret metatitel for at overskrive standard sidetitlen.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Robots tag</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>Meta beskrivelse</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Her kan du tilføje en brugerdefineret metabeskrivelse for at overskrive standard sidebeskrivelsen.</target>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>Tilføj et bilag</target>
@@ -80,6 +103,9 @@
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>
         <target>Svar</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

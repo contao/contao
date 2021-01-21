@@ -105,7 +105,7 @@ Klicken Sie hier, um den Kommentar zu bearbeiten oder zu beantworten:
       </trans-unit>
       <trans-unit id="MSC.com_optInSubject">
         <source>Your subscription on %s</source>
-        <target>Ihr Newsletter-Abonnement auf %s</target>
+        <target>Ihr Abonnement auf %s</target>
       </trans-unit>
       <trans-unit id="MSC.com_optInMessage">
         <source>Hello %s,
