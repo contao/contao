@@ -117,6 +117,8 @@ class ModuleLogin extends \Module
 				$this->redirect($strRedirect);
 			}
 
+			sleep(2); // Wait 2 seconds while brute forcing to prevent password spraying :)
+
 			$this->reload();
 		}
 
