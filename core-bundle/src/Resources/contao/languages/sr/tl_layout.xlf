@@ -511,13 +511,6 @@
         <source>Edit the module</source>
         <target>Уреди модул</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_google">
-        <source>Google Analytics</source>
-        <target>Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_matomo">
-        <source>Matomo</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
         <target>Ново</target>

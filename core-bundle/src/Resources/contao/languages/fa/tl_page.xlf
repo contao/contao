@@ -78,8 +78,8 @@
         <target>تغییر مسیر به آخرین برگه دیده شده</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>تغییر مسیر به عقب کاربر به آخرین برگه دیده شده به جای برگه تغییر مسیر.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>عضو را به جای اینجا به برگه‌ی بازگردانی به آخرین برگه‌ی بازدید شده برمی‌گرداند.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -133,8 +133,7 @@
         <target>نشانی ایمیل مدیر وب‌سایت</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>پیغام‌های خودکار مانند ایمیل تایید عضویت به این نشانی فرستاده خواهند شد.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>

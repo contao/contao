@@ -513,14 +513,6 @@
         <source>Edit the module</source>
         <target>モジュールを編集</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_google">
-        <source>Google Analytics</source>
-        <target>Googleアナリティックス</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_matomo">
-        <source>Matomo</source>
-        <target>Matomo</target>
-      </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
         <target>新規作成</target>

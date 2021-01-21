@@ -295,24 +295,24 @@
         <target>Automatické odhlášení</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>automaticky odhlásí uživatele.</target>
+        <source>Automatically logs out a member</source>
+        <target>Automaticky odhlásí uživatele</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Osobní data</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>generuje formulář pro editaci osobních dat užibatelů.</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Vytvoří formulář pro editaci osobních dat užibatele.</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Registrace člena</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Tento modul vytváří formulář, který umožňuje front end uživatelům registraci na vašem webu.</target>
+        <source>Generates a member registration form</source>
+        <target>Vytvoří registrační formulář pro člena</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

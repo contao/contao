@@ -506,13 +506,6 @@
         <source>Edit the module</source>
         <target>ویرایش ماژول</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_google">
-        <source>Google Analytics</source>
-        <target>گوگل آنالیتیکز</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_matomo">
-        <source>Matomo</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
         <target>جدید</target>

@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.11] (2021-01-21)
+
+**Fixed issues:**
+
+- [#2667] Ignore Monolog log files when rotating log files ([leofeyer])
+- [#2669] Use a listener to reset custom templates ([aschempp])
+- [#2668] Fix empty value for boolean type ([fritzmg])
+- [#2666] Reset the custom template if the element type changes ([leofeyer])
+- [#2653] Fix the comments cache tagging ([leofeyer])
+- [#2656] Correctly format the search query time ([leofeyer])
+- [#2657] Fix the search query if there are no keywords ([leofeyer])
+- [#2664] Use the 2fa/* subpackages instead of scheb/2fa ([bytehead])
+- [#2659] Handle ID URLs in the combiner ([leofeyer])
+- [#2658] Do not translate the analytics template names ([leofeyer])
+- [#2655] Improve rendering long titles and file names ([leofeyer])
+- [#2654] Always pass the DC object to the toggleFeatured() method ([leofeyer])
+- [#2636] Use the correct User-Agent request header in Escargot ([qzminski])
+- [#2614] Fix the file manager performance with large non-image files ([fritzmg])
+- [#2628] Use the token checker instead of FE_USER_LOGGED_IN constant ([fritzmg])
+- [#2609] Correctly validate min and max values in text fields ([aschempp])
+- [#2591] Retrieve the PageModel from the current request ([aschempp])
+- [#2617] Upgrade scheb/2fa to version 5 (PHP 8 compatibility) ([bytehead])
+- [#2615] Fix the news link markup ([fritzmg])
+- [#2602] Update the CONTRIBUTORS.md file ([leofeyer])
+- [#2588] Do not use the SQL default for empty values ([fritzmg])
+- [#2581] Use the Symfony InvalidArgumentException in commands ([m-vo])
+
 ## [4.9.10] (2020-12-10)
 
 **Fixed issues:**
@@ -476,6 +503,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.11]: https://github.com/contao/contao/releases/tag/4.9.11
 [4.9.10]: https://github.com/contao/contao/releases/tag/4.9.10
 [4.9.9]: https://github.com/contao/contao/releases/tag/4.9.9
 [4.9.8]: https://github.com/contao/contao/releases/tag/4.9.8
@@ -508,6 +536,28 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2667]: https://github.com/contao/contao/pull/2667
+[#2669]: https://github.com/contao/contao/pull/2669
+[#2668]: https://github.com/contao/contao/pull/2668
+[#2666]: https://github.com/contao/contao/pull/2666
+[#2653]: https://github.com/contao/contao/pull/2653
+[#2656]: https://github.com/contao/contao/pull/2656
+[#2657]: https://github.com/contao/contao/pull/2657
+[#2664]: https://github.com/contao/contao/pull/2664
+[#2659]: https://github.com/contao/contao/pull/2659
+[#2658]: https://github.com/contao/contao/pull/2658
+[#2655]: https://github.com/contao/contao/pull/2655
+[#2654]: https://github.com/contao/contao/pull/2654
+[#2636]: https://github.com/contao/contao/pull/2636
+[#2614]: https://github.com/contao/contao/pull/2614
+[#2628]: https://github.com/contao/contao/pull/2628
+[#2609]: https://github.com/contao/contao/pull/2609
+[#2591]: https://github.com/contao/contao/pull/2591
+[#2617]: https://github.com/contao/contao/pull/2617
+[#2615]: https://github.com/contao/contao/pull/2615
+[#2602]: https://github.com/contao/contao/pull/2602
+[#2588]: https://github.com/contao/contao/pull/2588
+[#2581]: https://github.com/contao/contao/pull/2581
 [#2551]: https://github.com/contao/contao/pull/2551
 [#2540]: https://github.com/contao/contao/pull/2540
 [#2550]: https://github.com/contao/contao/pull/2550
