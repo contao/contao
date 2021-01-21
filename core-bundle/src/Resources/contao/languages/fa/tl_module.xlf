@@ -54,8 +54,8 @@
         <target>نمایش موارد حفاظت شده</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>نمایش مواردی که فقط برای کاربران تایید شده قابل دیدن است.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>نمایش آیتم‌هایی که معمولا برای اعضای تایید شده قابل مشاهده هستند.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -134,8 +134,8 @@
         <target>تغییر مسیر به آخرین برگه دیده شده</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>تغییر مسیر به عقب کاربر به آخرین برگه دیده شده به جای برگه تغییر مسیر.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>عضو را به جای اینجا به برگه‌ی بازگردانی به آخرین برگه‌ی بازدید شده برمی‌گرداند.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -419,7 +419,7 @@
         <target>گروه‌های اعضاء</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
+        <source>Here you can assign the member to one or more groups.</source>
         <target>اینجا می‌توانید کاربر را به یک یا چند گروه اختصاص دهید.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
@@ -427,8 +427,8 @@
         <target>اجازه ورود</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>اجازه دادن به کاربر جدید برای ورود به بخش کاربری.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>اجازه دادن به اعضاء جدید برای ورود به بخش کاربری.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -475,8 +475,7 @@
         <target>برگه‌ی تایید</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>لطفا برگه‌ای را که می خواهید بعد از فعال‌سازی حساب کاربری، کاربر به آنجا تغییر مسیر گردد را انتخاب نمایید.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -491,8 +490,7 @@
         <target>پیغام گذرواژه</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>شما می‌توانید از جستجوی عمومی های &lt;em&gt;##domain##&lt;/em&gt; (نام دامنه), &lt;em&gt;##link##&lt;/em&gt; (پیوند فعال سازی) و هر فیلد ورودی (برای نمونه &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

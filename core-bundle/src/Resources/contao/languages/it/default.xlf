@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>Gli alias numerici non sono supportati!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -2670,6 +2671,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option</source>
+        <target>Opzione sconosciuta</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

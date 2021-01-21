@@ -54,8 +54,8 @@
         <target>保護した項目を表示</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>通常は認証済みのユーザーだけに見える項目も表示します。</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>通常は認証済みのメンバーだけに見える項目も表示します。</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -134,8 +134,8 @@
         <target>最後に参照していたページに移動</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>リダイレクト先のページの代わりに、ユーザーが最後に参照していたページに移動します。</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>リダイレクト先のページの代わりに、メンバーが最後に参照していたページに移動します。</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -422,16 +422,16 @@
         <target>メンバーグループ</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>ユーザーにグループを1つ以上割り当てができます。</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>メンバーにグループを1つ以上割り当てができます。</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>ログインを許可</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>フロントエンドにログインを新しいユーザーに許可します。</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>フロントエンドにログインを新しいメンバーに許可します。</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -478,8 +478,8 @@
         <target>確認ページ</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>リクエストを完了した後で移動するページを選択してください。</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>リクエストを完了した後で移動するメンバーのページを選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -494,8 +494,8 @@
         <target>パスワードのメッセージ</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>&lt;em&gt;##domain##&lt;/em&gt; (ドメイン名)、&lt;em&gt;##link##&lt;/em&gt; (アクティベーションのリンク)、(例えば、&lt;em&gt;##lastname##&lt;/em&gt;といった)任意の入力項目をワイルドカードとして使用できます。</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>&lt;em&gt;##domain##&lt;/em&gt; (ドメイン名)、&lt;em&gt;##link##&lt;/em&gt; (アクティベーションのリンク)、(例えば、&lt;em&gt;##lastname##&lt;/em&gt;といった)任意のメンバーの属性をワイルドカードとして使用できます。</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

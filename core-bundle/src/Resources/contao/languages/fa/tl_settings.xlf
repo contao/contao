@@ -6,8 +6,7 @@
         <target>نشانی ایمیل مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>پیغام‌های خودکار مانند ایمیل تایید عضویت به این نشانی فرستاده خواهند شد.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>

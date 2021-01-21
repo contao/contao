@@ -78,8 +78,8 @@
         <target>Reindirizza all'ultima pagina visitata</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Reindirizza l'utente all'ultima pagina visitata dopo il login/logout</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Reindirizzare il membro all'ultima pagina visitata anziché alla pagina di reindirizzamento.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -134,8 +134,8 @@
         <target>Indirizzo e-mail dell'amministratore del sito</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>I messaggi generati automaticamente, come ad esempio conferma iscrizione via e-mail, saranno inviate a questo indirizzo.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>uesto indirizzo e-mail sarà utilizzato per inviare e ricevere messaggi di sistema.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
