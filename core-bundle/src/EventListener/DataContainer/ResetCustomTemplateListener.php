@@ -12,15 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Contao\CoreBundle\ServiceAnnotation\Callback;
 
 /**
  * @internal
  *
- * @Callback(table="tl_content", target="fields.customTpl.save")
- * @Callback(table="tl_module", target="fields.customTpl.save"
+ * @Callback(table="tl_content", target="fields.type.save")
+ * @Callback(table="tl_module", target="fields.type.save")
  */
 class ResetCustomTemplateListener
 {
@@ -35,7 +35,7 @@ class ResetCustomTemplateListener
     }
 
     /**
-     * Check if we need to reset the template
+     * Checks if we need to reset the template.
      *
      * @param mixed $varValue
      *
@@ -44,7 +44,7 @@ class ResetCustomTemplateListener
     public function __invoke($varValue, DataContainer $dc)
     {
         if ($dc->activeRecord->type !== $varValue) {
-            $GLOBALS['TL_DCA'][$dc->table]['onsubmit_callback'][] = function (DataContainer $dc) {
+            $GLOBALS['TL_DCA'][$dc->table]['onsubmit_callback'][] = function (DataContainer $dc): void {
                 $this->resetTemplate($dc);
             };
         }
@@ -53,7 +53,7 @@ class ResetCustomTemplateListener
     }
 
     /**
-     * Reset the template if the element type has changed
+     * Resets the template if the element type has changed.
      */
     private function resetTemplate(DataContainer $dc): void
     {
@@ -61,10 +61,6 @@ class ResetCustomTemplateListener
             return;
         }
 
-        $this->connection->update(
-            $dc->table,
-            ['customTpl' => ''],
-            ['id' => $dc->id]
-        );
+        $this->connection->update($dc->table, ['customTpl' => ''], ['id' => $dc->id]);
     }
 }
