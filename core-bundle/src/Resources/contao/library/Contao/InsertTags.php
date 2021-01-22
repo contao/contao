@@ -1158,10 +1158,26 @@ class InsertTags extends Controller
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
+		// Restore [&]
+		$url = str_replace('[&]', '&', $url);
+
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
 
 		parse_str($query, $attributes);
+
+		// Cast and encode values
+		array_walk_recursive($attributes, static function (&$value)
+		{
+			if (is_numeric($value))
+			{
+				$value = (int) $value;
+
+				return;
+			}
+
+			$value = StringUtil::specialchars($value);
+		});
 
 		return array($base, $attributes);
 	}
