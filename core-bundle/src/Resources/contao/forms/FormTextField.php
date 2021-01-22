@@ -191,6 +191,7 @@ class FormTextField extends Widget
 						return 'email';
 
 					case 'url':
+					case 'httpurl':
 						return 'url';
 				}
 
