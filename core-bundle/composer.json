@@ -69,7 +69,7 @@
         "psr/log": "^1.0",
         "ramsey/uuid": "^3.8",
         "scheb/2fa-backup-code": "^5.0",
-        "scheb/2fa-bundle": "^5.0",
+        "scheb/2fa-bundle": "^5.4.0",
         "scheb/2fa-trusted-device": "^5.0",
         "scssphp/scssphp": "^1.0",
         "simplepie/simplepie": "^1.3",

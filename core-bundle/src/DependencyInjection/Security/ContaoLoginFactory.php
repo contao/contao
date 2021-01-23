@@ -53,11 +53,12 @@ class ContaoLoginFactory extends AbstractFactory
     {
         $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
         $twoFactorFirewallConfigId = 'contao.security.two_factor_firewall_config.'.$id;
-        $twoFactorFirewallConfig = new Definition(TwoFactorFirewallConfig::class, [$config, $id, null]);
+        $twoFactorFirewallConfig = new Definition(TwoFactorFirewallConfig::class, [$config, $id, null, null]);
 
         $container
             ->setDefinition($twoFactorFirewallConfigId, $twoFactorFirewallConfig)
             ->replaceArgument(2, new Reference('security.http_utils'))
+            ->replaceArgument(3, new Reference('scheb_two_factor.security.request_data_reader'))
         ;
 
         $container
