@@ -34,7 +34,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public static function getSubscribedServices()
     {
