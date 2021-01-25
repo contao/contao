@@ -1733,13 +1733,13 @@ abstract class Controller extends System
 		// Image link
 		if (TL_MODE == 'FE' && $arrItem['imageUrl'])
 		{
-			$imageUrl = urldecode(self::replaceInsertTags($arrItem['imageUrl']));
-
-			$objTemplate->$strHrefKey = System::urlEncode($imageUrl);
+			$objTemplate->$strHrefKey = $arrItem['imageUrl'];
 			$objTemplate->attributes = '';
 
 			if ($arrItem['fullsize'])
 			{
+				$imageUrl = 0 === strpos($arrItem['imageUrl'], '{{file::') ? urldecode(self::replaceInsertTags($arrItem['imageUrl'])) : $arrItem['imageUrl'];
+
 				$blnIsExternal = strncmp($imageUrl, 'http://', 7) === 0 || strncmp($imageUrl, 'https://', 8) === 0;
 
 				// Open images in the lightbox
@@ -1764,7 +1764,7 @@ abstract class Controller extends System
 						}
 						catch (\Exception $e)
 						{
-							$objTemplate->$strHrefKey = static::addFilesUrlTo(System::urlEncode($imageUrl));
+							$objTemplate->$strHrefKey = static::addFilesUrlTo($arrItem['imageUrl']);
 							$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
 						}
 					}
