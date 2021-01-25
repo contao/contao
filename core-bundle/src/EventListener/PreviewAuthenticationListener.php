@@ -58,6 +58,7 @@ class PreviewAuthenticationListener
 
         if (
             !$request->attributes->get('_preview', false)
+            || $this->scopeMatcher->isBackendRequest($request)
             || $this->tokenChecker->hasBackendUser()
         ) {
             return;
