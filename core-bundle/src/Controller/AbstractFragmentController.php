@@ -33,7 +33,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->options = $options;
     }
 
-    public static function getSubscribedServices(): array
+    /**
+     * @return string[]
+     */
+    public static function getSubscribedServices()
     {
         $services = parent::getSubscribedServices();
 
