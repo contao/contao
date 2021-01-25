@@ -54,6 +54,8 @@ class ContaoLoginFactory extends AbstractFactory
 
         $container
             ->setDefinition($twoFactorFirewallConfigId, new ChildDefinition(TwoFactorFactory::FIREWALL_CONFIG_DEFINITION_ID))
+            ->replaceArgument(0, $config)
+            ->replaceArgument(1, $id)
         ;
 
         $container

@@ -59,6 +59,13 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertEquals(new Reference($twoFactorProviderId), $arguments['index_5']);
 
         $this->assertTrue($container->hasDefinition($twoFactorFirewallConfigId));
+
+        $arguments = $container->getDefinition($twoFactorFirewallConfigId)->getArguments();
+
+        $this->assertIsArray($arguments);
+        $this->assertEquals(['remember_me' => true], $arguments['index_0']);
+        $this->assertSame('contao_frontend', $arguments['index_1']);
+
         $this->assertTrue($container->hasDefinition($twoFactorProviderId));
 
         $arguments = $container->getDefinition($twoFactorProviderId)->getArguments();
