@@ -1,0 +1,24 @@
+{
+  "name": "@contao/backend",
+  "description": "Contao backend theme",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "build": "env NODE_ENV=production node_modules/.bin/encore production",
+    "dev": "node_modules/.bin/encore dev",
+    "watch": "node_modules/.bin/encore dev --watch"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.2.3",
+    "postcss": "^8.2.4",
+    "tailwindcss": "^2.0.0"
+  },
+  "peerDependencies": {
+    "autoprefixer": "^10.0.0",
+    "tailwindcss": "^2.0.0"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.33.0",
+    "postcss-loader": "^4.0.0"
+  }
+}

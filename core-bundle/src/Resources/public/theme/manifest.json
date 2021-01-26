@@ -1,0 +1,6 @@
+{
+  "bundles/contaocore/theme/app.css": "/bundles/contaocore/theme/app.css",
+  "bundles/contaocore/theme/app.js": "/bundles/contaocore/theme/app.js",
+  "bundles/contaocore/theme/images/contao-logo.svg": "/bundles/contaocore/theme/images/contao-logo.svg",
+  "bundles/contaocore/theme/images/logo.svg": "/bundles/contaocore/theme/images/logo.svg"
+}

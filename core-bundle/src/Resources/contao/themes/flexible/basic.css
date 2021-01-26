@@ -37,6 +37,7 @@ th,td {
 }
 input,select,button,label,img,a.tl_submit,.tl_select {
 	vertical-align:middle;
+	display: unset;
 }
 button {
 	cursor:pointer;
@@ -124,9 +125,6 @@ hr {
 p {
 	margin-bottom:1em;
 	padding:0;
-}
-.hidden {
-	display:none;
 }
 .unselectable {
 	-moz-user-select:none;
@@ -286,14 +284,6 @@ fieldset.checkbox_container,fieldset.radio_container {
 }
 .tl_imageSize_0 {
 	margin-left:1%;
-}
-input[type="search"] {
-	height:26px;
-	padding-top:0;
-	padding-bottom:2px;
-}
-input[type="search"]::-webkit-search-decoration {
-	-webkit-appearance:none;
 }
 @-moz-document url-prefix() {
 	.tl_text::placeholder,.tl_text_2::placeholder,.tl_text_3::placeholder,.tl_text_4::placeholder,.tl_textarea::placeholder,.tl_text_unit::placeholder,.tl_text_trbl::placeholder,.tl_text_interval::placeholder {
