@@ -1,4 +1,8 @@
 @tailwind base;
 
+[x-cloak] {
+    @apply hidden;
+}
+
 @tailwind components;
 @tailwind utilities;

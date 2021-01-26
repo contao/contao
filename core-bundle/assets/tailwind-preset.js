@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors')
 const projectDir = process.cwd().replace(/\/assets$/, '').replace(/\/src\/Resources$/, '')
 
 module.exports = {
-    darkMode: 'media',
+    darkMode: 'class',
     purge: [
         projectDir + '/src/Resources/views/**/*.html.twig',
         projectDir + '/vendor/**/Resources/views/**/*.html.twig',
@@ -14,7 +14,7 @@ module.exports = {
             current: 'currentColor',
             black: colors.black,
             white: colors.white,
-            gray: colors.trueGray,
+            gray: colors.coolGray,
             primary: {
                 50: 'var(--color-primary-50, #FFF8F1)',
                 100: 'var(--color-primary-100, #FFEBD5)',

@@ -122,10 +122,6 @@ hr {
 	background:#ddd;
 	color:#ddd;
 }
-p {
-	margin-bottom:1em;
-	padding:0;
-}
 .unselectable {
 	-moz-user-select:none;
 	-webkit-user-select:none;
