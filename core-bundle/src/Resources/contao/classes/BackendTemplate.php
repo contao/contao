@@ -79,6 +79,7 @@ class BackendTemplate extends Template
 		$this->addBackendConfig();
 
 		// Style sheets
+		// TODO: This should become deprecated and be handled in EntrypointLookup::getCssFiles()
 		if (!empty($GLOBALS['TL_CSS']) && \is_array($GLOBALS['TL_CSS']))
 		{
 			$strStyleSheets = '';
@@ -107,6 +108,7 @@ class BackendTemplate extends Template
 		}
 
 		// JavaScripts
+		// TODO: This should become deprecated and be handled in EntrypointLookup::getJavaScriptFiles()
 		if (!empty($GLOBALS['TL_JAVASCRIPT']) && \is_array($GLOBALS['TL_JAVASCRIPT']))
 		{
 			$objCombiner = new Combiner();
@@ -141,6 +143,7 @@ class BackendTemplate extends Template
 		}
 
 		// MooTools scripts (added at the page bottom)
+		// TODO: This should become deprecated and removed
 		if (!empty($GLOBALS['TL_MOOTOOLS']) && \is_array($GLOBALS['TL_MOOTOOLS']))
 		{
 			$strMootools = '';
@@ -175,8 +178,10 @@ class BackendTemplate extends Template
 	 * Return the locale string
 	 *
 	 * @return string
+	 *
+	 * @internal Soon to be deprecated
 	 */
-	protected function getLocaleString()
+	public function getLocaleString()
 	{
 		$container = System::getContainer();
 
@@ -207,8 +212,10 @@ class BackendTemplate extends Template
 	 * not handle German date formats at all.
 	 *
 	 * @return string
+	 *
+	 * @internal Soon to be deprecated
 	 */
-	protected function getDateString()
+	public function getDateString()
 	{
 		return
 			'Locale.define("en-US","Date",{'
@@ -250,6 +257,7 @@ class BackendTemplate extends Template
 			));
 		}
 
+		// TODO move this to the Encore TagRenderer
 		if (!empty($backendConfig['custom_css']) && \is_array($backendConfig['custom_css']))
 		{
 			if (!\is_array($GLOBALS['TL_CSS']))
@@ -260,6 +268,7 @@ class BackendTemplate extends Template
 			$GLOBALS['TL_CSS'] = array_merge($GLOBALS['TL_CSS'], $backendConfig['custom_css']);
 		}
 
+		// TODO move this to the Encore TagRenderer
 		if (!empty($backendConfig['custom_js']) && \is_array($backendConfig['custom_js']))
 		{
 			if (!\is_array($GLOBALS['TL_JAVASCRIPT']))

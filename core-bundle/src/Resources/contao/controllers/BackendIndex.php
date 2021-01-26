@@ -140,7 +140,7 @@ class BackendIndex extends Backend
 
 		return $objTemplate->getResponse()->setContent(
 			$twig->render(
-				sprintf('@ContaoCore/Backend/%s.html.twig', ltrim('be_', $objTemplate->getName())),
+				sprintf('@ContaoCore/Backend/Layout/%s.html.twig', ltrim($objTemplate->getName(), 'be_')),
 				$objTemplate->getData()
 			)
 		);

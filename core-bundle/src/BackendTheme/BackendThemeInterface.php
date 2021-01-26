@@ -24,8 +24,6 @@ interface BackendThemeInterface
      * The project root dir (%kernel.project_dir%) is automatically prepended to generate a absolute path.
      * Keep in mind, that the "public" folder of your bundle is automatically symlinked to "web/bundles/foobar"
      * where "foobar" is a normalized name your bundle.
-     *
-     * @return string
      */
     public function getThemePath(): string;
 }

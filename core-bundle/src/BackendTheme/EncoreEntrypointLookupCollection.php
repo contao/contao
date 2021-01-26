@@ -27,13 +27,13 @@ use Symfony\WebpackEncoreBundle\Exception\UndefinedBuildException;
 class EncoreEntrypointLookupCollection implements EntrypointLookupCollectionInterface
 {
     private BackendThemes $backendThemes;
-    private string        $projectDir;
-    private array         $backendConfig;
+    private string $projectDir;
+    private array $backendConfig;
 
     public function __construct(BackendThemes $backendThemes, string $projectDir, array $backendConfig)
     {
         $this->backendThemes = $backendThemes;
-        $this->projectDir    = $projectDir;
+        $this->projectDir = $projectDir;
         $this->backendConfig = $backendConfig;
     }
 
