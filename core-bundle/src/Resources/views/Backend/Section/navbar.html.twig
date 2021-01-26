@@ -1,0 +1,157 @@
+<nav class="flex-shrink-0 bg-primary-500 z-10" x-data="{ sidebarOpen: false }">
+    <!-- Offcanvas (hidden on desktop) -->
+    <div class="lg:hidden">
+        <div x-show="sidebarOpen" class="fixed inset-0 flex z-40">
+            <div
+                x-show="sidebarOpen"
+                class="fixed inset-0"
+                x-transition:enter="transition-opacity ease-linear duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-opacity ease-linear duration-300"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0">
+                <div class="absolute inset-0 bg-gray-600 opacity-75"></div>
+            </div>
+
+            <div
+                x-show="sidebarOpen"
+                x-transition:enter="transition ease-in-out duration-300 transform"
+                x-transition:enter-start="-translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition ease-in-out duration-300 transform"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="-translate-x-full"
+                tabindex="0"
+                class="relative flex-1 flex flex-col max-w-xs w-full dark bg-gray-800 focus:outline-none">
+                <div class="absolute top-0 right-0 -mr-12 pt-2">
+                    <button
+                        type="button"
+                        @click="sidebarOpen = false"
+                        class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <span class="sr-only">Close sidebar</span>
+                        <span class="block h-6 w-6 text-white" aria-hidden="true">{{ source('@ContaoCore/Backend/Icon/x.solid.svg') }}</span>
+                    </button>
+                </div>
+                {% include '@ContaoCore/Backend/Section/_offcanvas.html.twig' %}
+            </div>
+            <div class="flex-shrink-0 w-14" aria-hidden="true">
+                <!-- Force sidebar to shrink to fit close icon -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation bar -->
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <div class="relative flex items-center justify-between h-16">
+            <!-- Logo section -->
+            <div class="flex items-center px-2 lg:px-0 xl:w-64">
+                <div class="flex-shrink-0">
+                    <h1>
+                        <a href="{{ path('contao_backend') }}" accesskey="h" id="home" title="{{ home }}">
+                            <img class="h-6 w-auto" src="{{ asset('theme/images/logo-white.svg', 'contao_core') }}"
+                                 alt="Contao">
+                        </a>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Search section -->
+            <div class="flex-1 flex justify-center lg:justify-end">
+                <div class="w-full px-2 lg:px-6">
+                    <label for="nvb_search" class="sr-only">Search everything</label>
+                    <div class="relative text-primary-400 focus-within:text-gray-400">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="h-5 w-5">{{ source('@ContaoCore/Backend/Icon/search.solid.svg') }}</span>
+                        </div>
+                        <input id="nvb_search" name="search"
+                               class="block w-full pl-10 pr-3 py-2 border border-transparent rounded-md leading-5 bg-primary-200 bg-opacity-25 text-primary-50 placeholder-primary-600 focus:outline-none focus:bg-primary-50 focus:ring-0 focus:placeholder-gray-400 focus:text-gray-900 sm:text-sm"
+                               placeholder="Search everything" type="search">
+                    </div>
+                </div>
+            </div>
+            <div class="flex lg:hidden">
+                <!-- Mobile menu button (hidden on desktop) -->
+                <button
+                    @click="sidebarOpen = !sidebarOpen"
+                    class="bg-primary-600 inline-flex items-center justify-center p-2 rounded-md text-primary-50 hover:text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-600 focus:ring-white"
+                    aria-expanded="false">
+                    <span class="sr-only">Open sidebar</span>
+                    <span class="h-6 w-6" aria-hidden="true">{{ source('@ContaoCore/Backend/Icon/menu.solid.svg') }}</span>
+                </button>
+            </div>
+            <!-- Links section -->
+            {% import '@KnpMenu/menu.html.twig' as knp_menu %}
+            <div class="hidden lg:block lg:w-80">
+                <div class="flex items-center justify-end">
+                    {% set menu = knp_menu_get('be_header_menu') %}
+                    <div class="flex">
+                        {% for item in menu.children|filter(v => v.isDisplayed) %}
+                            <a href="{{ item.uri }}" {{ knp_menu.attributes(item.linkAttributes) }}
+                               class="px-3 py-2 rounded-md text-sm font-medium text-primary-100 hover:text-white">{{ item.label }}</a>
+                        {% endfor %}
+                    </div>
+                    <!-- Alerts -->
+                    {% set alertsLabel = 'MSC.systemMessages'|trans([], 'contao_default') %}
+                    <a href="{{ path('contao_backend_alerts') }}"
+                       x-data=""
+                       title="{{ alertsLabel|escape }}"
+                       @click="{{ 'Backend.openModalIframe({"title":"'~alertsLabel|escape~'","url":this.href});return false' }}"
+                       class="ml-4 p-1 rounded-full text-primary-100 hover:text-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                        <span class="sr-only">{{ alertsLabel }}</span>
+                        <span class="block h-6 w-6" aria-hidden="true">{{ source('@ContaoCore/Backend/Icon/bell.svg') }}</span>
+                    </a>
+                    <!-- Profile dropdown -->
+                    <div class="ml-3 relative flex-shrink-0" x-data="{ dropdownOpen: false }">
+                        <div>
+                            <button
+                                @click="dropdownOpen = !dropdownOpen"
+                                @keydown.escape="dropdownOpen = false"
+                                class="bg-primary-700 flex text-sm rounded-full text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-700 focus:ring-white"
+                                id="user-menu"
+                                aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary-900"
+                                      aria-hidden="true">
+                                    <span class="text-sm font-medium leading-none text-white">{{ app.user.name|split(' ', 3)|map(v => v|first)|join }}</span>
+                                </span>
+                            </button>
+                        </div>
+                        <div
+                            x-show="dropdownOpen"
+                            x-cloak
+                            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-transition:enter-end="transform opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="transform opacity-100 scale-100"
+                            x-transition:leave-end="transform opacity-0 scale-95">
+                            <div class="px-4 py-3">
+                                <p class="text-sm font-medium text-gray-900 truncate">
+                                    {{ app.user.name }}
+                                </p>
+                                <p class="text-sm text-gray-500 truncate">
+                                    {{app.user.email}}
+                                </p>
+                            </div>
+
+                            {% set menu = knp_menu_get('be_user_menu') %}
+                            <div role="menu"
+                                 class="py-1"
+                                 aria-orientation="vertical"
+                                 aria-labelledby="user-menu">
+                                {% for item in menu.children|filter(v => v.isDisplayed) %}
+                                    <a href="{{ item.uri }}" {{ knp_menu.attributes(item.linkAttributes) }}
+                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                       role="menuitem">
+                                        {{ item.label }}</a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

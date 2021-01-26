@@ -1,0 +1,54 @@
+{% extends 'login.html.twig' %}
+
+{% block form %}
+    <form method="post">
+        <input type="hidden" name="FORM_SUBMIT" value="tl_login">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ REQUEST_TOKEN }}">
+        <input type="hidden" name="_target_path" value="{{ targetPath }}">
+        <input type="hidden" name="_always_use_target_path" value="1">
+
+        <div>
+            <div class="rounded-md shadow-sm">
+                <div>
+                    <input
+                        type="text"
+                        aria-label="{{ authCode }}"
+                        name="verify"
+                        id="verify"
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5"
+                        value=""
+                        autocapitalize="off"
+                        x-data="{}"
+                        x-init="$el.focus()"
+                        placeholder="{{ authCode }}"
+                        required>
+                </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="trusted" name="trusted" value="1" type="checkbox"
+                           class="form-checkbox h-4 w-4 text-primary-600 transition duration-150 ease-in-out"/>
+                    <label for="trusted" class="ml-2 block text-sm leading-5 text-gray-900">
+                        {{ 'MSC.twoFactorTrustDevice'|trans([], 'contao_default') }}
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                    <span class="block w-full rounded-md shadow-sm">
+                        <button
+                            type="submit"
+                            name="login"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-500 focus:outline-none focus:border-primary-700 focus:shadow-outline-primary active:bg-primary-700 transition duration-150 ease-in-out">
+                            {{ loginButton }}
+                        </button>
+                    </span>
+                <div class="text-center mt-2">
+                    <a href="{{ path('contao_backend_logout') }}"
+                       class="text-gray-700 text-sm">{{ cancel }}</a>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

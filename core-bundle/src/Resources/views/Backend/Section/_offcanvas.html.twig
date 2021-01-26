@@ -1,0 +1,67 @@
+<div class="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+    <div class="flex-shrink-0 flex items-center px-4">
+        <img class="h-8 w-auto dark:hidden" src="{{ asset('theme/images/logo.svg', 'contao_core') }}" alt="Contao">
+        <img class="h-8 w-auto hidden dark:block opacity-75"
+             src="{{ asset('theme/images/logo-white.svg', 'contao_core') }}" alt="Contao">
+    </div>
+
+    {% set menu = knp_menu_get('be_menu') %}
+    <nav class="my-5" aria-label="Sidebar">
+        <div class="space-y-1 pr-4">
+            {% for item in menu.children|filter(v => v.isDisplayed) %}
+                <div class="space-y-1">
+                    <button
+                        class="group w-full flex items-center pl-4 pr-1 py-1 text-xs font-medium uppercase tracking-wide rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                        <svg class="text-gray-400 group-hover:text-gray-500 mr-3 h-4 w-4"
+                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        {{ item.label }}
+                    </button>
+                    <div>
+                        {% for item in item.children|filter(v => v.isDisplayed) %}
+                            {% if item.current %}
+                                <a
+                                    href="{{ item.uri }}"
+                                    aria-current="page"
+                                    class="bg-gray-50 dark:bg-gray-900 border-primary-500 rounded-r text-gray-900 dark:text-gray-100 group flex items-center pr-3 py-1.5 pl-10 text-sm font-medium border-l-4">
+                                    {{ item.label }}
+                                </a>
+                            {% else %}
+                                <a
+                                    href="{{ item.uri }}"
+                                    class="border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 group flex items-center pr-3 py-1.5 pl-10 text-sm font-medium border-l-4">
+                                    {{ item.label }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </nav>
+</div>
+
+<div class="flex-shrink-0 flex bg-gray-900 p-4">
+    <a href="#" class="flex-shrink-0 group block">
+        <div class="flex items-center">
+            <div>
+                <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-700"
+                      aria-hidden="true">
+                    <span
+                        class="text-base font-medium leading-none text-white">{{ app.user.name|split(' ', 3)|map(v => v|first)|join }}</span>
+                </span>
+            </div>
+            <div class="ml-3">
+                <p class="text-base font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900">
+                    {{ app.user.name }}
+                </p>
+                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-700">
+                    View profile
+                </p>
+            </div>
+        </div>
+    </a>
+</div>
