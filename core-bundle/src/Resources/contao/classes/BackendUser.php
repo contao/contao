@@ -410,7 +410,7 @@ class BackendUser extends User
 		Config::set('useCE', $this->useCE);
 		Config::set('thumbnails', $this->thumbnails);
 		Config::set('backendTheme', $this->backendTheme);
-		Config::set('fullscreen', $this->fullscreen);
+		Config::set('fullscreen', false); // BC
 
 		// Inherit permissions
 		$always = array('alexf');

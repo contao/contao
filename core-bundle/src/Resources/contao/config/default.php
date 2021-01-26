@@ -95,7 +95,7 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 	. 'zip,rar,7z';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
-$GLOBALS['TL_CONFIG']['fullscreen']           = false;
+$GLOBALS['TL_CONFIG']['fullscreen']           = false; // BC
 $GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = array();
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
