@@ -399,6 +399,7 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
+            - { name: knp_menu.menu_builder, method: buildUserMenu, alias: be_user_menu }
         public: true
 
     contao.menu.matcher:

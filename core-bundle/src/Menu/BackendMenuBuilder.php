@@ -62,4 +62,13 @@ class BackendMenuBuilder
 
         return $tree;
     }
+
+    public function buildUserMenu(): ItemInterface
+    {
+        $tree = $this->factory->createItem('userMenu');
+
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+
+        return $tree;
+    }
 }
