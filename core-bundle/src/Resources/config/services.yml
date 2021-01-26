@@ -882,3 +882,26 @@ services:
         arguments:
             - '@Contao\CoreBundle\Util\SimpleTokenExpressionLanguage'
         public: true
+
+    Contao\CoreBundle\Twig\Extension\EncoreEntryFilesTwigExtension:
+        arguments:
+            - '@Contao\CoreBundle\BackendTheme\EncoreEntrypointLookupCollection'
+            - '@contao.backend_theme.tag_renderer'
+
+    Contao\CoreBundle\BackendTheme\EncoreEntrypointLookupCollection:
+        arguments:
+            - '@Contao\CoreBundle\BackendTheme\BackendThemes'
+            - '%kernel.project_dir%'
+            - '%contao.backend%'
+
+    contao.backend_theme.tag_renderer:
+        class: Symfony\WebpackEncoreBundle\Asset\TagRenderer
+        arguments:
+            - '@Contao\CoreBundle\BackendTheme\EncoreEntrypointLookupCollection'
+            - '@assets.packages'
+            - []
+            - []
+            - []
+            - '@event_dispatcher'
+        tags:
+            - { name: 'kernel.reset', method: 'reset'}
