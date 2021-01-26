@@ -79,6 +79,75 @@ jobs:
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
+    validate-assets:
+        name: Validate the backend theme was built, thus assets are in sync with source files
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        defaults:
+            run:
+                working-directory: ./core-bundle/assets
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+              with:
+                  fetch-depth: 100
+
+            - name: Check if theme touched
+              uses: marceloprado/has-changed-path@v1
+              id: changed-theme
+              with:
+                  paths: ./core-bundle/assets
+
+            - name: Setup Node
+              if: steps.changed-theme.outputs.changed == 'true' # See actions/runner#662
+              uses: actions/setup-node@v1
+              with:
+                  node-version: '10.x'
+
+            - name: Get yarn cache directory path
+              if: steps.changed-theme.outputs.changed == 'true'
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+
+            - name: Cache yarn cache
+              if: steps.changed-theme.outputs.changed == 'true'
+              uses: actions/cache@v2
+              id: cache-yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Cache node_modules
+              if: steps.changed-theme.outputs.changed == 'true'
+              id: cache-node-modules
+              uses: actions/cache@v2
+              with:
+                  path: node_modules
+                  key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+
+            - name: Run yarn
+              if: steps.changed-theme.outputs.changed == 'true'
+              run: yarn
+              if: |
+                  steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
+                  steps.cache-node-modules.outputs.cache-hit != 'true'
+
+            - name: Run yarn install
+              if: steps.changed-theme.outputs.changed == 'true'
+              run: yarn install
+
+            - name: Build theme
+              if: steps.changed-theme.outputs.changed == 'true'
+              run: yarn run prod
+
+            - name: Check for changes
+              if: steps.changed-theme.outputs.changed == 'true'
+              run: git diff --exit-code
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
