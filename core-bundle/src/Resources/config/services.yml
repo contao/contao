@@ -878,6 +878,10 @@ services:
             - ~
             - !tagged_iterator contao.simple_token_extension
 
+    Contao\CoreBundle\BackendTheme\BackendThemes:
+        arguments: [ !tagged { tag: 'contao.backend_theme', index_by: 'alias' } ]
+        public: true
+
     Contao\CoreBundle\Util\SimpleTokenParser:
         arguments:
             - '@Contao\CoreBundle\Util\SimpleTokenExpressionLanguage'

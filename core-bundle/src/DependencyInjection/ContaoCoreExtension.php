@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\BackendTheme\BackendThemeInterface;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
@@ -110,6 +111,11 @@ class ContaoCoreExtension extends Extension
         $container
             ->registerForAutoconfiguration(ContentCompositionInterface::class)
             ->addTag('contao.page')
+        ;
+
+        $container
+            ->registerForAutoconfiguration(BackendThemeInterface::class)
+            ->addTag('contao.backend_theme')
         ;
     }
 
