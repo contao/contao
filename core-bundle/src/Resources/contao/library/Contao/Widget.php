@@ -1456,7 +1456,7 @@ abstract class Widget extends Controller
 					return 0;
 				}
 
-				if ($sql['type'] === Type::BOOLEAN)
+				if ($sql['type'] === Types::BOOLEAN)
 				{
 					return false;
 				}
