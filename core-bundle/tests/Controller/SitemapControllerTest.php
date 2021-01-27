@@ -27,13 +27,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SitemapControllerTest extends TestCase
 {
-    public function testNoSitemapIfNoRootPageFound(): void
+    public function testNoSitemapIfDomainSettingsDoNotMatchAndNoEmptyDomainRootPageWasConfigured(): void
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('findPublishedRootPages')
-            ->with(['dns' => 'www.foobar.com'])
+            ->withConsecutive(
+                [['dns' => 'www.foobar.com']],
+                [['dns' => '']]
+            )
             ->willReturn(null)
         ;
 
