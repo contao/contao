@@ -43,19 +43,19 @@ class Encryption
 	protected static $resTd;
 
 	/**
-	 * @deprecated Use a third-party library such as OpenSSL or phpseclib instead.
+	 * @deprecated Use a third-party library such as OpenSSL or phpseclib instead
 	 */
 	public static function encrypt($varValue, $strKey=null)
 	{
-		throw new \BadMethodCallException('This method is not supported anymore since PHP 7.2 removed the mycrpyt extension.');
+		throw new \BadMethodCallException('This method is not supported anymore, because the PHP mcrypt extension has been removed in PHP 7.2.');
 	}
 
 	/**
-	 * @deprecated Use a third-party library such as OpenSSL or phpseclib instead.
+	 * @deprecated Use a third-party library such as OpenSSL or phpseclib instead
 	 */
 	public static function decrypt($varValue, $strKey=null)
 	{
-		throw new \BadMethodCallException('This method is not supported anymore since PHP 7.2 removed the mycrpyt extension.');
+		throw new \BadMethodCallException('This method is not supported anymore, because the PHP mcrypt extension has been removed in PHP 7.2.');
 	}
 
 	/**
@@ -120,7 +120,6 @@ class Encryption
 
 		return $encoder->isPasswordValid($strHash, $strPassword, null);
 	}
-
 
 	/**
 	 * Prevent cloning of the object (Singleton)
