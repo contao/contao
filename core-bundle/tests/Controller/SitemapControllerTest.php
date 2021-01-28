@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SitemapControllerTest extends TestCase
 {
-    public function testNoSitemapIfDomainSettingsDoNotMatchAndNoEmptyDomainRootPageWasConfigured(): void
+    public function testNoSitemapIfNoRootPageFound(): void
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
