@@ -19,6 +19,7 @@ use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
@@ -166,7 +167,21 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        return strnatcasecmp($a->getPath(), $b->getPath());
+        $pathA = $a instanceof PageRoute ? substr($a->getPath(), 0, -strlen($a->getUrlSuffix())) : $a->getPath();
+        $pathB = $b instanceof PageRoute ? substr($b->getPath(), 0, -strlen($b->getUrlSuffix())) : $b->getPath();
+
+        $countA = \count(explode('/', $pathA));
+        $countB = \count(explode('/', $pathB));
+
+        if ($countA > $countB) {
+            return -1;
+        }
+
+        if ($countB > $countA) {
+            return 1;
+        }
+
+        return strnatcasecmp($pathA, $pathB);
     }
 
     protected function convertLanguagesForSorting(array $languages): array
