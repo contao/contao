@@ -224,11 +224,6 @@ abstract class DataContainer extends Backend
 	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
-		if (!isset($arrData['inputType']))
-		{
-			return '';
-		}
-
 		// Check if the field is excluded
 		if ($arrData['exclude'] ?? null)
 		{
@@ -238,7 +233,7 @@ abstract class DataContainer extends Backend
 		$xlabel = '';
 
 		// Toggle line wrap (textarea)
-		if ($arrData['inputType'] == 'textarea' && !isset($arrData['eval']['rte']))
+		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
 		{
 			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
 		}
@@ -280,7 +275,7 @@ abstract class DataContainer extends Backend
 		}
 
 		/** @var Widget $strClass */
-		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType']] ?? null;
+		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
 
 		// Return if the widget class does not exists
 		if (!class_exists($strClass))
@@ -543,17 +538,17 @@ abstract class DataContainer extends Backend
 			$this->blnUploadable = true;
 		}
 
-		if ($arrData['inputType'] != 'password')
+		if (($arrData['inputType'] ?? null) != 'password')
 		{
 			$arrClasses[] = 'widget';
 		}
 
 		// Mark floated single checkboxes
-		if ($arrData['inputType'] == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
+		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
 		{
 			$arrClasses[] = 'cbx';
 		}
-		elseif ($arrData['inputType'] == 'text' && ($arrData['eval']['multiple'] ?? null) && \in_array('wizard', $arrClasses))
+		elseif (($arrData['inputType'] ?? null) == 'text' && ($arrData['eval']['multiple'] ?? null) && \in_array('wizard', $arrClasses))
 		{
 			$arrClasses[] = 'inline';
 		}
@@ -598,7 +593,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Handle multi-select fields in "override all" mode
-		elseif (($arrData['inputType'] == 'checkbox' || $arrData['inputType'] == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		elseif ((($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 		{
 			$updateMode = '
 </div>
