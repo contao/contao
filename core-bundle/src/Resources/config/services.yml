@@ -166,6 +166,11 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\SitemapController:
+        tags:
+            - controller.service_arguments
+            - container.service_subscriber
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
