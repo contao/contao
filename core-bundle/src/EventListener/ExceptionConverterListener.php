@@ -51,6 +51,7 @@ class ExceptionConverterListener
         PageNotFoundException::class => 'NotFoundHttpException',
         ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
         ContaoServiceUnavailableException::class => 'ServiceUnavailableHttpException',
+        \UnusedArgumentsException::class => 'NotFoundHttpException',
     ];
 
     /**

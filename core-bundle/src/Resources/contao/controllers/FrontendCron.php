@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Cron\Cron;
 use Symfony\Component\HttpFoundation\Response;
 
-@trigger_error('Using the "Contao\FrontendCron" class has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.9', 'Using the "Contao\FrontendCron" class has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Cron\Cron service instead.');
 
 /**
  * Command scheduler controller.

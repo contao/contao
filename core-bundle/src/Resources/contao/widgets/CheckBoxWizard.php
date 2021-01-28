@@ -14,6 +14,7 @@ namespace Contao;
  * Provide methods to handle sortable checkboxes.
  *
  * @property array   $options
+ * @property array   $unknownOption
  * @property boolean $multiple
  *
  * @author John Brand <http://www.thyon.com>
@@ -67,6 +68,31 @@ class CheckBoxWizard extends Widget
 	}
 
 	/**
+	 * Check whether an input is one of the given options
+	 *
+	 * @param mixed $varInput The input string or array
+	 *
+	 * @return boolean True if the selected option exists
+	 */
+	protected function isValidOption($varInput)
+	{
+		$arrOptions = $this->arrOptions;
+
+		if (\is_array($this->unknownOption))
+		{
+			foreach ($this->unknownOption as $v)
+			{
+				$this->arrOptions[] = array('value'=>$v);
+			}
+		}
+
+		$blnIsValid = parent::isValidOption($varInput);
+		$this->arrOptions = $arrOptions;
+
+		return $blnIsValid;
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -87,7 +113,7 @@ class CheckBoxWizard extends Widget
 			// Move selected and sorted options to the top
 			foreach ($this->arrOptions as $i=>$arrOption)
 			{
-				if (($intPos = array_search($arrOption['value'], $this->varValue)) !== false)
+				if (($intPos = array_search($arrOption['value'] ?? null, $this->varValue)) !== false)
 				{
 					$arrOptions[$intPos] = $arrOption;
 					unset($arrTemp[$i]);
@@ -100,9 +126,19 @@ class CheckBoxWizard extends Widget
 
 		$blnCheckAll = true;
 		$arrOptions = array();
+		$arrAllOptions = $this->arrOptions;
+
+		// Add unknown options, so they are not lost when saving the record (see #920)
+		if (\is_array($this->unknownOption))
+		{
+			foreach ($this->unknownOption as $val)
+			{
+				$arrAllOptions[] = array('value' => $val, 'label' => $GLOBALS['TL_LANG']['MSC']['unknownOption']);
+			}
+		}
 
 		// Generate options and add buttons
-		foreach ($this->arrOptions as $i=>$arrOption)
+		foreach ($arrAllOptions as $i=>$arrOption)
 		{
 			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button> ');
 		}
@@ -145,12 +181,12 @@ class CheckBoxWizard extends Widget
 			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> %s<label for="opt_%s">%s</label></span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
-			($this->multiple ? StringUtil::specialchars($arrOption['value']) : 1),
-			(((\is_array($this->varValue) && \in_array($arrOption['value'], $this->varValue)) || $this->varValue == $arrOption['value']) ? ' checked="checked"' : ''),
+			($this->multiple ? StringUtil::specialchars($arrOption['value'] ?? '') : 1),
+			(((\is_array($this->varValue) && \in_array($arrOption['value'] ?? null, $this->varValue)) || $this->varValue == ($arrOption['value'] ?? null)) ? ' checked="checked"' : ''),
 			$this->getAttributes(),
 			$strButtons,
 			$this->strId . '_' . $i,
-			$arrOption['label']
+			$arrOption['label'] ?? null
 		);
 	}
 }

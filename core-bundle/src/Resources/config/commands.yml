@@ -5,7 +5,7 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - ['setFramework', ['@contao.framework']]
+                - [setFramework, ['@contao.framework']]
 
     contao.command.automator:
         class: Contao\CoreBundle\Command\AutomatorCommand
@@ -16,6 +16,7 @@ services:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
             - '@contao.crawl.escargot_factory'
+            - '@filesystem'
 
     Contao\CoreBundle\Command\CronCommand:
         arguments:
@@ -66,6 +67,17 @@ services:
             - '@contao.resource_finder'
             - '@event_dispatcher'
         public: true
+
+    Contao\CoreBundle\Command\UserCreateCommand:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@security.encoder_factory'
+            - '%contao.locales%'
+
+    Contao\CoreBundle\Command\UserListCommand:
+        arguments:
+            - '@contao.framework'
 
     contao.command.user_password_command:
         class: Contao\CoreBundle\Command\UserPasswordCommand

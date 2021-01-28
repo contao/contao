@@ -32,7 +32,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -131,12 +131,12 @@ class DebugPluginsCommand extends Command
             $class = \get_class($bundle);
 
             if (ContaoModuleBundle::class === $class) {
-                $path = sprintf('system/modules/%s', $name);
+                $path = Path::join('system/modules', $name);
             } else {
                 $reflection = new \ReflectionClass($class);
 
-                if (is_dir($dir = \dirname($reflection->getFileName()).'/Resources/contao')) {
-                    $path = (new Filesystem())->makePathRelative($dir, $this->kernel->getProjectDir());
+                if (is_dir($dir = Path::join($reflection->getFileName(), '../Resources/contao'))) {
+                    $path = Path::makeRelative($dir, $this->kernel->getProjectDir());
                 }
             }
 
@@ -240,7 +240,7 @@ class DebugPluginsCommand extends Command
     {
         $parser = new DelegatingParser();
         $parser->addParser(new JsonParser());
-        $parser->addParser(new IniParser($this->kernel->getProjectDir().'/system/modules'));
+        $parser->addParser(new IniParser(Path::join($this->kernel->getProjectDir(), 'system/modules')));
 
         return $parser;
     }

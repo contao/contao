@@ -28,6 +28,7 @@ class MakeServicesPublicPassTest extends TestCase
         $container->setDefinition('fragment.handler', (new Definition())->setPublic(false));
         $container->setDefinition('lexik_maintenance.driver.factory', (new Definition())->setPublic(false));
         $container->setDefinition('monolog.logger.contao', (new Definition())->setPublic(false));
+        $container->setDefinition('security.authentication_utils', (new Definition())->setPublic(false));
         $container->setDefinition('security.authentication.trust_resolver', (new Definition())->setPublic(false));
         $container->setDefinition('security.firewall.map', (new Definition())->setPublic(false));
         $container->setDefinition('security.logout_url_generator', (new Definition())->setPublic(false));
@@ -35,11 +36,11 @@ class MakeServicesPublicPassTest extends TestCase
 
         // Aliased definitions
         $container->setDefinition('doctrine.dbal.default_connection', (new Definition())->setPublic(false));
-        $container->setDefinition('swiftmailer.mailer.default', (new Definition())->setPublic(false));
+        $container->setDefinition('mailer.mailer', (new Definition())->setPublic(false));
 
         // Aliases
         $container->setAlias('database_connection', 'doctrine.dbal.default_connection');
-        $container->setAlias('swiftmailer.mailer', 'swiftmailer.mailer.default');
+        $container->setAlias('mailer', 'mailer.mailer');
         $container->setAlias('security.encoder_factory', 'security.encoder_factory.generic');
 
         $pass = new MakeServicesPublicPass();
@@ -50,6 +51,7 @@ class MakeServicesPublicPassTest extends TestCase
         $this->assertTrue($container->getDefinition('fragment.handler')->isPublic());
         $this->assertTrue($container->getDefinition('lexik_maintenance.driver.factory')->isPublic());
         $this->assertTrue($container->getDefinition('monolog.logger.contao')->isPublic());
+        $this->assertTrue($container->getDefinition('security.authentication_utils')->isPublic());
         $this->assertTrue($container->getDefinition('security.authentication.trust_resolver')->isPublic());
         $this->assertTrue($container->getDefinition('security.firewall.map')->isPublic());
         $this->assertTrue($container->getDefinition('security.logout_url_generator')->isPublic());
@@ -57,7 +59,7 @@ class MakeServicesPublicPassTest extends TestCase
 
         // Aliases
         $this->assertTrue($container->getAlias('database_connection')->isPublic());
-        $this->assertTrue($container->getAlias('swiftmailer.mailer')->isPublic());
+        $this->assertTrue($container->getAlias('mailer')->isPublic());
         $this->assertTrue($container->getAlias('security.encoder_factory')->isPublic());
     }
 }

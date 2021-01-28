@@ -118,7 +118,7 @@ class Statement
 	 */
 	public function prepare($strQuery)
 	{
-		if ($strQuery == '')
+		if (!$strQuery)
 		{
 			throw new \Exception('Empty query string');
 		}
@@ -265,7 +265,7 @@ class Statement
 		}
 
 		// Make sure there is a query string
-		if ($this->strQuery == '')
+		if (!$this->strQuery)
 		{
 			throw new \Exception('Empty query string');
 		}
@@ -344,7 +344,7 @@ class Statement
 	 */
 	public function explain()
 	{
-		return $this->resConnection->executeQuery('EXPLAIN ' . $this->strQuery)->fetch();
+		return $this->resConnection->fetchAssociative('EXPLAIN ' . $this->strQuery);
 	}
 
 	/**
@@ -357,7 +357,7 @@ class Statement
 	 */
 	public function executeUncached()
 	{
-		@trigger_error('Using Statement::executeUncached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Statement::executeUncached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Statement::execute()" instead.');
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
@@ -372,7 +372,7 @@ class Statement
 	 */
 	public function executeCached()
 	{
-		@trigger_error('Using Statement::executeCached() has been deprecated and will no longer work in Contao 5.0. Use Statement::execute() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Statement::executeCached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Statement::execute()" instead.');
 
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}

@@ -15,14 +15,9 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Tools\SchemaTool;
 
 class DcaSchemaProvider
 {
@@ -37,21 +32,30 @@ class DcaSchemaProvider
     private $doctrine;
 
     /**
+     * @var SchemaProvider
+     */
+    private $schemaProvider;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Registry $doctrine)
+    public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
+        $this->schemaProvider = $schemaProvider;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
+     *             use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider
+     *             class instead.
+     */
     public function createSchema(): Schema
     {
-        if (0 !== \count($this->doctrine->getManagerNames())) {
-            return $this->createSchemaFromOrm();
-        }
+        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
 
-        return $this->createSchemaFromDca();
+        return $this->schemaProvider->createSchema();
     }
 
     /**
@@ -106,51 +110,6 @@ class DcaSchemaProvider
                 }
             }
         }
-    }
-
-    private function createSchemaFromOrm(): Schema
-    {
-        /** @var EntityManagerInterface $manager */
-        $manager = $this->doctrine->getManager();
-
-        /** @var array<ClassMetadata> $metadata */
-        $metadata = $manager->getMetadataFactory()->getAllMetadata();
-
-        /** @var Connection $connection */
-        $connection = $this->doctrine->getConnection();
-
-        // Apply the schema filter
-        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
-            foreach ($metadata as $key => $data) {
-                if (!$filter($data->getTableName())) {
-                    unset($metadata[$key]);
-                }
-            }
-        }
-
-        if (empty($metadata)) {
-            return $this->createSchemaFromDca();
-        }
-
-        $tool = new SchemaTool($manager);
-
-        return $tool->getSchemaFromMetadata($metadata);
-    }
-
-    private function createSchemaFromDca(): Schema
-    {
-        $config = new SchemaConfig();
-        $params = $this->doctrine->getConnection()->getParams();
-
-        if (isset($params['defaultTableOptions'])) {
-            $config->setDefaultTableOptions($params['defaultTableOptions']);
-        }
-
-        $schema = new Schema([], [], $config);
-
-        $this->appendToSchema($schema);
-
-        return $schema;
     }
 
     private function parseColumnSql(Table $table, string $columnName, string $sql): void
@@ -323,7 +282,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string, array<string, array<string>>>
+     * @return array<string, array<string, string|array<string>>>
      */
     private function getSqlDefinitions(): array
     {
@@ -345,18 +304,6 @@ class DcaSchemaProvider
                     } else {
                         $sqlTarget[$table][$category] = $fields;
                     }
-                }
-            }
-        }
-
-        /** @var Connection $connection */
-        $connection = $this->doctrine->getConnection();
-
-        // Apply the schema filter (see contao/installation-bundle#78)
-        if ($filter = $connection->getConfiguration()->getSchemaAssetsFilter()) {
-            foreach (array_keys($sqlTarget) as $key) {
-                if (!$filter($key)) {
-                    unset($sqlTarget[$key]);
                 }
             }
         }
@@ -410,22 +357,15 @@ class DcaSchemaProvider
 
         $largePrefix = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
-            ->fetch(\PDO::FETCH_OBJ)
+            ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")
         ;
 
         // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-        if (false === $largePrefix || '' === $largePrefix->Value) {
+        if (false === $largePrefix || '' === $largePrefix['Value']) {
             return 3072;
         }
 
-        $version = $this->doctrine
-            ->getConnection()
-            ->query('SELECT @@version as Value')
-            ->fetch(\PDO::FETCH_OBJ)
-        ;
-
-        [$ver] = explode('-', $version->Value);
+        [$ver] = explode('-', $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
 
         // As there is no reliable way to get the vendor (see #84), we are
         // guessing based on the version number. The check will not be run
@@ -438,29 +378,27 @@ class DcaSchemaProvider
         }
 
         // The innodb_large_prefix option is disabled
-        if (!\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
+        if (!\in_array(strtolower((string) $largePrefix['Value']), ['1', 'on'], true)) {
             return 767;
         }
 
         $filePerTable = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-            ->fetch(\PDO::FETCH_OBJ)
+            ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'")
         ;
 
         // The innodb_file_per_table option is disabled
-        if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
+        if (!\in_array(strtolower((string) $filePerTable['Value']), ['1', 'on'], true)) {
             return 767;
         }
 
         $fileFormat = $this->doctrine
             ->getConnection()
-            ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-            ->fetch(\PDO::FETCH_OBJ)
+            ->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")
         ;
 
         // The InnoDB file format is not Barracuda
-        if ('' !== $fileFormat->Value && 'barracuda' !== strtolower((string) $fileFormat->Value)) {
+        if ('' !== $fileFormat['Value'] && 'barracuda' !== strtolower((string) $fileFormat['Value'])) {
             return 767;
         }
 

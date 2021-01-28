@@ -38,6 +38,12 @@
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
       </trans-unit>
@@ -170,9 +176,6 @@
       <trans-unit id="tl_news.date_legend">
         <source>Date and time</source>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
       </trans-unit>
@@ -187,6 +190,9 @@
       </trans-unit>
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -226,6 +232,9 @@
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
       </trans-unit>
     </body>
   </file>

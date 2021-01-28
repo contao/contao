@@ -259,7 +259,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'picker' => 'foobar',
         ];
 
-        $config = $this->mockPickerConfig('tl_article', '');
+        $config = $this->mockPickerConfig('tl_article');
 
         $provider = $this->createTableProvider(
             null,
@@ -342,7 +342,14 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => 'Table', 'dynamicPtable' => true]];
+
+        $GLOBALS['TL_DCA']['tl_content'] = [
+            'config' => [
+                'dataContainer' => 'Table',
+                'ptable' => 'tl_article',
+                'dynamicPtable' => true,
+            ],
+        ];
 
         $params = [
             'do' => 'news',
@@ -422,7 +429,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'table' => 'tl_content',
         ];
 
-        $config = $this->mockPickerConfig('tl_content', '');
+        $config = $this->mockPickerConfig('tl_content');
 
         $provider = $this->createTableProvider(
             null,
@@ -454,6 +461,9 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
+    /**
+     * @param ItemInterface&MockObject $menu
+     */
     private function createMenuTableProvider(array $modules, string $current, ItemInterface $menu = null): TablePickerProvider
     {
         $expectedItems = [];
@@ -461,6 +471,8 @@ class TablePickerProviderTest extends ContaoTestCase
 
         if ($menu) {
             $expectedItems[] = ['picker'];
+        } else {
+            $menu = $this->createMock(ItemInterface::class);
         }
 
         foreach ($modules as $module) {
@@ -486,7 +498,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($expectedItems)))
             ->method('createItem')
             ->withConsecutive(...$expectedItems)
-            ->willReturn($menu)
+            ->willReturn($menu ?? $this->createMock(ItemInterface::class))
         ;
 
         return new TablePickerProvider(
@@ -615,7 +627,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
-            ->method('fetch')
+            ->method('fetchAssociative')
             ->willReturn($data)
         ;
 

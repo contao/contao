@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Controller;
+
 // Add palette to tl_content
 $GLOBALS['TL_DCA']['tl_content']['palettes']['comments'] = '{type_legend},type,headline;{comment_legend},com_order,com_perPage,com_moderate,com_bbcode,com_requireLogin,com_disableCaptcha;{template_legend:hide},com_template,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
 
@@ -68,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Contao\Controller::getTemplateGroup('com_');
+		return Controller::getTemplateGroup('com_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) NOT NULL default ''"

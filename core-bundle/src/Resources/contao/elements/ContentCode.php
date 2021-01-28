@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Highlight\Highlighter;
+
 /**
  * Front end content element "code".
  *
@@ -30,11 +32,13 @@ class ContentCode extends ContentElement
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$return = '<pre>' . htmlspecialchars($this->code) . '</pre>';
 
-			if ($this->headline != '')
+			if ($this->headline)
 			{
 				$return = '<' . $this->hl . '>' . $this->headline . '</' . $this->hl . '>' . $return;
 			}
@@ -59,8 +63,18 @@ class ContentCode extends ContentElement
 			$this->highlight = 'cpp';
 		}
 
-		$this->Template->code = htmlspecialchars($this->code);
-		$this->Template->cssClass = strtolower($this->highlight) ?: 'nohighlight';
+		$hl = new Highlighter();
+
+		try
+		{
+			$this->Template->code = $hl->highlight(strtolower($this->highlight) ?: 'plaintext', $this->code)->value;
+		}
+		catch (\DomainException $e)
+		{
+			$this->Template->code = htmlspecialchars($this->code);
+		}
+
+		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');
 	}
 }
 

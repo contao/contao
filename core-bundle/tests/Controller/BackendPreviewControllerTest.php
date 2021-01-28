@@ -18,11 +18,10 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BackendPreviewControllerTest extends TestCase
@@ -33,7 +32,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -50,7 +48,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker(false)
         );
 
@@ -75,7 +72,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -97,7 +93,6 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
@@ -113,15 +108,21 @@ class BackendPreviewControllerTest extends TestCase
             'preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
-            $this->mockRouter(),
             $this->mockAuthorizationChecker()
         );
 
+        $request = $this->mockRequest();
+        $request
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->willReturn('/preview.php')
+        ;
+
         /** @var RedirectResponse $response */
-        $response = $controller($this->mockRequest());
+        $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/index.html', $response->getTargetUrl());
+        $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
     /**
@@ -130,7 +131,7 @@ class BackendPreviewControllerTest extends TestCase
     private function mockRequest(): Request
     {
         $request = $this->createMock(Request::class);
-        $request->query = new ParameterBag();
+        $request->query = new InputBag();
 
         $request
             ->method('getScriptName')
@@ -138,21 +139,6 @@ class BackendPreviewControllerTest extends TestCase
         ;
 
         return $request;
-    }
-
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouter(): RouterInterface
-    {
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('contao_root')
-            ->willReturn('/index.html')
-        ;
-
-        return $router;
     }
 
     /**

@@ -74,7 +74,7 @@ class StyleSheets extends Backend
 		// Make sure the dcaconfig.php file is loaded
 		if (file_exists($this->strRootDir . '/system/config/dcaconfig.php'))
 		{
-			@trigger_error('Using the "dcaconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom DCA files in the "contao/dca" folder instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.3', 'Using the "dcaconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom DCA files in the "contao/dca" folder instead.');
 			include $this->strRootDir . '/system/config/dcaconfig.php';
 		}
 
@@ -156,7 +156,7 @@ class StyleSheets extends Backend
 		}
 
 		// Merge the global style sheet variables
-		if ($row['vars'] != '' && \is_array($tmp = StringUtil::deserialize($row['vars'])))
+		if (!empty($row['vars']) && \is_array($tmp = StringUtil::deserialize($row['vars'])))
 		{
 			foreach ($tmp as $v)
 			{
@@ -1072,7 +1072,6 @@ class StyleSheets extends Backend
 			return '';
 		}
 
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		// Import CSS

@@ -15,6 +15,7 @@ namespace Contao;
  *
  * @property integer $maxlength
  * @property array   $options
+ * @property array   $unknownOption
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -127,7 +128,7 @@ class ImageSize extends Widget
 	 */
 	protected function isValidOption($varInput)
 	{
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			return true;
 		}
@@ -145,6 +146,11 @@ class ImageSize extends Widget
 			{
 				return true;
 			}
+		}
+
+		if (isset($this->unknownOption[2]) && $varInput == $this->unknownOption[2])
+		{
+			return true;
 		}
 
 		return false;
@@ -170,16 +176,23 @@ class ImageSize extends Widget
 
 		$arrFields = array();
 		$arrOptions = array();
+		$arrAllOptions = $this->arrOptions;
 
-		foreach ($this->arrOptions as $strKey=>$arrOption)
+		// Add an unknown option, so it is not lost when saving the record (see #920)
+		if (isset($this->unknownOption[2]))
+		{
+			$arrAllOptions[] = array('value'=>$this->unknownOption[2], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+		}
+
+		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					StringUtil::specialchars($arrOption['value']),
-					$this->optionSelected($arrOption['value'], $this->varValue[2]),
-					$arrOption['label']
+					StringUtil::specialchars($arrOption['value'] ?? ''),
+					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
+					$arrOption['label'] ?? null
 				);
 			}
 			else
@@ -190,9 +203,9 @@ class ImageSize extends Widget
 				{
 					$arrOptgroups[] = sprintf(
 						'<option value="%s"%s>%s</option>',
-						StringUtil::specialchars($arrOptgroup['value']),
-						$this->optionSelected($arrOptgroup['value'], $this->varValue[2]),
-						$arrOptgroup['label']
+						StringUtil::specialchars($arrOptgroup['value'] ?? ''),
+						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
+						$arrOptgroup['label'] ?? null
 					);
 				}
 

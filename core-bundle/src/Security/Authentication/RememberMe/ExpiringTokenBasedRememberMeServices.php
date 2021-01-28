@@ -46,7 +46,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.expiring_token_based_remember_me_services" service instead
      */
-    public function __construct(RememberMeRepository $repository, array $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
+    public function __construct(RememberMeRepository $repository, iterable $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
     {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
 
@@ -147,7 +147,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @param array<RememberMe> $rows
      */
-    private function findValidToken(array $rows, string $cookieValue): RememberMe
+    private function findValidToken(array $rows, string $cookieValue): ?RememberMe
     {
         $lastException = null;
 
@@ -167,7 +167,11 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             }
         }
 
-        throw $lastException;
+        if (null !== $lastException) {
+            throw $lastException;
+        }
+
+        return null;
     }
 
     private function createRememberMeCookie(Request $request, string $series, string $cookieValue): Cookie

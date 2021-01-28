@@ -14,7 +14,7 @@ use Contao\Database;
 use Contao\DcaExtractor;
 
 /**
- * The class reads the relation meta data from the DCA and creates the necessary
+ * The class reads the relation metadata from the DCA and creates the necessary
  * JOIN queries to retrieve an object from the database.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -45,7 +45,7 @@ class QueryBuilder
 			foreach ($objBase->getRelations() as $strKey=>$arrConfig)
 			{
 				// Automatically join the single-relation records
-				if ($arrConfig['load'] == 'eager' || $arrOptions['eager'])
+				if ($arrConfig['load'] == 'eager' || ($arrOptions['eager'] ?? null))
 				{
 					if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
 					{
@@ -75,6 +75,7 @@ class QueryBuilder
 		// Group by
 		if (isset($arrOptions['group']))
 		{
+			trigger_deprecation('contao/core-bundle', '4.4', 'Using the "group" option has been deprecated and will no longer work in Contao 5.0. See https://github.com/contao/contao/issues/1680.');
 			$strQuery .= " GROUP BY " . $arrOptions['group'];
 		}
 
@@ -104,7 +105,7 @@ class QueryBuilder
 	{
 		$strQuery = "SELECT COUNT(*) AS count FROM " . $arrOptions['table'];
 
-		if ($arrOptions['column'] !== null)
+		if (isset($arrOptions['column']))
 		{
 			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
 		}

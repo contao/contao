@@ -66,6 +66,11 @@ abstract class System
 	protected static $objContainer;
 
 	/**
+	 * @var array|null
+	 */
+	private static $removedServiceIds;
+
+	/**
 	 * Cache
 	 * @var array
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
@@ -83,6 +88,12 @@ abstract class System
 	 * @var array
 	 */
 	protected static $arrStaticObjects = array();
+
+	/**
+	 * Singletons
+	 * @var array
+	 */
+	protected static $arrSingletons = array();
 
 	/**
 	 * Available languages
@@ -160,25 +171,51 @@ abstract class System
 		{
 			$container = static::getContainer();
 
+			if (null === $container)
+			{
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
+			}
+
 			if (\is_object($strClass))
 			{
 				$this->arrObjects[$strKey] = $strClass;
+			}
+			elseif (isset(static::$arrSingletons[$strClass]))
+			{
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
-			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
+				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::import() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				$this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
-				$this->arrObjects[$strKey] = new $strClass();
+				try
+				{
+					$this->arrObjects[$strKey] = new $strClass();
+				}
+				catch (\Throwable $t)
+				{
+					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
+					{
+						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+					}
+
+					throw $t;
+				}
 			}
 		}
 	}
@@ -207,29 +244,72 @@ abstract class System
 		{
 			$container = static::getContainer();
 
+			if (null === $container)
+			{
+				throw new \RuntimeException('The Symfony container is not available, did you initialize the Contao framework?');
+			}
+
 			if (\is_object($strClass))
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
+			}
+			elseif (isset(static::$arrSingletons[$strClass]))
+			{
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
-			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
+				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::importStatic() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
-				static::$arrStaticObjects[$strKey] = new $strClass();
+				try
+				{
+					static::$arrStaticObjects[$strKey] = new $strClass();
+				}
+				catch (\Throwable $t)
+				{
+					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
+					{
+						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+					}
+
+					throw $t;
+				}
 			}
 		}
 
 		return static::$arrStaticObjects[$strKey];
+	}
+
+	private static function isServiceInlined($strClass)
+	{
+		$container = static::getContainer();
+
+		if (!$container instanceof Container)
+		{
+			return false;
+		}
+
+		if (null === self::$removedServiceIds)
+		{
+			self::$removedServiceIds = $container->getRemovedIds();
+		}
+
+		return isset(self::$removedServiceIds[$strClass]);
 	}
 
 	/**
@@ -264,7 +344,7 @@ abstract class System
 	 */
 	public static function log($strText, $strFunction, $strCategory)
 	{
-		@trigger_error('Using System::log() has been deprecated and will no longer work in Contao 5.0. Use the logger service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\System::log()" has been deprecated and will no longer work in Contao 5.0. Use the "logger" service instead.');
 
 		$level = 'ERROR' === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 		$logger = static::getContainer()->get('monolog.logger.contao');
@@ -300,7 +380,7 @@ abstract class System
 		}
 
 		// Use a specific referer
-		if ($strTable != '' && isset($session[$strTable]) && Input::get('act') != 'select')
+		if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
 		{
 			$session['current'] = $session[$strTable];
 		}
@@ -308,14 +388,13 @@ abstract class System
 		// Remove parameters helper
 		$cleanUrl = static function ($url, $params=array('rt', 'ref'))
 		{
-			if ($url == '' || strpos($url, '?') === false)
+			if (!$url || strpos($url, '?') === false)
 			{
 				return $url;
 			}
 
 			list($path, $query) = explode('?', $url, 2);
 
-			/** @var Query $queryObj */
 			$queryObj = new Query($query);
 			$queryObj = $queryObj->withoutPairs($params);
 
@@ -329,13 +408,13 @@ abstract class System
 		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
+		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			$return = Environment::get('httpReferer');
 		}
 
 		// Fallback to the current URL if there is no referer
-		if ($return == '')
+		if (!$return)
 		{
 			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
 		}
@@ -347,9 +426,9 @@ abstract class System
 	/**
 	 * Load a set of language files
 	 *
-	 * @param string  $strName     The table name
-	 * @param boolean $strLanguage An optional language code
-	 * @param boolean $blnNoCache  If true, the cache will be bypassed
+	 * @param string      $strName     The table name
+	 * @param string|null $strLanguage An optional language code
+	 * @param boolean     $blnNoCache  If true, the cache will be bypassed
 	 */
 	public static function loadLanguageFile($strName, $strLanguage=null, $blnNoCache=false)
 	{
@@ -359,7 +438,7 @@ abstract class System
 		}
 
 		// Fall back to English
-		if ($strLanguage == '')
+		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
 		}
@@ -448,13 +527,13 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['deleteConfirm'] = str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['deleteConfirm']);
 		}
 
-		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Local configuration file
-		if (file_exists($rootDir . '/system/config/langconfig.php'))
+		if (file_exists($projectDir . '/system/config/langconfig.php'))
 		{
-			@trigger_error('Using the "langconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom language files in the "contao/languages" folder instead.', E_USER_DEPRECATED);
-			include $rootDir . '/system/config/langconfig.php';
+			trigger_deprecation('contao/core-bundle', '4.3', 'Using the "langconfig.php" file has been deprecated and will no longer work in Contao 5.0. Create custom language files in the "contao/languages" folder instead.');
+			include $projectDir . '/system/config/langconfig.php';
 		}
 	}
 
@@ -469,9 +548,9 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
-			$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+			$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
-			if (is_dir($rootDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
+			if (is_dir($projectDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
 			}
@@ -614,7 +693,7 @@ abstract class System
 	 */
 	public static function getImageSizes()
 	{
-		@trigger_error('Using System::getImageSizes() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_sizes service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_sizes" service instead.');
 
 		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
 	}
@@ -634,19 +713,29 @@ abstract class System
 	/**
 	 * Set a cookie
 	 *
-	 * @param string  $strName     The cookie name
-	 * @param mixed   $varValue    The cookie value
-	 * @param integer $intExpires  The expiration date
-	 * @param string  $strPath     An optional path
-	 * @param string  $strDomain   An optional domain name
-	 * @param boolean $blnSecure   If true, the secure flag will be set
-	 * @param boolean $blnHttpOnly If true, the http-only flag will be set
+	 * @param string       $strName     The cookie name
+	 * @param mixed        $varValue    The cookie value
+	 * @param integer      $intExpires  The expiration date
+	 * @param string|null  $strPath     An optional path
+	 * @param string|null  $strDomain   An optional domain name
+	 * @param boolean|null $blnSecure   If true, the secure flag will be set
+	 * @param boolean      $blnHttpOnly If true, the http-only flag will be set
 	 */
-	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
+	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
+		}
+
+		if ($blnSecure === null)
+		{
+			$blnSecure = false;
+
+			if ($request = static::getContainer()->get('request_stack')->getCurrentRequest())
+			{
+				$blnSecure = $request->isSecure();
+			}
 		}
 
 		$objCookie = new \stdClass();
@@ -714,7 +803,7 @@ abstract class System
 	 */
 	public static function getSessionHash($strCookie)
 	{
-		@trigger_error('Using System::getSessionHash() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\System::getSessionHash()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
 
 		$session = static::getContainer()->get('session');
 
@@ -759,18 +848,18 @@ abstract class System
 	 * @return string The PHP code without the PHP tags
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.
+	 *             Use the Contao\CoreBundle\Config\Loader\PhpFileLoader class instead.
 	 */
 	protected static function readPhpFileWithoutTags($strName)
 	{
-		@trigger_error('Using System::readPhpFileWithoutTags() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\PhpFileLoader instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::readPhpFileWithoutTags()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Config\Loader\PhpFileLoader" class instead.');
 
-		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Convert to absolute path
-		if (strpos($strName, $rootDir . '/') === false)
+		if (strpos($strName, $projectDir . '/') === false)
 		{
-			$strName = $rootDir . '/' . $strName;
+			$strName = $projectDir . '/' . $strName;
 		}
 
 		$loader = new PhpFileLoader();
@@ -788,18 +877,18 @@ abstract class System
 	 * @return string The PHP code
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.
+	 *             Use the Contao\CoreBundle\Config\Loader\XliffFileLoader class instead.
 	 */
 	public static function convertXlfToPhp($strName, $strLanguage, $blnLoad=false)
 	{
-		@trigger_error('Using System::convertXlfToPhp() has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Config\Loader\XliffFileLoader instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::convertXlfToPhp()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Config\Loader\XliffFileLoader" class instead.');
 
-		$rootDir = self::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 		// Convert to absolute path
-		if (strpos($strName, $rootDir . '/') === false)
+		if (strpos($strName, $projectDir . '/') === false)
 		{
-			$strName = $rootDir . '/' . $strName;
+			$strName = $projectDir . '/' . $strName;
 		}
 
 		$loader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), $blnLoad);
@@ -820,7 +909,7 @@ abstract class System
 	 */
 	public static function parseDate($strFormat, $intTstamp=null)
 	{
-		@trigger_error('Using System::parseDate() has been deprecated and will no longer work in Contao 5.0. Use Date::parse() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::parseDate()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Date::parse()" instead.');
 
 		return Date::parse($strFormat, $intTstamp);
 	}
@@ -837,7 +926,7 @@ abstract class System
 	 */
 	public static function addToUrl($strRequest)
 	{
-		@trigger_error('Using System::addToUrl() has been deprecated and will no longer work in Contao 5.0. Use Controller::addToUrl() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addToUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Controller::addToUrl()" instead.');
 
 		return Controller::addToUrl($strRequest);
 	}
@@ -850,7 +939,7 @@ abstract class System
 	 */
 	public static function reload()
 	{
-		@trigger_error('Using System::reload() has been deprecated and will no longer work in Contao 5.0. Use Controller::reload() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::reload()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Controller::reload()" instead.');
 
 		Controller::reload();
 	}
@@ -866,7 +955,7 @@ abstract class System
 	 */
 	public static function redirect($strLocation, $intStatus=303)
 	{
-		@trigger_error('Using System::redirect() has been deprecated and will no longer work in Contao 5.0. Use Controller::redirect() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::redirect()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Controller::redirect()" instead.');
 
 		Controller::redirect($strLocation, $intStatus);
 	}
@@ -881,7 +970,7 @@ abstract class System
 	 */
 	protected function addErrorMessage($strMessage)
 	{
-		@trigger_error('Using System::addErrorMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addError() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addErrorMessage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::addError()" instead.');
 
 		Message::addError($strMessage);
 	}
@@ -896,7 +985,7 @@ abstract class System
 	 */
 	protected function addConfirmationMessage($strMessage)
 	{
-		@trigger_error('Using System::addConfirmationMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addConfirmation() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addConfirmationMessage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::addConfirmation()" instead.');
 
 		Message::addConfirmation($strMessage);
 	}
@@ -911,7 +1000,7 @@ abstract class System
 	 */
 	protected function addNewMessage($strMessage)
 	{
-		@trigger_error('Using System::addNewMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addNew() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addNewMessage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::addNew()" instead.');
 
 		Message::addNew($strMessage);
 	}
@@ -926,7 +1015,7 @@ abstract class System
 	 */
 	protected function addInfoMessage($strMessage)
 	{
-		@trigger_error('Using System::addInfoMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addInfo() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addInfoMessage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::addInfo()" instead.');
 
 		Message::addInfo($strMessage);
 	}
@@ -941,7 +1030,7 @@ abstract class System
 	 */
 	protected function addRawMessage($strMessage)
 	{
-		@trigger_error('Using System::addRawMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::addRaw() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addRawMessage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::addRaw()" instead.');
 
 		Message::addRaw($strMessage);
 	}
@@ -957,7 +1046,7 @@ abstract class System
 	 */
 	protected function addMessage($strMessage, $strType)
 	{
-		@trigger_error('Using System::addMessage() has been deprecated and will no longer work in Contao 5.0. Use Message::add() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::addMessage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::add()" instead.');
 
 		Message::add($strMessage, $strType);
 	}
@@ -974,7 +1063,7 @@ abstract class System
 	 */
 	protected function getMessages($strScope=TL_MODE)
 	{
-		@trigger_error('Using System::getMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::generate() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::getMessages()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::generate()" instead.');
 
 		return Message::generate($strScope);
 	}
@@ -987,7 +1076,7 @@ abstract class System
 	 */
 	protected function resetMessages()
 	{
-		@trigger_error('Using System::resetMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::reset() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::resetMessages()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::reset()" instead.');
 
 		Message::reset();
 	}
@@ -1002,7 +1091,7 @@ abstract class System
 	 */
 	protected function getMessageTypes()
 	{
-		@trigger_error('Using System::getMessageTypes() has been deprecated and will no longer work in Contao 5.0. Use Message::getTypes() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::getMessageTypes()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::getTypes()" instead.');
 
 		return Message::getTypes();
 	}
@@ -1019,7 +1108,7 @@ abstract class System
 	 */
 	protected function idnaEncode($strDomain)
 	{
-		@trigger_error('Using System::idnaEncode() has been deprecated and will no longer work in Contao 5.0. Use Idna::encode() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::idnaEncode()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Idna::encode()" instead.');
 
 		return Idna::encode($strDomain);
 	}
@@ -1036,7 +1125,7 @@ abstract class System
 	 */
 	protected function idnaDecode($strDomain)
 	{
-		@trigger_error('Using System::idnaDecode() has been deprecated and will no longer work in Contao 5.0. Use Idna::decode() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::idnaDecode()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Idna::decode()" instead.');
 
 		return Idna::decode($strDomain);
 	}
@@ -1053,7 +1142,7 @@ abstract class System
 	 */
 	protected function idnaEncodeEmail($strEmail)
 	{
-		@trigger_error('Using System::idnaEncodeEmail() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeEmail() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::idnaEncodeEmail()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Idna::encodeEmail()" instead.');
 
 		return Idna::encodeEmail($strEmail);
 	}
@@ -1070,7 +1159,7 @@ abstract class System
 	 */
 	protected function idnaEncodeUrl($strUrl)
 	{
-		@trigger_error('Using System::idnaEncodeUrl() has been deprecated and will no longer work in Contao 5.0. Use Idna::encodeUrl() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::idnaEncodeUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Idna::encodeUrl()" instead.');
 
 		return Idna::encodeUrl($strUrl);
 	}
@@ -1087,7 +1176,7 @@ abstract class System
 	 */
 	protected function isValidEmailAddress($strEmail)
 	{
-		@trigger_error('Using System::isValidEmailAddress() has been deprecated and will no longer work in Contao 5.0. Use Validator::isEmail() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::isValidEmailAddress()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Validator::isEmail()" instead.');
 
 		return Validator::isEmail($strEmail);
 	}
@@ -1104,7 +1193,7 @@ abstract class System
 	 */
 	public static function splitFriendlyName($strEmail)
 	{
-		@trigger_error('Using System::splitFriendlyName() has been deprecated and will no longer work in Contao 5.0. Use StringUtil::splitFriendlyEmail() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::splitFriendlyName()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::splitFriendlyEmail()" instead.');
 
 		return StringUtil::splitFriendlyEmail($strEmail);
 	}
@@ -1121,7 +1210,7 @@ abstract class System
 	 */
 	public static function getIndexFreeRequest($blnAmpersand=true)
 	{
-		@trigger_error('Using System::getIndexFreeRequest() has been deprecated and will no longer work in Contao 5.0. Use Environment::get("indexFreeRequest") instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::getIndexFreeRequest()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Environment::get(\'indexFreeRequest\')" instead.');
 
 		return StringUtil::ampersand(Environment::get('indexFreeRequest'), $blnAmpersand);
 	}
@@ -1138,7 +1227,7 @@ abstract class System
 	 */
 	public static function getModelClassFromTable($strTable)
 	{
-		@trigger_error('Using System::getModelClassFromTable() has been deprecated and will no longer work in Contao 5.0. Use Model::getClassFromTable() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::getModelClassFromTable()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Model::getClassFromTable()" instead.');
 
 		return Model::getClassFromTable($strTable);
 	}
@@ -1151,7 +1240,7 @@ abstract class System
 	 */
 	public static function enableModule()
 	{
-		@trigger_error('Using System::enableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::enableModule()" has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.');
 	}
 
 	/**
@@ -1162,7 +1251,7 @@ abstract class System
 	 */
 	public static function disableModule()
 	{
-		@trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::disableModule()" has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.');
 	}
 }
 

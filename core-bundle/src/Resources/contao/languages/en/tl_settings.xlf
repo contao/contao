@@ -6,7 +6,7 @@
         <source>E-mail address of the system administrator</source>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -55,7 +55,6 @@
       </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.1">
         <source>Do not collapse elements in the back end preview.</source>
-      </trans-unit>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
@@ -152,6 +151,9 @@
       </trans-unit>
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
       </trans-unit>
     </body>
   </file>

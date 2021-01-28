@@ -57,8 +57,10 @@ class PageTree extends Widget
 		parent::__construct($arrAttributes);
 
 		// Prepare the order field
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
+			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the page tree has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
+
 			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
@@ -89,7 +91,7 @@ class PageTree extends Widget
 		}
 
 		// Store the order value
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
 			$arrNew = array();
 
@@ -109,7 +111,7 @@ class PageTree extends Widget
 		}
 
 		// Return the value as usual
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if ($this->mandatory)
 			{
@@ -136,7 +138,7 @@ class PageTree extends Widget
 	 */
 	protected function checkValue($varInput)
 	{
-		if ($varInput == '' || !\is_array($this->rootNodes))
+		if (!$varInput || !\is_array($this->rootNodes))
 		{
 			return;
 		}
@@ -165,7 +167,7 @@ class PageTree extends Widget
 	{
 		$arrSet = array();
 		$arrValues = array();
-		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
+		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 
 		// $this->varValue can be an array, so use empty() here
 		if (!empty($this->varValue))
@@ -174,10 +176,12 @@ class PageTree extends Widget
 
 			if ($objPages !== null)
 			{
-				while ($objPages->next())
+				foreach ($objPages as $objPage)
 				{
-					$arrSet[] = $objPages->id;
-					$arrValues[$objPages->id] = Image::getHtml($this->getPageStatusIcon($objPages)) . ' ' . $objPages->title . ' (' . $objPages->alias . Config::get('urlSuffix') . ')';
+					$objPage->loadDetails();
+
+					$arrSet[] = $objPage->id;
+					$arrValues[$objPage->id] = Image::getHtml($this->getPageStatusIcon($objPage)) . ' ' . $objPage->title . ' (' . ($objPage->urlPrefix ? ($objPage->urlPrefix . '/') : '') . $objPage->alias . $objPage->urlSuffix . ')';
 				}
 			}
 
@@ -190,9 +194,9 @@ class PageTree extends Widget
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
+  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder || $this->isSortable ? 'sortable' : '') . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -231,8 +235,8 @@ class PageTree extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($blnHasOrder || $this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';

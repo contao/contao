@@ -14,38 +14,48 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $fs = new Filesystem();
-        $fs->mkdir($this->getFixturesDir().'/templates');
+        $this->filesystem = new Filesystem();
+        $this->filesystem->mkdir($this->getFixturesDir().'/templates');
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+        $container->set('filesystem', $this->filesystem);
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        $fs = new Filesystem();
-        $fs->remove($this->getFixturesDir().'/templates');
+        $this->filesystem->remove($this->getFixturesDir().'/templates');
     }
 
     public function testReplacesTheVariables(): void
     {
         Config::set('debugMode', false);
 
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             '<?= $this->value ?>'
         );
@@ -60,7 +70,7 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptions(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             'test<?php throw new Exception ?>'
         );
@@ -83,7 +93,7 @@ class TemplateTest extends TestCase
 
     public function testHandlesExceptionsInsideBlocks(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             <<<'EOF'
 <?php
@@ -116,7 +126,7 @@ EOF
 
     public function testHandlesExceptionsInParentTemplate(): void
     {
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_parent.html5',
             <<<'EOF'
 <?php
@@ -137,7 +147,7 @@ EOF
 EOF
         );
 
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             <<<'EOF'
 <?php
@@ -175,9 +185,9 @@ EOF
 
     public function testParsesNestedBlocks(): void
     {
-        file_put_contents($this->getFixturesDir().'/templates/test_parent.html5', '');
+        $this->filesystem->dumpFile($this->getFixturesDir().'/templates/test_parent.html5', '');
 
-        file_put_contents(
+        $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             <<<'EOF'
 <?php
@@ -246,5 +256,43 @@ EOF
         $template->dumpTemplateVars();
 
         $this->assertSame(['test' => 1], $dump);
+    }
+
+    public function testFigureFunction(): void
+    {
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
+            ->expects($this->once())
+            ->method('render')
+            ->with('123', '_my_size', ['foo' => 'bar'], 'my_template')
+            ->willReturn('<result>')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+        $container->set(FigureRenderer::class, $figureRenderer);
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+
+        System::setContainer($container);
+
+        $this->assertSame('<result>', (new FrontendTemplate())->figure('123', '_my_size', ['foo' => 'bar'], 'my_template'));
+    }
+
+    public function testFigureFunctionUsesImageTemplateByDefault(): void
+    {
+        $figureRenderer = $this->createMock(FigureRenderer::class);
+        $figureRenderer
+            ->expects($this->once())
+            ->method('render')
+            ->with(1, null, [], 'image')
+            ->willReturn('<result>')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+        $container->set(FigureRenderer::class, $figureRenderer);
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+
+        System::setContainer($container);
+
+        (new FrontendTemplate())->figure(1, null);
     }
 }

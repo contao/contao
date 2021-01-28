@@ -21,6 +21,7 @@ use Contao\FrontendUser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -29,6 +30,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ContaoUserProviderTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testLoadsUsersByUsername(): void
     {
         $user = $this->createMock(BackendUser::class);
@@ -219,12 +222,15 @@ class ContaoUserProviderTest extends TestCase
             ->method('save')
         ;
 
-        $userProvider = $this->getProvider(null, BackendUser::class);
+        $userProvider = $this->getProvider();
         $userProvider->upgradePassword($user, 'newsuperhash');
 
         $this->assertSame('newsuperhash', $user->password);
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
     {
         $user = $this->createMock(UserInterface::class);
@@ -233,16 +239,17 @@ class ContaoUserProviderTest extends TestCase
         $this->expectException(UnsupportedUserException::class);
         $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
 
+        /** @phpstan-ignore-next-line */
         $provider->upgradePassword($user, 'newsuperhash');
     }
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using the "postAuthenticate" hook has been deprecated %s.
      */
     public function testTriggersThePostAuthenticateHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postAuthenticate" hook has been deprecated %s.');
+
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
@@ -279,9 +286,6 @@ class ContaoUserProviderTest extends TestCase
         // Dummy method to test the postAuthenticate hook
     }
 
-    /**
-     * @param ContaoFramework&MockObject $framework
-     */
     private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         if (null === $framework) {

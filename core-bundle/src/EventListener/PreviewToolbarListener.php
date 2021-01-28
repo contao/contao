@@ -121,6 +121,7 @@ class PreviewToolbarListener
                     },
                     $this->previewProviderManager->getProviders()
                 ),
+                'preview_script' => $this->previewScript,
             ]
         );
 

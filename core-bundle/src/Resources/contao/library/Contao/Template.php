@@ -11,7 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use MatthiasMullie\Minify;
+use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\Image\ImageInterface;
+use Contao\Image\PictureConfiguration;
+use MatthiasMullie\Minify\CSS;
+use MatthiasMullie\Minify\JS;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -254,7 +258,7 @@ abstract class Template extends Controller
 	 */
 	public function showTemplateVars()
 	{
-		@trigger_error('Using Template::showTemplateVars() has been deprecated and will no longer work in Contao 5.0. Use Template::dumpTemplateVars() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::showTemplateVars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::dumpTemplateVars()" instead.');
 
 		$this->dumpTemplateVars();
 	}
@@ -274,7 +278,7 @@ abstract class Template extends Controller
 	 */
 	public function parse()
 	{
-		if ($this->strTemplate == '')
+		if (!$this->strTemplate)
 		{
 			return '';
 		}
@@ -300,16 +304,13 @@ abstract class Template extends Controller
 	 */
 	public function output()
 	{
-		@trigger_error('Using Template::output() has been deprecated and will no longer work in Contao 5.0. Use Template::getResponse() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
 
 		$this->compile();
 
 		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
 
 		echo $this->strBuffer;
-
-		// Flush the output buffers (see #6962)
-		$this->flushAllData();
 	}
 
 	/**
@@ -392,6 +393,26 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Render a figure
+	 *
+	 * The provided configuration array is used to configure a FigureBuilder.
+	 * If not explicitly set, the default template "image.html5" will be used
+	 * to render the results. To use the core's default Twig template, pass
+	 * "@ContaoCore/Image/Studio/figure.html.twig" as $template argument.
+	 *
+	 * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+	 * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
+	 * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
+	 * @param string                                     $template      A Contao or Twig template
+	 *
+	 * @return string
+	 */
+	public function figure($from, $size, $configuration = array(), $template = 'image')
+	{
+		return System::getContainer()->get(FigureRenderer::class)->render($from, $size, $configuration, $template);
+	}
+
+	/**
 	 * Returns an asset path
 	 *
 	 * @param string      $path
@@ -439,7 +460,7 @@ abstract class Template extends Controller
 	 */
 	protected function getDebugBar()
 	{
-		@trigger_error('Using Template::getDebugBar() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::getDebugBar()" has been deprecated and will no longer work in Contao 5.0.');
 	}
 
 	/**
@@ -517,13 +538,13 @@ abstract class Template extends Controller
 				// Minify inline scripts
 				if ($strType == 'js')
 				{
-					$objMinify = new Minify\JS();
+					$objMinify = new JS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
 				elseif ($strType == 'css')
 				{
-					$objMinify = new Minify\CSS();
+					$objMinify = new CSS();
 					$objMinify->add($strChunk);
 					$strChunk = $objMinify->minify();
 				}
@@ -556,20 +577,20 @@ abstract class Template extends Controller
 		if ($mtime === null && !preg_match('@^https?://@', $href))
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 
-			if (file_exists($rootDir . '/' . $href))
+			if (file_exists($projectDir . '/' . $href))
 			{
-				$mtime = filemtime($rootDir . '/' . $href);
+				$mtime = filemtime($projectDir . '/' . $href);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists($rootDir . '/' . $webDir . '/' . $href))
+				if (file_exists($projectDir . '/' . $webDir . '/' . $href))
 				{
-					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $href);
+					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $href);
 				}
 			}
 		}
@@ -612,20 +633,20 @@ abstract class Template extends Controller
 		if ($mtime === null && !preg_match('@^https?://@', $src))
 		{
 			$container = System::getContainer();
-			$rootDir = $container->getParameter('kernel.project_dir');
+			$projectDir = $container->getParameter('kernel.project_dir');
 
-			if (file_exists($rootDir . '/' . $src))
+			if (file_exists($projectDir . '/' . $src))
 			{
-				$mtime = filemtime($rootDir . '/' . $src);
+				$mtime = filemtime($projectDir . '/' . $src);
 			}
 			else
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 				// Handle public bundle resources in web/
-				if (file_exists($rootDir . '/' . $webDir . '/' . $src))
+				if (file_exists($projectDir . '/' . $webDir . '/' . $src))
 				{
-					$mtime = filemtime($rootDir . '/' . $webDir . '/' . $src);
+					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $src);
 				}
 			}
 		}
@@ -671,7 +692,7 @@ abstract class Template extends Controller
 	 */
 	public function flushAllData()
 	{
-		@trigger_error('Using Template::flushAllData() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::flushAllData()" has been deprecated and will no longer work in Contao 5.0.');
 
 		if (\function_exists('fastcgi_finish_request'))
 		{

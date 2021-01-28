@@ -49,6 +49,13 @@
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
         <target>Aquí puede agregar un meta título personalizado para sobrescribir el título de página predeterminado.</target>
       </trans-unit>
+      <trans-unit id="tl_news.robots.0">
+        <source>Robots tag</source>
+        <target>Etiqueta Robots</target>
+      </trans-unit>
+      <trans-unit id="tl_news.robots.1">
+        <source>Here you can overwrite how search engines handle the news item.</source>
+      </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
         <target>Metadescripción</target>
@@ -223,10 +230,6 @@
         <source>Date and time</source>
         <target>Fecha y hora</target>
       </trans-unit>
-      <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta data</target>
-      </trans-unit>
       <trans-unit id="tl_news.teaser_legend">
         <source>Subheadline and teaser</source>
         <target>Subtítulo y sumario</target>
@@ -246,6 +249,10 @@
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>
         <target>Página fuente</target>
+      </trans-unit>
+      <trans-unit id="tl_news.meta_legend">
+        <source>Meta data</source>
+        <target>Meta data</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
@@ -298,6 +305,10 @@
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
         <target>Pegar dentro de este nuevo archivo</target>
+      </trans-unit>
+      <trans-unit id="tl_news.editmeta">
+        <source>Edit the news item settings</source>
+        <target>Editar la configuración del artículo de noticia</target>
       </trans-unit>
     </body>
   </file>

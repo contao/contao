@@ -35,9 +35,13 @@ body:not(.fullscreen) #header .inner {
 }
 #header h1 a {
 	display:block;
+	height:16px;
 	padding:12px 12px 12px 43px;
 	background:url("icons/logo.svg") no-repeat 10px center;
 	font-weight:400;
+}
+#header h1 a .app-title {
+	float: left;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	#header h1 a {
@@ -343,6 +347,13 @@ body:not(.fullscreen) #container {
 .popup #main_headline {
 	display:none;
 }
+#main_headline span {
+	display:inline-block;
+	max-width:30%;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
@@ -494,6 +505,7 @@ h2.sub_headline {
 .tl_box h3,.tl_tbox h3,.tl_xpl h3 {
 	margin:0;
 	padding-top:13px;
+	height:16px;
 	font-size:.875rem;
 }
 .tl_box h4,.tl_tbox h4 {
@@ -587,6 +599,15 @@ h2.sub_headline {
 	0% {
 		background-position-x:1rem;
 	}
+}
+#tl_crawl .tl_message {
+	margin-bottom:24px;
+}
+#tl_crawl .tl_message > p {
+	padding-top:0;
+	padding-bottom:0;
+	background-color:transparent;
+	background-position-y:center;
 }
 #tl_crawl .tl_tbox {
 	padding-top:0;
@@ -1126,9 +1147,10 @@ table.tl_listing {
 }
 .tl_listing .tl_left {
 	flex-grow:1;
-	margin-left:40px;
-	text-indent:-40px;
 	box-sizing:border-box;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
 }
 .tl_listing .tl_left.tl_left_dragging {
 	position:absolute;
@@ -1152,10 +1174,6 @@ table.tl_listing {
 .tl_tree_xtnd .tl_file {
 	padding-top:4px;
 	padding-bottom:4px;
-}
-.tl_tree_xtnd .tl_file .tl_left {
-	margin-left:22px;
-	text-indent:-22px;
 }
 .tl_tree_xtnd .tl_file .tl_left * {
 	line-height:normal;
@@ -1181,7 +1199,7 @@ table.tl_listing {
 	max-height:75px;
 	width:auto;
 	height:auto;
-	margin:0 0 2px -18px;
+	margin:0 0 2px 22px;
 }
 .tl_file_manager .preview-important {
 	max-width:80px;
@@ -1523,18 +1541,18 @@ ul.sgallery li {
 .tl_metawizard li.odd {
 	background:#f9f9fb;
 }
-.tl_metawizard span img {
-	cursor:pointer;
-}
 .tl_metawizard label {
 	float:left;
 	width:18%;
 	margin-top:9px;
 }
-.tl_metawizard .tl_text {
+.tl_metawizard .tl_text, .tl_metawizard .tl_textarea {
 	float:left;
 	width:82%;
 	margin:1px 0;
+}
+.tl_metawizard .tl_textarea {
+	resize: vertical;
 }
 .tl_metawizard .tl_text + a {
 	top:6px;
@@ -1544,26 +1562,21 @@ ul.sgallery li {
 }
 .tl_metawizard .lang {
 	display:block;
-	margin-bottom:9px;
+	margin:3px 0 9px;
 	font-weight:600;
 	position:relative;
 }
+.tl_metawizard .lang img {
+	position:absolute;
+	right:0;
+	top:-1px;
+	cursor:pointer;
+}
+
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	.tl_metawizard .lang {
 		font-weight:500;
 	}
-}
-.tl_metawizard_img {
-	position:absolute;
-	right:0;
-	top:-1px;
-}
-.tl_metawizard_new .tl_select {
-	margin-right:4px;
-	max-width:200px;
-}
-.tl_metawizard_new .tl_submit {
-	line-height:1;
 }
 
 /* Section wizard */
@@ -1658,10 +1671,12 @@ ul.sgallery li {
 
 /* Ajax box */
 #tl_ajaxBox {
-	width:20%;
+	width:300px;
 	padding:2em;
+	box-sizing:border-box;
 	position:absolute;
-	left:40%;
+	left:50%;
+	margin-left:-150px;
 	background:#fff url("icons/loading.svg") no-repeat right 2em center;
 	border:2px solid #111;
 	border-radius:2px;
@@ -1771,6 +1786,7 @@ ul.sortable button[disabled]:hover {
 }
 .ace_editor {
 	padding:3px;
+	z-index:0;
 }
 .ace_editor,.ace_editor * {
 	font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace  !important;
@@ -2097,6 +2113,14 @@ fieldset.collapsed > legend {
 	color:#ccc;
 }
 
+/* TinyMCE */
+.tox-tinymce {
+	margin: 3px 0;
+}
+.tox .tox-menubar,.tox .tox-toolbar__primary,.tox .tox-statusbar {
+	background-color: #f7f7f9 !important;
+}
+
 /* Tablet */
 @media (max-width:991px) {
 	body {
@@ -2159,10 +2183,14 @@ fieldset.collapsed > legend {
 		transform:translateY(-40px);
 	}
 	#header h1 a {
-		width:22px;
+		min-width:22px;
 		padding:12px;
-		text-indent:34px; /* 22px width + 12px padding */
-		overflow:hidden;
+	}
+	#header h1 a .app-title {
+		display:none;
+	}
+	#header h1 a .badge-title {
+		margin-left:32px;
 	}
 	#tmenu > li > a {
 		width:16px;

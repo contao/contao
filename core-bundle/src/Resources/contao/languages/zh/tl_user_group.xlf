@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间前不激活用户组，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
@@ -38,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>如果需要在一个特定日期/时间前不激活用户组，请在这里录入。否则该字段留空。</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -49,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
+        <target>允许的元素</target>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -76,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
+        <target>用户组设置</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

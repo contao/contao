@@ -12,24 +12,46 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Lock\Factory;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
+use Webmozart\PathUtil\Path;
 
 /**
  * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use
- *             the lock service instead
+ *             the Symfony Lock component instead
  */
-abstract class AbstractLockedCommand extends ContainerAwareCommand
+abstract class AbstractLockedCommand extends Command implements ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface|null
+     */
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null): void
+    {
+        $this->container = $container;
+    }
+
+    protected function getContainer(): ContainerInterface
+    {
+        if (null === $this->container) {
+            throw new \LogicException('The container needs to be set before it can be retrieved.');
+        }
+
+        return $this->container;
+    }
+
     final protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        @trigger_error('Using the "AbstractLockedCommand" has been deprecated and will no longer work in Contao 5.0. Use the lock service instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.7', 'Using the "AbstractLockedCommand" has been deprecated and will no longer work in Contao 5.0. Use the Symfony Lock component instead.');
 
         $store = new FlockStore($this->getTempDir());
-        $factory = new Factory($store);
+        $factory = new LockFactory($store);
         $lock = $factory->createLock($this->getName());
 
         if (!$lock->acquire()) {
@@ -59,7 +81,7 @@ abstract class AbstractLockedCommand extends ContainerAwareCommand
     private function getTempDir(): string
     {
         $container = $this->getContainer();
-        $tmpDir = sys_get_temp_dir().'/'.md5($container->getParameter('kernel.project_dir'));
+        $tmpDir = Path::join(sys_get_temp_dir(), md5($container->getParameter('kernel.project_dir')));
 
         if (!is_dir($tmpDir)) {
             $container->get('filesystem')->mkdir($tmpDir);

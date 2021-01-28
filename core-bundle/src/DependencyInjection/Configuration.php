@@ -19,6 +19,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
 {
@@ -62,16 +63,21 @@ class Configuration implements ConfigurationInterface
                     ->max(32767)
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
+                ->booleanNode('legacy_routing')
+                    ->defaultTrue()
+                    ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
+                ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
                 ->end()
                 ->arrayNode('locales')
-                    ->info('Allows to configure which languages can be used within Contao. Defaults to all languages for which a translation exists.')
+                    ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
                     ->prototype('scalar')->end()
                     ->defaultValue($this->getLocales())
                 ->end()
                 ->booleanNode('prepend_locale')
                     ->info('Whether or not to add the page language to the URL.')
+                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
                     ->defaultFalse()
                 ->end()
                 ->booleanNode('pretty_error_screens')
@@ -84,8 +90,8 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('')
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -107,16 +113,17 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
                 ->end()
                 ->scalarNode('url_suffix')
+                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
                     ->defaultValue('.html')
                 ->end()
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/web.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->canonicalize($this->projectDir.'/web'))
+                    ->defaultValue(Path::join($this->projectDir, 'web'))
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
@@ -125,6 +132,8 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
+                ->append($this->addMailerNode())
+                ->append($this->addBackendNode())
             ->end()
         ;
 
@@ -173,7 +182,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
-                    ->info('Allows to define image sizes in the configuration file in addition to in the Contao back end.')
+                    ->info('Allows to define image sizes in the configuration file in addition to in the Contao back end. Use the special name "_defaults" to preset values for all sizes of the configuration file.')
                     ->useAttributeAsKey('name')
                     ->validate()
                         ->always(
@@ -273,7 +282,7 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('sizes')
                                         ->end()
                                         ->enumNode('resizeMode')
-                                            ->setDeprecated('Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.')
+                                            ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.'))
                                             ->values([
                                                 ResizeConfiguration::MODE_CROP,
                                                 ResizeConfiguration::MODE_BOX,
@@ -284,7 +293,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->enumNode('resizeMode')
-                                ->setDeprecated('Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.'))
                                 ->values([
                                     ResizeConfiguration::MODE_CROP,
                                     ResizeConfiguration::MODE_BOX,
@@ -292,13 +301,13 @@ class Configuration implements ConfigurationInterface
                                 ])
                             ->end()
                             ->scalarNode('cssClass')
-                                ->setDeprecated('Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.'))
                             ->end()
                             ->booleanNode('lazyLoading')
-                                ->setDeprecated('Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.'))
                             ->end()
                             ->booleanNode('skipIfDimensionsMatch')
-                                ->setDeprecated('Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.')
+                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.'))
                             ->end()
                         ->end()
                     ->end()
@@ -307,17 +316,17 @@ class Configuration implements ConfigurationInterface
                     ->info('The target directory for the cached images processed by Contao.')
                     ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->canonicalize($this->projectDir.'/assets/images'))
+                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
                     ->validate()
                         ->always(
-                            function (string $value): string {
-                                return $this->canonicalize($value);
+                            static function (string $value): string {
+                                return Path::canonicalize($value);
                             }
                         )
                     ->end()
                 ->end()
                 ->scalarNode('target_path')
-                    ->setDeprecated('Use the "contao.image.target_dir" parameter instead.')
+                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Use the "contao.image.target_dir" parameter instead.'))
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
@@ -417,43 +426,71 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    /**
-     * Canonicalizes a path preserving the directory separators.
-     */
-    private function canonicalize(string $value): string
+    private function addMailerNode(): NodeDefinition
     {
-        $resolved = [];
-        $chunks = preg_split('#([\\\\/]+)#', $value, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        return (new TreeBuilder('mailer'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('transports')
+                    ->info('Specifies the mailer transports available for selection within Contao.')
+                    ->useAttributeAsKey('name')
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('from')
+                                ->info('Overrides the "From" address for any e-mails sent with this mailer transport.')
+                                ->defaultNull()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
 
-        for ($i = 0, $c = \count($chunks); $i < $c; ++$i) {
-            if ('.' === $chunks[$i]) {
-                ++$i;
-                continue;
-            }
+    private function addBackendNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('attributes')
+                    ->info('Adds HTML attributes to the <body> tag in the back end.')
+                    ->example(['data-app-name' => 'My App', 'data-app-version' => '1.2.3'])
+                    ->validate()
+                    ->always(
+                        static function (array $attributes): array {
+                            foreach (array_keys($attributes) as $name) {
+                                if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
+                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                }
+                            }
 
-            // Reduce multiple slashes to one
-            if (0 === strncmp($chunks[$i], '/', 1)) {
-                $resolved[] = '/';
-                continue;
-            }
-
-            // Reduce multiple backslashes to one
-            if (0 === strncmp($chunks[$i], '\\', 1)) {
-                $resolved[] = '\\';
-                continue;
-            }
-
-            if ('..' === $chunks[$i]) {
-                ++$i;
-                array_pop($resolved);
-                array_pop($resolved);
-                continue;
-            }
-
-            $resolved[] = $chunks[$i];
-        }
-
-        return rtrim(implode('', $resolved), '\/');
+                            return $attributes;
+                        }
+                    )
+                    ->end()
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('name')
+                    ->scalarPrototype()->end()
+                ->end()
+                ->arrayNode('custom_css')
+                    ->info('Adds custom style sheets to the back end.')
+                    ->example(['files/backend/custom.css'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->arrayNode('custom_js')
+                    ->info('Adds custom JavaScript files to the back end.')
+                    ->example(['files/backend/custom.js'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->scalarNode('badge_title')
+                    ->info('Configures the title of the badge in the back end.')
+                    ->example('develop')
+                    ->defaultValue('')
+                ->end()
+            ->end()
+        ;
     }
 
     /**
@@ -463,13 +500,13 @@ class Configuration implements ConfigurationInterface
     {
         $dirs = [__DIR__.'/../Resources/contao/languages'];
 
-        if (is_dir($this->projectDir.'/contao/languages')) {
-            $dirs[] = $this->projectDir.'/contao/languages';
+        if (is_dir($path = Path::join($this->projectDir, 'contao/languages'))) {
+            $dirs[] = $path;
         }
 
         // Backwards compatibility
-        if (is_dir($this->projectDir.'/app/Resources/contao/languages')) {
-            $dirs[] = $this->projectDir.'/app/Resources/contao/languages';
+        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
+            $dirs[] = $path;
         }
 
         // The default locale must be the first supported language (see contao/core#6533)
@@ -483,5 +520,20 @@ class Configuration implements ConfigurationInterface
         }
 
         return array_values(array_unique($languages));
+    }
+
+    /**
+     * @return array<string>
+     *
+     * @todo Remove this as soon as we are on Symfony 5 only
+     */
+    private function getDeprecationArgs(string $package, string $version, string $message): array
+    {
+        /** @phpstan-ignore-next-line */
+        if (method_exists('root', TreeBuilder::class)) {
+            return [$message];
+        }
+
+        return [$package, $version, $message];
     }
 }

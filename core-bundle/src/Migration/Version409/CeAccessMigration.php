@@ -55,7 +55,7 @@ class CeAccessMigration extends AbstractMigration
     {
         $this->framework->initialize();
 
-        $this->connection->query('
+        $this->connection->executeStatement('
             ALTER TABLE
                 tl_user_group
             ADD
@@ -77,6 +77,6 @@ class CeAccessMigration extends AbstractMigration
             ':fields' => serialize(array_keys($GLOBALS['TL_FFL'])),
         ]);
 
-        return new MigrationResult(true, '');
+        return $this->createResult(true);
     }
 }

@@ -77,8 +77,8 @@ abstract class Hybrid extends Frontend
 	/**
 	 * Initialize the object
 	 *
-	 * @param ContentModel|ModuleModel|FormModel $objElement
-	 * @param string                             $strColumn
+	 * @param ContentModel|ModuleModel $objElement
+	 * @param string                   $strColumn
 	 */
 	public function __construct($objElement, $strColumn='main')
 	{
@@ -87,7 +87,7 @@ abstract class Hybrid extends Frontend
 		// Store the parent element (see #4556)
 		if ($objElement instanceof Model || $objElement instanceof Collection)
 		{
-			/** @var ContentModel|ModuleModel|FormModel $objModel */
+			/** @var ContentModel|ModuleModel $objModel */
 			$objModel = $objElement;
 
 			if ($objModel instanceof Collection)
@@ -98,7 +98,7 @@ abstract class Hybrid extends Frontend
 			$this->objParent = $objModel;
 		}
 
-		if ($this->strKey == '' || $this->strTable == '')
+		if (!$this->strKey || !$this->strTable)
 		{
 			return;
 		}
@@ -147,7 +147,7 @@ abstract class Hybrid extends Frontend
 		// Merge the CSS classes (see #6011)
 		if (!empty($this->cssID[1]))
 		{
-			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
+			$cssID[1] = trim(($cssID[1] ?? '') . ' ' . $this->cssID[1]);
 		}
 
 		$this->cssID = $cssID;
@@ -221,7 +221,7 @@ abstract class Hybrid extends Frontend
 	 */
 	public function generate()
 	{
-		if ($this->objParent instanceof ContentModel && TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->objParent->invisible || ($this->objParent->start != '' && $this->objParent->start > time()) || ($this->objParent->stop != '' && $this->objParent->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
@@ -232,17 +232,17 @@ abstract class Hybrid extends Frontend
 		$this->compile();
 
 		$this->Template->style = !empty($this->arrStyle) ? implode(' ', $this->arrStyle) : '';
+		$this->Template->class = trim($this->typePrefix . $this->strKey . ' ' . ($this->cssID[1] ?? ''));
 		$this->Template->cssID = !empty($this->cssID[0]) ? ' id="' . $this->cssID[0] . '"' : '';
-		$this->Template->class = trim($this->typePrefix . $this->strKey . ' ' . $this->cssID[1]);
 
 		$this->Template->inColumn = $this->strColumn;
 
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $this->headline;
 		}
 
-		if ($this->Template->hl == '')
+		if (!$this->Template->hl)
 		{
 			$this->Template->hl = $this->hl;
 		}
@@ -253,6 +253,41 @@ abstract class Hybrid extends Frontend
 		}
 
 		return $this->Template->parse();
+	}
+
+	protected function isHidden()
+	{
+		// Only content models can be invisible
+		if (!$this->objParent instanceof ContentModel)
+		{
+			return false;
+		}
+
+		$isInvisible = $this->objParent->invisible || ($this->objParent->start && $this->objParent->start > time()) || ($this->objParent->stop && $this->objParent->stop <= time());
+
+		// The element is visible, so show it
+		if (!$isInvisible)
+		{
+			return false;
+		}
+
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+
+		// Preview mode is enabled, so show the element
+		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		{
+			return false;
+		}
+
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		// We are in the back end, so show the element
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

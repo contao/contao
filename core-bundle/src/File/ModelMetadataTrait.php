@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\File;
+
+use Contao\Controller;
+use Contao\FilesModel;
+
+/**
+ * @property string $overwriteMeta
+ *
+ * @method array row()
+ */
+trait ModelMetadataTrait
+{
+    /**
+     * Get the default meta data or null if not applicable.
+     */
+    public function getOverwriteMetadata(): ?Metadata
+    {
+        // Ignore if "overwriteMeta" is not set
+        if (!$this->overwriteMeta) {
+            return null;
+        }
+
+        $data = $this->row();
+
+        // Normalize keys
+        if (isset($data['imageTitle'])) {
+            $data[Metadata::VALUE_TITLE] = $data['imageTitle'];
+        }
+
+        if (isset($data['imageUrl'])) {
+            $data[Metadata::VALUE_URL] = $data['imageUrl'];
+        }
+
+        unset($data['imageTitle'], $data['imageUrl']);
+
+        // Make sure we resolve insert tags pointing to files.
+        if (isset($data[Metadata::VALUE_URL])) {
+            $data[Metadata::VALUE_URL] = Controller::replaceInsertTags($data[Metadata::VALUE_URL]);
+        }
+
+        // Strip superfluous fields by intersecting with tl_files.meta.eval.metaFields
+        return new Metadata(array_intersect_key($data, array_flip(FilesModel::getMetaFields())));
+    }
+}

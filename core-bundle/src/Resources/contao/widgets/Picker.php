@@ -38,8 +38,10 @@ class Picker extends Widget
 		parent::__construct($arrAttributes);
 
 		// Prepare the order field
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
+			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
+
 			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
@@ -68,7 +70,7 @@ class Picker extends Widget
 		}
 
 		// Store the order value
-		if ($this->orderField != '')
+		if ($this->orderField)
 		{
 			$arrNew = array();
 
@@ -88,7 +90,7 @@ class Picker extends Widget
 		}
 
 		// Return the value as usual
-		if ($varInput == '')
+		if (!$varInput)
 		{
 			if ($this->mandatory)
 			{
@@ -116,15 +118,15 @@ class Picker extends Widget
 	public function generate()
 	{
 		$strContext = $this->context ?: 'dc.' . $this->getRelatedTable();
-		$blnHasOrder = ($this->orderField != '' && \is_array($this->{$this->orderField}));
+		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
-  <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
+  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '" class="' . (($blnHasOrder || $this->isSortable) ? 'sortable' : '') . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -163,8 +165,8 @@ class Picker extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strOrderId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($blnHasOrder || $this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';
@@ -187,7 +189,8 @@ class Picker extends Widget
 
 		if (!empty($this->varValue))
 		{
-			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN (" . implode(',', array_map('intval', (array) $this->varValue)) . ")");
+			$strIdList = implode(',', array_map('intval', (array) $this->varValue));
+			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN ($strIdList) ORDER BY FIND_IN_SET(id, '$strIdList')");
 
 			if ($objRows->numRows)
 			{
@@ -226,7 +229,7 @@ class Picker extends Widget
 
 		if ($mode === 4)
 		{
-			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'];
+			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
 			if (\is_array($callback))
 			{
@@ -244,19 +247,19 @@ class Picker extends Widget
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
 		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
 
-		if (\is_array($labelConfig['label_callback']))
+		if (\is_array($labelConfig['label_callback'] ?? null))
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
 			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
 		}
 
-		if (\is_callable($labelConfig['label_callback']))
+		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}
 
-		return $arrRow['id'];
+		return $label ?: $arrRow['id'];
 	}
 
 	protected function getRelatedTable(): string

@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Dotenv\Dotenv;
+use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -49,13 +50,21 @@ class GetDotEnvCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $path = $this->projectDir.'/.env';
+        $path = Path::join($this->projectDir, '.env');
 
         if (!file_exists($path)) {
             return 0;
         }
 
-        $vars = (new Dotenv(false))->parse(file_get_contents($path));
+        if (method_exists(Dotenv::class, 'usePutenv')) {
+            $dotenv = new Dotenv();
+            $dotenv->usePutenv(false);
+        } else {
+            // Backwards compatibility with symfony/dotenv <5.0
+            $dotenv = new Dotenv(false);
+        }
+
+        $vars = $dotenv->parse(file_get_contents($path));
         $key = $input->getArgument('key');
 
         if (!$key) {

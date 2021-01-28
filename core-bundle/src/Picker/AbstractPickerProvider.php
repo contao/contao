@@ -57,7 +57,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $name = $this->getName();
 
         if (null === $this->translator) {
-            @trigger_error('Using a picker provider without injecting the translator service has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.4', 'Using a picker provider without injecting the translator service has been deprecated and will no longer work in Contao 5.0.');
             $label = $GLOBALS['TL_LANG']['MSC'][$name];
         } else {
             $label = $this->translator->trans('MSC.'.$name, [], 'contao_default');
@@ -80,7 +80,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      */
     public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {
-        @trigger_error('Using AbstractPickerProvider::setTokenStorage() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.8', 'Using "Contao\CoreBundle\Picker\AbstractPickerProvider::setTokenStorage()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
         $this->tokenStorage = $tokenStorage;
     }
@@ -100,7 +100,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      */
     protected function getUser(): BackendUser
     {
-        @trigger_error('Using AbstractPickerProvider::getUser() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.8', 'Using "Contao\CoreBundle\Picker\AbstractPickerProvider::getUser()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
         if (null === $this->tokenStorage) {
             throw new \RuntimeException('No token storage provided');

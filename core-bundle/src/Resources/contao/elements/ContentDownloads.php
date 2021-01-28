@@ -40,7 +40,7 @@ class ContentDownloads extends ContentElement
 	public function generate()
 	{
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && FE_USER_LOGGED_IN)
+		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 
@@ -71,7 +71,7 @@ class ContentDownloads extends ContentElement
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file != '' && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{
@@ -141,7 +141,7 @@ class ContentDownloads extends ContentElement
 				}
 
 				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
+				if (empty($arrMeta['title']))
 				{
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
@@ -168,8 +168,8 @@ class ContentDownloads extends ContentElement
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
 					'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
-					'link'      => $arrMeta['title'],
-					'caption'   => $arrMeta['caption'],
+					'link'      => $arrMeta['title'] ?? null,
+					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,
 					'filesize'  => $this->getReadableSize($objFile->filesize),
 					'icon'      => Image::getPath($objFile->icon),
@@ -223,7 +223,7 @@ class ContentDownloads extends ContentElement
 					}
 
 					// Use the file name as title if none is given
-					if ($arrMeta['title'] == '')
+					if (!$arrMeta['title'])
 					{
 						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}
@@ -266,14 +266,14 @@ class ContentDownloads extends ContentElement
 		{
 			default:
 			case 'name_asc':
-				uksort($files, static function (): int
+				uksort($files, static function ($a, $b): int
 				{
 					return strnatcasecmp(basename($a), basename($b));
 				});
 				break;
 
 			case 'name_desc':
-				uksort($files, static function (): int
+				uksort($files, static function ($a, $b): int
 				{
 					return -strnatcasecmp(basename($a), basename($b));
 				});
@@ -289,7 +289,7 @@ class ContentDownloads extends ContentElement
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			case 'meta':
-				@trigger_error('The "meta" key in ContentDownloads::compile() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+				trigger_deprecation('contao/core-bundle', '4.0', 'The "meta" key in "Contao\ContentDownloads::compile()" has been deprecated and will no longer work in Contao 5.0.');
 				// no break
 
 			case 'custom':

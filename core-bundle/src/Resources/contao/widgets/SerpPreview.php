@@ -10,11 +10,14 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * @property array    $titleFields
  * @property array    $descriptionFields
  * @property string   $aliasField
  * @property callable $url_callback
+ * @property callable $title_tag_callback
  */
 class SerpPreview extends Widget
 {
@@ -42,8 +45,15 @@ class SerpPreview extends Widget
 		$description = StringUtil::substr($this->getDescription($model), 160);
 		$alias = $this->getAlias($model);
 
-		// Get the URL with a %s placeholder for the alias or ID
-		$url = $this->getUrl($model);
+		try
+		{
+			// Get the URL with a %s placeholder for the alias or ID
+			$url = $this->getUrl($model);
+		}
+		catch (ExceptionInterface $routingException)
+		{
+			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
+		}
 
 		list($baseUrl) = explode('%s', $url);
 		$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
@@ -67,6 +77,11 @@ class SerpPreview extends Widget
 		$descriptionField = $this->getDescriptionField($suffix);
 		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
 
+		if ($titleTag = $this->getTitleTag($model))
+		{
+			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
+		}
+
 		return <<<EOT
 <div class="serp-preview">
   <p id="serp_url_$id" class="url">$url</p>
@@ -82,7 +97,8 @@ class SerpPreview extends Widget
       titleFallbackField: '$titleFallbackField',
       aliasField: '$aliasField',
       descriptionField: '$descriptionField',
-      descriptionFallbackField: '$descriptionFallbackField'
+      descriptionFallbackField: '$descriptionFallbackField',
+      titleTag: '$titleTag'
     });
   });
 </script>
@@ -152,6 +168,26 @@ EOT;
 		}
 
 		return str_replace($placeholder, '%s', $url);
+	}
+
+	private function getTitleTag(Model $model)
+	{
+		if (!isset($this->title_tag_callback))
+		{
+			return '';
+		}
+
+		if (\is_array($this->title_tag_callback))
+		{
+			return System::importStatic($this->title_tag_callback[0])->{$this->title_tag_callback[1]}($model);
+		}
+
+		if (\is_callable($this->title_tag_callback))
+		{
+			return \call_user_func($this->title_tag_callback, $model);
+		}
+
+		return '';
 	}
 
 	private function getTitleField($suffix)

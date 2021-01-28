@@ -2,6 +2,7 @@ extends: default
 
 ignore: |
     /node_modules/
+    /tools/
     /vendor/
 
 rules:
@@ -47,5 +48,9 @@ rules:
 
     octal-values:
         forbid-implicit-octal: true
+
+    quoted-strings:
+        quote-type: single
+        required: only-when-needed
 
     truthy: disable

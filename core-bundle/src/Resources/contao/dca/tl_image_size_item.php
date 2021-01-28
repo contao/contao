@@ -8,7 +8,17 @@
  * @license LGPL-3.0-or-later
  */
 
-Contao\System::loadLanguageFile('tl_image_size');
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+use Contao\Versions;
+
+System::loadLanguageFile('tl_image_size');
 
 $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 (
@@ -75,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'toggle' => array
 			(
@@ -192,7 +202,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class tl_image_size_item extends Contao\Backend
+class tl_image_size_item extends Backend
 {
 	/**
 	 * Import the back end user object
@@ -200,13 +210,13 @@ class tl_image_size_item extends Contao\Backend
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import('Contao\BackendUser', 'User');
+		$this->import(BackendUser::class, 'User');
 	}
 
 	/**
 	 * Check permissions to edit the table
 	 *
-	 * @throws Contao\CoreBundle\Exception\AccessDeniedException
+	 * @throws AccessDeniedException
 	 */
 	public function checkPermission()
 	{
@@ -217,7 +227,7 @@ class tl_image_size_item extends Contao\Backend
 
 		if (!$this->User->hasAccess('image_sizes', 'themes'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to access the image sizes module.');
+			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
 	}
 
@@ -262,9 +272,9 @@ class tl_image_size_item extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Contao\Input::get('tid'))
+		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
 			$this->redirect($this->getReferer());
 		}
 
@@ -281,21 +291,21 @@ class tl_image_size_item extends Contao\Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . Contao\StringUtil::specialchars($title) . '"' . $attributes . '>' . Contao\Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 
 	/**
 	 * Toggle the visibility of a format definition
 	 *
-	 * @param integer              $intId
-	 * @param boolean              $blnVisible
-	 * @param Contao\DataContainer $dc
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, Contao\DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
 		// Set the ID and action
-		Contao\Input::setGet('id', $intId);
-		Contao\Input::setGet('act', 'toggle');
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
 
 		if ($dc)
 		{
@@ -303,7 +313,7 @@ class tl_image_size_item extends Contao\Backend
 		}
 
 		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onload_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onload_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onload_callback'] as $callback)
 			{
@@ -322,30 +332,32 @@ class tl_image_size_item extends Contao\Backend
 		// Check the field access
 		if (!$this->User->hasAccess('tl_image_size_item::invisible', 'alexf'))
 		{
-			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish image size item ID ' . $intId . '.');
+			throw new AccessDeniedException('Not enough permissions to publish/unpublish image size item ID ' . $intId . '.');
+		}
+
+		$objRow = $this->Database->prepare("SELECT * FROM tl_image_size_item WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid image size item ID ' . $intId . '.');
 		}
 
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_image_size_item WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
-		$objVersions = new Contao\Versions('tl_image_size_item', $intId);
+		$objVersions = new Versions('tl_image_size_item', $intId);
 		$objVersions->initialize();
 
 		// Reverse the logic (image sizes have invisible=1)
 		$blnVisible = !$blnVisible;
 
 		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['fields']['invisible']['save_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['fields']['invisible']['save_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_image_size_item']['fields']['invisible']['save_callback'] as $callback)
 			{
@@ -374,7 +386,7 @@ class tl_image_size_item extends Contao\Backend
 		}
 
 		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onsubmit_callback']))
+		if (is_array($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onsubmit_callback'] ?? null))
 		{
 			foreach ($GLOBALS['TL_DCA']['tl_image_size_item']['config']['onsubmit_callback'] as $callback)
 			{
@@ -391,5 +403,10 @@ class tl_image_size_item extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

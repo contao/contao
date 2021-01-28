@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Webmozart\PathUtil\Path;
 
 class BackendCsvImportController
 {
@@ -148,7 +149,7 @@ class BackendCsvImportController
                 $message = $this->framework->getAdapter(Message::class);
                 $message->addError($e->getMessage());
 
-                return new RedirectResponse($request->getUri(), 303);
+                return new RedirectResponse($request->getUri());
             }
 
             $this->connection->update(
@@ -282,13 +283,13 @@ class BackendCsvImportController
         }
 
         foreach ($files as &$file) {
-            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $extension = Path::getExtension($file, true);
 
             if ('csv' !== $extension) {
                 throw new \RuntimeException(sprintf($this->translator->trans('ERR.filetype', [], 'contao_default'), $extension));
             }
 
-            $file = $this->projectDir.'/'.$file;
+            $file = Path::join($this->projectDir, $file);
         }
 
         return $files;

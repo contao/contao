@@ -15,15 +15,16 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
-use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-abstract class AbstractController extends SymfonyAbstractController implements ServiceAnnotationInterface
+abstract class AbstractController extends SymfonyAbstractController
 {
     public static function getSubscribedServices()
     {
         $services = parent::getSubscribedServices();
 
         $services['contao.framework'] = ContaoFramework::class;
+        $services['event_dispatcher'] = EventDispatcherInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
 
         return $services;

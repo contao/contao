@@ -54,8 +54,7 @@
         <target>Mostrar ítens protegidos</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Incluir itens que são mostrados apenas depois que um usuário se conectou ao website.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -82,12 +81,10 @@
         <target>Favor selecionar o modelo de navegação (estes modelos iniciam por &lt;em&gt;nav_&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
-        <source>Custom module template</source>
-        <target>Modelo personalizado de módulo</target>
+        <source>Module template</source>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
-        <source>Here you can overwrite the default module template.</source>
-        <target>Aqui pode substituir o modelo padrão de módulo.</target>
+        <source>Here you can select the module template.</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -134,8 +131,7 @@
         <target>Redirecionar para a última página visitada</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Após o login/logout, o usuário é redirecionado para a página em que ele estava antes.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -227,15 +223,19 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Largura de contexto</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>O primeiro campo define o numero de caracteres à esquerda e à direita de cada palavra chave e o segundo campo define a largura de contexto geral por resultado.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
+        <target>Cumprimento mínimo para palavra chave</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>Palavras Chave com menos que a dimensão em caracteres que o valor mínimo serão ignoradas nos resultados de pesquisa. Definir como 0 para desativar.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -263,9 +263,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Secção de Esquema</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
+        <target>Por favor escolha a secção de esquema cujos artigos pretende listar.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -341,7 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
         <source>Cache timeout</source>
-        <target>Expiração de cache</target>
+        <target>Timeout de cache</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the RSS feed is being cached.</source>
@@ -404,28 +406,25 @@
         <target>Aqui você pode inserir o ID de folha de estilo (atributo ID) ou uma ou mais classes de folha de estilo (atributo class) para formatar o módulo utilizando CSS.</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disabilitar pergunta de segurança</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
-        <source>Here you can disable the security question (not recommended).</source>
-        <target>Escolha essa opção para desabilitar a pergunta de segurança (não recomendado)</target>
+        <source>Here you can disable the spam protection (not recommended).</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
         <target>Grupos de Associados</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Cada usuário que não seja um administrador herda as todas as permissões de um grupo de usuários. Portanto, cada usuário deve ser associado a pelo menos, um grupo! Se um usuário é designado a mais de um grupo, as permissões são adicionadas.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Aqui pode atribuir um ou mais grupos ao membro.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Permite conexão</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Se você escolher essa opção, o novo usuário será capaz de se conectar utilizando nome de usuário e senha dele.</target>
+        <source>Allow the new member to log into the front end.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -472,8 +471,7 @@
         <target>Página de Ativação</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Por favor, informe a página para a qual o usuário será redirecionado depois da conta ter sido ativada.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -488,8 +486,7 @@
         <target>Email de confirmação</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Texto do email de confirmação. Você pode utilizar qualquer propriedade como curinga (ex: &lt;em&gt;##lastname##&lt;/em&gt; e também &lt;em&gt;##domain##&lt;/em&gt; (domínio) e ainda &lt;em&gt;##link##&lt;/em&gt; (link de ativação).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -617,6 +614,7 @@ Caso receba este e-mail por engano, pedimos que contacte um administrador.
       </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
+        <target>Criar um novo modulo</target>
       </trans-unit>
       <trans-unit id="tl_module.show">
         <source>Show the details of module ID %s</source>

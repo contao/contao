@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -21,6 +22,8 @@ use Patchwork\Utf8;
  */
 class ModuleFaqPage extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -34,7 +37,9 @@ class ModuleFaqPage extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqpage'][0]) . ' ###';
@@ -52,6 +57,13 @@ class ModuleFaqPage extends Module
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
 			return '';
+		}
+
+		// Tag the FAQ categories (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_faq_category.' . $id; }, $this->faq_categories));
 		}
 
 		return parent::generate();
@@ -74,8 +86,8 @@ class ModuleFaqPage extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$tags = array();
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add FAQs
 		while ($objFaq->next())
@@ -85,24 +97,21 @@ class ModuleFaqPage extends Module
 
 			// Clean the RTE output
 			$objTemp->answer = StringUtil::toHtml5($objFaq->answer);
-
 			$objTemp->answer = StringUtil::encodeEmail($objTemp->answer);
+
 			$objTemp->addImage = false;
+			$objTemp->addBefore = false;
 
 			// Add an image
-			if ($objFaq->addImage && $objFaq->singleSRC != '')
+			if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
 			{
-				$objModel = FilesModel::findByUuid($objFaq->singleSRC);
-
-				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
-				{
-					// Do not override the field now that we have a model registry (see #6303)
-					$arrFaq = $objFaq->row();
-					$arrFaq['singleSRC'] = $objModel->path;
-					$strLightboxId = 'lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']'; // see #5810
-
-					$this->addImageToTemplate($objTemp, $arrFaq, null, $strLightboxId, $objModel);
-				}
+				$figureBuilder
+					->setSize($objFaq->size)
+					->setMetadata($objFaq->getOverwriteMetadata())
+					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
+					->enableLightbox($objFaq->fullsize)
+					->build()
+					->applyLegacyTemplateData($objTemp, $objFaq->imagemargin, $objFaq->floating);
 			}
 
 			$objTemp->enclosure = array();
@@ -124,6 +133,15 @@ class ModuleFaqPage extends Module
 			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
 			$arrFaqs[$objFaq->pid]['headline'] = $objPid->headline;
 			$arrFaqs[$objFaq->pid]['title'] = $objPid->title;
+
+			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
+		}
+
+		// Tag the FAQs (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags($tags);
 		}
 
 		$arrFaqs = array_values(array_filter($arrFaqs));

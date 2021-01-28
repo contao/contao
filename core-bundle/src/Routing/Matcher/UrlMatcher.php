@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\Matcher;
 
 use Symfony\Cmf\Component\Routing\NestedMatcher\FinalMatcherInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
@@ -29,13 +31,12 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         parent::__construct(new RouteCollection(), new RequestContext());
     }
 
-    public function finalMatch(RouteCollection $collection, Request $request)
+    public function finalMatch(RouteCollection $collection, Request $request): array
     {
         $this->routes = $collection;
 
         $context = new RequestContext();
         $context->fromRequest($request);
-        $context->setHost($request->getHttpHost());
 
         $this->setContext($context);
 
@@ -53,5 +54,13 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
             'httpsPort' => $this->context->getHttpsPort(),
             '_route' => $route,
         ];
+    }
+
+    protected function getAttributes(Route $route, $name, array $attributes): array
+    {
+        $attributes[RouteObjectInterface::ROUTE_NAME] = $name;
+        $attributes[RouteObjectInterface::ROUTE_OBJECT] = $route;
+
+        return $this->mergeDefaults($attributes, $route->getDefaults());
     }
 }

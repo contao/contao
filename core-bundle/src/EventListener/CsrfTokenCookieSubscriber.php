@@ -70,7 +70,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
         if ($this->requiresCsrf($request, $response)) {
             $this->setCookies($request, $response);
-        } else {
+        } elseif ($response->isSuccessful()) {
+            // Only delete the CSRF token cookie if the response is successful (#2252)
             $this->removeCookies($request, $response);
             $this->replaceTokenOccurrences($response);
         }
@@ -81,7 +82,8 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return [
             // The priority must be higher than the one of the Symfony route listener (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
-            KernelEvents::RESPONSE => 'onKernelResponse',
+            // The priority must be higher than the one of the make-response-private listener (defaults to -896)
+            KernelEvents::RESPONSE => ['onKernelResponse', -832],
         ];
     }
 
@@ -137,12 +139,22 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $content = $response->getContent();
+        $tokens = $this->tokenStorage->getUsedTokens();
 
-        foreach ($this->tokenStorage->getUsedTokens() as $value) {
-            $content = str_replace($value, '', $content);
+        if (!\is_string($content) || empty($tokens)) {
+            return;
         }
 
-        $response->setContent($content);
+        $content = str_replace($tokens, '', $content, $replacedCount);
+
+        if ($replacedCount > 0) {
+            $response->setContent($content);
+
+            // Remove the Content-Length header now that we have changed the
+            // content length (see #2416). Do not add the header or adjust an
+            // existing one (see symfony/symfony#1846).
+            $response->headers->remove('Content-Length');
+        }
     }
 
     private function removeCookies(Request $request, Response $response): void
@@ -173,7 +185,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return $tokens;
     }
 
-    private function isCsrfCookie($key, string $value): bool
+    private function isCsrfCookie($key, $value): bool
     {
         if (!\is_string($key)) {
             return false;

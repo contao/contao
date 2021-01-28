@@ -41,7 +41,9 @@ class ModuleFaqList extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqlist'][0]) . ' ###';
@@ -67,6 +69,13 @@ class ModuleFaqList extends Module
 			return $this->getFrontendModule($this->faq_readerModule, $this->strColumn);
 		}
 
+		// Tag the FAQ categories (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_faq_category.' . $id; }, $this->faq_categories));
+		}
+
 		return parent::generate();
 	}
 
@@ -84,6 +93,7 @@ class ModuleFaqList extends Module
 			return;
 		}
 
+		$tags = array();
 		$arrFaq = array_fill_keys($this->faq_categories, array());
 
 		// Add FAQs
@@ -99,6 +109,15 @@ class ModuleFaqList extends Module
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
 			$arrFaq[$objFaq->pid]['headline'] = $objPid->headline;
 			$arrFaq[$objFaq->pid]['title'] = $objPid->title;
+
+			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
+		}
+
+		// Tag the FAQs (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags($tags);
 		}
 
 		$arrFaq = array_values(array_filter($arrFaq));

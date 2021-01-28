@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\HttpKernel;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -27,10 +28,11 @@ class ModelArgumentResolverTest extends TestCase
      */
     public function testResolvesTheModel(string $name, string $class): void
     {
+        unset($GLOBALS['objPage']);
+
         System::setContainer($this->getContainerWithContaoConfiguration());
 
-        $pageModel = new PageModel();
-        $pageModel->setRow(['id' => 42]);
+        $pageModel = $this->createMock(PageModel::class);
 
         $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
         $framework = $this->mockContaoFramework([$class => $adapter]);
@@ -54,6 +56,27 @@ class ModelArgumentResolverTest extends TestCase
         yield ['pageModel', PageModel::class];
         yield ['foobar', PageModel::class];
         yield ['foobar', 'PageModel'];
+    }
+
+    public function testResolvesAttributeInstances(): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $pageModel = $this->createMock(PageModel::class);
+        $framework = $this->mockContaoFramework();
+
+        $request = Request::create('/foobar');
+        $request->attributes->set('pageModel', $pageModel);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
+
+        $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
+        $generator = $resolver->resolve($request, $metadata);
+
+        foreach ($generator as $resolved) {
+            $this->assertSame($pageModel, $resolved);
+        }
     }
 
     public function testDoesNothingIfOutsideTheContaoScope(): void
@@ -138,5 +161,35 @@ class ModelArgumentResolverTest extends TestCase
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
 
         $this->assertFalse($resolver->supports($request, $argument));
+    }
+
+    public function testReturnsTheGlobalPageModel(): void
+    {
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $framework
+            ->expects($this->never())
+            ->method('getAdapter')
+        ;
+
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
+        $GLOBALS['objPage'] = $pageModel;
+
+        $request = Request::create('/foobar');
+        $request->attributes->set('pageModel', 42);
+        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
+
+        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '', true);
+        $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
+
+        $this->assertTrue($resolver->supports($request, $argument));
+
+        foreach ($resolver->resolve($request, $argument) as $model) {
+            $this->assertSame($pageModel, $model);
+        }
     }
 }

@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>Powiadom mnie o nowych komentarzach przez e-mail (możesz anulować subskrypcję w dowolnym momencie)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s utworzył nowy komentarz na twojej stronie:
+
+---
+
+%s
+
+---
+
+Kliknij tutaj, aby wyświetlić komentarz:
+
+%s
+
+Kliknij tutaj, aby edytować lub odpowiedzieć na komentarz:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +124,22 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>Witaj %s,
+
+potwierdź, że chcesz otrzymywać powiadomienia o nowych komentarzach przez e-mail na tej stronie:
+
+%s
+
+---
+
+Kliknij tutaj, aby potwierdzić subskrypcję:
+
+%s
+
+Link potwierdzający jest ważny przez 24 godziny. Możesz anulować subskrypcję w dowolnym momencie, klikając tutaj:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Witaj %s,
+
+nowy komentarz został dodany do subskrybowanej strony:
+
+---
+
+%s
+
+---
+
+Kliknij tutaj, aby anulować subskrypcję:
+
+%s
+</target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Witaj %s,
+
+nowa odpowiedź na komentarz została dodana do subskrybowanej strony:
+
+---
+
+%s
+
+---
+
+Kliknij tutaj, aby anulować subskrypcję:
+
+%s
+</target>
       </trans-unit>
     </body>
   </file>

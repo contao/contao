@@ -8,10 +8,12 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\CoreBundle\DataContainer\PaletteManipulator;
+
 // Extend the default palette
-Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-	->addLegend('calendars_legend', 'amg_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-	->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_APPEND)
+PaletteManipulator::create()
+	->addLegend('calendars_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
+	->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('default', 'tl_user_group')
 ;
 

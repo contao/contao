@@ -10,10 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Search\Document;
 use Psr\Log\LogLevel;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
@@ -65,11 +67,16 @@ abstract class Frontend extends Controller
 	 */
 	public static function getPageIdFromUrl()
 	{
-		@trigger_error('Using Frontend::getPageIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
+
+		if (!System::getContainer()->getParameter('contao.legacy_routing'))
+		{
+			throw new LegacyRoutingException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in your app configuration (e.g. config.yml).');
+		}
 
 		$strRequest = Environment::get('relativeRequest');
 
-		if ($strRequest == '')
+		if (!$strRequest)
 		{
 			return null;
 		}
@@ -97,7 +104,7 @@ abstract class Frontend extends Controller
 				Input::setGet('language', $arrMatches[1]);
 
 				// Trigger the root page if only the language was given
-				if ($arrMatches[3] == '')
+				if (!$arrMatches[3])
 				{
 					return null;
 				}
@@ -111,7 +118,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest != '' && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
+		if ($strRequest && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
 		{
 			$intSuffixLength = \strlen(Config::get('urlSuffix'));
 
@@ -240,7 +247,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Return if the alias is empty (see #4702 and #4972)
-		if ($arrFragments[0] == '' && \count($arrFragments) > 1)
+		if (!$arrFragments[0] && \count($arrFragments) > 1)
 		{
 			return false;
 		}
@@ -249,7 +256,7 @@ abstract class Frontend extends Controller
 		for ($i=1, $c=\count($arrFragments); $i<$c; $i+=2)
 		{
 			// Return false if the key is empty (see #4702 and #263)
-			if ($arrFragments[$i] == '')
+			if (!$arrFragments[$i])
 			{
 				return false;
 			}
@@ -282,7 +289,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootIdFromUrl()
 	{
-		@trigger_error('Using Frontend::getRootIdFromUrl() has been deprecated and will no longer work in Contao 5.0. Use Frontend::getRootPageFromUrl()->id instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Frontend::getRootIdFromUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Frontend::getRootPageFromUrl()->id" instead.');
 
 		return static::getRootPageFromUrl()->id;
 	}
@@ -294,6 +301,25 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
+		if (!System::getContainer()->getParameter('contao.legacy_routing'))
+		{
+			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			if ($objRequest instanceof Request)
+			{
+				$objPage = $objRequest->attributes->get('pageModel');
+
+				if ($objPage instanceof PageModel)
+				{
+					$objPage->loadDetails();
+
+					return PageModel::findByPk($objPage->rootId);
+				}
+			}
+
+			throw new NoRootPageFoundException('No root page found');
+		}
+
 		$host = Environment::get('host');
 		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
@@ -323,7 +349,7 @@ abstract class Frontend extends Controller
 		else
 		{
 			$strUri = Environment::get('url') . '/';
-			$strError = 'No root page found (host "' . Environment::get('host') . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
+			$strError = 'No root page found (host "' . $host . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
 		}
 
 		try
@@ -347,7 +373,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Redirect to the website root or language root (e.g. en/)
-		if (Environment::get('relativeRequest') == '')
+		if (!Environment::get('relativeRequest'))
 		{
 			if (Config::get('addLanguageToUrl'))
 			{
@@ -356,13 +382,13 @@ abstract class Frontend extends Controller
 				$strUrl = System::getContainer()->get('router')->generate('contao_index', $arrParams);
 				$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-				static::redirect($strUrl, 301);
+				static::redirect($strUrl);
 			}
 
 			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
 			elseif ($objRootPage->type !== 'root' && !\in_array($objRootPage->alias, array('index', '/')))
 			{
-				static::redirect($objRootPage->getAbsoluteUrl(), 302);
+				static::redirect($objRootPage->getAbsoluteUrl());
 			}
 		}
 
@@ -385,6 +411,9 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
+		/** @var PageModel $objPage */
+		global $objPage;
+
 		$arrGet = $blnIgnoreParams ? array() : $_GET;
 
 		// Clean the $_GET values (thanks to thyon)
@@ -400,7 +429,7 @@ abstract class Frontend extends Controller
 		{
 			list($key, $value) = explode('=', $strFragment);
 
-			if ($value == '')
+			if (!$value)
 			{
 				unset($arrGet[$key]);
 			}
@@ -411,7 +440,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Unset the language parameter
-		if (Config::get('addLanguageToUrl'))
+		if ($objPage->urlPrefix)
 		{
 			unset($arrGet['language']);
 		}
@@ -424,7 +453,7 @@ abstract class Frontend extends Controller
 		foreach ($arrGet as $k=>$v)
 		{
 			// Omit the key if it is an auto_item key (see #5037)
-			if (Config::get('useAutoItem') && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if ($objPage->useAutoItem && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
 			{
 				$strParams = $strConnector . urlencode($v) . $strParams;
 			}
@@ -434,26 +463,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$pageId = $objPage->alias ?: $objPage->id;
-
-		// Get the page ID from URL if not set
-		if (empty($pageId))
-		{
-			$pageId = static::getPageIdFromUrl();
-		}
-
-		$arrParams = array();
-		$arrParams['alias'] = $pageId . $strParams;
-
-		if (Config::get('addLanguageToUrl'))
-		{
-			$arrParams['_locale'] = $objPage->rootLanguage;
-		}
-
-		$strUrl = System::getContainer()->get('router')->generate('contao_frontend', $arrParams);
+		$strUrl = System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
 		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return $strUrl;
@@ -470,7 +480,7 @@ abstract class Frontend extends Controller
 	{
 		if ($strForceLang !== null)
 		{
-			@trigger_error('Using Frontend::jumpToOrReload() with $strForceLang has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Frontend::jumpToOrReload()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
 		}
 
 		/** @var PageModel $objPage */
@@ -504,7 +514,7 @@ abstract class Frontend extends Controller
 	 */
 	protected function getLoginStatus($strCookie)
 	{
-		@trigger_error('Using Frontend::getLoginStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\Frontend::getLoginStatus()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
 
@@ -528,7 +538,7 @@ abstract class Frontend extends Controller
 	}
 
 	/**
-	 * Get the meta data from a serialized string
+	 * Get the metadata from a serialized string
 	 *
 	 * @param string $strData
 	 * @param string $strLanguage
@@ -602,7 +612,15 @@ abstract class Frontend extends Controller
 	 */
 	public static function indexPageIfApplicable(Response $response)
 	{
-		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using "Contao\Frontend::indexPageIfApplicable()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.');
+
+		$searchIndexer = System::getContainer()->get('contao.search.indexer');
+
+		// The search indexer is disabled
+		if ($searchIndexer === null)
+		{
+			return;
+		}
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
@@ -613,7 +631,7 @@ abstract class Frontend extends Controller
 
 		$document = Document::createFromRequestResponse($request, $response);
 
-		System::getContainer()->get('contao.search.indexer')->index($document);
+		$searchIndexer->index($document);
 	}
 
 	/**
@@ -626,7 +644,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getResponseFromCache()
 	{
-		@trigger_error('Using Frontend::getResponseFromCache() has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Frontend::getResponseFromCache()" has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.');
 
 		return null;
 	}

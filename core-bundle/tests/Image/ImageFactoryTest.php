@@ -37,13 +37,24 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->filesystem = new Filesystem();
 
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
@@ -52,8 +63,8 @@ class ImageFactoryTest extends TestCase
     {
         parent::tearDown();
 
-        if (file_exists($this->getFixturesDir().'/assets/images')) {
-            (new Filesystem())->remove($this->getFixturesDir().'/assets/images');
+        if ($this->filesystem->exists($this->getFixturesDir().'/assets/images')) {
+            $this->filesystem->remove($this->getFixturesDir().'/assets/images');
         }
     }
 
@@ -106,11 +117,11 @@ class ImageFactoryTest extends TestCase
 
         $path = $this->getFixturesDir().'/assets/images/dummy.svg';
 
-        if (!file_exists(\dirname($path))) {
-            mkdir(\dirname($path), 0777, true);
+        if (!$this->filesystem->exists(\dirname($path))) {
+            $this->filesystem->mkdir(\dirname($path));
         }
 
-        file_put_contents($path, '');
+        $this->filesystem->dumpFile($path, '');
 
         $image = $imageFactory->create($path, [100, 200, ResizeConfiguration::MODE_BOX]);
 
@@ -461,14 +472,14 @@ class ImageFactoryTest extends TestCase
         ;
 
         $filesystem
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('exists')
             ->willReturn(true)
         ;
 
         $resizer = $this->createMock(ResizerInterface::class);
         $resizer
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('resize')
             ->with(
                 $this->callback(
@@ -511,18 +522,20 @@ class ImageFactoryTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
         $image = $imageFactory->create($path, [50, 50, $mode]);
+        $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
 
         $this->assertSame($imageMock, $image);
+        $this->assertSame($imageMock, $imageFromSerializedConfig);
     }
 
     /**
      * @group legacy
      * @dataProvider getInvalidImportantParts
-     *
-     * @expectedDeprecation Defining the important part in absolute pixels has been deprecated %s.
      */
     public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.8: Defining the important part in absolute pixels has been deprecated %s.');
+
         $path = $this->getFixturesDir().'/images/dummy.jpg';
 
         /** @var FilesModel&MockObject $filesModel */
@@ -623,14 +636,16 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheExecuteResizeHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -642,6 +657,8 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
+        $container->set('contao.image.image_factory', $imageFactory);
+
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
         ];
@@ -649,14 +666,14 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -667,7 +684,7 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg',
             $image->getPath()
         );
 
@@ -687,27 +704,30 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $fs = new Filesystem();
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!file_exists(\dirname($rootDir.'/'.$path))) {
-            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
-        file_put_contents($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testExecutesTheGetImageHook(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -718,6 +738,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -733,8 +755,8 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            $this->getFixturesDir().'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
-            $image->getPath()
+            Path::normalize($this->getFixturesDir()).'/assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg',
+            Path::normalize($image->getPath())
         );
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
@@ -752,8 +774,8 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            $this->getFixturesDir().'/images/dummy.jpg',
-            $image->getPath(),
+            Path::normalize($this->getFixturesDir()).'/images/dummy.jpg',
+            Path::normalize($image->getPath()),
             'Hook should not get called if no resize is necessary'
         );
 
@@ -774,27 +796,30 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        $rootDir = System::getContainer()->getParameter('kernel.project_dir');
+        $fs = new Filesystem();
+        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-        if (!file_exists(\dirname($rootDir.'/'.$path))) {
-            mkdir(\dirname($rootDir.'/'.$path), 0777, true);
+        if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
-        file_put_contents($rootDir.'/'.$path, '');
+        $fs->dumpFile($projectDir.'/'.$path, '');
 
         return $path;
     }
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testIgnoresAnEmptyHookReturnValue(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
 
@@ -810,6 +835,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'emptyHookCallback']],
@@ -828,12 +855,6 @@ class ImageFactoryTest extends TestCase
     {
     }
 
-    /**
-     * @param ResizerInterface&MockObject $resizer
-     * @param ImagineInterface&MockObject $imagine
-     * @param ImagineInterface&MockObject $imagineSvg
-     * @param ContaoFramework&MockObject  $framework
-     */
     private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
     {
         if (null === $resizer) {

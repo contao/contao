@@ -78,8 +78,8 @@
         <target>Направление на последнюю посещенную страницу</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Направление пользователя на последнюю посещенную им страницу вместо перехода на страницу перенаправления.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Направление участника на последнюю посещенную им страницу вместо перехода на страницу перенаправления.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -129,6 +129,12 @@
         <source>The assets URL applies to the &lt;em&gt;assets&lt;/em&gt; directory (page speed optimization).</source>
         <target>URL ресурсов применяется к каталогу &lt;em&gt;assets&lt;/em&gt; и всем ресурсам внутри (оптимизация скорости страниц).</target>
       </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_page.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send e-mails on this website.</source>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>E-mail администратора веб-сайта</target>
@@ -168,6 +174,26 @@
       <trans-unit id="tl_page.validAliasCharacters.1">
         <source>Here you can select a custom character set for auto-generated aliases.</source>
         <target>Вы можете выбрать определенный набор символов для автоматически генерируемых алиасов.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.0">
+        <source>Enable folder URLs</source>
+        <target>Файловый стиль для URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.useFolderUrl.1">
+        <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>Создание алиасов страниц в стиле отображения иерархии файловой системы напр. &lt;em&gt;docs/install/download.html&lt;/em&gt; вместо &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.0">
+        <source>URL prefix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlPrefix.1">
+        <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.0">
+        <source>URL suffix</source>
+      </trans-unit>
+      <trans-unit id="tl_page.urlSuffix.1">
+        <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
       <trans-unit id="tl_page.createSitemap.0">
         <source>Create an XML sitemap</source>
@@ -342,7 +368,7 @@
         <target>Показывать только гостям</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if there is an authenticated user.</source>
+        <source>Hide the page if a member is logged in.</source>
         <target>Скрыть страницу, если участник вошел в систему.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
@@ -398,8 +424,8 @@
         <target>Перейти на страницу двухфакторной авторизации</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
-        <source>Please choose the page to which visitors will be redirected when setting up two-factor authentication.</source>
-        <target>Выберите страницу, к которой будут перенаправлены посетители при настройке двухфакторной авторизации.</target>
+        <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Выберите страницу, к которой будут перенаправлены посетители, чтобы настроить двухфакторную аутентификацию.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -417,9 +443,8 @@
         <source>Redirect settings</source>
         <target>Настройки перенаправления</target>
       </trans-unit>
-      <trans-unit id="tl_page.dns_legend">
-        <source>DNS settings</source>
-        <target>Настройки DNS</target>
+      <trans-unit id="tl_page.url_legend">
+        <source>URL settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -428,10 +453,6 @@
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
         <target>Общие настройки</target>
-      </trans-unit>
-      <trans-unit id="tl_page.alias_legend">
-        <source>Alias settings</source>
-        <target>Настройки алиаса</target>
       </trans-unit>
       <trans-unit id="tl_page.sitemap_legend">
         <source>XML sitemap</source>
@@ -544,6 +565,9 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
         <target>Редактировать статьи на странице ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_page.legacyRouting">
+        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

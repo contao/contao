@@ -36,7 +36,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body class="<?= $this->ua ?>">
+<body class="<?= $this->ua ?>"<?= $this->attributes ?>>
 
   <?php $this->block('container'); ?>
     <div id="container">
@@ -47,18 +47,21 @@
             <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
             <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
             <input type="hidden" name="_always_use_target_path" value="1">
+            <?php if ($this->badgeTitle): ?>
+              <span class="badge-title"><?= $this->badgeTitle ?></span>
+            <?php endif; ?>
             <h1><?= $this->headline ?></h1>
             <div class="widget widget-text">
               <label for="username"><?= $this->username ?></label>
-              <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" placeholder="<?= $this->username ?>" required>
+              <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" autocomplete="username" placeholder="<?= $this->username ?>" required>
             </div>
             <div class="widget widget-password">
               <label for="password"><?= $this->password ?></label>
-              <input type="password" name="password" id="password" class="tl_text" value="" placeholder="<?= $this->password ?>" required>
+              <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
             </div>
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
-              <a href="<?= $this->route('contao_root') ?>" class="footer_preview"><?= $this->feLink ?> ›</a>
+              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>
             </div>
           </div>
         </form>

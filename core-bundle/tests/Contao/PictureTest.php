@@ -26,11 +26,19 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\Picture;
 use Contao\System;
 use Imagine\Gd\Imagine as ImagineGd;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
 class PictureTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -51,7 +59,8 @@ class PictureTest extends TestCase
     {
         parent::setUp();
 
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
+        $this->filesystem = new Filesystem();
+        $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
@@ -63,11 +72,11 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testReturnsTheTemplateData(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
@@ -88,11 +97,11 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImages(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
@@ -118,11 +127,11 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImagesWithSources(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
@@ -183,11 +192,11 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImagesWithDensities(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
@@ -212,11 +221,11 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testHandlesImagesWithDensitiesAndSizes(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [
@@ -243,12 +252,12 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testEncodesFileNames(): void
     {
-        copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy with spaces.jpg');
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
+        $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy with spaces.jpg');
 
         $picture = new Picture(new File('dummy with spaces.jpg'));
 
@@ -270,11 +279,11 @@ class PictureTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using new Contao\Image() has been deprecated %s.
      */
     public function testSupportsTheOldResizeMode(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
+
         $picture = new Picture(new File('dummy.jpg'));
 
         $picture->setImageSize((object) [

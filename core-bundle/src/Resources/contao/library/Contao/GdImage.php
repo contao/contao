@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-@trigger_error('Using the "Contao\GdImage" class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.', E_USER_DEPRECATED);
+trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\GdImage" class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.');
 
 /**
  * GD image class
@@ -43,7 +43,7 @@ class GdImage
 	/**
 	 * Create a new object to handle a GD image
 	 *
-	 * @param resource $gdResource The GD resource handle
+	 * @param \GdImage|resource $gdResource The GD resource handle
 	 */
 	public function __construct($gdResource)
 	{
@@ -119,7 +119,7 @@ class GdImage
 	/**
 	 * Get the GD resource handle
 	 *
-	 * @return resource The GD resource handle
+	 * @return \GdImage|resource The GD resource handle
 	 */
 	public function getResource()
 	{
@@ -129,7 +129,7 @@ class GdImage
 	/**
 	 * Set the GD resource handle
 	 *
-	 * @param resource $gdResource The GD resource handle
+	 * @param \GdImage|resource $gdResource The GD resource handle
 	 *
 	 * @return static
 	 *
@@ -137,7 +137,7 @@ class GdImage
 	 */
 	public function setResource($gdResource)
 	{
-		if (!\is_resource($gdResource) || get_resource_type($gdResource) !== 'gd')
+		if (!$gdResource instanceof \GdImage && (!\is_resource($gdResource) || get_resource_type($gdResource) !== 'gd'))
 		{
 			throw new \InvalidArgumentException('$gdResource is not a valid GD resource');
 		}
@@ -204,7 +204,6 @@ class GdImage
 
 			default:
 				throw new \InvalidArgumentException('Image type "' . $extension . '" cannot be generated');
-				break;
 		}
 
 		return $this;
@@ -397,4 +396,8 @@ class GdImage
 	}
 }
 
-class_alias(GdImage::class, 'GdImage');
+// PHP 8.0 compatibility
+if (!class_exists('GdImage'))
+{
+	class_alias(GdImage::class, 'GdImage');
+}

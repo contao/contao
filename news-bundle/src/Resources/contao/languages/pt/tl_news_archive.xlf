@@ -70,12 +70,10 @@
         <target>Requerem login para comentar</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Permitir que somente usuários autenticados podem criar comentários.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disabilitar pergunta de segurança</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,12 +132,12 @@
         <target>Autor e administrador de sistema</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>RSS feeds</target>
+        <source>News feeds</source>
+        <target>Feeds de notícias</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>Administrar RSS feeds</target>
+        <source>Manage news feeds</source>
+        <target>Gerir feeds de notícias</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
@@ -147,15 +145,19 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Criar novo arquivo de notícias</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Mostrar os detalhes do arquivos de noticias com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Editar o arquivo de noticias com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Editar as configurações do arquivo de noticias com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -163,12 +165,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Duplicar o arquivo de noticias com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Apagar o arquivo de noticias com ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Mostrar comentários presentes no arquivo de noticias com ID %s</target>
       </trans-unit>
     </body>
   </file>

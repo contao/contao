@@ -73,22 +73,6 @@
         <source>Do not collapse elements in the back end preview.</source>
         <target>Nesbalovat elementy v backendu a v náhledu.</target>
       </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.0">
-        <source>Do not redirect empty URLs</source>
-        <target>Nepřesměrovávat prazdné URL</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.doNotRedirectEmpty.1">
-        <source>For an empty URL display the website instead of redirecting to the language root page (not recommended).</source>
-        <target>Místo přesměřování na kořenovou stránku daného jazyka bude zobrazená prázdná stránka (nedoporučeno).</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.0">
-        <source>Enable folder URLs</source>
-        <target>Povolit tyto složkové adresy</target>
-      </trans-unit>
-      <trans-unit id="tl_settings.folderUrl.1">
-        <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Zde můžete povolit styly složek stránkových aliasů jako &lt;em&gt;docs/install/download.html&lt;/em&gt; namísto &lt;em&gt;docs-install-download.html&lt;/em&gt;.</target>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>
         <target>Povolené HTML značky</target>
@@ -197,10 +181,6 @@
         <source>Back end configuration</source>
         <target>Nastavení backendu</target>
       </trans-unit>
-      <trans-unit id="tl_settings.frontend_legend">
-        <source>Front end configuration</source>
-        <target>Nastavení frontendu</target>
-      </trans-unit>
       <trans-unit id="tl_settings.security_legend">
         <source>Security settings</source>
         <target>Bezpečnostní nastavení</target>
@@ -220,6 +200,9 @@
       <trans-unit id="tl_settings.chmod_legend">
         <source>Default access rights</source>
         <target>Výchozí přístupová práva</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
       </trans-unit>
     </body>
   </file>

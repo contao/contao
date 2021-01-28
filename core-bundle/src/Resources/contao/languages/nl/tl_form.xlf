@@ -33,6 +33,12 @@
         <source>Send the submitted data to an e-mail address.</source>
         <target>Indien u deze optie kiest worden formuliergegevens verzonden via e-mail.</target>
       </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.0">
+        <source>Mailer transport</source>
+      </trans-unit>
+      <trans-unit id="tl_form.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+      </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
         <target>Adres van de ontvanger</target>
@@ -81,6 +87,12 @@
         <source>The form data will be attached to the e-mail as a CSV file.</source>
         <target>De formuliergegevens worden als CSV (comma separated values) bestand aan de e-mail gekoppeld.</target>
       </trans-unit>
+      <trans-unit id="tl_form.csv_excel.0">
+        <source>CSV file (Microsoft Excel)</source>
+      </trans-unit>
+      <trans-unit id="tl_form.csv_excel.1">
+        <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+      </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
         <target>Sla lege velden over</target>
@@ -114,12 +126,12 @@
         <target>Sla de ingediende waarden op in de database.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
-        <source>Custom form template</source>
-        <target>Aangepast formulier template</target>
+        <source>Form template</source>
+        <target>Formulier template</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.1">
-        <source>Here you can overwrite the default form template.</source>
-        <target>Hier kunt u de standaard formulier template overschrijven.</target>
+        <source>Here you can select the form template.</source>
+        <target>Kies een formulier template.</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.0">
         <source>Target table</source>

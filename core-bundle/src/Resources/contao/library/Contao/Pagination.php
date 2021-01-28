@@ -250,7 +250,7 @@ class Pagination
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->items = function () use ($strSeparator)
 		{
-			@trigger_error('Using $pagination->items has been deprecated and will no longer work in Contao 5.0. Use $pagination->pages instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "$pagination->items" has been deprecated and will no longer work in Contao 5.0. Use "$pagination->pages" instead.');
 
 			return $this->getItemsAsString($strSeparator);
 		};

@@ -27,6 +27,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'fragment.handler',
         'lexik_maintenance.driver.factory',
         'monolog.logger.contao',
+        'security.authentication_utils',
         'security.authentication.trust_resolver',
         'security.firewall.map',
         'security.logout_url_generator',
@@ -36,7 +37,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
 
     private const ALIASES = [
         'database_connection',
-        'swiftmailer.mailer',
+        'mailer',
         'security.encoder_factory',
     ];
 

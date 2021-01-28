@@ -78,12 +78,10 @@
         <target>မှတ်ချက်ချရန်ဖွင့်ဝင်ရန်လို</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>မှတ်ချက်များဖန်တီးရန်စစ်ဆေးပြီးအသံုးပြုသူများသာလျှင်ခွင့်ပြု</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>လံုခြုံရေးမေးခွန်းမလုပ်ဆောင်စေ</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

@@ -12,7 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use FOS\HttpCache\ResponseTagger;
+use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -27,6 +28,8 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -42,7 +45,9 @@ class ModuleEventReader extends Events
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
@@ -91,10 +96,37 @@ class ModuleEventReader extends Events
 		// Get the current event
 		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
 
-		// The event does not exist or has an external target (see #33)
-		if (null === $objEvent || $objEvent->source != 'default')
+		// The event does not exist (see #33)
+		if ($objEvent === null)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
+		// Redirect if the event has a target URL (see #1498)
+		switch ($objEvent->source) {
+			case 'internal':
+				if ($page = PageModel::findPublishedById($objEvent->jumpTo))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
+
+			case 'article':
+				if (($article = ArticleModel::findByPk($objEvent->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
+				{
+					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
+				}
+
+				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
+
+			case 'external':
+				if ($objEvent->url)
+				{
+					throw new RedirectResponseException($objEvent->url, 301);
+				}
+
+				throw new InternalServerErrorException('Empty target URL');
 		}
 
 		// Overwrite the page title (see #2853, #4955 and #87)
@@ -115,6 +147,11 @@ class ModuleEventReader extends Events
 		elseif ($objEvent->teaser)
 		{
 			$objPage->description = $this->prepareMetaDescription($objEvent->teaser);
+		}
+
+		if ($objEvent->robots)
+		{
+			$objPage->robots = $objEvent->robots;
 		}
 
 		$intStartTime = $objEvent->startTime;
@@ -208,17 +245,8 @@ class ModuleEventReader extends Events
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
-			$responseTagger->addTags(array('contao.db.tl_calendar.' . $objEvent->pid));
-		}
-
 		// Clean the RTE output
-		if ($objEvent->teaser != '')
+		if ($objEvent->teaser)
 		{
 			$objTemplate->hasTeaser = true;
 			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
@@ -228,7 +256,6 @@ class ModuleEventReader extends Events
 		// Display the "read more" button for external/article links
 		if ($objEvent->source != 'default')
 		{
-			$objTemplate->details = true;
 			$objTemplate->hasDetails = true;
 		}
 
@@ -260,31 +287,30 @@ class ModuleEventReader extends Events
 		}
 
 		$objTemplate->addImage = false;
+		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objEvent->addImage && $objEvent->singleSRC != '')
+		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
 		{
-			$objModel = FilesModel::findByUuid($objEvent->singleSRC);
+			$imgSize = $objEvent->size ?: null;
 
-			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
+			// Override the default image size
+			if ($this->imgSize)
 			{
-				// Do not override the field now that we have a model registry (see #6303)
-				$arrEvent = $objEvent->row();
+				$size = StringUtil::deserialize($this->imgSize);
 
-				// Override the default image size
-				if ($this->imgSize != '')
+				if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
 				{
-					$size = StringUtil::deserialize($this->imgSize);
-
-					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
-					{
-						$arrEvent['size'] = $this->imgSize;
-					}
+					$imgSize = $this->imgSize;
 				}
-
-				$arrEvent['singleSRC'] = $objModel->path;
-				$this->addImageToTemplate($objTemplate, $arrEvent, null, null, $objModel);
 			}
+
+			$figureBuilder
+				->setSize($imgSize)
+				->setMetadata($objEvent->getOverwriteMetadata())
+				->enableLightbox($objEvent->fullsize)
+				->build()
+				->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
 		}
 
 		$objTemplate->enclosure = array();
@@ -373,6 +399,13 @@ class ModuleEventReader extends Events
 
 		$this->Template->event = $objTemplate->parse();
 
+		// Tag the event (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
+		}
+
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
@@ -407,7 +440,7 @@ class ModuleEventReader extends Events
 		}
 
 		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

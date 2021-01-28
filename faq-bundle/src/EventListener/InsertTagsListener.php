@@ -98,7 +98,7 @@ class InsertTagsListener
             case 'faq':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $url,
+                    $url ?: './',
                     StringUtil::specialchars($faq->question),
                     $faq->question
                 );
@@ -106,12 +106,12 @@ class InsertTagsListener
             case 'faq_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $url,
+                    $url ?: './',
                     StringUtil::specialchars($faq->question)
                 );
 
             case 'faq_url':
-                return $url;
+                return $url ?: './';
 
             case 'faq_title':
                 return StringUtil::specialchars($faq->question);

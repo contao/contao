@@ -16,9 +16,12 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\GdImage;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class GdImageTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,22 +31,22 @@ class GdImageTest extends TestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation Using the "Contao\GdImage" class has been deprecated %s.
      */
     public function testCreatesImagesFromResources(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\GdImage" class has been deprecated %s.');
+
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);
 
-        $this->assertIsResource($image->getResource());
+        $this->assertIsGdResource($image->getResource());
     }
 
     public function testCreatesImagesFromDimensions(): void
     {
         $image = GdImage::fromDimensions(100, 100);
 
-        $this->assertIsResource($image->getResource());
+        $this->assertIsGdResource($image->getResource());
         $this->assertTrue(imageistruecolor($image->getResource()));
         $this->assertSame(100, imagesx($image->getResource()));
         $this->assertSame(100, imagesy($image->getResource()));
@@ -75,7 +78,7 @@ class GdImageTest extends TestCase
 
         $image = GdImage::fromFile(new File('test.'.$type));
 
-        $this->assertIsResource($image->getResource());
+        $this->assertIsGdResource($image->getResource());
         $this->assertSame(100, imagesx($image->getResource()));
         $this->assertSame(100, imagesy($image->getResource()));
     }
@@ -180,7 +183,7 @@ class GdImageTest extends TestCase
         $image = new GdImage($image);
         $image->convertToPaletteImage();
 
-        $this->assertIsResource($image->getResource());
+        $this->assertIsGdResource($image->getResource());
         $this->assertFalse(imageistruecolor($image->getResource()));
 
         $this->assertSame(
@@ -213,7 +216,7 @@ class GdImageTest extends TestCase
         $image = new GdImage($image);
         $image->convertToPaletteImage();
 
-        $this->assertIsResource($image->getResource());
+        $this->assertIsGdResource($image->getResource());
         $this->assertFalse(imageistruecolor($image->getResource()));
         $this->assertSame(256, imagecolorstotal($image->getResource()));
 
@@ -262,5 +265,19 @@ class GdImageTest extends TestCase
 
         imagefill($image->getResource(), 0, 0, imagecolorallocatealpha($image->getResource(), 0, 0, 0, 0));
         $this->assertFalse($image->isSemitransparent());
+    }
+
+    /**
+     * @psalm-suppress UndefinedClass
+     */
+    private function assertIsGdResource($resource): void
+    {
+        if (PHP_MAJOR_VERSION >= 8) {
+            // PHP >= 8.0
+            $this->assertInstanceOf(\GdImage::class, $resource);
+        } else {
+            // PHP <= 7.4
+            $this->assertIsResource($resource);
+        }
     }
 }

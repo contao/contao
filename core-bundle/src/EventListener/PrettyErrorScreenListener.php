@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageError404;
 use Contao\StringUtil;
@@ -126,6 +127,12 @@ class PrettyErrorScreenListener
     {
         $exception = $event->getThrowable();
 
+        if ($exception instanceof RouteParametersException) {
+            $this->renderTemplate('missing_route_parameters', 501, $event);
+
+            return;
+        }
+
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
@@ -204,13 +211,19 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * @return array<string,string|int>
+     * @return array<string,mixed>
      */
     private function getTemplateParameters(string $view, int $statusCode, ExceptionEvent $event): array
     {
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $encoded = StringUtil::encodeEmail($config->get('adminEmail'));
+
+        try {
+            $isBackendUser = $this->security->isGranted('ROLE_USER');
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            $isBackendUser = false;
+        }
 
         return [
             'statusCode' => $statusCode,
@@ -219,7 +232,9 @@ class PrettyErrorScreenListener
             'base' => $event->getRequest()->getBasePath(),
             'language' => $event->getRequest()->getLocale(),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
+            'isBackendUser' => $isBackendUser,
             'exception' => $event->getThrowable()->getMessage(),
+            'throwable' => $event->getThrowable(),
         ];
     }
 

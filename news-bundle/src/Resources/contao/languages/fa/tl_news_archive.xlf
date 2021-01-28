@@ -70,12 +70,10 @@
         <target>برای دیدگاه نیاز به ورود است</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>اجازه دادن به کاربران تایید شده برای ایجاد دیدگاه‌ها.</target>
+        <source>Allow only authenticated members to create comments.</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>غیرفعال کردن سوال امنیتی</target>
+        <source>Disable spam protection</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -134,12 +132,11 @@
         <target>نویسنده و مدیر سامانه</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.0">
-        <source>RSS feeds</source>
-        <target>خوراک‌های RSS</target>
+        <source>News feeds</source>
+        <target>خوراک‌های اخبار</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
-        <source>Manage RSS feeds</source>
-        <target>مدیریت خوراک‌های RSS</target>
+        <source>Manage news feeds</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>

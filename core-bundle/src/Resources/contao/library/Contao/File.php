@@ -254,9 +254,11 @@ class File extends System
 					}
 					else
 					{
+						$imageFactory = System::getContainer()->get('contao.image.image_factory');
+
 						try
 						{
-							$dimensions = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
+							$dimensions = $imageFactory->create($this->strRootDir . '/' . $this->strFile)->getDimensions();
 
 							if (!$dimensions->isRelative() && !$dimensions->isUndefined())
 							{
@@ -285,11 +287,6 @@ class File extends System
 						{
 							// ignore
 						}
-
-						if (!$this->arrImageSize)
-						{
-							$this->arrImageSize = @getimagesize($this->strRootDir . '/' . $this->strFile);
-						}
 					}
 
 					if (!isset(static::$arrImageSizeCache[$strCacheKey]))
@@ -301,10 +298,10 @@ class File extends System
 				return $this->arrImageSize;
 
 			case 'width':
-				return $this->imageSize[0];
+				return $this->imageSize[0] ?? null;
 
 			case 'height':
-				return $this->imageSize[1];
+				return $this->imageSize[1] ?? null;
 
 			case 'imageViewSize':
 				if (empty($this->arrImageViewSize))
@@ -334,7 +331,7 @@ class File extends System
 								(int) $dimensions->getSize()->getHeight()
 							);
 
-							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1])
+							if (!$this->arrImageViewSize[0] || !$this->arrImageViewSize[1] || $dimensions->isUndefined())
 							{
 								$this->arrImageViewSize = false;
 							}
@@ -349,10 +346,16 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				return $this->imageViewSize !== false ? $this->imageViewSize[0] : null;
+				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				$imageViewSize = $this->imageViewSize;
+
+				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
-				return $this->imageViewSize !== false ? $this->imageViewSize[1] : null;
+				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				$imageViewSize = $this->imageViewSize;
+
+				return !empty($imageViewSize) ? $imageViewSize[1] : null;
 
 			case 'isImage':
 				return $this->isGdImage || $this->isSvgImage;
@@ -750,19 +753,18 @@ class File extends System
 			return false;
 		}
 
-		$return = System::getContainer()
+		System::getContainer()
 			->get('contao.image.image_factory')
 			->create($this->strRootDir . '/' . $this->strFile, array($width, $height, $mode), $this->strRootDir . '/' . $this->strFile)
-			->getUrl($this->strRootDir)
 		;
 
-		if ($return)
-		{
-			$this->arrPathinfo = array();
-			$this->arrImageSize = array();
-		}
+		$this->arrPathinfo = array();
+		$this->arrImageSize = array();
 
-		return $return;
+		// Clear the image size cache as mtime could potentially not change
+		unset(static::$arrImageSizeCache[$this->strFile . '|' . $this->mtime]);
+
+		return true;
 	}
 
 	/**
@@ -788,6 +790,7 @@ class File extends System
 
 		$response->headers->addCacheControlDirective('must-revalidate');
 		$response->headers->set('Connection', 'close');
+		$response->headers->set('Content-Type', $this->getMimeType());
 
 		throw new ResponseException($response);
 	}

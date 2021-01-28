@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -25,11 +26,14 @@ use Patchwork\Utf8;
  * @property bool   $cal_ignoreDynamic
  * @property int    $cal_readerModule
  * @property bool   $cal_hideRunning
+ * @property string $cal_featured
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventlist extends Events
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Current date object
 	 * @var Date
@@ -49,7 +53,9 @@ class ModuleEventlist extends Events
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
@@ -75,6 +81,13 @@ class ModuleEventlist extends Events
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}
 
+		// Tag the calendars (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_calendar.' . $id; }, $this->cal_calendar));
+		}
+
 		return parent::generate();
 	}
 
@@ -91,6 +104,18 @@ class ModuleEventlist extends Events
 		$intYear = Input::get('year');
 		$intMonth = Input::get('month');
 		$intDay = Input::get('day');
+
+		// Handle featured events
+		$blnFeatured = null;
+
+		if ($this->cal_featured == 'featured')
+		{
+			$blnFeatured = true;
+		}
+		elseif ($this->cal_featured == 'unfeatured')
+		{
+			$blnFeatured = false;
+		}
 
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
@@ -149,7 +174,8 @@ class ModuleEventlist extends Events
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
 
 		// Get all events
-		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd);
+		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd, $blnFeatured);
+
 		$sort = ($this->cal_order == 'descending') ? 'krsort' : 'ksort';
 
 		// Sort the days
@@ -246,20 +272,19 @@ class ModuleEventlist extends Events
 		$dayCount = 0;
 		$eventCount = 0;
 		$headerCount = 0;
-		$imgSize = false;
 
-		// Override the default image size
-		if ($this->imgSize != '')
+		$uuids = array();
+
+		for ($i=$offset; $i<$limit; $i++)
 		{
-			$size = StringUtil::deserialize($this->imgSize);
-
-			if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
+			if ($arrEvents[$i]['addImage'] && $arrEvents[$i]['singleSRC'])
 			{
-				$imgSize = $this->imgSize;
+				$uuids[] = $arrEvents[$i]['singleSRC'];
 			}
 		}
 
-		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+		// Preload all images in one query so they are loaded into the model registry
+		FilesModel::findMultipleByUuids($uuids);
 
 		// Parse events
 		for ($i=$offset; $i<$limit; $i++)
@@ -320,34 +345,43 @@ class ModuleEventlist extends Events
 			}
 
 			$objTemplate->addImage = false;
+			$objTemplate->addBefore = false;
 
 			// Add an image
-			if ($event['addImage'] && $event['singleSRC'] != '')
+			if ($event['addImage'] && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($event['singleSRC'])))
 			{
-				$objModel = FilesModel::findByUuid($event['singleSRC']);
+				/** @var CalendarEventsModel $eventModel */
+				$eventModel = CalendarEventsModel::findByPk($event['id']);
+				$imgSize = $eventModel->size ?: null;
 
-				if ($objModel !== null && is_file($rootDir . '/' . $objModel->path))
+				// Override the default image size
+				if ($this->imgSize)
 				{
-					if ($imgSize)
+					$size = StringUtil::deserialize($this->imgSize);
+
+					if ($size[0] > 0 || $size[1] > 0 || is_numeric($size[2]) || ($size[2][0] ?? null) === '_')
 					{
-						$event['size'] = $imgSize;
-					}
-
-					$event['singleSRC'] = $objModel->path;
-					$this->addImageToTemplate($objTemplate, $event, null, null, $objModel);
-
-					// Link to the event if no image link has been defined
-					if (!$objTemplate->fullsize && !$objTemplate->imageUrl)
-					{
-						// Unset the image title attribute
-						$picture = $objTemplate->picture;
-						unset($picture['title']);
-						$objTemplate->picture = $picture;
-
-						// Link to the event
-						$objTemplate->linkTitle = $objTemplate->readMore;
+						$imgSize = $this->imgSize;
 					}
 				}
+
+				$figure = $figureBuilder
+					->setSize($imgSize)
+					->setMetadata($eventModel->getOverwriteMetadata())
+					->enableLightbox($eventModel->fullsize)
+					->build();
+
+				// Rebuild with link to event if none is set
+				if (!$figure->getLinkHref())
+				{
+					$figure = $figureBuilder
+						->setLinkHref($event['href'])
+						->setLinkAttribute('title', $objTemplate->readMore)
+						->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
+						->build();
+				}
+
+				$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
 			}
 
 			$objTemplate->enclosure = array();
@@ -365,7 +399,7 @@ class ModuleEventlist extends Events
 		}
 
 		// No events found
-		if ($strEvents == '')
+		if (!$strEvents)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
 		}

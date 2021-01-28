@@ -46,8 +46,8 @@
         <target>Layout news</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
-        <source>Here you can select the news template.</source>
-        <target>Seleziona un modello per le news. È possibile aggiungere modelli personalizzati nella cartella &lt;em&gt;templates&lt;/em&gt;. I file template delle news cominciano con &lt;em&gt;news_&lt;/em&gt; e necessitano l'estensione &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <source>Here you can select a news template.</source>
+        <target>Qui puoi selezionare il template delle news</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>
@@ -115,6 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_module.featured_first">
         <source>Show featured news items first</source>
+        <target>Mostra per prime le notizie in evidenza</target>
       </trans-unit>
       <trans-unit id="tl_module.order_date_asc">
         <source>Date ascending</source>

@@ -69,10 +69,11 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      */
     private function startSession(): void
     {
-        @trigger_error('Using $_SESSION has been deprecated and will no longer work in Contao 5.0. Use the Symfony session instead.', E_USER_DEPRECATED);
+        trigger_deprecation('contao/core-bundle', '4.5', 'Using "$_SESSION" has been deprecated and will no longer work in Contao 5.0. Use the Symfony session instead.');
 
         $this->session->start();
 
+        /** @phpstan-ignore-next-line */
         if ($_SESSION instanceof self) {
             throw new \RuntimeException('Unable to start the native session, $_SESSION was not replaced.');
         }

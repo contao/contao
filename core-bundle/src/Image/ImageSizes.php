@@ -16,11 +16,11 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizes implements ResetInterface
 {
@@ -40,7 +40,7 @@ class ImageSizes implements ResetInterface
     private $framework;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -57,7 +57,7 @@ class ImageSizes implements ResetInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
      */
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, Translator $translator)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, TranslatorInterface $translator)
     {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
@@ -133,9 +133,9 @@ class ImageSizes implements ResetInterface
         // The framework is required to have the TL_CROP options available
         $this->framework->initialize();
 
-        $this->options = $GLOBALS['TL_CROP'];
+        $this->options = $GLOBALS['TL_CROP'] ?? [];
 
-        $rows = $this->connection->fetchAll(
+        $rows = $this->connection->fetchAllAssociative(
             'SELECT
                 s.id, s.name, s.width, s.height, t.name as theme
             FROM

@@ -345,7 +345,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('generate')
             ->with(
                 $this->callback(
@@ -377,7 +377,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('create')
             ->with($this->callback(
                 function (string $imagePath) use ($path): bool {
@@ -390,7 +390,7 @@ class PictureFactoryTest extends TestCase
         ;
 
         $imageFactory
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getImportantPartFromLegacyMode')
             ->with(
                 $this->callback(
@@ -410,8 +410,10 @@ class PictureFactoryTest extends TestCase
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);
+        $pictureFromSerializedConfig = $pictureFactory->create($path, serialize([100, 200, 'left_top']));
 
         $this->assertSame($imageMock, $picture->getImg()['src']);
+        $this->assertSame($imageMock, $pictureFromSerializedConfig->getImg()['src']);
     }
 
     public function testCreatesAPictureObjectWithoutAModel(): void
@@ -568,6 +570,100 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider getResizeOptionsScenarios
+     */
+    public function testCreatesAPictureWithResizeOptions(?ResizeOptions $resizeOptions, $size, bool $expected): void
+    {
+        $path = $this->getTempDir().'/images/dummy.jpg';
+        $imageMock = $this->createMock(ImageInterface::class);
+
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+        $pictureGenerator
+            ->method('generate')
+            ->willReturnCallback(
+                function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($imageMock, $expected) {
+                    $this->assertSame($expected, $options->getSkipIfDimensionsMatch());
+
+                    return new Picture(['src' => $imageMock, 'srcset' => []], []);
+                }
+            )
+        ;
+
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->willReturn($imageMock)
+        ;
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
+        $pictureFactory->setPredefinedSizes([
+            'size_skip' => [
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'skipIfDimensionsMatch' => true,
+                'items' => [],
+            ],
+            'size_noskip' => [
+                'resizeMode' => ResizeConfiguration::MODE_BOX,
+                'skipIfDimensionsMatch' => false,
+                'items' => [],
+            ],
+        ]);
+
+        $pictureFactory->create($path, $size, $resizeOptions);
+    }
+
+    public function getResizeOptionsScenarios(): \Generator
+    {
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (1)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            'size_skip',
+            true,
+        ];
+
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (2)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(true),
+            'size_noskip',
+            true,
+        ];
+
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (3)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            'size_skip',
+            false,
+        ];
+
+        yield 'Prefer skipIfDimensionsMatch from explicitly set options (4)' => [
+            (new ResizeOptions())->setSkipIfDimensionsMatch(false),
+            'size_noskip',
+            false,
+        ];
+
+        yield 'Use skipIfDimensionsMatch from predefined size (1)' => [
+            null,
+            'size_skip',
+            true,
+        ];
+
+        yield 'Use skipIfDimensionsMatch from predefined size (2)' => [
+            null,
+            'size_noskip',
+            false,
+        ];
+
+        yield 'Fallback to default resize option when passing a picture configuration' => [
+            null,
+            new PictureConfiguration(),
+            false,
+        ];
+
+        yield 'Fallback to default predefined size' => [
+            null,
+            null,
+            true,
+        ];
+    }
+
+    /**
      * @dataProvider getAspectRatios
      */
     public function testSetHasSingleAspectRatioAttribute(bool $expected, int $imgWidth, int $imgHeight, int $sourceWidth, int $sourceHeight): void
@@ -628,11 +724,6 @@ class PictureFactoryTest extends TestCase
         yield [false, 20, 100, 22, 100];
     }
 
-    /**
-     * @param PictureGeneratorInterface&MockObject $pictureGenerator
-     * @param ImageFactoryInterface&MockObject     $imageFactory
-     * @param ContaoFramework&MockObject           $framework
-     */
     private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null): PictureFactory
     {
         if (null === $pictureGenerator) {

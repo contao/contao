@@ -38,7 +38,9 @@ class ModuleNewsList extends ModuleNews
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newslist'][0]) . ' ###';
@@ -62,6 +64,13 @@ class ModuleNewsList extends ModuleNews
 		if ($this->news_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
+		}
+
+		// Tag the news archives (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_news_archive.' . $id; }, $this->news_archives));
 		}
 
 		return parent::generate();

@@ -78,12 +78,12 @@
         <target>Richiedere il login per poter aggiungere dei commenti</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
+        <source>Allow only authenticated members to create comments.</source>
         <target>Consentire solo agli utenti autenticati di creare commenti.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
-        <source>Disable the security question</source>
-        <target>Disattivare la domanda di sicurezza</target>
+        <source>Disable spam protection</source>
+        <target>Disabilita la protezione spam</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>

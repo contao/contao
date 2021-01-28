@@ -1,12 +1,21 @@
+includes:
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
+    - tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-symfony/rules.neon
+
+rules:
+    - SlamPhpStan\SymfonyFilesystemRule
+    - SlamPhpStan\SymfonyProcessRule
+    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+
 parameters:
-    autoload_files:
-        - %currentWorkingDirectory%/vendor/autoload.php
+    dynamicConstantNames:
+        - BE_USER_LOGGED_IN
 
-    contao:
-        services_yml_path: %currentWorkingDirectory%/core-bundle/src/Resources/config/services.yml
-
-    symfony:
-        container_xml_path: %currentWorkingDirectory%/core-bundle/var/cache/phpstan/appContao_CoreBundle_Tests_Functional_app_AppKernelPhpstanDebugContainer.xml
+    universalObjectCratesClasses:
+        - Contao\Model
+        - Contao\Template
 
     excludes_analyse:
         - %currentWorkingDirectory%/core-bundle/src/Resources/*
@@ -15,49 +24,26 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the Adapter::missingMethod() warning
-        - '#Call to an undefined method Contao\\CoreBundle\\Framework\\Adapter::missingMethod\(\)\.#'
+        # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
+        -
+            message: '#PHPDoc tag @param references unknown parameter: \$options#'
+            path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
-
-        # Ingore forward compatibility layers
-        - '#Method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::all\(\) invoked with 1 parameter, 0 required\.#'
 
         # Ignore configuration tree errors
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
 
-        # Ignore $_SESSION type errors in the lazy session access test
-        - '#Instanceof between array<string, mixed> and Contao\\CoreBundle\\Session\\LazySessionAccess will always evaluate to false\.#'
-
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
 
-        # Ignore constant errors due to bootstrap.php in contao/contao-phpstan (see https://github.com/contao/contao/pull/1451)
-        - message: '#Call to method PHPUnit\\Framework\\Assert::assert(Same|Null|True|InstanceOf)\(\) with .* will always evaluate to false\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
-              - %currentWorkingDirectory%/core-bundle/tests/Doctrine/Schema/DcaSchemaProviderTest.php
+        # Ignore the missing transChoice() method of the Translator class
+        - '#Call to an undefined method .*::transChoice\(\)\.#'
+        - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
 
-        - message: '#Result of && is always false\.#'
-          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
-
-        - message: '#Strict comparison using === between true and false will always evaluate to false\.#'
-          path: %currentWorkingDirectory%/core-bundle/src/DataCollector/ContaoDataCollector.php
-
-        # Ignore that $container->get() always returns false (see https://github.com/phpstan/phpstan-symfony/issues/74)
-        - message: '#Negated boolean expression is always (false|true)\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/src/Monolog/ContaoTableHandler.php
-              - %currentWorkingDirectory%/core-bundle/src/DependencyInjection/Compiler/*Pass.php
-              - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
-
-        - message: '#Unreachable statement - code above always terminates\.#'
-          paths:
-              - %currentWorkingDirectory%/core-bundle/src/Controller/AbstractController.php
-              - %currentWorkingDirectory%/core-bundle/src/Command/MigrateCommand.php
-
-    reportUnmatchedIgnoredErrors: false
-    inferPrivatePropertyTypeFromConstructor: true
     treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
+    inferPrivatePropertyTypeFromConstructor: true
+    reportUnmatchedIgnoredErrors: false

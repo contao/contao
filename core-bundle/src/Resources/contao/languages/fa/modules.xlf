@@ -283,24 +283,21 @@
         <target>خروج خودکار</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>کار را به صورت خودکار خارج می‌کند</target>
+        <source>Automatically logs out a member</source>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>اطلاعات شخصی</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>یک فرم ویرایش اطلاعات شخصی کاربران را ایجاد می‌کند</target>
+        <source>Generates a form to edit a member's personal data</source>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>نام‌نویسی</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>یک فرم نام‌نویسی کاربر ایجاد می‌کند</target>
+        <source>Generates a member registration form</source>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

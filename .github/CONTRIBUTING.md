@@ -19,9 +19,10 @@ propose changes to this document in a pull request.
 ## Pull requests
 
  * Follow the Contao coding standards.
- * For new features, create your pull request against the `master` branch.
- * For bug fixes, create your pull request against the lowest affected branch,
-   e.g. `4.4` if the bug is in Contao 4.4 or `4.7` if the bug is in Contao 4.7.
+ * For new features, create your pull request against the `4.x` branch.
+ * For bug fixes, create your pull request against the lowest affected branch
+   that is actively supported, e.g. `4.9` if the bug is in Contao 4.9 or `4.10`
+   if the bug is only in Contao 4.10 or greater.
  * Include screenshots in your pull request whenever possible.
  * If you want to add a new feature, we recommend that you discuss your ideas
    with us before your start writing code; either on GitHub or in one of our

@@ -24,9 +24,14 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Environment;
 use Contao\Input;
+use Contao\Model\Registry;
+use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -34,6 +39,8 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -334,7 +341,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testOverridesTheErrorLevel(): void
@@ -378,8 +385,10 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
+            false
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -414,8 +423,10 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
+            false
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -432,7 +443,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function getInstallRoutes(): \Generator
@@ -459,11 +470,11 @@ class ContaoFrameworkTest extends TestCase
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
-     *
-     * @expectedDeprecation Using $_SESSION has been deprecated %s.
      */
     public function testRegistersTheLazySessionAccessObject(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
+
         $beBag = new ArrayAttributeBag();
         $beBag->setName('contao_backend');
 
@@ -483,6 +494,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
+        /** @phpstan-ignore-next-line */
         $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
         $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
         $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
@@ -490,7 +502,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAnObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacyClass::class;
@@ -502,7 +513,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreateASingeltonObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacySingletonClass::class;
@@ -514,7 +524,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAdaptersForLegacyClasses(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
         $adapter = $framework->getAdapter(LegacyClass::class);
 
@@ -651,6 +660,43 @@ class ContaoFrameworkTest extends TestCase
     }
 
     /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testDelegatesTheResetCalls(): void
+    {
+        $framework = $this->mockFramework();
+        $framework->setContainer($this->getContainerWithContaoConfiguration());
+        $framework->initialize();
+
+        Environment::set('scriptFilename', 'bar');
+        Input::setUnusedGet('foo', 'bar');
+
+        /** @var PageModel&MockObject $model */
+        $model = $this
+            ->getMockBuilder(PageModel::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['onRegister'])
+            ->getMock()
+        ;
+
+        $model->id = 1;
+
+        $registry = Registry::getInstance();
+        $registry->register($model);
+
+        $this->assertSame('bar', Environment::get('scriptFilename'));
+        $this->assertNotEmpty(Input::getUnusedGet());
+        $this->assertCount(1, $registry);
+
+        $framework->reset();
+
+        $this->assertNotSame('bar', Environment::get('scriptFilename'));
+        $this->assertEmpty(Input::getUnusedGet());
+        $this->assertCount(0, $registry);
+    }
+
+    /**
      * @param TokenChecker&MockObject $tokenChecker
      */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
@@ -665,8 +711,10 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
+            new Filesystem(),
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
+            false
         );
 
         $adapters = [

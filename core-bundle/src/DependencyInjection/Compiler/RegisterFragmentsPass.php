@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\Container;
@@ -37,13 +39,25 @@ class RegisterFragmentsPass implements CompilerPassInterface
      */
     private $tag;
 
-    public function __construct(string $tag = null)
+    /**
+     * @var string|null
+     */
+    private $globalsKey;
+
+    /**
+     * @var string|null
+     */
+    private $proxyClass;
+
+    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null)
     {
         if (null === $tag) {
-            @trigger_error('Using "new RegisterFragmentsPass()" without passing the tag name has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.9', 'Initializing "Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass" objects without passing the tag name as argument has been deprecated and will no longer work in Contao 5.0.');
         }
 
         $this->tag = $tag;
+        $this->globalsKey = $globalsKey;
+        $this->proxyClass = $proxyClass;
     }
 
     /**
@@ -63,38 +77,65 @@ class RegisterFragmentsPass implements CompilerPassInterface
      */
     protected function registerFragments(ContainerBuilder $container, string $tag): void
     {
+        $globals = [];
         $preHandlers = [];
         $registry = $container->findDefinition('contao.fragment.registry');
-        $command = $container->findDefinition('contao.command.debug_fragments');
+        $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
-            $definition = $container->findDefinition($reference);
-            $definition->setPublic(true);
+            // If a controller has multiple methods for different fragment types (e.g. a content
+            // element and a front end module), the first pass creates a child definition that
+            // inherits all tags from the original. On the next run, the pass would pick up the
+            // child definition and try to create duplicate fragments.
+            if (0 === strpos((string) $reference, 'contao.fragment._')) {
+                continue;
+            }
 
+            $definition = $container->findDefinition((string) $reference);
             $tags = $definition->getTag($tag);
             $definition->clearTag($tag);
 
             foreach ($tags as $attributes) {
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
+                $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
 
                 $identifier = sprintf('%s.%s', $tag, $attributes['type']);
-                $config = $this->getFragmentConfig($container, $reference, $attributes);
+                $serviceId = 'contao.fragment._'.$identifier;
+
+                $childDefinition = new ChildDefinition((string) $reference);
+                $childDefinition->setPublic(true);
+
+                $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-                    $preHandlers[$identifier] = $reference;
+                    $preHandlers[$identifier] = new Reference($serviceId);
                 }
 
                 if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
-                    $definition->addMethodCall('setFragmentOptions', [$attributes]);
+                    $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-                $command->addMethodCall('add', [$identifier, $config, $attributes]);
-                $definition->addTag($tag, $attributes);
+
+                if (null !== $command) {
+                    $command->addMethodCall('add', [$identifier, $config, $attributes]);
+                }
+
+                $childDefinition->setTags($definition->getTags());
+                $container->setDefinition($serviceId, $childDefinition);
+
+                if ($this->globalsKey && $this->proxyClass) {
+                    if (!isset($attributes['category'])) {
+                        throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, (string) $reference));
+                    }
+
+                    $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                }
             }
         }
 
         $this->addPreHandlers($container, $preHandlers);
+        $this->addGlobalsMapListener($globals, $container);
     }
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
@@ -156,5 +197,18 @@ class RegisterFragmentsPass implements CompilerPassInterface
         }
 
         return Container::underscore($className);
+    }
+
+    private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
+    {
+        if (empty($globals)) {
+            return;
+        }
+
+        $listener = new Definition(GlobalsMapListener::class, [$globals]);
+        $listener->setPublic(true);
+        $listener->addTag('contao.hook', ['hook' => 'initializeSystem', 'priority' => 255]);
+
+        $container->setDefinition('contao.listener.'.ContainerBuilder::hash($listener), $listener);
     }
 }

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
 /**
@@ -39,7 +40,9 @@ class ModuleSubscribe extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['subscribe'][0]) . ' ###';
@@ -98,7 +101,6 @@ class ModuleSubscribe extends Module
 				'eval' => array('mandatory'=>true)
 			);
 
-			/** @var Widget $objWidget */
 			$objWidget = new FormCaptcha(FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
 		}
 
@@ -173,7 +175,7 @@ class ModuleSubscribe extends Module
 		// Find an unconfirmed token
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
 		{
-			$this->Template->type = 'error';
+			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 			return;
@@ -181,7 +183,7 @@ class ModuleSubscribe extends Module
 
 		if ($optInToken->isConfirmed())
 		{
-			$this->Template->type = 'error';
+			$this->Template->mclass = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
 
 			return;
@@ -194,7 +196,7 @@ class ModuleSubscribe extends Module
 		{
 			if (!$objRecipient = NewsletterRecipientsModel::findByPk($intId))
 			{
-				$this->Template->type = 'error';
+				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 
 				return;
@@ -202,7 +204,7 @@ class ModuleSubscribe extends Module
 
 			if ($optInToken->getEmail() != $objRecipient->email)
 			{
-				$this->Template->type = 'error';
+				$this->Template->mclass = 'error';
 				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
 
 				return;
@@ -351,10 +353,10 @@ class ModuleSubscribe extends Module
 			$objRecipient->addedOn = $time;
 			$objRecipient->save();
 
-			// Remove the blacklist entry (see #4999)
-			if (($objBlacklist = NewsletterBlacklistModel::findByHashAndPid(md5($strEmail), $id)) !== null)
+			// Remove the deny list entry (see #4999)
+			if (($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($strEmail), $id)) !== null)
 			{
-				$objBlacklist->delete();
+				$objDenyList->delete();
 			}
 
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
@@ -375,7 +377,10 @@ class ModuleSubscribe extends Module
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))), StringUtil::parseSimpleTokens($this->nl_subscribe, $arrData));
+		$optInToken->send(
+			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
+			System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_subscribe, $arrData)
+		);
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

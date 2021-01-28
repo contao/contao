@@ -16,7 +16,12 @@ use Composer\Script\Event;
 use Composer\Util\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Webmozart\PathUtil\Path;
 
+/**
+ * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0; use
+ *             the "contao-setup" binary instead.
+ */
 class ScriptHandler
 {
     /**
@@ -24,24 +29,49 @@ class ScriptHandler
      */
     public static function initializeApplication(Event $event): void
     {
-        $webDir = self::getWebDir($event);
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication() has been deprecated and will no longer work in Contao 5.0. Use the "contao-setup" binary instead.');
 
-        static::purgeCacheFolder();
-        static::executeCommand('contao:install-web-dir', $event);
-        static::executeCommand('cache:clear --no-warmup', $event);
-        static::executeCommand('cache:clear --no-warmup', $event, 'dev');
-        static::executeCommand('cache:warmup', $event);
-        static::executeCommand(sprintf('assets:install %s --symlink --relative', $webDir), $event);
-        static::executeCommand(sprintf('contao:install %s', $webDir), $event);
-        static::executeCommand(sprintf('contao:symlinks %s', $webDir), $event);
+        $command = array_filter([
+            'contao-setup',
+            $event->getIO()->isDecorated() ? '--ansi' : '--no-ansi',
+        ]);
 
-        $event->getIO()->write('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
+        $event->getIO()->write(
+            sprintf(
+                '<warning>Please edit your root composer.json and set "%s" to "%s" instead of using "ScriptHandler::initializeApplication()".</warning>',
+                $event->getName(),
+                implode(' ', $command)
+            )
+        );
+
+        if (false === ($phpPath = (new PhpExecutableFinder())->find())) {
+            throw new \RuntimeException('The PHP executable could not be found.');
+        }
+
+        $command[0] = Path::join(__DIR__.'/../../bin', $command[0]);
+        array_unshift($command, $phpPath);
+
+        // Backwards compatibility with symfony/process <3.3 (see #1964)
+        if (method_exists(Process::class, 'setCommandline')) {
+            $command = implode(' ', array_map('escapeshellarg', $command));
+        }
+
+        $process = new Process($command);
+        $process->setTimeout(null);
+
+        $process->run(
+            static function (string $type, string $buffer) use ($event): void {
+                $event->getIO()->write($buffer, false);
+            }
+        );
     }
 
     public static function purgeCacheFolder(): void
     {
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::purgeCacheFolder() has been deprecated and will no longer work in Contao 5.0.');
+
         $filesystem = new Filesystem();
-        $filesystem->removeDirectory(getcwd().'/var/cache/prod');
+        $filesystem->removeDirectory(Path::join(getcwd(), 'var/cache/prod'));
     }
 
     /**
@@ -49,70 +79,9 @@ class ScriptHandler
      */
     public static function addAppDirectory(): void
     {
+        trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::addAppDirectory() has been deprecated and will no longer work in Contao 5.0.');
+
         $filesystem = new Filesystem();
-        $filesystem->ensureDirectoryExists(getcwd().'/app');
-    }
-
-    /**
-     * @throws \RuntimeException
-     */
-    private static function executeCommand(string $cmd, Event $event, string $env = 'prod'): void
-    {
-        $phpFinder = new PhpExecutableFinder();
-
-        if (false === ($phpPath = $phpFinder->find())) {
-            throw new \RuntimeException('The php executable could not be found.');
-        }
-
-        $process = new Process(
-            sprintf(
-                '%s %s%s %s%s --env=%s',
-                escapeshellarg($phpPath),
-                escapeshellarg(__DIR__.'/../../bin/contao-console'),
-                $event->getIO()->isDecorated() ? ' --ansi' : '',
-                $cmd,
-                self::getVerbosityFlag($event),
-                $env
-            )
-        );
-
-        // Increase the timeout according to terminal42/background-process (see #54)
-        $process->setTimeout(500);
-
-        $process->run(
-            static function (string $type, string $buffer) use ($event): void {
-                $event->getIO()->write($buffer, false);
-            }
-        );
-
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException(sprintf('An error occurred while executing the "%s" command: %s', $cmd, $process->getErrorOutput()));
-        }
-    }
-
-    private static function getWebDir(Event $event): string
-    {
-        $extra = $event->getComposer()->getPackage()->getExtra();
-
-        return $extra['symfony-web-dir'] ?? 'web';
-    }
-
-    private static function getVerbosityFlag(Event $event): string
-    {
-        $io = $event->getIO();
-
-        switch (true) {
-            case $io->isDebug():
-                return ' -vvv';
-
-            case $io->isVeryVerbose():
-                return ' -vv';
-
-            case $io->isVerbose():
-                return ' -v';
-
-            default:
-                return '';
-        }
+        $filesystem->ensureDirectoryExists(Path::join(getcwd(), 'app'));
     }
 }

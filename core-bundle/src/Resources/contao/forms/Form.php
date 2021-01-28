@@ -67,7 +67,9 @@ class Form extends Hybrid
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
@@ -78,9 +80,15 @@ class Form extends Hybrid
 			return $objTemplate->parse();
 		}
 
-		if ($this->customTpl != '' && TL_MODE == 'FE')
+		if ($this->customTpl)
 		{
-			$this->strTemplate = $this->customTpl;
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			// Use the custom template unless it is a back end request
+			if (!$request || !System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+			{
+				$this->strTemplate = $this->customTpl;
+			}
 		}
 
 		return parent::generate();
@@ -115,7 +123,7 @@ class Form extends Hybrid
 			while ($objFields->next())
 			{
 				// Ignore the name of form fields which do not use a name (see #1268)
-				if ($objFields->name != '' && isset($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]) && preg_match('/[,;]name[,;]/', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]))
+				if ($objFields->name && isset($GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]) && preg_match('/[,;]name[,;]/', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objFields->type]))
 				{
 					$arrFields[$objFields->name] = $objFields->current();
 				}
@@ -145,7 +153,7 @@ class Form extends Hybrid
 			foreach ($arrFields as $objField)
 			{
 				/** @var FormFieldModel $objField */
-				$strClass = $GLOBALS['TL_FFL'][$objField->type];
+				$strClass = $GLOBALS['TL_FFL'][$objField->type] ?? null;
 
 				// Continue if the class is not defined
 				if (!class_exists($strClass))
@@ -175,7 +183,7 @@ class Form extends Hybrid
 				}
 
 				// Unset the default value depending on the field type (see #4722)
-				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type])))
+				if (!empty($arrData['value']) && !\in_array('value', StringUtil::trimsplit('[,;]', $GLOBALS['TL_DCA']['tl_form_field']['palettes'][$objField->type] ?? '')))
 				{
 					$arrData['value'] = '';
 				}
@@ -235,7 +243,7 @@ class Form extends Hybrid
 					continue;
 				}
 
-				if ($objWidget->name != '' && $objWidget->label != '')
+				if ($objWidget->name && $objWidget->label)
 				{
 					$arrLabels[$objWidget->name] = $this->replaceInsertTags($objWidget->label); // see #4268
 				}
@@ -265,12 +273,12 @@ class Form extends Hybrid
 		$strAttributes = '';
 		$arrAttributes = StringUtil::deserialize($this->attributes, true);
 
-		if ($arrAttributes[0] != '')
+		if ($arrAttributes[0])
 		{
 			$strAttributes .= ' id="' . $arrAttributes[0] . '"';
 		}
 
-		if ($arrAttributes[1] != '')
+		if ($arrAttributes[1])
 		{
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
@@ -345,7 +353,7 @@ class Form extends Hybrid
 				}
 
 				// Prepare CSV file
-				if ($this->format == 'csv')
+				if ($this->format == 'csv' || $this->format == 'csv_excel')
 				{
 					$keys[] = $k;
 					$values[] = (\is_array($v) ? implode(',', $v) : $v);
@@ -419,6 +427,10 @@ class Form extends Hybrid
 			{
 				$email->attachFileFromString(StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'form.csv', 'text/comma-separated-values');
 			}
+			elseif ($this->format == 'csv_excel')
+			{
+				$email->attachFileFromString(mb_convert_encoding("\u{FEFF}sep=;\n" . StringUtil::decodeEntities('"' . implode('";"', $keys) . '"' . "\n" . '"' . implode('";"', $values) . '"'), 'UTF-16LE', 'UTF-8'), 'form.csv', 'text/comma-separated-values');
+			}
 
 			$uploaded = '';
 
@@ -438,8 +450,14 @@ class Form extends Hybrid
 				}
 			}
 
-			$uploaded = trim($uploaded) != '' ? "\n\n---\n" . $uploaded : '';
+			$uploaded = trim($uploaded) ? "\n\n---\n" . $uploaded : '';
 			$email->text = StringUtil::decodeEntities(trim($message)) . $uploaded . "\n\n";
+
+			// Set the transport
+			if (!empty($this->mailerTransport))
+			{
+				$email->addHeader('X-Transport', $this->mailerTransport);
+			}
 
 			// Send the e-mail
 			$email->sendTo($recipients);
@@ -464,7 +482,7 @@ class Form extends Hybrid
 					$arrSet[$k] = $v;
 
 					// Convert date formats into timestamps (see #6827)
-					if ($arrSet[$k] != '' && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
+					if ($arrSet[$k] && \in_array($arrFields[$k]->rgxp, array('date', 'time', 'datim')))
 					{
 						$objDate = new Date($arrSet[$k], Date::getFormatFromRgxp($arrFields[$k]->rgxp));
 						$arrSet[$k] = $objDate->tstamp;
@@ -477,7 +495,7 @@ class Form extends Hybrid
 			{
 				foreach ($_SESSION['FILES'] as $k=>$v)
 				{
-					if ($v['uploaded'])
+					if ($v['uploaded'] ?? null)
 					{
 						$arrSet[$k] = StringUtil::stripRootDir($v['tmp_name']);
 					}
@@ -499,7 +517,7 @@ class Form extends Hybrid
 			{
 				if ($v === '')
 				{
-					$arrSet[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->targetTable]['fields'][$k]['sql']);
+					$arrSet[$k] = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->targetTable]['fields'][$k]['sql'] ?? array());
 				}
 			}
 
@@ -531,7 +549,7 @@ class Form extends Hybrid
 		$_SESSION['FILES'] = array(); // DO NOT CHANGE
 
 		// Add a log entry
-		if (FE_USER_LOGGED_IN)
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, TL_FORMS);
@@ -560,7 +578,7 @@ class Form extends Hybrid
 	 */
 	protected function getMaxFileSize()
 	{
-		@trigger_error('Using Form::getMaxFileSize() has been deprecated and will no longer work in Contao 5.0. Use $this->objModel->getMaxUploadFileSize() instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Form::getMaxFileSize()" has been deprecated and will no longer work in Contao 5.0. Use "$this->objModel->getMaxUploadFileSize()" instead.');
 
 		return $this->objModel->getMaxUploadFileSize();
 	}
@@ -578,11 +596,11 @@ class Form extends Hybrid
 		}
 
 		$arrMessageBox = array('TL_ERROR', 'TL_CONFIRM', 'TL_INFO');
-		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA']) ? $_SESSION['FORM_DATA'] : array();
+		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA'] ?? null) ? $_SESSION['FORM_DATA'] : array();
 
 		foreach ($arrMessageBox as $tl)
 		{
-			if (\is_array($_SESSION[$formId][$tl]))
+			if (\is_array($_SESSION[$formId][$tl] ?? null))
 			{
 				$_SESSION[$formId][$tl] = array_unique($_SESSION[$formId][$tl]);
 

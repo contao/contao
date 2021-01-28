@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -60,12 +61,36 @@ class SearchIndexListener
             return;
         }
 
+        // Do not index if called by crawler
+        if (Factory::USER_AGENT === $request->headers->get('User-Agent')) {
+            return;
+        }
+
         // Do not handle fragments
         if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
             return;
         }
 
-        $document = Document::createFromRequestResponse($request, $event->getResponse());
+        $response = $event->getResponse();
+
+        // Do not index if the X-Robots-Tag header contains "noindex"
+        if (false !== strpos($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return;
+        }
+
+        $document = Document::createFromRequestResponse($request, $response);
+
+        try {
+            $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
+
+            // Do not index if the meta robots tag contains "noindex"
+            if (false !== strpos($robots, 'noindex')) {
+                return;
+            }
+        } catch (\Exception $e) {
+            // No meta robots tag found
+        }
+
         $lds = $document->extractJsonLdScripts();
 
         // If there are no json ld scripts at all, this should not be handled by our indexer

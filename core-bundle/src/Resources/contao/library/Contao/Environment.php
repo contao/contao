@@ -467,7 +467,7 @@ class Environment
 	 */
 	protected static function host()
 	{
-		return static::get('httpHost');
+		return preg_replace('/:\d+$/', '', static::get('httpHost'));
 	}
 
 	/**
@@ -536,7 +536,7 @@ class Environment
 		$return->class = $os . ' ' . $browser . ' ' . $engine;
 
 		// Add the version number if available
-		if ($version != '')
+		if ($version)
 		{
 			$return->class .= ' ' . $shorty . $version;
 		}
@@ -634,7 +634,7 @@ class Environment
 	 */
 	public static function getInstance()
 	{
-		@trigger_error('Using Environment::getInstance() has been deprecated and will no longer work in Contao 5.0. The Environment class is now static.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Environment::getInstance()" has been deprecated and will no longer work in Contao 5.0. The "Contao\Environment" class is now static.');
 
 		if (static::$objInstance === null)
 		{

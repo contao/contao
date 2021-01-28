@@ -156,15 +156,13 @@ class FormTextField extends Widget
 						return $this->varValue;
 					}
 				}
-				elseif ($this->rgxp == 'email' || $this->rgxp == 'friendly')
+
+				if ($this->rgxp == 'email' || $this->rgxp == 'friendly')
 				{
 					return Idna::decodeEmail($this->varValue);
 				}
-				else
-				{
-					return $this->varValue;
-				}
-				break;
+
+				return $this->varValue;
 
 			case 'type':
 				if ($this->hideInput)
@@ -197,6 +195,24 @@ class FormTextField extends Widget
 				}
 
 				return 'text';
+
+			case 'min':
+			case 'minval':
+				if ($this->rgxp == 'digit')
+				{
+					return $this->arrAttributes['min'];
+				}
+
+				return parent::__get($strKey);
+
+			case 'max':
+			case 'maxval':
+				if ($this->rgxp == 'digit')
+				{
+					return $this->arrAttributes['max'];
+				}
+
+				return parent::__get($strKey);
 
 			default:
 				return parent::__get($strKey);

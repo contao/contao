@@ -267,7 +267,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function authenticate()
 	{
-		@trigger_error('Using User::authenticate() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		return false;
 	}
@@ -282,7 +282,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function login()
 	{
-		@trigger_error('Using User::login() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		return false;
 	}
@@ -297,7 +297,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	protected function checkAccountStatus()
 	{
-		@trigger_error('Using User::checkAccountStatus() has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::checkAccountStatus()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
 
 		try
 		{
@@ -358,7 +358,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	protected function regenerateSessionId()
 	{
-		@trigger_error('Using User::regenerateSessionId() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::regenerateSessionId()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
 
 		$container = System::getContainer();
 		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
@@ -390,7 +390,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	protected function generateSession()
 	{
-		@trigger_error('Using User::generateSession() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::generateSession()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
 	}
 
 	/**
@@ -403,7 +403,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function logout()
 	{
-		@trigger_error('Using User::logout() has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::logout()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
 
 		throw new RedirectResponseException(System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
@@ -454,8 +454,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * {@inheritdoc}
-	 *
 	 * @return User
 	 */
 	public static function loadUserByUsername($username)
@@ -506,9 +504,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->username;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function setUsername($username)
 	{
 		$this->username = $username;
@@ -524,9 +519,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function setPassword($password)
 	{
 		$this->password = $password;
@@ -542,9 +534,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->salt;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	public function setSalt($salt)
 	{
 		$this->salt = $salt;
@@ -617,14 +606,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$time = Date::floorToMinute();
-
-		if ($this->start !== '' && $this->start > $time)
+		if ($this->start !== '' && $this->start > time())
 		{
 			return false;
 		}
 
-		if ($this->stop !== '' && $this->stop <= ($time + 60))
+		if ($this->stop !== '' && $this->stop <= time())
 		{
 			return false;
 		}
@@ -650,7 +637,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		@trigger_error('Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0. Use the "contao.import_user" event instead.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.5', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0. Use the "contao.import_user" event instead.');
 
 		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 		{

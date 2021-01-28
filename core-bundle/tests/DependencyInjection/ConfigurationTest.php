@@ -72,7 +72,7 @@ class ConfigurationTest extends TestCase
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
         $this->assertSame('/tmp/contao', $configuration['web_dir']);
-        $this->assertSame('C:\Temp\contao', $configuration['image']['target_dir']);
+        $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
     public function getPaths(): \Generator
@@ -194,11 +194,30 @@ class ConfigurationTest extends TestCase
 
     public function testAllowsOnlySnakeCaseKeys(): void
     {
+        /** @var ArrayNode $tree */
         $tree = $this->configuration->getConfigTreeBuilder()->buildTree();
 
         $this->assertInstanceOf(ArrayNode::class, $tree);
 
         $this->checkKeys($tree->getChildren());
+    }
+
+    public function testFailsIfABackendAttributeNameContainsInvalidCharacters(): void
+    {
+        $params = [
+            'contao' => [
+                'backend' => [
+                    'attributes' => [
+                        'data-App Name' => 'My App',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageMatches('/The attribute name "data-App Name" must be a valid HTML attribute name./');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
     }
 
     /**
@@ -213,6 +232,7 @@ class ConfigurationTest extends TestCase
                 $this->checkKeys($value->getChildren());
             }
 
+            /** @var ArrayNode $prototype */
             if ($value instanceof PrototypedArrayNode && ($prototype = $value->getPrototype()) instanceof ArrayNode) {
                 $this->checkKeys($prototype->getChildren());
             }

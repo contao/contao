@@ -14,7 +14,7 @@ namespace Contao;
  * Extracts DCA information and cache it
  *
  * The class parses the DCA files and stores various extracts like relations
- * in the cache directory. This meta data can then be loaded and used in the
+ * in the cache directory. This metadata can then be loaded and used in the
  * application (e.g. the Model classes).
  *
  * Usage:
@@ -43,7 +43,7 @@ class DcaExtractor extends Controller
 	protected $strTable;
 
 	/**
-	 * Meta data
+	 * Metadata
 	 * @var array
 	 */
 	protected $arrMeta = array();
@@ -99,7 +99,7 @@ class DcaExtractor extends Controller
 	 */
 	protected function __construct($strTable)
 	{
-		if ($strTable == '')
+		if (!$strTable)
 		{
 			throw new \Exception('The table name must not be empty');
 		}
@@ -146,9 +146,9 @@ class DcaExtractor extends Controller
 	}
 
 	/**
-	 * Return the meta data as array
+	 * Return the metadata as array
 	 *
-	 * @return array The meta data
+	 * @return array The metadata
 	 */
 	public function getMeta()
 	{
@@ -156,9 +156,9 @@ class DcaExtractor extends Controller
 	}
 
 	/**
-	 * Return true if there is meta data
+	 * Return true if there is metadata
 	 *
-	 * @return boolean True if there is meta data
+	 * @return boolean True if there is metadata
 	 */
 	public function hasMeta()
 	{
@@ -378,13 +378,13 @@ class DcaExtractor extends Controller
 		}
 
 		// Return if the DC type is "File"
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File')
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null) == 'File')
 		{
 			return;
 		}
 
 		// Return if the DC type is "Folder" and the DC is not database assisted
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null) == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
 		{
 			return;
 		}
@@ -406,7 +406,13 @@ class DcaExtractor extends Controller
 				// Check whether there is a relation (see #6524)
 				if (isset($config['relation']))
 				{
-					$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+					$table = null;
+
+					if (isset($config['foreignKey']))
+					{
+						$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+					}
+
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
 					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
@@ -430,7 +436,7 @@ class DcaExtractor extends Controller
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($blnFromFile)
 		{
-			@trigger_error('Using database.sql files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using "database.sql" files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.');
 
 			if (!isset(static::$arrSql[$this->strTable]))
 			{
@@ -462,12 +468,12 @@ class DcaExtractor extends Controller
 
 			list($engine, , $charset) = explode(' ', trim($arrTable['TABLE_OPTIONS']));
 
-			if ($engine != '')
+			if ($engine)
 			{
 				$sql['engine'] = str_replace('ENGINE=', '', $engine);
 			}
 
-			if ($charset != '')
+			if ($charset)
 			{
 				$sql['charset'] = str_replace('CHARSET=', '', $charset);
 			}
@@ -490,7 +496,7 @@ class DcaExtractor extends Controller
 					{
 						$type = trim($arrMatches[1]);
 						$field = implode(',', $arrFields[1]);
-						$sql['keys'][$field] = ($type != '') ? strtolower($type) : 'index';
+						$sql['keys'][$field] = $type ? strtolower($type) : 'index';
 					}
 				}
 			}
@@ -544,29 +550,26 @@ class DcaExtractor extends Controller
 			'collate' => $sql['collate']
 		);
 
+		$this->arrFields = array();
+		$this->arrOrderFields = array();
+
 		// Fields
-		if (!empty($fields))
+		foreach ($fields as $field=>$config)
 		{
-			$this->arrFields = array();
-			$this->arrOrderFields = array();
-
-			foreach ($fields as $field=>$config)
+			if (isset($config['sql']))
 			{
-				if (isset($config['sql']))
-				{
-					$this->arrFields[$field] = $config['sql'];
-				}
+				$this->arrFields[$field] = $config['sql'];
+			}
 
-				// Only add order fields of binary fields (see #7785)
-				if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
-				{
-					$this->arrOrderFields[] = $config['eval']['orderField'];
-				}
+			// Only add order fields of binary fields (see #7785)
+			if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
+			{
+				$this->arrOrderFields[] = $config['eval']['orderField'];
+			}
 
-				if (isset($config['eval']['unique']) && $config['eval']['unique'])
-				{
-					$this->arrUniqueFields[] = $field;
-				}
+			if (isset($config['eval']['unique']) && $config['eval']['unique'])
+			{
+				$this->arrUniqueFields[] = $field;
 			}
 		}
 

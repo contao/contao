@@ -15,13 +15,13 @@
         <source>Here you can define the calendar permissions.</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.0">
-        <source>Allowed RSS feeds</source>
+        <source>Allowed calendar feeds</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeeds.1">
         <source>Here you can grant access to one or more calendar feeds.</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.0">
-        <source>RSS feed permissions</source>
+        <source>Calendar feed permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.calendarfeedp.1">
         <source>Here you can define the calendar feed permissions.</source>

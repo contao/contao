@@ -187,9 +187,9 @@ class FormCaptcha extends Widget
 		$strEncoded = '';
 		$arrCharacters = Utf8::str_split($question);
 
-		foreach ($arrCharacters as $strCharacter)
+		foreach ($arrCharacters as $index => $strCharacter)
 		{
-			$strEncoded .= sprintf('&#%s;', Utf8::ord($strCharacter));
+			$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', Utf8::ord($strCharacter));
 		}
 
 		return $strEncoded;
@@ -226,7 +226,7 @@ class FormCaptcha extends Widget
 	 */
 	public function generateLabel()
 	{
-		if ($this->strLabel == '')
+		if (!$this->strLabel)
 		{
 			return '';
 		}

@@ -28,8 +28,7 @@ if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 4);
 }
 
-/** @var Composer\Autoload\ClassLoader $loader */
-$loader = require $projectDir.'/vendor/autoload.php';
+require $projectDir.'/vendor/autoload.php';
 
 $input = new ArgvInput();
 $kernel = ContaoKernel::fromInput($projectDir, $input);

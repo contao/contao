@@ -42,7 +42,6 @@ class Theme extends Backend
 	 */
 	public function importTheme()
 	{
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -585,7 +584,7 @@ class Theme extends Backend
 						}
 
 						// Replace the file paths in singleSRC fields with their tl_files ID
-						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'fileTree' && !$GLOBALS['TL_DCA'][$table]['fields'][$name]['eval']['multiple'])
+						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'fileTree' && !($GLOBALS['TL_DCA'][$table]['fields'][$name]['eval']['multiple'] ?? null))
 						{
 							if (!$value)
 							{
@@ -603,7 +602,7 @@ class Theme extends Backend
 						}
 
 						// Replace the file paths in multiSRC fields with their tl_files ID
-						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'fileTree' || \in_array($name, $arrOrder))
+						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'fileTree' || \in_array($name, $arrOrder))
 						{
 							$tmp = StringUtil::deserialize($value);
 
@@ -624,7 +623,7 @@ class Theme extends Backend
 						}
 
 						// Adjust the imageSize widget data
-						elseif ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] == 'imageSize')
+						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'imageSize')
 						{
 							$imageSizes = StringUtil::deserialize($value, true);
 
@@ -707,7 +706,7 @@ class Theme extends Backend
 	 */
 	public function exportTheme(DataContainer $dc)
 	{
-		// Get the theme meta data
+		// Get the theme metadata
 		$objTheme = $this->Database->prepare("SELECT * FROM tl_theme WHERE id=?")
 								   ->limit(1)
 								   ->execute($dc->id);
@@ -1020,7 +1019,7 @@ class Theme extends Backend
 			}
 
 			// Replace the IDs of singleSRC fields with their path (see #4952)
-			elseif ($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] == 'fileTree' && !$GLOBALS['TL_DCA'][$t]['fields'][$k]['eval']['multiple'])
+			elseif (($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] ?? null) == 'fileTree' && !($GLOBALS['TL_DCA'][$t]['fields'][$k]['eval']['multiple'] ?? null))
 			{
 				$objFile = FilesModel::findByUuid($v);
 
@@ -1035,7 +1034,7 @@ class Theme extends Backend
 			}
 
 			// Replace the IDs of multiSRC fields with their paths (see #4952)
-			elseif ($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] == 'fileTree' || \in_array($k, $arrOrder))
+			elseif (($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] ?? null) == 'fileTree' || \in_array($k, $arrOrder))
 			{
 				$arrFiles = StringUtil::deserialize($v);
 
@@ -1087,7 +1086,7 @@ class Theme extends Backend
 		$strFolder = preg_replace('@^' . preg_quote(Config::get('uploadPath'), '@') . '/@', '', $strFolder);
 
 		// Add the default upload folder name
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			$strTarget = 'files';
 			$strFolder = Config::get('uploadPath');
@@ -1163,7 +1162,7 @@ class Theme extends Backend
 		$strFolder = preg_replace('@^templates/@', '', $strFolder);
 
 		// Re-add the templates folder name
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			$strFolder = 'templates';
 		}
@@ -1202,7 +1201,7 @@ class Theme extends Backend
 	 */
 	protected function customizeUploadPath($strPath)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			return '';
 		}
@@ -1219,7 +1218,7 @@ class Theme extends Backend
 	 */
 	protected function standardizeUploadPath($strPath)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			return '';
 		}

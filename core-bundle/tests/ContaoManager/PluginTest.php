@@ -17,7 +17,6 @@ use Contao\CoreBundle\ContaoManager\Plugin;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
@@ -28,7 +27,6 @@ use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
-use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -70,24 +68,25 @@ class PluginTest extends TestCase
         $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
         $this->assertSame(['core'], $bundles[5]->getReplace());
 
+        $loadAfter = $bundles[5]->getLoadAfter();
+        sort($loadAfter);
+
         $this->assertSame(
             [
-                FrameworkBundle::class,
-                SecurityBundle::class,
-                TwigBundle::class,
-                MonologBundle::class,
-                SwiftmailerBundle::class,
                 DoctrineBundle::class,
-                DoctrineCacheBundle::class,
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
                 LexikMaintenanceBundle::class,
                 NelmioCorsBundle::class,
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,
+                FrameworkBundle::class,
+                MonologBundle::class,
+                SecurityBundle::class,
+                TwigBundle::class,
                 CmfRoutingBundle::class,
             ],
-            $bundles[5]->getLoadAfter()
+            $loadAfter
         );
     }
 

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,8 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  */
 class AutomatorCommand extends Command
 {
+    protected static $defaultName = 'contao:automator';
+
     /**
      * @var array
      */
@@ -48,7 +51,6 @@ class AutomatorCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:automator')
             ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
             ->setDescription('Runs automator tasks on the command line.')
         ;
@@ -60,7 +62,7 @@ class AutomatorCommand extends Command
 
         try {
             $this->runAutomator($input, $output);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
 
             return 1;
@@ -121,7 +123,7 @@ class AutomatorCommand extends Command
 
         if (null !== $task) {
             if (!\in_array($task, $commands, true)) {
-                throw new \InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
+                throw new InvalidArgumentException(sprintf('Invalid task "%s"', $task)); // no full stop here
             }
 
             return $task;

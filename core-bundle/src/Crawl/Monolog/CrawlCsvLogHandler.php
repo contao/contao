@@ -17,20 +17,44 @@ use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
 {
-    protected function streamWrite($resource, array $record): void
+    public const DATETIME_FORMAT = 'Y-m-d H:i:s.u';
+
+    /**
+     * @var string
+     */
+    private $filterSource;
+
+    public function getFilterSource(): string
+    {
+        return $this->filterSource;
+    }
+
+    public function setFilterSource(string $filterSource): self
+    {
+        $this->filterSource = $filterSource;
+
+        return $this;
+    }
+
+    protected function streamWrite($stream, array $record): void
     {
         if (!isset($record['context']['source'])) {
+            return;
+        }
+
+        if ($this->filterSource && $this->filterSource !== $record['context']['source']) {
             return;
         }
 
         /** @var CrawlUri|null $crawlUri */
         $crawlUri = $record['context']['crawlUri'] ?? null;
 
-        $stat = fstat($resource);
+        $stat = fstat($stream);
         $size = $stat['size'];
 
         if (0 === $size) {
-            fputcsv($resource, [
+            fputcsv($stream, [
+                'Time',
                 'Source',
                 'URI',
                 'Found on URI',
@@ -41,6 +65,7 @@ class CrawlCsvLogHandler extends StreamHandler
         }
 
         $columns = [
+            $record['datetime']->format(self::DATETIME_FORMAT),
             $record['context']['source'],
             null === $crawlUri ? '---' : (string) $crawlUri->getUri(),
             null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
@@ -49,6 +74,6 @@ class CrawlCsvLogHandler extends StreamHandler
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 
-        fputcsv($resource, $columns);
+        fputcsv($stream, $columns);
     }
 }

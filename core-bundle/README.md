@@ -58,12 +58,12 @@ framework:
 ```
 
 Add the Contao routes to your `config/routing.yaml` file, and be sure to load
-the `ContaoCoreBundle` at the very end, so the catch all route does not catch
+the `ContaoCoreBundle` at the very end, so the catch-all route does not catch
 your application routes.
 
 ```yml
 ContaoCoreBundle:
-    resource: "@ContaoCoreBundle/Resources/config/routing.yml"
+    resource: "@ContaoCoreBundle/Resources/config/routes.yml"
 ```
 
 Edit your `config/security.yml` file and merge all the `providers`, `encoders`,
@@ -123,7 +123,6 @@ security:
 
             logout:
                 path: contao_frontend_logout
-                target: contao_root
                 handlers:
                     - contao.security.logout_handler
                 success_handler: contao.security.logout_success_handler

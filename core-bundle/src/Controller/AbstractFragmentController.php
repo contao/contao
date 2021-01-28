@@ -15,9 +15,11 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\FrontendTemplate;
 use Contao\Model;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
@@ -29,6 +31,45 @@ abstract class AbstractFragmentController extends AbstractController implements 
     public function setFragmentOptions(array $options): void
     {
         $this->options = $options;
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['request_stack'] = RequestStack::class;
+
+        return $services;
+    }
+
+    protected function getPageModel(): ?PageModel
+    {
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+        if (null === $request || !$request->attributes->has('pageModel')) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && (int) $GLOBALS['objPage']->id === (int) $pageModel
+        ) {
+            return $GLOBALS['objPage'];
+        }
+
+        $this->initializeContaoFramework();
+
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+
+        return $pageAdapter->findByPk((int) $pageModel);
     }
 
     /**
@@ -69,7 +110,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (\is_array($classes)) {
+        if (!empty($classes)) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }
