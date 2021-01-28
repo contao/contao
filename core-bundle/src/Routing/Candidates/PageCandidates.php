@@ -88,7 +88,6 @@ class PageCandidates extends AbstractCandidates
 
         foreach ($pathMap as $type => $pathRegex) {
             $path = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
-
             $lastParam = strrpos($path, '[^/]++');
 
             if (false !== $lastParam) {
