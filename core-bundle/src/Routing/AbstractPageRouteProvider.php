@@ -166,7 +166,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
+        return strnatcasecmp($a->getPath(), $b->getPath());
     }
 
     protected function convertLanguagesForSorting(array $languages): array
