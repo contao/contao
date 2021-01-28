@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
@@ -167,8 +167,8 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        $pathA = $a instanceof PageRoute ? substr($a->getPath(), 0, -strlen($a->getUrlSuffix())) : $a->getPath();
-        $pathB = $b instanceof PageRoute ? substr($b->getPath(), 0, -strlen($b->getUrlSuffix())) : $b->getPath();
+        $pathA = $a instanceof PageRoute ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
+        $pathB = $b instanceof PageRoute ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
 
         $countA = \count(explode('/', $pathA));
         $countB = \count(explode('/', $pathB));
