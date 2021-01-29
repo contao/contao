@@ -267,8 +267,6 @@ class BackendMain extends Backend
 			return $this->Template->getResponse();
 		}
 
-		$this->Template->theme = 'flexible' === $themeName ? 'contao' : $themeName;
-
 		return $this->Template->getResponse()->setContent(
 			$twig->render('@ContaoCore/Backend/Layout/main.html.twig', $this->Template->getData())
 		);

@@ -134,8 +134,6 @@ class BackendIndex extends Backend
 			return $this->Template->getResponse();
 		}
 
-		$objTemplate->theme = 'flexible' === $themeName ? 'contao' : $themeName;
-
 		$twig = $container->get('twig');
 
 		return $objTemplate->getResponse()->setContent(

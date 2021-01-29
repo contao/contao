@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\BackendTheme;
 
+use Contao\Config;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -46,8 +47,13 @@ class EncoreEntrypointLookupCollection implements EntrypointLookupCollectionInte
      */
     public function getEntrypointLookup(string $buildName = null): EntrypointLookupInterface
     {
-        if (null === $buildName) {
-            $buildName = 'contao';
+        if (null === $buildName || '_default' === $buildName) {
+            $buildName = Config::get('backendTheme') ?: 'contao';
+
+            // BC
+            if ('flexible' === $buildName) {
+                $buildName = 'contao';
+            }
         }
 
         // A custom theme path is defined in the app config (via contao.backend.theme_path)

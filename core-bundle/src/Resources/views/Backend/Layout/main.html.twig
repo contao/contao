@@ -13,7 +13,7 @@
         {% endblock %}
 
         {% block stylesheets %}
-            {{ contao_backend_link_tags('app', null, theme) }}
+            {{ contao_backend_link_tags('app') }}
 
             {# deprecated entries #}
             <link rel="stylesheet" href="system/themes/flexible/fonts.css">
@@ -26,7 +26,7 @@
         {% endblock %}
 
         {% block javascripts %}
-            {{ contao_backend_script_tags('app', null, theme) }}
+            {{ contao_backend_script_tags('app') }}
 
             {# deprecated entries #}
             <script>{{ localeString|raw }}</script>

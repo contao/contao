@@ -22,6 +22,11 @@ use Twig\TwigFunction;
  * This class provides twig functions to render theme assets in the page layout.
  *
  * Adapted from \Symfony\WebpackEncoreBundle\Twig\EntryFilesTwigExtension but uses a custom lookup collection.
+ *
+ * Per default, the Encore entrypoint of the currently active backend theme is used with a fallback to the Contao core
+ * backend theme. Use $entrypointName = 'foobar' to explicitly load files from a backend theme with the "foobar" alias.
+ *
+ * To register a theme, use the `contao.backend_theme` servie tag.
  */
 class EncoreEntryFilesTwigExtension extends AbstractExtension
 {
@@ -44,28 +49,28 @@ class EncoreEntryFilesTwigExtension extends AbstractExtension
         ];
     }
 
-    public function getWebpackJsFiles(string $entryName, string $entrypointName = '_default'): array
+    public function getWebpackJsFiles(string $entryName, string $entrypointName = null): array
     {
         return $this->getEntrypointLookup($entrypointName)
             ->getJavaScriptFiles($entryName)
         ;
     }
 
-    public function getWebpackCssFiles(string $entryName, string $entrypointName = '_default'): array
+    public function getWebpackCssFiles(string $entryName, string $entrypointName = null): array
     {
         return $this->getEntrypointLookup($entrypointName)
             ->getCssFiles($entryName)
         ;
     }
 
-    public function renderWebpackScriptTags(string $entryName, string $packageName = null, string $entrypointName = '_default', array $attributes = []): string
+    public function renderWebpackScriptTags(string $entryName, string $packageName = null, string $entrypointName = null, array $attributes = []): string
     {
         return $this->getTagRenderer()
             ->renderWebpackScriptTags($entryName, $packageName, $entrypointName, $attributes)
         ;
     }
 
-    public function renderWebpackLinkTags(string $entryName, string $packageName = null, string $entrypointName = '_default', array $attributes = []): string
+    public function renderWebpackLinkTags(string $entryName, string $packageName = null, string $entrypointName = null, array $attributes = []): string
     {
         return $this->getTagRenderer()
             ->renderWebpackLinkTags($entryName, $packageName, $entrypointName, $attributes)
