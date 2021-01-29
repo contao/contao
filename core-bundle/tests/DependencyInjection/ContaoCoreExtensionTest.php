@@ -36,6 +36,7 @@ use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Controller\ImagesController;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Controller\RobotsTxtController;
+use Contao\CoreBundle\Controller\SitemapController;
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
@@ -1529,6 +1530,29 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'controller.service_arguments' => [
+                    [],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheSitemapController(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(SitemapController::class));
+
+        $definition = $container->getDefinition(SitemapController::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertSame(
+            [
+                'controller.service_arguments' => [
+                    [],
+                ],
+                'container.service_subscriber' => [
                     [],
                 ],
             ],
