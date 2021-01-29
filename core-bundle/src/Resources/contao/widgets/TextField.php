@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
+
 /**
  * Provide methods to handle text fields.
  *
@@ -113,7 +115,7 @@ class TextField extends Widget
 		if (!$this->multiple)
 		{
 			// Convert to Punycode format (see #5571)
-			if ($this->rgxp == 'url')
+			if ($this->rgxp == 'url' || $this->rgxp == HttpUrlListener::RGXP_NAME)
 			{
 				try
 				{
@@ -144,7 +146,7 @@ class TextField extends Widget
 		if (!$this->multiple)
 		{
 			// Hide the Punycode format (see #2750)
-			if ($this->rgxp == 'url')
+			if ($this->rgxp == 'url' || $this->rgxp == HttpUrlListener::RGXP_NAME)
 			{
 				try
 				{
