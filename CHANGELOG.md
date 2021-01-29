@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.0-RC2] (2021-01-29)
+
+**Fixed issues:**
+
+- [#2703] Correctly show fields with an input_field_callback ([leofeyer])
+- [#2702] Register the SitemapController in the services.yml ([leofeyer])
+- [#2701] Correctly match page controllers with absolute paths ([aschempp])
+- [#2698] Handle root pages without hostname in the SitemapController ([Toflar])
+- [#2694] Remove the legacy encryption logic ([Toflar])
+- [#2693] Fix a wrong class reference in the Widget class ([leofeyer])
+- [#2679] Fix yet another E_WARNING issue ([leofeyer])
+- [#2662] Fix entity encoding in the figure insert tag ([m-vo])
+- [#2661] Use type="url" for httpurl text fields ([fritzmg])
+
 ## [4.11.0-RC1] (2021-01-18)
 
 **New features:**
@@ -46,7 +60,9 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.0-RC2]: https://github.com/contao/contao/releases/tag/4.11.0-RC2
 [4.11.0-RC1]: https://github.com/contao/contao/releases/tag/4.11.0-RC1
+[aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
 [dmolineus]: https://github.com/dmolineus
@@ -56,6 +72,15 @@ This project adheres to [Semantic Versioning].
 [rabauss]: https://github.com/rabauss
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#2703]: https://github.com/contao/contao/pull/2703
+[#2702]: https://github.com/contao/contao/pull/2702
+[#2701]: https://github.com/contao/contao/pull/2701
+[#2698]: https://github.com/contao/contao/pull/2698
+[#2694]: https://github.com/contao/contao/pull/2694
+[#2693]: https://github.com/contao/contao/pull/2693
+[#2679]: https://github.com/contao/contao/pull/2679
+[#2662]: https://github.com/contao/contao/pull/2662
+[#2661]: https://github.com/contao/contao/pull/2661
 [#2607]: https://github.com/contao/contao/pull/2607
 [#2297]: https://github.com/contao/contao/pull/2297
 [#2183]: https://github.com/contao/contao/pull/2183
