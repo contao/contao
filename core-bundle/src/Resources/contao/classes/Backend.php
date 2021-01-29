@@ -65,13 +65,26 @@ abstract class Backend extends Controller
 	 *
 	 * @return array An array of available back end themes
 	 *
-	 * @deprecated
+	 * @deprecated Returns only legacy backend themes. To be removed in Contao 5.0.
+	 *             Use BackendThemes::getThemeNames() instead.
 	 */
 	public static function getThemes()
 	{
-		$themes = System::getContainer()->get(BackendThemes::class)->getThemeNames();
+		$retrurn = array();
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$themes = Folder::scan($projectDir . '/system/themes');
 
-		return array_combine($themes, $themes);
+		foreach ($themes as $name)
+		{
+			if (0 === strncmp($name, '.', 1) || !is_dir($projectDir . '/system/themes/' . $name))
+			{
+				continue;
+			}
+
+			$retrurn[$name] = $name;
+		}
+
+		return $retrurn;
 	}
 
 	/**

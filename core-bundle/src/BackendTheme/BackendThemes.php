@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\BackendTheme;
 
-use Contao\Folder;
-use Contao\System;
-
 /**
  * This class holds all installed backend themes that can be fetched by their alias.
  *
@@ -38,32 +35,15 @@ class BackendThemes
 
     public function getThemeNames(): array
     {
-        return array_merge($this->getLegacyThemeNames(), array_keys($this->themes));
+        return array_keys($this->themes);
     }
 
-    public function getTheme($name): ?BackendThemeInterface
+    public function getTheme(string $name): ?BackendThemeInterface
     {
         if (!\array_key_exists($name, $this->themes)) {
             return null;
         }
 
         return $this->themes[$name];
-    }
-
-    private function getLegacyThemeNames(): array
-    {
-        $retrurn = [];
-        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
-        $themes = Folder::scan($projectDir.'/system/themes');
-
-        foreach ($themes as $name) {
-            if (0 === strncmp($name, '.', 1) || !is_dir($projectDir.'/system/themes/'.$name)) {
-                continue;
-            }
-
-            $retrurn[] = $name;
-        }
-
-        return $retrurn;
     }
 }

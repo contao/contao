@@ -898,6 +898,7 @@ services:
             - '@Contao\CoreBundle\BackendTheme\BackendThemes'
             - '%kernel.project_dir%'
             - '%contao.backend%'
+            - '@contao.framework'
 
     contao.backend_theme.tag_renderer:
         class: Symfony\WebpackEncoreBundle\Asset\TagRenderer

@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\BackendTheme;
 
+use Contao\BackendUser;
 use Contao\Config;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -30,12 +32,14 @@ class EncoreEntrypointLookupCollection implements EntrypointLookupCollectionInte
     private BackendThemes $backendThemes;
     private string $projectDir;
     private array $backendConfig;
+    private ContaoFramework $framework;
 
-    public function __construct(BackendThemes $backendThemes, string $projectDir, array $backendConfig)
+    public function __construct(BackendThemes $backendThemes, string $projectDir, array $backendConfig, ContaoFramework $framework)
     {
         $this->backendThemes = $backendThemes;
         $this->projectDir = $projectDir;
         $this->backendConfig = $backendConfig;
+        $this->framework = $framework;
     }
 
     /**
@@ -47,22 +51,25 @@ class EncoreEntrypointLookupCollection implements EntrypointLookupCollectionInte
      */
     public function getEntrypointLookup(string $buildName = null): EntrypointLookupInterface
     {
-        if (null === $buildName || '_default' === $buildName) {
-            $buildName = Config::get('backendTheme') ?: 'contao';
-
-            // BC
-            if ('flexible' === $buildName) {
-                $buildName = 'contao';
-            }
-        }
-
         // A custom theme path is defined in the app config (via contao.backend.theme_path)
         if ($themePath = $this->backendConfig['theme_path']) {
             return new EntrypointLookup($themePath);
         }
 
+        // A global theme is set
+        if ($themeName = $this->backendConfig['theme']) {
+            $buildName = $themeName;
+        }
+
+        // The user has a theme defined
+        $user = $this->framework->createInstance(BackendUser::class);
+
+        if (($themeName = $user->backendTheme) && \in_array($themeName, $this->backendThemes->getThemeNames(), true)) {
+            $buildName = $themeName;
+        }
+
         // Use the default theme
-        if ('contao' === $buildName) {
+        if (null === $buildName || '_default' === $buildName) {
             $themePath = sprintf('%s/web/bundles/contaocore/theme/entrypoints.json', $this->projectDir);
 
             return new EntrypointLookup($themePath);

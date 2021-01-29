@@ -187,10 +187,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
-				return Backend::getThemes();
-			},
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),

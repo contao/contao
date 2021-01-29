@@ -409,7 +409,7 @@ class BackendUser extends User
 		Config::set('useRTE', $this->useRTE);
 		Config::set('useCE', $this->useCE);
 		Config::set('thumbnails', $this->thumbnails);
-		Config::set('backendTheme', $this->backendTheme);
+		Config::set('backendTheme', $this->backendTheme); // BC
 		Config::set('fullscreen', false); // BC
 
 		// Inherit permissions
