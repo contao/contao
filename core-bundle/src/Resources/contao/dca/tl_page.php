@@ -15,6 +15,7 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Idna;
@@ -350,7 +351,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
@@ -362,7 +363,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
 
@@ -205,7 +206,7 @@ class Comments extends Frontend
 				'name'      => 'website',
 				'label'     => $GLOBALS['TL_LANG']['MSC']['com_website'],
 				'inputType' => 'text',
-				'eval'      => array('rgxp'=>'url', 'maxlength'=>128, 'decodeEntities'=>true)
+				'eval'      => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>128, 'decodeEntities'=>true)
 			)
 		);
 
