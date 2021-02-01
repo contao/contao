@@ -1400,7 +1400,8 @@ abstract class DataContainer extends Backend
 	{
 		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
 
-		if (false === strpos($dataContainer, '\\')) {
+		if (false === strpos($dataContainer, '\\'))
+		{
 			$dataContainer = 'DC_' . $dataContainer;
 		}
 
