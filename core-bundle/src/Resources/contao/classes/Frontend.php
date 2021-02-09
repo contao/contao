@@ -337,7 +337,7 @@ abstract class Frontend extends Controller
 			$objRequest = Request::create($strUri);
 			$objRequest->headers->set('Accept-Language', $accept_language);
 
-			$arrParameters = System::getContainer()->get('contao.routing.nested_matcher')->matchRequest($objRequest);
+			$arrParameters = System::getContainer()->get('router')->matchRequest($objRequest);
 			$objRootPage = $arrParameters['pageModel'] ?? null;
 
 			if (!$objRootPage instanceof PageModel)
