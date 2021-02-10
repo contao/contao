@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\ModuleModel;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +50,6 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $services = parent::getSubscribedServices();
 
         $services['translator'] = TranslatorInterface::class;
-        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
 
         return $services;
     }
