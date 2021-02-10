@@ -88,8 +88,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $request = $this->get('request_stack')->getCurrentRequest();
 
-        if ($model->customTpl && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
-            $templateName = $model->customTpl;
+        if ($model->customTpl) {
+            $request = $this->get('request_stack')->getCurrentRequest();
+
+            if (!$request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+                $templateName = $model->customTpl;
+            }
         }
 
         $template = $this->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
