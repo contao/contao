@@ -86,8 +86,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $templateName = $this->options['template'];
         }
 
-        $request = $this->get('request_stack')->getCurrentRequest();
-
         if ($model->customTpl) {
             $request = $this->get('request_stack')->getCurrentRequest();
 
