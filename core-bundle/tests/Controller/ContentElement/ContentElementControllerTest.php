@@ -37,7 +37,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $controller(new Request(), $this->createMock(ContentModel::class), 'main');
+        $controller(new Request(), new ContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTypeFragmentOptions(): void
