@@ -20,6 +20,7 @@ use Contao\System;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class FrontendModuleControllerTest extends TestCase
 {
@@ -61,10 +62,16 @@ class FrontendModuleControllerTest extends TestCase
         $model = new ModuleModel();
         $model->customTpl = 'mod_bar';
 
-        $controller = new TestController();
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_bar'));
+        $container = $this->mockContainerWithFrameworkTemplate('mod_bar');
+        $container->set('request_stack', new RequestStack());
 
-        $controller(new Request(), $model, 'main');
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+        $template = json_decode($response->getContent(), true);
+
+        $this->assertSame('mod_bar', $template['templateName']);
     }
 
     public function testSetsTheClassFromTheType(): void
@@ -148,7 +155,7 @@ class FrontendModuleControllerTest extends TestCase
             ->expects($this->once())
             ->method('createInstance')
             ->with(FrontendTemplate::class, [$templateName])
-            ->willReturn(new FrontendTemplate())
+            ->willReturn(new FrontendTemplate($templateName))
         ;
 
         $container = new ContainerBuilder();
