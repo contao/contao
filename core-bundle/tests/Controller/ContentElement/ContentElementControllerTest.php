@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -38,7 +37,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $controller(new Request(), new ContentModel(), 'main');
+        $controller(new Request(), $this->createMock(ContentModel::class), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTypeFragmentOptions(): void
@@ -81,17 +80,19 @@ class ContentElementControllerTest extends TestCase
         $model = new ContentModel();
         $model->customTpl = 'ce_bar';
 
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'backend']));
+        $request = new Request([], [], ['_scope' => 'backend']);
 
-        $container = $this->mockContainerWithFrameworkTemplate('ce_bar');
-        $container->set('request_stack', new RequestStack());
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test');
+        $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
 
         $controller = new TestController();
         $controller->setContainer($container);
 
-        $response = $controller(new Request(), $model, 'main');
+        $response = $controller($request, $model, 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('ce_test', $template['templateName']);
@@ -239,7 +240,7 @@ class ContentElementControllerTest extends TestCase
             ->expects($this->once())
             ->method('createInstance')
             ->with(FrontendTemplate::class, [$templateName])
-            ->willReturn(new FrontendTemplate())
+            ->willReturn(new FrontendTemplate($templateName))
         ;
 
         $container = new ContainerBuilder();
