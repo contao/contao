@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
@@ -62,10 +64,37 @@ class ContentElementControllerTest extends TestCase
         $model = new ContentModel();
         $model->customTpl = 'ce_bar';
 
-        $controller = new TestController();
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_bar'));
+        $container = $this->mockContainerWithFrameworkTemplate('ce_bar');
+        $container->set('request_stack', new RequestStack());
 
-        $controller(new Request(), $model, 'main');
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+        $template = json_decode($response->getContent(), true);
+
+        $this->assertSame('ce_bar', $template['templateName']);
+    }
+
+    public function testDoesNotCreateTheTemplateFromCustomTplInBackEnd(): void
+    {
+        $model = new ContentModel();
+        $model->customTpl = 'ce_bar';
+
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request([], [], ['_scope' => 'backend']));
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_bar');
+        $container->set('request_stack', new RequestStack());
+        $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+        $template = json_decode($response->getContent(), true);
+
+        $this->assertSame('ce_test', $template['templateName']);
     }
 
     public function testSetsTheClassFromTheType(): void
