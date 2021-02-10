@@ -1390,7 +1390,7 @@ abstract class DataContainer extends Backend
 	abstract protected function save($varValue);
 
 	/**
-	 * Return the class name for .
+	 * Return the class name of the DataContainer driver for the given table.
 	 *
 	 * @param string $table
 	 *
