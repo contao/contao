@@ -357,7 +357,7 @@ final class Figure
 
         // Apply data
         if ($template instanceof Template) {
-            $template->setData(array_replace_recursive($existing, $new));
+            $template->setData(array_replace($existing, $new));
 
             return;
         }
