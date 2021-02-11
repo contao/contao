@@ -52,13 +52,21 @@ class FigureBuilderTest extends TestCase
     {
         /** @var FilesModel&MockObject $model */
         $model = $this->mockClassWithProperties(FilesModel::class);
+        $model->path = 'foo';
         $model->type = 'folder';
 
-        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder = $this->getFigureBuilder()->fromFilesModel($model);
 
-        $this->expectException(InvalidResourceException::class);
+        $exception = $figureBuilder->getLastException();
 
-        $figureBuilder->fromFilesModel($model);
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame("DBAFS item 'foo' is not a file.", $exception->getMessage());
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
     }
 
     public function testFromFilesModelFailsWithNonExistingResource(): void
@@ -68,11 +76,18 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = 'this/does/not/exist.jpg';
 
-        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder = $this->getFigureBuilder()->fromFilesModel($model);
 
-        $this->expectException(InvalidResourceException::class);
+        $exception = $figureBuilder->getLastException();
 
-        $figureBuilder->fromFilesModel($model);
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
     }
 
     public function testFromUuid(): void
@@ -102,11 +117,19 @@ class FigureBuilderTest extends TestCase
     {
         $filesModelAdapter = $this->mockAdapter(['findByUuid']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $figureBuilder = $this->getFigureBuilder(null, $framework);
 
-        $this->expectException(InvalidResourceException::class);
+        $figureBuilder = $this->getFigureBuilder(null, $framework)->fromUuid('invalid-uuid');
 
-        $figureBuilder->fromUuid('invalid-uuid');
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame("DBAFS item with UUID 'invalid-uuid' could not be found.", $exception->getMessage());
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
     }
 
     public function testFromId(): void
@@ -135,11 +158,19 @@ class FigureBuilderTest extends TestCase
     {
         $filesModelAdapter = $this->mockAdapter(['findByPk']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $figureBuilder = $this->getFigureBuilder(null, $framework);
 
-        $this->expectException(InvalidResourceException::class);
+        $figureBuilder = $this->getFigureBuilder(null, $framework)->fromId(99);
 
-        $figureBuilder->fromId(99);
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame("DBAFS item with ID '99' could not be found.", $exception->getMessage());
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
     }
 
     public function testFromAbsolutePath(): void
@@ -191,11 +222,19 @@ class FigureBuilderTest extends TestCase
         [, , $projectDir,] = $this->getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
-        $figureBuilder = $this->getFigureBuilder();
 
-        $this->expectException(InvalidResourceException::class);
+        $figureBuilder = $this->getFigureBuilder()->fromPath($filePath, false);
 
-        $figureBuilder->fromPath($filePath, false);
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
     }
 
     public function testFromImage(): void
@@ -228,11 +267,18 @@ class FigureBuilderTest extends TestCase
             ->willReturn($filePath)
         ;
 
-        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder = $this->getFigureBuilder()->fromImage($image);
 
-        $this->expectException(InvalidResourceException::class);
+        $exception = $figureBuilder->getLastException();
 
-        $figureBuilder->fromImage($image);
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
     }
 
     /**
@@ -322,6 +368,101 @@ class FigureBuilderTest extends TestCase
         yield 'relative path' => [$relativeFilePath];
 
         yield 'absolute path' => [$absoluteFilePath];
+    }
+
+    public function testLastExceptionIsResetWhenCallingFrom(): void
+    {
+        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+
+        /** @var FilesModel&MockObject $model */
+        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model->type = 'file';
+        $model->path = $relativeFilePath;
+
+        /** @var FilesModel&MockObject $invalidModel */
+        $invalidModel = $this->mockClassWithProperties(FilesModel::class);
+        $invalidModel->type = 'folder';
+
+        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findByPk', 'findByPath']);
+
+        $filesModelAdapter
+            ->method('findByUuid')
+            ->willReturnMap([
+                ['foo-uuid', $model],
+                ['invalid-uuid', null],
+            ])
+        ;
+
+        $filesModelAdapter
+            ->method('findByPk')
+            ->willReturnMap([
+                [5, $model],
+                [123, null],
+            ])
+        ;
+
+        $filesModelAdapter
+            ->method('findByPath')
+            ->willReturnMap([
+                [$absoluteFilePath, $model],
+                ['invalid/path', null],
+            ])
+        ;
+
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $studio = $this->getStudioMockForImage($absoluteFilePath);
+
+        $figureBuilder = $this->getFigureBuilder($studio, $framework);
+
+        $setValidResourceOperations = [
+            ['fromFilesModel', $model],
+            ['fromUuid', 'foo-uuid'],
+            ['fromID', 5],
+            ['fromPath', $absoluteFilePath],
+        ];
+
+        $setInvalidResourceOperations = [
+            ['fromFilesModel', $invalidModel],
+            ['fromUuid', 'invalid-uuid'],
+            ['fromID', 123],
+            ['fromPath', 'invalid/path'],
+        ];
+
+        $exception = null;
+
+        foreach ($setInvalidResourceOperations as $operation) {
+            [$method, $argument] = $operation;
+
+            $figureBuilder->$method($argument);
+
+            $this->assertNotSame(
+                $exception,
+                $figureBuilder->getLastException(),
+                'new exception replaces old one'
+            );
+
+            $exception = $figureBuilder->getLastException();
+
+            $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        }
+
+        foreach ($setValidResourceOperations as $operation) {
+            [$method, $argument] = $operation;
+
+            $figureBuilder->from($invalidModel);
+
+            $this->assertInstanceOf(InvalidResourceException::class, $exception);
+
+            $figureBuilder->$method($argument);
+
+            $this->assertNull(
+                $figureBuilder->getLastException(),
+                'setting a valid resource clears the last exception'
+            );
+        }
+
+        // Calling build must succeed if last defined resource was valid
+        $figureBuilder->build();
     }
 
     public function testFailsWhenTryingToBuildWithoutSettingResource(): void

@@ -59,6 +59,11 @@ class FigureBuilder
     private $filesystem;
 
     /**
+     * @var InvalidResourceException|null
+     */
+    private $lastException;
+
+    /**
      * The resource's absolute file path.
      *
      * @var string|null
@@ -180,15 +185,19 @@ class FigureBuilder
      */
     public function fromFilesModel(FilesModel $filesModel): self
     {
+        $this->lastException = null;
+
         if ('file' !== $filesModel->type) {
-            throw new InvalidResourceException("DBAFS item '{$filesModel->path}' is not a file.");
+            $this->lastException = new InvalidResourceException("DBAFS item '{$filesModel->path}' is not a file.");
+
+            return $this;
         }
 
         $this->filePath = Path::makeAbsolute($filesModel->path, $this->projectDir);
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+            $this->lastException = new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
         }
 
         return $this;
@@ -199,10 +208,14 @@ class FigureBuilder
      */
     public function fromUuid(string $uuid): self
     {
+        $this->lastException = null;
+
         $filesModel = $this->filesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
-            throw new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
+            $this->lastException = new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
+
+            return $this;
         }
 
         return $this->fromFilesModel($filesModel);
@@ -213,10 +226,14 @@ class FigureBuilder
      */
     public function fromId(int $id): self
     {
+        $this->lastException = null;
+
         $filesModel = $this->filesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
-            throw new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
+            $this->lastException = new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
+
+            return $this;
         }
 
         return $this->fromFilesModel($filesModel);
@@ -229,6 +246,8 @@ class FigureBuilder
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {
+        $this->lastException = null;
+
         // Make sure path is absolute and in a canonical form
         $path = Path::isAbsolute($path) ? Path::canonicalize($path) : Path::makeAbsolute($path, $this->projectDir);
 
@@ -245,7 +264,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            throw new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+            $this->lastException = new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
         }
 
         return $this;
@@ -478,9 +497,46 @@ class FigureBuilder
     }
 
     /**
-     * Creates a result object with the current settings.
+     * Returns the last InvalidResourceException that was captured when setting
+     * resources or null if there was none.
+     */
+    public function getLastException(): ?InvalidResourceException
+    {
+        return $this->lastException;
+    }
+
+    /**
+     * Creates a result object with the current settings, throws an exception
+     * if the currently defined resource is invalid.
+     *
+     * @throws InvalidResourceException
      */
     public function build(): Figure
+    {
+        if (null !== $this->lastException) {
+            throw $this->lastException;
+        }
+
+        return $this->doBuild();
+    }
+
+    /**
+     * Creates a result object with the current settings, returns null if the
+     * currently defined resource is invalid.
+     */
+    public function buildIfResourceExists(): ?Figure
+    {
+        if (null !== $this->lastException) {
+            return null;
+        }
+
+        return $this->doBuild();
+    }
+
+    /**
+     * Creates a result object with the current settings.
+     */
+    private function doBuild(): Figure
     {
         if (null === $this->filePath) {
             throw new \LogicException('You need to set a resource before building the result.');
