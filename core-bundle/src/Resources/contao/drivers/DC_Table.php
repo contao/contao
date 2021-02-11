@@ -5198,11 +5198,38 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$searchValue = preg_quote($session['search'][$this->strTable]['value']);
 			}
 
-			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+			$strReplacePrefix = '';
+			$strReplaceSuffix = '';
+
+			// Decode HTML entities to make them searchable
+			if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$session['search'][$this->strTable]['field']]['eval']['decodeEntities']))
+			{
+				$arrReplace = array(
+					'&#35;' => '#',
+					'&#60;' => '<',
+					'&#62;' => '>',
+					'&lt;' => '<',
+					'&gt;' => '>',
+					'&#40;' => '(',
+					'&#41;' => ')',
+					'&#92;' => '\\\\',
+					'&#61;' => '=',
+					'&amp;' => '&',
+				);
+
+				$strReplacePrefix = str_repeat('REPLACE(', \count($arrReplace));
+
+				foreach ($arrReplace as $strSource => $strTarget)
+				{
+					$strReplaceSuffix .= ", '$strSource', '$strTarget')";
+				}
+			}
+
+			$strPattern = "$strReplacePrefix CAST(%s AS CHAR) $strReplaceSuffix REGEXP ?";
 
 			if (substr(Config::get('dbCollation'), -3) == '_ci')
 			{
-				$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
+				$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
 			}
 
 			$fld = $session['search'][$this->strTable]['field'];
