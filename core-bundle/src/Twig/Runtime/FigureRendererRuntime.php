@@ -34,7 +34,7 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * Renders a figure.
+     * Renders a figure. Returns null if the resource is invalid.
      *
      * The provided configuration array is used to configure a FigureBuilder
      * object. If not explicitly set, the default figure template will be used
@@ -44,7 +44,7 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      */
-    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
+    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
     {
         return $this->figureRenderer->render($from, $size, $configuration, $template);
     }

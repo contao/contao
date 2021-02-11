@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -47,7 +48,7 @@ class FigureRenderer
     }
 
     /**
-     * Renders a figure.
+     * Renders a figure. Returns null if the resource is invalid.
      *
      * The provided configuration array is used to configure a FigureBuilder
      * object. If not explicitly set, the default figure template will be used
@@ -58,7 +59,7 @@ class FigureRenderer
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      * @param string                                     $template      A Contao or Twig template
      */
-    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
+    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
     {
         $configuration['from'] = $from;
         $configuration['size'] = $size;
@@ -70,7 +71,11 @@ class FigureRenderer
             }
         }
 
-        $figure = $this->buildFigure($configuration);
+        try {
+            $figure = $this->buildFigure($configuration);
+        } catch (InvalidResourceException $e) {
+            return null;
+        }
 
         return $this->renderTemplate($figure, $template);
     }
