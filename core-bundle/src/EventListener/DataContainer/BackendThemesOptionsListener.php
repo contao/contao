@@ -17,6 +17,9 @@ use Contao\CoreBundle\BackendTheme\BackendThemes;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 
+/**
+ * @internal
+ */
 class BackendThemesOptionsListener
 {
     private BackendThemes $backendThemes;

@@ -124,14 +124,13 @@ class BackendIndex extends Backend
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
 		$objTemplate->REQUEST_TOKEN = REQUEST_TOKEN;
-		$objTemplate->errors = Message::generate();
 
 		$backendThemes = $container->get(BackendThemes::class);
 
 		if ('flexible' !== $themeName && null === $theme = $backendThemes->getTheme($themeName))
 		{
 			// Legacy theme detected.
-			return $this->Template->getResponse();
+			return $objTemplate->getResponse();
 		}
 
 		$twig = $container->get('twig');

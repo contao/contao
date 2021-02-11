@@ -15,6 +15,7 @@ module.exports = {
             black: colors.black,
             white: colors.white,
             gray: colors.coolGray,
+            red: colors.rose,
             primary: {
                 50: 'var(--color-primary-50, #FFF8F1)',
                 100: 'var(--color-primary-100, #FFEBD5)',

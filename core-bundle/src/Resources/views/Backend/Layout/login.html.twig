@@ -31,18 +31,16 @@
                 <img class="h-20 w-auto mx-auto" src="{{ asset('theme/images/contao-logo.svg', 'contao_core') }}" alt="">
             </div>
 
-            {% if errors %}
+            {% if messages %}
                 <div class="rounded-md bg-red-100 p-4 mb-6 mt-6 shadow-sm">
                     <div class="flex">
                         <div class="flex-shrink-0">
-                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                    clip-rule="evenodd" fill-rule="evenodd"></path>
-                            </svg>
+                            <span class="block h-5 w-5 text-red-400" aria-hidden="true">
+                                {{ source('@ContaoCore/Backend/Icon/x-circle.solid.svg') }}
+                            </span>
                         </div>
                         <div class="ml-2 text-sm leading-5 text-red-700">
-                            {{ errors }}
+                            {{ messages|raw }}
                         </div>
                     </div>
                 </div>
@@ -88,13 +86,9 @@
                             type="submit"
                             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-500 focus:outline-none focus:border-primary-700 focus:shadow-outline-brand active:bg-primary-700 transition duration-150 ease-in-out">
                               <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                                  <svg
-                                      class="h-5 w-5 text-primary-500 group-hover:text-primary-400 transition ease-in-out duration-150"
-                                      fill="currentColor" viewBox="0 0 20 20">
-                                      <path fill-rule="evenodd"
-                                            d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                            clip-rule="evenodd"/>
-                                  </svg>
+                                   <span class="block h-5 w-5 text-primary-500 group-hover:text-primary-400 transition ease-in-out duration-150" aria-hidden="true">
+                                       {{ source('@ContaoCore/Backend/Icon/lock-closed.solid.svg') }}
+                                   </span>
                               </span>
                             {{ loginButton }}
                         </button>
