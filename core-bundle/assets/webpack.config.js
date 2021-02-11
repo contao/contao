@@ -12,6 +12,11 @@ Encore
     .enablePostCssLoader()
 
     .addEntry('app', './js/app.js')
+
+    // Disable versioning for git-tracked files
+    .configureImageRule({
+        filename: 'images/[name][ext]'
+    })
     .copyFiles({
         from: './images/',
         to: 'images/[path][name].[ext]',
