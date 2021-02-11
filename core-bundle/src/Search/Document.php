@@ -95,7 +95,7 @@ class Document
         foreach ($this->getHeaders() as $key => $values) {
             if ('link' === $key) {
                 foreach ($values as $value) {
-                    if (preg_match('@<(https?://(.+))>; rel="canonical"@', $value, $matches)) {
+                    if (preg_match('@<(https?://(.+))>;\s*rel="canonical"@', $value, $matches)) {
                         return new Uri($matches[1]);
                     }
                 }
