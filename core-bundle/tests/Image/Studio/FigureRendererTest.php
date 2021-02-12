@@ -149,7 +149,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
     }
 
-    public function testReturnsNullForInvalidResources(): void
+    public function testReturnsNullIfTheResourceDoesNotExist(): void
     {
         $figureBuilder = $this->createMock(FigureBuilder::class);
         $figureBuilder
@@ -165,7 +165,6 @@ class FigureRendererTest extends TestCase
         ;
 
         $twig = $this->createMock(Environment::class);
-
         $figureRenderer = new FigureRenderer($studio, $twig);
 
         $this->assertNull($figureRenderer->render('invalid-resource', null));

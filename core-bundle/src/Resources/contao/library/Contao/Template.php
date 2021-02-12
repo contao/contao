@@ -393,7 +393,7 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Renders a figure. Returns null if the resource is invalid.
+	 * Render a figure
 	 *
 	 * The provided configuration array is used to configure a FigureBuilder.
 	 * If not explicitly set, the default template "image.html5" will be used
@@ -405,7 +405,7 @@ abstract class Template extends Controller
 	 * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
 	 * @param string                                     $template      A Contao or Twig template
 	 *
-	 * @return string|null
+	 * @return string|null Returns null if the resource is invalid
 	 */
 	public function figure($from, $size, $configuration = array(), $template = 'image')
 	{
