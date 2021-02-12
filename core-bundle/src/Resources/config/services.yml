@@ -766,7 +766,6 @@ services:
             - '@session'
             - '@security.authentication.trust_resolver'
             - ~ # Simple or Role Hierarchy Voter
-            - '%contao.preview_script%'
         public: true
 
     contao.security.two_factor.authenticator:

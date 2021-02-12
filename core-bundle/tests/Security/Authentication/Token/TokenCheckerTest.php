@@ -164,13 +164,13 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getPreviewModeData
      */
-    public function testChecksIfThePreviewModeIsActive(TokenInterface $token, string $script, bool $expect): void
+    public function testChecksIfThePreviewModeIsActive(TokenInterface $token, bool $isPreview, bool $expect): void
     {
         $request = new Request();
-        $request->server->set('SCRIPT_NAME', $script);
 
-        if ('' !== $script) {
+        if ($isPreview) {
             $session = $this->mockSessionWithToken($token);
+            $request->attributes->set('_preview', $isPreview);
         } else {
             $session = $this->createMock(SessionInterface::class);
             $session
@@ -185,8 +185,7 @@ class TokenCheckerTest extends TestCase
             $this->mockTokenStorage(BackendUser::class),
             $session,
             new AuthenticationTrustResolver(),
-            $this->getRoleVoter(),
-            '/preview.php'
+            $this->getRoleVoter()
         );
 
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
@@ -194,10 +193,10 @@ class TokenCheckerTest extends TestCase
 
     public function getPreviewModeData(): \Generator
     {
-        yield [new FrontendPreviewToken(null, true), '', false];
-        yield [new FrontendPreviewToken(null, true), '/preview.php', true];
-        yield [new FrontendPreviewToken(null, false), '/preview.php', false];
-        yield [new UsernamePasswordToken('user', 'password', 'provider'), '/preview.php', false];
+        yield [new FrontendPreviewToken(null, true), false, false];
+        yield [new FrontendPreviewToken(null, true), true, true];
+        yield [new FrontendPreviewToken(null, false), true, false];
+        yield [new UsernamePasswordToken('user', 'password', 'provider'), true, false];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void

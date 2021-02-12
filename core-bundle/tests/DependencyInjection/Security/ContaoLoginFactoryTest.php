@@ -63,21 +63,17 @@ class ContaoLoginFactoryTest extends TestCase
         $arguments = $container->getDefinition($twoFactorFirewallConfigId)->getArguments();
 
         $this->assertIsArray($arguments);
-        $this->assertCount(3, $arguments);
-        $this->assertSame(['remember_me' => true], $arguments[0]);
-        $this->assertSame('contao_frontend', $arguments[1]);
-        $this->assertEquals(new Reference('security.http_utils'), $arguments[2]);
+        $this->assertSame(['remember_me' => true], $arguments['index_0']);
+        $this->assertSame('contao_frontend', $arguments['index_1']);
 
         $this->assertTrue($container->hasDefinition($twoFactorProviderId));
 
         $arguments = $container->getDefinition($twoFactorProviderId)->getArguments();
 
         $this->assertIsArray($arguments);
-        $this->assertCount(4, $arguments);
+        $this->assertCount(2, $arguments);
         $this->assertEquals(new Reference($twoFactorFirewallConfigId), $arguments['index_0']);
-        $this->assertEquals(new Reference('scheb_two_factor.provider_registry'), $arguments['index_1']);
         $this->assertEquals(new Reference(BackupCodeManager::class), $arguments['index_2']);
-        $this->assertEquals(new Reference('scheb_two_factor.provider_preparation_recorder'), $arguments['index_3']);
 
         $this->assertTrue($container->hasDefinition($twoFactorListenerId));
 
@@ -89,15 +85,6 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertTrue($arguments['index_4']);
         $this->assertFalse($arguments['index_5']);
 
-        $this->assertSame(
-            [
-                'kernel.event_listener' => [
-                    ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX],
-                    ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'],
-                    ['event' => 'kernel.response', 'method' => 'onKernelResponse'],
-                ],
-            ],
-            $container->getDefinition($twoFactorListenerId)->getTags()
-        );
+        $this->assertTrue($container->getDefinition($twoFactorListenerId)->hasTag('kernel.event_subscriber'));
     }
 }
