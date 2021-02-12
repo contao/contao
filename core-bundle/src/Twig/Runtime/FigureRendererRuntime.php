@@ -40,11 +40,13 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
      * object. If not explicitly set, the default figure template will be used
      * to render the results.
      *
+     * Returns null if the resource is invalid.
+     *
      * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      */
-    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string
+    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
     {
         return $this->figureRenderer->render($from, $size, $configuration, $template);
     }

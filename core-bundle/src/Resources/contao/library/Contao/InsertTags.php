@@ -786,7 +786,7 @@ class InsertTags extends Controller
 
 					try
 					{
-						$arrCache[$strTag] = $figureRenderer->render($from, $size, $configuration, $template);
+						$arrCache[$strTag] = $figureRenderer->render($from, $size, $configuration, $template) ?? '';
 					}
 					catch (\Throwable $e)
 					{
