@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.2cll.1">
         <source>Show two columns with the main column on the right side.</source>
-        <target>zostaną wyświetlone dwie kolumny a kolumna główna będzie po prawej stronie.</target>
+        <target>zostaną wyświetlone dwie kolumny, a kolumna główna będzie po prawej stronie.</target>
       </trans-unit>
       <trans-unit id="tl_layout.2clr.0">
         <source>Main and right column</source>
@@ -103,15 +103,15 @@
       </trans-unit>
       <trans-unit id="tl_layout.2clr.1">
         <source>Show two columns with the main column on the left side.</source>
-        <target>zostaną wyświetlone dwie kolumny a kolumna główna będzie po lewej stronie.</target>
+        <target>zostaną wyświetlone dwie kolumny, a kolumna główna będzie po lewej stronie.</target>
       </trans-unit>
       <trans-unit id="tl_layout.3cl.0">
         <source>Main, left and right column</source>
-        <target>Trzy kolumny w główną kolumną po środku</target>
+        <target>Trzy kolumny z główną kolumną po środku</target>
       </trans-unit>
       <trans-unit id="tl_layout.3cl.1">
         <source>Show three columns with the main column in the middle.</source>
-        <target>zostaną wyświetlone trzy kolumny a główna kolumna będzie w środku.</target>
+        <target>zostaną wyświetlone trzy kolumny, a główna kolumna będzie w środku.</target>
       </trans-unit>
       <trans-unit id="tl_layout.widthLeft.0">
         <source>Left column width</source>
@@ -155,19 +155,19 @@
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.0">
         <source>Layout builder</source>
-        <target>Budowa layoutu</target>
+        <target>Budowa układu</target>
       </trans-unit>
       <trans-unit id="tl_layout.layout.css.1">
         <source>Generates a CSS layout based on the page layout settings. This component is required for the page layout generator to work!</source>
-        <target>Generuje CSS layoutu opierając się na ustawieniach układu strony. Ten komponent jest wymagany do działania generatora układu strony!</target>
+        <target>Generuje CSS układu opierając się na ustawieniach układu strony. Ten komponent jest wymagany do działania generatora układu strony!</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.0">
         <source>Responsive layout</source>
-        <target>Responsywny layout</target>
+        <target>Responsywny układ</target>
       </trans-unit>
       <trans-unit id="tl_layout.responsive.css.1">
         <source>Adds a meta viewport tag to the page header and scales the CSS layout based on the device width.</source>
-        <target>Dodaje do nagłówka strony tag z meta portem przeglądarki i skaluje layout CSS, używając jako punkt odniesienia szerokość urządzenia.</target>
+        <target>Dodaje do nagłówka strony tag z meta portem przeglądarki i skaluje układ CSS, używając jako punkt odniesienia szerokość urządzenia.</target>
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.0">
         <source>12-column grid</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.grid.css.1">
         <source>Adds a responsive 12-column grid that is triggered by the CSS classes &quot;grid1&quot; to &quot;grid12&quot; and &quot;offset1&quot; to &quot;offset12&quot;.</source>
-        <target>Dodaje responsywną 12-kolumnową siatkę, która może być użyta za pomocą klass CSS począwszy od &quot;grid1&quot; do &quot;grid12&quot; i &quot;offset1&quot; do &quot;offset12&quot;.</target>
+        <target>Dodaje responsywną 12-kolumnową siatkę, która może być użyta za pomocą klass CSS, począwszy od &quot;grid1&quot; do &quot;grid12&quot; i &quot;offset1&quot; do &quot;offset12&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.0">
         <source>CSS reset</source>
@@ -227,11 +227,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
-        <target>Załaduj zewnętrzne arkusze styli najpierw</target>
+        <target>Załaduj zewnętrzne arkusze stylów najpierw</target>
       </trans-unit>
       <trans-unit id="tl_layout.internal_first">
         <source>Load internal style sheets first</source>
-        <target>Załaduj wewnętrzne arkusze styli najpierw</target>
+        <target>Załaduj wewnętrzne arkusze stylów najpierw</target>
       </trans-unit>
       <trans-unit id="tl_layout.webfonts.0">
         <source>Google web fonts</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
-        <target>Przyporządkuj moduł do elementu strony. Używaj przycisków po prawej stronie by dodać, przesunąć (w górę albo w dół) lub skasować moduł. Jeśli pracujesz z przeglądarką, która ma wyłączoną obsługę Javascript, powinieneś zapisać swoje zmiany przed zmianą kolejności modułów!</target>
+        <target>Przyporządkuj moduł do elementu strony. Używaj przycisków po prawej stronie, aby dodać, przesunąć (w górę albo w dół) lub skasować moduł. Jeśli pracujesz z przeglądarką, która ma wyłączoną obsługę Javascript, powinieneś zapisać swoje zmiany przed zmianą kolejności modułów!</target>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.template.1">
         <source>Here you can select the page template.</source>
-        <target>Wybierz szablon układu. Domyślnym szablonem jest &lt;em&gt;fe_page&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;tpl&lt;/em&gt;).</target>
+        <target>Wybierz szablon układu. Domyślnym szablonem jest &lt;em&gt;fe_page&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;html5&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.minifyMarkup.0">
         <source>Minify the markup</source>
@@ -327,7 +327,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.1">
         <source>Include the jQuery library in the layout.</source>
-        <target>Załącz bibliotekę jQuery do layoutu.</target>
+        <target>Załącz bibliotekę jQuery do układu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jSource.0">
         <source>jQuery source</source>
@@ -335,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.jSource.1">
         <source>Here you can select from where to load the jQuery script.</source>
-        <target>Tutaj możesz wybrać skąd załadować skrypt jQuery.</target>
+        <target>Tutaj możesz wybrać, skąd załadować skrypt jQuery.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
@@ -351,7 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
-        <target>Załącz bibliotekę MooTools do layoutu.</target>
+        <target>Załącz bibliotekę MooTools do układu.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mooSource.0">
         <source>MooTools source</source>
@@ -367,11 +367,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.mootools.1">
         <source>Here you can select one or more MooTools templates.</source>
-        <target>Jeśli chcesz umieścić na swojej stronie rozwijane panele (mootools accordion), musisz dodać szablon JavaScript, który uruchomi ten efekt. Szablon JavaScript możesz wybrać tutaj. Szablon mootools zaczyna się od &lt;em&gt;moo_&lt;/em&gt; (rozszerzenie pliku &lt;em&gt;tpl&lt;/em&gt;).</target>
+        <target>Jeśli chcesz umieścić na swojej stronie rozwijane panele (mootools accordion), musisz dodać szablon JavaScript, który uruchomi ten efekt. Szablon JavaScript możesz wybrać tutaj. Szablon mootools zaczyna się od &lt;em&gt;moo_&lt;/em&gt; (rozszerzenie pliku &lt;em&gt;html5&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.scripts.0">
         <source>JavaScript templates</source>
-        <target>Templatki JavaScript</target>
+        <target>Szablony JavaScript</target>
       </trans-unit>
       <trans-unit id="tl_layout.scripts.1">
         <source>Here you can select one or more JavaScript templates.</source>
@@ -403,7 +403,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.static.0">
         <source>Static layout</source>
-        <target>Szablon statyczny</target>
+        <target>Układ statyczny</target>
       </trans-unit>
       <trans-unit id="tl_layout.static.1">
         <source>Create a static layout with a fixed width and alignment.</source>
@@ -451,7 +451,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.style_legend">
         <source>Style sheets</source>
-        <target>Arkusze styli</target>
+        <target>Arkusze stylów</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
@@ -467,7 +467,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.static_legend">
         <source>Static layout</source>
-        <target>Szablon statyczny</target>
+        <target>Układ statyczny</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery_legend">
         <source>jQuery</source>
@@ -483,7 +483,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.j_fallback">
         <source>CDN with local fallback</source>
-        <target>CDN z lokalnym wsparciem fallback</target>
+        <target>CDN z lokalnym wsparciem (fallback)</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
@@ -499,7 +499,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.moo_fallback">
         <source>CDN with local fallback</source>
-        <target>CDN z lokalnym wsparciem fallback</target>
+        <target>CDN z lokalnym wsparciem (fallback)</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
