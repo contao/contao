@@ -23,6 +23,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class LegacyCronTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using $GLOBALS['TL_CRON'] has been deprecated %s
+     */
     public function testLegacyCronJobsAreExecuted(): void
     {
         // Mock a simple object to be used for TL_CRON

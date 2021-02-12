@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -322,7 +321,7 @@ class FrontendTemplate extends Template
 	{
 		@trigger_error('Using FrontendTemplate::getCustomSections() has been deprecated and will no longer work in Contao 5.0. Use FrontendTemplate::sections() instead.', E_USER_DEPRECATED);
 
-		if ($strKey != '' && !isset($this->positions[$strKey]))
+		if ($strKey && !isset($this->positions[$strKey]))
 		{
 			return '';
 		}
@@ -346,7 +345,7 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		if ($sections == '')
+		if (!$sections)
 		{
 			return '';
 		}
@@ -403,10 +402,9 @@ class FrontendTemplate extends Template
 				$response->setVary(array('Cookie'));
 			}
 
-			// Tag the response with cache tags für the shared cache only
+			// Tag the page (see #2137)
 			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 			{
-				/** @var ResponseTagger $responseTagger */
 				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
 			}

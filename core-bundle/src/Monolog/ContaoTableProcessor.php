@@ -51,25 +51,25 @@ class ContaoTableProcessor implements ProcessorInterface
      *
      * @return array<string,array<string,mixed>>
      */
-    public function __invoke(array $record): array
+    public function __invoke(array $records): array
     {
-        if (!isset($record['context']['contao']) || !$record['context']['contao'] instanceof ContaoContext) {
-            return $record;
+        if (!isset($records['context']['contao']) || !$records['context']['contao'] instanceof ContaoContext) {
+            return $records;
         }
 
-        $context = $record['context']['contao'];
+        $context = $records['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
-        $level = $record['level'] ?? 0;
+        $level = $records['level'] ?? 0;
 
         $this->updateAction($context, $level);
         $this->updateBrowser($context, $request);
         $this->updateUsername($context);
         $this->updateSource($context, $request);
 
-        $record['extra']['contao'] = $context;
-        unset($record['context']['contao']);
+        $records['extra']['contao'] = $context;
+        unset($records['context']['contao']);
 
-        return $record;
+        return $records;
     }
 
     private function updateAction(ContaoContext $context, int $level): void

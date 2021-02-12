@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
@@ -148,7 +149,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $response = new Response(
             '<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>',
             200,
-            ['Content-Type' => 'text/html']
+            ['Content-Type' => 'text/html', 'Content-Length' => 1234]
         );
 
         $listener = new CsrfTokenCookieSubscriber($tokenStorage);
@@ -158,6 +159,8 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             '<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>',
             $response->getContent()
         );
+
+        $this->assertFalse($response->headers->has('Content-Length'));
 
         $cookies = $response->headers->getCookies();
 
@@ -172,6 +175,74 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertTrue($cookie->isSecure());
         $this->assertNull($cookie->getSameSite());
+    }
+
+    public function testDoesNotChangeTheResponseIfNoTokensArePresent(): void
+    {
+        $bag = new ParameterBag([
+            'csrf_foo' => 'bar',
+        ]);
+
+        $request = Request::create('https://foobar.com');
+        $request->cookies = $bag;
+
+        $tokenStorage = new MemoryTokenStorage();
+        $tokenStorage->initialize([]);
+
+        $response = new Response(
+            '<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>',
+            200,
+            ['Content-Type' => 'text/html', 'Content-Length' => 1234]
+        );
+
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
+
+        $this->assertSame(
+            '<html><body><form><input name="REQUEST_TOKEN" value="tokenValue"></form></body></html>',
+            $response->getContent()
+        );
+
+        $this->assertTrue($response->headers->has('Content-Length'));
+    }
+
+    public function testDoesNotChangeTheResponseIfTokensAreNotFound(): void
+    {
+        $bag = new ParameterBag([
+            'csrf_foo' => 'bar',
+        ]);
+
+        $request = Request::create('https://foobar.com');
+        $request->cookies = $bag;
+
+        $tokenStorage = new MemoryTokenStorage();
+        $tokenStorage->initialize(['tokenName' => 'tokenValue']);
+        $tokenStorage->getToken('tokenName');
+
+        $response = $this->createMock(Response::class);
+        $response
+            ->expects($this->once())
+            ->method('isSuccessful')
+            ->willReturn(true)
+        ;
+
+        $response
+            ->expects($this->once())
+            ->method('getContent')
+            ->willReturn(
+                '<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>'
+            )
+        ;
+
+        $response
+            ->expects($this->never())
+            ->method('setContent')
+        ;
+
+        $response->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
+
+        $listener = new CsrfTokenCookieSubscriber($tokenStorage);
+        $listener->onKernelResponse($this->getResponseEvent($request, $response));
     }
 
     public function testDoesNotAddTheTokenCookiesToTheResponseUponSubrequests(): void

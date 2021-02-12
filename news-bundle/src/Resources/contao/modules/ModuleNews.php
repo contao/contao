@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Parent class for news modules.
@@ -43,11 +42,13 @@ abstract class ModuleNews extends Module
 
 		if ($objArchive !== null)
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			while ($objArchive->next())
 			{
 				if ($objArchive->protected)
 				{
-					if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
+					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
 					{
 						continue;
 					}
@@ -82,7 +83,7 @@ abstract class ModuleNews extends Module
 		$objTemplate = new FrontendTemplate($this->news_template ?: 'news_latest');
 		$objTemplate->setData($objArticle->row());
 
-		if ($objArticle->cssClass != '')
+		if ($objArticle->cssClass)
 		{
 			$strClass = ' ' . $objArticle->cssClass . $strClass;
 		}
@@ -106,7 +107,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasTeaser = false;
 
 		// Clean the RTE output
-		if ($objArticle->teaser != '')
+		if ($objArticle->teaser)
 		{
 			$objTemplate->hasTeaser = true;
 			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
@@ -161,7 +162,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->addImage = false;
 
 		// Add an image
-		if ($objArticle->addImage && $objArticle->singleSRC != '')
+		if ($objArticle->addImage && $objArticle->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($objArticle->singleSRC);
 
@@ -171,7 +172,7 @@ abstract class ModuleNews extends Module
 				$arrArticle = $objArticle->row();
 
 				// Override the default image size
-				if ($this->imgSize != '')
+				if ($this->imgSize)
 				{
 					$size = StringUtil::deserialize($this->imgSize);
 
@@ -223,13 +224,11 @@ abstract class ModuleNews extends Module
 			}
 		}
 
-		// Tag the response
+		// Tag the news (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
-			$responseTagger->addTags(array('contao.db.tl_news_archive.' . $objArticle->pid));
 		}
 
 		return $objTemplate->parse();
@@ -258,7 +257,7 @@ abstract class ModuleNews extends Module
 
 		foreach ($objArticles as $objArticle)
 		{
-			if ($objArticle->addImage && $objArticle->singleSRC != '')
+			if ($objArticle->addImage && $objArticle->singleSRC)
 			{
 				$uuids[] = $objArticle->singleSRC;
 			}
@@ -365,37 +364,16 @@ abstract class ModuleNews extends Module
 	 */
 	protected function generateLink($strLink, $objArticle, $blnAddArchive=false, $blnIsReadMore=false)
 	{
-		// Internal link
-		if ($objArticle->source != 'external')
-		{
-			return sprintf(
-				'<a href="%s" title="%s" itemprop="url"><span itemprop="headline">%s</span>%s</a>',
-				News::generateNewsUrl($objArticle, $blnAddArchive),
-				StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true),
-				$strLink,
-				($blnIsReadMore ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
-			);
-		}
+		$blnIsInternal = $objArticle->source != 'external';
+		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
+		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
 
-		// Encode e-mail addresses
-		if (0 === strncmp($objArticle->url, 'mailto:', 7))
-		{
-			$strArticleUrl = StringUtil::encodeEmail($objArticle->url);
-		}
-
-		// Ampersand URIs
-		else
-		{
-			$strArticleUrl = ampersand($objArticle->url);
-		}
-
-		// External link
 		return sprintf(
-			'<a href="%s" title="%s"%s itemprop="url"><span itemprop="headline">%s</span></a>',
+			'<a href="%s" title="%s" itemprop="url">%s%s</a>',
 			$strArticleUrl,
-			StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['open'], $strArticleUrl)),
-			($objArticle->target ? ' target="_blank" rel="noreferrer noopener"' : ''),
-			$strLink
+			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
+			($blnIsReadMore ? $strLink : '<span itemprop="headline">' . $strLink . '</span>'),
+			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
 	}
 }

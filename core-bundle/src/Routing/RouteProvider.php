@@ -302,7 +302,7 @@ class RouteProvider implements RouteProviderInterface
         if (!$config->get('doNotRedirectEmpty')) {
             $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
             $defaults['path'] = '/'.$page->language.'/';
-            $defaults['permanent'] = true;
+            $defaults['permanent'] = false;
         }
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
@@ -344,7 +344,7 @@ class RouteProvider implements RouteProviderInterface
 
             [, $id] = explode('.', $name);
 
-            if (!is_numeric($id)) {
+            if (!preg_match('/^[1-9]\d*$/', $id)) {
                 continue;
             }
 
@@ -429,24 +429,22 @@ class RouteProvider implements RouteProviderInterface
                         if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
                             return 1;
                         }
+                    } else {
+                        if (null === $langA && null !== $langB) {
+                            return 1;
+                        }
 
-                        return $pageA->rootSorting <=> $pageB->rootSorting;
-                    }
+                        if (null !== $langA && null === $langB) {
+                            return -1;
+                        }
 
-                    if (null === $langA && null !== $langB) {
-                        return 1;
-                    }
+                        if ($langA < $langB) {
+                            return -1;
+                        }
 
-                    if (null !== $langA && null === $langB) {
-                        return -1;
-                    }
-
-                    if ($langA < $langB) {
-                        return -1;
-                    }
-
-                    if ($langA > $langB) {
-                        return 1;
+                        if ($langA > $langB) {
+                            return 1;
+                        }
                     }
                 }
 
@@ -472,7 +470,7 @@ class RouteProvider implements RouteProviderInterface
         $aliases = [];
 
         foreach ($candidates as $candidate) {
-            if (is_numeric($candidate)) {
+            if (preg_match('/^[1-9]\d*$/', $candidate)) {
                 $ids[] = (int) $candidate;
             } else {
                 $aliases[] = $candidate;

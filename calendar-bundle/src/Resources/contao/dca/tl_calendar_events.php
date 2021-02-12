@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
+			'eval'                    => array('url_callback'=>array('tl_calendar_events', 'getSerpUrl'), 'title_tag_callback'=>array('tl_calendar_events', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
 		),
 		'location' => array
@@ -668,9 +668,13 @@ class tl_calendar_events extends Contao\Backend
 		};
 
 		// Generate the alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, Contao\CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -747,6 +751,43 @@ class tl_calendar_events extends Contao\Backend
 	public function getSerpUrl(Contao\CalendarEventsModel $model)
 	{
 		return Contao\Events::generateEventUrl($model, true);
+	}
+
+	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param Contao\NewsModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(Contao\CalendarEventsModel $model)
+	{
+		/** @var Contao\CalendarModel $calendar */
+		if (!$calendar = $model->getRelated('pid'))
+		{
+			return '';
+		}
+
+		/** @var Contao\PageModel $page */
+		if (!$page = $calendar->getRelated('jumpTo'))
+		{
+			return '';
+		}
+
+		$page->loadDetails();
+
+		/** @var Contao\LayoutModel $layout */
+		if (!$layout = $page->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $page;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
 	}
 
 	/**
@@ -862,7 +903,7 @@ class tl_calendar_events extends Contao\Backend
 		}
 
 		// Add the option currently set
-		if ($dc->activeRecord && $dc->activeRecord->source != '')
+		if ($dc->activeRecord && $dc->activeRecord->source)
 		{
 			$arrOptions[] = $dc->activeRecord->source;
 			$arrOptions = array_unique($arrOptions);
@@ -958,6 +999,14 @@ class tl_calendar_events extends Contao\Backend
 			return;
 		}
 
+		$request = Contao\System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import('Contao\Calendar', 'Calendar');
 
 		foreach ($session as $id)
@@ -967,6 +1016,11 @@ class tl_calendar_events extends Contao\Backend
 
 		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
+
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}

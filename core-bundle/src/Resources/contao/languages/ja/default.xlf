@@ -185,6 +185,10 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>&quot;%s&quot;というエイリアスは既に存在します。</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>数字だけのエイリアスはサポートしていません!</target>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
         <target>&quot;%s&quot;はフォルダーなのでインポートできません。</target>
@@ -2664,6 +2668,10 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Contaoツールバーを閉じる</target>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>不明なオプション</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

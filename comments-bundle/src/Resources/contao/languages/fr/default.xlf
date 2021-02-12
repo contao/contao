@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="MSC.com_notify">
         <source>Notify me of new comments by e-mail (you can cancel your subscription at any time)</source>
+        <target>M'avertir des nouveaux commentaires par e-mail (vous pouvez annuler votre abonnement à tout moment)</target>
       </trans-unit>
       <trans-unit id="MSC.com_submit">
         <source>Submit comment</source>
@@ -69,6 +70,22 @@ Click here to edit or answer the comment:
 
 %s
 </source>
+        <target>%s a ajouter un nouveau commentaire sur votre site:
+
+        ---
+
+        %s
+
+        ---
+
+        Cliquez ici pour voir le commentaire:
+
+        %s
+
+        Cliquez ici pour modifier ou répondre au commentaire:
+
+        %s
+    </target>
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
@@ -107,6 +124,22 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 %s
 </source>
+        <target>Bonjour %s,
+
+              veuillez confirmer que vous souhaitez être informé des nouveaux commentaires par e-mail sur cette page:
+
+              %s
+
+              ---
+
+              Cliquez ici pour confirmer votre abonnement:
+
+              %s
+
+              Le lien de confirmation est valable 24 heures. Vous pouvez annuler votre abonnement à tout moment en cliquant ici:
+
+              %s
+          </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifySubject">
         <source>New comment on %s</source>
@@ -127,6 +160,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Bonjour %s,
+
+              un nouveau commentaire a été ajouté sur une page à laquelle vous êtes abonné:
+
+              ---
+
+              %s
+
+              ---
+
+              Cliquez ici pour annuler votre abonnement:
+
+              %s
+          </target>
       </trans-unit>
       <trans-unit id="MSC.com_notifyReplySubject">
         <source>New reply to a comment on %s</source>
@@ -147,6 +194,20 @@ Click here to cancel your subscription:
 
 %s
 </source>
+        <target>Bonjour %s,
+
+              une nouvelle réponse a été ajoutée sur une page à laquelle vous êtes abonné:
+
+              ---
+
+              %s
+
+              ---
+
+              Cliquez ici pour annuler votre abonnement:
+
+              %s
+          </target>
       </trans-unit>
     </body>
   </file>

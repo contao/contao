@@ -105,11 +105,8 @@ class BackendMenuListenerTest extends ContaoTestCase
 
     public function testAddsTheHoverClassIfTheDebugModeIsEnabled(): void
     {
-        $request = new Request();
-        $request->server->set('QUERY_STRING', 'do=page');
-
         $requestStack = new RequestStack();
-        $requestStack->push($request);
+        $requestStack->push(new Request());
 
         $translator = $this->getTranslator();
         $router = $this->createMock(RouterInterface::class);

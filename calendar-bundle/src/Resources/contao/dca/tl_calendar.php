@@ -450,6 +450,14 @@ class tl_calendar extends Contao\Backend
 			return;
 		}
 
+		$request = Contao\System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import('Contao\Calendar', 'Calendar');
 
 		foreach ($session as $id)
@@ -459,6 +467,11 @@ class tl_calendar extends Contao\Backend
 
 		$this->import('Contao\Automator', 'Automator');
 		$this->Automator->generateSitemap();
+
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('calendar_feed_updater', null);
 	}

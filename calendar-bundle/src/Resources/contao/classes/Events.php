@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
-
 /**
  * Provide methods to get all events of a certain period from the database.
  *
@@ -71,11 +69,13 @@ abstract class Events extends Module
 
 		if ($objCalendar !== null)
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			while ($objCalendar->next())
 			{
 				if ($objCalendar->protected)
 				{
-					if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
+					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
 					{
 						continue;
 					}
@@ -283,13 +283,11 @@ abstract class Events extends Module
 			}
 		}
 
-		// Tag the response
+		// Tag the event (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvents->id));
-			$responseTagger->addTags(array('contao.db.tl_calendar.' . $objEvents->pid));
 		}
 
 		// Store raw data
@@ -323,7 +321,7 @@ abstract class Events extends Module
 		}
 
 		// Clean the RTE output
-		if ($arrEvent['teaser'] != '')
+		if ($arrEvent['teaser'])
 		{
 			$arrEvent['hasTeaser'] = true;
 			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);

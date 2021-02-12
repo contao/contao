@@ -513,13 +513,6 @@
         <source>Edit the module</source>
         <target>编辑模块</target>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_google">
-        <source>Google Analytics</source>
-        <target>Google 分析</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_matomo">
-        <source>Matomo</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
         <target>新建</target>

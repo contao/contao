@@ -28,7 +28,16 @@ class ModuleHtml extends Module
 	 */
 	protected function compile()
 	{
-		$this->Template->html = (TL_MODE == 'FE') ? $this->html : htmlspecialchars($this->html);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$this->Template->html = '<pre>' . htmlspecialchars($this->html) . '</pre>';
+		}
+		else
+		{
+			$this->Template->html = $this->html;
+		}
 	}
 }
 

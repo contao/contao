@@ -54,8 +54,8 @@
         <target>Pokaż zastrzeżone elementy</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Domyślnie zastrzeżone elementy nie są widoczne, dopóki użytkownik nie zaloguje się na stronie. Jednakże, jeśli wybierzesz tę opcję, zastrzeżone elementy będą widoczne cały czas.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Pokaż elementy, które są widoczne tylko dla zalogowanych użytkowników.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -134,8 +134,8 @@
         <target>Przekieruj do ostatnio odwiedzonej strony</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Przekieruj użytkownika do strony, ostatnio odwiedzonej przed logowaniem/wylogowaniem.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Przekieruj użytkownika z powrotem do ostatnio odwiedzanej strony, zamiast do określonej strony docelowej.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -422,16 +422,16 @@
         <target>Grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Każdy redaktor, który nie jest administratorem dziedziczy zezwolenia po grupie, w której się znajduje. Dlatego każdy redaktor musi być członkiem co najmniej jednej grupy! Jeśli redaktor jest w więcej niż jednej grupie, zezwolenia się łączą.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Tutaj mozesz przypisać użytkownika do jednej lub więcej grup.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Zezwól na logowanie</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Wybierz ta opcje aby użytkownik mógł się zalogować przy pomocy nazwy użytkownika i hasła.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>Zezwól nowemu użytkownikowi na logowanie do serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -478,8 +478,8 @@
         <target>Przekierowanie po aktywacji</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Wybierz stronę, na którą zostanie przekierowany użytkownik po aktywacji konta.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Wybierz stronę, na którą zostanie przekierowany użytkownik po zakończonym żądaniu.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -494,8 +494,8 @@
         <target>Email potwierdzajacy</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Podaj tekst maila potwierdzającego. Dozwolone są także informacje o użytkowniku (np. &lt;em&gt;##lastname##&lt;/em&gt;) jak również &lt;em&gt;##domain##&lt;/em&gt; (aktualna domena) oraz &lt;em&gt;##link##&lt;/em&gt; (link aktywacyjny).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>Możesz używać wildcardów &lt;em&gt;##domain##&lt;/em&gt; (nazwa domeny), &lt;em&gt;##link##&lt;/em&gt; (link aktywacyjny) i dowolnych danych użytkownika (np. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

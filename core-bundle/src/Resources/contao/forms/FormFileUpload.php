@@ -98,7 +98,7 @@ class FormFileUpload extends Widget implements \uploadable
 		{
 			if ($this->mandatory)
 			{
-				if ($this->strLabel == '')
+				if (!$this->strLabel)
 				{
 					$this->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
 				}
@@ -212,7 +212,7 @@ class FormFileUpload extends Widget implements \uploadable
 				$intUploadFolder = $this->uploadFolder;
 
 				// Overwrite the upload folder with user's home directory
-				if ($this->useHomeDir && FE_USER_LOGGED_IN)
+				if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 				{
 					$this->import(FrontendUser::class, 'User');
 
@@ -234,7 +234,7 @@ class FormFileUpload extends Widget implements \uploadable
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 				// Store the file if the upload folder exists
-				if ($strUploadFolder != '' && is_dir($projectDir . '/' . $strUploadFolder))
+				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
 				{
 					$this->import(Files::class, 'Files');
 

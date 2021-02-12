@@ -69,7 +69,7 @@ abstract class Frontend extends Controller
 
 		$strRequest = Environment::get('relativeRequest');
 
-		if ($strRequest == '')
+		if (!$strRequest)
 		{
 			return null;
 		}
@@ -97,7 +97,7 @@ abstract class Frontend extends Controller
 				Input::setGet('language', $arrMatches[1]);
 
 				// Trigger the root page if only the language was given
-				if ($arrMatches[3] == '')
+				if (!$arrMatches[3])
 				{
 					return null;
 				}
@@ -111,7 +111,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest != '' && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
+		if ($strRequest && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
 		{
 			$intSuffixLength = \strlen(Config::get('urlSuffix'));
 
@@ -240,7 +240,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Return if the alias is empty (see #4702 and #4972)
-		if ($arrFragments[0] == '' && \count($arrFragments) > 1)
+		if (!$arrFragments[0] && \count($arrFragments) > 1)
 		{
 			return false;
 		}
@@ -249,7 +249,7 @@ abstract class Frontend extends Controller
 		for ($i=1, $c=\count($arrFragments); $i<$c; $i+=2)
 		{
 			// Return false if the key is empty (see #4702 and #263)
-			if ($arrFragments[$i] == '')
+			if (!$arrFragments[$i])
 			{
 				return false;
 			}
@@ -353,7 +353,7 @@ abstract class Frontend extends Controller
 		}
 
 		// Redirect to the website root or language root (e.g. en/)
-		if (Environment::get('relativeRequest') == '')
+		if (!Environment::get('relativeRequest'))
 		{
 			if (Config::get('addLanguageToUrl') && !Config::get('doNotRedirectEmpty'))
 			{
@@ -362,7 +362,7 @@ abstract class Frontend extends Controller
 				$strUrl = System::getContainer()->get('router')->generate('contao_index', $arrParams);
 				$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
-				static::redirect($strUrl, 301);
+				static::redirect($strUrl);
 			}
 
 			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
@@ -406,7 +406,7 @@ abstract class Frontend extends Controller
 		{
 			list($key, $value) = explode('=', $strFragment);
 
-			if ($value == '')
+			if (!$value)
 			{
 				unset($arrGet[$key]);
 			}
@@ -610,6 +610,14 @@ abstract class Frontend extends Controller
 	{
 		@trigger_error('Using Frontend::indexPageIfApplicable() has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.', E_USER_DEPRECATED);
 
+		$searchIndexer = System::getContainer()->get('contao.search.indexer');
+
+		// The search indexer is disabled
+		if ($searchIndexer === null)
+		{
+			return;
+		}
+
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
@@ -619,7 +627,7 @@ abstract class Frontend extends Controller
 
 		$document = Document::createFromRequestResponse($request, $response);
 
-		System::getContainer()->get('contao.search.indexer')->index($document);
+		$searchIndexer->index($document);
 	}
 
 	/**

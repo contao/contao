@@ -294,24 +294,24 @@
         <target>Automatyczne wylogowanie</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Ten moduł automatycznie wyloguje użytkownika.</target>
+        <source>Automatically logs out a member</source>
+        <target>Automatycznie wylogowuje użytkownika</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Osobiste informacje</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>Ten moduł generuje formularz, który pozwala użytkownikowi, zmianę jego danych osobistych.</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Generuje formularz do edycji danych osobistych użyktownika</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Rejestracja użytkownika</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Przy pomocy tego modułu użytkownicy będą mogli rejestrować się sami na twojej stronie.</target>
+        <source>Generates a member registration form</source>
+        <target>Generuje formularz do rejestracji użytkownika</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

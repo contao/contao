@@ -388,17 +388,17 @@ class Date
 			$intHour -= 12;
 		}
 
-		if ($intMonth == '')
+		if (!$intMonth)
 		{
 			$intMonth = 1;
 		}
 
-		if ($intDay == '')
+		if (!$intDay)
 		{
 			$intDay = 1;
 		}
 
-		if ($intYear == '')
+		if (!$intYear)
 		{
 			$intYear = 1970;
 		}
@@ -471,7 +471,7 @@ class Date
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			if ($objPage->dateFormat != '' && static::isNumericFormat($objPage->dateFormat))
+			if ($objPage->dateFormat && static::isNumericFormat($objPage->dateFormat))
 			{
 				return $objPage->dateFormat;
 			}
@@ -492,7 +492,7 @@ class Date
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			if ($objPage->timeFormat != '' && static::isNumericFormat($objPage->timeFormat))
+			if ($objPage->timeFormat && static::isNumericFormat($objPage->timeFormat))
 			{
 				return $objPage->timeFormat;
 			}
@@ -513,7 +513,7 @@ class Date
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			if ($objPage->datimFormat != '' && static::isNumericFormat($objPage->datimFormat))
+			if ($objPage->datimFormat && static::isNumericFormat($objPage->datimFormat))
 			{
 				return $objPage->datimFormat;
 			}

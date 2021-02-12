@@ -62,7 +62,7 @@ abstract class Controller extends System
 			/** @var PageModel $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup != '')
+			if ($objPage->templateGroup)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -346,44 +346,39 @@ abstract class Controller extends System
 				return '';
 			}
 
-			$arrArticles = array();
+			$return = '';
+			$intCount = 0;
 			$blnMultiMode = ($objArticles->count() > 1);
-			$arrRows = $objArticles->getModels();
-			$objLastRow = null;
+			$intLast = $objArticles->count() - 1;
 
-			/** @var ArticleModel $objRow */
-			while ($objRow = array_shift($arrRows))
+			while ($objArticles->next())
 			{
+				/** @var ArticleModel $objRow */
+				$objRow = $objArticles->current();
+
 				// Add the "first" and "last" classes (see #2583)
-				$arrCss = array();
-
-				if (empty($arrArticles))
+				if ($intCount == 0 || $intCount == $intLast)
 				{
-					$arrCss[] = 'first';
+					$arrCss = array();
+
+					if ($intCount == 0)
+					{
+						$arrCss[] = 'first';
+					}
+
+					if ($intCount == $intLast)
+					{
+						$arrCss[] = 'last';
+					}
+
+					$objRow->classes = $arrCss;
 				}
 
-				if (empty($arrRows))
-				{
-					$arrCss[] = 'last';
-				}
-
-				$objRow->classes = $arrCss;
-				$strArticle = static::getArticle($objRow, $blnMultiMode, false, $strColumn);
-
-				if ($strArticle != '')
-				{
-					$arrArticles[] = $strArticle;
-					$objLastRow = $objRow;
-				}
-				elseif (empty($arrRows) && $objLastRow != null && $objLastRow !== $objRow)
-				{
-					// Re-generate the last successful article with "last" class
-					array_pop($arrArticles);
-					$arrRows[] = $objLastRow;
-				}
+				$return .= static::getArticle($objRow, $blnMultiMode, false, $strColumn);
+				++$intCount;
 			}
 
-			return implode('', $arrArticles);
+			return $return;
 		}
 
 		// Other modules
@@ -492,7 +487,7 @@ abstract class Controller extends System
 				$objArticle = new ModuleArticle($objRow);
 				$objArticle->generatePdf();
 			}
-			elseif ($objRow->printable != '')
+			elseif ($objRow->printable)
 			{
 				$options = StringUtil::deserialize($objRow->printable);
 
@@ -614,7 +609,7 @@ abstract class Controller extends System
 		}
 		else
 		{
-			if ($varId == '')
+			if (!$varId)
 			{
 				return '';
 			}
@@ -694,7 +689,7 @@ abstract class Controller extends System
 		$image = $objPage->type . '.svg';
 
 		// Page not published or not active
-		if (!$objPage->published || ($objPage->start != '' && $objPage->start > time()) || ($objPage->stop != '' && $objPage->stop < time()))
+		if (!$objPage->published || ($objPage->start && $objPage->start > time()) || ($objPage->stop && $objPage->stop <= time()))
 		{
 			++$sub;
 		}
@@ -743,10 +738,12 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE')
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			// Protected element
 			if ($objElement->protected)
 			{
-				if (!FE_USER_LOGGED_IN)
+				if (!$blnFeUserLoggedIn)
 				{
 					$blnReturn = false;
 				}
@@ -771,7 +768,7 @@ abstract class Controller extends System
 			}
 
 			// Show to guests only
-			elseif ($objElement->guests && FE_USER_LOGGED_IN)
+			elseif ($objElement->guests && $blnFeUserLoggedIn)
 			{
 				$blnReturn = false;
 			}
@@ -1027,7 +1024,7 @@ abstract class Controller extends System
 		$left = $arrValues['left'];
 
 		// Try to shorten the definition
-		if ($top != '' && $right != '' && $bottom != '' && $left != '')
+		if ($top && $right  && $bottom  && $left)
 		{
 			if ($top == $right && $top == $bottom && $top == $left)
 			{
@@ -1052,7 +1049,7 @@ abstract class Controller extends System
 
 		foreach ($arrDir as $k=>$v)
 		{
-			if ($v != '')
+			if ($v)
 			{
 				$return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
 			}
@@ -1072,7 +1069,6 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		/** @var Query $query */
 		$query = new Query(Environment::get('queryString'));
 
 		// Remove the request token and referer ID
@@ -1082,7 +1078,7 @@ abstract class Controller extends System
 		$query = $query->merge(str_replace('&amp;', '&', $strRequest));
 
 		// Add the referer ID
-		if (isset($_GET['ref']) || ($strRequest != '' && $blnAddRef))
+		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
 		{
 			$query = $query->merge('ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
 		}
@@ -1199,7 +1195,7 @@ abstract class Controller extends System
 		$arrParams = array();
 
 		// Set the language
-		if ($strForceLang != '')
+		if ($strForceLang)
 		{
 			$arrParams['_locale'] = $strForceLang;
 		}
@@ -1270,7 +1266,7 @@ abstract class Controller extends System
 	 */
 	public static function convertRelativeUrls($strContent, $strBase='', $blnHrefOnly=false)
 	{
-		if ($strBase == '')
+		if (!$strBase)
 		{
 			$strBase = Environment::get('base');
 		}
@@ -1536,7 +1532,7 @@ abstract class Controller extends System
 			$objFile = null;
 		}
 
-		$imgSize = $objFile ? $objFile->imageSize : false;
+		$imgSize = $objFile->imageSize ?? array();
 		$size = StringUtil::deserialize($arrItem['size']);
 
 		if (is_numeric($size))
@@ -1558,7 +1554,16 @@ abstract class Controller extends System
 			$intMaxWidth = Config::get('maxImageWidth');
 		}
 
-		$arrMargin = (TL_MODE == 'BE') ? array() : StringUtil::deserialize($arrItem['imagemargin']);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$arrMargin = array();
+		}
+		else
+		{
+			$arrMargin = StringUtil::deserialize($arrItem['imagemargin']);
+		}
 
 		// Store the original dimensions
 		$objTemplate->width = $imgSize[0];
@@ -1717,7 +1722,7 @@ abstract class Controller extends System
 		}
 
 		// Do not override the "href" key (see #6468)
-		$strHrefKey = ($objTemplate->href != '') ? 'imageHref' : 'href';
+		$strHrefKey = $objTemplate->href ? 'imageHref' : 'href';
 		$lightboxSize = StringUtil::deserialize($arrItem['lightboxSize'] ?? null, true);
 
 		if (!$lightboxSize && $arrItem['fullsize'] && isset($GLOBALS['objPage']->layoutId))
@@ -1844,7 +1849,7 @@ abstract class Controller extends System
 		$file = Input::get('file', true);
 
 		// Send the file to the browser and do not send a 404 header (see #5178)
-		if ($file != '')
+		if ($file)
 		{
 			while ($objFiles->next())
 			{
@@ -1894,7 +1899,7 @@ abstract class Controller extends System
 				}
 
 				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
+				if (!$arrMeta['title'])
 				{
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}

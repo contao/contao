@@ -612,7 +612,7 @@ class Image
 	 */
 	public static function getPath($src)
 	{
-		if ($src == '')
+		if (!$src)
 		{
 			return '';
 		}
@@ -675,7 +675,7 @@ class Image
 	{
 		$src = static::getPath($src);
 
-		if ($src == '')
+		if (!$src)
 		{
 			return '';
 		}
@@ -759,7 +759,6 @@ class Image
 			$image = new File(rawurldecode($image));
 		}
 
-		/** @var Image $imageObj */
 		$imageObj = new static($image);
 
 		if (\is_array($size) && !empty($size[2]))
@@ -872,7 +871,7 @@ class Image
 	{
 		@trigger_error('Using Image::get() has been deprecated and will no longer work in Contao 5.0. Use the contao.image.image_factory service instead.', E_USER_DEPRECATED);
 
-		if ($image == '')
+		if (!$image)
 		{
 			return null;
 		}

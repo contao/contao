@@ -40,7 +40,7 @@ class ContentDownloads extends ContentElement
 	public function generate()
 	{
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && FE_USER_LOGGED_IN)
+		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 
@@ -71,7 +71,7 @@ class ContentDownloads extends ContentElement
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file != '' && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{
@@ -141,7 +141,7 @@ class ContentDownloads extends ContentElement
 				}
 
 				// Use the file name as title if none is given
-				if ($arrMeta['title'] == '')
+				if (!$arrMeta['title'])
 				{
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
@@ -223,7 +223,7 @@ class ContentDownloads extends ContentElement
 					}
 
 					// Use the file name as title if none is given
-					if ($arrMeta['title'] == '')
+					if (!$arrMeta['title'])
 					{
 						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}
@@ -287,7 +287,7 @@ class ContentDownloads extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
+				if ($this->orderSRC)
 				{
 					$tmp = StringUtil::deserialize($this->orderSRC);
 

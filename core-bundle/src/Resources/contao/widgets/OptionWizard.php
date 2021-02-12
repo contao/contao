@@ -43,7 +43,7 @@ class OptionWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if ($option['label'] == '')
+				if (!$option['label'])
 				{
 					unset($options[$key]);
 					continue;
@@ -52,13 +52,13 @@ class OptionWizard extends Widget
 				$options[$key]['label'] = trim($option['label']);
 				$options[$key]['value'] = trim($option['value']);
 
-				if ($options[$key]['label'] != '')
+				if ($options[$key]['label'])
 				{
 					$this->mandatory = false;
 				}
 
 				// Strip double quotes (see #6919)
-				if ($options[$key]['value'] != '')
+				if ($options[$key]['value'])
 				{
 					$options[$key]['value'] = str_replace('"', '', $options[$key]['value']);
 				}

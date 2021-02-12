@@ -253,7 +253,7 @@ class tl_theme extends Contao\Backend
 	 */
 	public function addPreviewImage($row, $label)
 	{
-		if ($row['screenshot'] != '')
+		if ($row['screenshot'])
 		{
 			$objFile = Contao\FilesModel::findByUuid($row['screenshot']);
 

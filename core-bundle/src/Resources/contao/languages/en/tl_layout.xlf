@@ -386,12 +386,6 @@
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
       </trans-unit>
-      <trans-unit id="tl_layout.analytics_google">
-        <source>Google Analytics</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_matomo">
-        <source>Matomo</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>
       </trans-unit>

@@ -68,17 +68,7 @@ abstract class BackendModule extends Backend
 	 */
 	public function __get($strKey)
 	{
-		if (isset($this->arrData[$strKey]))
-		{
-			return $this->arrData[$strKey];
-		}
-
-		if ($this->objDc->$strKey !== null)
-		{
-			return $this->objDc->$strKey;
-		}
-
-		return parent::__get($strKey);
+		return $this->arrData[$strKey] ?? $this->objDc->$strKey ?? parent::__get($strKey);
 	}
 
 	/**

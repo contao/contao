@@ -149,7 +149,6 @@ class ImageFactory implements ImageFactoryInterface
         $targetPath = $options instanceof ResizeOptions ? $options->getTargetPath() : $options;
 
         if ($size instanceof ResizeConfiguration) {
-            /** @var ResizeConfiguration $resizeConfig */
             $resizeConfig = $size;
             $importantPart = null;
         } else {

@@ -380,7 +380,7 @@ abstract class DataContainer extends Backend
 				if ($objWidget->hasErrors())
 				{
 					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value != '' || Input::post('SUBMIT_TYPE') != 'auto')
+					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 					{
 						$this->noReload = true;
 					}
@@ -517,7 +517,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		if ($wizard != '')
+		if ($wizard)
 		{
 			$objWidget->wizard = $wizard;
 
@@ -681,7 +681,7 @@ abstract class DataContainer extends Backend
 	{
 		$return = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][1];
 
-		if ($return == '' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
+		if (!$return || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'password' || !Config::get('showHelp'))
 		{
 			return '';
 		}
@@ -908,12 +908,12 @@ abstract class DataContainer extends Backend
 				$attributes = sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
 			}
 
-			if ($label == '')
+			if (!$label)
 			{
 				$label = $k;
 			}
 
-			if ($title == '')
+			if (!$title)
 			{
 				$title = $label;
 			}
@@ -1114,13 +1114,34 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
+	 * Return the data-picker-value attribute with the currently selected picker values (see #1816)
+	 *
+	 * @return string
+	 */
+	protected function getPickerValueAttribute()
+	{
+		// Only load the previously selected values for the checkbox field type (see #2346)
+		if ($this->strPickerFieldType != 'checkbox')
+		{
+			return '';
+		}
+
+		$values = array_map($this->objPickerCallback, $this->arrPickerValue);
+		$values = array_map('strval', $values);
+		$values = json_encode($values);
+		$values = htmlspecialchars($values);
+
+		return ' data-picker-value="' . $values . '"';
+	}
+
+	/**
 	 * Build the sort panel and return it as string
 	 *
 	 * @return string
 	 */
 	protected function panel()
 	{
-		if ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] == '')
+		if (!$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'])
 		{
 			return '';
 		}
@@ -1187,14 +1208,14 @@ abstract class DataContainer extends Backend
 				}
 
 				// Add the panel if it is not empty
-				if ($panel != '')
+				if ($panel)
 				{
 					$panels = $panel . $panels;
 				}
 			}
 
 			// Add the group if it is not empty
-			if ($panels != '')
+			if ($panels)
 			{
 				$arrPanels[] = $panels;
 			}
@@ -1257,14 +1278,10 @@ abstract class DataContainer extends Backend
 			return;
 		}
 
-		$ns = 'contao.db.';
-		$tags = array($ns . $this->table, $ns . $this->table . '.' . $this->id);
+		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
-		if (!empty($this->ptable) && $this->activeRecord && $this->activeRecord->pid > 0)
-		{
-			$tags[] = $ns . $this->ptable;
-			$tags[] = $ns . $this->ptable . '.' . $this->activeRecord->pid;
-		}
+		$this->addPtableTags($this->table, $this->id, $tags);
+		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
@@ -1289,6 +1306,68 @@ abstract class DataContainer extends Backend
 		/** @var CacheManager $cacheManager */
 		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
 		$cacheManager->invalidateTags($tags);
+	}
+
+	public function addPtableTags($strTable, $intId, &$tags)
+	{
+		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		{
+			$tags[] = 'contao.db.' . $strTable;
+
+			return;
+		}
+
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
+
+		Controller::loadDataContainer($ptable);
+
+		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
+								 ->execute($intId);
+
+		if (!$objPid->numRows)
+		{
+			return;
+		}
+
+		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
+
+		$this->addPtableTags($ptable, $objPid->pid, $tags);
+	}
+
+	public function addCtableTags($strTable, $intId, &$tags)
+	{
+		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
+		{
+			return;
+		}
+
+		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
+		{
+			Controller::loadDataContainer($ctable);
+
+			if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'])
+			{
+				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=? AND ptable=?')
+										 ->execute($intId, $strTable);
+			}
+			else
+			{
+				$objIds = $this->Database->prepare('SELECT id FROM ' . Database::quoteIdentifier($ctable) . ' WHERE pid=?')
+										 ->execute($intId);
+			}
+
+			if (!$objIds->numRows)
+			{
+				continue;
+			}
+
+			while ($objIds->next())
+			{
+				$tags[] = 'contao.db.' . $ctable . '.' . $objIds->id;
+
+				$this->addCtableTags($ctable, $objIds->id, $tags);
+			}
+		}
 	}
 
 	/**

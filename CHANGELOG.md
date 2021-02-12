@@ -2,10 +2,134 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.11] (2021-01-21)
+
+**Fixed issues:**
+
+- [#2667] Ignore Monolog log files when rotating log files ([leofeyer])
+- [#2669] Use a listener to reset custom templates ([aschempp])
+- [#2668] Fix empty value for boolean type ([fritzmg])
+- [#2666] Reset the custom template if the element type changes ([leofeyer])
+- [#2653] Fix the comments cache tagging ([leofeyer])
+- [#2656] Correctly format the search query time ([leofeyer])
+- [#2657] Fix the search query if there are no keywords ([leofeyer])
+- [#2664] Use the 2fa/* subpackages instead of scheb/2fa ([bytehead])
+- [#2659] Handle ID URLs in the combiner ([leofeyer])
+- [#2658] Do not translate the analytics template names ([leofeyer])
+- [#2655] Improve rendering long titles and file names ([leofeyer])
+- [#2654] Always pass the DC object to the toggleFeatured() method ([leofeyer])
+- [#2636] Use the correct User-Agent request header in Escargot ([qzminski])
+- [#2614] Fix the file manager performance with large non-image files ([fritzmg])
+- [#2628] Use the token checker instead of FE_USER_LOGGED_IN constant ([fritzmg])
+- [#2609] Correctly validate min and max values in text fields ([aschempp])
+- [#2591] Retrieve the PageModel from the current request ([aschempp])
+- [#2617] Upgrade scheb/2fa to version 5 (PHP 8 compatibility) ([bytehead])
+- [#2615] Fix the news link markup ([fritzmg])
+- [#2602] Update the CONTRIBUTORS.md file ([leofeyer])
+- [#2588] Do not use the SQL default for empty values ([fritzmg])
+- [#2581] Use the Symfony InvalidArgumentException in commands ([m-vo])
+
+## [4.9.10] (2020-12-10)
+
+**Fixed issues:**
+
+- [#2551] Fix the cache tag invalidation ([leofeyer])
+- [#2540] Correctly load the DCA labels ([aschempp])
+- [#2550] Do not index preview URLs for searching ([leofeyer])
+- [#2547] Fix the compatibility with scssphp 1.4 ([ausi])
+- [#2545] Move migrations to the core bundle ([ausi])
+- [#2527] Use a textarea for the image caption field ([Toflar])
+- [#2521] Do not try to generate fragments for generated fragments ([aschempp])
+- [#2506] Handle the global page model in fragments ([aschempp])
+- [#2535] Add compatibility with PHP 8 ([leofeyer])
+- [#2534] Backport the doctrine-cache-bundle changes ([leofeyer])
+- [#2528] Increase the undo period ([Toflar])
+- [#2522] Allow version 3 of toflar/psr6-symfony-http-cache-store ([Toflar])
+- [#2509] Add compatibility with terminal42/escargot 1.0 ([ausi])
+- [#2480] Correctly assign the CSS class in the newsletter subscribe module ([leofeyer])
+- [#2479] Correctly handle falsey values when decoding entities ([leofeyer])
+- [#2474] Correctly apply the CSS classes in the content module ([leofeyer])
+- [#2473] Add a Cache-Control header to the back end response ([leofeyer])
+- [#2463] Remove the hard dependency on PDO ([fritzmg])
+- [#2465] Fix routing issue with multiple domains and languages ([aschempp])
+- [#2321] Allow version 2 of the Doctrine bundle ([bytehead])
+- [#2433] Do not use all:unset with the preview toolbar ([leofeyer])
+
+## [4.9.9] (2020-10-20)
+
+**Fixed issues:**
+
+- [#2434] Correctly move root level pages to the top ([leofeyer])
+- [#2430] Correctly generate the HTML module ([leofeyer])
+- [#2417] Register globals in the fragments pass ([aschempp])
+- [#2416] Remove the Content-Length header when modifying the response ([aschempp])
+
+## [4.9.8] (2020-10-07)
+
+**Fixed issues:**
+
+- [#2403] Resolve private services in the ContaoCoreExtensionTest class ([leofeyer])
+- [#2399] Remove the last username from the session after use ([ausi])
+- [#2363] Reset the KEY_BLOCK_SIZE when migrating the MySQL engine and row format ([aschempp])
+- [#2388] Ignore the logout URL if no user is present ([fritzmg])
+- [#2376] Add a title tag callback to the SERP preview ([leofeyer])
+- [#2361] Prevent using page aliases that could be page IDs ([leofeyer])
+- [#2380] Fix the popup button padding ([leofeyer])
+- [#2373] Use $this->imageHref in the image.html5 template ([leofeyer])
+- [#2339] Optimize the check for inlined services ([aschempp])
+- [#2366] Harden non-normalized file extension comparisons in the LegacyResizer ([m-vo])
+- [#2369] Correctly check for numeric page IDs ([aschempp])
+- [#2351] Override the size variable for the ce_player template ([fritzmg])
+- [#2362] Correctly handle IDNA hostnames in the root page ([leofeyer])
+- [#2345] Support legacy console scripts in the initialize.php ([aschempp])
+
+## [4.9.7] (2020-09-25)
+
+**Fixed issues:**
+
+- [#2342] Fix entering 0 in the back end ([leofeyer])
+- [#2343] Only use $dc->id in the protectFolder() method ([leofeyer])
+
+## [4.9.6] (2020-09-24)
+
+**New features:**
+
+- [#2148] Add support for HTTP cache subscribers ([aschempp])
+
+**Fixed issues:**
+
+- [#2313] Fix the resize options priority in the PictureFactory class ([m-vo])
+- [#2320] Do not prolong unconfirmed opt-in tokens ([leofeyer])
+- [#2300] Do not use the default player size ([fritzmg])
+- [#2290] Fix warnings and deprecations when running unit tests ([ausi])
+- [#2294] Stop using == '' with regard to PHP 8 ([leofeyer])
+- [#2252] Do not change the CSRF token cookie if the response is not successful ([fritzmg])
+- [#2281] Update dependecies for PHP 8.0 compatibility ([ausi])
+- [#2264] Do not try to index a page if the search indexer is disabled ([aschempp])
+- [#2260] Do not use floorToMinute() in the PageModel::loadDetails() method ([leofeyer])
+- [#2257] Only use floorToMinute() in DB queries ([leofeyer])
+- [#2249] Return early in the Search::indexPage() method if nothing has changed ([leofeyer])
+- [#2248] Fix a type error in the back end menu listener ([leofeyer])
+- [#2244] Do not log 503 exceptions ([fritzmg])
+- [#2221] Use a temporary status code to redirect to the language root ([leofeyer])
+- [#2220] Simplify the tl_content header fields ([leofeyer])
+- [#2219] Only update the comment notification URL in the front end ([leofeyer])
+- [#2206] Use the scope matcher if an element renders differently in BE and FE ([leofeyer])
+- [#2204] Only check the request token for master requests ([fritzmg])
+- [#2208] Always load DotEnv files if they exist ([leofeyer])
+- [#2200] Load the default labels in the loadDcaFiles() method ([fritzmg])
+- [#2182] Catch exceptions to prevent the resize images command from failing ([ausi])
+- [#2181] Add the assets URL to non-combined files ([ausi])
+- [#2155] Support captcha input wrapped in DIV ([aschempp])
+- [#2153] Use the class name as cache key in System::import() ([leofeyer])
+- [#2120] Support multiple fragments on the same controller ([aschempp])
+- [#2150] Fix the checkbox height on mobile devices ([leofeyer])
+
 ## [4.9.5] (2020-08-10)
 
 **Fixed issues:**
 
+- [#2139] Also invalidate the ptable cache tags in the DC_Table class ([leofeyer])
 - [#2103] $this->ptable not available in the DataContainer class ([leofeyer])
 - [#2122] Remove the Contao-Merge-Cache-Control header in the master request ([leofeyer])
 - [#2121] Correctly show the default text form field template ([leofeyer])
@@ -379,6 +503,12 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.11]: https://github.com/contao/contao/releases/tag/4.9.11
+[4.9.10]: https://github.com/contao/contao/releases/tag/4.9.10
+[4.9.9]: https://github.com/contao/contao/releases/tag/4.9.9
+[4.9.8]: https://github.com/contao/contao/releases/tag/4.9.8
+[4.9.7]: https://github.com/contao/contao/releases/tag/4.9.7
+[4.9.6]: https://github.com/contao/contao/releases/tag/4.9.6
 [4.9.5]: https://github.com/contao/contao/releases/tag/4.9.5
 [4.9.4]: https://github.com/contao/contao/releases/tag/4.9.4
 [4.9.3]: https://github.com/contao/contao/releases/tag/4.9.3
@@ -406,6 +536,97 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2667]: https://github.com/contao/contao/pull/2667
+[#2669]: https://github.com/contao/contao/pull/2669
+[#2668]: https://github.com/contao/contao/pull/2668
+[#2666]: https://github.com/contao/contao/pull/2666
+[#2653]: https://github.com/contao/contao/pull/2653
+[#2656]: https://github.com/contao/contao/pull/2656
+[#2657]: https://github.com/contao/contao/pull/2657
+[#2664]: https://github.com/contao/contao/pull/2664
+[#2659]: https://github.com/contao/contao/pull/2659
+[#2658]: https://github.com/contao/contao/pull/2658
+[#2655]: https://github.com/contao/contao/pull/2655
+[#2654]: https://github.com/contao/contao/pull/2654
+[#2636]: https://github.com/contao/contao/pull/2636
+[#2614]: https://github.com/contao/contao/pull/2614
+[#2628]: https://github.com/contao/contao/pull/2628
+[#2609]: https://github.com/contao/contao/pull/2609
+[#2591]: https://github.com/contao/contao/pull/2591
+[#2617]: https://github.com/contao/contao/pull/2617
+[#2615]: https://github.com/contao/contao/pull/2615
+[#2602]: https://github.com/contao/contao/pull/2602
+[#2588]: https://github.com/contao/contao/pull/2588
+[#2581]: https://github.com/contao/contao/pull/2581
+[#2551]: https://github.com/contao/contao/pull/2551
+[#2540]: https://github.com/contao/contao/pull/2540
+[#2550]: https://github.com/contao/contao/pull/2550
+[#2547]: https://github.com/contao/contao/pull/2547
+[#2545]: https://github.com/contao/contao/pull/2545
+[#2527]: https://github.com/contao/contao/pull/2527
+[#2521]: https://github.com/contao/contao/pull/2521
+[#2506]: https://github.com/contao/contao/pull/2506
+[#2535]: https://github.com/contao/contao/pull/2535
+[#2534]: https://github.com/contao/contao/pull/2534
+[#2528]: https://github.com/contao/contao/pull/2528
+[#2522]: https://github.com/contao/contao/pull/2522
+[#2509]: https://github.com/contao/contao/pull/2509
+[#2480]: https://github.com/contao/contao/pull/2480
+[#2479]: https://github.com/contao/contao/pull/2479
+[#2474]: https://github.com/contao/contao/pull/2474
+[#2473]: https://github.com/contao/contao/pull/2473
+[#2463]: https://github.com/contao/contao/pull/2463
+[#2465]: https://github.com/contao/contao/pull/2465
+[#2321]: https://github.com/contao/contao/pull/2321
+[#2433]: https://github.com/contao/contao/pull/2433
+[#2434]: https://github.com/contao/contao/pull/2434
+[#2430]: https://github.com/contao/contao/pull/2430
+[#2417]: https://github.com/contao/contao/pull/2417
+[#2416]: https://github.com/contao/contao/pull/2416
+[#2403]: https://github.com/contao/contao/pull/2403
+[#2399]: https://github.com/contao/contao/pull/2399
+[#2363]: https://github.com/contao/contao/pull/2363
+[#2388]: https://github.com/contao/contao/pull/2388
+[#2376]: https://github.com/contao/contao/pull/2376
+[#2361]: https://github.com/contao/contao/pull/2361
+[#2380]: https://github.com/contao/contao/pull/2380
+[#2373]: https://github.com/contao/contao/pull/2373
+[#2339]: https://github.com/contao/contao/pull/2339
+[#2366]: https://github.com/contao/contao/pull/2366
+[#2369]: https://github.com/contao/contao/pull/2369
+[#2351]: https://github.com/contao/contao/pull/2351
+[#2362]: https://github.com/contao/contao/pull/2362
+[#2345]: https://github.com/contao/contao/pull/2345
+[#2342]: https://github.com/contao/contao/pull/2342
+[#2343]: https://github.com/contao/contao/pull/2343
+[#2148]: https://github.com/contao/contao/pull/2148
+[#2313]: https://github.com/contao/contao/pull/2313
+[#2320]: https://github.com/contao/contao/pull/2320
+[#2300]: https://github.com/contao/contao/pull/2300
+[#2290]: https://github.com/contao/contao/pull/2290
+[#2294]: https://github.com/contao/contao/pull/2294
+[#2252]: https://github.com/contao/contao/pull/2252
+[#2281]: https://github.com/contao/contao/pull/2281
+[#2264]: https://github.com/contao/contao/pull/2264
+[#2260]: https://github.com/contao/contao/pull/2260
+[#2257]: https://github.com/contao/contao/pull/2257
+[#2249]: https://github.com/contao/contao/pull/2249
+[#2248]: https://github.com/contao/contao/pull/2248
+[#2244]: https://github.com/contao/contao/pull/2244
+[#2221]: https://github.com/contao/contao/pull/2221
+[#2220]: https://github.com/contao/contao/pull/2220
+[#2219]: https://github.com/contao/contao/pull/2219
+[#2206]: https://github.com/contao/contao/pull/2206
+[#2204]: https://github.com/contao/contao/pull/2204
+[#2208]: https://github.com/contao/contao/pull/2208
+[#2200]: https://github.com/contao/contao/pull/2200
+[#2182]: https://github.com/contao/contao/pull/2182
+[#2181]: https://github.com/contao/contao/pull/2181
+[#2155]: https://github.com/contao/contao/pull/2155
+[#2153]: https://github.com/contao/contao/pull/2153
+[#2120]: https://github.com/contao/contao/pull/2120
+[#2150]: https://github.com/contao/contao/pull/2150
+[#2139]: https://github.com/contao/contao/pull/2139
 [#2103]: https://github.com/contao/contao/pull/2103
 [#2122]: https://github.com/contao/contao/pull/2122
 [#2121]: https://github.com/contao/contao/pull/2121
