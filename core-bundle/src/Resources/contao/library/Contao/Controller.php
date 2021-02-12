@@ -738,10 +738,12 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE')
 		{
+			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+
 			// Protected element
 			if ($objElement->protected)
 			{
-				if (!FE_USER_LOGGED_IN)
+				if (!$blnFeUserLoggedIn)
 				{
 					$blnReturn = false;
 				}
@@ -766,7 +768,7 @@ abstract class Controller extends System
 			}
 
 			// Show to guests only
-			elseif ($objElement->guests && FE_USER_LOGGED_IN)
+			elseif ($objElement->guests && $blnFeUserLoggedIn)
 			{
 				$blnReturn = false;
 			}
@@ -1067,7 +1069,6 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		/** @var Query $query */
 		$query = new Query(Environment::get('queryString'));
 
 		// Remove the request token and referer ID
@@ -1531,7 +1532,7 @@ abstract class Controller extends System
 			$objFile = null;
 		}
 
-		$imgSize = $objFile ? $objFile->imageSize : false;
+		$imgSize = $objFile->imageSize ?? array();
 		$size = StringUtil::deserialize($arrItem['size']);
 
 		if (is_numeric($size))

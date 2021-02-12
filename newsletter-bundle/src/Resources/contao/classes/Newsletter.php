@@ -427,7 +427,6 @@ class Newsletter extends Backend
 			return '';
 		}
 
-		/** @var FileUpload $objUploader */
 		$objUploader = new FileUpload();
 
 		// Import recipients

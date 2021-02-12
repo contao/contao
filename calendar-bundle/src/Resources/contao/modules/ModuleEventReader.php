@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
 /**
@@ -109,7 +108,6 @@ class ModuleEventReader extends Events
 				}
 
 				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-				break;
 
 			case 'article':
 				if (($article = ArticleModel::findByPk($objEvent->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
@@ -118,7 +116,6 @@ class ModuleEventReader extends Events
 				}
 
 				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-				break;
 
 			case 'external':
 				if ($objEvent->url)
@@ -127,7 +124,6 @@ class ModuleEventReader extends Events
 				}
 
 				throw new InternalServerErrorException('Empty target URL');
-				break;
 		}
 
 		// Overwrite the page title (see #2853, #4955 and #87)
@@ -240,15 +236,6 @@ class ModuleEventReader extends Events
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
-
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
-			$responseTagger->addTags(array('contao.db.tl_calendar.' . $objEvent->pid));
-		}
 
 		// Clean the RTE output
 		if ($objEvent->teaser)
@@ -404,6 +391,13 @@ class ModuleEventReader extends Events
 		};
 
 		$this->Template->event = $objTemplate->parse();
+
+		// Tag the event (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
+		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 

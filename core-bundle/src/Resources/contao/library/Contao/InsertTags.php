@@ -98,6 +98,7 @@ class InsertTags extends Controller
 
 		$strBuffer = '';
 		$container = System::getContainer();
+		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -105,6 +106,12 @@ class InsertTags extends Controller
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
+
+			if (!isset($tags[$_rit+1]))
+			{
+				continue;
+			}
+
 			$strTag = $tags[$_rit+1];
 
 			// Skip empty tags
@@ -289,7 +296,7 @@ class InsertTags extends Controller
 
 				// Front end user
 				case 'user':
-					if (FE_USER_LOGGED_IN)
+					if ($blnFeUserLoggedIn)
 					{
 						$this->import(FrontendUser::class, 'User');
 						$value = $this->User->{$elements[1]};
@@ -393,7 +400,7 @@ class InsertTags extends Controller
 						// User login page
 						if ($elements[1] == 'login')
 						{
-							if (!FE_USER_LOGGED_IN)
+							if (!$blnFeUserLoggedIn)
 							{
 								break;
 							}

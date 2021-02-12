@@ -288,8 +288,8 @@ class MigrateCommand extends Command
         if (!$withDrops) {
             foreach ($commands as $hash => $command) {
                 if (
-                    (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
-                    || preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                    preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                    || (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
                 ) {
                     unset($commands[$hash]);
                 }

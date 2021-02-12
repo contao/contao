@@ -209,7 +209,6 @@ class Email
 
 			default:
 				throw new \Exception(sprintf('Invalid argument "%s"', $strKey));
-				break;
 		}
 	}
 

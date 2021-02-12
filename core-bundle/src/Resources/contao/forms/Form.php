@@ -539,7 +539,7 @@ class Form extends Hybrid
 		$_SESSION['FILES'] = array(); // DO NOT CHANGE
 
 		// Add a log entry
-		if (FE_USER_LOGGED_IN)
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, TL_FORMS);

@@ -294,24 +294,24 @@
         <target>Автоматический выход из системы</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Автоматическое завершение сеанса пользователя</target>
+        <source>Automatically logs out a member</source>
+        <target>Автоматическое завершение сеанса участника</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Личные данные</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>Создает форму для заполнения личных данных пользователя</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Создает форму для заполнения личных данных участника</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Регистрация пользователя</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Создает форму для заполнения пользователем при регистрации</target>
+        <source>Generates a member registration form</source>
+        <target>Создает форму для заполнения участником при регистрации</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

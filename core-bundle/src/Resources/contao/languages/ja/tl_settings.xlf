@@ -6,8 +6,8 @@
         <target>システム管理者の電子メールアドレス</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>申し込みの確認の電子メールのような、自動的に生成するメッセージはこのアドレスから送信します。</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>この電子メールアドレスはシステムメッセージの送信と受信に使用します。</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>

@@ -263,7 +263,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $jwtManager = new JwtManager($projectDir);
             $jwt = $jwtManager->parseRequest($request);
 
-            if (\is_array($jwt) && $jwt['debug'] ?? false) {
+            if (\is_array($jwt) && ($jwt['debug'] ?? false)) {
                 $env = 'dev';
             }
 
@@ -370,7 +370,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private static function create(string $projectDir, string $env = null): self
     {
         if (null === $env) {
-            $env = (string) ($_SERVER['APP_ENV'] ?? 'prod');
+            $env = $_SERVER['APP_ENV'] ?? 'prod';
         }
 
         if ('dev' !== $env && 'prod' !== $env) {

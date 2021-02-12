@@ -759,7 +759,6 @@ class Image
 			$image = new File(rawurldecode($image));
 		}
 
-		/** @var Image $imageObj */
 		$imageObj = new static($image);
 
 		if (\is_array($size) && !empty($size[2]))

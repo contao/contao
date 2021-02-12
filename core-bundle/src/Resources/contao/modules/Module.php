@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Model\Collection;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Parent class for front end modules.
@@ -236,10 +235,9 @@ abstract class Module extends Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objModel->classes);
 		}
 
-		// Tag the response
+		// Tag the module (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_module.' . $this->id));
 		}
@@ -276,7 +274,7 @@ abstract class Module extends Frontend
 		$groups = array();
 
 		// Get all groups of the current front end user
-		if (FE_USER_LOGGED_IN)
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;

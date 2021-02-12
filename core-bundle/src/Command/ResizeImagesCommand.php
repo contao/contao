@@ -191,7 +191,7 @@ class ResizeImagesCommand extends Command
         return 0;
     }
 
-    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess)
+    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess): int
     {
         if (!$noSubProcess && $this->supportsSubProcesses()) {
             return $this->executeConcurrent($timeLimit, $concurrent);

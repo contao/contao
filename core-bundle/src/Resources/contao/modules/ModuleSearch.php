@@ -97,7 +97,7 @@ class ModuleSearch extends Module
 		$this->Template->results = '';
 
 		// Execute the search if there are keywords
-		if ((string) $strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
+		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
@@ -188,12 +188,13 @@ class ModuleSearch extends Module
 			if (Config::get('indexProtected'))
 			{
 				$this->import(FrontendUser::class, 'User');
+				$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
 
 				foreach ($arrResult as $k=>$v)
 				{
 					if ($v['protected'])
 					{
-						if (!FE_USER_LOGGED_IN || !\is_array($this->User->groups))
+						if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
 						{
 							unset($arrResult[$k]);
 						}
@@ -227,7 +228,7 @@ class ModuleSearch extends Module
 			if ($count < 1)
 			{
 				$this->Template->header = sprintf($GLOBALS['TL_LANG']['MSC']['sEmpty'], $strKeywords);
-				$this->Template->duration = substr($query_endtime-$query_starttime, 0, 6) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
+				$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 
 				return;
 			}
@@ -324,7 +325,7 @@ class ModuleSearch extends Module
 			}
 
 			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
-			$this->Template->duration = substr($query_endtime-$query_starttime, 0, 6) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
+			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 		}
 	}
 }

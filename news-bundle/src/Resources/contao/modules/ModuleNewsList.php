@@ -66,6 +66,13 @@ class ModuleNewsList extends ModuleNews
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}
 
+		// Tag the news archives (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array_map(static function ($id) { return 'contao.db.tl_news_archive.' . $id; }, $this->news_archives));
+		}
+
 		return parent::generate();
 	}
 

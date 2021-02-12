@@ -114,7 +114,7 @@ class ImageFactoryTest extends TestCase
         $path = $this->getFixturesDir().'/assets/images/dummy.svg';
 
         if (!$this->filesystem->exists(\dirname($path))) {
-            $this->filesystem->mkdir(\dirname($path), 0777);
+            $this->filesystem->mkdir(\dirname($path));
         }
 
         $this->filesystem->dumpFile($path, '');
@@ -637,7 +637,9 @@ class ImageFactoryTest extends TestCase
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -648,6 +650,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -698,7 +702,7 @@ class ImageFactoryTest extends TestCase
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
-            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
         $fs->dumpFile($projectDir.'/'.$path, '');
@@ -715,7 +719,9 @@ class ImageFactoryTest extends TestCase
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
         $adapter = $this->mockConfiguredAdapter(['findByPath' => null]);
@@ -726,6 +732,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -786,7 +794,7 @@ class ImageFactoryTest extends TestCase
         $projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
         if (!$fs->exists(\dirname($projectDir.'/'.$path))) {
-            $fs->mkdir(\dirname($projectDir.'/'.$path), 0777);
+            $fs->mkdir(\dirname($projectDir.'/'.$path));
         }
 
         $fs->dumpFile($projectDir.'/'.$path, '');
@@ -803,7 +811,9 @@ class ImageFactoryTest extends TestCase
     {
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpg';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
+
+        System::setContainer($container);
 
         $path = $this->getFixturesDir().'/images/dummy.jpg';
 
@@ -819,6 +829,8 @@ class ImageFactoryTest extends TestCase
 
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
+
+        $container->set('contao.image.image_factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'emptyHookCallback']],

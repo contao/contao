@@ -780,7 +780,7 @@ abstract class Widget extends Controller
 				break;
 			}
 
-			$varValue = $varValue[$part];
+			$varValue = $varValue[$part] ?? null;
 		}
 
 		return $varValue;
@@ -1444,11 +1444,6 @@ abstract class Widget extends Controller
 			}
 			else
 			{
-				if (isset($sql['default']))
-				{
-					return $sql['default'];
-				}
-
 				if (isset($sql['notnull']) && !$sql['notnull'])
 				{
 					return null;
@@ -1457,6 +1452,11 @@ abstract class Widget extends Controller
 				if (\in_array($sql['type'], array(Type::BIGINT, Type::DECIMAL, Type::INTEGER, Type::SMALLINT, Type::FLOAT)))
 				{
 					return 0;
+				}
+
+				if ($sql['type'] === Type::BOOLEAN)
+				{
+					return false;
 				}
 
 				return '';

@@ -395,7 +395,6 @@ abstract class System
 
 			list($path, $query) = explode('?', $url, 2);
 
-			/** @var Query $queryObj */
 			$queryObj = new Query($query);
 			$queryObj = $queryObj->withoutPairs($params);
 

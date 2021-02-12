@@ -828,7 +828,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('%contao.preview_script%'),
                 new Reference('contao.routing.scope_matcher'),
                 new Reference('twig'),
                 new Reference('router'),
@@ -1190,6 +1189,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('request_stack'),
+                new Reference('contao.framework'),
                 new Reference('staticPlugins'),
                 new Reference('%kernel.debug%'),
             ],
@@ -1209,6 +1209,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('request_stack'),
+                new Reference('contao.framework'),
                 new Reference('staticFiles'),
                 new Reference('%kernel.debug%'),
             ],
@@ -2715,7 +2716,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
-                new Reference('scheb_two_factor.token_factory'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
@@ -2956,7 +2956,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.simple_role_voter'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -2989,7 +2988,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.role_hierarchy_voter'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -3547,7 +3545,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.token_checker'),
                 new Reference('router'),
                 new Reference('uri_signer'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );

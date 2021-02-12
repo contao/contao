@@ -600,10 +600,12 @@ class StringUtil
 					->log(LogLevel::INFO, sprintf('Tried to evaluate unknown simple token "%s".', $strToken))
 				;
 
-				return false;
+				$varTokenValue = null;
 			}
-
-			$varTokenValue = $arrData[$strToken];
+			else
+			{
+				$varTokenValue = $arrData[$strToken];
+			}
 
 			if (is_numeric($strValue))
 			{

@@ -70,8 +70,8 @@
         <target>コメントにログインを必要</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>ログインしたユーザーにだけコメントの作成を許可します。</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>ログインしたメンバーにだけコメントの作成を許可します。</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>

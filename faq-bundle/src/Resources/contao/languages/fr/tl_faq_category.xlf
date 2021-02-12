@@ -78,7 +78,7 @@
         <target>Connexion préalable nécessaire</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
+        <source>Allow only authenticated members to create comments.</source>
         <target>N'autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>
-        <target>Actualité</target>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>

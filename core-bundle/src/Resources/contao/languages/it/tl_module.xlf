@@ -54,8 +54,8 @@
         <target>Mostra elementi protetti</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Includi gli elementi che sono solitamente visibili solamente agli utenti autenticati</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Mostra gli elementi che sono normalmente visibili solo ai membri autenticati.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -134,8 +134,8 @@
         <target>Reindirizza all'ultima pagina visitata</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Reindirizza l'utente all'ultima pagina visitata dopo il login/logout</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Reindirizzare il membro all'ultima pagina visitata anziché alla pagina di reindirizzamento.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -422,16 +422,16 @@
         <target>Gruppi membri</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Tutti gli utenti non amministratori, ereditano i permessi da un gruppo di utenti. Di conseguenza, ogni utente deve essere membro almeno di un gruppo. Se un utente è assegnato a più gruppi, i permessi vengono sommati.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Assegna l'utente ad uno o più gruppi.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Permetti login</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Se si seleziona questa opzione, i nuovi utenti saranno in grado di connettersi con i propri username e password.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>Consenti al nuovo membro di accedere al front-end.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -478,8 +478,8 @@
         <target>Dopo l'attivazione</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Seleziona la pagina a cui un utente sarà rediretto dopo che il suo account sarà stato attivato.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Scegli la pagina a cui verranno reindirizzati i membri dopo il completamento della richiesta.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -494,8 +494,8 @@
         <target>Conferma e-mail</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Inserisci il testo della e-mail di conferma. Puoi usare ogni campo di input come metacarattere (es: &lt;em&gt;##lastname##&lt;/em&gt;) così come &lt;em&gt;##domain##&lt;/em&gt; (Domain Name corrente) e &lt;em&gt;##link##&lt;/em&gt; (link di attivazione).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>È possibile utilizzare i caratteri jolly &lt;em&gt;##domain##&lt;/em&gt; (nome dominio), &lt;em&gt;##link##&lt;/em&gt; (link di attivazione) e qualsiasi proprietà membro (e.s. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

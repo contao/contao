@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments
@@ -42,14 +41,6 @@ class Comments extends Frontend
 		$arrComments = array();
 
 		$objTemplate->comments = array(); // see #4064
-
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
-		}
 
 		// Pagination
 		if ($objConfig->perPage > 0)
@@ -102,6 +93,7 @@ class Comments extends Frontend
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
 			$count = 0;
+			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
 			while ($objComments->next())
@@ -134,7 +126,16 @@ class Comments extends Frontend
 				}
 
 				$arrComments[] = $objPartial->parse();
+				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
+
 				++$count;
+			}
+
+			// Tag the comments (see #2137)
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags($tags);
 			}
 		}
 
@@ -164,7 +165,7 @@ class Comments extends Frontend
 		$this->import(FrontendUser::class, 'User');
 
 		// Access control
-		if ($objConfig->requireLogin && !FE_USER_LOGGED_IN)
+		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$objTemplate->requireLogin = true;
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];

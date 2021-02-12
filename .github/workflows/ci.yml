@@ -13,22 +13,22 @@ on:
 jobs:
     coverage:
         name: Coverage
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name != 'schedule'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: pcov
 
             - name: Checkout
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-progress
 
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
@@ -41,31 +41,34 @@ jobs:
 
     coding-style:
         name: Coding Style
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name == 'pull_request'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Checkout
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
-
-            - name: Check the coding style
               run: |
-                  vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao --config vendor/contao/easy-coding-standard/config/legacy.yaml --no-progress-bar --ansi
-                  vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config vendor/contao/easy-coding-standard/config/template.yaml --no-progress-bar --ansi
+                  composer install --no-interaction --no-progress
+                  composer bin ecs install --no-interaction --no-progress
+                  composer bin phpstan install --no-interaction --no-progress
+
+            - name: Check the coding standard
+              run: |
+                  tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
             - name: Analyze the code
-              run: vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
+              run: tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
             - name: Analyze the YAML files
               run: |
@@ -75,19 +78,19 @@ jobs:
 
     tests:
         name: PHP ${{ matrix.php }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name != 'push'
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4]
+                php: [7.2, 7.3, 7.4, 8.0]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Initialize the database
@@ -99,7 +102,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -107,11 +110,11 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     prefer-lowest:
         name: Prefer Lowest
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
@@ -119,7 +122,7 @@ jobs:
               with:
                   php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Initialize the database
@@ -131,7 +134,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -139,19 +142,19 @@ jobs:
             - name: Run the functional tests
               run: vendor/bin/phpunit --testsuite=functional --colors=always
               env:
-                  DATABASE_URL: mysql://root:root@localhost:3306/contao_test
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     bundles:
         name: Bundles
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Checkout
@@ -174,7 +177,7 @@ jobs:
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
-                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-suggest
+                      COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-progress
                       vendor/bin/phpunit --colors=always
                       cd ..
                   done
@@ -187,10 +190,10 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
-                  tools: prestissimo, flex
+                  tools: flex
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
@@ -200,22 +203,21 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest --no-progress
+              run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
 
     composer:
         name: Composer
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: json, zlib
-                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -223,23 +225,22 @@ jobs:
 
             - name: Install the dependencies
               run: |
-                  composer global require contao/monorepo-tools:dev-master
-                  composer install --no-interaction --no-suggest
+                  composer install --no-interaction --no-progress
+                  composer bin monorepo install --no-interaction --no-progress
 
             - name: Validate the composer.json files
-              run: $HOME/.composer/vendor/bin/monorepo-tools composer-json --validate --ansi
+              run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
 
     monorepo-split:
         name: Monorepo Split
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-18.04
         if: github.event_name == 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: json, zlib
-                  tools: prestissimo
                   coverage: none
 
             - name: Checkout
@@ -252,7 +253,7 @@ jobs:
                   key: dev-${GITHUB_REF##*/}
 
             - name: Install the dependencies
-              run: composer global require contao/monorepo-tools:dev-master
+              run: composer global require contao/monorepo-tools:dev-main
 
             - name: Split the monorepo
               run: $HOME/.composer/vendor/bin/monorepo-tools split ${GITHUB_REF##*/}

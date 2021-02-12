@@ -233,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true),
-					'caption'         => 'maxlength="255"'
+					'caption'         => array('type'=>'textarea')
 				)
 			),
 			'sql'                     => "blob NULL"
