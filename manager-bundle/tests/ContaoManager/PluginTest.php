@@ -266,8 +266,6 @@ class PluginTest extends ContaoTestCase
 
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
-
-        /** @var array<Route> $routes */
         $routes = array_values($collection->all());
 
         $this->assertCount(3, $routes);
@@ -414,7 +412,7 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
-    public function testAddsTheDefaultServerVersion(): void
+    public function testAddsTheDefaultServerVersionAndPdoOptions(): void
     {
         $extensionConfigs = [
             [
@@ -422,6 +420,86 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'server_version' => '5.5',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfDriverIsNotPdo(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ]]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfCustomOptionsPresent(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                            'options' => null,
                         ],
                     ],
                 ],
@@ -667,11 +745,6 @@ class PluginTest extends ContaoTestCase
         yield [
             'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
             'smtp://127.0.0.1:25?local_domain=example.org&foo=bar',
-        ];
-
-        yield [
-            'smtp://foo@bar.com@127.0.0.1:25',
-            'smtp://foo%%40bar.com@127.0.0.1:25',
         ];
 
         yield [

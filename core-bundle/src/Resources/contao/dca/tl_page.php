@@ -17,8 +17,10 @@ use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
+use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
+use Contao\LayoutModel;
 use Contao\Message;
 use Contao\Messages;
 use Contao\Model;
@@ -65,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 				'id' => 'primary',
 				'alias' => 'index',
 				'type,dns' => 'index',
-				'pid,type,start,stop,published' => 'index'
+				'pid,published,type,start,stop' => 'index'
 			)
 		)
 	),
@@ -277,7 +279,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -331,6 +333,10 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'load_callback' => array
+			(
+				array('tl_page', 'loadDns')
+			),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkDns')
@@ -486,8 +492,9 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'useSSL' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'inputType'               => 'select',
+			'options'                 => array(''=>'http://', '1'=>'https://'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'autoforward' => array
@@ -847,7 +854,7 @@ class tl_page extends Backend
 		{
 			$permission = 0;
 			$cid = CURRENT_ID ?: Input::get('id');
-			$ids = ($cid != '') ? array($cid) : array();
+			$ids = $cid ? array($cid) : array();
 
 			// Set permission
 			switch (Input::get('act'))
@@ -1039,11 +1046,36 @@ class tl_page extends Backend
 	}
 
 	/**
+	 * Return the title tag from the associated page layout
+	 *
+	 * @param PageModel $model
+	 *
+	 * @return string
+	 */
+	public function getTitleTag(PageModel $model)
+	{
+		$model->loadDetails();
+
+		/** @var LayoutModel $layout */
+		if (!$layout = $model->getRelated('layout'))
+		{
+			return '';
+		}
+
+		global $objPage;
+
+		// Set the global page object so we can replace the insert tags
+		$objPage = $model;
+
+		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+	}
+
+	/**
 	 * Show a warning if there is no language fallback page
 	 */
 	public function showFallbackWarning()
 	{
-		if (Input::get('act') != '')
+		if (Input::get('act'))
 		{
 			return;
 		}
@@ -1190,7 +1222,7 @@ class tl_page extends Backend
 	public function checkFeedAlias($varValue, DataContainer $dc)
 	{
 		// No change or empty value
-		if ($varValue == $dc->value || $varValue == '')
+		if (!$varValue || $varValue == $dc->value)
 		{
 			return $varValue;
 		}
@@ -1230,6 +1262,18 @@ class tl_page extends Backend
 	}
 
 	/**
+	 * Load the DNS settings
+	 *
+	 * @param mixed $varValue
+	 *
+	 * @return mixed
+	 */
+	public function loadDns($varValue)
+	{
+		return Idna::decode($varValue);
+	}
+
+	/**
 	 * Check the DNS settings
 	 *
 	 * @param mixed $varValue
@@ -1238,7 +1282,16 @@ class tl_page extends Backend
 	 */
 	public function checkDns($varValue)
 	{
-		return preg_replace('#^(?:[a-z]+://)?([a-z0-9[\].:_-]+).*$#i', '$1', $varValue);
+		if (!$varValue)
+		{
+			return '';
+		}
+
+		// The first part will match IPv6 addresses in square brackets. The
+		// second part will match domain names and IPv4 addresses.
+		preg_match('#^(?:[a-z]+://)?(\[[0-9a-f:]+]|[\pN\pL._-]*)#ui', $varValue, $matches);
+
+		return Idna::encode($matches[1]);
 	}
 
 	/**
@@ -1253,7 +1306,7 @@ class tl_page extends Backend
 	 */
 	public function checkFallback($varValue, DataContainer $dc)
 	{
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			return '';
 		}
@@ -1278,7 +1331,7 @@ class tl_page extends Backend
 	 */
 	public function checkStaticUrl($varValue)
 	{
-		if ($varValue != '')
+		if ($varValue)
 		{
 			$varValue = preg_replace('@https?://@', '', $varValue);
 		}

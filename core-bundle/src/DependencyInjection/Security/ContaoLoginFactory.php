@@ -50,12 +50,18 @@ class ContaoLoginFactory extends AbstractFactory
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId): string
     {
         $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
+        $twoFactorFirewallConfigId = 'contao.security.two_factor_firewall_config.'.$id;
+
+        $container
+            ->setDefinition($twoFactorFirewallConfigId, new ChildDefinition(TwoFactorFactory::FIREWALL_CONFIG_DEFINITION_ID))
+            ->replaceArgument(0, $config)
+            ->replaceArgument(1, $id)
+        ;
 
         $container
             ->setDefinition($twoFactorProviderId, new ChildDefinition(TwoFactorFactory::PROVIDER_DEFINITION_ID))
-            ->replaceArgument(0, $id)
-            ->replaceArgument(1, [])
-            ->replaceArgument(3, new Reference(BackupCodeManager::class))
+            ->replaceArgument(0, new Reference($twoFactorFirewallConfigId))
+            ->replaceArgument(2, new Reference(BackupCodeManager::class))
         ;
 
         $provider = 'contao.security.authentication_provider.'.$id;
@@ -100,9 +106,7 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(3, $firewallName)
             ->replaceArgument(4, true)
             ->replaceArgument(5, false)
-            ->addTag('kernel.event_listener', ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX])
-            ->addTag('kernel.event_listener', ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'])
-            ->addTag('kernel.event_listener', ['event' => 'kernel.finish_request', 'method' => 'onKernelFinishRequest'])
+            ->addTag('kernel.event_subscriber')
         ;
     }
 }

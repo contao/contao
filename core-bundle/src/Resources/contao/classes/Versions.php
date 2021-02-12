@@ -577,7 +577,7 @@ class Versions extends Controller
 		}
 
 		// Identical versions
-		if ($strBuffer == '')
+		if (!$strBuffer)
 		{
 			$strBuffer = '<p>' . $GLOBALS['TL_LANG']['MSC']['identicalVersions'] . '</p>';
 		}

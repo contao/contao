@@ -1,5 +1,14 @@
 # Deprecated features
 
+## FE_USER_LOGGED_IN
+
+The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
+Contao 5.0. Use the token checker service instead:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
+
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be
@@ -95,7 +104,7 @@ $data = [
 ];
 ```
 
-For more information see: https://github.com/contao/image/blob/master/README.md
+More information: https://github.com/contao/image/blob/master/README.md
 
 ## FORM_FIELDS
 
@@ -292,7 +301,7 @@ $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->
 
 ## PHP entry points
 
-Contao 4 only uses a single PHP entry point, namely the `index.php` or 
+Contao 4 only uses a single PHP entry point, namely the `index.php` or
 `preview.php` file. The previous PHP entry points have been removed and a route
 has been set up for each one instead (see UPGRADE.md).
 

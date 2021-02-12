@@ -252,7 +252,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true),
-					'caption'         => 'maxlength="255"'
+					'caption'         => array('type'=>'textarea')
 				)
 			),
 			'sql'                     => "blob NULL"
@@ -601,7 +601,7 @@ class tl_files extends Backend
 		}
 
 		// Check the length without the file extension
-		if ($dc->activeRecord && $varValue != '')
+		if ($dc->activeRecord && $varValue)
 		{
 			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'];
 
@@ -829,24 +829,6 @@ class tl_files extends Backend
 	{
 		$strPath = $dc->id;
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		// Check if the folder has been renamed (see #6432, #934)
-		if (Input::post('name') && !is_dir($projectDir . '/' . $strPath))
-		{
-			if (Validator::isInsecurePath(Input::post('name')))
-			{
-				throw new RuntimeException('Invalid file or folder name ' . Input::post('name'));
-			}
-
-			$count = 0;
-			$strName = basename($strPath);
-			$strNewPath = str_replace($strName, Input::post('name'), $strPath, $count);
-
-			if ($strNewPath && $count > 0 && is_dir($projectDir . '/' . $strNewPath))
-			{
-				$strPath = $strNewPath;
-			}
-		}
 
 		// Only show for folders (see #5660)
 		if (!is_dir($projectDir . '/' . $strPath))

@@ -78,6 +78,19 @@ class CombinerTest extends ContaoTestCase
             $combiner->getFileUrls()
         );
 
+        $this->assertSame(
+            [
+                'https://cdn.example.com/file1.css|'.$mtime,
+                'https://cdn.example.com/file2.css|screen|'.$mtime,
+                'https://cdn.example.com/file3.css|screen|'.$mtime,
+            ],
+            $combiner->getFileUrls('https://cdn.example.com/')
+        );
+
+        $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
+
+        $this->assertRegExp('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
+
         $combinedFile = $combiner->getCombinedFile();
 
         $this->assertRegExp('/^assets\/css\/file1\.css\,file2\.css\,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
@@ -176,6 +189,24 @@ EOF;
         $css = <<<'EOF'
 test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
 test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
+EOF;
+
+        $this->assertSame(
+            $css,
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'file.css']])
+        );
+    }
+
+    public function testIgnoresAbsoluteUrlsWhileFixingTheFilePaths(): void
+    {
+        $class = new \ReflectionClass(Combiner::class);
+        $method = $class->getMethod('fixPaths');
+        $method->setAccessible(true);
+
+        $css = <<<'EOF'
+test1 { background: url('/path/to/file.jpg') }
+test2 { background: url(https://example.com/file.jpg) }
+test3 { background: url('#foo') }
 EOF;
 
         $this->assertSame(

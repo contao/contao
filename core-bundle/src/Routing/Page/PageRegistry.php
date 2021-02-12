@@ -71,7 +71,7 @@ class PageRegistry
         if (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
-            $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+)?';
+            $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $config->getOptions(), $config->getMethods());
@@ -95,7 +95,6 @@ class PageRegistry
     {
         $prefixes = [];
 
-        /** @var RouteConfig $config */
         foreach ($this->routeConfigs as $type => $config) {
             $regex = $config->getPathRegex();
 

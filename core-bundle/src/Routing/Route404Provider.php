@@ -177,7 +177,7 @@ class Route404Provider extends AbstractPageRouteProvider
             $requirements,
             ['utf8' => true],
             $page->domain,
-            $page->rootUseSSL ? 'https' : null
+            $page->rootUseSSL ? 'https' : 'http'
         );
 
         if (!$page->urlPrefix) {
@@ -192,7 +192,7 @@ class Route404Provider extends AbstractPageRouteProvider
             $requirements,
             ['utf8' => true],
             $page->domain,
-            $page->rootUseSSL ? 'https' : null
+            $page->rootUseSSL ? 'https' : 'http'
         );
     }
 
@@ -238,7 +238,7 @@ class Route404Provider extends AbstractPageRouteProvider
         $redirect->addDefaults([
             '_controller' => RedirectController::class,
             'path' => $path,
-            'permanent' => true,
+            'permanent' => false,
         ]);
 
         $routes['tl_page.'.$route->getPageModel()->id.'.locale'] = $redirect;

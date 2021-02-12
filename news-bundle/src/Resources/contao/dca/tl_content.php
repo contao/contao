@@ -160,6 +160,14 @@ class tl_content_news extends Backend
 			return;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request)
+		{
+			$origScope = $request->attributes->get('_scope');
+			$request->attributes->set('_scope', 'frontend');
+		}
+
 		$this->import(News::class, 'News');
 
 		foreach ($session as $id)
@@ -169,6 +177,11 @@ class tl_content_news extends Backend
 
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSitemap();
+
+		if ($request)
+		{
+			$request->attributes->set('_scope', $origScope);
+		}
 
 		$objSession->set('news_feed_updater', null);
 	}

@@ -467,7 +467,7 @@ class Environment
 	 */
 	protected static function host()
 	{
-		return static::get('httpHost');
+		return preg_replace('/:\d+$/', '', static::get('httpHost'));
 	}
 
 	/**
@@ -536,7 +536,7 @@ class Environment
 		$return->class = $os . ' ' . $browser . ' ' . $engine;
 
 		// Add the version number if available
-		if ($version != '')
+		if ($version)
 		{
 			$return->class .= ' ' . $shorty . $version;
 		}

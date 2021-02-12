@@ -99,11 +99,11 @@ class PageRouteTest extends TestCase
 
     public function testSetsProtocolIfRootPageUsesSSL(): void
     {
-        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => false]));
+        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => '']));
 
-        $this->assertEmpty($route->getSchemes());
+        $this->assertSame(['http'], $route->getSchemes());
 
-        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => true]));
+        $route = new PageRoute($this->mockPageModel(['rootUseSSL' => '1']));
 
         $this->assertSame(['https'], $route->getSchemes());
     }
@@ -122,7 +122,7 @@ class PageRouteTest extends TestCase
                     'alias' => 'bar',
                     'domain' => 'www.example.com',
                     'rootLanguage' => 'xy',
-                    'rootUseSSL' => true,
+                    'rootUseSSL' => '1',
                     'urlPrefix' => 'foo',
                     'urlSuffix' => '.baz',
                 ],

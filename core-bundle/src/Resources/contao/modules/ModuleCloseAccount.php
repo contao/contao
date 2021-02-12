@@ -32,7 +32,10 @@ class ModuleCloseAccount extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['closeAccount'][0]) . ' ###';
@@ -45,7 +48,7 @@ class ModuleCloseAccount extends Module
 		}
 
 		// Return if there is no logged in user
-		if (!FE_USER_LOGGED_IN)
+		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
 		}
@@ -60,14 +63,13 @@ class ModuleCloseAccount extends Module
 	{
 		$this->import(FrontendUser::class, 'User');
 
+		System::loadLanguageFile('tl_member');
+		$this->loadDataContainer('tl_member');
+
 		// Initialize the password widget
-		$arrField = array
-		(
-			'name' => 'password',
-			'inputType' => 'text',
-			'label' => $GLOBALS['TL_LANG']['MSC']['password'][0],
-			'eval' => array('hideInput'=>true, 'preserveTags'=>true, 'mandatory'=>true, 'required'=>true)
-		);
+		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
+		$arrField['name'] = 'password';
+		$arrField['eval']['hideInput'] = true;
 
 		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
 		$objWidget->rowClass = 'row_0 row_first even';

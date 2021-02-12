@@ -42,7 +42,9 @@ class FormHtml extends Widget
 	 */
 	public function parse($arrAttributes=null)
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->html = htmlspecialchars($this->html);
 		}
@@ -57,7 +59,14 @@ class FormHtml extends Widget
 	 */
 	public function generate()
 	{
-		return (TL_MODE == 'FE') ? $this->html : htmlspecialchars($this->html);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			return htmlspecialchars($this->html);
+		}
+
+		return $this->html;
 	}
 }
 

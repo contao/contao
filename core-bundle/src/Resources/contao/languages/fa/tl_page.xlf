@@ -217,12 +217,10 @@
         <target>لطفا نام پرونده نقشه وب‌سایت را بدون پسوند وارد نمائید.</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
-        <source>Use HTTPS</source>
-        <target>استفاده از HTTPS</target>
+        <source>Protocol</source>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>این وب‌سایت از طریق HTTPS دردسترس است.</target>
+        <source>Here you can select which protocol to use for the website.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

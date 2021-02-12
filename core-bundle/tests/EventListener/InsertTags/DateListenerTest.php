@@ -28,17 +28,12 @@ class DateListenerTest extends TestCase
     public function testAnnotatedCallbacks(): void
     {
         $listener = new DateListener($this->getFramework(), new RequestStack());
-
         $annotationReader = new AnnotationReader();
+
+        /** @var Hook $annotation */
         $annotation = $annotationReader->getClassAnnotation(new \ReflectionClass($listener), Hook::class);
 
-        $this->assertSame(
-            [
-                'value' => 'replaceInsertTags',
-                'priority' => null,
-            ],
-            (array) $annotation
-        );
+        $this->assertSame('replaceInsertTags', $annotation->value);
     }
 
     /**

@@ -216,12 +216,10 @@
         <target>Geef naam op voor het sitemap bestand zonder extensie.</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
-        <source>Use HTTPS</source>
-        <target>Gebruik HTTPS</target>
+        <source>Protocol</source>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>Deze website is beschikbaar via HTTPS.</target>
+        <source>Here you can select which protocol to use for the website.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use FOS\HttpCache\ResponseTagger;
 use Patchwork\Utf8;
 
 /**
@@ -43,7 +42,9 @@ class ModuleEventReader extends Events
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
@@ -241,17 +242,8 @@ class ModuleEventReader extends Events
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
-			$responseTagger->addTags(array('contao.db.tl_calendar.' . $objEvent->pid));
-		}
-
 		// Clean the RTE output
-		if ($objEvent->teaser != '')
+		if ($objEvent->teaser)
 		{
 			$objTemplate->hasTeaser = true;
 			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
@@ -294,7 +286,7 @@ class ModuleEventReader extends Events
 		$objTemplate->addImage = false;
 
 		// Add an image
-		if ($objEvent->addImage && $objEvent->singleSRC != '')
+		if ($objEvent->addImage && $objEvent->singleSRC)
 		{
 			$objModel = FilesModel::findByUuid($objEvent->singleSRC);
 
@@ -304,7 +296,7 @@ class ModuleEventReader extends Events
 				$arrEvent = $objEvent->row();
 
 				// Override the default image size
-				if ($this->imgSize != '')
+				if ($this->imgSize)
 				{
 					$size = StringUtil::deserialize($this->imgSize);
 
@@ -405,6 +397,13 @@ class ModuleEventReader extends Events
 
 		$this->Template->event = $objTemplate->parse();
 
+		// Tag the event (see #2137)
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags(array('contao.db.tl_calendar_events.' . $objEvent->id));
+		}
+
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
@@ -439,7 +438,7 @@ class ModuleEventReader extends Events
 		}
 
 		/** @var UserModel $objAuthor */
-		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email != '')
+		if ($objCalendar->notify != 'notify_admin' && ($objAuthor = $objEvent->getRelated('author')) instanceof UserModel && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}

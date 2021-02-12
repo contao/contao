@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -1007,6 +1008,41 @@ class FigureBuilderIntegrationTest extends TestCase
             ),
         ];
 
+        yield 'using max-width with a serialized size' => [
+            static function () use ($baseRowData) {
+                return [
+                    null,
+                    [
+                        new \stdClass(),
+                        array_merge($baseRowData, [
+                            'size' => 'a:3:{i:0;s:3:"150";i:1;s:3:"100";i:2;s:4:"crop";}',
+                        ]),
+                        90,
+                        null,
+                        null,
+                    ],
+                ];
+            },
+            array_replace_recursive(
+                $baseExpectedTemplateData,
+                [
+                    'arrSize' => [
+                        0 => 90,
+                        1 => 60,
+                        3 => 'width="90" height="60"',
+                    ],
+                    'imgSize' => ' width="90" height="60"',
+                    'picture' => [
+                        'img' => [
+                            'width' => 90,
+                            'height' => 60,
+                        ],
+                        'title' => '',
+                    ],
+                ]
+            ),
+        ];
+
         yield 'defining max-width and margin' => [
             static function () use ($baseRowData) {
                 return [
@@ -1430,8 +1466,17 @@ class FigureBuilderIntegrationTest extends TestCase
 
     private function setUpTestCase(\Closure $testCase): array
     {
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasFrontendUser')
+            ->willReturn(false)
+        ;
+
         // Evaluate preconditions and setup container
         $container = $this->getContainerWithContaoConfiguration(self::$testRoot);
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+        $container->set('contao.security.token_checker', $tokenChecker);
+
         System::setContainer($container);
 
         [$preConditions, $arguments] = $testCase();
@@ -1494,7 +1539,9 @@ class FigureBuilderIntegrationTest extends TestCase
             // We are using a child class of FilesModel to benefit from realistic metadata
             // creation while being able to disable object registration
             $filesModel = new class($data) extends FilesModel {
-                /* @noinspection PhpMissingParentConstructorInspection */
+                /**
+                 * @noinspection PhpMissingParentConstructorInspection
+                 */
                 public function __construct($data)
                 {
                     $this->setRow($data);
@@ -1538,7 +1585,9 @@ class FigureBuilderIntegrationTest extends TestCase
         // We are using a child class of LayoutModel so that we can push it into the
         // registry cache and therefore make it available for the legacy code
         $layoutModel = new class($data) extends LayoutModel {
-            /* @noinspection PhpMissingParentConstructorInspection */
+            /**
+             * @noinspection PhpMissingParentConstructorInspection
+             */
             public function __construct($data)
             {
                 $this->setRow($data);

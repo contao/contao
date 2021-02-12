@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\OptIn\OptIn;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Class Comments
@@ -42,14 +41,6 @@ class Comments extends Frontend
 		$arrComments = array();
 
 		$objTemplate->comments = array(); // see #4064
-
-		// Tag the response
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			/** @var ResponseTagger $responseTagger */
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array(sprintf('contao.comments.%s.%s', $strSource, $intParent)));
-		}
 
 		// Pagination
 		if ($objConfig->perPage > 0)
@@ -102,6 +93,7 @@ class Comments extends Frontend
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
 			$count = 0;
+			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
 			while ($objComments->next())
@@ -122,7 +114,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply != '' && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -134,7 +126,16 @@ class Comments extends Frontend
 				}
 
 				$arrComments[] = $objPartial->parse();
+				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
+
 				++$count;
+			}
+
+			// Tag the comments (see #2137)
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			{
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger->addTags($tags);
 			}
 		}
 
@@ -164,7 +165,7 @@ class Comments extends Frontend
 		$this->import(FrontendUser::class, 'User');
 
 		// Access control
-		if ($objConfig->requireLogin && !FE_USER_LOGGED_IN)
+		if ($objConfig->requireLogin && !System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$objTemplate->requireLogin = true;
 			$objTemplate->login = $GLOBALS['TL_LANG']['MSC']['com_login'];
@@ -307,7 +308,7 @@ class Comments extends Frontend
 			$strWebsite = $arrWidgets['website']->value;
 
 			// Add http:// to the website
-			if (($strWebsite != '') && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
+			if ($strWebsite && !preg_match('@^(https?://|ftp://|mailto:|#)@i', $strWebsite))
 			{
 				$strWebsite = 'http://' . $strWebsite;
 			}
@@ -404,7 +405,7 @@ class Comments extends Frontend
 			{
 				$objEmail->sendTo(array_unique($varNotifies));
 			}
-			elseif ($varNotifies != '')
+			elseif ($varNotifies)
 			{
 				$objEmail->sendTo($varNotifies); // see #5443
 			}
@@ -661,6 +662,9 @@ class Comments extends Frontend
 
 		if ($objNotify !== null)
 		{
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+
 			while ($objNotify->next())
 			{
 				// Don't notify the commentor about his own comment
@@ -670,7 +674,7 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if (TL_MODE == 'FE' && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('request'))
 				{
 					$objNotify->url = Environment::get('request');
 					$objNotify->save();

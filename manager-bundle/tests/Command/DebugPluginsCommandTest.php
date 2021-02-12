@@ -12,26 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\CalendarBundle\ContaoManager\Plugin as CalendarBundlePlugin;
-use Contao\CommentsBundle\ContaoManager\Plugin as CommentsBundlePlugin;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin as CoreBundlePlugin;
-use Contao\FaqBundle\ContaoManager\Plugin as FaqBundlePlugin;
-use Contao\InstallationBundle\ContaoManager\Plugin as InstallationBundlePlugin;
-use Contao\ListingBundle\ContaoManager\Plugin as ListingBundlePlugin;
 use Contao\ManagerBundle\Command\DebugPluginsCommand;
-use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin as FixturesPlugin;
 use Contao\ManagerPlugin\PluginLoader;
-use Contao\NewsBundle\ContaoManager\Plugin as NewsBundlePlugin;
 use Contao\NewsBundle\ContaoNewsBundle;
-use Contao\NewsletterBundle\ContaoManager\Plugin as NewsletterBundlePlugin;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
 
 class DebugPluginsCommandTest extends ContaoTestCase
 {
@@ -54,47 +45,30 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute($arguments);
 
-        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertStringContainsString($expectedOutput, $commandTester->getDisplay(true));
     }
 
     public function commandOutputProvider(): \Generator
     {
-        yield 'Lists the plugins' => [
-            [
-                'contao/core-bundle' => new CoreBundlePlugin(),
-                'contao/calendar-bundle' => new CalendarBundlePlugin(),
-                'contao/comments-bundle' => new CommentsBundlePlugin(),
-                'contao/faq-bundle' => new FaqBundlePlugin(),
-                'contao/installation-bundle' => new InstallationBundlePlugin(),
-                'contao/listing-bundle' => new ListingBundlePlugin(),
-                'contao/news-bundle' => new NewsBundlePlugin(),
-                'contao/newsletter-bundle' => new NewsletterBundlePlugin(),
-                'contao/manager-bundle' => new ManagerBundlePlugin(),
-            ],
-            [],
-            [],
-            $this->getOutput('plugins'),
-        ];
-
         yield 'Lists the test plugin' => [
             ['foo/bar-bundle' => new FixturesPlugin()],
             [],
             [],
-            $this->getOutput('test_plugin'),
+            'Contao Manager Plugins',
         ];
 
         yield 'Lists the registered bundles by package name' => [
             ['contao/core-bundle' => new CoreBundlePlugin()],
             [],
             ['name' => 'contao/core-bundle', '--bundles' => true],
-            $this->getOutput('registered_bundles'),
+            'Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"',
         ];
 
         yield 'Lists the registered bundles by class name' => [
             ['contao/core-bundle' => new CoreBundlePlugin()],
             [],
             ['name' => CoreBundlePlugin::class, '--bundles' => true],
-            $this->getOutput('registered_bundles'),
+            'Bundles Registered by Plugin "Contao\CoreBundle\ContaoManager\Plugin"',
         ];
 
         yield 'Lists the bundles in loading order' => [
@@ -104,7 +78,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
                 new ContaoNewsBundle(),
             ],
             ['--bundles' => true],
-            $this->getOutput('loading_order'),
+            'Registered Bundles in Loading Order',
         ];
     }
 
@@ -175,18 +149,6 @@ class DebugPluginsCommandTest extends ContaoTestCase
         $container->set('kernel', $kernel);
 
         return $kernel;
-    }
-
-    private function getOutput(string $outputFile): string
-    {
-        $output = file_get_contents(Path::join(__DIR__, '../Fixtures/output', "$outputFile.out"));
-
-        // Replace check mark with '1' on Windows
-        if ('\\' === \DIRECTORY_SEPARATOR) {
-            $output = str_replace('✔', '1', $output);
-        }
-
-        return $output;
     }
 
     private function normalizeDisplay(string $string): string

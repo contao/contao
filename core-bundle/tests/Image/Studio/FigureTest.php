@@ -13,15 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\Image\ImageDimensions;
+use Contao\Image\ResizerInterface;
 use Contao\System;
 use Imagine\Image\BoxInterface;
+use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
 class FigureTest extends TestCase
@@ -327,7 +333,22 @@ class FigureTest extends TestCase
         [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
         [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.image_factory', $imageFactory);
+
+        System::setContainer($container);
 
         $figure = new Figure($this->getImageMock(), $metadata, $linkAttributes, $lightbox, $options);
         $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
@@ -337,15 +358,13 @@ class FigureTest extends TestCase
 
     public function provideLegacyTemplateDataScenarios(): \Generator
     {
-        $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg');
-
         yield 'basic image data' => [
             [null, null, null, null],
             [false, null, null],
-            function (array $data) use ($imageSrc): void {
+            function (array $data): void {
                 $this->assertSame(['img foo'], $data['picture']['img']);
                 $this->assertSame(['sources foo'], $data['picture']['sources']);
-                $this->assertSame($imageSrc, $data['src']);
+                $this->assertSame('https://assets.url/files/public/foo.jpg', $data['src']);
                 $this->assertSame('path/to/resource.jpg', $data['singleSRC']);
                 $this->assertSame(100, $data['width']);
                 $this->assertSame(50, $data['height']);
@@ -364,6 +383,11 @@ class FigureTest extends TestCase
         $metadataWithLink = new Metadata([
             Metadata::VALUE_TITLE => 't',
             Metadata::VALUE_URL => 'foo://meta',
+        ]);
+
+        $metadataWithHtml = new Metadata([
+            Metadata::VALUE_ALT => 'Here <b>is</b> some <i>HTML</i>!',
+            Metadata::VALUE_CAPTION => 'Here <b>is</b> some <i>HTML</i>!',
         ]);
 
         yield 'with metadata' => [
@@ -396,6 +420,15 @@ class FigureTest extends TestCase
                 $this->assertSame('', $data['attributes']);
 
                 $this->assertArrayNotHasKey('title', $data['picture']);
+            },
+        ];
+
+        yield 'with metadata containing HTML' => [
+            [$metadataWithHtml, null, null, null],
+            [true, null, null],
+            function (array $data): void {
+                $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
+                $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
             },
         ];
 
@@ -527,7 +560,10 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplate(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
 
         $template = new FrontendTemplate('ce_image');
 
@@ -544,7 +580,9 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures')
+        ));
 
         $template = new \stdClass();
 
@@ -570,7 +608,7 @@ class FigureTest extends TestCase
         $img = ['img foo'];
         $sources = ['sources foo'];
         $filePath = 'path/to/resource.jpg';
-        $imageSrc = Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo.jpg'); // use existing file so that we can read the file info
+        $imageSrc = 'files/public/foo.jpg'; // use existing file so that we can read the file info
         $originalWidth = 100;
         $originalHeight = 50;
 
@@ -617,7 +655,10 @@ class FigureTest extends TestCase
 
         $image
             ->method('getImageSrc')
-            ->willReturn($imageSrc)
+            ->willReturnMap([
+                [false, "https://assets.url/$imageSrc"],
+                [true, $imageSrc],
+            ])
         ;
 
         return $image;
