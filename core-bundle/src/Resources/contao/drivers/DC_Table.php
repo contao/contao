@@ -5195,7 +5195,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($session['search'][$this->strTable]['value']);
+				$searchValue = preg_quote($searchValue);
 			}
 
 			$strReplacePrefix = '';
