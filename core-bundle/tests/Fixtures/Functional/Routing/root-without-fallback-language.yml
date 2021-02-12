@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539694676
       title: Root without fallback language
       alias: root-without-fallback-language
+      urlSuffix: .html
       type: root
       language: en
       dns: root-without-fallback-language.local
