@@ -728,6 +728,14 @@ class FigureBuilderTest extends TestCase
         yield 'file path with valid extension to a non-existing resource' => [
             'this/does/not/exist.png', [], false,
         ];
+
+        yield 'file path with special chars to an existing resource' => [
+            'files/public/foo%20%28bar%29.jpg',
+            [
+                Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
+                null,
+            ],
+        ];
     }
 
     /**
