@@ -89,6 +89,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         if ($model->customTpl) {
             $request = $this->get('request_stack')->getCurrentRequest();
 
+            // Use the custom template unless it is a back end request
             if (null === $request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
                 $templateName = $model->customTpl;
             }
