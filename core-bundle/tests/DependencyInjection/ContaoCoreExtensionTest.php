@@ -901,10 +901,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('%contao.preview_script%'),
                 new Reference('contao.routing.scope_matcher'),
                 new Reference('twig'),
                 new Reference('router'),
+                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -3429,7 +3429,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.simple_role_voter'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -3464,7 +3463,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.role_hierarchy_voter'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -4194,7 +4192,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.token_checker'),
                 new Reference('router'),
                 new Reference('uri_signer'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
