@@ -5187,6 +5187,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		elseif ((string) $session['search'][$this->strTable]['value'] !== '')
 		{
 			$searchValue = $session['search'][$this->strTable]['value'];
+			$fld = $session['search'][$this->strTable]['field'];
 
 			try
 			{
@@ -5202,7 +5203,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$strReplaceSuffix = '';
 
 			// Decode HTML entities to make them searchable
-			if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$session['search'][$this->strTable]['field']]['eval']['decodeEntities']))
+			if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['eval']['decodeEntities']))
 			{
 				$arrReplace = array(
 					'&#35;' => '#',
@@ -5231,8 +5232,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
 			}
-
-			$fld = $session['search'][$this->strTable]['field'];
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
