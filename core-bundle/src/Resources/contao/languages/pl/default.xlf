@@ -75,11 +75,11 @@
       </trans-unit>
       <trans-unit id="ERR.locale">
         <source>Please enter a valid locale such as &quot;en&quot; or &quot;en_US&quot;!</source>
-        <target>Wprowadź poprawny język taki jak &quot;en&quot; lub &quot;en_US&quot;!</target>
+        <target>Wprowadź poprawny język, taki jak &quot;en&quot; lub &quot;en_US&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.language">
         <source>Please enter a valid language code such as &quot;en&quot; or &quot;en-US&quot;!</source>
-        <target>Wprowadź poprawny kod językowy taki jak &quot;en&quot; lub &quot;en-US&quot;!</target>
+        <target>Wprowadź poprawny kod językowy, taki jak &quot;en&quot; lub &quot;en-US&quot;!</target>
       </trans-unit>
       <trans-unit id="ERR.alias">
         <source>Please enter only alphanumeric characters and the following special characters: .-_</source>
@@ -115,7 +115,7 @@
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>Maksymalny rozmiar pliku do wysyłki to %s KB (Contao lub ustawienia php.ini)!</target>
+        <target>Maksymalny rozmiar pliku do wysyłki, to %s KB (Contao lub ustawienia php.ini)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
@@ -194,7 +194,7 @@
       </trans-unit>
       <trans-unit id="ERR.notWriteable">
         <source>The file &quot;%s&quot; is not writeable and can therefore not be updated!</source>
-        <target>Plik &quot;%s&quot; nie ma prawa do zapisu więc zmiany nie zostaną naniesione.</target>
+        <target>Plik &quot;%s&quot; nie ma prawa do zapisu, więc zmiany nie zostaną naniesione.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidName">
         <source>This file or folder name is invalid!</source>
@@ -690,7 +690,7 @@
       </trans-unit>
       <trans-unit id="PTY.regular.1">
         <source>A regular page contains articles and content elements. It is the default page type.</source>
-        <target>Zwykła strona, która może zawierać artykuły lub inne elementy zawartości. Jest to domyślny typ strony.</target>
+        <target>Zwykła strona, która może zawierać artykuły lub inne elementy treści. Jest to domyślny typ strony.</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
@@ -706,7 +706,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>Ten ty strony automatycznie przeniesie cię na inną stronę tego samego serwisu internetowego. Przeniesienie odbywa się na podstawie ID strony lub aliasu strony.</target>
+        <target>Ten typ strony automatycznie przeniesie cię na inną stronę tego samego serwisu internetowego. Przeniesienie odbywa się na podstawie ID strony lub aliasu strony.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -737,8 +737,8 @@
         <target>Błąd 403 (odmowa dostępu)</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
-        <target>Jeśli członek zażąda chronionej strony bez pozwolenia, zamiast niej zostanie załadowana strona błędu 403.</target>
+        <source>If a user requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Ta strona pokazuje się w momencie, kiedy nieautoryzowany użytkownik próbuje uzyskać dostęp do zabezpieczonych stron. Jeśli ta strona błędu znajduje się w konkretnym punkcie startowym, jej użytkowanie ograniczać się będzie tylko dla stron tego konkretnego punktu startowego.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -782,7 +782,7 @@
       </trans-unit>
       <trans-unit id="CHMOD.editpage">
         <source>Edit page</source>
-        <target>Edytuj strone</target>
+        <target>Edytuj stronę</target>
       </trans-unit>
       <trans-unit id="CHMOD.editnavigation">
         <source>Edit page hierarchy</source>
@@ -790,7 +790,7 @@
       </trans-unit>
       <trans-unit id="CHMOD.deletepage">
         <source>Delete page</source>
-        <target>Skasuj strone</target>
+        <target>Skasuj stronę</target>
       </trans-unit>
       <trans-unit id="CHMOD.editarticles">
         <source>Edit articles</source>
@@ -1402,7 +1402,7 @@
       </trans-unit>
       <trans-unit id="MSC.id.1">
         <source>Note that changing the ID can break data integrity!</source>
-        <target>ID jest unikatowym numerycznym identyfikatorem rekordu tabeli. Numery ID są zwykle przydzielane automatycznie. Jako, że numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych a co za tym idzie do awarii systemu!!</target>
+        <target>ID jest unikatowym numerycznym identyfikatorem rekordu tabeli. Numery ID są zwykle przydzielane automatycznie. Jako że numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych a co za tym idziedo awarii systemu!</target>
       </trans-unit>
       <trans-unit id="MSC.pid.0">
         <source>Parent ID</source>
@@ -1410,7 +1410,7 @@
       </trans-unit>
       <trans-unit id="MSC.pid.1">
         <source>Note that changing the parent ID can break data integrity!</source>
-        <target>Nadrzędne ID jest identyfikatorem rekordu, który jest nadrzędnym rekordem wobec rekordu aktualnego oraz jest z nim powiązany. Nadrzędne numery ID są zwykle przydzielane automatycznie. Jako, że nadrzędne numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych a co za tym idzie do awarii systemu!</target>
+        <target>Nadrzędne ID jest identyfikatorem rekordu, który jest nadrzędnym rekordem wobec rekordu aktualnego oraz jest z nim powiązany. Nadrzędne numery ID są zwykle przydzielane automatycznie. Jako że nadrzędne numery ID używane są w zależnościach pomiędzy rekordami, zmiana lub ich usunięcie może doprowadzić do utraty integralności danych a co za tym idzie, do awarii systemu!</target>
       </trans-unit>
       <trans-unit id="MSC.sorting.0">
         <source>Sorting value</source>
@@ -1578,7 +1578,7 @@
       </trans-unit>
       <trans-unit id="MSC.backToTopTitle">
         <source>Go to the top of the page</source>
-        <target>Idź do góry</target>
+        <target>Idź do góry strony</target>
       </trans-unit>
       <trans-unit id="MSC.home">
         <source>Home</source>
@@ -1650,7 +1650,7 @@
       </trans-unit>
       <trans-unit id="MSC.showRecord">
         <source>Show the details of record %s</source>
-        <target>Pokaż szczegóły of record %s</target>
+        <target>Pokaż szczegóły rekordu %s</target>
       </trans-unit>
       <trans-unit id="MSC.editRecord">
         <source>Edit record %s</source>
@@ -1686,7 +1686,7 @@
       </trans-unit>
       <trans-unit id="MSC.save">
         <source>Save</source>
-        <target>Zapisz</target>
+        <target>Zachowaj</target>
       </trans-unit>
       <trans-unit id="MSC.saveNclose">
         <source>Save and close</source>
@@ -1706,7 +1706,7 @@
       </trans-unit>
       <trans-unit id="MSC.saveNduplicate">
         <source>Save and duplicate</source>
-        <target>Zapisz i duplikuj</target>
+        <target>Zachowaj i duplikuj</target>
       </trans-unit>
       <trans-unit id="MSC.continue">
         <source>Continue</source>
@@ -1718,7 +1718,7 @@
       </trans-unit>
       <trans-unit id="MSC.skipNavigation">
         <source>Skip navigation</source>
-        <target>Pomiń nawigacje</target>
+        <target>Pomiń nawigację</target>
       </trans-unit>
       <trans-unit id="MSC.selectAll">
         <source>Select all</source>
@@ -2022,7 +2022,7 @@
       </trans-unit>
       <trans-unit id="MSC.applyTitle">
         <source>Apply the changes</source>
-        <target>Zachowaj zmiany</target>
+        <target>Zastosuj zmiany</target>
       </trans-unit>
       <trans-unit id="MSC.reset">
         <source>Reset</source>
@@ -2070,7 +2070,7 @@
       </trans-unit>
       <trans-unit id="MSC.updateReplace">
         <source>Replace the existing entries</source>
-        <target>Zastąp istniejący wpis</target>
+        <target>Zastąp istniejące wpisy</target>
       </trans-unit>
       <trans-unit id="MSC.ascending">
         <source>ascending</source>
@@ -2134,7 +2134,7 @@
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>Nowy użytkownik (ID %s) zarejestrował się na twojej stronie internetowej. %s Jeżeli nie używasz automatycznego aktywowania nowych uzytkownikow przez email, musisz uaktywnić konto ręcznie w panelu.</target>
+        <target>Nowy użytkownik (ID %s) zarejestrował się na twojej stronie internetowej.%sJeżeli nie używasz automatycznego aktywowania nowych uzytkownikow przez email, musisz uaktywnić konto ręcznie w panelu.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -2150,7 +2150,7 @@
       </trans-unit>
       <trans-unit id="MSC.passwordSubject">
         <source>Your password request for %s</source>
-        <target>Twoje zapytanie o haslo dla %s</target>
+        <target>Twoje zapytanie o hasło dla %s</target>
       </trans-unit>
       <trans-unit id="MSC.accountNotFound">
         <source>No matching account found</source>
@@ -2234,7 +2234,7 @@
       </trans-unit>
       <trans-unit id="MSC.selectNewPosition">
         <source>Next, please choose the (new) position of the element</source>
-        <target>Następnie, wybierz (nową) pozycję elementu</target>
+        <target>Następnie wybierz (nową) pozycję elementu</target>
       </trans-unit>
       <trans-unit id="MSC.go">
         <source>Go</source>
@@ -2470,7 +2470,7 @@
       </trans-unit>
       <trans-unit id="MSC.versionConflict1">
         <source>Another user has created version %s while you were editing version %s of this record.</source>
-        <target>Inny użytkownik utworzył wersję %s podczas gdy ty edytowałeś wersję %s tego rekordu.</target>
+        <target>Inny użytkownik utworzył wersję %s, podczas gdy ty edytowałeś wersję %s tego rekordu.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict2">
         <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
@@ -2486,7 +2486,7 @@
       </trans-unit>
       <trans-unit id="MSC.location">
         <source>Location</source>
-        <target>Lokacja</target>
+        <target>Lokalizacja</target>
       </trans-unit>
       <trans-unit id="MSC.download">
         <source>Download %s</source>
@@ -2673,7 +2673,7 @@
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
-        <target>Bitów</target>
+        <target>Bajtów</target>
       </trans-unit>
       <trans-unit id="UNITS.1">
         <source>KiB</source>

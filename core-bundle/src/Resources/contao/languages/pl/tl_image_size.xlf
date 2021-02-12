@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
-        <target>Użyj oryginalnego obrazka jeśli wymiary się zgadzają</target>
+        <target>Użyj oryginalnego obrazka, jeśli wymiary się zgadzają</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
@@ -91,7 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
-        <target>Opóźnij ładowanie obrazka do czasu aż pojawi się w viewporcie.</target>
+        <target>Opóźnij ładowanie obrazka do czasu, aż pojawi się w viewporcie.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
