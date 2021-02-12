@@ -15,6 +15,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain1 - Deutsch
       alias: de
+      urlSuffix: .html
       type: root
       language: de
       dns: domain1.local
@@ -38,6 +39,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain1 - Français
       alias: fr
+      urlSuffix: .html
       type: root
       language: fr
       dns: domain1.local
@@ -51,6 +53,7 @@ tl_page:
       tstamp: 1603795275
       title: Domain1 - Italiano
       alias: it
+      urlSuffix: .html
       type: root
       language: it
       dns: domain1.local
@@ -64,6 +67,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain1 - English
       alias: en
+      urlSuffix: .html
       type: root
       language: en
       dns: domain1.local
@@ -77,6 +81,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain2 - Deutsch
       alias: de
+      urlSuffix: .html
       type: root
       language: de
       dns: domain2.local
@@ -91,6 +96,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain2 - Français
       alias: fr
+      urlSuffix: .html
       type: root
       language: fr
       dns: domain2.local
@@ -104,6 +110,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain2 - Italiano
       alias: it
+      urlSuffix: .html
       type: root
       language: it
       dns: domain2.local
@@ -171,6 +178,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain3 - Deutsch
       alias: de
+      urlSuffix: .html
       type: root
       language: de
       dns: domain3.local
@@ -185,6 +193,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain3 - Français
       alias: fr
+      urlSuffix: .html
       type: root
       language: fr
       dns: domain3.local
@@ -198,6 +207,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain3 - Italiano
       alias: it
+      urlSuffix: .html
       type: root
       language: it
       dns: domain3.local
@@ -238,6 +248,7 @@ tl_page:
       tstamp: 1603728012
       title: Domain3 - English
       alias: en
+      urlSuffix: .html
       type: root
       language: en
       dns: domain3.local

@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539679767
       title: Page without alias
       alias: page-without-alias
+      urlSuffix: .html
       type: root
       language: en
       fallback: '1'

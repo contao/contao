@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539680233
       title: Root with special chars
       alias: root-with-special-chars
+      urlSuffix: .html
       type: root
       language: en
       dns: root-with-special-chars.local

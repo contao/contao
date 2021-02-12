@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539679763
       title: Root with index page
       alias: root-with-index-page
+      urlSuffix: .html
       type: root
       language: en
       dns: root-with-index.local

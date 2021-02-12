@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539680468
       title: Root with folder URLs
       alias: root-with-folder-urls
+      urlSuffix: .html
       type: root
       language: en
       dns: root-with-folder-urls.local
