@@ -124,12 +124,16 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $childDefinition->setTags($definition->getTags());
                 $container->setDefinition($serviceId, $childDefinition);
 
-                if ($this->globalsKey && $this->proxyClass) {
+                if ($this->globalsKey) {
                     if (!isset($attributes['category'])) {
                         throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, (string) $reference));
                     }
 
-                    $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                    $category = $attributes['category'];
+                    $type = $attributes['type'];
+                    $keys = array_diff_key($attributes, array_flip(['category', 'type', 'debugController']));
+
+                    $globals[$this->globalsKey][$category][$type] = $this->proxyClass ?? $keys;
                 }
             }
         }

@@ -89,6 +89,10 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RegisterPagesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
 
         $container->addCompilerPass(
+            new RegisterFragmentsPass(BackendModuleReference::TAG_NAME, BackendModuleReference::GLOBALS_KEY)
+        );
+
+        $container->addCompilerPass(
             new RegisterFragmentsPass(
                 FrontendModuleReference::TAG_NAME,
                 FrontendModuleReference::GLOBALS_KEY,
