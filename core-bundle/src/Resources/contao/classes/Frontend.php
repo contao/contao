@@ -347,7 +347,7 @@ abstract class Frontend extends Controller
 			}
 			catch (RoutingExceptionInterface $exception)
 			{
-				$logger->log(LogLevel::ERROR, $strError, ['contao' => new ContaoContext(__METHOD__, 'ERROR')]);
+				$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
 
 				throw new NoRootPageFoundException('No root page found', 0, $exception);
 			}
