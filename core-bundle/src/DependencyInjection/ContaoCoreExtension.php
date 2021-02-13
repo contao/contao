@@ -83,6 +83,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
         $container->setParameter('contao.backend', $config['backend']);
+        $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);

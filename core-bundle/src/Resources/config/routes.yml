@@ -5,7 +5,7 @@ contao:
 contao_backend:
     resource: '@ContaoCoreBundle/Controller/Backend'
     type: annotation
-    prefix: '/contao'
+    prefix: '%contao.backend.route_prefix%'
     defaults:
         _scope: backend
         _token_check: true
@@ -16,7 +16,7 @@ contao_images:
 
 # Redirect /contao/ to /contao
 contao_backend_redirect:
-    path: /contao/
+    path: '%contao.backend.route_prefix%/'
     defaults:
         _scope: backend
         _controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
