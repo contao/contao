@@ -72,6 +72,9 @@ services:
             - '@contao.fragment.registry'
             - '@fragment.handler'
 
+    Contao\CoreBundle\Controller\BackendDashboard\WelcomeScreenController: ~
+    Contao\CoreBundle\Controller\BackendModule\BackendModuleController: ~
+
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
             - '@contao.framework'

@@ -40,7 +40,9 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
+use Contao\CoreBundle\Fragment\Reference\BackendModuleReference;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\DashboardWidgetReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
@@ -106,6 +108,10 @@ class ContaoCoreBundle extends Bundle
                 ContentElementReference::GLOBALS_KEY,
                 ContentElementReference::PROXY_CLASS
             )
+        );
+
+        $container->addCompilerPass(
+            new RegisterFragmentsPass(DashboardWidgetReference::TAG_NAME)
         );
 
         $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
