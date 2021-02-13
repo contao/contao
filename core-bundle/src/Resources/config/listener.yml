@@ -336,6 +336,10 @@ services:
         tags:
             - kernel.event_listener
 
+    Contao\CoreBundle\EventListener\BackendModuleControllerListener:
+        tags:
+            - kernel.event_listener
+
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener
         arguments:
