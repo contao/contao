@@ -2,6 +2,14 @@ contao:
     resource: '@ContaoCoreBundle/Controller'
     type: annotation
 
+contao_backend:
+    resource: '@ContaoCoreBundle/Controller/Backend'
+    type: annotation
+    prefix: '/contao'
+    defaults:
+        _scope: backend
+        _token_check: true
+
 contao_images:
     resource: .
     type: contao_images
