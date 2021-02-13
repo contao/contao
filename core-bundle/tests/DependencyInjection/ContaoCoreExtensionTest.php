@@ -2495,7 +2495,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.routing.nested_404_matcher');
 
         $this->assertSame(NestedMatcher::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [
