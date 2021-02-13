@@ -16,8 +16,6 @@ use Contao\BackendAlerts;
 use Contao\BackendConfirm;
 use Contao\BackendFile;
 use Contao\BackendHelp;
-use Contao\BackendIndex;
-use Contao\BackendMain;
 use Contao\BackendPage;
 use Contao\BackendPassword;
 use Contao\BackendPopup;
@@ -36,43 +34,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BackendController extends AbstractController
 {
-    /**
-     * @Route("/contao", name="contao_backend")
-     */
-    public function mainAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        $controller = new BackendMain();
-
-        return $controller->run();
-    }
-
-    /**
-     * @Route("/contao/login", name="contao_backend_login")
-     */
-    public function loginAction(Request $request): Response
-    {
-        $this->initializeContaoFramework();
-
-        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
-            if ($request->query->has('redirect')) {
-                $uriSigner = $this->get('uri_signer');
-
-                // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-                if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
-                    return new RedirectResponse($request->query->get('redirect'));
-                }
-            }
-
-            return new RedirectResponse($this->generateUrl('contao_backend'));
-        }
-
-        $controller = new BackendIndex();
-
-        return $controller->run();
-    }
-
     /**
      * Symfony will un-authenticate the user automatically by calling this route.
      *

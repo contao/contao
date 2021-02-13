@@ -10,21 +10,18 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\Exception\LockedException;
-use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
-use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
+use Contao\CoreBundle\Controller\Backend\BackendLoginController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+
+trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\BackendIndex" class has been deprecated and will no longer work in Contao 5.0.');
 
 /**
  * Handle back end logins and logouts.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated this controller was moved to the \Contao\CoreBundle\Controller\Backend namespace
  */
 class BackendIndex extends Backend
 {
@@ -54,74 +51,12 @@ class BackendIndex extends Backend
 	public function run()
 	{
 		$container = System::getContainer();
-		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
 
-		if ($exception instanceof LockedException)
-		{
-			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['accountLocked'], $exception->getLockedMinutes()));
-		}
-		elseif ($exception instanceof InvalidTwoFactorCodeException)
-		{
-			Message::addError($GLOBALS['TL_LANG']['ERR']['invalidTwoFactor']);
-		}
-		elseif ($exception instanceof AuthenticationException)
-		{
-			Message::addError($GLOBALS['TL_LANG']['ERR']['invalidLogin']);
-		}
-
-		$router = $container->get('router');
-		$targetPath = $router->generate('contao_backend', array(), Router::ABSOLUTE_URL);
 		$request = $container->get('request_stack')->getCurrentRequest();
+		$path['_controller'] = BackendLoginController::class;
+		$subRequest = $request->duplicate($query, null, $path);
 
-		if ($request && $request->query->has('redirect'))
-		{
-			/** @var UriSigner $uriSigner */
-			$uriSigner = $container->get('uri_signer');
-
-			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
-			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
-			{
-				$targetPath = $request->query->get('redirect');
-			}
-		}
-
-		$objTemplate = new BackendTemplate('be_login');
-		$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['loginBT'];
-
-		/** @var TokenInterface $token */
-		$token = $container->get('security.token_storage')->getToken();
-
-		if ($token instanceof TwoFactorToken)
-		{
-			// Dispatch 2FA form event to prepare 2FA providers
-			$event = new TwoFactorAuthenticationEvent($request, $token);
-			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
-
-			$objTemplate = new BackendTemplate('be_login_two_factor');
-			$objTemplate->headline = $GLOBALS['TL_LANG']['MSC']['twoFactorAuthentication'];
-			$objTemplate->authCode = $GLOBALS['TL_LANG']['MSC']['twoFactorVerification'];
-			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
-		}
-
-		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->messages = Message::generate();
-		$objTemplate->base = Environment::get('base');
-		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->languages = System::getLanguages(true); // backwards compatibility
-		$objTemplate->host = Backend::getDecodedHostname();
-		$objTemplate->charset = Config::get('characterSet');
-		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
-		$objTemplate->curLanguage = Input::post('language') ?: str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
-		$objTemplate->curUsername = Input::post('username') ?: '';
-		$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
-		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];
-		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$objTemplate->feLink = $GLOBALS['TL_LANG']['MSC']['feLink'];
-		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
-		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
-		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
-
-		return $objTemplate->getResponse();
+		return $container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 	}
 }
 

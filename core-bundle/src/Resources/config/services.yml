@@ -65,7 +65,12 @@ services:
             - '%contao.locales%'
         public: true
 
-    Contao\CoreBundle\Controller\BackendController: ~
+    Contao\CoreBundle\Controller\Backend\BackendController: ~
+    Contao\CoreBundle\Controller\Backend\BackendLoginController: ~
+    Contao\CoreBundle\Controller\Backend\BackendMainController:
+        arguments:
+            - '@contao.fragment.registry'
+            - '@fragment.handler'
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:

@@ -175,8 +175,10 @@ class BackendTemplate extends Template
 	 * Return the locale string
 	 *
 	 * @return string
+	 *
+	 * @internal Soon to be deprecated
 	 */
-	protected function getLocaleString()
+	public function getLocaleString()
 	{
 		$container = System::getContainer();
 
@@ -207,8 +209,10 @@ class BackendTemplate extends Template
 	 * not handle German date formats at all.
 	 *
 	 * @return string
+	 *
+	 * @internal Soon to be deprecated
 	 */
-	protected function getDateString()
+	public function getDateString()
 	{
 		return
 			'Locale.define("en-US","Date",{'
