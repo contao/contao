@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\BackendModule;
 
-use Contao\BackendTemplate;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Backend\BackendState;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
@@ -24,7 +24,6 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\Module;
 use Contao\System;
-use Contao\Template;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -39,12 +38,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BackendModuleController extends AbstractBackendModuleController
 {
     private PickerInterface $picker;
-    private Template $Template;
 
     public function __invoke(Request $request): Response
     {
-        $this->Template = new BackendTemplate();
-
         $user = $this->get('contao.framework')->createInstance(BackendUser::class);
 
         $blnAccess = (isset($this->options['disablePermissionChecks']) && true === $this->options['disablePermissionChecks']) || $user->hasAccess($this->getName(), 'modules');
@@ -67,9 +63,7 @@ class BackendModuleController extends AbstractBackendModuleController
 
         \define('CURRENT_ID', ($request->query->get('table') ? $id : $request->query->get('id')));
 
-        if (isset($GLOBALS['TL_LANG']['MOD'][$this->getName()][0])) {
-            $this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$this->getName()][0];
-        }
+        $headline = $this->trans('MOD.'.$this->getName().'.0');
 
         // Add the module style sheet
         if (isset($this->options['stylesheet'])) {
@@ -127,7 +121,7 @@ class BackendModuleController extends AbstractBackendModuleController
         }
 
         // Wrap the existing headline
-        $this->Template->headline = sprintf('<span>%s</span>', $this->Template->headline);
+        $headline = sprintf('<span>%s</span>', $headline);
 
         // AJAX request
         if ($_POST && Environment::get('isAjaxRequest')) {
@@ -136,15 +130,17 @@ class BackendModuleController extends AbstractBackendModuleController
         }
 
         // Trigger the module callback
-        elseif (isset($this->options['callback']) && class_exists($this->options['callback'])) {
+        if (isset($this->options['callback']) && class_exists($this->options['callback'])) {
+            trigger_deprecation('contao/core-bundle', '4.12', 'Using "callback" in BE_MOD is deprecated and will no longer work in Contao 5.0. Create a new controller with the "contao.backend_module" tag instead.');
+
             /** @var Module $objCallback */
             $objCallback = new $this->options['callback']($dc);
 
-            $this->Template->main .= $objCallback->generate();
+            return new Response($objCallback->generate());
         }
 
         // Custom action (if key is not defined in config.php the default action will be called)
-        elseif ($key = $request->query->has('key') && isset($this->options[$key])) {
+        if ($key = $request->query->has('key') && isset($this->options[$key])) {
             $objCallback = System::importStatic($this->options[$key][0]);
             $response = $objCallback->{$this->options[$key][1]}($dc);
 
@@ -152,11 +148,9 @@ class BackendModuleController extends AbstractBackendModuleController
                 throw new ResponseException($response);
             }
 
-            if ($response instanceof Response) {
-                $response = $response->getContent();
+            if (!$response instanceof Response) {
+                $response = new Response($response);
             }
-
-            $this->Template->main .= $response;
 
             // Add the name of the parent element
             if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables, true) && Input::get('table') !== $arrTables[0]) {
@@ -170,18 +164,22 @@ class BackendModuleController extends AbstractBackendModuleController
                 ;
 
                 if ($objRow->title) {
-                    $this->Template->headline .= sprintf(' › <span>%s</span>', $objRow->title);
+                    $headline .= sprintf(' › <span>%s</span>', $objRow->title);
                 } elseif ($objRow->name) {
-                    $this->Template->headline .= sprintf(' › <span>%s</span>', $objRow->name);
+                    $headline .= sprintf(' › <span>%s</span>', $objRow->name);
                 }
             }
 
             // Add the name of the submodule
-            $this->Template->headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')).'</span>';
+            $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')).'</span>';
+
+            $this->get(BackendState::class)->setHeadline($headline);
+
+            return $response;
         }
 
         // Default action
-        elseif (\is_object($dc)) {
+        if (\is_object($dc)) {
             $act = $request->query->get('act');
 
             if (!$act || 'paste' === $act || 'select' === $act) {
@@ -257,7 +255,7 @@ class BackendModuleController extends AbstractBackendModuleController
 
                 // Add the breadcrumb trail in reverse order
                 foreach (array_reverse($trail) as $breadcrumb) {
-                    $this->Template->headline .= $breadcrumb;
+                    $headline .= $breadcrumb;
                 }
             }
 
@@ -266,11 +264,11 @@ class BackendModuleController extends AbstractBackendModuleController
             // Add the current action
             if ('editAll' === $act) {
                 if (isset($GLOBALS['TL_LANG']['MSC']['all'][0])) {
-                    $this->Template->headline .= sprintf(' › <span>%s</span>', $GLOBALS['TL_LANG']['MSC']['all'][0]);
+                    $headline .= sprintf(' › <span>%s</span>', $GLOBALS['TL_LANG']['MSC']['all'][0]);
                 }
             } elseif ('overrideAll' === $act) {
                 if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0])) {
-                    $this->Template->headline .= sprintf(
+                    $headline .= sprintf(
                         ' › <span>%s</span>',
                         $GLOBALS['TL_LANG']['MSC']['all_override'][0]
                     );
@@ -279,40 +277,42 @@ class BackendModuleController extends AbstractBackendModuleController
                 if ('files' === $do || 'tpl_editor' === $do) {
                     // Handle new folders (see #7980)
                     if (false !== strpos($request->query->get('id'), '__new__')) {
-                        $this->Template->headline .= sprintf(
+                        $headline .= sprintf(
                             ' › <span>%s</span> › <span>%s</span>',
                             \dirname(Input::get('id')),
                             $GLOBALS['TL_LANG'][$strTable]['new'][1]
                         );
                     } else {
-                        $this->Template->headline .= sprintf(' › <span>%s</span>', $request->query->get('id'));
+                        $headline .= sprintf(' › <span>%s</span>', $request->query->get('id'));
                     }
                 } elseif (isset($GLOBALS['TL_LANG'][$strTable][$act])) {
                     if (\is_array($GLOBALS['TL_LANG'][$strTable][$act])) {
-                        $this->Template->headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], $request->query->get('id')).'</span>';
+                        $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], $request->query->get('id')).'</span>';
                     } else {
-                        $this->Template->headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act], $request->query->get('id')).'</span>';
+                        $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act], $request->query->get('id')).'</span>';
                     }
                 }
             } elseif ($request->query->get('pid')) {
                 if ('files' === $do || 'tpl_editor' === $do) {
                     if ('move' === $act) {
-                        $this->Template->headline .= sprintf(
+                        $headline .= sprintf(
                             ' › <span>%s</span> › <span>%s</span>',
                             $request->query->get('pid'),
                             $GLOBALS['TL_LANG'][$strTable]['move'][1]
                         );
                     } else {
-                        $this->Template->headline .= sprintf(' › <span>%s</span>', $request->query->get('pid'));
+                        $headline .= sprintf(' › <span>%s</span>', $request->query->get('pid'));
                     }
                 } elseif (isset($GLOBALS['TL_LANG'][$strTable][$act])) {
                     if (\is_array($GLOBALS['TL_LANG'][$strTable][$act])) {
-                        $this->Template->headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], $request->query->get('pid')).'</span>';
+                        $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], $request->query->get('pid')).'</span>';
                     } else {
-                        $this->Template->headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act], $request->query->get('pid')).'</span>';
+                        $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$act], $request->query->get('pid')).'</span>';
                     }
                 }
             }
+
+            $this->get(BackendState::class)->setHeadline($headline);
 
             return new Response($dc->$act());
         }
@@ -326,6 +326,7 @@ class BackendModuleController extends AbstractBackendModuleController
 
         $services['translator'] = TranslatorInterface::class;
         $services['database_connection'] = Connection::class;
+        $services[BackendState::class] = BackendState::class;
 
         return $services;
     }

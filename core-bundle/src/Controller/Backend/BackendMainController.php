@@ -18,6 +18,7 @@ use Contao\BackendTemplate;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
+use Contao\CoreBundle\Backend\BackendState;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Controller\BackendModule\BackendModuleController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -145,14 +146,12 @@ class BackendMainController extends AbstractController
             }
 
             $template->main .= $this->getBackendModule($request->query->get('do'));
-            $template->title = $template->headline;
 
             return $this->getResponse($template);
         }
 
         // Welcome screen
         $template->main .= $this->dashboard();
-        $template->title = $this->trans('MSC.dashboard');
 
         return $this->getResponse($template);
     }
@@ -162,12 +161,16 @@ class BackendMainController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['translator'] = TranslatorInterface::class;
+        $services[BackendState::class] = BackendState::class;
 
         return $services;
     }
 
     private function getResponse(BackendTemplate $template): Response
     {
+        $template->headline = $this->get(BackendState::class)->getHeadline();
+        $template->title = $this->get(BackendState::class)->getTitle();
+
         // Default headline
         if (!$template->headline) {
             $template->headline = $this->trans('MSC.dashboard');
