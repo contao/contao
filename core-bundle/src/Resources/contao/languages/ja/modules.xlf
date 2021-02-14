@@ -294,24 +294,24 @@
         <target>自動ログアウト</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>ユーザーを自動的にログアウト</target>
+        <source>Automatically logs out a member</source>
+        <target>メンバーを自動的にログアウト</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>個人データ</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>ユーザーの個人データを編集するフォームを生成</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>メンバーの個人データを編集するフォームを生成</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>登録</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>ユーザー登録のフォームを生成</target>
+        <source>Generates a member registration form</source>
+        <target>メンバーを登録するフォームを生成</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

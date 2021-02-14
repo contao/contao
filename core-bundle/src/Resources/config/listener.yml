@@ -8,6 +8,10 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
+    Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener:
+        arguments:
+            - '@database_connection'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -188,7 +192,6 @@ services:
     contao.listener.preview_bar:
         class: Contao\CoreBundle\EventListener\PreviewToolbarListener
         arguments:
-            - '%contao.preview_script%'
             - '@contao.routing.scope_matcher'
             - '@twig'
             - '@router'
@@ -209,7 +212,6 @@ services:
             - '@contao.security.token_checker'
             - '@router'
             - '@uri_signer'
-            - '%contao.preview_script%'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }

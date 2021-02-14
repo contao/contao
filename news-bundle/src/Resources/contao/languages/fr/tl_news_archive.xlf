@@ -70,7 +70,7 @@
         <target>Connexion préalable nécessaire</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
+        <source>Allow only authenticated members to create comments.</source>
         <target>N'autoriser que les utilisateurs authentifiés à créer des commentaires.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">

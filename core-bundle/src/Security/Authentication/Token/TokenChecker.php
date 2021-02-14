@@ -60,14 +60,9 @@ class TokenChecker
     private $roleVoter;
 
     /**
-     * @var string
-     */
-    private $previewScript;
-
-    /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter, string $previewScript = '')
+    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter)
     {
         $this->requestStack = $requestStack;
         $this->firewallMap = $firewallMap;
@@ -75,7 +70,6 @@ class TokenChecker
         $this->session = $session;
         $this->trustResolver = $trustResolver;
         $this->roleVoter = $roleVoter;
-        $this->previewScript = $previewScript;
     }
 
     /**
@@ -133,7 +127,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getMasterRequest();
 
-        if (null === $request || $request->getScriptName() !== $this->previewScript) {
+        if (null === $request || !$request->attributes->get('_preview', false)) {
             return false;
         }
 

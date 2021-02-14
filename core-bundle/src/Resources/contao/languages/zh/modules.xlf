@@ -294,24 +294,21 @@
         <target>自动登出</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>自动登出某用户</target>
+        <source>Automatically logs out a member</source>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>个人信息</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>生成一个表单以编辑个人信息</target>
+        <source>Generates a form to edit a member's personal data</source>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>会员注册</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>此模块创建了一个表单，允许用户注册在您的网站上。</target>
+        <source>Generates a member registration form</source>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>
