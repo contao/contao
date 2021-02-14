@@ -1175,6 +1175,10 @@ abstract class Controller extends System
 				{
 					$page->$key = $arrRow[$key];
 				}
+				else
+				{
+					$arrRow[$key] = $page->$key;
+				}
 			}
 		}
 
