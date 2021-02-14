@@ -1,7 +1,3 @@
-parameters:
-    contao.content_element.templates: []
-    contao.frontend_module.templates: []
-
 services:
     _defaults:
         autoconfigure: true
