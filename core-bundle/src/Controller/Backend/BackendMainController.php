@@ -31,7 +31,6 @@ use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Util\PackageUtil;
 use Contao\Environment;
-use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -114,20 +113,20 @@ class BackendMainController extends AbstractController
         $template->version = $this->trans('MSC.version').' '.$version;
 
         // Ajax request
-        if ($_POST && Environment::get('isAjaxRequest')) {
+        if (Environment::get('isAjaxRequest') && $request->request->has('action')) {
             $objAjax = new Ajax($request->request->get('action'));
             $objAjax->executePreActions();
         }
 
         // Toggle nodes
-        if (Input::get('mtg')) {
+        if ($mtg = $request->query->get('mtg')) {
             /** @var AttributeBagInterface $objSessionBag */
-            $objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+            $objSessionBag = $this->get('session')->getBag('contao_backend');
             $session = $objSessionBag->all();
-            $session['backend_modules'][Input::get('mtg')] = isset($session['backend_modules'][Input::get('mtg')]) && 0 === $session['backend_modules'][Input::get('mtg')] ? 1 : 0;
+            $session['backend_modules'][$mtg] = isset($session['backend_modules'][$mtg]) && 0 === $session['backend_modules'][$mtg] ? 1 : 0;
             $objSessionBag->replace($session);
 
-            return $this->redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
+            return $this->redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', $request->getRequestUri()));
         }
 
         // Error
@@ -199,9 +198,9 @@ class BackendMainController extends AbstractController
         $template->title = StringUtil::specialchars(strip_tags($template->title));
         $template->host = Backend::getDecodedHostname();
         $template->charset = Config::get('characterSet');
-        $template->home = $GLOBALS['TL_LANG']['MSC']['home'];
-        $template->isPopup = Input::get('popup');
-        $template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
+        $template->home = $this->trans('MSC.home');
+        $template->isPopup = $request->query->get('popup');
+        $template->learnMore = sprintf($this->trans('MSC.learnMore'), '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
         $template->menu = $this->get('twig')->render('@ContaoCore/Backend/be_menu.html.twig');
         $template->headerMenu = $this->get('twig')->render('@ContaoCore/Backend/be_header_menu.html.twig');

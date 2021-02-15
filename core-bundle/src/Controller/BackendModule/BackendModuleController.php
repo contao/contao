@@ -124,8 +124,15 @@ class BackendModuleController extends AbstractBackendModuleController
         $headline = sprintf('<span>%s</span>', $headline);
 
         // AJAX request
-        if ($_POST && Environment::get('isAjaxRequest')) {
+        if (Environment::get('isAjaxRequest') && $request->request->has('action')) {
             $objAjax = new Ajax($request->request->get('action'));
+
+            // Call executePreActions again because we need its state
+            try {
+                $objAjax->executePreActions();
+            } catch (ResponseException $e) {
+            }
+
             $objAjax->executePostActions($dc);
         }
 
