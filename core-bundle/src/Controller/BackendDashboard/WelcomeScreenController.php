@@ -16,7 +16,6 @@ use Contao\Backend;
 use Contao\BackendTemplate;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\ServiceAnnotation\DashboardWidget;
 use Contao\Date;
 use Contao\Message;
 use Contao\StringUtil;
@@ -27,8 +26,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Shows the welcome screen in the backend dashboard.
- *
- * @DashboardWidget
  *
  * @internal
  */

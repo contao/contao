@@ -74,7 +74,10 @@ services:
             - '@contao.fragment.registry'
             - '@fragment.handler'
 
-    Contao\CoreBundle\Controller\BackendDashboard\WelcomeScreenController: ~
+    Contao\CoreBundle\Controller\BackendDashboard\WelcomeScreenController:
+        tags:
+            - { name: contao.dashboard_widget, priority: 100 }
+
     Contao\CoreBundle\Controller\BackendModule\BackendModuleController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:

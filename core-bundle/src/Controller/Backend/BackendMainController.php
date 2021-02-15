@@ -25,6 +25,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Fragment\Reference\BackendModuleReference;
+use Contao\CoreBundle\Fragment\Reference\DashboardWidgetReference;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Util\PackageUtil;
 use Contao\Environment;
@@ -103,7 +104,6 @@ class BackendMainController extends AbstractController
 
         $template = new BackendTemplate('be_main');
 
-        $template->main = '';
         $template->version = $this->trans('MSC.version').' '.$version;
 
         // Ajax request
@@ -145,13 +145,13 @@ class BackendMainController extends AbstractController
                 }
             }
 
-            $template->main .= $this->getBackendModule($request->query->get('do'));
+            $template->main = $this->getBackendModule($request->query->get('do'));
 
             return $this->getResponse($template);
         }
 
         // Welcome screen
-        $template->main .= $this->dashboard();
+        $template->main = $this->generateDashboard();
 
         return $this->getResponse($template);
     }
@@ -225,14 +225,26 @@ class BackendMainController extends AbstractController
         throw new \InvalidArgumentException(sprintf('Back end module "%s" is not defined in the BE_MOD array', $name));
     }
 
-    private function dashboard(): string
+    private function generateDashboard(): string
     {
-        $return = '';
+        $widgets = array_values(
+            array_filter(
+                $this->fragmentRegistry->keys(),
+                static function ($key) {
+                    return 0 === strpos($key, DashboardWidgetReference::TAG_NAME.'.');
+                }
+            )
+        );
 
-        $return .= $this->fragmentHandler->render(new FragmentReference('contao.dashboard_widget.welcome_screen'));
-        $return .= $this->fragmentHandler->render(new FragmentReference('contao.dashboard_widget.custom'));
-
-        return $return;
+        return implode(
+            '',
+            array_map(
+                function (string $widget): ?string {
+                    return $this->fragmentHandler->render(new FragmentReference($widget), 'forward');
+                },
+                $widgets
+            )
+        );
     }
 
     private function trans(string $key, array $parameters = [], string $domain = 'contao_default')
