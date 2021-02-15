@@ -30,11 +30,6 @@ class TemplateOptionsListener
     private $requestStack;
 
     /**
-     * @var array
-     */
-    private $customTemplates;
-
-    /**
      * @var string
      */
     private $templatePrefix;
@@ -44,14 +39,18 @@ class TemplateOptionsListener
      */
     private $proxyClass;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, array $customTemplates, string $templatePrefix, string $proxyClass = null)
+    /**
+     * @var array
+     */
+    private $customTemplates = [];
+
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, string $templatePrefix, string $proxyClass = null)
     {
         /** @var Controller $controller */
         $controller = $framework->getAdapter(Controller::class);
 
         $this->controller = $controller;
         $this->requestStack = $requestStack;
-        $this->customTemplates = $customTemplates;
         $this->templatePrefix = $templatePrefix;
         $this->proxyClass = $proxyClass;
     }
@@ -70,6 +69,11 @@ class TemplateOptionsListener
         }
 
         return $this->controller->getTemplateGroup($defaultTemplate.'_', [], $defaultTemplate);
+    }
+
+    public function setCustomTemplates(array $customTemplates): void
+    {
+        $this->customTemplates = $customTemplates;
     }
 
     /**

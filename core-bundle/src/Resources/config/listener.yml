@@ -97,7 +97,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@request_stack'
-            - '%contao.content_element.templates%'
             - ce_
             - Contao\ContentProxy
         tags:
@@ -108,7 +107,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@request_stack'
-            - '%contao.frontend_module.templates%'
             - mod_
             - Contao\ModuleProxy
         tags:

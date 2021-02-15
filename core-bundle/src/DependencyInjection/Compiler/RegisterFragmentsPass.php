@@ -49,7 +49,12 @@ class RegisterFragmentsPass implements CompilerPassInterface
      */
     private $proxyClass;
 
-    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null)
+    /**
+     * @var string|null
+     */
+    private $templateOptionsListener;
+
+    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null, string $templateOptionsListener = null)
     {
         if (null === $tag) {
             @trigger_error('Using "new RegisterFragmentsPass()" without passing the tag name has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
@@ -58,6 +63,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->tag = $tag;
         $this->globalsKey = $globalsKey;
         $this->proxyClass = $proxyClass;
+        $this->templateOptionsListener = $templateOptionsListener;
     }
 
     /**
@@ -82,6 +88,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
+        $templateOptions = null;
+
+        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
+            $templateOptions = $container->findDefinition($this->templateOptionsListener);
+        }
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a content
@@ -143,7 +154,9 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
 
-        $container->setParameter($tag.'.templates', $templates);
+        if (null !== $templateOptions) {
+            $templateOptions->addMethodCall('setCustomTemplates', [$templates]);
+        }
     }
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference

@@ -59,7 +59,6 @@ class TemplateOptionsListenerTest extends TestCase
         $callback = new TemplateOptionsListener(
             $this->getFramework(),
             new RequestStack(),
-            [],
             'ce_',
             ContentProxy::class
         );
@@ -75,7 +74,6 @@ class TemplateOptionsListenerTest extends TestCase
         $callback = new TemplateOptionsListener(
             $this->getFramework(),
             new RequestStack(),
-            [],
             'mod_',
             ModuleProxy::class
         );
@@ -91,10 +89,11 @@ class TemplateOptionsListenerTest extends TestCase
         $callback = new TemplateOptionsListener(
             $this->getFramework(),
             new RequestStack(),
-            ['fragment_element' => 'ce_custom_fragment_template'],
             'ce_',
             ContentProxy::class
         );
+
+        $callback->setCustomTemplates(['fragment_element' => 'ce_custom_fragment_template']);
 
         $this->assertSame(
             ['' => 'ce_custom_fragment_template'],
@@ -112,10 +111,11 @@ class TemplateOptionsListenerTest extends TestCase
         $callback = new TemplateOptionsListener(
             $this->getFramework(),
             new RequestStack(),
-            ['fragment_module' => 'mod_custom_fragment_template'],
             'mod_',
             ModuleProxy::class
         );
+
+        $callback->setCustomTemplates(['fragment_module' => 'mod_custom_fragment_template']);
 
         $this->assertSame(
             ['' => 'mod_custom_fragment_template'],
@@ -133,7 +133,7 @@ class TemplateOptionsListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['act' => 'overrideAll']));
 
-        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, [], 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, 'ce_', ContentProxy::class);
 
         $this->assertSame(['' => '-', 'ce_all' => 'ce_all'], $callback($this->mockDataContainer('tl_content')));
     }
@@ -143,7 +143,7 @@ class TemplateOptionsListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['act' => 'overrideAll']));
 
-        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, [], 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, 'mod_', ModuleProxy::class);
 
         $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
     }

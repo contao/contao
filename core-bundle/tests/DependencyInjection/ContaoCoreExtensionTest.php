@@ -533,7 +533,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('request_stack'),
-                '%contao.content_element.templates%',
                 'ce_',
                 ContentProxy::class,
             ],
@@ -565,7 +564,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('request_stack'),
-                '%contao.frontend_module.templates%',
                 'mod_',
                 ModuleProxy::class,
             ],
