@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\BackendModule;
 
+use Contao\Ajax;
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Backend\BackendState;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -21,7 +21,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\DataContainer;
 use Contao\Environment;
-use Contao\Input;
 use Contao\Module;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -29,7 +28,6 @@ use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -125,8 +123,8 @@ class BackendModuleController extends AbstractBackendModuleController
 
         // AJAX request
         if ($_POST && Environment::get('isAjaxRequest')) {
-            // TODO
-            $this->objAjax->executePostActions($dc);
+            $objAjax = new Ajax($request->request->get('action'));
+            $objAjax->executePostActions($dc);
         }
 
         // Trigger the module callback
@@ -140,7 +138,7 @@ class BackendModuleController extends AbstractBackendModuleController
         }
 
         // Custom action (if key is not defined in config.php the default action will be called)
-        if ($key = $request->query->has('key') && isset($this->options[$key])) {
+        if (($key = $request->query->get('key')) && isset($this->options[$key])) {
             $objCallback = System::importStatic($this->options[$key][0]);
             $response = $objCallback->{$this->options[$key][1]}($dc);
 
@@ -153,7 +151,7 @@ class BackendModuleController extends AbstractBackendModuleController
             }
 
             // Add the name of the parent element
-            if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables, true) && Input::get('table') !== $arrTables[0]) {
+            if ($request->query->has('table') && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array($request->query->get('table'), $arrTables, true) && $request->query->get('table') !== $arrTables[0]) {
                 $objRow = $this->get('database_connection')->executeQuery(
                     sprintf(
                         'SELECT * FROM %s WHERE id=(SELECT pid FROM %s WHERE id=:id)',
@@ -171,7 +169,7 @@ class BackendModuleController extends AbstractBackendModuleController
             }
 
             // Add the name of the submodule
-            $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')).'</span>';
+            $headline .= ' › <span>'.sprintf($GLOBALS['TL_LANG'][$strTable][$request->query->get('key')][1], $request->query->get('id')).'</span>';
 
             $this->get(BackendState::class)->setHeadline($headline);
 
@@ -268,20 +266,13 @@ class BackendModuleController extends AbstractBackendModuleController
                 }
             } elseif ('overrideAll' === $act) {
                 if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0])) {
-                    $headline .= sprintf(
-                        ' › <span>%s</span>',
-                        $GLOBALS['TL_LANG']['MSC']['all_override'][0]
-                    );
+                    $headline .= sprintf(' › <span>%s</span>', $GLOBALS['TL_LANG']['MSC']['all_override'][0]);
                 }
             } elseif ($request->query->get('id')) {
                 if ('files' === $do || 'tpl_editor' === $do) {
                     // Handle new folders (see #7980)
                     if (false !== strpos($request->query->get('id'), '__new__')) {
-                        $headline .= sprintf(
-                            ' › <span>%s</span> › <span>%s</span>',
-                            \dirname(Input::get('id')),
-                            $GLOBALS['TL_LANG'][$strTable]['new'][1]
-                        );
+                        $headline .= sprintf(' › <span>%s</span> › <span>%s</span>', \dirname($request->query->get('id')), $GLOBALS['TL_LANG'][$strTable]['new'][1]);
                     } else {
                         $headline .= sprintf(' › <span>%s</span>', $request->query->get('id'));
                     }
@@ -295,11 +286,7 @@ class BackendModuleController extends AbstractBackendModuleController
             } elseif ($request->query->get('pid')) {
                 if ('files' === $do || 'tpl_editor' === $do) {
                     if ('move' === $act) {
-                        $headline .= sprintf(
-                            ' › <span>%s</span> › <span>%s</span>',
-                            $request->query->get('pid'),
-                            $GLOBALS['TL_LANG'][$strTable]['move'][1]
-                        );
+                        $headline .= sprintf(' › <span>%s</span> › <span>%s</span>', $request->query->get('pid'), $GLOBALS['TL_LANG'][$strTable]['move'][1]);
                     } else {
                         $headline .= sprintf(' › <span>%s</span>', $request->query->get('pid'));
                     }

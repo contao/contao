@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\Backend;
 
 use Contao\Ajax;
+use Contao\ArticleModel;
 use Contao\Backend;
 use Contao\BackendTemplate;
 use Contao\BackendUser;
@@ -30,8 +31,10 @@ use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Util\PackageUtil;
 use Contao\Environment;
 use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -70,7 +73,7 @@ class BackendMainController extends AbstractController
         }
 
         // Password change required
-        if ($this->User->pwChange && !$this->get('security.authorization_checker')->isGranted('ROLE_PREVIOUS_ADMIN')) {
+        if ($user->pwChange && !$this->get('security.authorization_checker')->isGranted('ROLE_PREVIOUS_ADMIN')) {
             return $this->redirect('contao/password.php');
         }
 
@@ -83,7 +86,7 @@ class BackendMainController extends AbstractController
         if ('feRedirect' === $request->query->get('do')) {
             trigger_deprecation('contao/core-bundle', '4.0', 'Using the "feRedirect" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao_backend_preview" route directly instead.');
 
-            return $this->redirectToFrontendPage($request->query->get('page'), $request->query->get('article'));
+            return $this->redirectToFrontendPage($request->query->getInt('page'), $request->query->get('article'));
         }
 
         // Backend user profile redirect
@@ -130,7 +133,7 @@ class BackendMainController extends AbstractController
 
             trigger_deprecation('contao/core-bundle', '4.0', 'Using "act=error" has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.');
 
-            return $this->getResponse($template);
+            return $this->getResponse($request, $template, $user);
         }
 
         // Open a module
@@ -147,13 +150,13 @@ class BackendMainController extends AbstractController
 
             $template->main = $this->getBackendModule($request->query->get('do'));
 
-            return $this->getResponse($template);
+            return $this->getResponse($request, $template, $user);
         }
 
         // Welcome screen
         $template->main = $this->generateDashboard();
 
-        return $this->getResponse($template);
+        return $this->getResponse($request, $template, $user);
     }
 
     public static function getSubscribedServices()
@@ -166,7 +169,7 @@ class BackendMainController extends AbstractController
         return $services;
     }
 
-    private function getResponse(BackendTemplate $template): Response
+    private function getResponse(Request $request, BackendTemplate $template, BackendUser $user): Response
     {
         $template->headline = $this->get(BackendState::class)->getHeadline();
         $template->title = $this->get(BackendState::class)->getTitle();
@@ -182,7 +185,7 @@ class BackendMainController extends AbstractController
         }
 
         // File picker reference (backwards compatibility)
-        if (Input::get('popup') && 'show' !== Input::get('act') && $this->get('session')->get('filePickerRef') && (('page' === Input::get('do') && $this->User->hasAccess('page', 'modules')) || ('files' === Input::get('do') && $this->User->hasAccess('files', 'modules')))) {
+        if ($request->query->has('popup') && 'show' !== $request->query->get('act') && $this->get('session')->get('filePickerRef') && (('page' === $request->query->get('do') && $user->hasAccess('page', 'modules')) || ('files' === $request->query->get('do') && $user->hasAccess('files', 'modules')))) {
             $template->managerHref = StringUtil::ampersand($this->get('session')->get('filePickerRef'));
             $template->manager = false !== strpos($this->get('session')->get('filePickerRef'), 'contao/page?') ? $this->trans('MSC.pagePickerHome') : $this->trans('MSC.filePickerHome');
         }
@@ -245,6 +248,22 @@ class BackendMainController extends AbstractController
                 $widgets
             )
         );
+    }
+
+    private function redirectToFrontendPage(int $page, ?string $article): RedirectResponse
+    {
+        if (null === ($pageModel = PageModel::findWithDetails($page))) {
+            return new RedirectResponse('');
+        }
+
+        $parameters = null;
+
+        // Add the /article/ fragment (see #673)
+        if ($article && null !== ($articleModel = ArticleModel::findByAlias($article))) {
+            $parameters = sprintf('/articles/%s%s', 'main' !== $articleModel->inColumn ? $articleModel->inColumn.':' : '', $article);
+        }
+
+        return new RedirectResponse($pageModel->getPreviewUrl($parameters));
     }
 
     private function trans(string $key, array $parameters = [], string $domain = 'contao_default')

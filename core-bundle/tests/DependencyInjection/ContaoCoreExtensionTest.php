@@ -26,7 +26,9 @@ use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Command\VersionCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Controller\BackendController;
+use Contao\CoreBundle\Controller\Backend\BackendController;
+use Contao\CoreBundle\Controller\Backend\BackendLoginController;
+use Contao\CoreBundle\Controller\Backend\BackendMainController;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Controller\BackendPreviewController;
 use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
@@ -1370,6 +1372,28 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->has(BackendController::class));
 
         $definition = $container->getDefinition(BackendController::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheBackendMainController(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(BackendMainController::class));
+
+        $definition = $container->getDefinition(BackendMainController::class);
+
+        $this->assertTrue($definition->isPrivate());
+    }
+
+    public function testRegistersTheBackendLoginController(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(BackendLoginController::class));
+
+        $definition = $container->getDefinition(BackendLoginController::class);
 
         $this->assertTrue($definition->isPrivate());
     }

@@ -78,7 +78,7 @@ class BackendLoginController extends AbstractController
 
         $targetPath = $this->generateUrl('contao_backend', [], Router::ABSOLUTE_URL);
 
-        if ($request && $request->query->has('redirect')) {
+        if ($request->query->has('redirect')) {
             // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
             if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
                 $targetPath = $request->query->get('redirect');
