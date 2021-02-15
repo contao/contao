@@ -28,12 +28,14 @@ use Contao\CoreBundle\Fragment\FragmentRegistryInterface;
 use Contao\CoreBundle\Fragment\Reference\BackendModuleReference;
 use Contao\CoreBundle\Fragment\Reference\DashboardWidgetReference;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
+use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Util\PackageUtil;
 use Contao\Environment;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use Knp\Menu\Renderer\RendererInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,11 +51,13 @@ class BackendMainController extends AbstractController
 {
     private $fragmentRegistry;
     private $fragmentHandler;
+    private $menuRenderer;
 
-    public function __construct(FragmentRegistryInterface $fragmentRegistry, FragmentHandler $fragmentHandler)
+    public function __construct(FragmentRegistryInterface $fragmentRegistry, FragmentHandler $fragmentHandler, RendererInterface $menuRenderer)
     {
         $this->fragmentRegistry = $fragmentRegistry;
         $this->fragmentHandler = $fragmentHandler;
+        $this->menuRenderer = $menuRenderer;
     }
 
     public function __invoke(Request $request): Response
@@ -138,13 +142,11 @@ class BackendMainController extends AbstractController
 
         // Open a module
         if ($request->query->get('do')) {
-            $picker = null;
-
             if ($request->query->has('picker')) {
                 $picker = $this->get('contao.picker.builder')->createFromData($request->query->get('picker'));
 
                 if (null !== $picker && ($menu = $picker->getMenu())) {
-                    $template->pickerMenu = $this->get('contao.menu.renderer')->render($menu);
+                    $template->pickerMenu = $this->menuRenderer->render($menu);
                 }
             }
 
@@ -164,6 +166,7 @@ class BackendMainController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['translator'] = TranslatorInterface::class;
+        $services['contao.picker.builder'] = PickerBuilderInterface::class;
         $services[BackendState::class] = BackendState::class;
 
         return $services;

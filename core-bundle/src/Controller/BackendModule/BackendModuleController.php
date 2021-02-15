@@ -18,7 +18,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Backend\BackendState;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\DataContainer;
 use Contao\Environment;
 use Contao\Module;
@@ -35,9 +35,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendModuleController extends AbstractBackendModuleController
 {
-    private PickerInterface $picker;
-
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, PickerBuilderInterface $pickerBuilder): Response
     {
         $user = $this->get('contao.framework')->createInstance(BackendUser::class);
 
@@ -113,7 +111,11 @@ class BackendModuleController extends AbstractBackendModuleController
             /** @var DataContainer $dc */
             $dc = new $dataContainer($strTable, $this->options);
 
-            if (null !== $picker && $dc instanceof DataContainer) {
+            if (
+                $request->query->has('picker')
+                && null !== ($picker = $pickerBuilder->createFromData($request->query->get('picker')))
+                && $dc instanceof DataContainer
+            ) {
                 $dc->initPicker($picker);
             }
         }

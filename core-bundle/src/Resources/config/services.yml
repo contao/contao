@@ -73,6 +73,7 @@ services:
         arguments:
             - '@contao.fragment.registry'
             - '@fragment.handler'
+            - '@contao.menu.renderer'
 
     Contao\CoreBundle\Controller\BackendDashboard\WelcomeScreenController:
         tags:
