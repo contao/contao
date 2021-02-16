@@ -537,6 +537,7 @@ services:
         calls:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
+        public: true
 
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
