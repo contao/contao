@@ -93,7 +93,7 @@ class TemplateOptionsListener
 
         $properties = (new \ReflectionClass($class))->getDefaultProperties();
 
-        return \is_string($properties['strTemplate'] ?? null) ? $properties['strTemplate'] : null;
+        return $properties['strTemplate'] ?? null;
     }
 
     private function isOverrideAll(): bool
