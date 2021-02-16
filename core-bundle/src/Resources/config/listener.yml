@@ -92,7 +92,7 @@ services:
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 
-    contao.listener.data_container.element_template_options:
+    contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
             - '@contao.framework'
@@ -102,7 +102,7 @@ services:
         tags:
             - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
 
-    contao.listener.data_container.module_template_options:
+    contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
             - '@contao.framework'

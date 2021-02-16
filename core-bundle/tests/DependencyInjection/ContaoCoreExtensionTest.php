@@ -523,9 +523,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheCustomElementTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.data_container.element_template_options'));
+        $this->assertTrue($this->container->has('contao.listener.element_template_options'));
 
-        $definition = $this->container->getDefinition('contao.listener.data_container.element_template_options');
+        $definition = $this->container->getDefinition('contao.listener.element_template_options');
 
         $this->assertTrue($definition->isPrivate());
 
@@ -554,9 +554,9 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersTheCustomModuleTemplateOptionsListener(): void
     {
-        $this->assertTrue($this->container->has('contao.listener.data_container.module_template_options'));
+        $this->assertTrue($this->container->has('contao.listener.module_template_options'));
 
-        $definition = $this->container->getDefinition('contao.listener.data_container.module_template_options');
+        $definition = $this->container->getDefinition('contao.listener.module_template_options');
 
         $this->assertTrue($definition->isPrivate());
 
