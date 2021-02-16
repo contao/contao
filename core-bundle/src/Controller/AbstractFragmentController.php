@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
@@ -33,11 +34,15 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->options = $options;
     }
 
-    public static function getSubscribedServices(): array
+    /**
+     * @return array<string>
+     */
+    public static function getSubscribedServices()
     {
         $services = parent::getSubscribedServices();
 
         $services['request_stack'] = RequestStack::class;
+        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
 
         return $services;
     }
@@ -82,7 +87,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
 
         if ($model->customTpl) {
-            $templateName = $model->customTpl;
+            $request = $this->get('request_stack')->getCurrentRequest();
+
+            // Use the custom template unless it is a back end request
+            if (null === $request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+                $templateName = $model->customTpl;
+            }
         }
 
         $template = $this->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);

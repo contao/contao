@@ -39,9 +39,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Lejo vetëm përdoruesit e autorizuar për të komentuar.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Çaktivizo mbrojtjen nga postat e padëshiruara</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
