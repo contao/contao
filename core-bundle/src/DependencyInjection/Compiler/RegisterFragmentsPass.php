@@ -88,11 +88,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
-        $templateOptions = null;
-
-        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $templateOptions = $container->findDefinition($this->templateOptionsListener);
-        }
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a content
@@ -154,8 +149,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
 
-        if (null !== $templateOptions) {
-            $templateOptions->addMethodCall('setCustomTemplates', [$templates]);
+        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setCustomTemplates', [$templates]);
         }
     }
 
