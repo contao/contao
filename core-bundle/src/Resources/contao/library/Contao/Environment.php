@@ -199,7 +199,15 @@ class Environment
 		if (!empty($_SERVER['REQUEST_URI']))
 		{
 			$arrComponents = parse_url($_SERVER['REQUEST_URI']);
-			$strRequest = $arrComponents['path'] . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
+
+			if ($arrComponents === false)
+			{
+				$strRequest = $_SERVER['REQUEST_URI'];
+			}
+			else
+			{
+				$strRequest = $arrComponents['path'] . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
+			}
 		}
 		else
 		{

@@ -577,6 +577,7 @@ services:
         calls:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
+        public: true
 
     Contao\CoreBundle\Routing\Page\PageRegistry:
         arguments:

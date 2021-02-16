@@ -524,7 +524,7 @@ abstract class Backend extends Controller
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(5, 6)))
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(5, 6)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
