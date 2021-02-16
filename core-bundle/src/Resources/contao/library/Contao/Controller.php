@@ -1738,7 +1738,8 @@ abstract class Controller extends System
 
 			if ($arrItem['fullsize'])
 			{
-				$imageUrl = 0 === strpos($arrItem['imageUrl'], '{{file::') ? urldecode(self::replaceInsertTags($arrItem['imageUrl'])) : $arrItem['imageUrl'];
+				// Always replace insert tags (see #2674)
+				$imageUrl = self::replaceInsertTags($arrItem['imageUrl']);
 
 				$blnIsExternal = strncmp($imageUrl, 'http://', 7) === 0 || strncmp($imageUrl, 'https://', 8) === 0;
 
@@ -1752,7 +1753,9 @@ abstract class Controller extends System
 						{
 							$projectDir = $container->getParameter('kernel.project_dir');
 							$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
-							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . $imageUrl, $lightboxSize);
+
+							// The image url is always an url encoded string and must be decoded beforehand (see #2674)
+							$picture = $container->get('contao.image.picture_factory')->create($projectDir . '/' . urldecode($imageUrl), $lightboxSize);
 
 							$objTemplate->lightboxPicture = array
 							(
