@@ -21,6 +21,7 @@ use Contao\System;
 use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
@@ -57,15 +58,44 @@ class ContentElementControllerTest extends TestCase
         $controller(new Request(), new ContentModel(), 'main');
     }
 
-    public function testCreatesTheTemplateFromCustomTpl(): void
+    public function testCreatesTheTemplateFromACustomTpl(): void
     {
         $model = new ContentModel();
         $model->customTpl = 'ce_bar';
 
-        $controller = new TestController();
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_bar'));
+        $container = $this->mockContainerWithFrameworkTemplate('ce_bar');
+        $container->set('request_stack', new RequestStack());
 
-        $controller(new Request(), $model, 'main');
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+        $template = json_decode($response->getContent(), true);
+
+        $this->assertSame('ce_bar', $template['templateName']);
+    }
+
+    public function testDoesNotCreateTheTemplateFromACustomTplInTheBackend(): void
+    {
+        $model = new ContentModel();
+        $model->customTpl = 'ce_bar';
+
+        $request = new Request([], [], ['_scope' => 'backend']);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test');
+        $container->set('request_stack', $requestStack);
+        $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller($request, $model, 'main');
+        $template = json_decode($response->getContent(), true);
+
+        $this->assertSame('ce_test', $template['templateName']);
     }
 
     public function testSetsTheClassFromTheType(): void
@@ -210,7 +240,7 @@ class ContentElementControllerTest extends TestCase
             ->expects($this->once())
             ->method('createInstance')
             ->with(FrontendTemplate::class, [$templateName])
-            ->willReturn(new FrontendTemplate())
+            ->willReturn(new FrontendTemplate($templateName))
         ;
 
         $container = new ContainerBuilder();
