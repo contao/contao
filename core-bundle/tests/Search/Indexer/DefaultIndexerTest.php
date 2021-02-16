@@ -125,6 +125,21 @@ class DefaultIndexerTest extends ContaoTestCase
             null,
             true,
         ];
+
+        yield 'Test valid index with page title' => [
+            new Document(new Uri('https://example.com/valid'), 200, [], '<html lang="de"><head><title>HTML page title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>'),
+            [
+                'url' => 'https://example.com/valid',
+                'content' => '<html lang="de"><head><title>HTML page title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
+                'protected' => '1',
+                'groups' => [42],
+                'pid' => 2,
+                'title' => 'JSON-LD page title',
+                'language' => 'de',
+            ],
+            null,
+            true,
+        ];
     }
 
     /**

@@ -62,8 +62,6 @@ class ModuleCloseAccount extends Module
 	protected function compile()
 	{
 		$this->import(FrontendUser::class, 'User');
-
-		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
 		// Initialize the password widget
