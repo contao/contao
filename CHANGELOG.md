@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.10.7] (2021-02-16)
+
+**Fixed issues:**
+
+- [#2749] Correctly fix the domain when generating URLs from a page array ([aschempp])
+- [#2716] Urldecode file paths from metadata URLs in the FigureBuilder ([m-vo])
+- [#2690] Correctly handle trailing slashes in URLs ([aschempp])
+
 ## [4.10.6] (2021-01-21)
 
 **Fixed issues:**
@@ -203,6 +211,7 @@ This project adheres to [Semantic Versioning].
 - [#1458] Always set host and language when generating the navigation menu ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.10.7]: https://github.com/contao/contao/releases/tag/4.10.7
 [4.10.6]: https://github.com/contao/contao/releases/tag/4.10.6
 [4.10.5]: https://github.com/contao/contao/releases/tag/4.10.5
 [4.10.4]: https://github.com/contao/contao/releases/tag/4.10.4
@@ -225,6 +234,9 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [richardhj]: https://github.com/richardhj
 [Toflar]: https://github.com/Toflar
+[#2749]: https://github.com/contao/contao/pull/2749
+[#2716]: https://github.com/contao/contao/pull/2716
+[#2690]: https://github.com/contao/contao/pull/2690
 [#2673]: https://github.com/contao/contao/pull/2673
 [#2199]: https://github.com/contao/contao/pull/2199
 [#2632]: https://github.com/contao/contao/pull/2632

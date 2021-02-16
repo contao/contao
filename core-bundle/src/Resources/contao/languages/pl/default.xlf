@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>Numeryczne aliasy nie są wspierane!</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
@@ -1894,6 +1895,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
         <source>Metadata</source>
+        <target>Metadane</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2509,6 +2511,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <target>Musisz dodać stronę główną w strukturze witryny, aby wprowadzić metadane plików.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2648,6 +2651,7 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Tutaj możesz podejrzeć metadane w wynikach wyszukiwania Google. Inne wyszukiwarki mogą pokazywać dłuższe teksty lub ucinać je na innej pozycji.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2683,9 +2687,11 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>URL podglądu nie może zostać wygenerowany, ponieważ ścieżka posiada obowiązkowe parametry.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option</source>
+        <target>Nieznana opcja</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
