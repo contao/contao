@@ -58,7 +58,7 @@ class ContentElementControllerTest extends TestCase
         $controller(new Request(), new ContentModel(), 'main');
     }
 
-    public function testCreatesTheTemplateFromCustomTpl(): void
+    public function testCreatesTheTemplateFromACustomTpl(): void
     {
         $model = new ContentModel();
         $model->customTpl = 'ce_bar';
@@ -75,7 +75,7 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_bar', $template['templateName']);
     }
 
-    public function testDoesNotCreateTheTemplateFromCustomTplInBackEnd(): void
+    public function testDoesNotCreateTheTemplateFromACustomTplInTheBackend(): void
     {
         $model = new ContentModel();
         $model->customTpl = 'ce_bar';

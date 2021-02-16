@@ -57,7 +57,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller(new Request(), new ModuleModel(), 'main');
     }
 
-    public function testCreatesTheTemplateFromCustomTpl(): void
+    public function testCreatesTheTemplateFromACustomTpl(): void
     {
         $model = new ModuleModel();
         $model->customTpl = 'mod_bar';
