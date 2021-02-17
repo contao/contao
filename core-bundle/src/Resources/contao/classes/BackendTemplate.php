@@ -244,7 +244,7 @@ class BackendTemplate extends Template
 		if (!empty($backendConfig['attributes']) && \is_array($backendConfig['attributes']))
 		{
 			$this->attributes = ' ' . implode(' ', array_map(
-				static function ($v, $k) { return sprintf('%s="%s"', $k, $v); },
+				static function ($v, $k) { return sprintf('data-%s="%s"', $k, $v); },
 				$backendConfig['attributes'],
 				array_keys($backendConfig['attributes'])
 			));
