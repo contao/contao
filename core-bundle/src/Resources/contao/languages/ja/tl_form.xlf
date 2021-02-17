@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>メールトランスポート</target>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>フォームを電子メールで送信するのに使用するメールトランスポートを上書きできます。</target>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
@@ -89,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
+        <target>CSVファイル(マイクロソフトExcel)</target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>フォームのデータをマイクロソフトExcelで読み込めるCSVファイルにして電子メールに添付します。</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>

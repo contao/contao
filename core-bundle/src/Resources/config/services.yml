@@ -166,6 +166,11 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\SitemapController:
+        tags:
+            - controller.service_arguments
+            - container.service_subscriber
+
     contao.controller_resolver:
         class: Contao\CoreBundle\HttpKernel\ControllerResolver
         decorates: controller_resolver
@@ -572,6 +577,7 @@ services:
         calls:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
+        public: true
 
     Contao\CoreBundle\Routing\Page\PageRegistry:
         arguments:
@@ -761,7 +767,6 @@ services:
             - '@session'
             - '@security.authentication.trust_resolver'
             - ~ # Simple or Role Hierarchy Voter
-            - '%contao.preview_script%'
         public: true
 
     contao.security.two_factor.authenticator:

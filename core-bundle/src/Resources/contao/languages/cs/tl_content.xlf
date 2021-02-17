@@ -42,12 +42,10 @@
         <target>Zobrazit soubor v prohlížeči namísto stáhnutí do počítače.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
-        <target>Přepsat meta data</target>
+        <source>Overwrite metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
-        <target>Přepsat meta informace obrázku z Manažera souborů</target>
+        <source>Overwrite the metadata from the file manager.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -378,12 +376,10 @@
         <target>Zvolte prosím pořadí třídění.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
-        <target>Ignorovat soubory bez meta údajů</target>
+        <source>Ignore files without metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
-        <target>Nezobrazovat soubory bez meta údajů odpovídajících jazyku stránky.</target>
+        <source>Do not show files without metadata matching the page language.</source>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>

@@ -88,6 +88,12 @@
         <source>Show this page if there is none that matches the visitor's language.</source>
         <target>如果没有匹配访问者的语言，将显示这个页面。</target>
       </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.0">
+        <source>Disable language redirect</source>
+      </trans-unit>
+      <trans-unit id="tl_page.disableLanguageRedirect.1">
+        <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+      </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
         <target>Favicon</target>
@@ -139,8 +145,7 @@
         <target>网站管理员电子邮件地址</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>自动生成的电子邮件。例如订阅和确认信，将发送到此地址</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -193,29 +198,11 @@
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
       </trans-unit>
-      <trans-unit id="tl_page.createSitemap.0">
-        <source>Create an XML sitemap</source>
-        <target>创建XML站点地图</target>
-      </trans-unit>
-      <trans-unit id="tl_page.createSitemap.1">
-        <source>Create a Google XML sitemap in the &lt;em&gt;share/&lt;/em&gt; directory.</source>
-        <target>在&lt;em&gt;share/&lt;/em&gt;目录中创建一个Google XML站点地图。</target>
-      </trans-unit>
-      <trans-unit id="tl_page.sitemapName.0">
-        <source>Sitemap file name</source>
-        <target>站点地图文件名称</target>
-      </trans-unit>
-      <trans-unit id="tl_page.sitemapName.1">
-        <source>Please enter the name of the sitemap file without extension.</source>
-        <target>请输入不含扩展名的站点地图文件名称。</target>
-      </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
-        <source>Use HTTPS</source>
-        <target>使用HTTPS</target>
+        <source>Protocol</source>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
-        <source>This website is available via HTTPS.</source>
-        <target>网站HTTPS可用.</target>
+        <source>Here you can select which protocol to use for the website.</source>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -428,8 +415,7 @@
         <target>名称和类型</target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
-        <source>Meta data</source>
-        <target>Meta数据</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -441,6 +427,9 @@
       </trans-unit>
       <trans-unit id="tl_page.url_legend">
         <source>URL settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.language_legend">
+        <source>Language settings</source>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -563,7 +552,7 @@
         <target>编辑ID为%s的页面文章</target>
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
-        <source>This setting has been disabled because Contao is running in legacy routing mode.</source>
+        <source>Disable legacy routing mode to enable this configuration.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

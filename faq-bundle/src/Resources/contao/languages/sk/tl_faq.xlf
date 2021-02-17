@@ -41,6 +41,25 @@
         <source>Add an image to the FAQ.</source>
         <target>Pridajte obrázok k odpovedi.</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Tag pre vyhľadávacie roboty</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>Pridat prílohu</target>
@@ -81,6 +100,9 @@
         <source>Answer</source>
         <target>Odpoveď</target>
       </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+      </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
         <target>Nastavenia obrazku</target>
@@ -99,6 +121,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
         <source>New</source>
+        <target>Nová</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>

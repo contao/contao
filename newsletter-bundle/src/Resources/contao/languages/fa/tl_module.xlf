@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Please enter the text of the unsubscription confirmation e-mail. You can use the wildcards &lt;em&gt;##channel##&lt;/em&gt; (channel name) and &lt;em&gt;##domain##&lt;/em&gt; (current domain name).</target>
+        <target>شما می‌توانید فرانویسه‌های &lt;em&gt;##channels##&lt;/em&gt; (channel names) و &lt;em&gt;##domain##&lt;/em&gt; (domain name) را استفاده کنید..</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select a newsletter template.</source>
+        <target>اینجا می‌توانید قالب خبرنامه را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
@@ -85,7 +86,7 @@ If you did not subscribe yourself, please ignore this e-mail.
 
 ##link##
 
-لینک تایید برای ۲۴ ساعت معتبر است. شما می‌توانید اشتراک‌تان هر زمانی لغو کنید.
+لینک تایید برای 24 ساعت معتبر است. شما می‌توانید اشتراک‌تان هر زمانی لغو کنید.
 
 اگر شما خودتان مشترک نشده‌اید، این ایمیل را نادیده بگیرید.
 </target>
@@ -99,7 +100,10 @@ If you did not subscribe yourself, please ignore this e-mail.
 
 ##channels##
 </source>
-        <target>اشتراک شما در ##channel## به طور کامل قطع شد .</target>
+        <target>شما از کانال‌های زیر در ##domain## لغو اشتراک کرده‌اید:
+
+##channels##
+</target>
       </trans-unit>
     </body>
   </file>

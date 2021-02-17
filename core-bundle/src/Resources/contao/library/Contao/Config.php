@@ -485,7 +485,6 @@ class Config
 			'smtpPort'         => 'mailer_port',
 			'smtpEnc'          => 'mailer_encryption',
 			'addLanguageToUrl' => 'contao.prepend_locale',
-			'encryptionKey'    => 'contao.encryption_key',
 			'urlSuffix'        => 'contao.url_suffix',
 			'uploadPath'       => 'contao.upload_path',
 			'editableFiles'    => 'contao.editable_files',

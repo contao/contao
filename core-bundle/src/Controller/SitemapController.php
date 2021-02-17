@@ -41,7 +41,12 @@ class SitemapController extends AbstractController
         $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->server->get('HTTP_HOST')]);
 
         if (null === $rootPages) {
-            return new Response('', Response::HTTP_NOT_FOUND);
+            // We did not find root pages by matching host name, let's fetch those that do not have any domain configured
+            $rootPages = $pageModel->findPublishedRootPages(['dns' => '']);
+
+            if (null === $rootPages) {
+                return new Response('', Response::HTTP_NOT_FOUND);
+            }
         }
 
         $pages = [];

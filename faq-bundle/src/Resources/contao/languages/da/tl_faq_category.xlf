@@ -79,9 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Tillad kun kommentarer fra godkendte medlemmer.</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Deaktiver spambeskyttelse</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -114,10 +116,6 @@
       <trans-unit id="tl_faq_category.notify_both">
         <source>Author and system administrator</source>
         <target>Forfatter og systemadministrator</target>
-      </trans-unit>
-      <trans-unit id="tl_faq_category.deleteConfirm">
-        <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>
-        <target>Sletning af en kategori medfører sletning af alle dets FAQ! Er du sikker på du vil slette kategori ID %s?</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>

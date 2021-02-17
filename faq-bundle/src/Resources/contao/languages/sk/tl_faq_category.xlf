@@ -115,12 +115,9 @@
         <source>Author and system administrator</source>
         <target>Autor a administrátor systému</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.deleteConfirm">
-        <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>
-        <target>Odstránením kategórie vymažete všetky FAQ, ktoré obsahuje! Naozaj chcete odstrániť kategóriu ID %s?</target>
-      </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>
+        <target>Nová</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>

@@ -23,7 +23,7 @@ use Contao\FilesModel;
 trait ModelMetadataTrait
 {
     /**
-     * Get the default meta data or null if not applicable.
+     * Get the default metadata or null if not applicable.
      */
     public function getOverwriteMetadata(): ?Metadata
     {

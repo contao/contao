@@ -58,9 +58,15 @@ class PackageUtil
     public static function getContaoVersion(): string
     {
         try {
-            return static::getVersion('contao/core-bundle');
+            $version = static::getVersion('contao/core-bundle');
         } catch (\OutOfBoundsException $e) {
-            return static::getVersion('contao/contao');
+            $version = '';
         }
+
+        if ('' === $version) {
+            $version = static::getVersion('contao/contao');
+        }
+
+        return $version;
     }
 }

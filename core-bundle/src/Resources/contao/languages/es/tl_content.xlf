@@ -42,12 +42,10 @@
         <target>Muestra el archivo en el navegador en lugar de abrir el cuadro de diálogo de descarga.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
-        <target>Sobrescribir metadatos</target>
+        <source>Overwrite metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
-        <target>Sobrescriba los metadatos del administrador de archivos.</target>
+        <source>Overwrite the metadata from the file manager.</source>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -378,12 +376,10 @@
         <target>Por favor selecciona el tipo de orden.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
-        <target>Ignorar ficheros sin metadatos</target>
+        <source>Ignore files without metadata</source>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
-        <target>No mostrar ficheros sin metadatos coincidiendo con el lenguaje de la página.</target>
+        <source>Do not show files without metadata matching the page language.</source>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
@@ -391,12 +387,15 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select a gallery template.</source>
+        <target>Aquí puede seleccionar una plantilla de galería.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
+        <target>Plantilla de elemento de contenido</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>
+        <target>Aquí puede seleccionar la plantilla del elemento de contenido.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -620,6 +619,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que el elemento se muestre en el sitio web antes de una fecha / hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -627,6 +627,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que el elemento se muestre en el sitio web después de una determinada fecha/hora, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -146,6 +147,27 @@ class FigureRendererTest extends TestCase
         $this->expectException(NoSuchPropertyException::class);
 
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
+    }
+
+    public function testReturnsNullIfTheResourceDoesNotExist(): void
+    {
+        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder
+            ->method('from')
+            ->with('invalid-resource')
+            ->willThrowException(new InvalidResourceException())
+        ;
+
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->method('createFigureBuilder')
+            ->willReturn($figureBuilder)
+        ;
+
+        $twig = $this->createMock(Environment::class);
+        $figureRenderer = new FigureRenderer($studio, $twig);
+
+        $this->assertNull($figureRenderer->render('invalid-resource', null));
     }
 
     private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRenderer

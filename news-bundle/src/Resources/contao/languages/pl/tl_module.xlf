@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_featured.1">
         <source>Here you can choose how featured items are handled.</source>
-        <target>Pokaż tylko promowane aktualności.</target>
+        <target>Tutaj możesz wybrać jak obsługiwane są promowane aktualności.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_jumpToCurrent.0">
         <source>No period selected</source>
@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
         <source>Here you can select a news template.</source>
+        <target>Tutaj możesz wybrać szablon aktualności.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>
