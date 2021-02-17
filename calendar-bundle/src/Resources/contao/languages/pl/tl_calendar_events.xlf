@@ -319,6 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
         <source>Metadata</source>
+        <target>Metadane</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>

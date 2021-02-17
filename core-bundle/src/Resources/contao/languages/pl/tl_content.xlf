@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
+        <target>Nadpisz meta dane</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the metadata from the file manager.</source>
+        <target>Nadpisz meta dane z menedżera plików.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -377,9 +379,11 @@
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
         <source>Ignore files without metadata</source>
+        <target>Ignoruj pliki bez meta danych</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
         <source>Do not show files without metadata matching the page language.</source>
+        <target>Nie pokazuj plików bez meta danych pasujących do języka strony.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>

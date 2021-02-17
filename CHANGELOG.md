@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.0] (2021-02-17)
+
+**Fixed issues:**
+
+- [#2763] Fix an illegal array access in BackendUser::navigation() ([m-vo])
+- [#2764] Fix an illegal array access in DC_Table::reviseTables() ([m-vo])
+- [#2766] Automatically prefix the back end attributes ([leofeyer])
+- [#2752] Symlink highlight.php as highlight_php ([leofeyer])
+- [#2743] Change the default URL suffix ([leofeyer])
+- [#2732] Handle non-existing resources in the FigureRenderer ([m-vo])
+- [#2731] Do not replace template data recursively when applying legacy template data ([m-vo])
+- [#2704] Fix the rgxp=>httpurl implementation ([leofeyer])
+
 ## [4.11.0-RC2] (2021-01-29)
 
 **Fixed issues:**
@@ -60,6 +73,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.0]: https://github.com/contao/contao/releases/tag/4.11.0
 [4.11.0-RC2]: https://github.com/contao/contao/releases/tag/4.11.0-RC2
 [4.11.0-RC1]: https://github.com/contao/contao/releases/tag/4.11.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -72,6 +86,14 @@ This project adheres to [Semantic Versioning].
 [rabauss]: https://github.com/rabauss
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#2763]: https://github.com/contao/contao/pull/2763
+[#2764]: https://github.com/contao/contao/pull/2764
+[#2766]: https://github.com/contao/contao/pull/2766
+[#2752]: https://github.com/contao/contao/pull/2752
+[#2743]: https://github.com/contao/contao/pull/2743
+[#2732]: https://github.com/contao/contao/pull/2732
+[#2731]: https://github.com/contao/contao/pull/2731
+[#2704]: https://github.com/contao/contao/pull/2704
 [#2703]: https://github.com/contao/contao/pull/2703
 [#2702]: https://github.com/contao/contao/pull/2702
 [#2701]: https://github.com/contao/contao/pull/2701
