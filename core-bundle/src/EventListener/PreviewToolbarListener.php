@@ -28,6 +28,8 @@ use Twig\Error\Error as TwigError;
  *
  * The toolbar is only injected on well-formed HTML with a proper </body> tag,
  * so is never included in sub-requests or ESI requests.
+ *
+ * @internal
  */
 class PreviewToolbarListener
 {
@@ -35,11 +37,6 @@ class PreviewToolbarListener
      * @var ScopeMatcher
      */
     private $scopeMatcher;
-
-    /**
-     * @var string
-     */
-    private $previewScript;
 
     /**
      * @var TwigEnvironment
@@ -51,30 +48,34 @@ class PreviewToolbarListener
      */
     private $router;
 
-    public function __construct(string $previewScript, ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router)
+    /**
+     * @var string
+     */
+    private $previewScript;
+
+    public function __construct(ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
     {
-        $this->previewScript = $previewScript;
         $this->scopeMatcher = $scopeMatcher;
         $this->twig = $twig;
         $this->router = $router;
+        $this->previewScript = $previewScript;
     }
 
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
+        if ($this->scopeMatcher->isBackendMasterRequest($event)) {
             return;
         }
 
         $request = $event->getRequest();
-
-        if ('' === $this->previewScript || $request->getScriptName() !== $this->previewScript) {
-            return;
-        }
-
         $response = $event->getResponse();
 
         // Do not capture redirects, errors, or modify XML HTTP Requests
-        if ($request->isXmlHttpRequest() || !($response->isSuccessful() || $response->isClientError())) {
+        if (
+            !$request->attributes->get('_preview', false)
+            || $request->isXmlHttpRequest()
+            || !($response->isSuccessful() || $response->isClientError())
+        ) {
             return;
         }
 

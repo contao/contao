@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.1">
         <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
+        <target>Qui puoi sovrascrivere il mailer transport utilizzato per inviare newsletter in questo canale.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

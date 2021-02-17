@@ -66,7 +66,6 @@ class ContaoCoreExtension extends Extension
         $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
-        $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);

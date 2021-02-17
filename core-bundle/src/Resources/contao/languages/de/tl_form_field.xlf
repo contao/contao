@@ -145,6 +145,22 @@
         <source>Checks whether the input is a valid URL.</source>
         <target>Prüft, ob die Eingabe eine gültige URL ist.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.0">
+        <source>Absolute URL</source>
+        <target>Absolute URL</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.1">
+        <source>Checks whether the input is a valid absolute URL.</source>
+        <target>Prüft, ob die Eingabe eine gültige absolute URL ist.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.0">
+        <source>Custom</source>
+        <target>Eigene</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.1">
+        <source>Checks against a custom regular expression.</source>
+        <target>Prüft anhand eines eigenen regulären Ausdrucks.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>
         <target>Platzhalter</target>
@@ -152,6 +168,22 @@
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
         <target>Dieser Text wird angezeigt solange das Feld noch nicht ausgefüllt wurde (benötigt HTML5).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.0">
+        <source>Custom regular expression</source>
+        <target>Eigener regulärer Ausdruck</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.1">
+        <source>The custom regular expression including delimiters and modifiers.</source>
+        <target>Der reguläre Ausdruck inklusive Begrenzer und Modifikatoren.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.0">
+        <source>Error message</source>
+        <target>Fehlermeldung</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.1">
+        <source>Show this error message in the front end if the user input is invalid.</source>
+        <target>Diese Fehlermeldung im Frontend anzeigen, wenn die Eingabe ungültig ist.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.0">
         <source>Minimum length</source>

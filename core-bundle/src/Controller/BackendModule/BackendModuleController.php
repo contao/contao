@@ -226,7 +226,7 @@ class BackendModuleController extends AbstractBackendModuleController
                 $table = $strTable;
                 $ptable = 'edit' !== $act ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
-                while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, [5, 6], true)) {
+                while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, [5, 6], true) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table') {
                     $objRow = $this->get('database_connection')->executeQuery("SELECT * FROM {$ptable} WHERE id=:pid", ['pid' => $pid])->fetch(FetchMode::STANDARD_OBJECT);
 
                     // Add only parent tables to the trail

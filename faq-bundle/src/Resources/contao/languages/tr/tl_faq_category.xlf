@@ -115,10 +115,6 @@
         <source>Author and system administrator</source>
         <target>Yazar ve sistem yöneticisi</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.deleteConfirm">
-        <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>
-        <target>Kategori ID %s silmek, bütün iceriğindeki FAQ'ları da silmek demektir! Devam edilsin mi?</target>
-      </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>
         <target>Yeni</target>

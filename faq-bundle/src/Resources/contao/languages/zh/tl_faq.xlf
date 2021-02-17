@@ -41,6 +41,29 @@
         <source>Add an image to the FAQ.</source>
         <target>在FAQ中添加一张图片</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>Meta标题</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>在这里添加一个自定义meta标题覆盖默认页面标题。</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>Robots标签</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>Meta描述</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>在这里添加一个自定义meta描述覆盖默认页面描述。</target>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>添加附件</target>
@@ -80,6 +103,9 @@
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>
         <target>答案</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

@@ -26,12 +26,19 @@ class InsertTagsTest extends TestCase
      */
     public function testFigureInsertTag(string $input, array $expectedArguments): void
     {
+        $usedArguments = [];
+
         $figureRenderer = $this->createMock(FigureRenderer::class);
         $figureRenderer
             ->expects($this->once())
             ->method('render')
-            ->with(...$expectedArguments)
-            ->willReturn('<figure>foo</figure>')
+            ->willReturnCallback(
+                static function (...$arguments) use (&$usedArguments) {
+                    $usedArguments = $arguments;
+
+                    return '<figure>foo</figure>';
+                }
+            )
         ;
 
         $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
@@ -39,18 +46,21 @@ class InsertTagsTest extends TestCase
         $output = (new InsertTags())->replace($input, false);
 
         $this->assertSame('<figure>foo</figure>', $output);
+        $this->assertSame($expectedArguments, $usedArguments);
     }
 
     public function provideFigureInsertTags(): \Generator
     {
+        $defaultTemplate = '@ContaoCore/Image/Studio/figure.html.twig';
+
         yield 'without any configuration' => [
             '{{figure::123}}',
-            ['123', null, []],
+            ['123', null, [], $defaultTemplate],
         ];
 
         yield 'with size' => [
             '{{figure::files/cat.jpg?size=_my_size}}',
-            ['files/cat.jpg', '_my_size', []],
+            ['files/cat.jpg', '_my_size', [], $defaultTemplate],
         ];
 
         yield 'with custom template' => [
@@ -62,11 +72,12 @@ class InsertTagsTest extends TestCase
             '{{figure::1000?size=5&metadata[title]=foo%20bar&options[attr][class]=baz}}',
             [
                 '1000',
-                '5',
+                5,
                 [
                     'metadata' => ['title' => 'foo bar'],
                     'options' => ['attr' => ['class' => 'baz']],
                 ],
+                $defaultTemplate,
             ],
         ];
 
@@ -77,9 +88,46 @@ class InsertTagsTest extends TestCase
                 '_my_size',
                 [
                     'metadata' => ['alt' => 'alt'],
-                    'enableLightbox' => '1',
+                    'enableLightbox' => 1,
                 ],
                 'my_template.html.twig',
+            ],
+        ];
+
+        yield 'wrapped basic entities' => [
+            '{{figure::123?size[]=800[&]size[]=600[&]metadata[alt]=alt[&]enableLightbox=1}}',
+            [
+                '123',
+                [800, 600],
+                [
+                    'metadata' => ['alt' => 'alt'],
+                    'enableLightbox' => 1,
+                ],
+                $defaultTemplate,
+            ],
+        ];
+
+        yield 'HTML' => [
+            '{{figure::123?metadata[caption]=<script>alert(1)</script>}}',
+            [
+                '123',
+                null,
+                [
+                    'metadata' => ['caption' => '&lt;script&gt;alert(1)&lt;/script&gt;'],
+                ],
+                $defaultTemplate,
+            ],
+        ];
+
+        yield 'urlencoded HTML' => [
+            '{{figure::123?metadata[caption]=%3Cscript%3Ealert%281%29%3C%2Fscript%3E}}',
+            [
+                '123',
+                null,
+                [
+                    'metadata' => ['caption' => '&lt;script&gt;alert(1)&lt;/script&gt;'],
+                ],
+                $defaultTemplate,
             ],
         ];
     }

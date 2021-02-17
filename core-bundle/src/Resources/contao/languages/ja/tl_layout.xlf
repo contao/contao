@@ -233,14 +233,6 @@
         <source>Load internal style sheets first</source>
         <target>先に内部のスタイルシートを読み込み</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-        <target>Google Webフォント</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>Google Webフォントを追加できます。基準のURLなしのフォントファミリーで指定してください。(例: &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;)</target>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
         <target>lightboxの画像の大きさ</target>
@@ -329,14 +321,6 @@
         <source>Include the jQuery library in the layout.</source>
         <target>レイアウトにjQueryライブラリを含めます。</target>
       </trans-unit>
-      <trans-unit id="tl_layout.jSource.0">
-        <source>jQuery source</source>
-        <target>jQueryのソース</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.jSource.1">
-        <source>Here you can select from where to load the jQuery script.</source>
-        <target>jQueryのスクリプトを読み込んでくる先を選択できます。</target>
-      </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
         <target>jQueryのテンプレート</target>
@@ -352,14 +336,6 @@
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
         <target>レイアウトにMooToolsライブラリを含めます。</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.0">
-        <source>MooTools source</source>
-        <target>MooToolsのソース</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.1">
-        <source>Here you can select from where to load the MooTools scripts.</source>
-        <target>MooToolsのスクリプトを読み込んでくる先を選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -441,10 +417,6 @@
         <source>Custom sections</source>
         <target>カスタムセクション</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-        <target>Webフォント</target>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
         <target>画像サイズ</target>
@@ -473,33 +445,9 @@
         <source>jQuery</source>
         <target>jQuery</target>
       </trans-unit>
-      <trans-unit id="tl_layout.j_local">
-        <source>Local file</source>
-        <target>ローカルのファイル</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_googleapis">
-        <source>CDN (code.jquery.com)</source>
-        <target>コンテンツ配信網(code.jquery.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_fallback">
-        <source>CDN with local fallback</source>
-        <target>コンテンツ配信網、ローカルのファイルを代替</target>
-      </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
         <target>MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_local">
-        <source>Local file</source>
-        <target>ローカルのファイル</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_googleapis">
-        <source>CDN (googleapis.com)</source>
-        <target>コンテンツ配信網(googleapis.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_fallback">
-        <source>CDN with local fallback</source>
-        <target>コンテンツ配信網、ローカルのファイルを代替</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

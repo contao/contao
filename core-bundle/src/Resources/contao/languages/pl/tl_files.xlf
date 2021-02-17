@@ -74,12 +74,12 @@
         <target>Tutaj możesz wprowadzić wysokość ważnego obszaru.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
-        <target>Meta dane</target>
+        <source>Metadata</source>
+        <target>Metadane</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
-        <target>Tutaj możesz wprowadzić meta dane pliku.</target>
+        <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
+        <target>Tutaj możesz wprowadzić meta dane pliku. Aby dodać język, utwórz punkt startowy serwisu w strukturze stron.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

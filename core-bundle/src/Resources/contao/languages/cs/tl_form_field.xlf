@@ -145,6 +145,18 @@
         <source>Checks whether the input is a valid URL.</source>
         <target>zkontroluje, zda zadaný údaj odpovídá správnému formátu internetové adresy.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.0">
+        <source>Absolute URL</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.1">
+        <source>Checks whether the input is a valid absolute URL.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.0">
+        <source>Custom</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.1">
+        <source>Checks against a custom regular expression.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>
         <target>Zástupný znak</target>
@@ -152,6 +164,18 @@
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
         <target>Zobrazit tento text, dokud bude pole prázdné (vyžaduje HTML5)</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.0">
+        <source>Custom regular expression</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.1">
+        <source>The custom regular expression including delimiters and modifiers.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.0">
+        <source>Error message</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.1">
+        <source>Show this error message in the front end if the user input is invalid.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.0">
         <source>Minimum length</source>

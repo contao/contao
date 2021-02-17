@@ -6,8 +6,8 @@
         <target>E-Mail-Adresse des Systemadministrators</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Automatisch erstellte Mitteilungen wie z.B. Kommentar-Benachrichtigungen werden an diese Adresse versendet.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Diese E-Mail-Adresse wird benutzt, um Systemnachrichten zu senden und zu empfangen.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.configuredInApp">
         <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
-        <target>Diese Einstellung wurde in der App-Konfiguration definiert und kann daher nicht mehr geändert werden.</target>
+        <target>Diese Einstellung wurde in der App-Konfiguration definiert und kann daher hier nicht mehr geändert werden.</target>
       </trans-unit>
     </body>
   </file>

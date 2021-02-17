@@ -316,8 +316,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
         <target>Redireccionar para</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Dados meta</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>

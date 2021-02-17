@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
@@ -166,7 +167,21 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
+        $pathA = $a instanceof PageRoute ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
+        $pathB = $b instanceof PageRoute ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
+
+        $countA = \count(explode('/', $pathA));
+        $countB = \count(explode('/', $pathB));
+
+        if ($countA > $countB) {
+            return -1;
+        }
+
+        if ($countB > $countA) {
+            return 1;
+        }
+
+        return strnatcasecmp($pathA, $pathB);
     }
 
     protected function convertLanguagesForSorting(array $languages): array

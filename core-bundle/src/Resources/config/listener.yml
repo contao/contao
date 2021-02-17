@@ -153,6 +153,26 @@ services:
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 
+    contao.listener.element_template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - ce_
+            - Contao\ContentProxy
+        tags:
+            - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
+
+    contao.listener.module_template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - mod_
+            - Contao\ModuleProxy
+        tags:
+            - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
+
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
@@ -236,10 +256,10 @@ services:
     contao.listener.preview_bar:
         class: Contao\CoreBundle\EventListener\PreviewToolbarListener
         arguments:
-            - '%contao.preview_script%'
             - '@contao.routing.scope_matcher'
             - '@twig'
             - '@router'
+            - '%contao.preview_script%'
         tags:
             - kernel.event_listener
 
@@ -257,7 +277,6 @@ services:
             - '@contao.security.token_checker'
             - '@router'
             - '@uri_signer'
-            - '%contao.preview_script%'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }

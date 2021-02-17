@@ -146,6 +146,22 @@
         <source>Checks whether the input is a valid URL.</source>
         <target>Проверяет является ли текущее значение правильным URL.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.0">
+        <source>Absolute URL</source>
+        <target>Абсолютный URL</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.1">
+        <source>Checks whether the input is a valid absolute URL.</source>
+        <target>Проверяет, является ли вводимое действительным абсолютным URL-адресом.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.0">
+        <source>Custom</source>
+        <target>Пользовательский</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.1">
+        <source>Checks against a custom regular expression.</source>
+        <target>Проверяет настраиваемое регулярное выражение.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>
         <target>Атрибут Placeholder (Замещающий текст)</target>
@@ -153,6 +169,22 @@
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
         <target>Показать этот текст пока поле остается пустым (требует HTML5).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.0">
+        <source>Custom regular expression</source>
+        <target>Пользовательское регулярное выражение</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.1">
+        <source>The custom regular expression including delimiters and modifiers.</source>
+        <target>Пользовательское регулярное выражение, включая разделители и модификаторы.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.0">
+        <source>Error message</source>
+        <target>Сообщение об ошибке</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.1">
+        <source>Show this error message in the front end if the user input is invalid.</source>
+        <target>Показать сообщение об ошибке во внешнем интерфейсе, если пользовательский ввод недействителен.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.0">
         <source>Minimum length</source>

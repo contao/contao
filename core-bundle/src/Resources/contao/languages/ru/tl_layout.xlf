@@ -233,14 +233,6 @@
         <source>Load internal style sheets first</source>
         <target>Сначала загружать внутренние таблицы стилей</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-        <target>Веб-шрифты Google</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>Вы можете добавить веб-шрифты Google, для использования на веб-сайте. Укажите семейства шрифтов без URL (напр. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
         <target>Размер изображения лайтбокса</target>
@@ -329,14 +321,6 @@
         <source>Include the jQuery library in the layout.</source>
         <target>Включать библиотеку jQuery в макет.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.jSource.0">
-        <source>jQuery source</source>
-        <target>Источник jQuery</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.jSource.1">
-        <source>Here you can select from where to load the jQuery script.</source>
-        <target>Вы можете выбрать откуда загружать jQuery скрипт.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
         <target>Шаблоны jQuery</target>
@@ -352,14 +336,6 @@
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
         <target>Включать библиотеку MooTools в макет.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.0">
-        <source>MooTools source</source>
-        <target>Источник MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.1">
-        <source>Here you can select from where to load the MooTools scripts.</source>
-        <target>Вы можете выбрать откуда загружать MooTools скрипт.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -441,10 +417,6 @@
         <source>Custom sections</source>
         <target>Пользовательские секции</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-        <target>Веб-шрифты</target>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
         <target>Размеры изображения</target>
@@ -473,33 +445,9 @@
         <source>jQuery</source>
         <target>jQuery</target>
       </trans-unit>
-      <trans-unit id="tl_layout.j_local">
-        <source>Local file</source>
-        <target>Локальный файл</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_googleapis">
-        <source>CDN (code.jquery.com)</source>
-        <target>CDN (code.jquery.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_fallback">
-        <source>CDN with local fallback</source>
-        <target>CDN с локальной копией</target>
-      </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
         <target>MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_local">
-        <source>Local file</source>
-        <target>Локальный файл</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_googleapis">
-        <source>CDN (googleapis.com)</source>
-        <target>CDN (googleapis.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_fallback">
-        <source>CDN with local fallback</source>
-        <target>CDN с локальной копией</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

@@ -11,6 +11,7 @@
 use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Environment;
@@ -196,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'load_callback' => array
 			(
 				array('tl_news_feed', 'addFeedBase')

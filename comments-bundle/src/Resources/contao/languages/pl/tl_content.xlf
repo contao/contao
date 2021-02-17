@@ -39,12 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Zezwól tylko zalogowanym użytkownikom na tworzenie komentarzy.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Wyłącz ochronę przeciw spamowi</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Tutaj możesz wyłączyć ochronę przed spamem (niezalecane).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
@@ -52,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select a comments template.</source>
+        <target>Tutaj możesz wybrać szablon komentarzy.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

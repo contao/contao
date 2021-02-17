@@ -74,12 +74,12 @@
         <target>Вы можете ввести высоту важной части.</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
-        <target>Вы можете ввести метаданные файла.</target>
+        <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
+        <target>Вы можете ввести метаданные файла. Чтобы добавить язык, создайте соответствующую корневую страницу в структуре веб-сайта.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

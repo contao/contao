@@ -115,10 +115,6 @@
         <source>Author and system administrator</source>
         <target>作者和系统管理员</target>
       </trans-unit>
-      <trans-unit id="tl_faq_category.deleteConfirm">
-        <source>Deleting category ID %s will also delete all its FAQs! Continue?</source>
-        <target>删除分类将删除下属所有FAQ问题，真的要删除分类ID %s吗？</target>
-      </trans-unit>
       <trans-unit id="tl_faq_category.new.0">
         <source>New</source>
         <target>新建</target>
