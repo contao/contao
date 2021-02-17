@@ -113,7 +113,7 @@ class SelectMenu extends Widget
 			$this->arrOptions['unknown'][] = array('value'=>$this->unknownOption[0]);
 		}
 
-		$blnIsValid = parent::isValidOption($varInput);
+		$blnIsValid = parent::isValidOption(StringUtil::specialchars($varInput));
 		$this->arrOptions = $arrOptions;
 
 		return $blnIsValid;
