@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Patchwork\Utf8;
 
@@ -451,7 +452,7 @@ class ModuleListing extends Module
 		}
 
 		// URLs
-		elseif (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null) == 'url' && preg_match('@^(https?://|ftp://)@i', $value))
+		elseif (\in_array($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['eval']['rgxp'] ?? null, array('url', HttpUrlListener::RGXP_NAME)) && preg_match('@^(https?://|ftp://)@i', $value))
 		{
 			$value = Idna::decode($value); // see #5946
 			$value = '<a href="' . $value . '" target="_blank" rel="noreferrer noopener">' . $value . '</a>';

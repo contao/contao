@@ -352,24 +352,32 @@ abstract class Frontend extends Controller
 			$strError = 'No root page found (host "' . $host . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
 		}
 
+		$objRequest = Request::create($strUri);
+		$objRequest->headers->set('Accept-Language', $accept_language);
+
 		try
 		{
-			$objRequest = Request::create($strUri);
-			$objRequest->headers->set('Accept-Language', $accept_language);
-
 			$arrParameters = System::getContainer()->get('contao.routing.nested_matcher')->matchRequest($objRequest);
-			$objRootPage = $arrParameters['pageModel'] ?? null;
-
-			if (!$objRootPage instanceof PageModel)
-			{
-				throw new MissingMandatoryParametersException('Every Contao route must have a "pageModel" parameter');
-			}
 		}
 		catch (RoutingExceptionInterface $exception)
 		{
-			$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
+			try
+			{
+				$arrParameters = System::getContainer()->get('contao.routing.nested_404_matcher')->matchRequest($objRequest);
+			}
+			catch (RoutingExceptionInterface $exception)
+			{
+				$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
 
-			throw new NoRootPageFoundException('No root page found', 0, $exception);
+				throw new NoRootPageFoundException('No root page found', 0, $exception);
+			}
+		}
+
+		$objRootPage = $arrParameters['pageModel'] ?? null;
+
+		if (!$objRootPage instanceof PageModel)
+		{
+			throw new MissingMandatoryParametersException('Every Contao route must have a "pageModel" parameter');
 		}
 
 		// Redirect to the website root or language root (e.g. en/)

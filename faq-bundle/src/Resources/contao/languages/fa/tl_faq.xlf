@@ -41,6 +41,29 @@
         <source>Add an image to the FAQ.</source>
         <target>افزودن یک تصویر به پاسخ.</target>
       </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+        <target>عنوان متا</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>اینجا می‌توانید عنوان متا دلخواه را برای جایگزینی عنوان پیش‌فرض برگه اضافه کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+        <target>برچسب روبوت‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+        <target>توضیحات متا</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>اینجا می‌توانید توضیحات متا دلخواه را برای جایگزینی توضیحات پیش‌فرض برگه اضافه کنید.</target>
+      </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
         <target>افزودن پیوست‌ها</target>
@@ -80,6 +103,9 @@
       <trans-unit id="tl_faq.answer_legend">
         <source>Answer</source>
         <target>پاسخ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

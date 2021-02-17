@@ -31,13 +31,15 @@
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید از فعال بودن گروه قبل از تاریخ/ساعت مشخصی جلوگیری کنید، می‌توانید اینجا وارد کنید. در غیر این صوت فیلد را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>غیرفعال در</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید از فعال بودن گروه بعد از تاریخ/ساعت مشخصی جلوگیری کنید، می‌توانید اینجا وارد کنید. در غیر این صوت فیلد را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -49,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
+        <target>المنت‌های مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -76,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
+        <target>تنظیمات گروه</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>
@@ -87,18 +91,23 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show">
         <source>Show the details of user group ID %s</source>
+        <target>نمایش جزئیات گروه کاربری شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
+        <target>ویرایش گروه کاربری شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
+        <target>تکثیر گروه کاربری شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
+        <target>حذف گروه کاربری شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle">
         <source>Activate/deactivate user group ID %s</source>
+        <target>فعال/غیرفعال کردن گروه کاربری شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

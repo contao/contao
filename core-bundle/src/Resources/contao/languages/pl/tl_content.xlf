@@ -42,11 +42,11 @@
         <target>Pokaż plik w przeglądarce zamiast otwierać okno dialogowe pobierania.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
-        <target>Napisz meta dane</target>
+        <source>Overwrite metadata</source>
+        <target>Nadpisz meta dane</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
+        <source>Overwrite the metadata from the file manager.</source>
         <target>Nadpisz meta dane z menedżera plików.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
@@ -378,11 +378,11 @@
         <target>Wybierz rodzaj sortowania.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
+        <source>Ignore files without metadata</source>
         <target>Ignoruj pliki bez meta danych</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
+        <source>Do not show files without metadata matching the page language.</source>
         <target>Nie pokazuj plików bez meta danych pasujących do języka strony.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
@@ -391,12 +391,15 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select a gallery template.</source>
+        <target>Tutaj możesz wybrać szablon galerii.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
+        <target>Szablon elementu</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>
+        <target>Tutaj możesz wybrać szablon elementu.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>

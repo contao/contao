@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539696285
       title: Domain without hostname
       alias: domain-without-hostname
+      urlSuffix: .html
       type: root
       language: en
       fallback: '1'

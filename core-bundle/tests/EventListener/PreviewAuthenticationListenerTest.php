@@ -26,17 +26,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PreviewAuthenticationListenerTest extends TestCase
 {
-    public function testReturnsIfNoPreviewScriptIsSet(): void
+    public function testDoesNothingIfPreviewAttributeIsNotSet(): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $tokenChecker = $this->createMock(TokenChecker::class);
         $router = $this->createMock(UrlGeneratorInterface::class);
         $uriSigner = $this->createMock(UriSigner::class);
-        $previewScript = '';
 
         $requestEvent = $this->getRequestEvent();
 
-        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner, $previewScript);
+        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner);
         $listener($requestEvent);
 
         $this->assertNull($requestEvent->getResponse());
@@ -47,8 +46,8 @@ class PreviewAuthenticationListenerTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isFrontendRequest')
-            ->willReturn(true)
+            ->method('isBackendRequest')
+            ->willReturn(false)
         ;
 
         $tokenChecker = $this->createMock(TokenChecker::class);
@@ -73,13 +72,12 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->willReturn('/contao/login')
         ;
 
-        $previewScript = '/preview.php';
-
         $request = new Request([], [], [], [], [], ['SCRIPT_NAME' => '/preview.php']);
+        $request->attributes->set('_preview', true);
 
         $requestEvent = $this->getRequestEvent($request);
 
-        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner, $previewScript);
+        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner);
         $listener($requestEvent);
 
         $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());

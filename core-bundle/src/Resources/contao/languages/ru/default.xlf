@@ -185,17 +185,25 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Алиас страницы &quot;%s&quot; уже существует!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>Цифровые алиасы не поддерживаются!</target>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>Префикс URL &quot;%s&quot; уже используется другой корневой страницей с тем же именем домена!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>Страница с URL-адресом &quot;%s&quot; уже существует!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Этот суффикс URL приведет к дублированию URL (наприм.: %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Этот префикс URL приведет к дублированию URL (наприм.: %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -324,6 +332,22 @@
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
         <target>Назначьте все модули в колонку!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidHttpUrl">
+        <source>Please enter an absolute URL starting with https:// or http://!</source>
+        <target>Введите абсолютный URL-адрес, начинающийся с https:// или http://!</target>
+      </trans-unit>
+      <trans-unit id="ERR.customRgxp">
+        <source>Please enter a value that matches %s!</source>
+        <target>Введите значение соответствующее %s!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidCustomRgxp">
+        <source>Invalid custom regular expression!</source>
+        <target>Неверное пользовательское регулярное выражение!</target>
+      </trans-unit>
+      <trans-unit id="ERR.applicationCache">
+        <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
+        <target>Запустите команду &quot;cache:clear&quot; или воспользуйтесь Contao Manager для восстановления кэша приложения.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1269,14 +1293,6 @@
         <source>Caption</source>
         <target>Подпись</target>
       </trans-unit>
-      <trans-unit id="MSC.aw_delete">
-        <source>Delete the language</source>
-        <target>Удалить язык</target>
-      </trans-unit>
-      <trans-unit id="MSC.aw_new">
-        <source>Add language</source>
-        <target>Добавить язык</target>
-      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>Название</target>
@@ -1886,7 +1902,7 @@
         <target>Относительный путь</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Метаданные</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
@@ -2502,8 +2518,8 @@
         <target>Загрузка %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
-        <target>Чтобы ввести метаданные файла, вы должны добавить корневую страницу в структуру сайта.</target>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <target>Необходимо добавить корневую страницу в структуру сайта, чтобы ввести метаданные файла.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2581,17 +2597,13 @@
         <source>Backup codes</source>
         <target>Резервные коды</target>
       </trans-unit>
-      <trans-unit id="MSC.twoFactorBackupCodesShow">
-        <source>Show backup codes</source>
-        <target>Показать резервные коды</target>
-      </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
         <target>Резервные коды можно использовать для доступа к учетной записи, если вы потеряли устройство аутентификации вы больше не сможете генерировать двухфакторные коды. Относитесь к своим резервным кодам с тем же вниманием, что и к паролю! Рекомендуется сохранять их с помощью менеджера паролей, таких как Lastpass, 1Password или Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
-        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
-        <target>Поместите коды в безопасное место. Если вы потеряете свое устройство аутентификации и у вас не будет резервных кодов, вы больше не сможете получить доступ к своей учетной записи!</target>
+        <source>Make sure to copy the codes now. You will not be able to see them again!</source>
+        <target>Обязательно скопируйте коды сейчас. Вы больше не сможете их увидеть!</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
@@ -2642,7 +2654,7 @@
         <target>Предпросмотр результатов поиска Google</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Вы можете просмотреть метаданные в результатах поиска Google. Другие поисковые системы могут показывать более длинные тексты или обрезать их в разных местах.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
@@ -2676,6 +2688,18 @@
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
         <target>Закрыть панель инструментов Contao</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>Невозможно создать URL-адрес предварительного просмотра, так как маршрут имеет обязательные параметры.</target>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>Неизвестный параметр</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyURL">
+        <source>Copy URL</source>
+        <target>Копировать URL</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

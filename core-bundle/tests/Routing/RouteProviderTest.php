@@ -94,12 +94,14 @@ class RouteProviderTest extends TestCase
         $page1->id = 17;
         $page1->rootId = 1;
         $page1->urlPrefix = '';
+        $page1->urlSuffix = '';
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
         $page2->rootId = 1;
         $page2->urlPrefix = '';
+        $page2->urlSuffix = '';
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -420,6 +422,24 @@ class RouteProviderTest extends TestCase
                 2 => $this->createPage('it', 'foo'),
             ],
             ['de_CH', 'en'],
+        ];
+
+        yield 'Sorts with parameters' => [
+            [
+                1 => $this->createPage('de', 'foo/bar{!parameters}'),
+                0 => $this->createPage('de', 'foo/bar/baz{!parameters}'),
+                2 => $this->createPage('de', 'foo{!parameters}'),
+            ],
+            ['en'],
+        ];
+
+        yield 'Sorts with absolute path' => [
+            [
+                1 => $this->createPage('de', 'foo/bar{!parameters}'),
+                0 => $this->createPage('de', 'foo/{category}/{alias}'),
+                2 => $this->createPage('de', 'foo{!parameters}'),
+            ],
+            ['en'],
         ];
     }
 

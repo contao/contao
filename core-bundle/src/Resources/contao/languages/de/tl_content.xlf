@@ -42,11 +42,11 @@
         <target>Die Datei im Browser anzeigen anstatt den Download-Dialog zu öffnen.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
-        <source>Overwrite meta data</source>
+        <source>Overwrite metadata</source>
         <target>Metadaten überschreiben</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
-        <source>Overwrite the meta data from the file manager.</source>
+        <source>Overwrite the metadata from the file manager.</source>
         <target>Die Metadaten aus der Dateiverwaltung überschreiben.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
@@ -378,11 +378,11 @@
         <target>Bitte wählen Sie die Sortierreihenfolge aus.</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
-        <source>Ignore files without meta data</source>
+        <source>Ignore files without metadata</source>
         <target>Dateien ohne Metadaten ignorieren</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
-        <source>Do not show files without meta data matching the page language.</source>
+        <source>Do not show files without metadata matching the page language.</source>
         <target>Dateien ohne zur Seitensprache passenden Metadaten nicht anzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">

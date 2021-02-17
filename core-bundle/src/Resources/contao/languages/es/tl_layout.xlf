@@ -233,14 +233,6 @@
         <source>Load internal style sheets first</source>
         <target>Cargar las hojas de estilo internas primero</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-        <target>Fuentes Web de Google</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>Aqui puedes añadir fuentes web de Google a tu página. Especifica la familia fuente sin la base URL (por ejemplo.&lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
         <target>Tamaño de imagen del lightbox</target>
@@ -329,14 +321,6 @@
         <source>Include the jQuery library in the layout.</source>
         <target>Incluir jQuery en el diseño.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.jSource.0">
-        <source>jQuery source</source>
-        <target>Fuente jQuery</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.jSource.1">
-        <source>Here you can select from where to load the jQuery script.</source>
-        <target>Aquí puede seleccionar desde dónde cargar el script de jQuery.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
         <target>plantillas jQuery</target>
@@ -352,14 +336,6 @@
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
         <target>Incluir la biblioteca MooTools en el diseño.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.0">
-        <source>MooTools source</source>
-        <target>Fuente MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.1">
-        <source>Here you can select from where to load the MooTools scripts.</source>
-        <target>Puedes usar tanto la versión local de los Scripts MooTools o cargarla desde una red de distribución de contenidos.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -441,10 +417,6 @@
         <source>Custom sections</source>
         <target>Secciones personalizadas</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-        <target>Fuentes web</target>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
         <target>Tamaños de imágen</target>
@@ -473,33 +445,9 @@
         <source>jQuery</source>
         <target>jQuery</target>
       </trans-unit>
-      <trans-unit id="tl_layout.j_local">
-        <source>Local file</source>
-        <target>Fichero local</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_googleapis">
-        <source>CDN (code.jquery.com)</source>
-        <target>CDN (code.jquery.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_fallback">
-        <source>CDN with local fallback</source>
-        <target>CDN con fallback local</target>
-      </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
         <target>MooTools</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_local">
-        <source>Local file</source>
-        <target>Fichero local</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_googleapis">
-        <source>CDN (googleapis.com)</source>
-        <target>CDN (googleapis.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_fallback">
-        <source>CDN with local fallback</source>
-        <target>CDN con fallback local</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

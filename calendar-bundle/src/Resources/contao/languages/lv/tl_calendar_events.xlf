@@ -315,8 +315,7 @@
         <target>Novirzīšanas mērķis</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
-        <target>Meta dati</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>

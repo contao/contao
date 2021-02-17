@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
         <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Pokaż rzeczy, które są widoczne tylko dla zalogowanych użytkowników.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -82,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Szablon modułu</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Tutaj możesz wybrać szablon modułu.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -132,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Przekieruj użytkownika z powrotem do ostatnio odwiedzanej strony zamiast do określonej strony docelowej.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -407,9 +411,11 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Wyłącz ochronę przeciw spamowi</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Tutaj możesz wyłączyć ochronę przed spamem (niezalecane).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
@@ -425,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
         <source>Allow the new member to log into the front end.</source>
+        <target>Zezwól nowemu użytkownikowi na logowanie do serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -472,6 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Wybierz stronę, na którą zostanie przekierowany użytkownik po zakończonym żądaniu.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -487,6 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>Możesz używać wildcardów &lt;em&gt;##domain##&lt;/em&gt; (nazwa domeny), &lt;em&gt;##link##&lt;/em&gt; (link aktywacyjny) i dowolnych danych użytkownika (np. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

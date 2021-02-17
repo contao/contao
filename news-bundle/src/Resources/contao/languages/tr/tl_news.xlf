@@ -250,8 +250,7 @@
         <target>Yönlendirme hedefi</target>
       </trans-unit>
       <trans-unit id="tl_news.meta_legend">
-        <source>Meta data</source>
-        <target>Meta bilgileri</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>

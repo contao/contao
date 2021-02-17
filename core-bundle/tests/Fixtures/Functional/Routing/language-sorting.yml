@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1568196756
       title: Root ZH
       alias: root-zh
+      urlSuffix: .html
       type: root
       language: zh
       dns: root-zh.local
@@ -28,6 +29,7 @@ tl_page:
       tstamp: 1568196339
       title: Root FR
       alias: foot-fr
+      urlSuffix: .html
       type: root
       language: fr
       dns: root-fr.local

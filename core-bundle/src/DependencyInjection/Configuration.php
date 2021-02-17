@@ -456,7 +456,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('attributes')
                     ->info('Adds HTML attributes to the <body> tag in the back end.')
-                    ->example(['data-app-name' => 'My App', 'data-app-version' => '1.2.3'])
+                    ->example(['app-name' => 'My App', 'app-version' => '1.2.3'])
                     ->validate()
                     ->always(
                         static function (array $attributes): array {

@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_user.fullscreen.1">
         <source>Do not limit the width of the back end.</source>
+        <target>عرض بخش مدیریت را محدود نکنید.</target>
       </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
@@ -169,6 +170,7 @@
       </trans-unit>
       <trans-unit id="tl_user.fields.0">
         <source>Form fields</source>
+        <target>فیلدهای فرم</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.1">
         <source>Here you can select the allowed form field types.</source>
@@ -287,6 +289,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
+        <target>المنت‌های مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>
