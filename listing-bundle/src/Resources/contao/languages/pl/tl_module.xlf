@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_sort.1">
         <source>Here you can enter a comma seperated list of fields to sort the results by.</source>
-        <target>Wprowadź rozdzieloną przecinkami listę pól, które będą użyte do ustawienia domyślnej kolejności wyników. Dodaj &lt;em&gt;DESC&lt;/em&gt; po nazwie pola by uporządkować malejąco (np. &lt;em&gt;name, date DESC&lt;/em&gt;).</target>
+        <target>Wprowadź rozdzieloną przecinkami listę pól, które będą użyte do ustawienia domyślnej kolejności wyników.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.0">
         <source>Details page fields</source>

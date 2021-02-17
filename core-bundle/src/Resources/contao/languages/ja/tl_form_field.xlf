@@ -147,15 +147,19 @@
       </trans-unit>
       <trans-unit id="tl_form_field.httpurl.0">
         <source>Absolute URL</source>
+        <target>絶対URL</target>
       </trans-unit>
       <trans-unit id="tl_form_field.httpurl.1">
         <source>Checks whether the input is a valid absolute URL.</source>
+        <target>入力が有効なURLであるかどうか確認します。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.custom.0">
         <source>Custom</source>
+        <target>独自</target>
       </trans-unit>
       <trans-unit id="tl_form_field.custom.1">
         <source>Checks against a custom regular expression.</source>
+        <target>独自の正規表現で確認しました。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>
@@ -167,15 +171,19 @@
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
+        <target>独自の正規表現</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.1">
         <source>The custom regular expression including delimiters and modifiers.</source>
+        <target>区切り文字と修飾子を含んだ独自の正規表現です。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.errorMsg.0">
         <source>Error message</source>
+        <target>エラーメッセージ</target>
       </trans-unit>
       <trans-unit id="tl_form_field.errorMsg.1">
         <source>Show this error message in the front end if the user input is invalid.</source>
+        <target>入力が不正な場合にフロントエンドでエラーメッセージを表示します。</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.0">
         <source>Minimum length</source>

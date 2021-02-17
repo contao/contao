@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
+        <target>Ici, vous pouvez entrer les métadonnées du fichier. Pour ajouter une langue, créez une page racine correspondante dans la structure du site.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

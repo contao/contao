@@ -63,15 +63,19 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.title">
         <source>Unable to generate front end URL</source>
+        <target>Nie udało się wygenerować URL front end</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.matter">
         <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>URL nie mógł zostać wygenerowany, ponieważ ścieżka posiada obowiązkowe parametry, które nie zostały podane. Należy podać dodatkowe informacje (np. alias wiadomości).</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.explain">
         <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Ścieżki Symfony mogą mieć zmienne parametry, które są sprawdzane przy użyciu wyrażeń regularnych. Następująca konfiguracja nie może zostać rozwiązana:</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.path">
         <source>Route path</source>
+        <target>Ścieżka</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterName">
         <source>Name</source>
@@ -79,6 +83,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
         <source>Requirement (Regex)</source>
+        <target>Wymagania (regex)</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterDefault">
         <source>Default value</source>
@@ -86,6 +91,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
         <source>empty</source>
+        <target>puste</target>
       </trans-unit>
     </body>
   </file>

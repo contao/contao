@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.robots.1">
         <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Remplacer la façon dont les moteurs de recherche traitent la FAQ.</target>
       </trans-unit>
       <trans-unit id="tl_faq.description.0">
         <source>Meta description</source>
