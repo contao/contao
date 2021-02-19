@@ -93,7 +93,7 @@ class DcaExtractor extends Controller
 	protected $blnIsDbTable = false;
 
 	/**
-	 * Array of found database.sql files
+	 * database.sql file paths
 	 * @var array|null
 	 */
 	private static $arrDatabaseSqlFiles;
