@@ -1,8 +1,4 @@
-<?php
-
-use Contao\FormRange;
-
-$this->extend('form_row'); ?>
+<?php $this->extend('form_row'); ?>
 
 <?php $this->block('label'); ?>
   <?php if ($this->label): ?>
