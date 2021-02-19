@@ -93,6 +93,12 @@ class DcaExtractor extends Controller
 	protected $blnIsDbTable = false;
 
 	/**
+	 * Array of found database.sql files
+	 * @var array|null
+	 */
+	private static $arrDatabaseSqlFiles;
+
+	/**
 	 * Load or create the extract
 	 *
 	 * @param string $strTable The table name
@@ -428,17 +434,8 @@ class DcaExtractor extends Controller
 		$sql = $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] ?? array();
 		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array();
 
-		try
-		{
-			$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
-		}
-		catch (FileLocatorFileNotFoundException $e)
-		{
-			$files = array();
-		}
-
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if (!empty($files))
+		if (!empty($files = $this->getDatabaseSqlFiles()))
 		{
 			@trigger_error('Using database.sql files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.', E_USER_DEPRECATED);
 
@@ -586,6 +583,25 @@ class DcaExtractor extends Controller
 
 		$this->arrUniqueFields = array_unique($this->arrUniqueFields);
 		$this->blnIsDbTable = true;
+	}
+
+	private function getDatabaseSqlFiles(): array
+	{
+		if (null !== self::$arrDatabaseSqlFiles)
+		{
+			return self::$arrDatabaseSqlFiles;
+		}
+
+		try
+		{
+			$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+		}
+		catch (FileLocatorFileNotFoundException $e)
+		{
+			$files = array();
+		}
+
+		return self::$arrDatabaseSqlFiles = $files;
 	}
 }
 
