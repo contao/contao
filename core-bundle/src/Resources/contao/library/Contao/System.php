@@ -369,43 +369,48 @@ abstract class System
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
 
-		// Unique referer ID
-		if ($ref && isset($session[$ref]))
-		{
-			$session = $session[$ref];
-		}
-		elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
-		{
-			$session = end($session);
-		}
+		$return = null;
 
-		// Use a specific referer
-		if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
+		if (null !== $session)
 		{
-			$session['current'] = $session[$strTable];
-		}
-
-		// Remove parameters helper
-		$cleanUrl = static function ($url, $params=array('rt', 'ref'))
-		{
-			if (!$url || strpos($url, '?') === false)
+			// Unique referer ID
+			if ($ref && isset($session[$ref]))
 			{
-				return $url;
+				$session = $session[$ref];
+			}
+			elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
+			{
+				$session = end($session);
 			}
 
-			list($path, $query) = explode('?', $url, 2);
+			// Use a specific referer
+			if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
+			{
+				$session['current'] = $session[$strTable];
+			}
 
-			$queryObj = new Query($query);
-			$queryObj = $queryObj->withoutPairs($params);
+			// Remove parameters helper
+			$cleanUrl = static function ($url, $params = array('rt', 'ref'))
+			{
+				if (!$url || strpos($url, '?') === false)
+				{
+					return $url;
+				}
 
-			return $path . $queryObj->getUriComponent();
-		};
+				list($path, $query) = explode('?', $url, 2);
 
-		// Determine current or last
-		$strUrl = ($cleanUrl($session['current']) != $cleanUrl(Environment::get('request'))) ? $session['current'] : $session['last'];
+				$queryObj = new Query($query);
+				$queryObj = $queryObj->withoutPairs($params);
 
-		// Remove the "toggle" and "toggle all" parameters
-		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
+				return $path . $queryObj->getUriComponent();
+			};
+
+			// Determine current or last
+			$strUrl = ($cleanUrl($session['current']) != $cleanUrl(Environment::get('request'))) ? $session['current'] : $session['last'];
+
+			// Remove the "toggle" and "toggle all" parameters
+			$return = $cleanUrl($strUrl, array('tg', 'ptg'));
+		}
 
 		// Fallback to the generic referer in the front end
 		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
