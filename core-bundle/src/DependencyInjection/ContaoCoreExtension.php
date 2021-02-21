@@ -185,7 +185,12 @@ class ContaoCoreExtension extends Extension
             }
 
             if (isset($config['image']['sizes']['_defaults'])) {
-                $value = array_merge($config['image']['sizes']['_defaults'], $value);
+                // Make sure that arrays defined under _defaults will take precedence over empty arrays
+                $value = array_merge(
+                    $value,
+                    $config['image']['sizes']['_defaults'],
+                    array_filter($value, static function ($v) { return !\is_array($v) || !empty($v); })
+                );
             }
 
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
