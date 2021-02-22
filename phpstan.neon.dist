@@ -36,6 +36,11 @@ parameters:
         - '#Call to an undefined method .*::transChoice\(\)\.#'
         - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
 
+        # Ignore PHPStan not being able to trace changes in $GLOBALS
+        -
+            message: '#Call to method PHPUnit\\Framework\\Assert::assertSame\(\) with .* will always evaluate to false\.#'
+            path: %currentWorkingDirectory%/core-bundle/tests/Framework/ContaoFrameworkTest.php
+
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
