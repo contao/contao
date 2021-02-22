@@ -135,6 +135,7 @@ TXT;
         $loader = new XliffFileLoader($this->getFixturesDir().'/app', true);
         $loader->load($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao/languages/en/default.xlf', 'en');
 
+        $this->assertIsArray($GLOBALS['TL_LANG']['MSC']['third']);
         $this->assertSame('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 }
