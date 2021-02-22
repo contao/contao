@@ -74,9 +74,9 @@ class ModuleFaqPage extends Module
 	 */
 	protected function compile()
 	{
-		$objFaq = FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaqs = FaqModel::findPublishedByPids($this->faq_categories);
 
-		if ($objFaq === null)
+		if ($objFaqs === null)
 		{
 			$this->Template->faq = array();
 
@@ -90,7 +90,7 @@ class ModuleFaqPage extends Module
 		$arrFaqs = array_fill_keys($this->faq_categories, array());
 
 		// Add FAQs
-		while ($objFaq->next())
+		foreach ($objFaqs as $objFaq)
 		{
 			/** @var FaqModel $objFaq */
 			$objTemp = (object) $objFaq->row();
