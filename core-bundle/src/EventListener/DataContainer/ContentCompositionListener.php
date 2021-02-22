@@ -104,7 +104,7 @@ class ContentCompositionListener
         $pageModel->setRow($row);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            return $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+            return null !== $icon ? $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ' : '';
         }
 
         return sprintf(
