@@ -198,7 +198,7 @@ class Installer
                         }
                     }
 
-                    $order += array_reverse($partsOrder);
+                    $order = array_merge($order, array_reverse($partsOrder));
 
                     break;
 
