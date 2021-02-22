@@ -514,6 +514,33 @@ class InstallerTest extends TestCase
         $this->assertEmpty($commands);
     }
 
+    public function testRespectsOriginalOrderOfAlterStatements(): void
+    {
+        $fromSchema = new Schema();
+        $table1 = $fromSchema->createTable('tl_foo');
+        $table1->addColumn('bar', 'string');
+        $table1->setPrimaryKey(['bar']);
+
+        $toSchema = new Schema();
+        $table2 = $toSchema->createTable('tl_foo');
+        $table2->addColumn('id', 'integer')->setAutoincrement(true);
+        $table2->setPrimaryKey(['id']);
+
+        $installer = $this->getInstaller($fromSchema, $toSchema);
+
+        $commandsInOrder = $installer->getCommands(false);
+
+        $this->assertSame(
+            [
+                'ALTER TABLE tl_foo ADD id INT AUTO_INCREMENT NOT NULL',
+                'ALTER TABLE tl_foo DROP bar',
+                'ALTER TABLE tl_foo DROP PRIMARY KEY',
+                'ALTER TABLE tl_foo ADD PRIMARY KEY (id)',
+            ],
+            array_values($commandsInOrder)
+        );
+    }
+
     private function assertHasStatement(array $commands, string $expected): void
     {
         $key = md5($expected);

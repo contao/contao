@@ -169,6 +169,7 @@ class Installer
                     $prefix = $matches[1];
                     $sql = substr($sql, \strlen($prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
+                    $partsOrder = [];
 
                     for ($i = 0, $count = \count($parts); $i < $count; ++$i) {
                         $part = $parts[$i];
@@ -177,18 +178,18 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
-                                $order[] = md5($command);
+                                $partsOrder[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
-                                $order[] = md5($command);
+                                $partsOrder[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
-                                $order[] = md5($command);
+                                $partsOrder[] = md5($command);
                                 break;
 
                             default:
@@ -196,6 +197,9 @@ class Installer
                                 break;
                         }
                     }
+
+                    $order += array_reverse($partsOrder);
+
                     break;
 
                 default:
