@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
 
 /**
@@ -20,6 +22,8 @@ use Patchwork\Utf8;
  */
 class ModuleSearch extends Module
 {
+	use LegacyFigureBuilderTrait;
+
 	/**
 	 * Template
 	 * @var string
@@ -319,6 +323,48 @@ class ModuleSearch extends Module
 					$objTemplate->context = preg_replace('/(?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$)/ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
+				}
+
+				// Add image to search results
+				$objTemplate->hasImage = false;
+				if (isset($arrResult[$i]['meta']) && null !== $arrResult[$i]['meta'])
+				{
+					$meta = json_decode($arrResult[$i]['meta'], true);
+					// Reverse so the last element wins
+					$meta = array_reverse($meta);
+					foreach ($meta as $v)
+					{
+						if (!isset($v['https://schema.org/primaryImageOfPage']))
+						{
+							continue;
+						}
+
+						if ($figureBuilder = $this->getFigureBuilderIfResourceExists($v['https://schema.org/primaryImageOfPage']['contentUrl']))
+						{
+							$objTemplate->hasImage = true;
+
+							$figureMeta = array();
+							if (isset($v['https://schema.org/primaryImageOfPage']['caption']))
+							{
+								$figureMeta[Metadata::VALUE_CAPTION]  = $v['https://schema.org/primaryImageOfPage']['caption'];
+							}
+							if (isset($v['https://schema.org/primaryImageOfPage']['name']))
+							{
+								$figureMeta[Metadata::VALUE_TITLE]  = $v['https://schema.org/primaryImageOfPage']['name'];
+							}
+
+							if (isset($v['https://schema.org/primaryImageOfPage']['alternateName']))
+							{
+								$figureMeta[Metadata::VALUE_ALT]  = $v['https://schema.org/primaryImageOfPage']['alternateName'];
+							}
+
+							$objTemplate->image = (object) $figureBuilder
+								->setSize($this->imgSize)
+								->setMetadata(new Metadata($figureMeta))
+								->build()
+								->getLegacyTemplateData();
+						}
+					}
 				}
 
 				$this->Template->results .= $objTemplate->parse();
