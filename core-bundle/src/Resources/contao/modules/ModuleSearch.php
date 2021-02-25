@@ -325,53 +325,67 @@ class ModuleSearch extends Module
 					$objTemplate->hasContext = true;
 				}
 
-				// Add image to search results
-				$objTemplate->hasImage = false;
-				if (isset($arrResult[$i]['meta']) && null !== $arrResult[$i]['meta'])
-				{
-					$meta = json_decode($arrResult[$i]['meta'], true);
-					// Reverse so the last element wins
-					$meta = array_reverse($meta);
-					foreach ($meta as $v)
-					{
-						if (!isset($v['https://schema.org/primaryImageOfPage']))
-						{
-							continue;
-						}
-
-						if ($figureBuilder = $this->getFigureBuilderIfResourceExists($v['https://schema.org/primaryImageOfPage']['contentUrl']))
-						{
-							$objTemplate->hasImage = true;
-
-							$figureMeta = array();
-							if (isset($v['https://schema.org/primaryImageOfPage']['caption']))
-							{
-								$figureMeta[Metadata::VALUE_CAPTION]  = $v['https://schema.org/primaryImageOfPage']['caption'];
-							}
-							if (isset($v['https://schema.org/primaryImageOfPage']['name']))
-							{
-								$figureMeta[Metadata::VALUE_TITLE]  = $v['https://schema.org/primaryImageOfPage']['name'];
-							}
-
-							if (isset($v['https://schema.org/primaryImageOfPage']['alternateName']))
-							{
-								$figureMeta[Metadata::VALUE_ALT]  = $v['https://schema.org/primaryImageOfPage']['alternateName'];
-							}
-
-							$objTemplate->image = (object) $figureBuilder
-								->setSize($this->imgSize)
-								->setMetadata(new Metadata($figureMeta))
-								->build()
-								->getLegacyTemplateData();
-						}
-					}
-				}
+				$this->addImageToTemplateFromSearchResult($arrResult[$i], $objTemplate);
 
 				$this->Template->results .= $objTemplate->parse();
 			}
 
 			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
+		}
+	}
+
+	protected function addImageToTemplateFromSearchResult(array $result, Template $template): void
+	{
+		$template->hasImage = false;
+
+		if (!isset($result['meta']) || null == $result['meta'])
+		{
+			return;
+		}
+
+		$meta = json_decode($result['meta'], true);
+
+		// Reverse so the last element wins
+		$meta = array_reverse($meta);
+
+		foreach ($meta as $v)
+		{
+			if (!isset($v['https://schema.org/primaryImageOfPage']))
+			{
+				continue;
+			}
+
+			$figureBuilder = $this->getFigureBuilderIfResourceExists($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+
+			if (null === $figureBuilder)
+			{
+				continue;
+			}
+
+			$figureMeta = array();
+			if (isset($v['https://schema.org/primaryImageOfPage']['caption']))
+			{
+				$figureMeta[Metadata::VALUE_CAPTION]  = $v['https://schema.org/primaryImageOfPage']['caption'];
+			}
+			if (isset($v['https://schema.org/primaryImageOfPage']['name']))
+			{
+				$figureMeta[Metadata::VALUE_TITLE]  = $v['https://schema.org/primaryImageOfPage']['name'];
+			}
+
+			if (isset($v['https://schema.org/primaryImageOfPage']['alternateName']))
+			{
+				$figureMeta[Metadata::VALUE_ALT]  = $v['https://schema.org/primaryImageOfPage']['alternateName'];
+			}
+
+			$template->hasImage = true;
+			$template->image = (object) $figureBuilder
+				->setSize($this->imgSize)
+				->setMetadata(new Metadata($figureMeta))
+				->build()
+				->getLegacyTemplateData();
+
+			return;
 		}
 	}
 }
