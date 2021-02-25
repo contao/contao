@@ -3847,11 +3847,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$this->generateTree(
 					$table,
 					$arrIds[$i],
-					array('p'=>$arrIds[($i-1)], 'n'=>$arrIds[($i+1)]),
+					array('p'=>($arrIds[$i-1] ?? null), 'n'=>($arrIds[$i+1] ?? null)),
 					$hasSorting,
 					$margin,
 					($blnClipboard ? $arrClipboard : false),
-					(
+					$arrClipboard !== null && (
 						$id == $arrClipboard['id'] ||
 						(\is_array($arrClipboard['id']) && \in_array($id, $arrClipboard['id'])) ||
 						(!$blnPtable && !\is_array($arrClipboard['id']) && \in_array($id, $this->Database->getChildRecords($arrClipboard['id'], $table)))
