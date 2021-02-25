@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Response\InitializeControllerResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;

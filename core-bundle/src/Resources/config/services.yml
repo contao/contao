@@ -134,6 +134,9 @@ services:
             - controller.service_arguments
 
     # Backwards compatibility
+    Contao\CoreBundle\Controller\InitializeController: ~
+
+    # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
         # TODO: re-enable this as soon as we are on Symfony 5 only
