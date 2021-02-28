@@ -236,7 +236,7 @@ abstract class Module extends Frontend
 		}
 
 		// Tag the module (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		if (!$this instanceof ModuleArticle && System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_module.' . $this->id));
