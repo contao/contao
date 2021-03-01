@@ -65,7 +65,7 @@ class MakeResponsePrivateListener
         }
 
         // 1) An Authorization header is present and not empty
-        if ($request->headers->has('Authorization') && '' !== $request->headers->get('Authorization')) {
+        if ('' !== (string) $request->headers->get('Authorization')) {
             $this->makePrivate($response, 'authorization');
 
             return;
