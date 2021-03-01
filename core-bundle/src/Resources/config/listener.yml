@@ -92,6 +92,26 @@ services:
         tags:
             - { name: contao.hook, hook: loadDataContainer }
 
+    contao.listener.element_template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - ce_
+            - Contao\ContentProxy
+        tags:
+            - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
+
+    contao.listener.module_template_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - mod_
+            - Contao\ModuleProxy
+        tags:
+            - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
+
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:

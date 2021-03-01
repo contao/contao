@@ -106,7 +106,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if there is an item with an empty key' => [
             '/home//.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -116,7 +116,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             '/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -126,7 +126,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -136,7 +136,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains duplicate keys' => [
             '/home/foo/bar1/foo/bar2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -146,7 +146,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument' => [
             '/home/foo/bar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -156,7 +156,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument without value' => [
             '/home/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -166,7 +166,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument with an empty value' => [
             '/home/foo/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => ''],
             'root-with-home.local',
             false,
@@ -186,7 +186,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an item with an empty key' => [
             '/home//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -196,7 +196,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the alias is empty' => [
             '/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -226,7 +226,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -236,7 +236,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
             '/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -374,7 +374,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             '/en/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -384,7 +384,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
             '/en/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -394,7 +394,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains duplicate keys' => [
             '/en/home/foo/bar1/foo/bar2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -404,7 +404,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument' => [
             '/en/home/foo/bar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -424,7 +424,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains item with an empty key' => [
             '/en/home//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -434,8 +434,18 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the alias is empty' => [
             '/en/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
+            'root-with-home.local',
+            false,
+            false,
+        ];
+
+        yield 'Renders the 404 page for an unknown language' => [
+            '/fr/home.html',
+            404,
+            'Error 404 Page',
+            ['language' => 'fr'],
             'root-with-home.local',
             false,
             false,
@@ -464,7 +474,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and there is item with an empty key' => [
             '/en/home/foobar//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'auto_item' => 'foobar'],
             'root-with-home.local',
             true,
@@ -474,7 +484,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the page if there is an item with an empty value and another item with an empty key' => [
             '/en/home/foobar///foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foobar' => ''],
             'root-with-home.local',
             true,
@@ -484,7 +494,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
             '/en/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             true,
@@ -494,7 +504,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
             '/en/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             true,
@@ -611,7 +621,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             '/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -621,7 +631,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -631,7 +641,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains duplicate keys' => [
             '/home/foo/bar1/foo/bar2',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -641,7 +651,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument' => [
             '/home/foo/bar',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -661,7 +671,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an item with item with an empty key' => [
             '/home//foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -691,7 +701,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -701,7 +711,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
             '/home/items/foobar',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,

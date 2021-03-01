@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.12] (2021-02-16)
+
+**Fixed issues:**
+
+- [#2754] Fix the line-height of the main headline ([leofeyer])
+- [#2755] Remove an unnecessary loadLanguageFile() call ([leofeyer])
+- [#1909] Correctly handle custom default templates of fragments ([fritzmg])
+- [#2721] Ignore custom templates in the back end ([fritzmg])
+- [#2717] Use the chained router to find root pages ([aschempp])
+- [#2747] Do not query for PIDs when building the breadcrumb of a File data container ([ausi])
+- [#2737] Use the internal page title for the search index ([Toflar])
+- [#2497] Re-use the tl_member.password field in ModuleCloseAccount ([bennyborn])
+- [#2688] Fix a BC break in the AbstractFragmentController ([leofeyer])
+- [#2683] Adjust the scheb/2fa-bundle integration ([bytehead])
+- [#2685] Use the request attribute to determine preview mode ([aschempp])
+
 ## [4.9.11] (2021-01-21)
 
 **Fixed issues:**
@@ -503,6 +519,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.12]: https://github.com/contao/contao/releases/tag/4.9.12
 [4.9.11]: https://github.com/contao/contao/releases/tag/4.9.11
 [4.9.10]: https://github.com/contao/contao/releases/tag/4.9.10
 [4.9.9]: https://github.com/contao/contao/releases/tag/4.9.9
@@ -521,6 +538,7 @@ This project adheres to [Semantic Versioning].
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [baumannsven]: https://github.com/baumannsven
+[bennyborn]: https://github.com/bennyborn
 [Blog404DE]: https://github.com/Blog404DE
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
@@ -536,6 +554,17 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2754]: https://github.com/contao/contao/pull/2754
+[#2755]: https://github.com/contao/contao/pull/2755
+[#1909]: https://github.com/contao/contao/pull/1909
+[#2721]: https://github.com/contao/contao/pull/2721
+[#2717]: https://github.com/contao/contao/pull/2717
+[#2747]: https://github.com/contao/contao/pull/2747
+[#2737]: https://github.com/contao/contao/pull/2737
+[#2497]: https://github.com/contao/contao/pull/2497
+[#2688]: https://github.com/contao/contao/pull/2688
+[#2683]: https://github.com/contao/contao/pull/2683
+[#2685]: https://github.com/contao/contao/pull/2685
 [#2667]: https://github.com/contao/contao/pull/2667
 [#2669]: https://github.com/contao/contao/pull/2669
 [#2668]: https://github.com/contao/contao/pull/2668

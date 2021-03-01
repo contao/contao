@@ -86,7 +86,8 @@ class ContaoCoreBundle extends Bundle
             new RegisterFragmentsPass(
                 FrontendModuleReference::TAG_NAME,
                 FrontendModuleReference::GLOBALS_KEY,
-                FrontendModuleReference::PROXY_CLASS
+                FrontendModuleReference::PROXY_CLASS,
+                'contao.listener.module_template_options'
             )
         );
 
@@ -94,7 +95,8 @@ class ContaoCoreBundle extends Bundle
             new RegisterFragmentsPass(
                 ContentElementReference::TAG_NAME,
                 ContentElementReference::GLOBALS_KEY,
-                ContentElementReference::PROXY_CLASS
+                ContentElementReference::PROXY_CLASS,
+                'contao.listener.element_template_options'
             )
         );
 

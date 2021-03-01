@@ -49,7 +49,12 @@ class RegisterFragmentsPass implements CompilerPassInterface
      */
     private $proxyClass;
 
-    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null)
+    /**
+     * @var string|null
+     */
+    private $templateOptionsListener;
+
+    public function __construct(string $tag = null, string $globalsKey = null, string $proxyClass = null, string $templateOptionsListener = null)
     {
         if (null === $tag) {
             @trigger_error('Using "new RegisterFragmentsPass()" without passing the tag name has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
@@ -58,6 +63,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->tag = $tag;
         $this->globalsKey = $globalsKey;
         $this->proxyClass = $proxyClass;
+        $this->templateOptionsListener = $templateOptionsListener;
     }
 
     /**
@@ -79,6 +85,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
     {
         $globals = [];
         $preHandlers = [];
+        $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
 
@@ -107,6 +114,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $childDefinition->setPublic(true);
 
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
+
+                if (!empty($attributes['template'])) {
+                    $templates[$attributes['type']] = $attributes['template'];
+                }
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
                     $preHandlers[$identifier] = new Reference($serviceId);
@@ -137,6 +148,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
+
+        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setCustomTemplates', [$templates]);
+        }
     }
 
     protected function getFragmentConfig(ContainerBuilder $container, Reference $reference, array $attributes): Reference
