@@ -167,7 +167,7 @@ class Document
         }
 
         if (\is_string($data['@context'])) {
-            $data['@context'] = rtrim($data['@context'], '/') .'/';
+            $data['@context'] = rtrim($data['@context'], '/').'/';
 
             foreach ($data as $key => $value) {
                 if ('@type' === $key) {
