@@ -1040,7 +1040,7 @@ class RoutingTest extends WebTestCase
 
     public function testFindsFallbackPageForUnknownLanguage(): void
     {
-        static::loadFileIntoDatabase(__DIR__.'/app/Resources/issue-xxxx.sql');
+        static::loadFileIntoDatabase(__DIR__.'/app/Resources/issue-2819.sql');
 
         Config::set('folderUrl', true);
         Config::set('addLanguageToUrl', true);
