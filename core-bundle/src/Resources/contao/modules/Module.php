@@ -236,7 +236,7 @@ abstract class Module extends Frontend
 		}
 
 		// Tag the module (see #2137)
-		if (!empty($tags = $this->getResponseCacheTags()) && System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger') && !empty($tags = $this->getResponseCacheTags()))
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags($tags);
