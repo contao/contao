@@ -135,6 +135,7 @@ TXT;
             'en'
         );
 
+        $this->assertIsArray($GLOBALS['TL_LANG']['MSC']['third']);
         $this->assertSame('This is the third source', $GLOBALS['TL_LANG']['MSC']['third']['with'][1]);
     }
 }
