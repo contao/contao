@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Doctrine\DBAL\Exception\DriverException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -5187,21 +5188,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$strKeyword = '';
 			}
 
-			// Make sure the regular expression is valid
-			if ($strField && $strKeyword)
-			{
-				try
-				{
-					$this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strField) . " REGEXP ?")
-								   ->limit(1)
-								   ->execute($strKeyword);
-				}
-				catch (\Exception $e)
-				{
-					$strKeyword = '';
-				}
-			}
-
 			$session['search'][$this->strTable]['field'] = $strField;
 			$session['search'][$this->strTable]['value'] = $strKeyword;
 
@@ -5211,27 +5197,65 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Set the search value from the session
 		elseif (isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '')
 		{
-			$strPattern = "CAST(%s AS CHAR) REGEXP ?";
+			$searchValue = $session['search'][$this->strTable]['value'];
+			$fld = $session['search'][$this->strTable]['field'] ?? null;
+
+			try
+			{
+				$this->Database->prepare("SELECT '' REGEXP ?")->execute($searchValue);
+			}
+			catch (DriverException $exception)
+			{
+				// Quote search string if it is not a valid regular expression
+				$searchValue = preg_quote($searchValue);
+			}
+
+			$strReplacePrefix = '';
+			$strReplaceSuffix = '';
+
+			// Decode HTML entities to make them searchable
+			if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['eval']['decodeEntities']))
+			{
+				$arrReplace = array(
+					'&#35;' => '#',
+					'&#60;' => '<',
+					'&#62;' => '>',
+					'&lt;' => '<',
+					'&gt;' => '>',
+					'&#40;' => '(',
+					'&#41;' => ')',
+					'&#92;' => '\\\\',
+					'&#61;' => '=',
+					'&amp;' => '&',
+				);
+
+				$strReplacePrefix = str_repeat('REPLACE(', \count($arrReplace));
+
+				foreach ($arrReplace as $strSource => $strTarget)
+				{
+					$strReplaceSuffix .= ", '$strSource', '$strTarget')";
+				}
+			}
+
+			$strPattern = "$strReplacePrefix CAST(%s AS CHAR) $strReplaceSuffix REGEXP ?";
 
 			if (substr(Config::get('dbCollation'), -3) == '_ci')
 			{
-				$strPattern = "LOWER(CAST(%s AS CHAR)) REGEXP LOWER(?)";
+				$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
 			}
-
-			$fld = $session['search'][$this->strTable]['field'] ?? array();
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
 				$this->procedure[] = "(" . sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
-				$this->values[] = $session['search'][$this->strTable]['value'] ?? null;
+				$this->values[] = $searchValue;
 			}
 			else
 			{
 				$this->procedure[] = sprintf($strPattern, Database::quoteIdentifier($fld));
 			}
 
-			$this->values[] = $session['search'][$this->strTable]['value'] ?? null;
+			$this->values[] = $searchValue;
 		}
 
 		$options_sorter = array();
