@@ -128,34 +128,37 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 0;
         }
 
+        $langA = null;
+        $langB = null;
+
         if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
             $langA = $languages[$pageA->rootLanguage] ?? null;
             $langB = $languages[$pageB->rootLanguage] ?? null;
+        }
 
-            if (null === $langA && null === $langB) {
-                if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
-                    return -1;
-                }
+        if (null === $langA && null === $langB) {
+            if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
+                return -1;
+            }
 
-                if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
-                    return 1;
-                }
-            } else {
-                if (null === $langA && null !== $langB) {
-                    return 1;
-                }
+            if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
+                return 1;
+            }
+        } else {
+            if (null === $langA && null !== $langB) {
+                return 1;
+            }
 
-                if (null !== $langA && null === $langB) {
-                    return -1;
-                }
+            if (null !== $langA && null === $langB) {
+                return -1;
+            }
 
-                if ($langA < $langB) {
-                    return -1;
-                }
+            if ($langA < $langB) {
+                return -1;
+            }
 
-                if ($langA > $langB) {
-                    return 1;
-                }
+            if ($langA > $langB) {
+                return 1;
             }
         }
 

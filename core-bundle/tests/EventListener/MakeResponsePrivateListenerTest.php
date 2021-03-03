@@ -94,6 +94,54 @@ class MakeResponsePrivateListenerTest extends TestCase
         $this->assertSame('authorization', $response->headers->get(MakeResponsePrivateListener::DEBUG_HEADER));
     }
 
+    public function testIgnoresTheResponseWhenAnAuthorizationHeaderIsEmpty(): void
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(600);
+
+        $request = new Request();
+        $request->headers->set('Authorization', '');
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
+
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
+        $this->assertTrue($response->headers->getCacheControlDirective('public'));
+        $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
+    }
+
+    public function testIgnoresTheResponseWhenAnAuthorizationHeaderIsNull(): void
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge(600);
+
+        $request = new Request();
+        $request->headers->set('Authorization', null); // @phpstan-ignore-line
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MASTER_REQUEST,
+            $response
+        );
+
+        $listener = new MakeResponsePrivateListener($this->createScopeMatcher(true));
+        $listener($event);
+
+        $this->assertTrue($response->headers->has(AbstractSessionListener::NO_AUTO_CACHE_CONTROL_HEADER));
+        $this->assertTrue($response->headers->getCacheControlDirective('public'));
+        $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
+    }
+
     public function testMakesResponsePrivateWhenTheSessionWasStarted(): void
     {
         $session = $this->createMock(SessionInterface::class);

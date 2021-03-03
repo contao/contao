@@ -1279,6 +1279,35 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('Domain1', $title);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testFindsFallbackPageForUnknownLanguage(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
+        Config::set('folderUrl', true);
+        Config::set('addLanguageToUrl', true);
+
+        $request = '/de/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'domain1.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'af';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['issue-2819']);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Domain1', $title);
+    }
+
     private function loadFixtureFiles(array $fileNames): void
     {
         // Do not reload the fixtures if they have not changed

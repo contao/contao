@@ -1706,7 +1706,7 @@ abstract class Controller extends System
 			->setSize($size)
 			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
 			->setLightboxSize($lightboxSize)
-			->enableLightbox($rowData['fullsize'] ?? false)
+			->enableLightbox((bool) ($rowData['fullsize'] ?? false))
 			->build();
 
 		// Build result and apply it to the template
