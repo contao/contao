@@ -75,6 +75,17 @@ Request.Contao = new Class(
 		}
 
 		this.onSuccess(json.content, json);
+	},
+
+	failure: function() {
+		var url = this.getHeader('X-Ajax-Location');
+
+		if (url && this.options.followRedirects && this.status >= 300 && this.status < 400) {
+			location.replace(url);
+			return;
+		}
+
+		this.onFailure();
 	}
 });
 

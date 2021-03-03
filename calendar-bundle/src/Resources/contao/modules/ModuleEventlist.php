@@ -368,7 +368,7 @@ class ModuleEventlist extends Events
 				$figure = $figureBuilder
 					->setSize($imgSize)
 					->setMetadata($eventModel->getOverwriteMetadata())
-					->enableLightbox($eventModel->fullsize)
+					->enableLightbox((bool) $eventModel->fullsize)
 					->build();
 
 				// Rebuild with link to event if none is set

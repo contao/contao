@@ -189,7 +189,7 @@ abstract class ModuleNews extends Module
 			$figure = $figureBuilder
 				->setSize($imgSize)
 				->setMetadata($objArticle->getOverwriteMetadata())
-				->enableLightbox($objArticle->fullsize)
+				->enableLightbox((bool) $objArticle->fullsize)
 				->build();
 
 			// Rebuild with link to news article if none is set
