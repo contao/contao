@@ -170,8 +170,8 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        $pathA = $a instanceof PageRoute ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
-        $pathB = $b instanceof PageRoute ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
+        $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
+        $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
 
         $countA = \count(explode('/', $pathA));
         $countB = \count(explode('/', $pathB));

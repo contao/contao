@@ -8,9 +8,26 @@ tl_article:
       inColumn: main
       published: '1'
 
+    - id: 2
+      pid: 8
+      sorting: 128
+      tstamp: 1539686711
+      title: Home
+      author: 1
+      inColumn: main
+      published: '1'
+
 tl_content:
     - id: 1
       pid: 1
+      ptable: tl_article
+      sorting: 128
+      tstamp: 1539686688
+      type: module
+      module: 1
+
+    - id: 2
+      pid: 2
       ptable: tl_article
       sorting: 128
       tstamp: 1539686688
@@ -62,4 +79,4 @@ tl_news_archive:
     - id: 1
       tstamp: 1539616536
       title: Test
-      jumpTo: 2
+      jumpTo: 3
