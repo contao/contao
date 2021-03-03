@@ -339,6 +339,7 @@ class RouteProvider implements RouteProviderInterface
 
         foreach ($names as $name) {
             $parts = explode('.', $name);
+
             if ('tl_page' !== ($parts[0] ?? '') || 'error_404' === ($parts[2] ?? '')) {
                 continue;
             }

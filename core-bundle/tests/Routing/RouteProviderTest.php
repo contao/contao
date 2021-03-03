@@ -53,7 +53,7 @@ class RouteProviderTest extends TestCase
         $provider = $this->getRouteProvider();
 
         $this->expectException(RouteNotFoundException::class);
-        $this->expectExceptionMessage('Route name does not match a page ID');
+        $this->expectExceptionMessage('Route name "foobar" is not supported by Contao\CoreBundle\Routing\RouteProvider::getRouteByName');
 
         $provider->getRouteByName('foobar');
     }
