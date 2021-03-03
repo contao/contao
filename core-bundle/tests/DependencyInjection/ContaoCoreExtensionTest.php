@@ -3980,6 +3980,9 @@ class ContaoCoreExtensionTest extends TestCase
                         'sizes' => [
                             '_defaults' => [
                                 'width' => 150,
+                                'formats' => [
+                                    'jpg' => ['webp', 'jpg'],
+                                ],
                             ],
                             'foo' => [
                                 'height' => 250,
@@ -4026,12 +4029,16 @@ class ContaoCoreExtensionTest extends TestCase
                 'width' => 150,
                 'height' => 250,
                 'items' => [],
-                'formats' => [],
+                'formats' => [
+                    'jpg' => ['webp', 'jpg'],
+                ],
             ],
             '_bar' => [
                 'width' => 150,
                 'items' => [],
-                'formats' => [],
+                'formats' => [
+                    'jpg' => ['webp', 'jpg'],
+                ],
             ],
             '_foobar' => [
                 'width' => 100,
@@ -4052,7 +4059,9 @@ class ContaoCoreExtensionTest extends TestCase
                     'sizes' => '50vw',
                     'media' => '(max-width: 900px)',
                 ]],
-                'formats' => [],
+                'formats' => [
+                    'jpg' => ['webp', 'jpg'],
+                ],
             ],
         ]];
 
