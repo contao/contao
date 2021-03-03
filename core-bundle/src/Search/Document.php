@@ -139,6 +139,10 @@ class Document
 
     private function filterJsonLd(array $jsonLds, string $context = '', string $type = ''): array
     {
+        if ('' !== $context) {
+            $context = rtrim($context, '/').'/';
+        }
+
         $matching = [];
 
         foreach ($jsonLds as $data) {
@@ -163,6 +167,8 @@ class Document
         }
 
         if (\is_string($data['@context'])) {
+            $data['@context'] = rtrim($data['@context'], '/').'/';
+
             foreach ($data as $key => $value) {
                 if ('@type' === $key) {
                     $data[$key] = $data['@context'].$value;
