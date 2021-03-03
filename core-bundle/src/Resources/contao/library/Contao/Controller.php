@@ -1767,7 +1767,7 @@ abstract class Controller extends System
 						}
 						catch (\Exception $e)
 						{
-							$objTemplate->$strHrefKey = static::addFilesUrlTo($arrItem['imageUrl']);
+							$objTemplate->$strHrefKey = static::addFilesUrlTo($imageUrl);
 							$objTemplate->lightboxPicture = array('img'=>array('src'=>$objTemplate->$strHrefKey, 'srcset'=>$objTemplate->$strHrefKey), 'sources'=>array());
 						}
 					}
