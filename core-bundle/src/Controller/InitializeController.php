@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -121,6 +123,16 @@ class InitializeController extends AbstractController
         );
 
         return new InitializeControllerResponse('', 204);
+    }
+
+    public static function getSubscribedServices()
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.framework'] = ContaoFramework::class;
+        $services['kernel'] = KernelInterface::class;
+
+        return $services;
     }
 
     /**
