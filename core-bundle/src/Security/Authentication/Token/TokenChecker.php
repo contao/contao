@@ -174,7 +174,16 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): ?TokenInterface
     {
-        if (!$this->session->isStarted() || !$this->session->has($sessionKey)) {
+        if (!$this->session->isStarted()) {
+            $request = $this->requestStack->getMasterRequest();
+
+            if (!$request || !$request->hasPreviousSession()) {
+                return null;
+            }
+        }
+
+        // This will start the session if Request::hasPreviousSession() was true
+        if (!$this->session->has($sessionKey)) {
             return null;
         }
 

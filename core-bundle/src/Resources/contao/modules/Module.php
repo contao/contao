@@ -236,10 +236,10 @@ abstract class Module extends Frontend
 		}
 
 		// Tag the module (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger') && !empty($tags = $this->getResponseCacheTags()))
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_module.' . $this->id));
+			$responseTagger->addTags($tags);
 		}
 
 		return $this->Template->parse();
@@ -249,6 +249,14 @@ abstract class Module extends Frontend
 	 * Compile the current element
 	 */
 	abstract protected function compile();
+
+	/**
+	 * Get a list of tags that should be applied to the response when calling generate().
+	 */
+	protected function getResponseCacheTags(): array
+	{
+		return array('contao.db.tl_module.' . $this->id);
+	}
 
 	/**
 	 * Recursively compile the navigation menu and return it as HTML string
