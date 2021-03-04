@@ -2,6 +2,25 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.1] (2021-03-04)
+
+**Fixed issues:**
+
+- [#2785] Handle null arguments in the ContentCompositionListener ([fritzmg])
+- [#2835] Fix an illegal object access in the Versions class ([leofeyer])
+- [#2833] Use dependency injection for the InitializeController ([aschempp])
+- [#2834] Allow passing an array of IDs to User::isMemberOf() ([leofeyer])
+- [#2805] Fix an illegal array access in DC_Table when expanding the tree ([m-vo])
+- [#2818] Fix the logout handler in Symfony 5 ([fritzmg])
+- [#2794] Handle another illegal array access in the tl_page DCA ([m-vo])
+- [#2788] Fix accessing Model\Collection instead of Model in ModuleFaqPage ([m-vo])
+- [#2784] Correctly sort the pages if the URL suffix is empty ([aschempp])
+- [#2806] Fix accessing an undefined variable ([m-vo])
+- [#2796] Suggest using the contao-setup binary with @php prefix ([m-vo])
+- [#2783] Correctly merge image size _defaults ([m-vo])
+- [#2782] Fix the type casting for the FigureBuilder::enableLightbox() method ([richardhj])
+- [#2774] Do not use Kernel::$rootDir anymore ([fritzmg])
+
 ## [4.11.0] (2021-02-17)
 
 **Fixed issues:**
@@ -73,6 +92,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.1]: https://github.com/contao/contao/releases/tag/4.11.1
 [4.11.0]: https://github.com/contao/contao/releases/tag/4.11.0
 [4.11.0-RC2]: https://github.com/contao/contao/releases/tag/4.11.0-RC2
 [4.11.0-RC1]: https://github.com/contao/contao/releases/tag/4.11.0-RC1
@@ -84,8 +104,23 @@ This project adheres to [Semantic Versioning].
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [rabauss]: https://github.com/rabauss
+[richardhj]: https://github.com/richardhj
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#2785]: https://github.com/contao/contao/pull/2785
+[#2835]: https://github.com/contao/contao/pull/2835
+[#2833]: https://github.com/contao/contao/pull/2833
+[#2834]: https://github.com/contao/contao/pull/2834
+[#2805]: https://github.com/contao/contao/pull/2805
+[#2818]: https://github.com/contao/contao/pull/2818
+[#2794]: https://github.com/contao/contao/pull/2794
+[#2788]: https://github.com/contao/contao/pull/2788
+[#2784]: https://github.com/contao/contao/pull/2784
+[#2806]: https://github.com/contao/contao/pull/2806
+[#2796]: https://github.com/contao/contao/pull/2796
+[#2783]: https://github.com/contao/contao/pull/2783
+[#2782]: https://github.com/contao/contao/pull/2782
+[#2774]: https://github.com/contao/contao/pull/2774
 [#2763]: https://github.com/contao/contao/pull/2763
 [#2764]: https://github.com/contao/contao/pull/2764
 [#2766]: https://github.com/contao/contao/pull/2766

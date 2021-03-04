@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>نام مستعار عددی پشتیبانی نمی‌شود!</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
@@ -1884,6 +1885,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
         <source>Metadata</source>
+        <target>فراداده</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
         <source>Version management</source>
@@ -2589,6 +2591,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>به این دستگاه اعتماد کن</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2656,9 +2659,11 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option</source>
+        <target>انتخاب نامشخص</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
+        <target>کپی URL</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
