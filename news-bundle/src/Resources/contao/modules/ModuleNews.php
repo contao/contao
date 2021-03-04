@@ -39,29 +39,23 @@ abstract class ModuleNews extends Module
 			return $arrArchives;
 		}
 
-		$this->import(FrontendUser::class, 'User');
 		$objArchive = NewsArchiveModel::findMultipleByIds($arrArchives);
 		$arrArchives = array();
 
 		if ($objArchive !== null)
 		{
-			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+			$user = null;
+
+			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$user = FrontendUser::getInstance();
+			}
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected)
+				if ($objArchive->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objArchive->groups))))
 				{
-					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
-					{
-						continue;
-					}
-
-					$groups = StringUtil::deserialize($objArchive->groups);
-
-					if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
-					{
-						continue;
-					}
+					continue;
 				}
 
 				$arrArchives[] = $objArchive->id;
