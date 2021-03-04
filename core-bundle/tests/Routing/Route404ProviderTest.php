@@ -42,9 +42,7 @@ class Route404ProviderTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
         $provider = new Route404Provider($framework, false);
-        $result = $provider->getRouteByName('tl_page.17.error_404');
-
-        $this->assertInstanceOf(Route::class, $result);
+        $provider->getRouteByName('tl_page.17.error_404');
     }
 
     public function testGetRouteByNameThrowsExceptionOnUnknownName(): void
@@ -63,7 +61,6 @@ class Route404ProviderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-
         $provider = new Route404Provider($framework, false);
 
         $this->expectException(RouteNotFoundException::class);
@@ -155,8 +152,8 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
-
         $provider = new Route404Provider($framework, false);
+
         $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
     }
 
