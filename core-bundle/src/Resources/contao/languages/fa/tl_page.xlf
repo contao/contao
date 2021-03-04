@@ -91,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
         <source>Disable language redirect</source>
+        <target>غیرفعال کردن بازگردانی زبان</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.1">
         <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
@@ -202,6 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
+        <target>پروتکل</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Here you can select which protocol to use for the website.</source>
@@ -409,6 +411,7 @@
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
+        <target>فراداده</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -424,6 +427,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language_legend">
         <source>Language settings</source>
+        <target>تنظیمات زبان</target>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>

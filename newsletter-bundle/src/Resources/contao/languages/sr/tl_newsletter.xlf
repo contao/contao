@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
+        <target>Овде можете да заобиђете шаблоне имејла за канал.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -74,9 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Mailer transport</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>
+        <target>Овде можете да заобиђете подразумевани mailer transport за канал.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
