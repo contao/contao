@@ -246,6 +246,63 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
+    public function testRendersNoArticlesIconIfPageSupportsContentCompositionAndIconIsNull(): void
+    {
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('contao_user.modules', 'article')
+            ->willReturn(true)
+        ;
+
+        $page = $this->expectPageWithRow($this->pageRecord, 17);
+
+        $this->expectSupportsContentComposition(true, $page);
+
+        $this->imageAdapter
+            ->expects($this->never())
+            ->method('getHtml')
+        ;
+
+        $this->backendAdapter
+            ->expects($this->never())
+            ->method('addToUrl')
+        ;
+
+        $this->assertSame(
+            '',
+            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', null)
+        );
+    }
+
+    public function testRendersNoArticlesIconIfPageSupportsContentCompositionAndIconAndHrefAreNull(): void
+    {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        $this->imageAdapter
+            ->expects($this->never())
+            ->method('getHtml')
+        ;
+
+        $this->backendAdapter
+            ->expects($this->never())
+            ->method('addToUrl')
+        ;
+
+        $this->framework
+            ->expects($this->never())
+            ->method('createInstance')
+        ;
+
+        $this->assertSame(
+            '',
+            $this->listener->renderPageArticlesOperation($this->pageRecord, null, '', '', null)
+        );
+    }
+
     public function testRendersArticlesOperationIfProviderSupportsCompositionAndPageLayoutHasArticles(): void
     {
         $this->security
