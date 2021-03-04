@@ -771,6 +771,8 @@ class Versions extends Controller
 		// Adjust the URL of the "personal data" module (see #7987)
 		if (preg_match('/do=login(&|$)/', $strUrl))
 		{
+			$this->import(BackendUser::class, 'User');
+
 			$strUrl = preg_replace('/do=login(&|$)/', 'do=user$1', $strUrl);
 			$strUrl .= '&amp;act=edit&amp;id=' . $this->User->id . '&amp;rt=' . REQUEST_TOKEN;
 		}
