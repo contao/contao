@@ -91,11 +91,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     public function getRootDir(): string
     {
-        if (null === $this->rootDir) {
-            $this->rootDir = Path::join($this->getProjectDir(), 'app');
-        }
-
-        return $this->rootDir;
+        return Path::join($this->getProjectDir(), 'app');
     }
 
     public function getCacheDir(): string

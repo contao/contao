@@ -726,27 +726,9 @@ abstract class Controller extends System
 			// Protected element
 			if ($objElement->protected)
 			{
-				if (!$blnFeUserLoggedIn)
+				if (!$blnFeUserLoggedIn || !FrontendUser::getInstance()->isMemberOf(StringUtil::deserialize($objElement->groups)))
 				{
 					$blnReturn = false;
-				}
-				else
-				{
-					$objUser = FrontendUser::getInstance();
-
-					if (!\is_array($objUser->groups))
-					{
-						$blnReturn = false;
-					}
-					else
-					{
-						$groups = StringUtil::deserialize($objElement->groups);
-
-						if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $objUser->groups)))
-						{
-							$blnReturn = false;
-						}
-					}
 				}
 			}
 
@@ -1706,7 +1688,7 @@ abstract class Controller extends System
 			->setSize($size)
 			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
 			->setLightboxSize($lightboxSize)
-			->enableLightbox($rowData['fullsize'] ?? false)
+			->enableLightbox((bool) ($rowData['fullsize'] ?? false))
 			->build();
 
 		// Build result and apply it to the template

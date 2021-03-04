@@ -673,14 +673,21 @@ abstract class Backend extends Controller
 		}
 
 		$arrPages = array();
+		$user = null;
+
+		if (Config::get('indexProtected') && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$user = FrontendUser::getInstance();
+		}
 
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
 			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
+			$indexProtected = $user && $user->isMemberOf(StringUtil::deserialize($objPage->groups));
 
 			// Searchable and not protected
-			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || Config::get('indexProtected')))
+			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || $indexProtected))
 			{
 				$arrPages[] = $objPage->getAbsoluteUrl();
 
@@ -695,7 +702,7 @@ abstract class Backend extends Controller
 			}
 
 			// Get subpages
-			if ((!$objPage->protected || Config::get('indexProtected')) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsXmlSitemap)))
+			if ((!$objPage->protected || $indexProtected) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsXmlSitemap)))
 			{
 				$arrPages = array_merge($arrPages, $arrSubpages);
 			}
@@ -894,7 +901,7 @@ abstract class Backend extends Controller
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] .= '
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? '') . '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -1068,7 +1075,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] .= '
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? '') . '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">

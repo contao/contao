@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version408;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
@@ -36,14 +37,20 @@ class Version480Update extends AbstractMigration
     private $filesystem;
 
     /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
      * @var string
      */
     private $projectDir;
 
-    public function __construct(Connection $connection, Filesystem $filesystem, string $projectDir)
+    public function __construct(Connection $connection, Filesystem $filesystem, ContaoFramework $framework, string $projectDir)
     {
         $this->connection = $connection;
         $this->filesystem = $filesystem;
+        $this->framework = $framework;
         $this->projectDir = $projectDir;
     }
 
@@ -67,6 +74,8 @@ class Version480Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $this->framework->initialize();
+
         $this->connection->executeStatement('
             ALTER TABLE
                 tl_layout
