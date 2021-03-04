@@ -93,7 +93,7 @@ class RouteProvider implements RouteProviderInterface
         $ids = $this->getPageIdsFromNames([$name]);
 
         if (empty($ids)) {
-            throw new RouteNotFoundException('Route name does not match a page ID');
+            throw new RouteNotFoundException('Route name "'.$name.'" is not supported by '.__METHOD__);
         }
 
         /** @var PageModel $pageModel */
@@ -338,7 +338,9 @@ class RouteProvider implements RouteProviderInterface
         $ids = [];
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+            $parts = explode('.', $name);
+
+            if ('tl_page' !== $parts[0] || 'error_404' === ($parts[2] ?? null)) {
                 continue;
             }
 
