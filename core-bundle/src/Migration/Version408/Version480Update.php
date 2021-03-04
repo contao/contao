@@ -66,6 +66,8 @@ class Version480Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $this->framework->initialize();
+
         $this->connection->query('
             ALTER TABLE
                 tl_layout
