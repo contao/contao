@@ -265,7 +265,7 @@ class Picker extends Widget
 		$labelValues = [];
 
 		foreach ($labelConfig['fields'] as $field) {
-			$labelValues[] = $arrRow[$field];
+			$labelValues[] = $arrRow[$field] ?? '';
 		}
 
 		$label = vsprintf($labelConfig['format'], $labelValues);
