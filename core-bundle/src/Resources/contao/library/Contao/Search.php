@@ -55,7 +55,7 @@ class Search
 		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
-		$arrSet['filesize'] = $arrData['filesize'];
+		$arrSet['filesize'] = $arrData['filesize'] ?? null;
 		$arrSet['groups'] = $arrData['groups'];
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
