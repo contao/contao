@@ -262,9 +262,10 @@ class Picker extends Widget
 		}
 
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
-		$labelValues = [];
+		$labelValues = array();
 
-		foreach ($labelConfig['fields'] as $field) {
+		foreach ($labelConfig['fields'] as $field)
+		{
 			$labelValues[] = $arrRow[$field] ?? '';
 		}
 
