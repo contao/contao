@@ -32,7 +32,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $template = $this->createTemplate($model, 'mod_'.$type);
 
         $this->addHeadlineToTemplate($template, $model->headline);
-        $this->addCssAttributesToTemplate($template, 'mod_'.$type, $model->cssID, $classes);
+        $this->addCssAttributesToTemplate($template, 'mod_'.$type, $model->cssID, $classes, $request->attributes->get('cssID'));
         $this->addSectionToTemplate($template, $section);
         $this->tagResponse(['contao.db.tl_module.'.$model->id]);
 
