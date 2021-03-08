@@ -20,6 +20,11 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 class ContentProxy extends ContentElement
 {
 	/**
+	 * @var array
+	 */
+	private $fragmentAttributes = [];
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function generate()
@@ -32,7 +37,17 @@ class ContentProxy extends ContentElement
 			$reference->setBackendScope();
 		}
 
+		foreach ($this->fragmentAttributes as $k => $v)
+		{
+			$reference->attributes[$k] = $v;
+		}
+
 		return System::getContainer()->get('fragment.handler')->render($reference);
+	}
+
+	public function addFragmentAttributes(array $attributes)
+	{
+		$this->fragmentAttributes = array_merge($this->fragmentAttributes, $attributes);
 	}
 
 	/**

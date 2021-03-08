@@ -114,11 +114,16 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * @param string|array $cssID
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, array $classes = null, string $overrideCssID = null): void
     {
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));
-        $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
+
+        if (!empty($overrideCssID)) {
+            $template->cssID = $overrideCssID;
+        } else {
+            $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
+        }
 
         if (!empty($classes)) {
             $template->class .= ' '.implode(' ', $classes);
