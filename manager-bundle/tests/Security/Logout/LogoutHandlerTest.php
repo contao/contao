@@ -21,6 +21,18 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class LogoutHandlerTest extends ContaoTestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(LogoutHandler::class);
+    }
+
     public function testClearsCookieOnResponse(): void
     {
         $response = $this->createMock(Response::class);

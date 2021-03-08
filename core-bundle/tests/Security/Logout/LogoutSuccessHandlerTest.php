@@ -21,6 +21,18 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutSuccessHandlerTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %s class implements "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" that is deprecated %s
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(LogoutSuccessHandler::class);
+    }
+
     public function testRedirectsToAGivenUrl(): void
     {
         $request = new Request();

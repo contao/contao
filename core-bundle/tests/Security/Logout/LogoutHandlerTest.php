@@ -31,6 +31,20 @@ class LogoutHandlerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s
+     * @expectedDeprecation The "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" class is deprecated%s
+     * @expectedDeprecation The "Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface" interface is deprecated%s
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(LogoutHandler::class);
+    }
+
     public function testAddsTheLogEntry(): void
     {
         $framework = $this->mockContaoFramework();

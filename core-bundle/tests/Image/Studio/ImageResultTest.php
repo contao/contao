@@ -37,6 +37,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImageResultTest extends TestCase
 {
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %s\PictureFactoryWithoutResizeOptionsStub::create()" method will require a new "ResizeOptions|null $options" argument in the next major version%s
+     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        spl_autoload_call(PictureFactoryWithoutResizeOptionsStub::class);
+    }
+
     public function testGetPicture(): void
     {
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
