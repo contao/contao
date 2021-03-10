@@ -17,6 +17,7 @@ use Contao\CoreBundle\DataContainer\PalettePositionException;
 use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\GdImage;
+use Doctrine\DBAL\Driver\Result;
 use PHPUnit\Framework\Constraint\StringMatchesFormatDescription;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterLastTestHook;
@@ -24,14 +25,6 @@ use PHPUnit\Runner\BeforeFirstTestHook;
 
 final class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
 {
-    private const DEPRECATED_CLASSES = [
-        DoctrineArrayStatement::class => ['%s extends "Doctrine\DBAL\Cache\ArrayStatement" that is deprecated.'],
-        GdImage::class => ['Using the "Contao\GdImage" class has been deprecated %s.'],
-        PaletteNotFoundException::class => ['Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
-        PalettePositionException::class => ['Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
-        Translator::class => ['%simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s'],
-    ];
-
     private $failed = false;
 
     public function executeAfterLastTest(): void
@@ -39,13 +32,13 @@ final class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
         if ($this->failed) {
             echo "\n\n";
 
-            throw new ExpectationFailedException('Expected deprecations were not triggered or did not match.');
+            throw new ExpectationFailedException(sprintf('Expected deprecations were not triggered or did not match. See %s::deprecationProvider()', self::class));
         }
     }
 
     public function executeBeforeFirstTest(): void
     {
-        foreach (self::DEPRECATED_CLASSES as $className => $deprecationMessages) {
+        foreach ($this->deprecationProvider() as $className => $deprecationMessages) {
             try {
                 $this->expectDeprecatedClass($className, $deprecationMessages);
             } catch (ExpectationFailedException $exception) {
@@ -57,6 +50,23 @@ final class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
         if ($this->failed) {
             echo "\n";
         }
+    }
+
+    private function deprecationProvider(): array
+    {
+        $deprecations = [
+            GdImage::class => ['Using the "Contao\GdImage" class has been deprecated %s.'],
+            PaletteNotFoundException::class => ['Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
+            PalettePositionException::class => ['Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
+            Translator::class => ['%simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s'],
+        ];
+
+        // Deprecated since doctrine/dbal 2.11.0
+        if (interface_exists(Result::class)) {
+            $deprecations[DoctrineArrayStatement::class] = ['%s extends "Doctrine\DBAL\Cache\ArrayStatement" that is deprecated.'];
+        }
+
+        return $deprecations;
     }
 
     private function expectDeprecatedClass(string $className, array $expectedDeprecations): void
