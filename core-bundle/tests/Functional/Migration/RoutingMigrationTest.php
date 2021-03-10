@@ -21,6 +21,7 @@ use Doctrine\DBAL\Connection;
 class RoutingMigrationTest extends FunctionalTestCase
 {
     /**
+     * @group legacy
      * @dataProvider shouldRunProvider
      */
     public function testShouldRun(array $dropFields, bool $expected): void
@@ -102,6 +103,7 @@ class RoutingMigrationTest extends FunctionalTestCase
     }
 
     /**
+     * @group legacy
      * @dataProvider migrationDataProvider
      */
     public function testMigratesData(bool $prependLocale, string $urlSuffix, bool $folderUrl): void
