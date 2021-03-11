@@ -23,7 +23,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterLastTestHook;
 use PHPUnit\Runner\BeforeFirstTestHook;
 
-final class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
+class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
 {
     private $failed = false;
 
@@ -52,12 +52,11 @@ final class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
         }
     }
 
-    private function deprecationProvider(): array
+    protected function deprecationProvider(): array
     {
         return [
             GdImage::class => ['%sUsing the "Contao\GdImage" class has been deprecated %s.'],
             LogoutHandler::class => ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'],
-            \Contao\ManagerBundle\Security\Logout\LogoutHandler::class => ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'],
             LogoutSuccessHandler::class => [
                 '%sThe "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" class is deprecated%s',
                 '%sclass extends "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" that is deprecated%s',
