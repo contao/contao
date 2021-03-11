@@ -117,11 +117,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         Environment::reset();
+        Files::reset();
         Input::resetCache();
         Input::resetUnusedGet();
         InsertTags::reset();
         Registry::getInstance()->reset();
-        Files::reset();
         Session::reset();
         System::reset();
     }

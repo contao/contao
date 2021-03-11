@@ -99,7 +99,7 @@ class Session
 	}
 
 	/**
-	 * @internal
+	 * Reset the singleton instance
 	 */
 	public static function reset(): void
 	{

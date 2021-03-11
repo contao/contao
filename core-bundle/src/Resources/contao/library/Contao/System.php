@@ -332,17 +332,6 @@ abstract class System
 		static::$objContainer = $container;
 	}
 
-	public static function reset()
-	{
-		self::$objContainer = null;
-		self::$removedServiceIds = null;
-		self::$arrStaticObjects = array();
-		self::$arrSingletons = array();
-		self::$arrLanguages = array();
-		self::$arrLanguageFiles = array();
-		self::$arrImageSizes = array();
-	}
-
 	/**
 	 * Add a log entry to the database
 	 *
@@ -1267,6 +1256,20 @@ abstract class System
 	public static function disableModule()
 	{
 		@trigger_error('Using System::disableModule() has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.', E_USER_DEPRECATED);
+	}
+
+	/**
+	 * Reset the internal cache
+	 */
+	public static function reset()
+	{
+		self::$objContainer = null;
+		self::$removedServiceIds = null;
+		self::$arrStaticObjects = array();
+		self::$arrSingletons = array();
+		self::$arrLanguages = array();
+		self::$arrLanguageFiles = array();
+		self::$arrImageSizes = array();
 	}
 }
 
