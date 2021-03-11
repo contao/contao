@@ -204,8 +204,12 @@ class MigrateCommand extends Command
 
         $commandsByHash = [];
 
+        // For backwards compatibility, keep splitting "ALTER TABLE" statements
+        // if a "sqlCompileCommands" hook is registered.
+        $splitAlterTableStatements = !empty($GLOBALS['TL_HOOKS']['sqlCompileCommands']);
+
         while (true) {
-            $this->installer->compileCommands();
+            $this->installer->compileCommands($splitAlterTableStatements);
 
             if (!$commands = $this->installer->getCommands(false)) {
                 return true;
