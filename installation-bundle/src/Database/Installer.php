@@ -108,7 +108,7 @@ class Installer
     /**
      * Compiles the command required to update the database.
      */
-    public function compileCommands(): void
+    public function compileCommands(bool $splitAlterTableStatements = true): void
     {
         $return = [
             'CREATE' => [],
@@ -166,6 +166,12 @@ class Installer
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
+                    if (!$splitAlterTableStatements) {
+                        $return['ALTER_TABLE'][md5($sql)] = $sql;
+                        $order[] = md5($sql);
+                        break;
+                    }
+
                     $prefix = $matches[1];
                     $sql = substr($sql, \strlen($prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
