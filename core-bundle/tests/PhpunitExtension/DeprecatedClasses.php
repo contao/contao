@@ -10,18 +10,18 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\PhpUnitExtension;
+namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
-use Contao\CoreBundle\TestUtil\DeprecatedClassesExtension;
 use Contao\GdImage;
+use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
-class DeprecatedClasses extends DeprecatedClassesExtension
+class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
     protected function deprecationProvider(): array
     {

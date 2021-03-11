@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\PhpUnitExtension;
+namespace Contao\ManagerBundle\Tests\PhpunitExtension;
 
-use Contao\CoreBundle\TestUtil\DeprecatedClassesExtension;
 use Contao\ManagerBundle\Security\Logout\LogoutHandler;
+use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
-class DeprecatedClasses extends DeprecatedClassesExtension
+class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
     private $failed = false;
 
