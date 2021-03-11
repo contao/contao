@@ -17,41 +17,11 @@ use Contao\CoreBundle\DataContainer\PalettePositionException;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
+use Contao\CoreBundle\TestUtil\DeprecatedClassesExtension;
 use Contao\GdImage;
-use PHPUnit\Framework\Constraint\StringMatchesFormatDescription;
-use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Runner\AfterLastTestHook;
-use PHPUnit\Runner\BeforeFirstTestHook;
 
-class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
+class DeprecatedClasses extends DeprecatedClassesExtension
 {
-    private $failed = false;
-
-    public function executeAfterLastTest(): void
-    {
-        if ($this->failed) {
-            echo "\n\n";
-
-            throw new ExpectationFailedException(sprintf('Expected deprecations were not triggered or did not match. See %s::deprecationProvider()', self::class));
-        }
-    }
-
-    public function executeBeforeFirstTest(): void
-    {
-        foreach ($this->deprecationProvider() as $className => $deprecationMessages) {
-            try {
-                $this->expectDeprecatedClass($className, $deprecationMessages);
-            } catch (ExpectationFailedException $exception) {
-                $this->failed = true;
-                echo $exception->toString()."\n";
-            }
-        }
-
-        if ($this->failed) {
-            echo "\n";
-        }
-    }
-
     protected function deprecationProvider(): array
     {
         return [
@@ -66,57 +36,5 @@ class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
             PalettePositionException::class => ['%sUsing the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
             PictureFactoryWithoutResizeOptionsStub::class => ['%s\PictureFactoryWithoutResizeOptionsStub::create()" method will require a new "ResizeOptions|null $options" argument in the next major version%s'],
         ];
-    }
-
-    private function expectDeprecatedClass(string $className, array $expectedDeprecations): void
-    {
-        // Skip, if the class was already autoloaded
-        if (class_exists($className, false)) {
-            return;
-        }
-
-        $unhandledErrors = [];
-
-        $previousHandler = set_error_handler(
-            static function ($errno, $errstr) use (&$expectedDeprecations, &$previousHandler, &$unhandledErrors) {
-                foreach ($expectedDeprecations as $key => $expectedDeprecation) {
-                    if ((new StringMatchesFormatDescription($expectedDeprecation))->evaluate($errstr, '', true)) {
-                        unset($expectedDeprecations[$key]);
-
-                        return true;
-                    }
-                }
-
-                $unhandledErrors[] = $errstr;
-
-                if ($previousHandler) {
-                    return $previousHandler(...\func_get_args());
-                }
-
-                return false;
-            },
-            E_DEPRECATED | E_USER_DEPRECATED
-        );
-
-        try {
-            class_exists($className);
-        } finally {
-            restore_error_handler();
-        }
-
-        if (!\count($expectedDeprecations)) {
-            return;
-        }
-
-        $expectedDeprecation = array_values($expectedDeprecations)[0];
-
-        if (\count($unhandledErrors)) {
-            (new StringMatchesFormatDescription($expectedDeprecation))->evaluate(
-                $unhandledErrors[0],
-                sprintf('Expected deprecation for "%s" did not match.', $className)
-            );
-        }
-
-        throw new ExpectationFailedException(sprintf('Expected deprecation for "%s" was not triggered: "%s"', $className, $expectedDeprecation));
     }
 }

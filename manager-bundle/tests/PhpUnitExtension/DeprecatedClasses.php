@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\PhpUnitExtension;
 
-use Contao\CoreBundle\Tests\PhpUnitExtension\DeprecatedClasses as CoreBundleDeprecatedClasses;
+use Contao\CoreBundle\TestUtil\DeprecatedClassesExtension;
 use Contao\ManagerBundle\Security\Logout\LogoutHandler;
 
-class DeprecatedClasses extends CoreBundleDeprecatedClasses
+class DeprecatedClasses extends DeprecatedClassesExtension
 {
     private $failed = false;
 
