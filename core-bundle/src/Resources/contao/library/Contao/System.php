@@ -334,6 +334,7 @@ abstract class System
 
 	public static function reset()
 	{
+		self::$objContainer = null;
 		self::$removedServiceIds = null;
 		self::$arrStaticObjects = array();
 		self::$arrSingletons = array();
