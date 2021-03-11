@@ -69,6 +69,6 @@
     </listeners>
 
     <extensions>
-        <extension class="Contao\CoreBundle\Tests\PhpUnitExtension\DeprecatedClasses"/>
+        <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     </extensions>
 </phpunit>
