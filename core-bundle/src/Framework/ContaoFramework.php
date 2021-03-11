@@ -19,10 +19,12 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Environment;
+use Contao\Files;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\Model\Registry;
 use Contao\RequestToken;
+use Contao\Session;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -119,6 +121,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         Input::resetUnusedGet();
         InsertTags::reset();
         Registry::getInstance()->reset();
+        Files::reset();
+        Session::reset();
+        System::reset();
     }
 
     public function isInitialized(): bool
