@@ -22,6 +22,13 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 {
     public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null): Response
     {
+        if (!$this->isVisible($model, $request)) {
+            $response = new Response();
+            $this->addSharedMaxAgeToResponse($response, $model);
+
+            return $response;
+        }
+
         $type = $this->getType();
         $template = $this->createTemplate($model, 'ce_'.$type);
 
@@ -35,6 +42,8 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         if (null === $response) {
             $response = $template->getResponse();
         }
+
+        $this->addSharedMaxAgeToResponse($response, $model);
 
         return $response;
     }
@@ -57,6 +66,35 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         }
 
         $response->setSharedMaxAge(min($min));
+    }
+
+    protected function isVisible(ContentModel $model, Request $request): bool
+    {
+        $isInvisible = $model->invisible || ($model->start && $model->start > time()) || ($model->stop && $model->stop <= time());
+
+        // The element is visible, so show it
+        if (!$isInvisible) {
+            return true;
+        }
+
+        return $this->isFrontendPreview($request);
+    }
+
+    protected function isFrontendPreview(Request $request): bool
+    {
+        $tokenChecker = $this->get('contao.security.token_checker');
+
+        // Preview mode is enabled, so show the element
+        if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode()) {
+            return true;
+        }
+
+        // We are in the back end, so show the element
+        if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+            return true;
+        }
+
+        return false;
     }
 
     abstract protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response;
