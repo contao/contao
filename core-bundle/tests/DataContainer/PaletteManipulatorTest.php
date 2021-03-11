@@ -333,13 +333,8 @@ class PaletteManipulatorTest extends TestCase
         $this->assertTrue($closureCalled);
     }
 
-    /**
-     * @group legacy
-     */
     public function testFailsIfTheDcaPaletteDoesNotExist(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.7: Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.');
-
         $pm = PaletteManipulator::create()
             ->addLegend('foobar_legend', '', 'append')
             ->addField(['foo', 'bar'], 'foobar_legend', 'append')
@@ -367,12 +362,8 @@ class PaletteManipulatorTest extends TestCase
         $pm->applyToSubpalette('name', 'tl_test');
     }
 
-    /**
-     * @group legacy
-     */
     public function testFailsIfThePositionIsInvalid(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.7: Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.');
         $this->expectException(PalettePositionException::class);
 
         PaletteManipulator::create()

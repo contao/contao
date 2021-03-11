@@ -67,4 +67,8 @@
             </arguments>
         </listener>
     </listeners>
+
+    <extensions>
+        <extension class="Contao\CoreBundle\Tests\PhpUnitExtension\DeprecatedClasses"/>
+    </extensions>
 </phpunit>
