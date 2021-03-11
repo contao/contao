@@ -116,6 +116,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
+        ClassLoader::reset();
         Environment::reset();
         Files::reset();
         Input::resetCache();
