@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\Tests\PhpUnitExtension;
 
 use Contao\CoreBundle\TestUtil\DeprecatedClassesExtension;
 use Contao\ManagerBundle\Security\Logout\LogoutHandler;
+use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
 class DeprecatedClasses extends DeprecatedClassesExtension
 {
@@ -21,6 +22,10 @@ class DeprecatedClasses extends DeprecatedClassesExtension
 
     protected function deprecationProvider(): array
     {
+        if (!class_exists(LegacyLogoutHandlerListener::class)) {
+            return [];
+        }
+
         return [
             LogoutHandler::class => ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'],
         ];
