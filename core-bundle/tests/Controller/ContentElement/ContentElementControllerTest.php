@@ -25,11 +25,31 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
+    /**
+     * @var string
+     */
+    private static $testRoot;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        // Make resources available in test root
+        self::$testRoot = self::getTempDir();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', new RequestStack());
+
+        // Prevent that the dca extractor tries to load language file and dca files
+        // See Contao\DcaExtractor::createExtract()
+        $GLOBALS['TL_LANG']['MSC']['foo'] = 'bar';
+
+        System::setContainer($container);
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void
