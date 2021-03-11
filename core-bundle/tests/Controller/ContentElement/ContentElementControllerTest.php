@@ -23,7 +23,6 @@ use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use function time;
 
 class ContentElementControllerTest extends TestCase
 {
