@@ -14,10 +14,10 @@ namespace Contao\CoreBundle\Tests\PhpUnitExtension;
 
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
-use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
-use Contao\CoreBundle\Translation\Translator;
+use Contao\CoreBundle\Security\Logout\LogoutHandler;
+use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
+use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
 use Contao\GdImage;
-use Doctrine\DBAL\Driver\Result;
 use PHPUnit\Framework\Constraint\StringMatchesFormatDescription;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterLastTestHook;
@@ -54,19 +54,19 @@ final class DeprecatedClasses implements AfterLastTestHook, BeforeFirstTestHook
 
     private function deprecationProvider(): array
     {
-        $deprecations = [
-            GdImage::class => ['Using the "Contao\GdImage" class has been deprecated %s.'],
-            PaletteNotFoundException::class => ['Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
-            PalettePositionException::class => ['Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
-            Translator::class => ['%simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s'],
+        return [
+            GdImage::class => ['%sUsing the "Contao\GdImage" class has been deprecated %s.'],
+            LogoutHandler::class => ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'],
+            \Contao\ManagerBundle\Security\Logout\LogoutHandler::class => ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'],
+            LogoutSuccessHandler::class => [
+                '%sThe "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" class is deprecated%s',
+                '%sclass extends "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" that is deprecated%s',
+                '%sThe "Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface" interface is deprecated%s',
+            ],
+            PaletteNotFoundException::class => ['%sUsing the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
+            PalettePositionException::class => ['%sUsing the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
+            PictureFactoryWithoutResizeOptionsStub::class => ['%s\PictureFactoryWithoutResizeOptionsStub::create()" method will require a new "ResizeOptions|null $options" argument in the next major version%s'],
         ];
-
-        // Deprecated since doctrine/dbal 2.11.0
-        if (interface_exists(Result::class)) {
-            $deprecations[DoctrineArrayStatement::class] = ['%s extends "Doctrine\DBAL\Cache\ArrayStatement" that is deprecated.'];
-        }
-
-        return $deprecations;
     }
 
     private function expectDeprecatedClass(string $className, array $expectedDeprecations): void
