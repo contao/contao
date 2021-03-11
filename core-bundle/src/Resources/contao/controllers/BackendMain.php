@@ -10,17 +10,21 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Backend\BackendMainController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Util\PackageUtil;
-use Knp\Bundle\TimeBundle\DateTimeFormatter;
+use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
+trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\BackendMain" class has been deprecated and will no longer work in Contao 5.0.');
 
 /**
  * Main back end controller.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated this controller was moved to the \Contao\CoreBundle\Controller\Backend namespace
  */
 class BackendMain extends Backend
 {
@@ -105,69 +109,6 @@ class BackendMain extends Backend
 	 */
 	public function run()
 	{
-		$version = PackageUtil::getContaoVersion();
-
-		$this->Template = new BackendTemplate('be_main');
-		$this->Template->version = $version;
-
-		if (isset($GLOBALS['TL_LANG']['MSC']['version']))
-		{
-			$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . $version;
-		}
-
-		$this->Template->main = '';
-
-		// Ajax request
-		if ($_POST && Environment::get('isAjaxRequest'))
-		{
-			$this->objAjax = new Ajax(Input::post('action'));
-			$this->objAjax->executePreActions();
-		}
-
-		// Toggle nodes
-		if (Input::get('mtg'))
-		{
-			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-			$session = $objSessionBag->all();
-			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
-			$objSessionBag->replace($session);
-
-			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
-		}
-		// Error
-		elseif (Input::get('act') == 'error')
-		{
-			$this->Template->error = $GLOBALS['TL_LANG']['ERR']['general'];
-			$this->Template->title = $GLOBALS['TL_LANG']['ERR']['general'];
-
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "act=error" has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.');
-		}
-		// Welcome screen
-		elseif (!Input::get('do') && !Input::get('act'))
-		{
-			$this->Template->main .= $this->welcomeScreen();
-			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['dashboard'];
-		}
-		// Open a module
-		elseif (Input::get('do'))
-		{
-			$picker = null;
-
-			if (isset($_GET['picker']))
-			{
-				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
-
-				if ($picker !== null && ($menu = $picker->getMenu()))
-				{
-					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
-				}
-			}
-
-			$this->Template->main .= $this->getBackendModule(Input::get('do'), $picker);
-			$this->Template->title = $this->Template->headline;
-		}
-
 		return $this->output();
 	}
 
@@ -178,35 +119,12 @@ class BackendMain extends Backend
 	 */
 	protected function welcomeScreen()
 	{
-		System::loadLanguageFile('explain');
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using BackendMain::welcomeScreen() has been deprecated.');
 
-		$objTemplate = new BackendTemplate('be_welcome');
-		$objTemplate->messages = Message::generateUnwrapped() . Backend::getSystemMessages();
-		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
+		$container = System::getContainer();
+		$fragmentHandler = $container->get('fragment.handler');
 
-		// Add the login message
-		if ($this->User->lastLogin > 0)
-		{
-			$formatter = new DateTimeFormatter(System::getContainer()->get('translator'));
-			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $this->User->lastLogin)), new \DateTime());
-
-			$objTemplate->loginMsg = sprintf(
-				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time title="' . Date::parse(Config::get('datimFormat'), $this->User->lastLogin) . '">' . $diff . '</time>'
-			);
-		}
-
-		// Add the versions overview
-		Versions::addToTemplate($objTemplate);
-
-		$objTemplate->showDifferences = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
-		$objTemplate->recordOfTable = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
-		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
-		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
-		$objTemplate->shortcutsLink = $GLOBALS['TL_LANG']['MSC']['shortcuts'][1];
-		$objTemplate->editElement = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
-
-		return $objTemplate->parse();
+		return $fragmentHandler->render(new FragmentReference('contao.dashboard_widget.welcome_screen'));
 	}
 
 	/**
@@ -216,44 +134,13 @@ class BackendMain extends Backend
 	 */
 	protected function output()
 	{
-		// Default headline
-		if (!$this->Template->headline)
-		{
-			$this->Template->headline = $GLOBALS['TL_LANG']['MSC']['dashboard'];
-		}
-
-		// Default title
-		if (!$this->Template->title)
-		{
-			$this->Template->title = $this->Template->headline;
-		}
-
 		$container = System::getContainer();
-		$objSession = $container->get('session');
 
-		// File picker reference (backwards compatibility)
-		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))))
-		{
-			$this->Template->managerHref = StringUtil::ampersand($objSession->get('filePickerRef'));
-			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
-		}
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$path['_controller'] = BackendMainController::class;
+		$subRequest = $request->duplicate($query, null, $path);
 
-		$this->Template->theme = Backend::getTheme();
-		$this->Template->base = Environment::get('base');
-		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->title = StringUtil::specialchars(strip_tags($this->Template->title));
-		$this->Template->host = Backend::getDecodedHostname();
-		$this->Template->charset = Config::get('characterSet');
-		$this->Template->home = $GLOBALS['TL_LANG']['MSC']['home'];
-		$this->Template->isPopup = Input::get('popup');
-		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
-
-		$twig = $container->get('twig');
-
-		$this->Template->menu = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
-		$this->Template->headerMenu = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
-
-		return $this->Template->getResponse();
+		return $container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 	}
 }
 

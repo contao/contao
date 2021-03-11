@@ -65,7 +65,21 @@ services:
             - '%contao.locales%'
         public: true
 
-    Contao\CoreBundle\Controller\BackendController: ~
+    Contao\CoreBundle\Backend\BackendState: ~
+
+    Contao\CoreBundle\Controller\Backend\BackendController: ~
+    Contao\CoreBundle\Controller\Backend\BackendLoginController: ~
+    Contao\CoreBundle\Controller\Backend\BackendMainController:
+        arguments:
+            - '@contao.fragment.registry'
+            - '@fragment.handler'
+            - '@contao.menu.renderer'
+
+    Contao\CoreBundle\Controller\BackendDashboard\WelcomeScreenController:
+        tags:
+            - { name: contao.dashboard_widget, priority: 100 }
+
+    Contao\CoreBundle\Controller\BackendModule\BackendModuleController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
