@@ -21,11 +21,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation %simplements "Symfony\Component\Translation\TranslatorInterface" that is deprecated%s
-     */
     public function testTranslatorImplementsDeprecatedInterface(): void
     {
         $translator = new Translator($this->createMock(BaseTranslator::class), $this->mockContaoFramework());
