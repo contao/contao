@@ -174,11 +174,18 @@ class Picker extends Widget
 
 	protected function generateValues($blnHasOrder): array
 	{
-		$strRelatedTable = $this->getRelatedTable();
+		if (substr($this->context ?? '', 0, 3) === 'dc.')
+		{
+			$strRelatedTable = substr($this->context, 3);
+		}
+		else
+		{
+			$strRelatedTable = $this->getRelatedTable();
+		}
 
 		if (!$strRelatedTable)
 		{
-			return (array) $this->varValue;
+			return array_combine((array) $this->varValue, (array) $this->varValue);
 		}
 
 		Controller::loadDataContainer($strRelatedTable);
