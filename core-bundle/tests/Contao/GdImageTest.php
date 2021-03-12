@@ -26,11 +26,6 @@ class GdImageTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
-    /**
-     * @group legacy
-     *
-     * @expectedDeprecation Using the "Contao\GdImage" class has been deprecated %s.
-     */
     public function testCreatesImagesFromResources(): void
     {
         $resource = imagecreate(1, 1);
