@@ -245,7 +245,7 @@ class Picker extends Widget
 
 			if ($objRows->numRows)
 			{
-				$dataContainer = 'DC_' . $GLOBALS['TL_DCA'][$strRelatedTable]['config']['dataContainer'];
+				$dataContainer = DataContainer::getDriverForTable($strRelatedTable);
 				$dc = new $dataContainer($strRelatedTable);
 
 				while ($objRows->next())
