@@ -330,10 +330,6 @@ class PaletteManipulatorTest extends TestCase
         $this->assertTrue($closureCalled);
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.
-     */
     public function testFailsIfTheDcaPaletteDoesNotExist(): void
     {
         $pm = PaletteManipulator::create()
@@ -363,10 +359,6 @@ class PaletteManipulatorTest extends TestCase
         $pm->applyToSubpalette('name', 'tl_test');
     }
 
-    /**
-     * @group legacy
-     * @expectedDeprecation Using the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.
-     */
     public function testFailsIfThePositionIsInvalid(): void
     {
         $this->expectException(PalettePositionException::class);
