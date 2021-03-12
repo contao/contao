@@ -67,9 +67,7 @@ class ImageFactoryTest extends TestCase
     {
         parent::tearDown();
 
-        (new Filesystem())->remove(
-            Path::join($this->getTempDir(), 'assets/images')
-        );
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
     }
 
     public function testCreatesAnImageObjectFromAnImagePath(): void
@@ -698,9 +696,8 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        $path = Path::join(System::getContainer()->getParameter('kernel.project_dir'), $relativePath);
-
         $filesystem = new Filesystem();
+        $path = Path::join(System::getContainer()->getParameter('kernel.project_dir'), $relativePath);
 
         if (!$filesystem->exists($dir = Path::getDirectory($path))) {
             $filesystem->mkdir($dir);
@@ -787,9 +784,8 @@ class ImageFactoryTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        $path = Path::join(System::getContainer()->getParameter('kernel.project_dir'), $relativePath);
-
         $filesystem = new Filesystem();
+        $path = Path::join(System::getContainer()->getParameter('kernel.project_dir'), $relativePath);
 
         if (!$filesystem->exists($dir = Path::getDirectory($path))) {
             $filesystem->mkdir($dir);

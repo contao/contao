@@ -31,18 +31,14 @@ class ResizeImagesCommandTest extends TestCase
     {
         parent::setUp();
 
-        (new Filesystem())->mkdir(
-            Path::join($this->getTempDir(), 'assets/images')
-        );
+        (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'assets/images'));
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        (new Filesystem())->remove(
-            Path::join($this->getTempDir(), 'assets/images')
-        );
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
     }
 
     public function testExecutesWithoutPendingImages(): void

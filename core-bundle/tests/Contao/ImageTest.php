@@ -44,9 +44,7 @@ class ImageTest extends TestCase
         );
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $filesystem->mkdir(
-                Path::join(self::getTempDir(), 'assets/images', (string) $subdir)
-            );
+            $filesystem->mkdir(Path::join(self::getTempDir(), 'assets/images', (string) $subdir));
         }
 
         $filesystem->mkdir(Path::join(static::getTempDir(), 'system/tmp'));
@@ -68,9 +66,7 @@ class ImageTest extends TestCase
     {
         parent::tearDown();
 
-        (new Filesystem())->remove(
-            Path::join($this->getTempDir(), 'assets/images')
-        );
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
 
         unset($GLOBALS['TL_CONFIG']);
     }
@@ -1426,9 +1422,7 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        (new Filesystem())->dumpFile(
-            Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), ''
-        );
+        (new Filesystem())->dumpFile(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), '');
 
         return $path;
     }
@@ -1508,9 +1502,7 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        (new Filesystem())->dumpFile(
-            Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), ''
-        );
+        (new Filesystem())->dumpFile(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), '');
 
         return $path;
     }
@@ -1562,10 +1554,7 @@ class ImageTest extends TestCase
             $container->getParameter('contao.image.bypass_cache'),
             $container->getParameter('contao.image.imagine_options'),
             $container->getParameter('contao.image.valid_extensions'),
-            Path::join(
-                $container->getParameter('kernel.project_dir'),
-                $container->getParameter('contao.upload_path')
-            )
+            Path::join($container->getParameter('kernel.project_dir'), $container->getParameter('contao.upload_path'))
         );
 
         $container->set('contao.image.resizer', $resizer);

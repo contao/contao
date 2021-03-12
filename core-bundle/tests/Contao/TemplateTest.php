@@ -177,11 +177,7 @@ EOF
     public function testParsesNestedBlocks(): void
     {
         $filesystem = new Filesystem();
-
-        $filesystem->dumpFile(
-            Path::join($this->getTempDir(), 'templates/test_parent.html5'),
-            ''
-        );
+        $filesystem->dumpFile(Path::join($this->getTempDir(), 'templates/test_parent.html5'), '');
 
         $filesystem->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),

@@ -64,9 +64,7 @@ class TemplateLoaderTest extends TestCase
 
     public function testReturnsACustomTemplateInTemplates(): void
     {
-        (new Filesystem())->touch(
-            Path::join($this->getTempDir(), 'templates/mod_article_custom.html5')
-        );
+        (new Filesystem())->touch(Path::join($this->getTempDir(), 'templates/mod_article_custom.html5'));
 
         TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
 

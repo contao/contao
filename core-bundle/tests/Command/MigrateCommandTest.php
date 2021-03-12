@@ -85,7 +85,6 @@ class MigrateCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertRegExp('/runonceFile.php/', $display);
         $this->assertRegExp('/All migrations completed/', $display);
-
         $this->assertFileNotExists($runOnceFile, 'File should be gone once executed');
     }
 
