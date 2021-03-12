@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
+
 /**
  * Extracts DCA information and cache it
  *
@@ -89,6 +91,12 @@ class DcaExtractor extends Controller
 	 * @var boolean
 	 */
 	protected $blnIsDbTable = false;
+
+	/**
+	 * database.sql file paths
+	 * @var array|null
+	 */
+	private static $arrDatabaseSqlFiles;
 
 	/**
 	 * Load or create the extract
@@ -434,22 +442,13 @@ class DcaExtractor extends Controller
 		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($blnFromFile)
+		if ($blnFromFile && !empty($files = $this->getDatabaseSqlFiles()))
 		{
 			@trigger_error('Using database.sql files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.', E_USER_DEPRECATED);
 
 			if (!isset(static::$arrSql[$this->strTable]))
 			{
 				$arrSql = array();
-
-				try
-				{
-					$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
-				}
-				catch (\InvalidArgumentException $e)
-				{
-					$files = array();
-				}
 
 				foreach ($files as $file)
 				{
@@ -591,6 +590,25 @@ class DcaExtractor extends Controller
 
 		$this->arrUniqueFields = array_unique($this->arrUniqueFields);
 		$this->blnIsDbTable = true;
+	}
+
+	private function getDatabaseSqlFiles(): array
+	{
+		if (null !== self::$arrDatabaseSqlFiles)
+		{
+			return self::$arrDatabaseSqlFiles;
+		}
+
+		try
+		{
+			$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
+		}
+		catch (FileLocatorFileNotFoundException $e)
+		{
+			$files = array();
+		}
+
+		return self::$arrDatabaseSqlFiles = $files;
 	}
 }
 

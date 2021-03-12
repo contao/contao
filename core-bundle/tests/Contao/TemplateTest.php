@@ -31,6 +31,7 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
+        Config::set('debugMode', false);
     }
 
     protected function tearDown(): void
