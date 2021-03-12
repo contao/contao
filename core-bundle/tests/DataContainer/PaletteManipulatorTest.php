@@ -16,12 +16,9 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class PaletteManipulatorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testPrependsAFieldToAPalette(): void
     {
         $pm = PaletteManipulator::create()

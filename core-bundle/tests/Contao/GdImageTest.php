@@ -16,12 +16,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\GdImage;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class GdImageTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
