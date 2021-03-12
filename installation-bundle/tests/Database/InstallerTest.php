@@ -14,6 +14,8 @@ namespace Contao\InstallationBundle\Tests\Database;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -21,9 +23,8 @@ use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class InstallerTest extends TestCase
+class InstallerTest extends ContaoTestCase
 {
     public function testReturnsTheAlterTableCommands(): void
     {
@@ -514,7 +515,7 @@ class InstallerTest extends TestCase
         $this->assertEmpty($commands);
     }
 
-    public function testRespectsOriginalOrderOfAlterStatements(): void
+    public function testRespectsOriginalOrderOfAlterTableStatements(): void
     {
         $fromSchema = new Schema();
         $table1 = $fromSchema->createTable('tl_foo');
@@ -539,6 +540,52 @@ class InstallerTest extends TestCase
             ],
             array_values($commandsInOrder)
         );
+    }
+
+    public function testDoesNotSplitAlterTableStatements(): void
+    {
+        $fromSchema = new Schema();
+        $table1 = $fromSchema->createTable('tl_foo');
+        $table1->addColumn('bar', 'string');
+        $table1->setPrimaryKey(['bar']);
+
+        $toSchema = new Schema();
+        $table2 = $toSchema->createTable('tl_foo');
+        $table2->addColumn('id', 'integer')->setAutoincrement(true);
+        $table2->setPrimaryKey(['id']);
+
+        $installer = $this->getInstaller($fromSchema, $toSchema);
+
+        $installer->compileCommands(false);
+        $commandsInOrder = $installer->getCommands(false);
+
+        $this->assertSame(
+            [
+                'ALTER TABLE tl_foo ADD id INT AUTO_INCREMENT NOT NULL, DROP bar, DROP PRIMARY KEY, ADD PRIMARY KEY (id)',
+            ],
+            array_values($commandsInOrder)
+        );
+    }
+
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using the "sqlCompileCommands" hook has been deprecated and will no longer work in Contao 5.0.
+     */
+    public function testDeprecatesTheSqlCompileCommandsHook(): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $GLOBALS['TL_HOOKS']['sqlCompileCommands'] = [[static::class, 'sqlCompileCommandsHookCallback']];
+
+        $this->getInstaller(new Schema(), new Schema())->compileCommands();
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public static function sqlCompileCommandsHookCallback(array $commands): array
+    {
+        return $commands;
     }
 
     private function assertHasStatement(array $commands, string $expected): void
