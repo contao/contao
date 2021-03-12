@@ -36,6 +36,7 @@ class TemplateTest extends TestCase
         $this->filesystem->mkdir($this->getFixturesDir().'/templates');
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        Config::set('debugMode', false);
     }
 
     protected function tearDown(): void
@@ -47,8 +48,6 @@ class TemplateTest extends TestCase
 
     public function testReplacesTheVariables(): void
     {
-        Config::set('debugMode', false);
-
         $this->filesystem->dumpFile(
             $this->getFixturesDir().'/templates/test_template.html5',
             '<?= $this->value ?>'

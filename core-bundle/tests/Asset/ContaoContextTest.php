@@ -224,6 +224,8 @@ class ContaoContextTest extends TestCase
         $context = $this->getContaoContext('staticPlugins', $requestStack);
 
         $this->assertSame('https://example.com/foo/', $context->getStaticUrl());
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testReturnsAnEmptyStaticUrlIfTheBasePathIsEmpty(): void
