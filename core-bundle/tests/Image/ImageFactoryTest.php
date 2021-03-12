@@ -658,15 +658,15 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg'),
-            $image->getPath()
+            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_100_100_crop__Contao-Image.jpg')),
+            Path::canonicalize($image->getPath())
         );
 
         $image = $imageFactory->create($path, [200, 200, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg'),
-            $image->getPath()
+            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_200_200_crop__Contao-Image.jpg')),
+            Path::canonicalize($image->getPath())
         );
 
         $image = $imageFactory->create(
@@ -676,8 +676,8 @@ class ImageFactoryTest extends TestCase
         );
 
         $this->assertSame(
-            Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg'),
-            $image->getPath()
+            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&executeResize_200_200_crop_target.jpg_Contao-Image.jpg')),
+            Path::canonicalize($image->getPath())
         );
 
         unset($GLOBALS['TL_CONFIG']['validImageTypes'], $GLOBALS['TL_HOOKS']);
@@ -743,8 +743,8 @@ class ImageFactoryTest extends TestCase
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
         $this->assertSame(
-            Path::join($this->getTempDir(), 'assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg'),
-            $image->getPath()
+            Path::canonicalize(Path::join($this->getTempDir(), 'assets/images/dummy.jpg&getImage_100_100_crop_Contao-File__Contao-Image.jpg')),
+            Path::canonicalize($image->getPath())
         );
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
