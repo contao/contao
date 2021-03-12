@@ -123,7 +123,7 @@
         "ext-fileinfo": "*",
         "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.3.1",
-        "contao/test-case": "^4.2",
+        "contao/test-case": "^4.3",
         "phpunit/phpunit": "^8.5",
         "symfony/browser-kit": "4.4.* || 5.2.*",
         "symfony/http-client": "4.4.* || 5.2.*",
