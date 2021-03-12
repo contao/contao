@@ -36,7 +36,6 @@ class TemplateTest extends TestCase
         $this->filesystem->mkdir($this->getFixturesDir().'/templates');
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
-
         Config::set('debugMode', false);
     }
 

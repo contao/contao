@@ -44,7 +44,6 @@ class BackendCsvImportControllerTest extends TestCase
         $container->set('contao.resource_finder', $finder);
 
         System::setContainer($container);
-
         Config::set('debugMode', false);
     }
 

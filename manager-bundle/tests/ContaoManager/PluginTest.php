@@ -53,11 +53,7 @@ class PluginTest extends ContaoTestCase
     {
         parent::setUp();
 
-        unset(
-            $_SERVER['DATABASE_URL'],
-            $_SERVER['APP_SECRET'],
-            $_ENV['DATABASE_URL']
-        );
+        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
     }
 
     public function testReturnsTheBundles(): void
