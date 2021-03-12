@@ -28,7 +28,7 @@ class SymlinksCommandTest extends TestCase
 
         $filesystem = new Filesystem();
 
-        foreach (['assets', 'files', 'system', 'vendor'] as $directory) {
+        foreach (['assets', 'files', 'system', 'var', 'vendor'] as $directory) {
             $filesystem->mirror(
                 Path::join(__DIR__.'/../Fixtures', $directory),
                 Path::join(self::getTempDir(), $directory)
@@ -56,14 +56,14 @@ class SymlinksCommandTest extends TestCase
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
-        $this->assertSame(1, $code);
+        $this->assertSame(0, $code);
 
         $this->assertNotRegExp('# web/files +files #', $display);
         $this->assertRegExp('# web/files/public +files/public #', $display);
         $this->assertRegExp('# web/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
         $this->assertRegExp('# web/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
         $this->assertRegExp('# web/system/modules/foobar/html +system/modules/foobar/html #', $display);
-        $this->assertRegExp('# system/themes/default +The path "system/themes/default" exists and is not a symlink\. #', $display);
+        $this->assertRegExp('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
         $this->assertRegExp('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
         $this->assertRegExp('# web/assets +assets #', $display);
         $this->assertRegExp('# web/system/themes +system/themes #', $display);
