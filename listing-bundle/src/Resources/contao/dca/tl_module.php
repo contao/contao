@@ -107,6 +107,15 @@ class tl_module_listing extends Contao\Backend
 	 */
 	public function getAllTables()
 	{
-		return $this->Database->listTables();
+		$arrTables = $this->Database->listTables();
+		$arrViews = Contao\System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
+
+		if (!empty($arrViews))
+		{
+			$arrTables = array_merge($arrTables, array_keys($arrViews));
+			natsort($arrTables);
+		}
+
+		return array_values($arrTables);
 	}
 }

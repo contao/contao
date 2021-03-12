@@ -45,6 +45,7 @@ services:
         arguments:
             - '@database_connection'
             - '@filesystem'
+            - '@contao.framework'
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Migration\Version409\CeAccessMigration:

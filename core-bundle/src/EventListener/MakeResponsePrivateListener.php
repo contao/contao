@@ -39,7 +39,7 @@ class MakeResponsePrivateListener
      * Make sure that the current response becomes a private response if any
      * of the following conditions are true.
      *
-     *   1. An Authorization header is present
+     *   1. An Authorization header is present and not empty
      *   2. The session was started
      *   3. The response sets a cookie (same reason as 2 but for other cookies than the session cookie)
      *   4. The response has a "Vary: Cookie" header and the request provides at least one cookie
@@ -64,8 +64,8 @@ class MakeResponsePrivateListener
             return;
         }
 
-        // 1) An Authorization header is present
-        if ($request->headers->has('Authorization')) {
+        // 1) An Authorization header is present and not empty
+        if ('' !== (string) $request->headers->get('Authorization')) {
             $this->makePrivate($response, 'authorization');
 
             return;
