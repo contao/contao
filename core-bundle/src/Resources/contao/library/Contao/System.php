@@ -368,7 +368,6 @@ abstract class System
 		$ref = Input::get('ref');
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
-
 		$return = null;
 
 		if (null !== $session)
