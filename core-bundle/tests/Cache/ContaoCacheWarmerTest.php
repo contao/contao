@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -46,8 +47,16 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testCreatesTheCacheFolder(): void
     {
+        $resourceLocator = $this->createMock(FileLocator::class);
+        $resourceLocator
+            ->method('locate')
+            ->with('config/database.sql', null, false)
+            ->willThrowException(new FileLocatorFileNotFoundException())
+        ;
+
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
         $container->set('database_connection', $this->createMock(Connection::class));
+        $container->set('contao.resource_locator', $resourceLocator);
 
         System::setContainer($container);
 
