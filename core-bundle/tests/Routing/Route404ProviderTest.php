@@ -24,28 +24,93 @@ use Symfony\Component\Routing\Route;
 
 class Route404ProviderTest extends TestCase
 {
-    public function testGetRouteByNameThrowsException(): void
+    public function testGetRouteByNameReturns404Route(): void
     {
-        $framework = $this->mockContaoFramework();
-        $provider = new Route404Provider($framework, false);
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->rootId = 1;
 
-        $this->expectException(RouteNotFoundException::class);
-
-        $provider->getRouteByName('foo');
-    }
-
-    public function testGetRoutesByNamesWithValueReturnsEmptyArray(): void
-    {
         $pageAdapter = $this->mockAdapter(['findByType']);
         $pageAdapter
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('findByType')
+            ->with('error_404')
+            ->willReturn(new Collection([$page], 'tl_page'))
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
         $provider = new Route404Provider($framework, false);
-        $result = $provider->getRoutesByNames(['foo']);
+        $provider->getRouteByName('tl_page.17.error_404');
+    }
+
+    public function testGetRouteByNameThrowsExceptionOnUnknownName(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->rootId = 1;
+
+        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByType')
+            ->with('error_404')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $provider = new Route404Provider($framework, false);
+
+        $this->expectException(RouteNotFoundException::class);
+
+        $provider->getRouteByName('foobar');
+    }
+
+    public function testGetRoutesByNamesReturnsErrorPage(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->rootId = 1;
+
+        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByType')
+            ->with('error_404')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+
+        $provider = new Route404Provider($framework, false);
+        $result = $provider->getRoutesByNames(['tl_page.17.error_404']);
+
+        $this->assertIsArray($result);
+        $this->assertCount(1, $result);
+    }
+
+    public function testGetRoutesByNamesReturnsEmptyForUnknownName(): void
+    {
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->rootId = 1;
+
+        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByType')
+            ->with('error_404')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+
+        $provider = new Route404Provider($framework, false);
+        $result = $provider->getRoutesByNames(['tl_page.123']);
 
         $this->assertIsArray($result);
         $this->assertEmpty($result);
@@ -87,8 +152,8 @@ class Route404ProviderTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
         $request = $this->mockRequestWithPath('/');
-
         $provider = new Route404Provider($framework, false);
+
         $this->assertCount(0, $provider->getRouteCollectionForRequest($request));
     }
 

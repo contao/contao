@@ -93,7 +93,7 @@ class RouteProvider implements RouteProviderInterface
         $ids = $this->getPageIdsFromNames([$name]);
 
         if (empty($ids)) {
-            throw new RouteNotFoundException('Route name does not match a page ID');
+            throw new RouteNotFoundException('Route name "'.$name.'" is not supported by '.__METHOD__);
         }
 
         /** @var PageModel $pageModel */
@@ -338,7 +338,9 @@ class RouteProvider implements RouteProviderInterface
         $ids = [];
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+            $parts = explode('.', $name);
+
+            if ('tl_page' !== $parts[0] || 'error_404' === ($parts[2] ?? null)) {
                 continue;
             }
 
@@ -417,34 +419,37 @@ class RouteProvider implements RouteProviderInterface
                     return 0;
                 }
 
+                $langA = null;
+                $langB = null;
+
                 if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
                     $langA = $languages[$pageA->rootLanguage] ?? null;
                     $langB = $languages[$pageB->rootLanguage] ?? null;
+                }
 
-                    if (null === $langA && null === $langB) {
-                        if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
-                            return -1;
-                        }
+                if (null === $langA && null === $langB) {
+                    if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
+                        return -1;
+                    }
 
-                        if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
-                            return 1;
-                        }
-                    } else {
-                        if (null === $langA && null !== $langB) {
-                            return 1;
-                        }
+                    if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
+                        return 1;
+                    }
+                } else {
+                    if (null === $langA && null !== $langB) {
+                        return 1;
+                    }
 
-                        if (null !== $langA && null === $langB) {
-                            return -1;
-                        }
+                    if (null !== $langA && null === $langB) {
+                        return -1;
+                    }
 
-                        if ($langA < $langB) {
-                            return -1;
-                        }
+                    if ($langA < $langB) {
+                        return -1;
+                    }
 
-                        if ($langA > $langB) {
-                            return 1;
-                        }
+                    if ($langA > $langB) {
+                        return 1;
                     }
                 }
 

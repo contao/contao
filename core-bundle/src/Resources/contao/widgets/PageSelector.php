@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -68,21 +69,6 @@ class PageSelector extends Widget
 		{
 			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
-			// Make sure the regular expression is valid
-			if ($strKeyword !== '')
-			{
-				try
-				{
-					$this->Database->prepare("SELECT * FROM tl_page WHERE title REGEXP ?")
-								   ->limit(1)
-								   ->execute($strKeyword);
-				}
-				catch (\Exception $e)
-				{
-					$strKeyword = '';
-				}
-			}
-
 			$objSessionBag->set('page_selector_search', $strKeyword);
 			$this->reload();
 		}
@@ -95,67 +81,70 @@ class PageSelector extends Widget
 		// Search for a specific page
 		if ((string) $for !== '')
 		{
-			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
-				$strPattern = "CAST(title AS CHAR) REGEXP ?";
+				$this->Database->prepare("SELECT '' REGEXP ?")->execute($for);
+			}
+			catch (DriverException $exception)
+			{
+				// Quote search string if it is not a valid regular expression
+				$for = preg_quote($for);
+			}
 
-				if (substr(Config::get('dbCollation'), -3) == '_ci')
+			$strPattern = "CAST(title AS CHAR) REGEXP ?";
+
+			if (substr(Config::get('dbCollation'), -3) == '_ci')
+			{
+				$strPattern = "LOWER(CAST(title AS CHAR)) REGEXP LOWER(?)";
+			}
+
+			$objRoot = $this->Database->prepare("SELECT id FROM tl_page WHERE $strPattern GROUP BY id")
+									  ->execute($for);
+
+			if ($objRoot->numRows < 1)
+			{
+				$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array(0);
+			}
+			else
+			{
+				$arrIds = array();
+
+				// Respect existing limitations
+				if (\is_array($this->rootNodes))
 				{
-					$strPattern = "LOWER(CAST(title AS CHAR)) REGEXP LOWER(?)";
-				}
-
-				$objRoot = $this->Database->prepare("SELECT id FROM tl_page WHERE $strPattern GROUP BY id")
-										  ->execute($for);
-
-				if ($objRoot->numRows < 1)
-				{
-					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array(0);
-				}
-				else
-				{
-					$arrIds = array();
-
-					// Respect existing limitations
-					if (\is_array($this->rootNodes))
+					while ($objRoot->next())
 					{
-						while ($objRoot->next())
-						{
-							// Predefined node set (see #3563)
-							if (\count(array_intersect($this->rootNodes, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
-							{
-								$arrFound[] = $objRoot->id;
-								$arrIds[] = $objRoot->id;
-							}
-						}
-					}
-					elseif ($this->User->isAdmin)
-					{
-						// Show all pages to admins
-						while ($objRoot->next())
+						// Predefined node set (see #3563)
+						if (\count(array_intersect($this->rootNodes, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
 						{
 							$arrFound[] = $objRoot->id;
 							$arrIds[] = $objRoot->id;
 						}
 					}
-					else
+				}
+				elseif ($this->User->isAdmin)
+				{
+					// Show all pages to admins
+					while ($objRoot->next())
 					{
-						while ($objRoot->next())
+						$arrFound[] = $objRoot->id;
+						$arrIds[] = $objRoot->id;
+					}
+				}
+				else
+				{
+					while ($objRoot->next())
+					{
+						// Show only mounted pages to regular users
+						if (\count(array_intersect($this->User->pagemounts, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
 						{
-							// Show only mounted pages to regular users
-							if (\count(array_intersect($this->User->pagemounts, $this->Database->getParentRecords($objRoot->id, 'tl_page'))) > 0)
-							{
-								$arrFound[] = $objRoot->id;
-								$arrIds[] = $objRoot->id;
-							}
+							$arrFound[] = $objRoot->id;
+							$arrIds[] = $objRoot->id;
 						}
 					}
-
-					$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array_unique($arrIds);
 				}
-			}
-			catch (\Exception $e)
-			{
+
+				$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array_unique($arrIds);
 			}
 		}
 

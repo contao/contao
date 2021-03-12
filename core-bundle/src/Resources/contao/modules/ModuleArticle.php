@@ -317,6 +317,12 @@ class ModuleArticle extends Module
 			}
 		}
 	}
+
+	protected function getResponseCacheTags(): array
+	{
+		// Do not tag with 'contao.db.tl_module.<id>' when rendering articles (see #2814)
+		return array();
+	}
 }
 
 class_alias(ModuleArticle::class, 'ModuleArticle');
