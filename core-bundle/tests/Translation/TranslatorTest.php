@@ -24,15 +24,8 @@ class TranslatorTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @group legacy
-     */
     public function testTranslatorImplementsDeprecatedInterface(): void
     {
-        if (method_exists(BaseTranslator::class, 'transChoice')) {
-            $this->expectDeprecation('%s "Symfony\Component\Translation\TranslatorInterface" that is deprecated %s');
-        }
-
         $translator = new Translator($this->createMock(BaseTranslator::class), $this->mockContaoFramework());
 
         $this->assertInstanceOf(TranslatorInterface::class, $translator);

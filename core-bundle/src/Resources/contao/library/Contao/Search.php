@@ -623,7 +623,15 @@ class Search
 		$strQuery .= ") variables, tl_search_term HAVING";
 
 		// Select all terms in the sub query that match any of the keywords or wildcards
-		$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
+		if ($arrAllKeywords)
+		{
+			$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
+		}
+		else
+		{
+			$strQuery .= " 0";
+		}
+
 		$strQuery .= ") matchedTerm JOIN tl_search_index ON tl_search_index.termId = matchedTerm.id";
 		$strQuery .= " GROUP BY tl_search_index.pid";
 
