@@ -60,7 +60,7 @@
     },
     "require-dev": {
         "composer/composer": "^1.0 || ^2.0",
-        "contao/test-case": "^4.2",
+        "contao/test-case": "^4.3",
         "phpunit/phpunit": "^8.5",
         "symfony/phpunit-bridge": "^5.2"
     },
