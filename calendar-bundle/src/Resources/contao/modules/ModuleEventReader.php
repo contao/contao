@@ -308,7 +308,7 @@ class ModuleEventReader extends Events
 			$figureBuilder
 				->setSize($imgSize)
 				->setMetadata($objEvent->getOverwriteMetadata())
-				->enableLightbox($objEvent->fullsize)
+				->enableLightbox((bool) $objEvent->fullsize)
 				->build()
 				->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
 		}

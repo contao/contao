@@ -2,8 +2,8 @@
 
 <?php
 
-// Add the highlight.php style sheet
-$GLOBALS['TL_CSS'][] = 'vendor/scrivo/highlight.php/styles/foundation.css';
+// Add the style sheet
+$GLOBALS['TL_CSS'][] = 'vendor/scrivo/highlight_php/styles/foundation.css';
 
 ?>
 

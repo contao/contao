@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1550250980
       title: Same domain root English
       alias: same-domain-root-english
+      urlSuffix: .html
       type: root
       language: en
       dns: same-domain-root.local
@@ -28,6 +29,7 @@ tl_page:
       tstamp: 1550250980
       title: Same domain root German
       alias: same-domain-root-german
+      urlSuffix: .html
       type: root
       language: de
       dns: same-domain-root.local

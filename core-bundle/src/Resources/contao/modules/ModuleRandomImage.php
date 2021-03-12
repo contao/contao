@@ -129,7 +129,7 @@ class ModuleRandomImage extends Module
 			->getFigureBuilder()
 			->fromFilesModel($images[array_rand($images)])
 			->setSize($this->imgSize)
-			->enableLightbox($this->fullsize)
+			->enableLightbox((bool) $this->fullsize)
 			->build()
 			->getLegacyTemplateData();
 

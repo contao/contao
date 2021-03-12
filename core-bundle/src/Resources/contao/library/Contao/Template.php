@@ -405,7 +405,7 @@ abstract class Template extends Controller
 	 * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
 	 * @param string                                     $template      A Contao or Twig template
 	 *
-	 * @return string
+	 * @return string|null Returns null if the resource is invalid
 	 */
 	public function figure($from, $size, $configuration = array(), $template = 'image')
 	{

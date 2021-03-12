@@ -133,6 +133,16 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\InitializeController:
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '@event_dispatcher'
+            - '@http_kernel'
+            - '@kernel'
+        tags:
+            - controller.service_arguments
+
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
@@ -577,6 +587,7 @@ services:
         calls:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
+        public: true
 
     Contao\CoreBundle\Routing\Page\PageRegistry:
         arguments:
@@ -766,7 +777,6 @@ services:
             - '@session'
             - '@security.authentication.trust_resolver'
             - ~ # Simple or Role Hierarchy Voter
-            - '%contao.preview_script%'
         public: true
 
     contao.security.two_factor.authenticator:

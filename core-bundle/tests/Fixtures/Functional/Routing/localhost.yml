@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539696285
       title: Localhost
       alias: localhost
+      urlSuffix: .html
       type: root
       language: en
       dns: 127.0.0.1

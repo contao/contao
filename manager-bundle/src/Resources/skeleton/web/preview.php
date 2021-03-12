@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 @ini_set('display_errors', '0');
 
 // Disable the phar stream wrapper for security reasons (see #105)
-if (\in_array('phar', stream_get_wrappers(), true)) {
+if (in_array('phar', stream_get_wrappers(), true)) {
     stream_wrapper_unregister('phar');
 }
 
@@ -27,7 +27,9 @@ if (\in_array('phar', stream_get_wrappers(), true)) {
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
-$kernel = ContaoKernel::fromRequest(\dirname(__DIR__), $request);
+$request->attributes->set('_preview', true);
+
+$kernel = ContaoKernel::fromRequest(dirname(__DIR__), $request);
 $response = $kernel->handle($request);
 
 // Prevent preview URLs from being indexed

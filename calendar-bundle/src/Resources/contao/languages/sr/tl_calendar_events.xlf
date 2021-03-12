@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Овде можете прегазити правила која користе претраживачи приликом обраде догађаја.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -246,9 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>Истакнути догађај</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>Прикажи догађај у листи истакнутих догађаја.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -316,6 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
         <source>Metadata</source>
+        <target>Мета подаци</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -375,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
+        <target>Истакни/уклони истицање догађаја ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>

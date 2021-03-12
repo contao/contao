@@ -471,7 +471,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['urlSuffix'],
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(16) NOT NULL default '.html'"
+			'sql'                     => "varchar(16) NOT NULL default ''"
 		),
 		'useSSL' => array
 		(
@@ -1461,7 +1461,7 @@ class tl_page extends Backend
 		}
 
 		// Prevent adding non-root pages on top-level
-		if ($row['pid'] == 0 && Input::get('mode') != 'create')
+		if (empty($row['pid']) && Input::get('mode') != 'create')
 		{
 			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
 									  ->limit(1)

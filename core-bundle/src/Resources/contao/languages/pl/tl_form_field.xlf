@@ -147,15 +147,19 @@
       </trans-unit>
       <trans-unit id="tl_form_field.httpurl.0">
         <source>Absolute URL</source>
+        <target>Absolutny URL</target>
       </trans-unit>
       <trans-unit id="tl_form_field.httpurl.1">
         <source>Checks whether the input is a valid absolute URL.</source>
+        <target>Sprawdza, czy wprowadzone dane są poprawnym, absolutnym adresem URL</target>
       </trans-unit>
       <trans-unit id="tl_form_field.custom.0">
         <source>Custom</source>
+        <target>Własne</target>
       </trans-unit>
       <trans-unit id="tl_form_field.custom.1">
         <source>Checks against a custom regular expression.</source>
+        <target>Sprawdza pod kątem własnego wyrażenia regularnego.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.placeholder.0">
         <source>Placeholder</source>
@@ -167,15 +171,19 @@
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
+        <target>Własne wyrażenie regularne</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.1">
         <source>The custom regular expression including delimiters and modifiers.</source>
+        <target>Własne wyrażenie regularne zawierające delimitery i modyfikatory.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.errorMsg.0">
         <source>Error message</source>
+        <target>Komunikat o błędzie</target>
       </trans-unit>
       <trans-unit id="tl_form_field.errorMsg.1">
         <source>Show this error message in the front end if the user input is invalid.</source>
+        <target>Pokaż ten komunikat o błędzie, jeśli dane wprowadzone przez użytkownika są nieprawidłowe.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minlength.0">
         <source>Minimum length</source>

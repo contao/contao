@@ -187,26 +187,18 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (Config::get('indexProtected'))
 			{
-				$this->import(FrontendUser::class, 'User');
-				$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+				$user = null;
+
+				if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+				{
+					$user = FrontendUser::getInstance();
+				}
 
 				foreach ($arrResult as $k=>$v)
 				{
-					if ($v['protected'] ?? null)
+					if (($v['protected'] ?? null) && (!$user || !$user->isMemberOf(StringUtil::deserialize($v['groups'] ?? null))))
 					{
-						if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
-						{
-							unset($arrResult[$k]);
-						}
-						else
-						{
-							$groups = StringUtil::deserialize($v['groups']);
-
-							if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
-							{
-								unset($arrResult[$k]);
-							}
-						}
+						unset($arrResult[$k]);
 					}
 				}
 

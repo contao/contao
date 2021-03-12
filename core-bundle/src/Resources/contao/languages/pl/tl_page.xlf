@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.0">
         <source>Disable language redirect</source>
+        <target>Wyłącz przekierowanie językowe</target>
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.1">
         <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
+        <target>Nie przekierowuj odwiedzających do tego punktu startowego bazując na ich preferowanym języku przeglądarki.</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
@@ -209,9 +211,11 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
+        <target>Protokół</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Here you can select which protocol to use for the website.</source>
+        <target>Tutaj możesz wybrać jaki protokół użyć dla serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>
@@ -427,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
+        <target>Metadane</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -442,6 +447,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language_legend">
         <source>Language settings</source>
+        <target>Ustawienia języka</target>
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
@@ -565,6 +571,7 @@
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>Wyłącz stary tryb przekierowywania, aby włączyć tą konfigurację.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

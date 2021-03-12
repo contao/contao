@@ -5,6 +5,7 @@ tl_page:
       tstamp: 1539679763
       title: English Root
       alias: english-root
+      urlSuffix: .html
       type: root
       language: en
       dns: example.com
@@ -28,6 +29,7 @@ tl_page:
       tstamp: 1539679763
       title: German Root
       alias: german-root
+      urlSuffix: .html
       type: root
       language: de
       dns: example.com

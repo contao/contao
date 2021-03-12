@@ -14,11 +14,9 @@ namespace Contao\CoreBundle\DependencyInjection\Security;
 
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
-use Scheb\TwoFactorBundle\Security\TwoFactor\TwoFactorFirewallConfig;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 class ContaoLoginFactory extends AbstractFactory
@@ -53,19 +51,17 @@ class ContaoLoginFactory extends AbstractFactory
     {
         $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
         $twoFactorFirewallConfigId = 'contao.security.two_factor_firewall_config.'.$id;
-        $twoFactorFirewallConfig = new Definition(TwoFactorFirewallConfig::class, [$config, $id, null]);
 
         $container
-            ->setDefinition($twoFactorFirewallConfigId, $twoFactorFirewallConfig)
-            ->replaceArgument(2, new Reference('security.http_utils'))
+            ->setDefinition($twoFactorFirewallConfigId, new ChildDefinition(TwoFactorFactory::FIREWALL_CONFIG_DEFINITION_ID))
+            ->replaceArgument(0, $config)
+            ->replaceArgument(1, $id)
         ;
 
         $container
             ->setDefinition($twoFactorProviderId, new ChildDefinition(TwoFactorFactory::PROVIDER_DEFINITION_ID))
             ->replaceArgument(0, new Reference($twoFactorFirewallConfigId))
-            ->replaceArgument(1, new Reference('scheb_two_factor.provider_registry'))
             ->replaceArgument(2, new Reference(BackupCodeManager::class))
-            ->replaceArgument(3, new Reference('scheb_two_factor.provider_preparation_recorder'))
         ;
 
         $provider = 'contao.security.authentication_provider.'.$id;
@@ -110,9 +106,7 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(3, $firewallName)
             ->replaceArgument(4, true)
             ->replaceArgument(5, false)
-            ->addTag('kernel.event_listener', ['event' => 'security.authentication.success', 'method' => 'onLogin', 'priority' => PHP_INT_MAX])
-            ->addTag('kernel.event_listener', ['event' => 'scheb_two_factor.authentication.form', 'method' => 'onTwoFactorForm'])
-            ->addTag('kernel.event_listener', ['event' => 'kernel.response', 'method' => 'onKernelResponse'])
+            ->addTag('kernel.event_subscriber')
         ;
     }
 }

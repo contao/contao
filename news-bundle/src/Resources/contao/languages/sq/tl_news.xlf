@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news.robots.1">
         <source>Here you can overwrite how search engines handle the news item.</source>
+        <target>Këtu mund të mbishkruani se si motorët e kërkimit trajtojnë lajmin.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
@@ -206,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Nëse dëshironi të parandaloni shfaqjen e lajmit në faqen e internetit para një date / kohe të caktuar, mund ta futni këtu. Përndryshe lëreni fushën bosh.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -213,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Nëse dëshironi të parandaloni shfaqjen e lajmit në faqen e internetit pas një date / kohe të caktuar, mund ta futni këtu. Përndryshe lëreni fushën bosh.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
@@ -252,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.meta_legend">
         <source>Metadata</source>
+        <target>Metadata</target>
       </trans-unit>
       <trans-unit id="tl_news.expert_legend">
         <source>Expert settings</source>
