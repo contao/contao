@@ -77,7 +77,7 @@ class BackendFile extends Backend
 		\define('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
 
 		$this->loadDataContainer($strTable);
-		$strDriver = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
+		$strDriver = DataContainer::getDriverForTable($strTable);
 		$objDca = new $strDriver($strTable);
 		$objDca->field = $strField;
 
