@@ -376,6 +376,7 @@ class ModuleSearch extends Module
 			}
 
 			$template->hasImage = true;
+			$template->figure = $figure;
 			$template->image = (object) $figure->getLegacyTemplateData();
 
 			return;
