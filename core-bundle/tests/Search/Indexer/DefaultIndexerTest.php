@@ -111,6 +111,17 @@ class DefaultIndexerTest extends ContaoTestCase
                 'pid' => 2,
                 'title' => 'undefined',
                 'language' => 'en',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/Page',
+                        'https://schema.contao.org/pageId' => 2,
+                        'https://schema.contao.org/noSearch' => false,
+                        'https://schema.contao.org/protected' => false,
+                        'https://schema.contao.org/groups' => [],
+                        'https://schema.contao.org/fePreview' => false,
+                    ],
+                ],
             ],
         ];
 
@@ -124,6 +135,17 @@ class DefaultIndexerTest extends ContaoTestCase
                 'pid' => 2,
                 'title' => 'Foo title',
                 'language' => 'de',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/Page',
+                        'https://schema.contao.org/pageId' => 2,
+                        'https://schema.contao.org/noSearch' => false,
+                        'https://schema.contao.org/protected' => true,
+                        'https://schema.contao.org/groups' => [42],
+                        'https://schema.contao.org/fePreview' => false,
+                    ],
+                ],
             ],
             null,
             true,
@@ -139,6 +161,18 @@ class DefaultIndexerTest extends ContaoTestCase
                 'pid' => 2,
                 'title' => 'JSON-LD page title',
                 'language' => 'de',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/Page',
+                        'https://schema.contao.org/title' => 'JSON-LD page title',
+                        'https://schema.contao.org/pageId' => 2,
+                        'https://schema.contao.org/noSearch' => false,
+                        'https://schema.contao.org/protected' => true,
+                        'https://schema.contao.org/groups' => [42],
+                        'https://schema.contao.org/fePreview' => false,
+                    ],
+                ],
             ],
             null,
             true,
@@ -168,6 +202,17 @@ class DefaultIndexerTest extends ContaoTestCase
                 'pid' => 2,
                 'title' => 'undefined',
                 'language' => 'en',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/RegularPage',
+                        'https://schema.contao.org/pageId' => 2,
+                        'https://schema.contao.org/noSearch' => false,
+                        'https://schema.contao.org/protected' => false,
+                        'https://schema.contao.org/groups' => [],
+                        'https://schema.contao.org/fePreview' => false,
+                    ],
+                ],
             ],
             null,
             false,
