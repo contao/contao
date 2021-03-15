@@ -336,9 +336,6 @@ class ModuleSearch extends Module
 
 		$meta = json_decode($result['meta'], true);
 
-		// Reverse so the last element wins
-		$meta = array_reverse($meta);
-
 		foreach ($meta as $v)
 		{
 			if (!isset($v['https://schema.org/primaryImageOfPage']))
