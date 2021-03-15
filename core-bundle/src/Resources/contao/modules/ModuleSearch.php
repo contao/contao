@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -22,8 +22,6 @@ use Patchwork\Utf8;
  */
 class ModuleSearch extends Module
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -349,11 +347,8 @@ class ModuleSearch extends Module
 			}
 
 			$figureBuilder = $this->getFigureBuilderIfResourceExists($v['https://schema.org/primaryImageOfPage']['contentUrl']);
-
-			if (null === $figureBuilder)
-			{
-				continue;
-			}
+			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
 
 			$figureMeta = array();
 			if (isset($v['https://schema.org/primaryImageOfPage']['caption']))
@@ -370,12 +365,18 @@ class ModuleSearch extends Module
 				$figureMeta[Metadata::VALUE_ALT]  = $v['https://schema.org/primaryImageOfPage']['alternateName'];
 			}
 
-			$template->hasImage = true;
-			$template->image = (object) $figureBuilder
+			$figure = $figureBuilder
 				->setSize($this->imgSize)
 				->setMetadata(new Metadata($figureMeta))
-				->build()
-				->getLegacyTemplateData();
+				->buildIfResourceExists();
+
+			if (null === $figure)
+			{
+				continue;
+			}
+
+			$template->hasImage = true;
+			$template->image = (object) $figure->getLegacyTemplateData();
 
 			return;
 		}
