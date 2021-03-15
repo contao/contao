@@ -258,10 +258,12 @@ class ContentGallery extends ContentElement
 				// Image / empty cell
 				if (($j + $i) < $limit && null !== ($image = $images[$i + $j] ?? null))
 				{
-					$cellData = $figureBuilder
+					$figure = $figureBuilder
 						->fromFilesModel($image)
-						->build()
-						->getLegacyTemplateData($this->imagemargin);
+						->build();
+
+					$cellData = $figure->getLegacyTemplateData($this->imagemargin);
+					$cellData['figure'] = $figure;
 				}
 				else
 				{
