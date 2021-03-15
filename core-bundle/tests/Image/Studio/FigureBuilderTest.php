@@ -56,12 +56,10 @@ class FigureBuilderTest extends TestCase
         $model->type = 'folder';
 
         $figureBuilder = $this->getFigureBuilder()->fromFilesModel($model);
-
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertSame("DBAFS item 'foo' is not a file.", $exception->getMessage());
-
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -77,12 +75,10 @@ class FigureBuilderTest extends TestCase
         $model->path = 'this/does/not/exist.jpg';
 
         $figureBuilder = $this->getFigureBuilder()->fromFilesModel($model);
-
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
-
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -119,12 +115,10 @@ class FigureBuilderTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
 
         $figureBuilder = $this->getFigureBuilder(null, $framework)->fromUuid('invalid-uuid');
-
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertSame("DBAFS item with UUID 'invalid-uuid' could not be found.", $exception->getMessage());
-
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -160,12 +154,10 @@ class FigureBuilderTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
 
         $figureBuilder = $this->getFigureBuilder(null, $framework)->fromId(99);
-
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertSame("DBAFS item with ID '99' could not be found.", $exception->getMessage());
-
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -222,14 +214,11 @@ class FigureBuilderTest extends TestCase
         [, , $projectDir,] = $this->getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
-
         $figureBuilder = $this->getFigureBuilder()->fromPath($filePath, false);
-
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
-
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -268,12 +257,10 @@ class FigureBuilderTest extends TestCase
         ;
 
         $figureBuilder = $this->getFigureBuilder()->fromImage($image);
-
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
-
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -384,7 +371,6 @@ class FigureBuilderTest extends TestCase
         $invalidModel->type = 'folder';
 
         $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findByPk', 'findByPath']);
-
         $filesModelAdapter
             ->method('findByUuid')
             ->willReturnMap([
@@ -411,7 +397,6 @@ class FigureBuilderTest extends TestCase
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
         $studio = $this->getStudioMockForImage($absoluteFilePath);
-
         $figureBuilder = $this->getFigureBuilder($studio, $framework);
 
         $setValidResourceOperations = [
@@ -536,6 +521,7 @@ class FigureBuilderTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', $this->createMock(RequestStack::class));
+
         System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
