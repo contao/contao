@@ -430,8 +430,7 @@ class FigureBuilderTest extends TestCase
             $this->assertInstanceOf(InvalidResourceException::class, $exception);
         }
 
-        foreach ($setValidResourceOperations as $operation) {
-            [$method, $argument] = $operation;
+        foreach ($setValidResourceOperations as [$method, $argument]) {
 
             $figureBuilder->from($invalidModel);
 
