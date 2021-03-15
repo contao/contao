@@ -70,6 +70,11 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 
     protected function isVisible(ContentModel $model, Request $request): bool
     {
+        // We are in the back end, so show the element
+        if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+            return true;
+        }
+
         $isInvisible = $model->invisible || ($model->start && $model->start > time()) || ($model->stop && $model->stop <= time());
 
         // The element is visible, so show it
@@ -77,20 +82,10 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             return true;
         }
 
-        return $this->isFrontendPreview($request);
-    }
-
-    protected function isFrontendPreview(Request $request): bool
-    {
         $tokenChecker = $this->get('contao.security.token_checker');
 
         // Preview mode is enabled, so show the element
         if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode()) {
-            return true;
-        }
-
-        // We are in the back end, so show the element
-        if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return true;
         }
 
