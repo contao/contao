@@ -30,9 +30,8 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         '(.*)?modal(.*)?',
 
         // Google Analytics (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage)
-        '_ga',
+        '_ga.*',
         '_gid',
-        '_gat',
         '_dc_gtm_.+',
         'AMP_TOKEN',
         '_gac_.+',
