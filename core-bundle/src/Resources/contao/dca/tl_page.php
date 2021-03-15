@@ -1461,7 +1461,7 @@ class tl_page extends Backend
 		}
 
 		// Prevent adding non-root pages on top-level
-		if ($row['pid'] == 0 && Input::get('mode') != 'create')
+		if (empty($row['pid']) && Input::get('mode') != 'create')
 		{
 			$objPage = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
 									  ->limit(1)

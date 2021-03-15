@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.robots.1">
         <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Овде можете да прегазите правила како претраживачи виде ЧПП.</target>
       </trans-unit>
       <trans-unit id="tl_faq.description.0">
         <source>Meta description</source>
@@ -106,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.meta_legend">
         <source>Metadata</source>
+        <target>Мета подаци</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
@@ -165,9 +167,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>Креирај ново питање на врху</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>Креирај ново питање након ID %s</target>
       </trans-unit>
     </body>
   </file>

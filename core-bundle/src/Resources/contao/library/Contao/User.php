@@ -411,14 +411,21 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Return true if the user is member of a particular group
 	 *
-	 * @param integer $id The group ID
+	 * @param mixed $ids A single group ID or an array of group IDs
 	 *
 	 * @return boolean True if the user is a member of the group
 	 */
-	public function isMemberOf($id)
+	public function isMemberOf($ids)
 	{
-		// ID not numeric
-		if (!is_numeric($id))
+		if (!\is_array($ids))
+		{
+			$ids = array($ids);
+		}
+
+		// Filter non-numeric values
+		$ids = array_values(array_filter($ids, static function ($val) { return is_numeric($val); }));
+
+		if (empty($ids))
 		{
 			return false;
 		}
@@ -431,13 +438,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		// Group ID found
-		if (\in_array($id, $groups))
-		{
-			return true;
-		}
-
-		return false;
+		return \count(array_intersect($ids, $groups)) > 0;
 	}
 
 	/**

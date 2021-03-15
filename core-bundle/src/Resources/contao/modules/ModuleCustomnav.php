@@ -68,13 +68,11 @@ class ModuleCustomnav extends Module
 		global $objPage;
 
 		$items = array();
-		$groups = array();
+		$user = null;
 
-		// Get all groups of the current front end user
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-			$groups = $this->User->groups;
+			$user = FrontendUser::getInstance();
 		}
 
 		// Get all active pages and also include root pages if the language is added to the URL (see #72)
@@ -95,10 +93,8 @@ class ModuleCustomnav extends Module
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
 		{
-			$_groups = StringUtil::deserialize($objModel->groups);
-
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objModel->protected || $this->showProtected || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
+			if (!$objModel->protected || $this->showProtected || ($user && $user->isMemberOf(StringUtil::deserialize($objModel->groups))))
 			{
 				// Get href
 				switch ($objModel->type)
