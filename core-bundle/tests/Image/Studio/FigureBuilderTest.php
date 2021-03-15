@@ -415,8 +415,7 @@ class FigureBuilderTest extends TestCase
 
         $exception = null;
 
-        foreach ($setInvalidResourceOperations as $operation) {
-            [$method, $argument] = $operation;
+        foreach ($setInvalidResourceOperations as [$method, $argument]) {
 
             $figureBuilder->$method($argument);
 
