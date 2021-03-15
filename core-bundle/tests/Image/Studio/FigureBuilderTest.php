@@ -416,7 +416,6 @@ class FigureBuilderTest extends TestCase
         $exception = null;
 
         foreach ($setInvalidResourceOperations as [$method, $argument]) {
-
             $figureBuilder->$method($argument);
 
             $this->assertNotSame(
@@ -431,7 +430,6 @@ class FigureBuilderTest extends TestCase
         }
 
         foreach ($setValidResourceOperations as [$method, $argument]) {
-
             $figureBuilder->from($invalidModel);
 
             $this->assertInstanceOf(InvalidResourceException::class, $exception);
