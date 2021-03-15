@@ -263,7 +263,7 @@ class ContentGallery extends ContentElement
 						->build();
 
 					$cellData = $figure->getLegacyTemplateData($this->imagemargin);
-					$cellData['figure'] = $this;
+					$cellData['figure'] = $figure;
 				}
 				else
 				{
