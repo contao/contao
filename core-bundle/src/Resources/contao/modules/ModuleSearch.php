@@ -355,6 +355,7 @@ class ModuleSearch extends Module
 			$figure = $figureBuilder
 				->setSize($this->imgSize)
 				->setMetadata(new Metadata($figureMeta))
+				->setLinkHref($result['url'])
 				->buildIfResourceExists();
 
 			if (null === $figure)
