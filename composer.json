@@ -20,6 +20,16 @@
         "source": "https://github.com/contao/contao",
         "docs": "https://docs.contao.org"
     },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/contao-association"
+        },
+        {
+            "type": "other",
+            "url": "https://to.contao.org/supporter"
+        }
+    ],
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-dom": "*",
