@@ -343,24 +343,14 @@ class ModuleSearch extends Module
 				continue;
 			}
 
-			$figureBuilder = $this->getFigureBuilderIfResourceExists($v['https://schema.org/primaryImageOfPage']['contentUrl']);
 			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
 			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
 
-			$figureMeta = array();
-			if (isset($v['https://schema.org/primaryImageOfPage']['caption']))
-			{
-				$figureMeta[Metadata::VALUE_CAPTION]  = $v['https://schema.org/primaryImageOfPage']['caption'];
-			}
-			if (isset($v['https://schema.org/primaryImageOfPage']['name']))
-			{
-				$figureMeta[Metadata::VALUE_TITLE]  = $v['https://schema.org/primaryImageOfPage']['name'];
-			}
-
-			if (isset($v['https://schema.org/primaryImageOfPage']['alternateName']))
-			{
-				$figureMeta[Metadata::VALUE_ALT]  = $v['https://schema.org/primaryImageOfPage']['alternateName'];
-			}
+			$figureMeta = new Metadata(array_filter(array(
+				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
+				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
+			)));
 
 			$figure = $figureBuilder
 				->setSize($this->imgSize)
