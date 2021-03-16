@@ -752,7 +752,7 @@ class RouteProviderTest extends TestCase
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = random_int(1, 10000);
+        $page->id = ++$this->pageModelAutoIncrement;
         $page->rootId = 1;
         $page->type = 'root';
         $page->alias = $alias;
