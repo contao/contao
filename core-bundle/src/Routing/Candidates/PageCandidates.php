@@ -90,7 +90,14 @@ class PageCandidates extends AbstractCandidates
         $paths = [];
 
         foreach ($pathMap as $type => $pathRegex) {
-            $paths[] = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
+            $path = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
+            $lastParam = strrpos($path, '[^/]++');
+
+            if (false !== $lastParam) {
+                $path = substr_replace($path, '[^/]+?', $lastParam, 6);
+            }
+
+            $paths[] = $path;
         }
 
         $prefixes = array_map(

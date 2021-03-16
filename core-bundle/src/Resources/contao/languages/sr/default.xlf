@@ -185,17 +185,25 @@
         <source>The alias &quot;%s&quot; already exists!</source>
         <target>Алиас &quot;%s&quot; већ постоји!</target>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+        <target>Нумерички алиаси нису подржани!</target>
+      </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>Префикс URL &quot;%s&quot; се већ користи у некој другој root страници са истим доменским именом.</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>Страница са URL &quot;%s&quot; већ постоји!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Овај суфикс URL ће да доведе до дуплираних URL-ова (нпр. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Овај префикс URL ће да доведе до дуплираних URL-ова (нпр. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -324,6 +332,22 @@
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
         <target>Доделите све модуле колони!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidHttpUrl">
+        <source>Please enter an absolute URL starting with https:// or http://!</source>
+        <target>Унесите апсолутни URL са https:// или http://!</target>
+      </trans-unit>
+      <trans-unit id="ERR.customRgxp">
+        <source>Please enter a value that matches %s!</source>
+        <target>Унесите вредност која одговара %s!</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidCustomRgxp">
+        <source>Invalid custom regular expression!</source>
+        <target>Неисправан произвољни типични израз!</target>
+      </trans-unit>
+      <trans-unit id="ERR.applicationCache">
+        <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
+        <target>Покрените команду &quot;cache:clear&quot; или употријебите Contao Manager да поновно креирате апликативни кеш.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1269,14 +1293,6 @@
         <source>Caption</source>
         <target>Заглавље</target>
       </trans-unit>
-      <trans-unit id="MSC.aw_delete">
-        <source>Delete the language</source>
-        <target>Обриши језик</target>
-      </trans-unit>
-      <trans-unit id="MSC.aw_new">
-        <source>Add language</source>
-        <target>Додај језик</target>
-      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>Назив</target>
@@ -1531,6 +1547,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Упознајте се детаљније о обрзању рада са  &lt;a href=&quot;https://contao.org/manual/administration-area.html#keyboard-shortcuts&quot; title=&quot;Keyboard shortcuts overview on contao.org&quot; target=&quot;_blank&quot;&gt;пречицама на тастатури&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1885,7 +1902,7 @@
         <target>Релативна путања</target>
       </trans-unit>
       <trans-unit id="MSC.fileMeta">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>Мета подаци</target>
       </trans-unit>
       <trans-unit id="MSC.versioning">
@@ -2501,7 +2518,7 @@
         <target>Преузимање  %s</target>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file meta data.</source>
+        <source>You have to add a root page in the site structure to enter file metadata.</source>
         <target>Да бисте чували мета податке о фајлу, у структуру сајта морате додати root страницу.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
@@ -2580,16 +2597,13 @@
         <source>Backup codes</source>
         <target>Кодови за повратак</target>
       </trans-unit>
-      <trans-unit id="MSC.twoFactorBackupCodesShow">
-        <source>Show backup codes</source>
-        <target>Прикажи кодове за повратак</target>
-      </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>Кодови за повратак могу да се користе за приступ вашем налогу ако сте изгубили ваш уређај за аутентификацју или не можете више да генеришете кодове за двоструку аутентификацију. Водите рачуна о вашим кодовима за повратак на исти начин као и о вашој лозинци. Преопручујемо кориштење некога од програма за управљање лозинкама као што су Lastpass, 1Password или Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
-        <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
-        <target>Сачувајте кодове на безбедном месту. Ако изгубите ваш уређај којим бршите аутентификацију и немате кодове за повратак, нећете моћи приступити свом налогу!</target>
+        <source>Make sure to copy the codes now. You will not be able to see them again!</source>
+        <target>Побрините се да сада копирате кодове. Након овога их више нећете моћи видети! </target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
@@ -2640,7 +2654,7 @@
         <target>Преглед резултата претраге из Google-a</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the meta data in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Овде можете да прегледате мета податке у резултатима претраге Google-а. Остали алати за претраживање можда ће приказати дужи текст или извршити одсецање на другим позицијама.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
@@ -2669,9 +2683,23 @@
       </trans-unit>
       <trans-unit id="MSC.openToolbar">
         <source>Open the Contao toolbar</source>
+        <target>Отвори Contao траку са алаткама </target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+        <target>Затвори Contao траку са алаткама</target>
+      </trans-unit>
+      <trans-unit id="MSC.noSerpPreview">
+        <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>Преглед URL не може да буде генерисан, зато што путања има обавезне параметре.</target>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
+        <target>Непозната опција</target>
+      </trans-unit>
+      <trans-unit id="MSC.copyURL">
+        <source>Copy URL</source>
+        <target>Копирај URL</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

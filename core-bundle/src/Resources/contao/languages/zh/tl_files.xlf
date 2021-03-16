@@ -74,12 +74,10 @@
         <target>在这里输入重要部分的高度</target>
       </trans-unit>
       <trans-unit id="tl_files.meta.0">
-        <source>Meta data</source>
-        <target>Meta数据</target>
+        <source>Metadata</source>
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
-        <source>Here you can enter the file meta data.</source>
-        <target>在这里可以输入文件元数据。</target>
+        <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>

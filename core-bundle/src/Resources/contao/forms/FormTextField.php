@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
+
 /**
  * Class FormTextField
  *
@@ -145,7 +147,7 @@ class FormTextField extends Widget
 		{
 			case 'value':
 				// Hide the Punycode format (see #2750)
-				if ($this->rgxp == 'url')
+				if ($this->rgxp == 'url' || $this->rgxp == HttpUrlListener::RGXP_NAME)
 				{
 					try
 					{
@@ -191,6 +193,7 @@ class FormTextField extends Widget
 						return 'email';
 
 					case 'url':
+					case HttpUrlListener::RGXP_NAME:
 						return 'url';
 				}
 
@@ -234,7 +237,7 @@ class FormTextField extends Widget
 		}
 
 		// Convert to Punycode format (see #5571)
-		if ($this->rgxp == 'url')
+		if ($this->rgxp == 'url' || $this->rgxp == HttpUrlListener::RGXP_NAME)
 		{
 			try
 			{

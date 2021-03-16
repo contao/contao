@@ -66,7 +66,6 @@ class ContaoCoreExtension extends Extension
         $loader->load('migrations.yml');
 
         $container->setParameter('contao.web_dir', $config['web_dir']);
-        $container->setParameter('contao.encryption_key', $config['encryption_key']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -186,7 +185,11 @@ class ContaoCoreExtension extends Extension
             }
 
             if (isset($config['image']['sizes']['_defaults'])) {
-                $value = array_merge($config['image']['sizes']['_defaults'], $value);
+                // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
+                $value = array_merge(
+                    $config['image']['sizes']['_defaults'],
+                    array_filter($value, static function ($v) { return !\is_array($v) || !empty($v); })
+                );
             }
 
             $imageSizes['_'.$name] = $this->camelizeKeys($value);

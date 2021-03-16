@@ -16,12 +16,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\GdImage;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class GdImageTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -29,13 +26,8 @@ class GdImageTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
-    /**
-     * @group legacy
-     */
     public function testCreatesImagesFromResources(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\GdImage" class has been deprecated %s.');
-
         $resource = imagecreate(1, 1);
         $image = new GdImage($resource);
 

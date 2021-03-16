@@ -125,13 +125,15 @@ class ModuleRandomImage extends Module
 			return;
 		}
 
-		$imageData = $this
+		$figure = $this
 			->getFigureBuilder()
 			->fromFilesModel($images[array_rand($images)])
 			->setSize($this->imgSize)
-			->enableLightbox($this->fullsize)
-			->build()
-			->getLegacyTemplateData();
+			->enableLightbox((bool) $this->fullsize)
+			->build();
+
+		$imageData = $figure->getLegacyTemplateData();
+		$imageData['figure'] = $figure;
 
 		$this->Template->setData(array_merge(
 			$this->Template->getData(),

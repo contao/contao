@@ -355,9 +355,12 @@ final class Figure
             unset($new['href']);
         }
 
+        // Allow accessing Figure methods in a legacy template context
+        $new['figure'] = $this;
+
         // Apply data
         if ($template instanceof Template) {
-            $template->setData(array_replace_recursive($existing, $new));
+            $template->setData(array_replace($existing, $new));
 
             return;
         }

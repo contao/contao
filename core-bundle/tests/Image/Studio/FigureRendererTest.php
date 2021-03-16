@@ -100,7 +100,7 @@ class FigureRendererTest extends TestCase
 
         $figureBuilder = $this->createMock(FigureBuilder::class);
         $figureBuilder
-            ->method('build')
+            ->method('buildIfResourceExists')
             ->willReturn(new Figure($image))
         ;
 
@@ -148,13 +148,33 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
     }
 
+    public function testReturnsNullIfTheResourceDoesNotExist(): void
+    {
+        $figureBuilder = $this->createMock(FigureBuilder::class);
+        $figureBuilder
+            ->method('buildIfResourceExists')
+            ->willReturn(null)
+        ;
+
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->method('createFigureBuilder')
+            ->willReturn($figureBuilder)
+        ;
+
+        $twig = $this->createMock(Environment::class);
+        $figureRenderer = new FigureRenderer($studio, $twig);
+
+        $this->assertNull($figureRenderer->render('invalid-resource', null));
+    }
+
     private function getFigureRenderer(array $figureBuilderCalls = [], string $expectedTemplate = '@ContaoCore/Image/Studio/figure.html.twig'): FigureRenderer
     {
         $figure = new Figure($this->createMock(ImageResult::class));
 
         $figureBuilder = $this->createMock(FigureBuilder::class);
         $figureBuilder
-            ->method('build')
+            ->method('buildIfResourceExists')
             ->willReturn($figure)
         ;
 

@@ -571,11 +571,13 @@ class FigureTest extends TestCase
         $figure->applyLegacyTemplateData($template);
 
         $this->assertSame(['img foo'], $template->getData()['picture']['img']);
+        $this->assertSame($figure, $template->getData()['figure']);
 
         $template = new \stdClass();
         $figure->applyLegacyTemplateData($template);
 
         $this->assertSame(['img foo'], $template->picture['img']);
+        $this->assertSame($figure, $template->figure);
     }
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void

@@ -231,14 +231,6 @@
         <source>Load internal style sheets first</source>
         <target>بارگذاری اول شیوه‌نامه‌های خارجی</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts.0">
-        <source>Google web fonts</source>
-        <target>قلم‌های وب گوگل</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.webfonts.1">
-        <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>اینجا می‌توانید قلم‌های وب گوگل را به وب‌سایت خود اضافه نمایید. خانواده‌های قلم را بدون نشانی وب مشخص نمایید (برای نمونه &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
-      </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
         <target>اندازه تصویر Lightbox</target>
@@ -323,14 +315,6 @@
         <source>Include the jQuery library in the layout.</source>
         <target>کتابخانه جی‌کوئری را در چیدمان می‌گنجاند.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.jSource.0">
-        <source>jQuery source</source>
-        <target>منبع جی‌کوئری</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.jSource.1">
-        <source>Here you can select from where to load the jQuery script.</source>
-        <target>اینجا می‌توانید جایی که اسکریپت جی‌کوئری باید بارگزاری شود را انتخاب نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
         <target>قالب‌های جی‌کوئری</target>
@@ -346,14 +330,6 @@
       <trans-unit id="tl_layout.addMooTools.1">
         <source>Include the MooTools library in the layout.</source>
         <target>کتابخانه موتولز را در چیدمان می‌گنجاند.</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.0">
-        <source>MooTools source</source>
-        <target>منبع موتولز</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.mooSource.1">
-        <source>Here you can select from where to load the MooTools scripts.</source>
-        <target>اینجا می‌توانید یا از اسکریپت موتولز محلی و یا از شبکه‌های تحویل محتوا بارگذاری کنید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools.0">
         <source>MooTools templates</source>
@@ -434,10 +410,6 @@
         <source>Custom sections</source>
         <target>بخش‌های سفارشی</target>
       </trans-unit>
-      <trans-unit id="tl_layout.webfonts_legend">
-        <source>Web fonts</source>
-        <target>قلم‌های وبی</target>
-      </trans-unit>
       <trans-unit id="tl_layout.image_legend">
         <source>Image sizes</source>
         <target>اندازه‌های تصویر</target>
@@ -466,33 +438,9 @@
         <source>jQuery</source>
         <target>جی‌کوئری</target>
       </trans-unit>
-      <trans-unit id="tl_layout.j_local">
-        <source>Local file</source>
-        <target>پرونده محلی</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_googleapis">
-        <source>CDN (code.jquery.com)</source>
-        <target>سی‌دی‌ان (code.jquery.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.j_fallback">
-        <source>CDN with local fallback</source>
-        <target>سی‌دی‌ان با یدکی محلی</target>
-      </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
         <target>موتولز</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_local">
-        <source>Local file</source>
-        <target>پرونده محلی</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_googleapis">
-        <source>CDN (googleapis.com)</source>
-        <target>سی‌دی‌ان (googleapis.com)</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.moo_fallback">
-        <source>CDN with local fallback</source>
-        <target>سی‌دی‌ان با یدکی محلی</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

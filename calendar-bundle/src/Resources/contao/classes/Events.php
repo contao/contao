@@ -63,29 +63,23 @@ abstract class Events extends Module
 			return $arrCalendars;
 		}
 
-		$this->import(FrontendUser::class, 'User');
 		$objCalendar = CalendarModel::findMultipleByIds($arrCalendars);
 		$arrCalendars = array();
 
 		if ($objCalendar !== null)
 		{
-			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+			$user = null;
+
+			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$user = FrontendUser::getInstance();
+			}
 
 			while ($objCalendar->next())
 			{
-				if ($objCalendar->protected)
+				if ($objCalendar->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objCalendar->groups))))
 				{
-					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
-					{
-						continue;
-					}
-
-					$groups = StringUtil::deserialize($objCalendar->groups);
-
-					if (empty($groups) || !\is_array($groups) || \count(array_intersect($groups, $this->User->groups)) < 1)
-					{
-						continue;
-					}
+					continue;
 				}
 
 				$arrCalendars[] = $objCalendar->id;

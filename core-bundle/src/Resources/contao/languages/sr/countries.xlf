@@ -223,6 +223,7 @@
       </trans-unit>
       <trans-unit id="CNT.cz">
         <source>Czechia</source>
+        <target>Чешка</target>
       </trans-unit>
       <trans-unit id="CNT.de">
         <source>Germany</source>
@@ -582,6 +583,7 @@
       </trans-unit>
       <trans-unit id="CNT.mk">
         <source>North Macedonia</source>
+        <target>Северна Македонија</target>
       </trans-unit>
       <trans-unit id="CNT.ml">
         <source>Mali</source>
@@ -857,6 +859,7 @@
       </trans-unit>
       <trans-unit id="CNT.sz">
         <source>Eswatini</source>
+        <target>Есватини</target>
       </trans-unit>
       <trans-unit id="CNT.ta">
         <source>Tristan da Cunha</source>

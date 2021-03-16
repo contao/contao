@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
@@ -127,34 +128,37 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 0;
         }
 
+        $langA = null;
+        $langB = null;
+
         if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
             $langA = $languages[$pageA->rootLanguage] ?? null;
             $langB = $languages[$pageB->rootLanguage] ?? null;
+        }
 
-            if (null === $langA && null === $langB) {
-                if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
-                    return -1;
-                }
+        if (null === $langA && null === $langB) {
+            if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
+                return -1;
+            }
 
-                if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
-                    return 1;
-                }
-            } else {
-                if (null === $langA && null !== $langB) {
-                    return 1;
-                }
+            if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
+                return 1;
+            }
+        } else {
+            if (null === $langA && null !== $langB) {
+                return 1;
+            }
 
-                if (null !== $langA && null === $langB) {
-                    return -1;
-                }
+            if (null !== $langA && null === $langB) {
+                return -1;
+            }
 
-                if ($langA < $langB) {
-                    return -1;
-                }
+            if ($langA < $langB) {
+                return -1;
+            }
 
-                if ($langA > $langB) {
-                    return 1;
-                }
+            if ($langA > $langB) {
+                return 1;
             }
         }
 
@@ -166,7 +170,21 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        return strnatcasecmp((string) $pageB->alias, (string) $pageA->alias);
+        $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
+        $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
+
+        $countA = \count(explode('/', $pathA));
+        $countB = \count(explode('/', $pathB));
+
+        if ($countA > $countB) {
+            return -1;
+        }
+
+        if ($countB > $countA) {
+            return 1;
+        }
+
+        return strnatcasecmp($pathA, $pathB);
     }
 
     protected function convertLanguagesForSorting(array $languages): array

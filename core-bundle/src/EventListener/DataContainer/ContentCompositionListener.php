@@ -95,7 +95,7 @@ class ContentCompositionListener
      */
     public function renderPageArticlesOperation(array $row, ?string $href, string $label, string $title, ?string $icon): string
     {
-        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
+        if ((null === $href && null === $icon) || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
             return '';
         }
 
@@ -104,7 +104,7 @@ class ContentCompositionListener
         $pageModel->setRow($row);
 
         if (!$this->pageRegistry->supportsContentComposition($pageModel) || !$this->hasArticlesInLayout($pageModel)) {
-            return $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ';
+            return null !== $icon ? $this->image->getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)).' ' : '';
         }
 
         return sprintf(

@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
@@ -33,21 +35,55 @@ use Symfony\Component\Routing\Annotation\Route;
  * @internal
  *
  * @deprecated Deprecated in Contao 4.0, to be removed in Contao 5.0
+ *
+ * @Route("/_contao/initialize", name="contao_initialize")
  */
-class InitializeController extends AbstractController
+class InitializeController
 {
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var HttpKernelInterface
+     */
+    private $httpKernel;
+
+    /**
+     * @var KernelInterface
+     */
+    private $kernel;
+
+    public function __construct(ContaoFramework $framework, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, HttpKernelInterface $httpKernel, KernelInterface $kernel)
+    {
+        $this->framework = $framework;
+        $this->requestStack = $requestStack;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->httpKernel = $httpKernel;
+        $this->kernel = $kernel;
+    }
+
     /**
      * Initializes the Contao framework.
      *
      * @throws \RuntimeException
-     *
-     * @Route("/_contao/initialize", name="contao_initialize")
      */
-    public function indexAction(): InitializeControllerResponse
+    public function __invoke(): InitializeControllerResponse
     {
         trigger_deprecation('contao/core-bundle', '4.0', 'Using custom entry points has been deprecated and will no longer work in Contao 5.0.');
 
-        $masterRequest = $this->get('request_stack')->getMasterRequest();
+        $masterRequest = $this->requestStack->getMasterRequest();
 
         if (null === $masterRequest) {
             throw new \RuntimeException('The request stack did not contain a master request.');
@@ -76,16 +112,16 @@ class InitializeController extends AbstractController
 
         // Empty the request stack to make our real request the master
         do {
-            $pop = $this->get('request_stack')->pop();
+            $pop = $this->requestStack->pop();
         } while ($pop);
 
         // Initialize the framework with the real request
-        $this->get('request_stack')->push($realRequest);
-        $this->get('contao.framework')->initialize();
+        $this->requestStack->push($realRequest);
+        $this->framework->initialize();
 
         // Add the master request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.
-        $this->get('request_stack')->push($masterRequest);
+        $this->requestStack->push($masterRequest);
 
         set_exception_handler(
             function ($e) use ($realRequest): void {
@@ -133,8 +169,8 @@ class InitializeController extends AbstractController
      */
     private function handleException(\Throwable $e, Request $request, int $type): void
     {
-        $event = new ExceptionEvent($this->get('http_kernel'), $request, $type, $e);
-        $this->get('event_dispatcher')->dispatch($event, KernelEvents::EXCEPTION);
+        $event = new ExceptionEvent($this->httpKernel, $request, $type, $e);
+        $this->eventDispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
         // A listener might have replaced the exception
         $e = $event->getThrowable();
@@ -161,26 +197,24 @@ class InitializeController extends AbstractController
         }
 
         try {
-            $event = new ResponseEvent($this->get('http_kernel'), $request, $type, $response);
-            $this->get('event_dispatcher')->dispatch($event, KernelEvents::RESPONSE);
+            $event = new ResponseEvent($this->httpKernel, $request, $type, $response);
+            $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
             $response = $event->getResponse();
 
-            $this->get('event_dispatcher')->dispatch(
-                new FinishRequestEvent($this->get('http_kernel'), $request, $type),
+            $this->eventDispatcher->dispatch(
+                new FinishRequestEvent($this->httpKernel, $request, $type),
                 KernelEvents::FINISH_REQUEST
             );
 
-            $this->get('request_stack')->pop();
+            $this->requestStack->pop();
         } catch (\Exception $e) {
             // ignore and continue with original response
         }
 
         $response->send();
 
-        $kernel = $this->get('kernel');
-
-        if ($kernel instanceof TerminableInterface) {
-            $kernel->terminate($request, $response);
+        if ($this->kernel instanceof TerminableInterface) {
+            $this->kernel->terminate($request, $response);
         }
 
         exit;
@@ -191,28 +225,26 @@ class InitializeController extends AbstractController
      */
     private function handleResponse(Request $request, Response $response, int $type): void
     {
-        $event = new ResponseEvent($this->get('http_kernel'), $request, $type, $response);
+        $event = new ResponseEvent($this->httpKernel, $request, $type, $response);
 
         try {
-            $this->get('event_dispatcher')->dispatch($event, KernelEvents::RESPONSE);
+            $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
         } catch (\Throwable $e) {
             // Ignore any errors from events
         }
 
-        $this->get('event_dispatcher')->dispatch(
-            new FinishRequestEvent($this->get('http_kernel'), $request, $type),
+        $this->eventDispatcher->dispatch(
+            new FinishRequestEvent($this->httpKernel, $request, $type),
             KernelEvents::FINISH_REQUEST
         );
 
-        $this->get('request_stack')->pop();
+        $this->requestStack->pop();
 
         $response = $event->getResponse();
         $response->send();
 
-        $kernel = $this->get('kernel');
-
-        if ($kernel instanceof TerminableInterface) {
-            $kernel->terminate($request, $response);
+        if ($this->kernel instanceof TerminableInterface) {
+            $this->kernel->terminate($request, $response);
         }
     }
 }

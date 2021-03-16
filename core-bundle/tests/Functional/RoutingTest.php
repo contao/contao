@@ -134,7 +134,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '//',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -144,7 +144,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home//.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -154,7 +154,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -164,7 +164,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -174,7 +174,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/foo/bar1/foo/bar2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -194,7 +194,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -224,7 +224,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -234,7 +234,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -264,7 +264,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -274,7 +274,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -470,7 +470,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -490,7 +490,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -500,7 +500,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en/home/foo/bar1/foo/bar2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -530,7 +530,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/en/home//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -540,7 +540,17 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
+            [],
+            'root-with-home.local',
+            false,
+        ];
+
+        yield 'Renders the 404 page for an unknown language' => [
+            ['theme', 'root-with-home'],
+            '/fr/home.html',
+            404,
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -570,7 +580,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/en/home/foobar//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'auto_item' => 'foobar'],
             'root-with-home.local',
             true,
@@ -580,7 +590,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/en/home/foobar///foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foobar' => ''],
             'root-with-home.local',
             true,
@@ -590,7 +600,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/en/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -600,7 +610,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/en/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             true,
@@ -781,7 +791,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -791,7 +801,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -801,7 +811,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/foo/bar1/foo/bar2',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -831,7 +841,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/home//foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -861,7 +871,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -871,7 +881,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/home/items/foobar',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -1260,6 +1270,35 @@ class RoutingTest extends FunctionalTestCase
         System::setContainer($client->getContainer());
 
         $this->loadFixtureFiles(['issue-2465']);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Domain1', $title);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testFindsFallbackPageForUnknownLanguage(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
+
+        Config::set('folderUrl', true);
+        Config::set('addLanguageToUrl', true);
+
+        $request = '/de/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'domain1.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'af';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['issue-2819']);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());

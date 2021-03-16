@@ -129,7 +129,7 @@ class SymlinksCommand extends Command
 
         $this->symlink(
             'vendor/scrivo/highlight.php/styles',
-            Path::join($this->webDir, 'vendor/scrivo/highlight.php/styles')
+            Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles')
         );
 
         // Symlink the assets and themes directory

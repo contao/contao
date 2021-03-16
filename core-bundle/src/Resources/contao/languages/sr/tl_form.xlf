@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Mailer transport</target>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>Овде можете да заобиђете подразумевани mailer transport за слање мејлова преко формулара на сајту.</target>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
@@ -89,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
+        <target>CSV фајл (Microsoft Excel)</target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>Подаци из формулара ће бити прикачени у мејл као CSV фајл који можете отворити помоћу програма Microsoft Excel.</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
@@ -99,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
+        <target>Изостави празна поља у формулару</target>
       </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>

@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>イベントを検索エンジンが扱う方法を上書き設定できます。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -246,9 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>将来のイベント</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>イベントを将来のイベントリストに表示</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -315,7 +318,7 @@
         <target>リダイレクト先</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
-        <source>Meta data</source>
+        <source>Metadata</source>
         <target>メタデータ</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
@@ -376,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
+        <target>%sのイベントを特別かどうかを切り替え</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>

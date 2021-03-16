@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Repository;
 use Contao\CoreBundle\Entity\RememberMe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
@@ -61,7 +62,7 @@ class RememberMeRepository extends ServiceEntityRepository
                 )
             )
             ->setParameter('series', $series)
-            ->setParameter('now', new \DateTime())
+            ->setParameter('now', new \DateTime(), Types::DATETIME_MUTABLE)
             ->orderBy('rm.expires', 'ASC')
         ;
 

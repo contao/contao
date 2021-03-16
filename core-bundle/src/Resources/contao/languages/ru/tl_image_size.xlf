@@ -82,7 +82,7 @@
         <target>Использовать оригинальное изображение, если размеры совпадают</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
-        <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
+        <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
         <target>Обратите внимание, что в этом случае, не будет применена оптимизация, такая как удаление метаданных или сжатие JPEG.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
