@@ -31,9 +31,9 @@ class RouteProviderTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->pageModelAutoIncrement = 0;
+        parent::tearDown();
 
-        parent::setUp();
+        $this->pageModelAutoIncrement = 0;
     }
 
     public function testGetsARouteByName(): void
@@ -671,9 +671,11 @@ class RouteProviderTest extends TestCase
      */
     private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
     {
+        mt_srand(++$this->pageModelAutoIncrement);
+
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = ++$this->pageModelAutoIncrement;
+        $page->id = $this->pageModelAutoIncrement;
         $page->rootId = 1;
         $page->type = 'regular';
         $page->alias = $alias;
@@ -681,7 +683,6 @@ class RouteProviderTest extends TestCase
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = 'https' === $scheme;
-        mt_srand($this->pageModelAutoIncrement);
         $page->rootSorting = mt_rand();
 
         return $page;
