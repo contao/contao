@@ -130,6 +130,7 @@ SVG;
     private function randomBytes(int $bytesCount, int $seed): string
     {
         mt_srand($seed);
+
         $return = '';
 
         while (\strlen($return) < $bytesCount) {
