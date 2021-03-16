@@ -58,7 +58,7 @@ class ContentElementControllerTest extends TestCase
     {
         parent::tearDown();
 
-        unset($GLOBALS['TL_LANG']['MSC']);
+        unset($GLOBALS['TL_LANG']);
 
         $reflection = new ReflectionClass(System::class);
         $property = $reflection->getProperty('objContainer');
