@@ -34,7 +34,6 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         '_gid',
         '_dc_gtm_.+',
         'AMP_TOKEN',
-        '_gac_.+',
         '__utm.+',
 
         // Matomo (https://matomo.org/faq/general/faq_146/)
