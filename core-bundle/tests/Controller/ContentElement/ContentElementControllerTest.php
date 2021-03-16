@@ -20,6 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -48,9 +49,21 @@ class ContentElementControllerTest extends TestCase
 
         // Prevent that the dca extractor tries to load language file and dca files
         // See Contao\DcaExtractor::createExtract()
-        $GLOBALS['TL_LANG']['MSC']['foo'] = 'bar';
+        $GLOBALS['TL_LANG']['MSC'] = ['foo' => 'bar'];
 
         System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($GLOBALS['TL_LANG']['MSC']);
+
+        $reflection = new ReflectionClass(System::class);
+        $property = $reflection->getProperty('objContainer');
+        $property->setAccessible(true);
+        $property->setValue(null);
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void
