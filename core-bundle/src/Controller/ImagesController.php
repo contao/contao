@@ -61,7 +61,11 @@ class ImagesController
     public function __invoke(string $path): Response
     {
         try {
-            $image = $this->imageFactory->create($this->targetDir.'/'.$path);
+            try {
+                $image = $this->imageFactory->create($this->targetDir.'/'.$path);
+            } catch (\InvalidArgumentException $exception) {
+                throw new NotFoundHttpException($exception->getMessage(), $exception);
+            }
 
             if ($image instanceof DeferredImageInterface && $this->resizer instanceof DeferredResizerInterface) {
                 $this->resizer->resizeDeferredImage($image);

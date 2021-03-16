@@ -80,10 +80,8 @@ class ImagesControllerTest extends TestCase
 
     public function testReturns404IfImageDoesNotExistOnResize(): void
     {
-        if (class_exists(FileNotExistsException::class)) {
-            $exception = new FileNotExistsException('Image does not exist');
-        } else {
-            $exception = new \InvalidArgumentException('Image does not exist');
+        if (!class_exists(FileNotExistsException::class)) {
+            $this->markTestSkipped();
         }
 
         $factory = $this->createMock(ImageFactoryInterface::class);
@@ -95,7 +93,7 @@ class ImagesControllerTest extends TestCase
         $resizer = $this->createMock(DeferredResizerInterface::class);
         $resizer
             ->method('resizeDeferredImage')
-            ->willThrowException($exception)
+            ->willThrowException(new FileNotExistsException('Image does not exist'))
         ;
 
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
