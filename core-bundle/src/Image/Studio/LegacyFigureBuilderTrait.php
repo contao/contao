@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\System;
 
 /**
@@ -39,11 +38,9 @@ trait LegacyFigureBuilderTrait
             return null;
         }
 
-        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder = $this->getFigureBuilder()->from($resource);
 
-        try {
-            $figureBuilder->from($resource);
-        } catch (InvalidResourceException $e) {
+        if (null !== $figureBuilder->getLastException()) {
             return null;
         }
 

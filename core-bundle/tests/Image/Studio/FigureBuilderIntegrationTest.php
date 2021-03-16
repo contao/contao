@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
+use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -1672,6 +1673,9 @@ class FigureBuilderIntegrationTest extends TestCase
         $templateData = $template instanceof Template
             ? $template->getData()
             : get_object_vars($template);
+
+        // Do not compare Figure reference
+        unset($templateData['figure']);
 
         $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
             foreach ($array as &$value) {

@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
-use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
@@ -1635,48 +1634,27 @@ abstract class Controller extends System
 		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
 
 		// Set image resource
-		try
+		if (null !== $filesModel)
 		{
-			if (null !== $filesModel)
-			{
-				// Make sure model points to the same resource (BC)
-				$filesModel = clone $filesModel;
-				$filesModel->path = $rowData['singleSRC'];
+			// Make sure model points to the same resource (BC)
+			$filesModel = clone $filesModel;
+			$filesModel->path = $rowData['singleSRC'];
 
-				// Use source + metadata from files model (if not overwritten)
-				$figureBuilder
-					->fromFilesModel($filesModel)
-					->setMetadata($createMetadataOverwriteFromRowData(true));
+			// Use source + metadata from files model (if not overwritten)
+			$figureBuilder
+				->fromFilesModel($filesModel)
+				->setMetadata($createMetadataOverwriteFromRowData(true));
 
-				$includeFullMetadata = true;
-			}
-			else
-			{
-				// Always ignore file metadata when building from path (BC)
-				$figureBuilder
-					->fromPath($rowData['singleSRC'], false)
-					->setMetadata($createMetadataOverwriteFromRowData(false));
-
-				$includeFullMetadata = false;
-			}
+			$includeFullMetadata = true;
 		}
-		catch (InvalidResourceException $e)
+		else
 		{
-			System::getContainer()
-				->get('monolog.logger.contao')
-				->log(
-					LogLevel::ERROR,
-					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $e->getMessage()),
-					array('contao' => new ContaoMonologContext(__METHOD__, 'ERROR'))
-				);
+			// Always ignore file metadata when building from path (BC)
+			$figureBuilder
+				->fromPath($rowData['singleSRC'], false)
+				->setMetadata($createMetadataOverwriteFromRowData(false));
 
-			// Fall back to apply a sparse data set instead of failing (BC)
-			foreach ($createFallBackTemplateData() as $key => $value)
-			{
-				$template->$key = $value;
-			}
-
-			return;
+			$includeFullMetadata = false;
 		}
 
 		// Set size and lightbox configuration
@@ -1689,7 +1667,26 @@ abstract class Controller extends System
 			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
 			->setLightboxSize($lightboxSize)
 			->enableLightbox((bool) ($rowData['fullsize'] ?? false))
-			->build();
+			->buildIfResourceExists();
+
+		if (null === $figure)
+		{
+			System::getContainer()
+				->get('monolog.logger.contao')
+				->log(
+					LogLevel::ERROR,
+					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $figureBuilder->getLastException()->getMessage()),
+					array('contao' => new ContaoMonologContext(__METHOD__, 'ERROR'))
+				);
+
+			// Fall back to apply a sparse data set instead of failing (BC)
+			foreach ($createFallBackTemplateData() as $key => $value)
+			{
+				$template->$key = $value;
+			}
+
+			return;
+		}
 
 		// Build result and apply it to the template
 		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);

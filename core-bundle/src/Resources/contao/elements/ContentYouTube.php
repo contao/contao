@@ -131,10 +131,12 @@ class ContentYouTube extends ContentElement
 		// Add a splash image
 		if ($this->splashImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
 		{
-			$this->Template->splashImage = (object) $figureBuilder
+			$figure = $figureBuilder
 				->setSize($this->size)
-				->build()
-				->getLegacyTemplateData();
+				->build();
+
+			$this->Template->splashImage = (object) $figure->getLegacyTemplateData();
+			$this->Template->splashImage->figure = $figure;
 		}
 
 		$this->Template->src = $url;
