@@ -302,8 +302,8 @@ class Version480Update extends AbstractMigration
 
             if (empty($imageSize[0]) || empty($imageSize[1])) {
                 if (
-                    $file->importantPartX + $file->importantPartWidth <= 1.00001
-                    && $file->importantPartY + $file->importantPartHeight <= 1.00001
+                    (float) $file->importantPartX + (float) $file->importantPartWidth <= 1.00001
+                    && (float) $file->importantPartY + (float) $file->importantPartHeight <= 1.00001
                 ) {
                     continue;
                 }
