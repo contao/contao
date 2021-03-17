@@ -329,7 +329,7 @@ class ModuleSearch extends Module
 	{
 		$template->hasImage = false;
 
-		if (!isset($result['meta']) || null == $result['meta'])
+		if (!array_key_exists('meta', $result) || null === $result['meta'])
 		{
 			return;
 		}
@@ -354,7 +354,7 @@ class ModuleSearch extends Module
 
 			$figure = $figureBuilder
 				->setSize($this->imgSize)
-				->setMetadata(new Metadata($figureMeta))
+				->setMetadata($figureMeta)
 				->setLinkHref($result['url'])
 				->buildIfResourceExists();
 
