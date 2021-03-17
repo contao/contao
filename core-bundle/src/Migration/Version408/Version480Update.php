@@ -18,6 +18,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\IntegerType;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -233,6 +234,10 @@ class Version480Update extends AbstractMigration
             return false;
         }
 
+        if ($columns['importantpartx']->getType() instanceof IntegerType) {
+            return true;
+        }
+
         return (bool) $this->connection->query('
             SELECT EXISTS(
                 SELECT id
@@ -248,6 +253,13 @@ class Version480Update extends AbstractMigration
 
     public function runImportantPart(): void
     {
+        $compareValue = 1;
+
+        // If the columns are of type integer, we can safely convert all images even if they are only set to 1
+        if ($this->connection->getSchemaManager()->listTableColumns('tl_files')['importantpartx']->getType() instanceof IntegerType) {
+            $compareValue = 0;
+        }
+
         $this->connection->query('
             ALTER TABLE
                 tl_files
@@ -261,14 +273,14 @@ class Version480Update extends AbstractMigration
                 importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
         ');
 
-        $statement = $this->connection->query('
+        $statement = $this->connection->query("
             SELECT
                 id, path, importantPartX, importantPartY, importantPartWidth, importantPartHeight
             FROM
                 tl_files
             WHERE
-                importantPartWidth > 1 OR importantPartHeight > 1
-        ');
+                importantPartWidth > $compareValue OR importantPartHeight > $compareValue
+        ");
 
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
