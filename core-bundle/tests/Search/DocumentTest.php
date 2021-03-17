@@ -36,6 +36,46 @@ class DocumentTest extends TestCase
     }
 
     /**
+     * @dataProvider canonicalUriProvider
+     */
+    public function testExtractsTheCanonicalUri(string $body, array $headers, ?Uri $expectedCanonicalUri): void
+    {
+        $document = new Document(
+            new Uri('https://example.com'),
+            200,
+            $headers,
+            $body
+        );
+
+        if (null === $expectedCanonicalUri) {
+            $this->assertNull($document->extractCanonicalUri());
+        } else {
+            $this->assertSame((string) $expectedCanonicalUri, (string) $document->extractCanonicalUri());
+        }
+    }
+
+    public function canonicalUriProvider(): \Generator
+    {
+        yield 'Test no data available' => [
+            '',
+            ['Content-Type' => ['text/html']],
+            null,
+        ];
+
+        yield 'Test with Link header' => [
+            '',
+            ['Content-Type' => ['text/html'], 'Link' => ['Link: <https://www.example.com/foobar>; rel="canonical"']],
+            new Uri('https://www.example.com/foobar'),
+        ];
+
+        yield 'Test with cononical link in body' => [
+            '<html><head><link rel="canonical" href="https://www.example.com/foobar2" /></head><body></body></html>',
+            ['Content-Type' => ['text/html']],
+            new Uri('https://www.example.com/foobar2'),
+        ];
+    }
+
+    /**
      * @dataProvider documentProvider
      */
     public function testExtractsTheJsdonLdScript(string $body, array $expectedJsonLds, string $context = 'https://contao.org/'): void

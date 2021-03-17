@@ -90,6 +90,30 @@ class Document
         return $this->crawler;
     }
 
+    public function extractCanonicalUri(): ?UriInterface
+    {
+        foreach ($this->getHeaders() as $key => $values) {
+            if ('link' === $key) {
+                foreach ($values as $value) {
+                    if (preg_match('@<(https?://(.+))>;\s*rel="canonical"@', $value, $matches)) {
+                        return new Uri($matches[1]);
+                    }
+                }
+            }
+        }
+
+        $headCanonical = $this->getContentCrawler()
+            ->filterXPath('//html/head/link[@rel="canonical"][starts-with(@href,"http")]')
+            ->first()
+        ;
+
+        if ($headCanonical->count()) {
+            return new Uri($headCanonical->attr('href'));
+        }
+
+        return null;
+    }
+
     /**
      * Extracts all <script type="application/ld+json"> script tags and returns their contents as a JSON decoded
      * array. Optionally allows to restrict it to a given context and type.
