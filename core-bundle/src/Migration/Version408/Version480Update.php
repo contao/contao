@@ -319,7 +319,7 @@ class Version480Update extends AbstractMigration
                     $file->importantPartY,
                     $file->importantPartWidth,
                     $file->importantPartHeight,
-                    $file->path,
+                    $file->path
                 );
             } else {
                 $updateData[':x'] = min(1, $file->importantPartX / $imageSize[0]);
