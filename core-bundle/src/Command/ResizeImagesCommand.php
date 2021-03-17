@@ -108,7 +108,7 @@ class ResizeImagesCommand extends Command
             ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, '(Deprecated) Use the concurrent option instead', false)
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
             ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
-            ->addOption('delete-missing', null, InputOption::VALUE_NONE, 'Delete deferred image references to images that no longer exist')
+            ->addOption('preserve-missing', null, InputOption::VALUE_NONE, 'Do not delete deferred image references to images that no longer exist')
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }
@@ -126,7 +126,7 @@ class ResizeImagesCommand extends Command
         $this->io = new SymfonyStyle($input, $output->section());
 
         if (null !== $image = $input->getOption('image')) {
-            return $this->resizeImage($image, $input->getOption('delete-missing'));
+            return $this->resizeImage($image, $input->getOption('preserve-missing'));
         }
 
         $timeLimit = (float) $input->getOption('time-limit');
@@ -160,10 +160,10 @@ class ResizeImagesCommand extends Command
         $this->table->setColumnWidth(2, $this->terminalWidth - 25);
         $this->table->setColumnMaxWidth(2, $this->terminalWidth - 25);
 
-        return $this->resizeImages($timeLimit, $concurrent, $input->getOption('no-sub-process'), $input->getOption('delete-missing'));
+        return $this->resizeImages($timeLimit, $concurrent, $input->getOption('no-sub-process'), $input->getOption('preserve-missing'));
     }
 
-    private function resizeImage(string $path, bool $deleteMissing, bool $quiet = false): int
+    private function resizeImage(string $path, bool $preserveMissing, bool $quiet = false): int
     {
         if ($this->filesystem->exists($this->targetDir.'/'.$path)) {
             return 0;
@@ -183,7 +183,7 @@ class ResizeImagesCommand extends Command
                 $this->io->writeln($exception->getMessage());
             }
 
-            if ($exception instanceof FileNotExistsException && $deleteMissing) {
+            if ($exception instanceof FileNotExistsException && !$preserveMissing) {
                 try {
                     $this->storage->delete($path);
                 } catch (\Throwable $deleteException) {
@@ -202,7 +202,7 @@ class ResizeImagesCommand extends Command
         return 0;
     }
 
-    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess, bool $deleteMissing): int
+    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess, bool $preserveMissing): int
     {
         if (!$noSubProcess && $this->supportsSubProcesses()) {
             return $this->executeConcurrent($timeLimit, $concurrent);
@@ -213,7 +213,7 @@ class ResizeImagesCommand extends Command
             .'This can lead to memory leaks and eventually let the execution fail.'
         );
 
-        return $this->executeInCurrentProcess($timeLimit, $concurrent, $deleteMissing);
+        return $this->executeInCurrentProcess($timeLimit, $concurrent, $preserveMissing);
     }
 
     private function supportsSubProcesses(): bool
@@ -233,7 +233,7 @@ class ResizeImagesCommand extends Command
         return 0 === $process->run();
     }
 
-    private function executeInCurrentProcess(float $timeLimit, float $concurrent, bool $deleteMissing): int
+    private function executeInCurrentProcess(float $timeLimit, float $concurrent, bool $preserveMissing): int
     {
         $startTime = microtime(true);
 
@@ -259,7 +259,7 @@ class ResizeImagesCommand extends Command
 
                 $resizeStart = microtime(true);
 
-                $failedCount += $this->resizeImage($path, $deleteMissing, true);
+                $failedCount += $this->resizeImage($path, $preserveMissing, true);
 
                 $lastDuration = microtime(true) - $resizeStart;
             }
