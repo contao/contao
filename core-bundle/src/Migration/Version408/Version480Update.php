@@ -46,6 +46,11 @@ class Version480Update extends AbstractMigration
      */
     private $projectDir;
 
+    /**
+     * @var array<string>
+     */
+    private $resultMessages = [];
+
     public function __construct(Connection $connection, Filesystem $filesystem, ContaoFramework $framework, string $projectDir)
     {
         $this->connection = $connection;
@@ -73,6 +78,7 @@ class Version480Update extends AbstractMigration
     public function run(): MigrationResult
     {
         $this->framework->initialize();
+        $this->resultMessages = [];
 
         if ($this->shouldRunMediaelement()) {
             $this->runMediaelement();
@@ -102,7 +108,7 @@ class Version480Update extends AbstractMigration
             $this->runRememberMe();
         }
 
-        return $this->createResult(true);
+        return $this->createResult(true, $this->resultMessages ? implode("\n", $this->resultMessages) : null);
     }
 
     public function shouldRunMediaelement(): bool
@@ -264,13 +270,13 @@ class Version480Update extends AbstractMigration
             ALTER TABLE
                 tl_files
             CHANGE
-                importantPartX importantPartX DOUBLE PRECISION DEFAULT 0 NOT NULL,
+                importantPartX importantPartX DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL,
             CHANGE
-                importantPartY importantPartY DOUBLE PRECISION DEFAULT 0 NOT NULL,
+                importantPartY importantPartY DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL,
             CHANGE
-                importantPartWidth importantPartWidth DOUBLE PRECISION DEFAULT 0 NOT NULL,
+                importantPartWidth importantPartWidth DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL,
             CHANGE
-                importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
+                importantPartHeight importantPartHeight DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL
         ');
 
         $statement = $this->connection->query("
@@ -285,16 +291,44 @@ class Version480Update extends AbstractMigration
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
             if (!$this->filesystem->exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
-                continue;
+                $imageSize = [];
+            } else {
+                $imageSize = (new File($file->path))->imageViewSize;
             }
 
-            $imageSize = (new File($file->path))->imageViewSize;
+            $updateData = [
+                ':id' => $file->id,
+            ];
 
             if (empty($imageSize[0]) || empty($imageSize[1])) {
-                continue;
+                if (
+                    $file->importantPartX + $file->importantPartWidth <= 1.00001
+                    && $file->importantPartY + $file->importantPartHeight <= 1.00001
+                ) {
+                    continue;
+                }
+
+                $updateData[':x'] = 0;
+                $updateData[':y'] = 0;
+                $updateData[':width'] = 0;
+                $updateData[':height'] = 0;
+
+                $this->resultMessages[] = sprintf(
+                    'Deleted invalid important part [%s,%s,%s,%s] from image "%s".',
+                    $file->importantPartX,
+                    $file->importantPartY,
+                    $file->importantPartWidth,
+                    $file->importantPartHeight,
+                    $file->path,
+                );
+            } else {
+                $updateData[':x'] = min(1, $file->importantPartX / $imageSize[0]);
+                $updateData[':y'] = min(1, $file->importantPartY / $imageSize[1]);
+                $updateData[':width'] = min(1 - $updateData[':x'], $file->importantPartWidth / $imageSize[0]);
+                $updateData[':height'] = min(1 - $updateData[':y'], $file->importantPartHeight / $imageSize[1]);
             }
 
-            $stmt = $this->connection->prepare('
+            $this->connection->prepare('
                 UPDATE
                     tl_files
                 SET
@@ -304,15 +338,7 @@ class Version480Update extends AbstractMigration
                     importantPartHeight = :height
                 WHERE
                     id = :id
-            ');
-
-            $stmt->execute([
-                ':id' => $file->id,
-                ':x' => $file->importantPartX / $imageSize[0],
-                ':y' => $file->importantPartY / $imageSize[1],
-                ':width' => $file->importantPartWidth / $imageSize[0],
-                ':height' => $file->importantPartHeight / $imageSize[1],
-            ]);
+            ')->execute($updateData);
         }
     }
 
