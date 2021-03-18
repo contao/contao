@@ -176,11 +176,18 @@ class Picker extends Widget
 
 	protected function generateValues($blnHasOrder): array
 	{
-		$strRelatedTable = $this->getRelatedTable();
+		if (substr($this->context ?? '', 0, 3) === 'dc.')
+		{
+			$strRelatedTable = substr($this->context, 3);
+		}
+		else
+		{
+			$strRelatedTable = $this->getRelatedTable();
+		}
 
 		if (!$strRelatedTable)
 		{
-			return (array) $this->varValue;
+			return array_combine((array) $this->varValue, (array) $this->varValue);
 		}
 
 		Controller::loadDataContainer($strRelatedTable);
@@ -245,7 +252,14 @@ class Picker extends Widget
 		}
 
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
-		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
+		$labelValues = array();
+
+		foreach ($labelConfig['fields'] as $field)
+		{
+			$labelValues[] = $arrRow[$field] ?? '';
+		}
+
+		$label = vsprintf($labelConfig['format'], $labelValues);
 
 		if (\is_array($labelConfig['label_callback'] ?? null))
 		{

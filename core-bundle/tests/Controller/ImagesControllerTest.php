@@ -17,6 +17,7 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizerInterface;
+use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -57,13 +58,44 @@ class ImagesControllerTest extends TestCase
 
     public function testReturns404IfImageDoesNotExist(): void
     {
+        if (class_exists(FileNotExistsException::class)) {
+            $exception = new FileNotExistsException('Image does not exist');
+        } else {
+            $exception = new \InvalidArgumentException('Image does not exist');
+        }
+
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
-            ->willThrowException(new \InvalidArgumentException('Image does not exist'))
+            ->willThrowException($exception)
         ;
 
         $resizer = $this->createMock(ResizerInterface::class);
+        $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
+
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller('image.jpg');
+    }
+
+    public function testReturns404IfImageDoesNotExistOnResize(): void
+    {
+        if (!class_exists(FileNotExistsException::class)) {
+            $this->markTestSkipped();
+        }
+
+        $factory = $this->createMock(ImageFactoryInterface::class);
+        $factory
+            ->method('create')
+            ->willReturn($this->createMock(DeferredImageInterface::class))
+        ;
+
+        $resizer = $this->createMock(DeferredResizerInterface::class);
+        $resizer
+            ->method('resizeDeferredImage')
+            ->willThrowException(new FileNotExistsException('Image does not exist'))
+        ;
+
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
 
         $this->expectException(NotFoundHttpException::class);

@@ -45,38 +45,18 @@ use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @backupGlobals enabled
+ */
 class PluginTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
-        if (isset($_SERVER['APP_SECRET'])) {
-            $_SERVER['APP_SECRET_ORIG'] = $_SERVER['APP_SECRET'];
-            unset($_SERVER['APP_SECRET']);
-        }
-
-        if (isset($_SERVER['DATABASE_URL'])) {
-            $_SERVER['DATABASE_URL_ORIG'] = $_SERVER['DATABASE_URL'];
-            unset($_SERVER['DATABASE_URL']);
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        if (isset($_SERVER['APP_SECRET_ORIG'])) {
-            $_SERVER['APP_SECRET'] = $_SERVER['APP_SECRET_ORIG'];
-            unset($_SERVER['APP_SECRET_ORIG']);
-        }
-
-        if (isset($_SERVER['DATABASE_URL_ORIG'])) {
-            $_SERVER['DATABASE_URL'] = $_SERVER['DATABASE_URL_ORIG'];
-            unset($_SERVER['DATABASE_URL_ORIG']);
-        }
+        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
     }
 
     public function testReturnsTheBundles(): void
@@ -881,13 +861,10 @@ class PluginTest extends ContaoTestCase
             return $connection;
         };
 
-        $url = $_ENV['DATABASE_URL'] ?? null;
         $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
 
         $plugin = new Plugin($dbalConnectionFactory);
         $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
-
-        $_ENV['DATABASE_URL'] = $url;
     }
 
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void

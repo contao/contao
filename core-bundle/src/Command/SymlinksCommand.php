@@ -127,17 +127,20 @@ class SymlinksCommand extends Command
         $this->symlinkModules();
         $this->symlinkThemes();
 
-        $this->symlink(
-            'vendor/scrivo/highlight.php/styles',
-            Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles')
-        );
-
         // Symlink the assets and themes directory
         $this->symlink('assets', Path::join($this->webDir, 'assets'));
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
+
+        // Symlink the highlight.php styles
+        if ($fs->exists(Path::join($this->projectDir, 'vendor/scrivo/highlight.php/styles'))) {
+            $this->symlink(
+                'vendor/scrivo/highlight.php/styles',
+                Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles')
+            );
+        }
 
         $this->triggerSymlinkEvent();
     }
