@@ -55,7 +55,9 @@ class SymlinksCommandTest extends TestCase
         $tester = new CommandTester($command);
         $code = $tester->execute([]);
         $display = $tester->getDisplay();
-
+if ($code !== 0) {
+    dump($display);
+}
         $this->assertSame(0, $code);
 
         $this->assertNotRegExp('# web/files +files #', $display);
