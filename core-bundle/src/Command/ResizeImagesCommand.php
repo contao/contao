@@ -189,6 +189,7 @@ class ResizeImagesCommand extends Command
                 } catch (\Throwable $deleteException) {
                     $this->io->writeln($deleteException->getMessage());
                 }
+
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
             }
 
