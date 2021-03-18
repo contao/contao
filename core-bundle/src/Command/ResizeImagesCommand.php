@@ -16,6 +16,7 @@ use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
+use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ResizerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -107,6 +108,7 @@ class ResizeImagesCommand extends Command
             ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, '(Deprecated) Use the concurrent option instead', false)
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
             ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
+            ->addOption('preserve-missing', null, InputOption::VALUE_NONE, 'Do not delete deferred image references to images that no longer exist')
             ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }
@@ -124,7 +126,7 @@ class ResizeImagesCommand extends Command
         $this->io = new SymfonyStyle($input, $output->section());
 
         if (null !== $image = $input->getOption('image')) {
-            return $this->resizeImage($image);
+            return $this->resizeImage($image, $input->getOption('preserve-missing'));
         }
 
         $timeLimit = (float) $input->getOption('time-limit');
@@ -158,10 +160,10 @@ class ResizeImagesCommand extends Command
         $this->table->setColumnWidth(2, $this->terminalWidth - 25);
         $this->table->setColumnMaxWidth(2, $this->terminalWidth - 25);
 
-        return $this->resizeImages($timeLimit, $concurrent, $input->getOption('no-sub-process'));
+        return $this->resizeImages($timeLimit, $concurrent, $input->getOption('no-sub-process'), $input->getOption('preserve-missing'));
     }
 
-    private function resizeImage(string $path, bool $quiet = false): int
+    private function resizeImage(string $path, bool $preserveMissing, bool $quiet = false): int
     {
         if ($this->filesystem->exists($this->targetDir.'/'.$path)) {
             return 0;
@@ -181,6 +183,16 @@ class ResizeImagesCommand extends Command
                 $this->io->writeln($exception->getMessage());
             }
 
+            if ($exception instanceof FileNotExistsException && !$preserveMissing) {
+                try {
+                    $this->storage->delete($path);
+                } catch (\Throwable $deleteException) {
+                    $this->io->writeln($deleteException->getMessage());
+                }
+
+                $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
+            }
+
             return 1;
         }
 
@@ -191,7 +203,7 @@ class ResizeImagesCommand extends Command
         return 0;
     }
 
-    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess): int
+    private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess, bool $preserveMissing): int
     {
         if (!$noSubProcess && $this->supportsSubProcesses()) {
             return $this->executeConcurrent($timeLimit, $concurrent);
@@ -202,9 +214,7 @@ class ResizeImagesCommand extends Command
             .'This can lead to memory leaks and eventually let the execution fail.'
         );
 
-        $this->executeInCurrentProcess($timeLimit, $concurrent);
-
-        return 0;
+        return $this->executeInCurrentProcess($timeLimit, $concurrent, $preserveMissing);
     }
 
     private function supportsSubProcesses(): bool
@@ -224,11 +234,12 @@ class ResizeImagesCommand extends Command
         return 0 === $process->run();
     }
 
-    private function executeInCurrentProcess(float $timeLimit, float $concurrent): void
+    private function executeInCurrentProcess(float $timeLimit, float $concurrent, bool $preserveMissing): int
     {
         $startTime = microtime(true);
 
         $count = 0;
+        $failedCount = 0;
         $lastDuration = 0;
 
         try {
@@ -238,7 +249,7 @@ class ResizeImagesCommand extends Command
                 if ($timeLimit && microtime(true) - $startTime + $sleep > $timeLimit) {
                     $this->io->writeln('Time limit of '.$timeLimit.' seconds reached.');
 
-                    return;
+                    return 0;
                 }
 
                 usleep((int) ($sleep * 1000000));
@@ -249,14 +260,26 @@ class ResizeImagesCommand extends Command
 
                 $resizeStart = microtime(true);
 
-                $this->resizeImage($path, true);
+                $failedCount += $this->resizeImage($path, $preserveMissing, true);
 
                 $lastDuration = microtime(true) - $resizeStart;
             }
         } finally {
             $this->tableOutput->clear();
-            $this->io->writeln('Resized '.$count.' images.');
+            $this->io->writeln('Resized '.($count - $failedCount).' images.');
+
+            if ($failedCount > 0) {
+                $this->io->writeln('Resizing of '.$failedCount.' images failed.');
+            }
+
+            if (0 !== $failedCount && $count - $failedCount <= 0) {
+                $this->io->error('No image could be resized successfully.');
+
+                return 1;
+            }
         }
+
+        return 0;
     }
 
     private function executeConcurrent(float $timeLimit, float $concurrent): int
