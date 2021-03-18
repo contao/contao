@@ -176,7 +176,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$objSession->set('CLIPBOARD', $arrClipboard);
 
 				// Support copyAll in the list view (see #7499)
-				if (isset($_POST['copy']) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < 4)
+				if (isset($_POST['copy']) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
 				{
 					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('request')));
 				}
@@ -188,7 +188,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$this->strTable = $strTable;
 		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
-		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(5, 6));
+		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
 
 		// Call onload_callback (e.g. to check permissions)
@@ -311,7 +311,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			$return .= $this->panel();
-			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->parentView() : $this->listView();
+			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->parentView() : $this->listView();
 		}
 
 		return $return;
@@ -462,7 +462,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$row[$i] = $value ? Date::parse(Config::get('timeFormat'), $value) : '-';
 			}
-			elseif ($i == 'tstamp' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'datim' || \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['flag'] ?? null, array(5, 6, 7, 8, 9, 10)))
+			elseif ($i == 'tstamp' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'datim' || \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 			{
 				$row[$i] = $value ? Date::parse(Config::get('datimFormat'), $value) : '-';
 			}
@@ -1100,7 +1100,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					{
 						$insertID = $objInsertStmt->insertId;
 
-						if ($kk != $parentId && (!empty($cctable[$k]) || ($GLOBALS['TL_DCA'][$k]['list']['sorting']['mode'] ?? null) == 5))
+						if ($kk != $parentId && (!empty($cctable[$k]) || ($GLOBALS['TL_DCA'][$k]['list']['sorting']['mode'] ?? null) == self::MODE_TREE))
 						{
 							$this->copyChilds($k, $insertID, $kk, $parentId);
 						}
@@ -1164,7 +1164,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				$newPID = null;
 				$newSorting = null;
-				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
 				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
@@ -1986,7 +1986,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					$arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e">' . $GLOBALS['TL_LANG']['MSC']['saveNedit'] . '</button>';
 				}
 
-				if ($this->ptable || ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4)
+				if ($this->ptable || ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g">' . $GLOBALS['TL_LANG']['MSC']['saveNback'] . '</button>';
 				}
@@ -2195,7 +2195,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Parent view
-				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4)
+				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . $this->activeRecord->pid;
 				}
@@ -2226,7 +2226,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Parent view
-				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4)
+				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . CURRENT_ID . '&amp;id=' . $this->intId;
 				}
@@ -3105,7 +3105,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && ($arrData['eval']['fallback'] ?? null))
 			{
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4)
+				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "='' WHERE pid=?")
 								   ->execute($this->activeRecord->pid);
@@ -3429,7 +3429,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$table = $this->strTable;
 		$treeClass = 'tl_tree';
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 		{
 			$table = $this->ptable;
 			$treeClass = 'tl_tree_xtnd';
@@ -3449,7 +3449,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Toggle the nodes
 		if (Input::get('ptg') == 'all')
 		{
-			$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
+			$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
 
 			// Expand tree
 			if (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) != 1)
@@ -3474,14 +3474,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Return if a mandatory field (id, pid, sorting) is missing
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && (!$this->Database->fieldExists('id', $table) || !$this->Database->fieldExists('pid', $table) || !$this->Database->fieldExists('sorting', $table)))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$this->Database->fieldExists('id', $table) || !$this->Database->fieldExists('pid', $table) || !$this->Database->fieldExists('sorting', $table)))
 		{
 			return '
 <p class="tl_empty">Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</p>';
 		}
 
 		// Return if there is no parent table
-		if (!$this->ptable && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6)
+		if (!$this->ptable && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 		{
 			return '
 <p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
@@ -3535,7 +3535,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		if (!empty($this->procedure))
 		{
-			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? 'pid' : 'id';
+			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? 'pid' : 'id';
 
 			if ($fld == 'id')
 			{
@@ -3595,7 +3595,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && $blnClipboard && $this->$topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $this->$topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
 			}
 		}
 
@@ -3631,7 +3631,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$_buttons = '&nbsp;';
 
 		// Show paste button only if there are no root records specified
-		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && (!$this->root || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? null)) && Input::get('act') != 'select')
+		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$this->root || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? null)) && Input::get('act') != 'select')
 		{
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $childs, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -3761,7 +3761,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$blnPtable = false;
 
 		// Load parent table
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 		{
 			$table = $this->ptable;
 
@@ -3846,7 +3846,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
+		$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
 
 		// Toggle nodes
 		if (Input::get('ptg'))
@@ -3881,7 +3881,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Check whether there are child records
 		if (!$blnNoRecursion)
 		{
-			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
 				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($arrFound) ? " AND id IN(" . implode(',', array_map('\intval', $arrFound)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting" : ''))
 											->execute($id);
@@ -3902,9 +3902,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
-		$mouseover = (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 || $table == $this->strTable) ? ' toggle_select hover-div' : '';
+		$mouseover = (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable) ? ' toggle_select hover-div' : '';
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$args = array();
@@ -3913,11 +3913,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1);
 
 		// Always show selected nodes
-		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 || $table !== $this->strTable))
+		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
 		{
 			$selected = $this->arrPickerValue;
 
-			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 			{
 				$selected = $this->Database->execute("SELECT pid FROM {$this->strTable} WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
 										   ->fetchEach('pid');
@@ -3955,7 +3955,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(5, 6, 7, 8, 9, 10)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 			{
 				$args[$k] = Date::parse(Config::get('datimFormat'), $objRow->$v);
 			}
@@ -3999,8 +3999,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$return .= '</div> <div class="tl_right">';
-		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
-		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
+		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
+		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
 		$_buttons = '';
 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
@@ -4041,7 +4041,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $id));
 
 				// Regular tree (on cut: disable buttons of the page and all its childs to avoid circular references)
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
 					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || ($this->root && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
@@ -4062,7 +4062,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		if ($table != $this->strTable)
 		{
 			// Also apply the filter settings to the child table (see #716)
-			if (!empty($this->procedure) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6)
+			if (!empty($this->procedure) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 			{
 				$arrValues = $this->values;
 				array_unshift($arrValues, $id);
@@ -4102,7 +4102,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			{
 				for ($k=0, $c=\count($childs); $k<$c; $k++)
 				{
-					$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
+					$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
 				}
 			}
 
@@ -4130,7 +4130,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
-		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
+		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$blnHasSorting = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) == 'sorting';
 		$blnMultiboard = false;
 
@@ -4679,7 +4679,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	protected function listView()
 	{
-		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
+		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array();
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
@@ -4713,7 +4713,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
 				{
-					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 1 && isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag']) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] % 2) == 0)
+					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED && isset($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag']) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] % 2) == 0)
 					{
 						$direction = 'DESC';
 					}
@@ -4751,7 +4751,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					$orderBy[$k] = $this->Database->findInSet($v, $keys);
 				}
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(5, 6, 7, 8, 9, 10)))
+				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 				{
 					$orderBy[$k] = "CAST($key AS SIGNED)"; // see #5503
 				}
@@ -4762,7 +4762,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 			}
 
-			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 3)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT)
 			{
 				$firstOrderBy = 'pid';
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
@@ -4800,7 +4800,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div id="tl_buttons">' . ((Input::get('act') == 'select' || $this->ptable) ? '
 <a href="' . $this->getReferer(true, $this->ptable) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)) ? '
-<a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1] ?? '') . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons() . '
+<a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1] ?? '') . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons() . '
 </div>';
 
 		// Return "no records found" message
@@ -4905,7 +4905,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 						$args[$k] = $objRef->numRows ? $objRef->$strField : '';
 					}
-					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['flag'] ?? null, array(5, 6, 7, 8, 9, 10)))
+					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 					{
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
 						{
@@ -5310,7 +5310,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	protected function sortMenu()
 	{
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != 2 && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != 4)
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_SORTABLE && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_PARENT)
 		{
 			return '';
 		}
@@ -5340,7 +5340,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
 		// Add PID to order fields
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 3 && $this->Database->fieldExists('pid', $this->strTable))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT && $this->Database->fieldExists('pid', $this->strTable))
 		{
 			array_unshift($orderBy, 'pid');
 		}
@@ -5353,7 +5353,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Validate the user input (thanks to aulmn) (see #4971)
 			if (\in_array($strSort, $sortingFields, true))
 			{
-				$session['sorting'][$this->strTable] = \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strSort]['flag'] ?? null, array(2, 4, 6, 8, 10, 12)) ? "$strSort DESC" : $strSort;
+				$session['sorting'][$this->strTable] = \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strSort]['flag'] ?? null, array(self::SORT_INITIAL_LETTER_DESC, self::SORT_INITIAL_LETTERS_DESC, self::SORT_DAY_DESC, self::SORT_MONTH_DESC, self::SORT_YEAR_DESC, self::SORT_DESC)) ? "$strSort DESC" : $strSort;
 				$objSessionBag->replace($session);
 			}
 		}
@@ -5421,7 +5421,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 		$fields = '';
 
 		// Set limit from user input
@@ -5561,7 +5561,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$fields = '';
 		$sortingFields = array();
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -5606,7 +5606,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				if (isset($session['filter'][$filter][$field]))
 				{
 					// Sort by day
-					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(5, 6)))
+					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 					{
 						if (!$session['filter'][$filter][$field])
 						{
@@ -5638,7 +5638,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					// Sort by year
-					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(9, 10)))
+					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 					{
 						if (!$session['filter'][$filter][$field])
 						{
@@ -5685,7 +5685,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$arrValues = array();
 			$arrProcedure = array();
 
-			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 			{
 				$arrProcedure[] = 'pid=?';
 				$arrValues[] = CURRENT_ID;
@@ -5726,25 +5726,25 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag']))
 			{
 				// Sort by day
-				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(5, 6)))
+				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 				{
 					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-%%d'))), '') AS $what";
 				}
 
 				// Sort by month
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(7, 8)))
+				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 				{
 					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-01'))), '') AS $what";
 				}
 
 				// Sort by year
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(9, 10)))
+				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 				{
 					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01'))), '') AS $what";
 				}
 			}
 
-			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
+			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 
 			// Limit the options if there are root records
 			if ($this->root)
@@ -5752,12 +5752,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$rootIds = $this->root;
 
 				// Also add the child records of the table (see #1811)
-				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == 5)
+				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
 					$rootIds = array_merge($rootIds, $this->Database->getChildRecords($rootIds, $table));
 				}
 
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6)
+				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 				{
 					$arrProcedure[] = "pid IN(" . implode(',', $rootIds) . ")";
 				}
@@ -5781,7 +5781,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$options = $objFields->fetchEach($field);
 
 				// Sort by day
-				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(5, 6)))
+				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 				{
 					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 6 ? rsort($options) : sort($options);
 
@@ -5801,7 +5801,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Sort by month
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(7, 8)))
+				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 				{
 					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 8 ? rsort($options) : sort($options);
 
@@ -5827,9 +5827,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Sort by year
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(9, 10)))
+				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 				{
-					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 10 ? rsort($options) : sort($options);
+					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == self::SORT_YEAR_DESC ? rsort($options) : sort($options);
 
 					foreach ($options as $k=>$v)
 					{
@@ -5897,7 +5897,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				$options_sorter = array();
-				$blnDate = \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(5, 6, 7, 8, 9, 10));
+				$blnDate = \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC));
 
 				// Options
 				foreach ($options as $kk=>$vv)
@@ -5998,7 +5998,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
 					});
 
-					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(2, 4, 12)))
+					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_INITIAL_LETTER_DESC, self::SORT_INITIAL_LETTERS_DESC, self::SORT_DESC)))
 					{
 						$options_sorter = array_reverse($options_sorter, true);
 					}
@@ -6035,7 +6035,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 
@@ -6093,11 +6093,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$remoteNew = $objParent->value;
 			}
 		}
-		elseif (\in_array($mode, array(1, 2)))
+		elseif (\in_array($mode, array(self::SORT_INITIAL_LETTER_ASC, self::SORT_INITIAL_LETTER_DESC)))
 		{
 			$remoteNew = $value ? mb_strtoupper(mb_substr($value, 0, 1)) : '-';
 		}
-		elseif (\in_array($mode, array(3, 4)))
+		elseif (\in_array($mode, array(self::SORT_INITIAL_LETTERS_ASC, self::SORT_INITIAL_LETTERS_DESC)))
 		{
 			if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length']))
 			{
@@ -6106,11 +6106,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			$remoteNew = $value ? (new UnicodeString($value))->slice(0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])->title()->toString() : '-';
 		}
-		elseif (\in_array($mode, array(5, 6)))
+		elseif (\in_array($mode, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 		{
 			$remoteNew = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
 		}
-		elseif (\in_array($mode, array(7, 8)))
+		elseif (\in_array($mode, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 		{
 			$remoteNew = $value ? date('Y-m', $value) : '-';
 			$intMonth = $value ? (date('m', $value) - 1) : '-';
@@ -6120,7 +6120,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$remoteNew = $value ? $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . date('Y', $value) : '-';
 			}
 		}
-		elseif (\in_array($mode, array(9, 10)))
+		elseif (\in_array($mode, array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 		{
 			$remoteNew = $value ? date('Y', $value) : '-';
 		}
@@ -6235,7 +6235,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Get the IDs of all root records (tree view)
 		if ($this->treeView)
 		{
-			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
+			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)

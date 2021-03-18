@@ -51,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sent', 'date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'panelLayout'             => 'filter;sort,search,limit',
@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -246,7 +246,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -259,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'eval'                    => array('doNotCopy'=>true, 'isBoolean'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
@@ -267,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 8,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		)
