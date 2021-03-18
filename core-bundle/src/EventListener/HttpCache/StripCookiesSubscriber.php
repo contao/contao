@@ -63,6 +63,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Osano Cookie Consent
         'cookieconsent_status',
+
+        // Cookiebot Cookie Consent
+        'CookieConsent',
     ];
 
     /**
