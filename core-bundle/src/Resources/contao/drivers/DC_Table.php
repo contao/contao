@@ -5705,19 +5705,19 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(5, 6)))
 				{
-					$what = "IF($what!='', UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-%%d')), '') AS $what";
+					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-%%d'))), '') AS $what";
 				}
 
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(7, 8)))
 				{
-					$what = "IF($what!='', UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-01')), '') AS $what";
+					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-01'))), '') AS $what";
 				}
 
 				// Sort by year
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(9, 10)))
 				{
-					$what = "IF($what!='', UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01')), '') AS $what";
+					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01'))), '') AS $what";
 				}
 			}
 

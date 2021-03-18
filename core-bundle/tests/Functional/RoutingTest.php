@@ -16,6 +16,8 @@ use Contao\Config;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class RoutingTest extends FunctionalTestCase
 {
@@ -33,6 +35,13 @@ class RoutingTest extends FunctionalTestCase
         static::bootKernel();
         static::resetDatabaseSchema();
         static::ensureKernelShutdown();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
     }
 
     protected function setUp(): void

@@ -21,7 +21,7 @@ use Contao\GdImage;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
-class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
+final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
     protected function deprecationProvider(): array
     {
