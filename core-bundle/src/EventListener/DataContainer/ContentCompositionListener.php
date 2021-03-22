@@ -194,6 +194,10 @@ class ContentCompositionListener
 
     private function renderArticlePasteIntoButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
     {
+        if (empty($row['pid'])) {
+            return $this->image->getHtml('pasteinto_.svg').' ';
+        }
+
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
         $pageModel->setRow($row);

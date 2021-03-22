@@ -41,6 +41,7 @@ class ContentCompositionListenerTest extends TestCase
      */
     private $pageRecord = [
         'id' => 17,
+        'pid' => 3,
         'alias' => 'foo/bar',
         'type' => 'foo',
         'title' => 'foo',
@@ -713,6 +714,34 @@ class ContentCompositionListenerTest extends TestCase
         $this->assertSame(
             '<img src="pasteinto_.svg"> ',
             $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true)
+        );
+    }
+
+    public function testDisablesPasteIntoArticleOnRootLevel(): void
+    {
+        $this->imageAdapter
+            ->expects($this->once())
+            ->method('getHtml')
+            ->with('pasteinto_.svg')
+            ->willReturn('<img src="pasteinto_.svg">')
+        ;
+
+        $this->pageRegistry
+            ->expects($this->never())
+            ->method('supportsContentComposition')
+        ;
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
+        /** @var DataContainer&MockObject $dc */
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article', 'activeRecord' => (object) $this->pageRecord]);
+
+        $this->assertSame(
+            '<img src="pasteinto_.svg"> ',
+            $this->listener->renderArticlePasteButton($dc, array_merge($this->pageRecord, ['pid' => 0]), 'tl_page', true)
         );
     }
 
