@@ -45,6 +45,12 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 
+        $targetUrl = $request->request->get('_target_path');
+
+        if (null !== $targetUrl && '' !== $targetUrl) {
+            return $this->httpUtils->createRedirectResponse($request, $targetUrl);
+        }
+
         if ($targetUrl = $request->headers->get('Referer')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
