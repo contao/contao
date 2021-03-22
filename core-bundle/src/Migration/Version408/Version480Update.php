@@ -18,6 +18,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\IntegerType;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -45,6 +46,11 @@ class Version480Update extends AbstractMigration
      */
     private $projectDir;
 
+    /**
+     * @var array<string>
+     */
+    private $resultMessages = [];
+
     public function __construct(Connection $connection, Filesystem $filesystem, ContaoFramework $framework, string $projectDir)
     {
         $this->connection = $connection;
@@ -60,6 +66,53 @@ class Version480Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
+        return $this->shouldRunMediaelement()
+            || $this->shouldRunSkipIfDimensionsMatch()
+            || $this->shouldRunImportantPart()
+            || $this->shouldRunMinKeywordLength()
+            || $this->shouldRunContextLength()
+            || $this->shouldRunDefaultImageDensities()
+            || $this->shouldRunRememberMe();
+    }
+
+    public function run(): MigrationResult
+    {
+        $this->framework->initialize();
+        $this->resultMessages = [];
+
+        if ($this->shouldRunMediaelement()) {
+            $this->runMediaelement();
+        }
+
+        if ($this->shouldRunSkipIfDimensionsMatch()) {
+            $this->runSkipIfDimensionsMatch();
+        }
+
+        if ($this->shouldRunImportantPart()) {
+            $this->runImportantPart();
+        }
+
+        if ($this->shouldRunMinKeywordLength()) {
+            $this->runMinKeywordLength();
+        }
+
+        if ($this->shouldRunContextLength()) {
+            $this->runContextLength();
+        }
+
+        if ($this->shouldRunDefaultImageDensities()) {
+            $this->runDefaultImageDensities();
+        }
+
+        if ($this->shouldRunRememberMe()) {
+            $this->runRememberMe();
+        }
+
+        return $this->createResult(true, $this->resultMessages ? implode("\n", $this->resultMessages) : null);
+    }
+
+    public function shouldRunMediaelement(): bool
+    {
         $schemaManager = $this->connection->getSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
@@ -68,20 +121,26 @@ class Version480Update extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_layout');
 
-        return isset($columns['picturefill']);
+        if (!isset($columns['jquery'], $columns['scripts'])) {
+            return false;
+        }
+
+        return (bool) $this->connection
+            ->query("
+                SELECT EXISTS(
+                    SELECT id
+                    FROM tl_layout
+                    WHERE
+                        jquery LIKE '%j_mediaelement%'
+                        OR scripts LIKE '%js_mediaelement%'
+                )
+            ")
+            ->fetchColumn()
+        ;
     }
 
-    public function run(): MigrationResult
+    public function runMediaelement(): void
     {
-        $this->framework->initialize();
-
-        $this->connection->query('
-            ALTER TABLE
-                tl_layout
-            DROP
-                picturefill
-        ');
-
         $statement = $this->connection->query('
             SELECT
                 id, jquery, scripts
@@ -129,7 +188,23 @@ class Version480Update extends AbstractMigration
                 }
             }
         }
+    }
 
+    public function shouldRunSkipIfDimensionsMatch(): bool
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_image_size'])) {
+            return false;
+        }
+
+        $columns = $schemaManager->listTableColumns('tl_image_size');
+
+        return !isset($columns['skipifdimensionsmatch']);
+    }
+
+    public function runSkipIfDimensionsMatch(): void
+    {
         $this->connection->query("
             ALTER TABLE
                 tl_image_size
@@ -144,62 +219,153 @@ class Version480Update extends AbstractMigration
             SET
                 skipIfDimensionsMatch = '1'
         ");
+    }
+
+    public function shouldRunImportantPart(): bool
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_files'])) {
+            return false;
+        }
+
+        $columns = $schemaManager->listTableColumns('tl_files');
+
+        if (
+            !isset(
+            $columns['path'],
+            $columns['importantpartx'],
+            $columns['importantparty'],
+            $columns['importantpartwidth'],
+            $columns['importantpartheight']
+        )
+        ) {
+            return false;
+        }
+
+        if ($columns['importantpartx']->getType() instanceof IntegerType) {
+            return true;
+        }
+
+        return (bool) $this->connection
+            ->query('
+                SELECT EXISTS(
+                    SELECT id
+                    FROM tl_files
+                    WHERE
+                        importantPartX > 1
+                        OR importantPartY > 1
+                        OR importantPartWidth > 1
+                        OR importantPartHeight > 1
+                )
+            ')
+            ->fetchColumn()
+        ;
+    }
+
+    public function runImportantPart(): void
+    {
+        $compareValue = 1;
+
+        // If the columns are of type integer, we can safely convert all images even if they are only set to 1
+        if ($this->connection->getSchemaManager()->listTableColumns('tl_files')['importantpartx']->getType() instanceof IntegerType) {
+            $compareValue = 0;
+        }
 
         $this->connection->query('
             ALTER TABLE
                 tl_files
             CHANGE
-                importantPartX importantPartX DOUBLE PRECISION DEFAULT 0 NOT NULL,
+                importantPartX importantPartX DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL,
             CHANGE
-                importantPartY importantPartY DOUBLE PRECISION DEFAULT 0 NOT NULL,
+                importantPartY importantPartY DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL,
             CHANGE
-                importantPartWidth importantPartWidth DOUBLE PRECISION DEFAULT 0 NOT NULL,
+                importantPartWidth importantPartWidth DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL,
             CHANGE
-                importantPartHeight importantPartHeight DOUBLE PRECISION DEFAULT 0 NOT NULL
+                importantPartHeight importantPartHeight DOUBLE PRECISION UNSIGNED DEFAULT 0 NOT NULL
         ');
 
-        $statement = $this->connection->query('
+        $statement = $this->connection->query("
             SELECT
                 id, path, importantPartX, importantPartY, importantPartWidth, importantPartHeight
             FROM
                 tl_files
             WHERE
-                importantPartWidth > 0 OR importantPartHeight > 0
-        ');
+                importantPartWidth > $compareValue OR importantPartHeight > $compareValue
+        ");
 
         // Convert the important part to relative values as fractions
         while (false !== ($file = $statement->fetch(\PDO::FETCH_OBJ))) {
             if (!$this->filesystem->exists($this->projectDir.'/'.$file->path) || is_dir($this->projectDir.'/'.$file->path)) {
-                continue;
+                $imageSize = [];
+            } else {
+                $imageSize = (new File($file->path))->imageViewSize;
             }
 
-            $imageSize = (new File($file->path))->imageViewSize;
+            $updateData = [
+                ':id' => $file->id,
+            ];
 
             if (empty($imageSize[0]) || empty($imageSize[1])) {
-                continue;
+                if (
+                    (float) $file->importantPartX + (float) $file->importantPartWidth <= 1.00001
+                    && (float) $file->importantPartY + (float) $file->importantPartHeight <= 1.00001
+                ) {
+                    continue;
+                }
+
+                $updateData[':x'] = 0;
+                $updateData[':y'] = 0;
+                $updateData[':width'] = 0;
+                $updateData[':height'] = 0;
+
+                $this->resultMessages[] = sprintf(
+                    'Deleted invalid important part [%s,%s,%s,%s] from image "%s".',
+                    $file->importantPartX,
+                    $file->importantPartY,
+                    $file->importantPartWidth,
+                    $file->importantPartHeight,
+                    $file->path
+                );
+            } else {
+                $updateData[':x'] = min(1, $file->importantPartX / $imageSize[0]);
+                $updateData[':y'] = min(1, $file->importantPartY / $imageSize[1]);
+                $updateData[':width'] = min(1 - $updateData[':x'], $file->importantPartWidth / $imageSize[0]);
+                $updateData[':height'] = min(1 - $updateData[':y'], $file->importantPartHeight / $imageSize[1]);
             }
 
-            $stmt = $this->connection->prepare('
-                UPDATE
-                    tl_files
-                SET
-                    importantPartX = :x,
-                    importantPartY = :y,
-                    importantPartWidth = :width,
-                    importantPartHeight = :height
-                WHERE
-                    id = :id
-            ');
+            $this->connection
+                ->prepare('
+                    UPDATE
+                        tl_files
+                    SET
+                        importantPartX = :x,
+                        importantPartY = :y,
+                        importantPartWidth = :width,
+                        importantPartHeight = :height
+                    WHERE
+                        id = :id
+                ')
+                ->execute($updateData)
+            ;
+        }
+    }
 
-            $stmt->execute([
-                ':id' => $file->id,
-                ':x' => $file->importantPartX / $imageSize[0],
-                ':y' => $file->importantPartY / $imageSize[1],
-                ':width' => $file->importantPartWidth / $imageSize[0],
-                ':height' => $file->importantPartHeight / $imageSize[1],
-            ]);
+    public function shouldRunMinKeywordLength(): bool
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_module'])) {
+            return false;
         }
 
+        $columns = $schemaManager->listTableColumns('tl_module');
+
+        return !isset($columns['minkeywordlength']);
+    }
+
+    public function runMinKeywordLength(): void
+    {
         $this->connection->query('
             ALTER TABLE
                 tl_module
@@ -216,7 +382,23 @@ class Version480Update extends AbstractMigration
             WHERE
                 type = 'search'
         ");
+    }
 
+    public function shouldRunContextLength(): bool
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_module'])) {
+            return false;
+        }
+
+        $columns = $schemaManager->listTableColumns('tl_module');
+
+        return isset($columns['contextlength'], $columns['totallength']);
+    }
+
+    public function runContextLength(): void
+    {
         $this->connection->query("
             ALTER TABLE
                 tl_module
@@ -250,6 +432,25 @@ class Version480Update extends AbstractMigration
             ]);
         }
 
+        $this->connection->query('ALTER TABLE tl_module DROP COLUMN totalLength');
+    }
+
+    public function shouldRunDefaultImageDensities(): bool
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_layout', 'tl_theme'])) {
+            return false;
+        }
+
+        $columnsLayout = $schemaManager->listTableColumns('tl_layout');
+        $columnsTheme = $schemaManager->listTableColumns('tl_theme');
+
+        return !isset($columnsLayout['defaultimagedensities']) && isset($columnsTheme['defaultimagedensities']);
+    }
+
+    public function runDefaultImageDensities(): void
+    {
         $this->connection->query("
             ALTER TABLE
                 tl_layout
@@ -264,14 +465,28 @@ class Version480Update extends AbstractMigration
             SET
                 defaultImageDensities = (SELECT defaultImageDensities FROM tl_theme t WHERE t.id = l.pid)
         ');
+    }
 
+    public function shouldRunRememberMe(): bool
+    {
+        $schemaManager = $this->connection->getSchemaManager();
+
+        if (!$schemaManager->tablesExist(['tl_remember_me'])) {
+            return false;
+        }
+
+        $columns = $schemaManager->listTableColumns('tl_remember_me');
+
+        return !isset($columns['id']);
+    }
+
+    public function runRememberMe(): void
+    {
         // Since rememberme is broken in Contao 4.7 and there are no valid
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
         if ($this->connection->getSchemaManager()->tablesExist(['tl_remember_me'])) {
             $this->connection->query('DROP TABLE tl_remember_me');
         }
-
-        return $this->createResult(true);
     }
 }
