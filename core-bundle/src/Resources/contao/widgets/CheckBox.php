@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class CheckBox extends Widget
 {
-	public const TYPE = 'checkbox';
-
 	/**
 	 * Submit user input
 	 * @var boolean

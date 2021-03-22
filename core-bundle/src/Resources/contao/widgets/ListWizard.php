@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ListWizard extends Widget
 {
-	public const TYPE = 'listWizard';
-
 	/**
 	 * Submit user input
 	 * @var boolean

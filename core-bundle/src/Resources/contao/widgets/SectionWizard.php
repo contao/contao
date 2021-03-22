@@ -17,8 +17,6 @@ namespace Contao;
  */
 class SectionWizard extends Widget
 {
-	public const TYPE = 'sectionWizard';
-
 	/**
 	 * Submit user input
 	 * @var boolean

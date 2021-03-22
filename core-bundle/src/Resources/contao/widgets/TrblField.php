@@ -20,8 +20,6 @@ namespace Contao;
  */
 class TrblField extends Widget
 {
-	public const TYPE = 'trbl';
-
 	/**
 	 * Submit user input
 	 * @var boolean

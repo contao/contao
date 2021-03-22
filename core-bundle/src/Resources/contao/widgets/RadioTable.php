@@ -20,8 +20,6 @@ namespace Contao;
  */
 class RadioTable extends Widget
 {
-	public const TYPE = 'radioTable';
-
 	/**
 	 * Submit user input
 	 * @var boolean

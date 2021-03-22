@@ -24,8 +24,6 @@ use Patchwork\Utf8;
  */
 class Password extends Widget
 {
-	public const TYPE = 'password';
-
 	/**
 	 * Submit user input
 	 * @var boolean

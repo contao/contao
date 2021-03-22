@@ -17,8 +17,6 @@ namespace Contao;
  */
 class ChmodTable extends Widget
 {
-	public const TYPE = 'chmod';
-
 	/**
 	 * Submit user input
 	 * @var boolean

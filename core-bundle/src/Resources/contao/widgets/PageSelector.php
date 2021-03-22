@@ -23,8 +23,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class PageSelector extends Widget
 {
-	public const TYPE = 'pageSelector';
-
 	/**
 	 * Submit user input
 	 * @var boolean

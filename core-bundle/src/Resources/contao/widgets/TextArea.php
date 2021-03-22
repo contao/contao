@@ -23,8 +23,6 @@ namespace Contao;
  */
 class TextArea extends Widget
 {
-	public const TYPE = 'textarea';
-
 	/**
 	 * Submit user input
 	 * @var boolean

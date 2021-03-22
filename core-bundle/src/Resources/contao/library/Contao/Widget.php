@@ -197,6 +197,62 @@ abstract class Widget extends Controller
 	 */
 	protected $objDca;
 
+	public const TYPE_CHECKBOX = 'checkbox';
+
+	public const TYPE_CHECKBOX_WIZARD = 'checkboxWizard';
+
+	public const TYPE_CHMOD_TABLE = 'chmod';
+
+	public const TYPE_FILE_SELECTOR = 'fileSelector';
+
+	public const FILE_TREE_TYPE = 'fileTree';
+
+	public const TYPE_IMAGE_SIZE = 'imageSize';
+
+	public const TYPE_INPUT_UNIT = 'inputUnit';
+
+	public const TYPE_KEY_VALUE_WIZARD = 'keyValueWizard';
+
+	public const TYPE_LIST_WIZARD = 'listWizard';
+
+	public const TYPE_META_WIZARD = 'metaWizard';
+
+	public const TYPE_MODULE_WIZARD = 'moduleWizard';
+
+	public const TYPE_OPTION_WIZARD = 'optionWizard';
+
+	public const TYPE_PAGE_SELECTOR = 'pageSelector';
+
+	public const TYPE_PAGE_TREE = 'pageTree';
+
+	public const TYPE_PASSWORD = 'password';
+
+	public const TYPE_PICKER = 'picker';
+
+	public const TYPE_RADIO = 'radio';
+
+	public const TYPE_RADIO_TABLE = 'radioTable';
+
+	public const TYPE_SECTION_WIZARD = 'sectionWizard';
+
+	public const TYPE_SELECT = 'select';
+
+	public const TYPE_SERP_PREVIEW = 'serpPreview';
+
+	public const TYPE_TABLE_WIZARD = 'tableWizard';
+
+	public const TYPE_TEXTAREA = 'textarea';
+
+	public const TYPE_TEXT = 'text';
+
+	public const TYPE_TEXT_STORE = 'textStore';
+
+	public const TYPE_TIME_PERIOD = 'timePeriod';
+
+	public const TYPE_TRBL_FIELD = 'trbl';
+
+	public const TYPE_FILE_UPLOAD = 'fileUpload';
+
 	/**
 	 * Initialize the object
 	 *

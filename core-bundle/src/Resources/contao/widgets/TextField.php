@@ -26,8 +26,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  */
 class TextField extends Widget
 {
-	public const TYPE = 'text';
-
 	/**
 	 * Submit user input
 	 * @var boolean

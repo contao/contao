@@ -24,8 +24,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class TableWizard extends Widget
 {
-	public const TYPE = 'tableWizard';
-
 	/**
 	 * Submit user input
 	 * @var boolean

@@ -21,8 +21,6 @@ namespace Contao;
  */
 class TimePeriod extends Widget
 {
-	public const TYPE = 'timePeriod';
-
 	/**
 	 * Submit user input
 	 * @var boolean

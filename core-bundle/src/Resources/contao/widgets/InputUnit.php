@@ -22,8 +22,6 @@ namespace Contao;
  */
 class InputUnit extends Widget
 {
-	public const TYPE = 'inputUnit';
-
 	/**
 	 * Submit user input
 	 * @var boolean

@@ -17,8 +17,6 @@ namespace Contao;
  */
 class OptionWizard extends Widget
 {
-	public const TYPE = 'optionWizard';
-
 	/**
 	 * Submit user input
 	 * @var boolean
