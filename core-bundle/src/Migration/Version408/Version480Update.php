@@ -125,15 +125,17 @@ class Version480Update extends AbstractMigration
             return false;
         }
 
-        return (bool) $this->connection->query("
-            SELECT EXISTS(
-                SELECT id
-                FROM tl_layout
-                WHERE
-                    jquery LIKE '%j_mediaelement%'
-                    OR scripts LIKE '%js_mediaelement%'
-            )
-        ")->fetchColumn();
+        return (bool) $this->connection
+            ->query("
+                SELECT EXISTS(
+                    SELECT id
+                    FROM tl_layout
+                    WHERE
+                        jquery LIKE '%j_mediaelement%'
+                        OR scripts LIKE '%js_mediaelement%'
+                )
+            ")
+            ->fetchColumn();
     }
 
     public function runMediaelement(): void
@@ -228,15 +230,13 @@ class Version480Update extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_files');
 
-        if (
-            !isset(
-                $columns['path'],
-                $columns['importantpartx'],
-                $columns['importantparty'],
-                $columns['importantpartwidth'],
-                $columns['importantpartheight']
-            )
-        ) {
+        if (!isset(
+            $columns['path'],
+            $columns['importantpartx'],
+            $columns['importantparty'],
+            $columns['importantpartwidth'],
+            $columns['importantpartheight']
+        )) {
             return false;
         }
 
@@ -244,17 +244,19 @@ class Version480Update extends AbstractMigration
             return true;
         }
 
-        return (bool) $this->connection->query('
-            SELECT EXISTS(
-                SELECT id
-                FROM tl_files
-                WHERE
-                    importantPartX > 1
-                    OR importantPartY > 1
-                    OR importantPartWidth > 1
-                    OR importantPartHeight > 1
-            )
-        ')->fetchColumn();
+        return (bool) $this->connection
+            ->query('
+                SELECT EXISTS(
+                    SELECT id
+                    FROM tl_files
+                    WHERE
+                        importantPartX > 1
+                        OR importantPartY > 1
+                        OR importantPartWidth > 1
+                        OR importantPartHeight > 1
+                )
+            ')
+            ->fetchColumn();
     }
 
     public function runImportantPart(): void
@@ -328,17 +330,19 @@ class Version480Update extends AbstractMigration
                 $updateData[':height'] = min(1 - $updateData[':y'], $file->importantPartHeight / $imageSize[1]);
             }
 
-            $this->connection->prepare('
-                UPDATE
-                    tl_files
-                SET
-                    importantPartX = :x,
-                    importantPartY = :y,
-                    importantPartWidth = :width,
-                    importantPartHeight = :height
-                WHERE
-                    id = :id
-            ')->execute($updateData);
+            $this->connection
+                ->prepare('
+                    UPDATE
+                        tl_files
+                    SET
+                        importantPartX = :x,
+                        importantPartY = :y,
+                        importantPartWidth = :width,
+                        importantPartHeight = :height
+                    WHERE
+                        id = :id
+                ')
+                ->execute($updateData);
         }
     }
 
@@ -437,9 +441,7 @@ class Version480Update extends AbstractMigration
         $columnsLayout = $schemaManager->listTableColumns('tl_layout');
         $columnsTheme = $schemaManager->listTableColumns('tl_theme');
 
-        return
-            !isset($columnsLayout['defaultimagedensities'])
-            && isset($columnsTheme['defaultimagedensities']);
+        return !isset($columnsLayout['defaultimagedensities']) && isset($columnsTheme['defaultimagedensities']);
     }
 
     public function runDefaultImageDensities(): void
