@@ -1915,9 +1915,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				if (isset($legends[$k]))
 				{
-					$chunks = explode(':', $legends[$k]);
-					$key = $chunks[0] ?? null;
-					$cls = $chunks[1] ?? null;
+					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
 					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
@@ -4723,9 +4721,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($orderBy as $k=>$v)
 			{
-				$chunks = explode(' ', $v, 2);
-				$key = $chunks[0] ?? null;
-				$direction = $chunks[1] ?? null;
+				list($key, $direction) = explode(' ', $v, 2) + array(null, null);
 
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
