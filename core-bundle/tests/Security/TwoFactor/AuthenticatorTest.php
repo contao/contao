@@ -24,7 +24,7 @@ class AuthenticatorTest extends TestCase
 {
     public function testValidatesTheCode(): void
     {
-        $secret = random_bytes(128);
+        $secret = $this->generateSecret(1);
         $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
 
         /** @var BackendUser&MockObject $user */
@@ -39,7 +39,7 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCodeOfPreviousWindow(): void
     {
-        $secret = random_bytes(128);
+        $secret = $this->generateSecret(2);
         $now = 1586161036;
         $fourtySecondsAgo = $now - 40;
 
@@ -58,7 +58,7 @@ class AuthenticatorTest extends TestCase
 
     public function testGeneratesTheProvisionUri(): void
     {
-        $secret = random_bytes(128);
+        $secret = $this->generateSecret(3);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -125,5 +125,21 @@ SVG;
 
         $this->assertSame(5897, \strlen($svg));
         $this->assertSame(0, strpos($svg, $beginSvg));
+    }
+
+    /**
+     * Generate pseudorandom secret from fixed seed to be deterministic.
+     */
+    private function generateSecret(int $seed): string
+    {
+        mt_srand($seed);
+
+        $return = '';
+
+        while (\strlen($return) < 128) {
+            $return .= \chr(mt_rand() % 256);
+        }
+
+        return $return;
     }
 }

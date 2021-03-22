@@ -344,7 +344,7 @@ body:not(.fullscreen) #container {
 	display:none;
 }
 #main_headline span {
-	display:inline-block;
+	display:inline-flex;
 	max-width:30%;
 	white-space:nowrap;
 	overflow:hidden;
@@ -1184,9 +1184,6 @@ table.tl_listing {
 }
 .tl_left > a:last-of-type {
 	vertical-align:middle;
-}
-.tl_left > a:first-child {
-	vertical-align:bottom;
 }
 .tl_file_manager .tl_file .tl_left > a:first-child {
 	vertical-align:1px;
