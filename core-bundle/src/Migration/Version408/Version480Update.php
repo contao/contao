@@ -135,7 +135,8 @@ class Version480Update extends AbstractMigration
                         OR scripts LIKE '%js_mediaelement%'
                 )
             ")
-            ->fetchColumn();
+            ->fetchColumn()
+        ;
     }
 
     public function runMediaelement(): void
@@ -230,13 +231,15 @@ class Version480Update extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_files');
 
-        if (!isset(
+        if (
+            !isset(
             $columns['path'],
             $columns['importantpartx'],
             $columns['importantparty'],
             $columns['importantpartwidth'],
             $columns['importantpartheight']
-        )) {
+        )
+        ) {
             return false;
         }
 
@@ -256,7 +259,8 @@ class Version480Update extends AbstractMigration
                         OR importantPartHeight > 1
                 )
             ')
-            ->fetchColumn();
+            ->fetchColumn()
+        ;
     }
 
     public function runImportantPart(): void
@@ -342,7 +346,8 @@ class Version480Update extends AbstractMigration
                     WHERE
                         id = :id
                 ')
-                ->execute($updateData);
+                ->execute($updateData)
+            ;
         }
     }
 
