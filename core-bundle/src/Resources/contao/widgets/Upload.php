@@ -21,6 +21,8 @@ namespace Contao;
  */
 class Upload extends Widget implements \uploadable
 {
+	public const TYPE = 'fileUpload';
+
 	/**
 	 * Submit user input
 	 * @var boolean

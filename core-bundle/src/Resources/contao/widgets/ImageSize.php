@@ -21,6 +21,8 @@ namespace Contao;
  */
 class ImageSize extends Widget
 {
+	public const TYPE = 'imageSize';
+
 	/**
 	 * Submit user input
 	 * @var boolean

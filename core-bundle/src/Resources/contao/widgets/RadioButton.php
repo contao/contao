@@ -21,6 +21,8 @@ namespace Contao;
  */
 class RadioButton extends Widget
 {
+	public const TYPE = 'radio';
+
 	/**
 	 * Submit user input
 	 * @var boolean

@@ -24,6 +24,8 @@ namespace Contao;
  */
 class SelectMenu extends Widget
 {
+	public const TYPE = 'select';
+
 	/**
 	 * Submit user input
 	 * @var boolean

@@ -21,6 +21,8 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  */
 class SerpPreview extends Widget
 {
+	public const TYPE = 'serpPreview';
+
 	/**
 	 * @var string
 	 */

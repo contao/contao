@@ -15,6 +15,8 @@ namespace Contao;
  */
 class Picker extends Widget
 {
+	public const TYPE = 'picker';
+
 	/**
 	 * Submit user input
 	 * @var boolean

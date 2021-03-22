@@ -20,6 +20,8 @@ namespace Contao;
  */
 class TextStore extends Widget
 {
+	public const TYPE = 'textStore';
+
 	/**
 	 * Submit user input
 	 * @var boolean

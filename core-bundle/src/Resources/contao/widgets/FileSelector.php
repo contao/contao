@@ -28,6 +28,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 class FileSelector extends Widget
 {
+	public const TYPE = 'fileSelector';
+
 	/**
 	 * Submit user input
 	 * @var boolean

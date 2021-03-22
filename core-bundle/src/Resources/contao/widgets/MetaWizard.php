@@ -19,6 +19,8 @@ namespace Contao;
  */
 class MetaWizard extends Widget
 {
+	public const TYPE = 'metaWizard';
+
 	/**
 	 * Submit user input
 	 * @var boolean

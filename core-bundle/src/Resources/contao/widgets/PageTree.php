@@ -22,6 +22,8 @@ namespace Contao;
  */
 class PageTree extends Widget
 {
+	public const TYPE = 'pageTree';
+
 	/**
 	 * Submit user input
 	 * @var boolean

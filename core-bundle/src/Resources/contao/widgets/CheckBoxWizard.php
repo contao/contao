@@ -22,6 +22,8 @@ namespace Contao;
  */
 class CheckBoxWizard extends Widget
 {
+	public const TYPE = 'checkboxWizard';
+
 	/**
 	 * Submit user input
 	 * @var boolean

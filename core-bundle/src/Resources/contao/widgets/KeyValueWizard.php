@@ -19,6 +19,8 @@ namespace Contao;
  */
 class KeyValueWizard extends Widget
 {
+	public const TYPE = 'keyValueWizard';
+
 	/**
 	 * Submit user input
 	 * @var boolean

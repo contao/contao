@@ -30,6 +30,8 @@ use Contao\Image\ResizeConfiguration;
  */
 class FileTree extends Widget
 {
+	public const TYPE = 'fileTree';
+
 	/**
 	 * Submit user input
 	 * @var boolean
