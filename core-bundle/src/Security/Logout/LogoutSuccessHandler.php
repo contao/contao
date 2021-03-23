@@ -41,13 +41,11 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
             return $this->httpUtils->createRedirectResponse($request, 'contao_backend_login');
         }
 
-        if ($targetUrl = $request->query->get('redirect')) {
+        if ($targetUrl = $request->request->get('_target_path')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 
-        $targetUrl = $request->request->get('_target_path');
-
-        if (null !== $targetUrl && '' !== $targetUrl) {
+        if ($targetUrl = $request->query->get('redirect')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 
