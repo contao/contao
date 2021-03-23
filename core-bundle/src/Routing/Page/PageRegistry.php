@@ -111,7 +111,7 @@ class PageRegistry
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         if (!isset($this->contentComposition[$pageModel->type])) {
-            return !\in_array($pageModel->type, self::DISABLE_CONTENT_COMPOSITION);
+            return !\in_array($pageModel->type, self::DISABLE_CONTENT_COMPOSITION, true);
         }
 
         $service = $this->contentComposition[$pageModel->type];
