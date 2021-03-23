@@ -385,14 +385,16 @@ class DcaExtractor extends Controller
 			return;
 		}
 
+		$strDataContainer = $GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null;
+
 		// Return if the DC type is "File"
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File')
+		if ($strDataContainer == 'File')
 		{
 			return;
 		}
 
 		// Return if the DC type is "Folder" and the DC is not database assisted
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		if ($strDataContainer == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
 		{
 			return;
 		}
@@ -421,7 +423,7 @@ class DcaExtractor extends Controller
 						$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
 					}
 
-					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
+					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id', 'load'=>'lazy', 'type'=>null), $config['relation']);
 
 					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
 					if (isset($config['eval']['csv']))
