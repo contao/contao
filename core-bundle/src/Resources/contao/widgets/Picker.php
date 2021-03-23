@@ -282,11 +282,25 @@ class Picker extends Widget
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
+			if (\in_array($mode, array(5, 6)))
+			{
+				$isProtected = 'tl_page' === $dc->table && $arrRow['protected'];
+
+				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, $isProtected);
+			}
+
 			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
 		}
 
 		if (\is_callable($labelConfig['label_callback']))
 		{
+			if (\in_array($mode, array(5, 6)))
+			{
+				$isProtected = 'tl_page' === $dc->table && $arrRow['protected'];
+
+				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, $isProtected);
+			}
+
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}
 
