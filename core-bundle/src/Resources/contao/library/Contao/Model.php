@@ -1072,7 +1072,7 @@ abstract class Model
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute($arrOptions['value'] ?? []);
+		$objResult = $objStatement->execute($arrOptions['value'] ?? null);
 
 		if ($objResult->numRows < 1)
 		{
