@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.newsletters.1">
         <source>Show these channels in the front end form.</source>
-        <target>Wybierz newslettery, do których użytkownik może się zapisać podczas procesu rejestracji.</target>
+        <target>Wybierz kanały, do których użytkownik może się zapisać podczas procesu rejestracji.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_channels.0">
         <source>Channels</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_unsubscribe.1">
         <source>You can use the wildcards &lt;em&gt;##channels##&lt;/em&gt; (channel names) and &lt;em&gt;##domain##&lt;/em&gt; (domain name).</source>
-        <target>Wpisz treść e-maila z anulowaniem subskrypcji. Możesz używać tagów &lt;em&gt;##channel##&lt;/em&gt; (channel name) and &lt;em&gt;##domain##&lt;/em&gt; (aktualna domena).</target>
+        <target>Wpisz treść e-maila z anulowaniem subskrypcji. Możesz używać tagów &lt;em&gt;##channel##&lt;/em&gt; (nazwa kanału) and &lt;em&gt;##domain##&lt;/em&gt; (aktualna domena).</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_template.0">
         <source>Newsletter template</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select a newsletter template.</source>
-        <target>Tutaj możesz wybrać szablon newslettera.</target>
+        <target>Tutaj możesz wybrać szablon newslettera. Możesz dodać własne szablony do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów newslettera muszą zaczynać się od &lt;em&gt;nl_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>

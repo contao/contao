@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_news.alias.1">
         <source>The news alias is a unique reference to the news item which can be called instead of its numeric ID.</source>
-        <target>Alias aktualności jest unikalnym odwołaniem do strony gdzie będzie ona wyświetlana, który może być używany zamiast jej ID.</target>
+        <target>Alias aktualności jest unikalnym odwołaniem do strony, gdzie będzie ona wyświetlana, który może być używany zamiast jej ID.</target>
       </trans-unit>
       <trans-unit id="tl_news.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_news.author.1">
         <source>Here you can change the author of the news item.</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_news.teaser.1">
         <source>The news teaser can be shown in a news list instead of the full story. A &quot;read more …&quot; link will be added automatically.</source>
-        <target>Zajawka jest tekstem wstępnym do pełnej treści i jest zazwyczaj pokazywany zamiast pełnej treści aktualności. Jest on zakończony odnośnikiem &quot;Więcej...&quot;.</target>
+        <target>Zajawka jest tekstem wstępnym do pełnej treści i jest zazwyczaj pokazywana zamiast pełnej treści aktualności. Jest ona zakończona odnośnikiem &quot;Więcej...&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_news.addImage.1">
         <source>Add an image to the news item.</source>
-        <target>Jeśli wybierzesz tą opcję, do aktualności zostanie dodany obrazek.</target>
+        <target>Jeśli wybierzesz tę opcję, do aktualności zostanie dodany obrazek.</target>
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.0">
         <source>Add enclosures</source>
@@ -103,7 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure.1">
         <source>Please choose the files you want to attach.</source>
-        <target>Wybierz plik, który chcesz załączyć do odpowiedzi.</target>
+        <target>Wybierz pliki, które chcesz załączyć do aktualności.</target>
       </trans-unit>
       <trans-unit id="tl_news.source.0">
         <source>Redirect target</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_news.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
-        <target>Kliknięcie w przycisk &quot;czytaj więcej...&quot;, przekieruje do artykułu</target>
+        <target>Klikając w przycisk &quot;czytaj więcej...&quot; odwiedzający zostaną przekierowani do artykułu</target>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>
@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the news item.</source>
-        <target>Wybierz stronę, na którą zostaną przekierowani odwiedzający. Zauważ, że strona docelowa powinna zawierać moduł &quot;Czytnik aktualności&quot; w kolejności wyświetlania aktualności.</target>
+        <target>Wybierz stronę, na którą zostaną przekierowani odwiedzający. Zauważ, że strona docelowa powinna zawierać moduł &quot;Czytnik aktualności&quot;.</target>
       </trans-unit>
       <trans-unit id="tl_news.articleId.0">
         <source>Article</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
-        <target>Wybierz artykuł, do którego czytelnicy będą przekierowani kiedy klikną w aktualność.</target>
+        <target>Wybierz artykuł, do którego czytelnicy będą przekierowani, kiedy klikną w aktualność.</target>
       </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokazuj od</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokazuj do</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>

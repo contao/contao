@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user.language.1">
         <source>Here you can choose the back end language.</source>
-        <target>Wybierz domyślny język strony.</target>
+        <target>Wybierz język panelu.</target>
       </trans-unit>
       <trans-unit id="tl_user.backendTheme.0">
         <source>Back end theme</source>
@@ -63,15 +63,15 @@
       </trans-unit>
       <trans-unit id="tl_user.showHelp.1">
         <source>Show a short explanation text below each input field.</source>
-        <target>Jeśli wybierzesz tą opcję, będzie wyświetlane krótkie wyjaśnienie po wpisaniu w polu tekstowym.</target>
+        <target>Jeśli wybierzesz tę opcję, będzie wyświetlane krótkie wyjaśnienie po wpisaniu w polu tekstowym.</target>
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.0">
         <source>Show thumbnail images</source>
-        <target>Pokazuj miniaturki obrazków</target>
+        <target>Pokazuj miniatury obrazków</target>
       </trans-unit>
       <trans-unit id="tl_user.thumbnails.1">
         <source>Show thumbnail images in the file manager.</source>
-        <target>Jeśli wybierzesz tą opcję, w menadżerze plików zostaną wyśwwietlone miniaturki obrazków.</target>
+        <target>Jeśli wybierzesz tę opcję, w menadżerze plików zostaną wyśwwietlone miniatury obrazków.</target>
       </trans-unit>
       <trans-unit id="tl_user.useRTE.0">
         <source>Enable the rich text editor</source>
@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_user.groups.1">
         <source>Here you can assign the user to one or more groups.</source>
-        <target>Każdy redaktor, który nie jest administratorem dziedziczy zezwolenia po grupie, w której się znajduje. Dlatego każdy redaktor musi być członkiem co najmniej jednej grupy! Jeśli redaktor jest w więcej niż jednej grupie, zezwolenia się łączą.</target>
+        <target>Każdy redaktor, który nie jest administratorem, dziedziczy zezwolenia po grupie, w której się znajduje. Dlatego każdy redaktor musi być członkiem co najmniej jednej grupy! Jeśli redaktor jest w więcej niż jednej grupie, zezwolenia się łączą.</target>
       </trans-unit>
       <trans-unit id="tl_user.inherit.0">
         <source>Permission inheritance</source>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_user.inherit.1">
         <source>Here you can define which group permissions the user inherits.</source>
-        <target>Określ do jakiego obszaru redaktor dziedziczy zezwolenia.</target>
+        <target>Określ, do jakiego obszaru redaktor dziedziczy zezwolenia.</target>
       </trans-unit>
       <trans-unit id="tl_user.group.0">
         <source>Use group settings only</source>
@@ -127,7 +127,7 @@
       </trans-unit>
       <trans-unit id="tl_user.group.1">
         <source>The user inherits only group permissions.</source>
-        <target>Redaktor dziedziczy zezwolenia od grup wyłącznie niezależnych indywidualnymi ustawieniami.</target>
+        <target>Redaktor dziedziczy zezwolenia wyłącznie od grup.</target>
       </trans-unit>
       <trans-unit id="tl_user.extend.0">
         <source>Extend group settings</source>
@@ -143,11 +143,11 @@
       </trans-unit>
       <trans-unit id="tl_user.custom.1">
         <source>Only individual permissions are applied.</source>
-        <target>Tylko zezwolenia aktualnego redaktora są potwierdzone niezależnie przez każde zezwolenie grupy.</target>
+        <target>Tylko zezwolenia aktualnego redaktora są stosowane.</target>
       </trans-unit>
       <trans-unit id="tl_user.modules.0">
         <source>Back end modules</source>
-        <target>Moduły admin panelu</target>
+        <target>Moduły panelu admina</target>
       </trans-unit>
       <trans-unit id="tl_user.modules.1">
         <source>Here you can grant access to one or more back end modules.</source>
@@ -227,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.0">
         <source>Allowed member groups</source>
-        <target>Zezwolone grupy użytkowników</target>
+        <target>Dozwolone grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_user.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Jeśli nie chcesz żeby konto było aktywne przed jakąś datą, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
+        <target>Jeśli nie chcesz, żeby konto redaktora było aktywne przed jakąś datą, możesz wprowadzić ją tutaj. W przeciwnym wypadku zostaw to pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_user.session.1">
         <source>Please select the data you want to purge.</source>
-        <target>Po wybraniu tej opcji, dane tej sesji zostaną usunięte.</target>
+        <target>Zaznacz dane, które chcesz wyczyścić.</target>
       </trans-unit>
       <trans-unit id="tl_user.name_legend">
         <source>Name and e-mail</source>
@@ -315,7 +315,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg_legend">
         <source>Allowed member groups</source>
-        <target>Zezwolone grupy użytkowników</target>
+        <target>Dozwolone grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
@@ -347,7 +347,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
-        <target>Wspólna pamięć podręczna została wyczyszczona.</target>
+        <target>Wspólna pamięć podręczna została wyczyszczona</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
