@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
@@ -55,7 +54,6 @@ class DebugPagesCommand extends Command
         $this->pageRegistry = $pageRegistry;
     }
 
-
     public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null): void
     {
         $this->routeConfigs[$type] = $config;
@@ -67,9 +65,7 @@ class DebugPagesCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Displays the page controller configuration.')
-        ;
+        $this->setDescription('Displays the page controller configuration.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -93,7 +89,7 @@ class DebugPagesCommand extends Command
                 $config ? $config->getPath() : '*',
                 $config ? $config->getUrlSuffix() : '*',
                 $this->pageRegistry->supportsContentComposition($page) ? 'yes' : 'no',
-                isset($this->routeEnhancers[$type]) ? get_class($this->routeEnhancers[$type]) : '-',
+                isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',
                 $config ? $this->generateArray($config->getDefaults()) : '-',
                 $config ? $this->generateArray($config->getOptions()) : '-',
