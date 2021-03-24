@@ -154,10 +154,12 @@ class Search
 			$arrData['description'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
+		$arrData['keywords'] = '';
+
 		// Get the keywords
 		if (preg_match('/<meta[^>]+name="keywords"[^>]+content="([^"]*)"[^>]*>/i', $strHead, $tags))
 		{
-			$arrData['keywords'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
+			$arrData['keywords'] .= trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
 		// Read the title and alt attributes
