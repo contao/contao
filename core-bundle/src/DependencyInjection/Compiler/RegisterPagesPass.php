@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\Command\DebugPagesCommand;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -49,6 +50,7 @@ class RegisterPagesPass implements CompilerPassInterface
     protected function registerPages(ContainerBuilder $container): void
     {
         $registry = $container->findDefinition(PageRegistry::class);
+        $command = $container->hasDefinition(DebugPagesCommand::class) ? $container->findDefinition(DebugPagesCommand::class) : null;
 
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
             $definition = $container->findDefinition((string) $reference);
@@ -72,6 +74,10 @@ class RegisterPagesPass implements CompilerPassInterface
 
                 $config = $this->getRouteConfig($reference, $definition, $attributes);
                 $registry->addMethodCall('add', [$type, $config, $routeEnhancer, $contentComposition]);
+
+                if (null !== $command) {
+                    $command->addMethodCall('add', [$type, $config, $routeEnhancer]);
+                }
             }
         }
     }
