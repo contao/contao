@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="ERR.subscribed">
         <source>You are subscribed to the selected channels already.</source>
-        <target>Jesteś już zapisany do tego newslettera.</target>
+        <target>Jesteś już zapisany do tego kanału newslettera.</target>
       </trans-unit>
       <trans-unit id="ERR.unsubscribed">
         <source>You are not subscribed to the selected channels.</source>
-        <target>Nie jesteś zapisany do tego newslettera.</target>
+        <target>Nie jesteś zapisany do tego kanału newslettera.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidToken">
         <source>The activation link is invalid or outdated.</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="ERR.noChannels">
         <source>Please select at least one channel.</source>
-        <target>Wybierz conajmniej jeden kanał.</target>
+        <target>Wybierz co najmniej jeden kanał.</target>
       </trans-unit>
       <trans-unit id="ERR.blacklisted">
         <source>The e-mail address has been unsubscribed from the channel.</source>

@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.alias.1">
         <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
-        <target>Alias wydarzenia jest unikalnym odwołaniem do wydarzenia, który może być używany zamiast jej ID.</target>
+        <target>Alias wydarzenia jest unikalnym odwołaniem do wydarzenia, który może być używany zamiast jego ID.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.author.1">
         <source>Here you can change the author of the event.</source>
@@ -119,11 +119,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.1">
         <source>Add an image to the event.</source>
-        <target>Jeśli wybierzesz tą opcję, do wydarzenia zostanie dodany obrazek.</target>
+        <target>Jeśli wybierzesz tę opcję, do wydarzenia zostanie dodany obrazek.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.0">
         <source>Repeat event</source>
-        <target>Wydarzeni cykliczne</target>
+        <target>Wydarzenie cykliczne</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurring.1">
         <source>Create a recurring event.</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.internal.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an internal page.</source>
-        <target>Po kliknięciu w odnośnik &quot;czytaj więcej...&quot; użytkownik będzie przekierowany na inną stronę naszego serwisu.</target>
+        <target>Po kliknięciu w odnośnik &quot;czytaj więcej...&quot; odwiedzający zostaną przekierowani na inną stronę naszego serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.article.0">
         <source>Article</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
-        <target>Wybierz stronę, na którą użytkownik zostanie przekierowany.</target>
+        <target>Wybierz stronę, na którą odwiedzający zostaną przekierowani.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.0">
         <source>Article</source>
@@ -219,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
-        <target>Wybierz artykuł na który zostaną przeniesieni użytkownicy kiedy klikną w wydarzenie.</target>
+        <target>Wybierz artykuł, na który zostaną przeniesieni użytkownicy, kiedy klikną w wydarzenie.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.0">
         <source>CSS class</source>
@@ -235,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.1">
         <source>Do not allow comments for this particular event.</source>
-        <target>Nie zezwalaj komentowania tego wydarzenia.</target>
+        <target>Nie zezwalaj na komentowanie tego wydarzenia.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.0">
         <source>Show from</source>
-        <target>Wrapper start</target>
+        <target>Pokazuj od</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
         <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
-        <target>Wrapper stop</target>
+        <target>Pokazuj do</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
         <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -311,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.publish_legend">
         <source>Publish settings</source>
-        <target>Ustawinia publikacji</target>
+        <target>Ustawienia publikacji</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.days">
         <source>day(s)</source>

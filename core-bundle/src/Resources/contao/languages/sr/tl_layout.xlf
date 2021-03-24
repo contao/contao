@@ -243,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
+        <target>Величина Lightbox-а</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>Овде можете подесити величину слике која ће бити приказана унутар Lightbox-а.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
@@ -517,21 +519,27 @@
       </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
+        <target>Креирај нови изглед странице</target>
       </trans-unit>
       <trans-unit id="tl_layout.show">
         <source>Show the details of page layout ID %s</source>
+        <target>Прикажи детаље изгледа странице ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.edit">
         <source>Edit page layout ID %s</source>
+        <target>Уреди изглед странице ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.copy">
         <source>Duplicate page layout ID %s</source>
+        <target>Копирај изглед странице ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.cut">
         <source>Move page layout ID %s</source>
+        <target>Премести изглед странице ID %s</target>
       </trans-unit>
       <trans-unit id="tl_layout.delete">
         <source>Delete page layout ID %s</source>
+        <target>Обриши изглед странице ID%s</target>
       </trans-unit>
     </body>
   </file>

@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.source_legend">
         <source>Image source settings</source>
+        <target>Подешавања извора слика</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
@@ -70,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle">
         <source>Activate/deactivate media query ID %s</source>
+        <target>Активирај/деактивирај медијски упит ID%s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -81,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
+        <target>Креирај нови медијски упит на врху</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
+        <target>Креирај нови медијски упит након упита ID %s</target>
       </trans-unit>
     </body>
   </file>
