@@ -253,10 +253,10 @@ class Version480Update extends AbstractMigration
                     SELECT id
                     FROM tl_files
                     WHERE
-                        importantPartX > 1
-                        OR importantPartY > 1
-                        OR importantPartWidth > 1
-                        OR importantPartHeight > 1
+                        importantPartX > 1.00001
+                        OR importantPartY > 1.00001
+                        OR importantPartWidth > 1.00001
+                        OR importantPartHeight > 1.00001
                 )
             ')
             ->fetchColumn()
@@ -349,6 +349,22 @@ class Version480Update extends AbstractMigration
                 ->execute($updateData)
             ;
         }
+
+        // If there are still invalid values left, reset them
+        $this->connection->query('
+            UPDATE
+                tl_files
+            SET
+                importantPartX = 0,
+                importantPartY = 0,
+                importantPartWidth = 0,
+                importantPartHeight = 0
+            WHERE
+                importantPartX > 1.00001
+                OR importantPartY > 1.00001
+                OR importantPartWidth > 1.00001
+                OR importantPartHeight > 1.00001
+        ');
     }
 
     public function shouldRunMinKeywordLength(): bool
