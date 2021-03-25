@@ -166,9 +166,7 @@ class DC_File extends DataContainer implements \editable
 
 				if (isset($legends[$k]))
 				{
-					$chunks = explode(':', $legends[$k]);
-					$key = $chunks[0] ?? null;
-					$cls = $chunks[1] ?? null;
+					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
 					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this, \'' . $key . '\', \'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}

@@ -563,9 +563,7 @@ abstract class DataContainer extends Backend
 		// Replace the textarea with an RTE instance
 		if (!empty($arrData['eval']['rte']))
 		{
-			$chunks = explode('|', $arrData['eval']['rte'], 2);
-			$file = $chunks[0] ?? null;
-			$type = $chunks[1] ?? null;
+			list($file, $type) = explode('|', $arrData['eval']['rte'], 2) + array(null, null);
 
 			$fileBrowserTypes = array();
 			$pickerBuilder = System::getContainer()->get('contao.picker.builder');

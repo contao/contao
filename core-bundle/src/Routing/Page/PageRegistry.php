@@ -17,6 +17,8 @@ use Doctrine\DBAL\Connection;
 
 class PageRegistry
 {
+    private const DISABLE_CONTENT_COMPOSITION = ['root', 'redirect', 'forward', 'logout'];
+
     /**
      * @var Connection
      */
@@ -109,7 +111,7 @@ class PageRegistry
     public function supportsContentComposition(PageModel $pageModel): bool
     {
         if (!isset($this->contentComposition[$pageModel->type])) {
-            return true;
+            return !\in_array($pageModel->type, self::DISABLE_CONTENT_COMPOSITION, true);
         }
 
         $service = $this->contentComposition[$pageModel->type];
