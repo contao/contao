@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.author.0">
         <source>Author</source>
-        <target>Imię</target>
+        <target>Autor</target>
       </trans-unit>
       <trans-unit id="tl_theme.author.1">
         <source>Please enter the name of the theme designer.</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.vars.1">
         <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Tutaj możesz zdefiniować zmienne globalne dla arkuszy styli tego motywu (np. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; lub &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
+        <target>Tutaj możesz zdefiniować zmienne globalne dla arkuszy stylów tego motywu (np. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; lub &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.template_exists">
         <source>The template &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; exists and will be overwritten.</source>
-        <target>Szablon &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; istnieje i zostanie nadpisany..</target>
+        <target>Szablon &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; istnieje i zostanie nadpisany.</target>
       </trans-unit>
       <trans-unit id="tl_theme.templates_ok">
         <source>No conflicts detected.</source>
@@ -155,7 +155,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.css">
         <source>Edit the style sheets of theme ID %s</source>
-        <target>Edytuj arkusze styli motywu ID %s</target>
+        <target>Edytuj arkusze stylów motywu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
-        <target>Edytuj szablony stron motywu ID %s</target>
+        <target>Edytuj układy stron motywu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes">
         <source>Edit the image sizes of theme ID %s</source>

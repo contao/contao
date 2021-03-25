@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.2] (2021-03-25)
+
+**Fixed issues:**
+
+- [#2915] Fix the version 4.8.0 update ([leofeyer])
+- [#2911] Fix more PHP 8 warnings ([leofeyer])
+- [#2908] Add a command to debug the page controllers ([aschempp])
+- [#2907] Manually override content composition for known legacy types ([aschempp])
+- [#2902] Fix the list/explodes when the second variable can be null ([leofeyer])
+- [#2858] Quote the "group" field in the UserCreateCommand statement ([richardhj])
+- [#2706] Add support for namespaced DC drivers ([Toflar])
+- [#2845] Always show all errors in the contao-setup binary ([m-vo])
+- [#2843] Fix another illegal array access in System::getReferer() ([m-vo])
+- [#2856] Fix the search query if there are no keywords ([ausi])
+
 ## [4.11.1] (2021-03-04)
 
 **Fixed issues:**
@@ -92,6 +107,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.2]: https://github.com/contao/contao/releases/tag/4.11.2
 [4.11.1]: https://github.com/contao/contao/releases/tag/4.11.1
 [4.11.0]: https://github.com/contao/contao/releases/tag/4.11.0
 [4.11.0-RC2]: https://github.com/contao/contao/releases/tag/4.11.0-RC2
@@ -107,6 +123,16 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#2915]: https://github.com/contao/contao/pull/2915
+[#2911]: https://github.com/contao/contao/pull/2911
+[#2908]: https://github.com/contao/contao/pull/2908
+[#2907]: https://github.com/contao/contao/pull/2907
+[#2902]: https://github.com/contao/contao/pull/2902
+[#2858]: https://github.com/contao/contao/pull/2858
+[#2706]: https://github.com/contao/contao/pull/2706
+[#2845]: https://github.com/contao/contao/pull/2845
+[#2843]: https://github.com/contao/contao/pull/2843
+[#2856]: https://github.com/contao/contao/pull/2856
 [#2785]: https://github.com/contao/contao/pull/2785
 [#2835]: https://github.com/contao/contao/pull/2835
 [#2833]: https://github.com/contao/contao/pull/2833

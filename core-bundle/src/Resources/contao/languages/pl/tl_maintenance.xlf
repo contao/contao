@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_maintenance.cacheTables.0">
         <source>Purge data</source>
-        <target>Usuń dane sesji</target>
+        <target>Usuń dane</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.cacheTables.1">
         <source>Please select the data you want to purge or rebuild.</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
-        <target>Usuń dane sesji</target>
+        <target>Usuń dane</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.cacheCleared">
         <source>The data has been purged</source>
