@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_moderate.1">
         <source>Approve comments before they are published on the website.</source>
-        <target>Zatwierdzaj komentarze zanim zostaną one opublikowane na stronie.</target>
+        <target>Zatwierdzaj komentarze, zanim zostaną one opublikowane na stronie.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.0">
         <source>Allow BBCode</source>
@@ -31,11 +31,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_bbcode.1">
         <source>Allow visitors to format their comments with BBCode.</source>
-        <target>Zezwól odwiedzającym na formatowanie ich komenatrzy za pomocą BBCode.</target>
+        <target>Zezwól odwiedzającym na formatowanie ich komentarzy za pomocą BBCode.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.0">
         <source>Require login to comment</source>
-        <target>Wymagaj zalogowania aby komentować</target>
+        <target>Wymagaj zalogowania, aby komentować</target>
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
@@ -55,11 +55,11 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select a comments template.</source>
-        <target>Tutaj możesz wybrać szablon komentarzy.</target>
+        <target>Wybierz szablon komentarzy. Własne szablony komentarzy można zapisać do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów komentarzy muszą zaczynać się &lt;em&gt;com_&lt;/em&gt;, a kończyć &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>
-        <target>Ustawienia komantarzy</target>
+        <target>Ustawienia komentarzy</target>
       </trans-unit>
     </body>
   </file>

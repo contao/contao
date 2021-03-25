@@ -819,6 +819,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
+        <target>Ограничить количество связанных видео на одном канале</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
