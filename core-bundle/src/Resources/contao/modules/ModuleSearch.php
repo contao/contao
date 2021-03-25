@@ -329,7 +329,7 @@ class ModuleSearch extends Module
 	{
 		$template->hasImage = false;
 
-		if (!\array_key_exists('meta', $result) || null === $result['meta'])
+		if (!isset($result['meta']))
 		{
 			return;
 		}
