@@ -59,6 +59,7 @@ class Search
 		$arrSet['groups'] = $arrData['groups'];
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
+		$arrSet['meta'] = json_encode((array) $arrData['meta']);
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
@@ -177,7 +178,7 @@ class Search
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
-		$arrSet['checksum'] = md5($arrSet['text']);
+		$arrSet['checksum'] = md5($arrSet['text'] . $arrSet['meta']);
 
 		$blnIndexExists = $objDatabase
 			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")

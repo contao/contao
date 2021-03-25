@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -313,11 +315,59 @@ class ModuleSearch extends Module
 					$objTemplate->hasContext = true;
 				}
 
+				$this->addImageToTemplateFromSearchResult($arrResult[$i], $objTemplate);
+
 				$this->Template->results .= $objTemplate->parse();
 			}
 
 			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
+		}
+	}
+
+	protected function addImageToTemplateFromSearchResult(array $result, Template $template): void
+	{
+		$template->hasImage = false;
+
+		if (!isset($result['meta']))
+		{
+			return;
+		}
+
+		$meta = json_decode($result['meta'], true);
+
+		foreach ($meta as $v)
+		{
+			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']))
+			{
+				continue;
+			}
+
+			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+
+			$figureMeta = new Metadata(array_filter(array(
+				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
+				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
+			)));
+
+			$figure = $figureBuilder
+				->setSize($this->imgSize)
+				->setMetadata($figureMeta)
+				->setLinkHref($result['url'])
+				->buildIfResourceExists();
+
+			if (null === $figure)
+			{
+				continue;
+			}
+
+			$template->hasImage = true;
+			$template->figure = $figure;
+			$template->image = (object) $figure->getLegacyTemplateData();
+
+			return;
 		}
 	}
 }

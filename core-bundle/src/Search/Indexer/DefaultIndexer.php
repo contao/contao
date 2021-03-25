@@ -108,6 +108,7 @@ class DefaultIndexer implements IndexerInterface
                 'pid' => $meta['pageId'],
                 'title' => $meta['title'],
                 'language' => $meta['language'],
+                'meta' => $document->extractJsonLdScripts(),
             ]);
         } catch (\Throwable $t) {
             $this->throwBecause('Could not add a search index entry: '.$t->getMessage(), false);
