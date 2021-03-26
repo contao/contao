@@ -146,42 +146,17 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$arrResult = null;
-			$strChecksum = md5($strKeywords . $strQueryType . $varRootId . $blnFuzzy);
 			$query_starttime = microtime(true);
-			$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
-			// Load the cached result
-			if (file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strCacheFile))
+			try
 			{
-				$objFile = new File($strCacheFile);
-
-				if ($objFile->mtime > time() - 1800)
-				{
-					$arrResult = json_decode($objFile->getContent(), true);
-				}
-				else
-				{
-					$objFile->delete();
-				}
+				$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $this->minKeywordLength);
+				$arrResult = $objSearch->fetchAllAssoc();
 			}
-
-			// Cache the result
-			if ($arrResult === null)
+			catch (\Exception $e)
 			{
-				try
-				{
-					$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $this->minKeywordLength);
-					$arrResult = $objSearch->fetchAllAssoc();
-				}
-				catch (\Exception $e)
-				{
-					$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-					$arrResult = array();
-				}
-
-				File::putContent($strCacheFile, json_encode($arrResult));
+				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+				$arrResult = array();
 			}
 
 			$query_endtime = microtime(true);

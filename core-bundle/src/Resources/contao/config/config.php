@@ -449,11 +449,6 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array(Automator::class, 'purgeScriptCache'),
 			'affected' => array('assets/js', 'assets/css')
 		),
-		'search' => array
-		(
-			'callback' => array(Automator::class, 'purgeSearchCache'),
-			'affected' => array('%s/contao/search')
-		),
 		'temp' => array
 		(
 			'callback' => array(Automator::class, 'purgeTempFolder'),
@@ -505,7 +500,6 @@ $GLOBALS['TL_CRON'] = array
 	'daily' => array
 	(
 		'purgeTempFolder' => array(Automator::class, 'purgeTempFolder'),
-		'purgeSearchCache' => array(Automator::class, 'purgeSearchCache'),
 		'generateSitemap' => array(Automator::class, 'generateSitemap'),
 		'purgeRegistrations' => array(Automator::class, 'purgeRegistrations'),
 		'purgeOptInTokens' => array(Automator::class, 'purgeOptInTokens')
