@@ -22,7 +22,7 @@ class ContentElementReference extends FragmentReference
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
-        $this->attributes['contentModel'] = $model->id;
+        $this->attributes['contentModel'] = $model->origId ? $model->origId : $model->id;
         $this->attributes['section'] = $section;
         $this->attributes['classes'] = $model->classes;
     }
