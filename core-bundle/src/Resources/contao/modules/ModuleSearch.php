@@ -146,7 +146,6 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$arrResult = null;
 			$query_starttime = microtime(true);
 
 			try

@@ -189,7 +189,7 @@ class Automator extends System
 	/**
 	 * Purge the search cache
 	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
 	public function purgeSearchCache()
 	{
