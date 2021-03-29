@@ -38,7 +38,7 @@ class ContentAccordionStart extends ContentElement
 			$this->Template->title = $this->mooHeadline;
 		}
 
-		$classes = StringUtil::deserialize($this->mooClasses, true) + array('', '');
+		$classes = StringUtil::deserialize($this->mooClasses, true) + array(null, null);
 
 		$this->Template->toggler = $classes[0] ?: 'toggler';
 		$this->Template->accordion = $classes[1] ?: 'accordion';
