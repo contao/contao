@@ -308,6 +308,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
+		else
+		{
+			$arrClipboard = null;
+		}
 
 		$this->import(Files::class, 'Files');
 		$this->import(BackendUser::class, 'User');
@@ -2579,6 +2583,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
+		}
+		else
+		{
+			$arrClipboard = null;
 		}
 
 		$this->import(Files::class, 'Files');
