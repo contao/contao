@@ -1506,7 +1506,7 @@ abstract class Controller extends System
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
 				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
-				'linkTitle' => (string)($rowData['linkTitle'] ?? ''),
+				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
 			));
 		};
 
