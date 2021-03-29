@@ -4171,7 +4171,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$table];
 
-			if (!empty($arrClipboard['id']) && \is_array($arrClipboard['id']))
+			if (\is_array($arrClipboard['id'] ?? null))
 			{
 				$blnMultiboard = true;
 			}
