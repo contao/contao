@@ -10,7 +10,7 @@
 
 namespace Contao\Database;
 
-use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
+use Doctrine\DBAL\Driver\ResultStatement as DoctrineStatement;
 
 /**
  * Lazy load the result set rows
