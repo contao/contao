@@ -348,7 +348,7 @@ body:not(.fullscreen) #container {
 	display:none;
 }
 #main_headline span {
-	display:inline-flex;
+	display:inline-block;
 	max-width:30%;
 	white-space:nowrap;
 	overflow:hidden;
@@ -358,9 +358,16 @@ body:not(.fullscreen) #container {
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
+#main_headline span + span::before {
+	content: '› ';
+	font-weight: 600;
+}
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
 	#main_headline span:nth-child(even) {
 		font-weight:300;
+	}
+	#main_headline span + span::before {
+		font-weight: 500;
 	}
 }
 h2.sub_headline {
