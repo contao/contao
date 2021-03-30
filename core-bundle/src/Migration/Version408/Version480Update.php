@@ -417,6 +417,10 @@ class Version480Update extends AbstractMigration
 
         // Consolidate the search context fields
         while (false !== ($row = $statement->fetch(\PDO::FETCH_OBJ))) {
+            if (!empty($row->contextLength) && !is_numeric($row->contextLength)) {
+                continue;
+            }
+
             $stmt = $this->connection->prepare('
                 UPDATE
                     tl_module
