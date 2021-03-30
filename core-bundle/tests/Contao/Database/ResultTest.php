@@ -23,8 +23,7 @@ class ResultTest extends TestCase
 {
     public function testEmptyResult(): void
     {
-        /** @var Result|object $result */
-        foreach ($this->createResults([]) as $result) {
+        foreach ($results = $this->createResults([]) as $result) {
             foreach ([null, 'first', 'last', 'reset'] as $methodName) {
                 if ($methodName) {
                     $this->assertSame($result, $result->$methodName());
@@ -52,7 +51,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
-        $resultStatement->fetchField();
+        $results[1]->fetchField();
     }
 
     public function testSingleRow(): void
@@ -61,8 +60,7 @@ class ResultTest extends TestCase
             ['field' => 'value1'],
         ];
 
-        /** @var Result|object $result */
-        foreach ($this->createResults($data) as $result) {
+        foreach ($results = $this->createResults($data) as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
             $this->assertSame(1, $result->numRows);
@@ -92,7 +90,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
-        $result->fetchField(1);
+        $results[1]->fetchField(1);
     }
 
     public function testMultipleRows(): void
@@ -102,8 +100,7 @@ class ResultTest extends TestCase
             ['field' => 'value2'],
         ];
 
-        /** @var Result|object $result */
-        foreach ($this->createResults($data) as $result) {
+        foreach ($results = $this->createResults($data) as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
             $this->assertSame(2, $result->numRows);
@@ -137,7 +134,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
-        $result->fetchField(1);
+        $results[1]->fetchField(1);
     }
 
     public function testFetchRowAndAssoc(): void
@@ -147,7 +144,6 @@ class ResultTest extends TestCase
             ['field' => 'value2'],
         ];
 
-        /** @var Result|object $result */
         foreach ($this->createResults($data) as $result) {
             $this->assertSame(['field' => 'value1'], $result->fetchAssoc());
             $this->assertSame(['field' => 'value1'], $result->row());
