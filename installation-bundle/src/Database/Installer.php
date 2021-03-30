@@ -238,11 +238,13 @@ class Installer
             $this->setLegacyOptions($table);
 
             $tableOptions = $this->connection
-                ->query("SHOW TABLE STATUS LIKE '".$tableName."'")
+                ->executeQuery(
+                    'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
+                    [$tableName]
+                )
                 ->fetch(\PDO::FETCH_OBJ)
             ;
 
-            // The table does not yet exist
             if (false === $tableOptions) {
                 continue;
             }
@@ -253,6 +255,10 @@ class Installer
             if (strtolower($tableOptions->Engine) !== strtolower($engine)) {
                 if ($innodb && $dynamic) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
+                        $command .= ' KEY_BLOCK_SIZE = 0';
+                    }
                 } else {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine;
                 }
@@ -262,6 +268,11 @@ class Installer
             } elseif ($innodb && $dynamic) {
                 if (false === stripos($tableOptions->Create_options, 'row_format=dynamic')) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+
+                    if (false !== stripos($tableOptions->Create_options, 'key_block_size=')) {
+                        $command .= ' KEY_BLOCK_SIZE = 0';
+                    }
+
                     $alterTables[md5($command)] = $command;
                 }
             }
@@ -295,17 +306,10 @@ class Installer
                     $indexCommand = $platform->getDropIndexSQL($indexName, $tableName);
                     $strKey = md5($indexCommand);
 
-                    if (isset($sql['ALTER_CHANGE'][$strKey])) {
-                        unset(
-                            $sql['ALTER_CHANGE'][$strKey],
-                            $order[array_search($strKey, $order, true)]
-                        );
-
-                        $order = array_values($order);
+                    if (!isset($sql['ALTER_CHANGE'][$strKey])) {
+                        $sql['ALTER_TABLE'][$strKey] = $indexCommand;
+                        $order[] = $strKey;
                     }
-
-                    $sql['ALTER_TABLE'][$strKey] = $indexCommand;
-                    $order[] = $strKey;
                 }
             }
 

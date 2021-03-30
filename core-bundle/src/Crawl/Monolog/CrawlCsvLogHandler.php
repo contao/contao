@@ -36,7 +36,7 @@ class CrawlCsvLogHandler extends StreamHandler
         return $this;
     }
 
-    protected function streamWrite($resource, array $record): void
+    protected function streamWrite($stream, array $record): void
     {
         if (!isset($record['context']['source'])) {
             return;
@@ -49,11 +49,11 @@ class CrawlCsvLogHandler extends StreamHandler
         /** @var CrawlUri $crawlUri */
         $crawlUri = $record['context']['crawlUri'] ?? null;
 
-        $stat = fstat($resource);
+        $stat = fstat($stream);
         $size = $stat['size'];
 
         if (0 === $size) {
-            fputcsv($resource, [
+            fputcsv($stream, [
                 'Time',
                 'Source',
                 'URI',
@@ -74,6 +74,6 @@ class CrawlCsvLogHandler extends StreamHandler
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 
-        fputcsv($resource, $columns);
+        fputcsv($stream, $columns);
     }
 }

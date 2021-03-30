@@ -13,11 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendTemplate;
 use Contao\Model;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
@@ -32,6 +35,49 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
+     * @return array<string>
+     */
+    public static function getSubscribedServices()
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['request_stack'] = RequestStack::class;
+        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+
+        return $services;
+    }
+
+    protected function getPageModel(): ?PageModel
+    {
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+        if (null === $request || !$request->attributes->has('pageModel')) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && (int) $GLOBALS['objPage']->id === (int) $pageModel
+        ) {
+            return $GLOBALS['objPage'];
+        }
+
+        $this->initializeContaoFramework();
+
+        /** @var PageModel $pageAdapter */
+        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+
+        return $pageAdapter->findByPk((int) $pageModel);
+    }
+
+    /**
      * Creates a template by name or from the "customTpl" field of the model.
      */
     protected function createTemplate(Model $model, string $templateName): Template
@@ -41,7 +87,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
 
         if ($model->customTpl) {
-            $templateName = $model->customTpl;
+            $request = $this->get('request_stack')->getCurrentRequest();
+
+            // Use the custom template unless it is a back end request
+            if (null === $request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+                $templateName = $model->customTpl;
+            }
         }
 
         $template = $this->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
@@ -69,7 +120,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (\is_array($classes)) {
+        if (!empty($classes)) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }

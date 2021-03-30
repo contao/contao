@@ -143,6 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_files.fileLocation">
         <source>Path: %s</source>
+        <target>Путања: %s</target>
       </trans-unit>
       <trans-unit id="tl_files.syncAdded">
         <source>Added the file or folder &quot;%s&quot;</source>
@@ -222,9 +223,11 @@
       </trans-unit>
       <trans-unit id="tl_files.drag">
         <source>Drag file or folder &quot;%s&quot;</source>
+        <target>Превуци фајл или фолдер &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit the source text of file &quot;%s&quot;</source>
+        <target>Уреди изворни текст фајла &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder &quot;%s&quot;</source>
@@ -240,9 +243,11 @@
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.0">
         <source>Paste into the root folder</source>
+        <target>Налепи у root фолдер</target>
       </trans-unit>
       <trans-unit id="tl_files.pasteinto.1">
         <source>Paste into folder &quot;%s&quot;</source>
+        <target>Налепи у фолдер &quot;%s&quot;</target>
       </trans-unit>
     </body>
   </file>

@@ -31,7 +31,6 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
@@ -87,16 +86,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return ['contao/core-bundle'];
     }
 
-    public function getBundles(ParserInterface $parser)
+    public function getBundles(ParserInterface $parser): array
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
-            BundleConfig::create(SecurityBundle::class),
+            BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class]),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(SwiftmailerBundle::class),
             BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(DoctrineCacheBundle::class),
             BundleConfig::create(LexikMaintenanceBundle::class),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
@@ -241,7 +239,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
                 }
 
-                return $this->addDefaultServerVersion($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
+
+                return $this->addDefaultPdoDriverOptions($extensionConfigs);
 
             case 'swiftmailer':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
@@ -325,6 +325,45 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 ],
             ];
         }
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Sets the PDO driver options if applicable (#2459).
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function addDefaultPdoDriverOptions(array $extensionConfigs): array
+    {
+        // Do not add PDO options if the constant does not exist
+        if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            // Do not add PDO options if the selected driver is not pdo_mysql
+            if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
+                return $extensionConfigs;
+            }
+
+            // Do not add PDO options if custom options have been defined
+            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         return $extensionConfigs;
     }

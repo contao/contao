@@ -55,7 +55,7 @@ class Search
 		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
-		$arrSet['filesize'] = $arrData['filesize'];
+		$arrSet['filesize'] = $arrData['filesize'] ?? null;
 		$arrSet['groups'] = $arrData['groups'];
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
@@ -181,28 +181,20 @@ class Search
 								->limit(1)
 								->execute($arrSet['checksum'], $arrSet['pid']);
 
-		// Update the URL if the new URL is shorter or the current URL is not canonical
-		if ($objIndex->numRows && $objIndex->url != $arrSet['url'])
+		if ($objIndex->numRows)
 		{
-			if (strpos($objIndex->url, '?') !== false && strpos($arrSet['url'], '?') === false)
+			// The new URL is more canonical (shorter and/or less fragments)
+			if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
 			{
-				// The new URL is more canonical (no query string)
-				$objDatabase->prepare("DELETE FROM tl_search WHERE id=?")
-							->execute($objIndex->id);
+				self::removeEntry($arrSet['url']);
 
-				$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
+				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+							->set($arrSet)
 							->execute($objIndex->id);
 			}
-			elseif (substr_count($arrSet['url'], '/') > substr_count($objIndex->url, '/') || (strpos($arrSet['url'], '?') !== false && strpos($objIndex->url, '?') === false) || \strlen($arrSet['url']) > \strlen($objIndex->url))
-			{
-				// The current URL is more canonical (shorter and/or less fragments)
-				$arrSet['url'] = $objIndex->url;
-			}
-			else
-			{
-				// The same page has been indexed under a different URL already (see #8460)
-				return false;
-			}
+
+			// The same page has been indexed under a different URL already (see #8460)
+			return false;
 		}
 
 		$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
@@ -466,7 +458,7 @@ class Search
 			$arrValues = array_merge($arrValues, $arrWildcards);
 		}
 
-		$strQuery .= " FROM (SELECT word FROM tl_search_index WHERE (" . implode(' OR ', $arrAllKeywords) . ") GROUP BY word) words JOIN tl_search_index ON tl_search_index.word = words.word WHERE 1";
+		$strQuery .= " FROM (SELECT word FROM tl_search_index WHERE (" . (implode(' OR ', $arrAllKeywords) ?: "0") . ") GROUP BY word) words JOIN tl_search_index ON tl_search_index.word = words.word WHERE 1";
 
 		// Get phrases
 		if ($intPhrases)
@@ -628,6 +620,40 @@ class Search
 		}
 
 		return static::$objInstance;
+	}
+
+	/**
+	 * @param string $strUrlA
+	 * @param string $strUrlB
+	 *
+	 * @return int negative if $strUrlA is more canonical, positive if $strUrlB is more canonical
+	 */
+	private static function compareUrls($strUrlA, $strUrlB)
+	{
+		if (strpos($strUrlA, '?') === false && strpos($strUrlB, '?') !== false)
+		{
+			return -1;
+		}
+
+		if (strpos($strUrlA, '?') !== false && strpos($strUrlB, '?') === false)
+		{
+			return 1;
+		}
+
+		$slashCountA = substr_count(explode('?', $strUrlA)[0], '/');
+		$slashCountB = substr_count(explode('?', $strUrlB)[0], '/');
+
+		if ($slashCountA !== $slashCountB)
+		{
+			return $slashCountA - $slashCountB;
+		}
+
+		if (\strlen($strUrlA) !== \strlen($strUrlB))
+		{
+			return \strlen($strUrlA) - \strlen($strUrlB);
+		}
+
+		return strcmp($strUrlA, $strUrlB);
 	}
 }
 

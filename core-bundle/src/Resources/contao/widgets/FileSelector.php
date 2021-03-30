@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Image\ResizeConfiguration;
+use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -72,7 +73,7 @@ class FileSelector extends Widget
 		$this->import(BackendUser::class, 'User');
 		$this->convertValuesToPaths();
 
-		if ($this->extensions != '')
+		if ($this->extensions)
 		{
 			$this->arrValidFileTypes = StringUtil::trimsplit(',', strtolower($this->extensions));
 		}
@@ -85,21 +86,6 @@ class FileSelector extends Widget
 		{
 			$strKeyword = ltrim(Input::postRaw('keyword'), '*');
 
-			// Make sure the regular expression is valid
-			if ($strKeyword != '')
-			{
-				try
-				{
-					$this->Database->prepare("SELECT * FROM tl_files WHERE name REGEXP ?")
-								   ->limit(1)
-								   ->execute($strKeyword);
-				}
-				catch (\Exception $e)
-				{
-					$strKeyword = '';
-				}
-			}
-
 			$objSessionBag->set('file_selector_search', $strKeyword);
 			$this->reload();
 		}
@@ -109,49 +95,87 @@ class FileSelector extends Widget
 		$arrFound = array();
 
 		// Search for a specific file
-		if ($for != '')
+		if ((string) $for !== '')
 		{
-			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
-				$strPattern = "CAST(name AS CHAR) REGEXP ?";
+				$this->Database->prepare("SELECT '' REGEXP ?")->execute($for);
+			}
+			catch (DriverException $exception)
+			{
+				// Quote search string if it is not a valid regular expression
+				$for = preg_quote($for);
+			}
 
-				if (substr(Config::get('dbCollation'), -3) == '_ci')
+			$strPattern = "CAST(name AS CHAR) REGEXP ?";
+
+			if (substr(Config::get('dbCollation'), -3) == '_ci')
+			{
+				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+			}
+
+			$strType = '';
+
+			if (strpos($for, 'type:file') !== false)
+			{
+				$strType = " AND type='file'";
+				$for = trim(str_replace('type:file', '', $for));
+			}
+
+			if (strpos($for, 'type:folder') !== false)
+			{
+				$strType = " AND type='folder'";
+				$for = trim(str_replace('type:folder', '', $for));
+			}
+
+			$objRoot = $this->Database->prepare("SELECT path, type, extension FROM tl_files WHERE $strPattern $strType")
+									  ->execute($for);
+
+			if ($objRoot->numRows < 1)
+			{
+				$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array('');
+			}
+			else
+			{
+				$arrPaths = array();
+
+				// Respect existing limitations
+				if ($this->path)
 				{
-					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-				}
-
-				$strType = '';
-
-				if (strpos($for, 'type:file') !== false)
-				{
-					$strType = " AND type='file'";
-					$for = trim(str_replace('type:file', '', $for));
-				}
-
-				if (strpos($for, 'type:folder') !== false)
-				{
-					$strType = " AND type='folder'";
-					$for = trim(str_replace('type:folder', '', $for));
-				}
-
-				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM tl_files WHERE $strPattern $strType")
-										  ->execute($for);
-
-				if ($objRoot->numRows < 1)
-				{
-					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array('');
-				}
-				else
-				{
-					$arrPaths = array();
-
-					// Respect existing limitations
-					if ($this->path != '')
+					while ($objRoot->next())
 					{
-						while ($objRoot->next())
+						if (strncmp($this->path . '/', $objRoot->path . '/', \strlen($this->path) + 1) === 0)
 						{
-							if (strncmp($this->path . '/', $objRoot->path . '/', \strlen($this->path) + 1) === 0)
+							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+							{
+								$arrFound[] = $objRoot->path;
+							}
+
+							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+						}
+					}
+				}
+				elseif ($this->User->isAdmin)
+				{
+					// Show all files to admins
+					while ($objRoot->next())
+					{
+						if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+						{
+							$arrFound[] = $objRoot->path;
+						}
+
+						$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+					}
+				}
+				elseif (\is_array($this->User->filemounts))
+				{
+					while ($objRoot->next())
+					{
+						// Show only mounted folders to regular users
+						foreach ($this->User->filemounts as $path)
+						{
+							if (strncmp($path . '/', $objRoot->path . '/', \strlen($path) + 1) === 0)
 							{
 								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
 								{
@@ -162,51 +186,16 @@ class FileSelector extends Widget
 							}
 						}
 					}
-					elseif ($this->User->isAdmin)
-					{
-						// Show all files to admins
-						while ($objRoot->next())
-						{
-							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-							{
-								$arrFound[] = $objRoot->path;
-							}
-
-							$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-						}
-					}
-					elseif (\is_array($this->User->filemounts))
-					{
-						while ($objRoot->next())
-						{
-							// Show only mounted folders to regular users
-							foreach ($this->User->filemounts as $path)
-							{
-								if (strncmp($path . '/', $objRoot->path . '/', \strlen($path) + 1) === 0)
-								{
-									if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-									{
-										$arrFound[] = $objRoot->path;
-									}
-
-									$arrPaths[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-								}
-							}
-						}
-					}
-
-					$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array_unique($arrPaths);
 				}
-			}
-			catch (\Exception $e)
-			{
+
+				$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array_unique($arrPaths);
 			}
 		}
 
 		$strNode = $objSessionBag->get('tl_files_picker');
 
 		// Unset the node if it is not within the path (see #5899)
-		if ($strNode != '' && $this->path != '' && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
+		if ($strNode && $this->path && strncmp($strNode . '/', $this->path . '/', \strlen($this->path) + 1) !== 0)
 		{
 			$objSessionBag->remove('tl_files_picker');
 		}
@@ -225,7 +214,7 @@ class FileSelector extends Widget
 			$root = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'];
 
 			// Allow only those roots that are within the custom path
-			if ($this->path != '')
+			if ($this->path)
 			{
 				$root = array_intersect(preg_grep('/^' . preg_quote($this->path, '/') . '(?:$|\/)/', $root), $root);
 
@@ -248,7 +237,7 @@ class FileSelector extends Widget
 		}
 
 		// Show a custom path (see #4926)
-		elseif ($this->path != '')
+		elseif ($this->path)
 		{
 			$tree .= $this->renderFiletree($projectDir . '/' . $this->path, 0, false, $this->isProtectedPath($this->path), $arrFound);
 		}
@@ -311,7 +300,7 @@ class FileSelector extends Widget
 		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
 		{
 			case 'File':
-				if (Config::get($this->strField) != '')
+				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
@@ -338,7 +327,7 @@ class FileSelector extends Widget
 
 		$this->convertValuesToPaths();
 
-		if ($this->extensions != '')
+		if ($this->extensions)
 		{
 			$this->arrValidFileTypes = StringUtil::trimsplit(',', $this->extensions);
 		}
@@ -626,7 +615,7 @@ class FileSelector extends Widget
 		}
 
 		// Return if the custom path is not within the upload path (see #8562)
-		if ($this->path != '' && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
+		if ($this->path && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
 		{
 			return;
 		}

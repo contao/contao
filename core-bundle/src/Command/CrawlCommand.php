@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Crawl\Escargot\Factory;
-use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
@@ -21,6 +20,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -112,7 +112,7 @@ class CrawlCommand extends Command
             $io->error('Could not find the given job ID.');
 
             return 1;
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $io->error($e->getMessage());
 
             return 1;
@@ -143,7 +143,6 @@ class CrawlCommand extends Command
         foreach ($this->escargotFactory->getSubscribers($subscribers) as $subscriber) {
             $io->section($subscriber->getName());
 
-            /** @var SubscriberResult $result */
             $result = $subscriber->getResult();
 
             if ($result->wasSuccessful()) {

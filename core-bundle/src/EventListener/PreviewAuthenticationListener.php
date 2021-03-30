@@ -44,18 +44,12 @@ class PreviewAuthenticationListener
      */
     private $uriSigner;
 
-    /**
-     * @var string
-     */
-    private $previewScript;
-
-    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner, string $previewScript)
+    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
         $this->router = $router;
         $this->uriSigner = $uriSigner;
-        $this->previewScript = $previewScript;
     }
 
     public function __invoke(RequestEvent $event): void
@@ -63,9 +57,8 @@ class PreviewAuthenticationListener
         $request = $event->getRequest();
 
         if (
-            '' === $this->previewScript
-            || $request->getScriptName() !== $this->previewScript
-            || !$this->scopeMatcher->isFrontendRequest($request)
+            !$request->attributes->get('_preview', false)
+            || $this->scopeMatcher->isBackendRequest($request)
             || $this->tokenChecker->hasBackendUser()
         ) {
             return;

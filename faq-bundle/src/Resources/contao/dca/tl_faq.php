@@ -495,9 +495,13 @@ class tl_faq extends Contao\Backend
 		};
 
 		// Generate alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->question, Contao\FaqCategoryModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -606,17 +610,19 @@ class tl_faq extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_faq WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid FAQ ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_faq WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_faq', $intId);
@@ -669,5 +675,10 @@ class tl_faq extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

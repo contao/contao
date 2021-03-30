@@ -43,7 +43,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'mode'                    => 4,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
-			'headerFields'            => array('title', 'headline', 'author', 'inColumn', 'tstamp', 'showTeaser', 'published', 'start', 'stop'),
+			'headerFields'            => array('title', 'headline', 'author', 'tstamp', 'start', 'stop'),
 			'child_record_callback'   => array('tl_content', 'addCteType')
 		),
 		'global_operations' => array
@@ -566,10 +566,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback' => static function (Contao\DataContainer $dc)
-			{
-				return Contao\Controller::getTemplateGroup('ce_' . $dc->activeRecord->type . '_', array(), 'ce_' . $dc->activeRecord->type);
-			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -1470,11 +1466,11 @@ class tl_content extends Contao\Backend
 			$text = Contao\StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
 			$strText = $GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] . ' (';
 
-			if ($headline != '')
+			if ($headline)
 			{
 				$strText .= $headline . ', ';
 			}
-			elseif ($text != '')
+			elseif ($text)
 			{
 				$strText .= $text . ', ';
 			}
@@ -1849,6 +1845,8 @@ class tl_content extends Contao\Backend
 				case 'hyperlink':
 				case 'image':
 				case 'accordionSingle':
+				case 'youtube':
+				case 'vimeo':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Contao\Config::get('validImageTypes');
 					break;
 
@@ -1950,12 +1948,6 @@ class tl_content extends Contao\Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
-		{
-			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
 		if (Contao\Input::get('cid'))
 		{
 			$this->toggleVisibility(Contao\Input::get('cid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
@@ -1966,6 +1958,12 @@ class tl_content extends Contao\Backend
 		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
 		{
 			return '';
+		}
+
+		// Disable the button if the element type is not allowed
+		if (!$this->User->hasAccess($row['type'], 'elements'))
+		{
+			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$href .= '&amp;id=' . Contao\Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
@@ -2021,22 +2019,24 @@ class tl_content extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid content element ID ' . $intId . '.');
+		}
+
+		if (!$this->User->hasAccess($objRow->type, 'elements'))
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-
-				if (!$this->User->hasAccess($objRow->type, 'elements'))
-				{
-					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-				}
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_content', $intId);
@@ -2092,5 +2092,10 @@ class tl_content extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

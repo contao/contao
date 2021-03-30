@@ -454,9 +454,7 @@ class tl_member extends Contao\Backend
 	public function addIcon($row, $label, Contao\DataContainer $dc, $args)
 	{
 		$image = 'member';
-		$time = Contao\Date::floorToMinute();
-
-		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
+		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
 
 		if ($row['useTwoFactor'])
 		{
@@ -493,7 +491,7 @@ class tl_member extends Contao\Backend
 			return '';
 		}
 
-		if (!$row['login'] || $row['username'] == '' || (!$this->User->isAdmin && count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
+		if (!$row['login'] || !$row['username'] || (!$this->User->isAdmin && count(array_intersect(Contao\StringUtil::deserialize($row['groups'], true), $this->User->amg)) < 1))
 		{
 			return Contao\Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -646,17 +644,19 @@ class tl_member extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate member ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid member ID ' . $intId . '.');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_member WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_member', $intId);
@@ -712,5 +712,10 @@ class tl_member extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

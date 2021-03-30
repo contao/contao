@@ -61,7 +61,7 @@ class Dbafs
 		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
-		if ($strResource == '' || !file_exists($projectDir . '/' . $strResource) || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0)
+		if (!$strResource || !file_exists($projectDir . '/' . $strResource) || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0)
 		{
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}

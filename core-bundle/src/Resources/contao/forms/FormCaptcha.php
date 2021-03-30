@@ -226,7 +226,7 @@ class FormCaptcha extends Widget
 	 */
 	public function generateLabel()
 	{
-		if ($this->strLabel == '')
+		if (!$this->strLabel)
 		{
 			return '';
 		}

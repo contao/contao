@@ -22,7 +22,6 @@ use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
 use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
@@ -45,36 +44,16 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @backupGlobals enabled
+ */
 class PluginTest extends ContaoTestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
-        if (isset($_SERVER['APP_SECRET'])) {
-            $_SERVER['APP_SECRET_ORIG'] = $_SERVER['APP_SECRET'];
-            unset($_SERVER['APP_SECRET']);
-        }
-
-        if (isset($_SERVER['DATABASE_URL'])) {
-            $_SERVER['DATABASE_URL_ORIG'] = $_SERVER['DATABASE_URL'];
-            unset($_SERVER['DATABASE_URL']);
-        }
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        if (isset($_SERVER['APP_SECRET_ORIG'])) {
-            $_SERVER['APP_SECRET'] = $_SERVER['APP_SECRET_ORIG'];
-            unset($_SERVER['APP_SECRET_ORIG']);
-        }
-
-        if (isset($_SERVER['DATABASE_URL_ORIG'])) {
-            $_SERVER['DATABASE_URL'] = $_SERVER['DATABASE_URL_ORIG'];
-            unset($_SERVER['DATABASE_URL_ORIG']);
-        }
+        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
     }
 
     public function testReturnsTheBundles(): void
@@ -84,7 +63,7 @@ class PluginTest extends ContaoTestCase
         /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(14, $bundles);
+        $this->assertCount(13, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -92,7 +71,7 @@ class PluginTest extends ContaoTestCase
 
         $this->assertSame(SecurityBundle::class, $bundles[1]->getName());
         $this->assertSame([], $bundles[1]->getReplace());
-        $this->assertSame([], $bundles[1]->getLoadAfter());
+        $this->assertSame([FrameworkBundle::class], $bundles[1]->getLoadAfter());
 
         $this->assertSame(TwigBundle::class, $bundles[2]->getName());
         $this->assertSame([], $bundles[2]->getReplace());
@@ -110,39 +89,35 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[5]->getReplace());
         $this->assertSame([], $bundles[5]->getLoadAfter());
 
-        $this->assertSame(DoctrineCacheBundle::class, $bundles[6]->getName());
+        $this->assertSame(LexikMaintenanceBundle::class, $bundles[6]->getName());
         $this->assertSame([], $bundles[6]->getReplace());
         $this->assertSame([], $bundles[6]->getLoadAfter());
 
-        $this->assertSame(LexikMaintenanceBundle::class, $bundles[7]->getName());
+        $this->assertSame(NelmioCorsBundle::class, $bundles[7]->getName());
         $this->assertSame([], $bundles[7]->getReplace());
         $this->assertSame([], $bundles[7]->getLoadAfter());
 
-        $this->assertSame(NelmioCorsBundle::class, $bundles[8]->getName());
+        $this->assertSame(NelmioSecurityBundle::class, $bundles[8]->getName());
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(NelmioSecurityBundle::class, $bundles[9]->getName());
+        $this->assertSame(FOSHttpCacheBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
         $this->assertSame([], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(FOSHttpCacheBundle::class, $bundles[10]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
-        $this->assertSame([], $bundles[10]->getLoadAfter());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[10]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[11]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[11]->getLoadAfter());
+        $this->assertSame([], $bundles[11]->getLoadAfter());
+        $this->assertFalse($bundles[11]->loadInProduction());
 
-        $this->assertSame(DebugBundle::class, $bundles[12]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[12]->getName());
         $this->assertSame([], $bundles[12]->getReplace());
         $this->assertSame([], $bundles[12]->getLoadAfter());
         $this->assertFalse($bundles[12]->loadInProduction());
-
-        $this->assertSame(WebProfilerBundle::class, $bundles[13]->getName());
-        $this->assertSame([], $bundles[13]->getReplace());
-        $this->assertSame([], $bundles[13]->getLoadAfter());
-        $this->assertFalse($bundles[13]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -167,7 +142,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(16, $configs);
+        $this->assertCount(15, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -276,8 +251,6 @@ class PluginTest extends ContaoTestCase
 
         $plugin = new Plugin();
         $collection = $plugin->getRouteCollection($resolver, $kernel);
-
-        /** @var array<Route> $routes */
         $routes = array_values($collection->all());
 
         $this->assertCount(3, $routes);
@@ -424,7 +397,7 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
-    public function testAddsTheDefaultServerVersion(): void
+    public function testAddsTheDefaultServerVersionAndPdoOptions(): void
     {
         $extensionConfigs = [
             [
@@ -432,6 +405,86 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'server_version' => '5.5',
+                            ],
+                        ],
+                    ],
+                ],
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfDriverIsNotPdo(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ]]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfCustomOptionsPresent(): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                            'options' => null,
                         ],
                     ],
                 ],
@@ -611,13 +664,10 @@ class PluginTest extends ContaoTestCase
             return $connection;
         };
 
-        $url = $_ENV['DATABASE_URL'] ?? null;
         $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
 
         $plugin = new Plugin($dbalConnectionFactory);
         $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
-
-        $_ENV['DATABASE_URL'] = $url;
     }
 
     private function getContainer(): PluginContainerBuilder

@@ -17,13 +17,18 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\File;
 use Contao\Image as LegacyImage;
+use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredResizer as ImageResizer;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeCoordinates;
 use Contao\Image\ResizeOptions;
 use Contao\System;
+use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine as GdImagine;
+use Imagine\Image\Box;
+use Imagine\Image\ImagineInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Resizes image objects and executes the legacy hooks.
@@ -49,7 +54,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
 
-            if (0 === strpos($legacyPath, $projectDir.'/') || 0 === strpos($legacyPath, $projectDir.'\\')) {
+            if (Path::isBasePath($projectDir, $legacyPath)) {
                 $legacyPath = substr($legacyPath, \strlen($projectDir) + 1);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
                 $this->legacyImage->setTargetWidth($config->getWidth());
@@ -57,10 +62,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 $this->legacyImage->setResizeMode($config->getMode());
                 $this->legacyImage->setZoomLevel($config->getZoomLevel());
 
-                if (
-                    ($targetPath = $options->getTargetPath())
-                    && (0 === strpos($targetPath, $projectDir.'/') || 0 === strpos($targetPath, $projectDir.'\\'))
-                ) {
+                if (($targetPath = $options->getTargetPath()) && Path::isBasePath($projectDir, $targetPath)) {
                     $this->legacyImage->setTargetPath(substr($targetPath, \strlen($projectDir) + 1));
                 }
 
@@ -86,7 +88,20 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             }
         }
 
-        return parent::resize($image, $config, $options);
+        try {
+            return parent::resize($image, $config, $options);
+        } catch (ImagineRuntimeException $exception) {
+            throw $this->enhanceImagineException($exception, $image);
+        }
+    }
+
+    public function resizeDeferredImage(DeferredImageInterface $image, bool $blocking = true): ?ImageInterface
+    {
+        try {
+            return parent::resizeDeferredImage($image, $blocking);
+        } catch (ImagineRuntimeException $exception) {
+            throw $this->enhanceImagineException($exception, $image);
+        }
     }
 
     protected function executeResize(ImageInterface $image, ResizeCoordinates $coordinates, string $path, ResizeOptions $options): ImageInterface
@@ -142,5 +157,31 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     private function hasGetImageHook(): bool
     {
         return !empty($GLOBALS['TL_HOOKS']['getImage']) && \is_array($GLOBALS['TL_HOOKS']['getImage']);
+    }
+
+    private function enhanceImagineException(ImagineRuntimeException $exception, ImageInterface $image): \Throwable
+    {
+        $format = Path::getExtension($image->getPath(), true);
+
+        if (!$this->formatIsSupported($format, $image->getImagine())) {
+            return new \RuntimeException(sprintf('Image format "%s" is not supported in %s on this environment. Consider removing this format from contao.image.valid_extensions or switch the contao.image.imagine_service to an implementation that supports it.', $format, \get_class($image->getImagine())), $exception->getCode(), $exception);
+        }
+
+        return $exception;
+    }
+
+    private function formatIsSupported(string $format, ImagineInterface $imagine): bool
+    {
+        if ('' === $format) {
+            return false;
+        }
+
+        try {
+            $imagine->create(new Box(1, 1))->get($format);
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        return true;
     }
 }

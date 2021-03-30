@@ -199,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que la noticia se muestre en el sitio web antes de una fecha/hora determinada, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -206,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Si desea evitar que la noticia se muestre en el sitio web después de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>

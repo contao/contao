@@ -158,7 +158,7 @@ class BackendMain extends Backend
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
-				if ($picker !== null && ($menu = $picker->getMenu()) && $menu->count() > 1)
+				if ($picker !== null && ($menu = $picker->getMenu()))
 				{
 					$this->Template->pickerMenu = System::getContainer()->get('contao.menu.renderer')->render($menu);
 				}
@@ -217,13 +217,13 @@ class BackendMain extends Backend
 	protected function output()
 	{
 		// Default headline
-		if ($this->Template->headline == '')
+		if (!$this->Template->headline)
 		{
 			$this->Template->headline = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 
 		// Default title
-		if ($this->Template->title == '')
+		if (!$this->Template->title)
 		{
 			$this->Template->title = $this->Template->headline;
 		}

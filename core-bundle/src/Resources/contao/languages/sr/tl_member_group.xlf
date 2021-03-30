@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ако желите да спречите да група буде активна пре неког дана/времена, можете то подесити овде. У супротном, оставите поље празним.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.stop.0">
         <source>Deactivate on</source>
@@ -46,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.stop.1">
         <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ако желите да спречите да група буде активна након неког дана/времена, можете то подесити овде. У супротном, оставите поље празним.</target>
       </trans-unit>
       <trans-unit id="tl_member_group.title_legend">
         <source>Title</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="tl_member_group.account_legend">
         <source>Group settings</source>
+        <target>Подешавања групе</target>
       </trans-unit>
       <trans-unit id="tl_member_group.new.0">
         <source>New</source>
@@ -64,21 +67,27 @@
       </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
+        <target>Креирај новог члана групе</target>
       </trans-unit>
       <trans-unit id="tl_member_group.show">
         <source>Show the details of member group ID %s</source>
+        <target>Прикажи детаље члана групе ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.edit">
         <source>Edit member group ID %s</source>
+        <target>Уреди члана групе ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.copy">
         <source>Duplicate member group ID %s</source>
+        <target>Копирај корисничку групу ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.delete">
         <source>Delete member group ID %s</source>
+        <target>Обриши корисничку групу ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle">
         <source>Activate/deactivate member group ID %s</source>
+        <target>Активира/деактивирај корисничку групу ID %s</target>
       </trans-unit>
     </body>
   </file>

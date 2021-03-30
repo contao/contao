@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use FOS\HttpCache\ResponseTagger;
-
 /**
  * Front end content element "module".
  *
@@ -26,31 +24,26 @@ class ContentModule extends ContentElement
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'FE' && !BE_USER_LOGGED_IN && ($this->invisible || ($this->start != '' && $this->start > time()) || ($this->stop != '' && $this->stop < time())))
+		if ($this->isHidden())
 		{
 			return '';
 		}
 
-		$objModule = ModuleModel::findByPk($this->module);
+		$objModel = ModuleModel::findByPk($this->module);
 
-		if ($objModule === null)
+		if ($objModel === null)
 		{
 			return '';
 		}
 
-		$strClass = Module::findClass($objModule->type);
+		$strClass = Module::findClass($objModel->type);
 
 		if (!class_exists($strClass))
 		{
 			return '';
 		}
 
-		$objModule->typePrefix = 'ce_';
-
-		/** @var Module $objModule */
-		$objModule = new $strClass($objModule, $this->strColumn);
-
-		$cssID = StringUtil::deserialize($objModule->cssID, true);
+		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)
 		if (!empty($this->cssID[0]))
@@ -64,12 +57,17 @@ class ContentModule extends ContentElement
 			$cssID[1] = trim($cssID[1] . ' ' . $this->cssID[1]);
 		}
 
-		$objModule->cssID = $cssID;
+		// Clone the model so we do not modify the shared model in the registry
+		$objModel = $objModel->cloneOriginal();
+		$objModel->cssID = $cssID;
+		$objModel->typePrefix = 'ce_';
 
-		// Tag the response
+		/** @var Module $objModule */
+		$objModule = new $strClass($objModel, $this->strColumn);
+
+		// Tag the content element (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 		{
-			/** @var ResponseTagger $responseTagger */
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}

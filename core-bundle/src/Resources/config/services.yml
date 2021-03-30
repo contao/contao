@@ -19,6 +19,7 @@ services:
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.image_factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
+    Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
@@ -32,6 +33,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticPlugins
             - '%kernel.debug%'
         public: true
@@ -40,6 +42,7 @@ services:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
             - '@request_stack'
+            - '@contao.framework'
             - staticFiles
             - '%kernel.debug%'
         public: true
@@ -48,6 +51,7 @@ services:
         class: Contao\CoreBundle\Cache\ContaoCacheClearer
         arguments:
             - '@filesystem'
+        public: true
 
     contao.cache.warm_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
@@ -59,6 +63,7 @@ services:
             - '@database_connection'
             - '@contao.framework'
             - '%contao.locales%'
+        public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
 
@@ -532,6 +537,7 @@ services:
         calls:
             - [addRouteFilter, ['@contao.routing.domain_filter']]
             - [addRouteFilter, ['@contao.routing.published_filter']]
+        public: true
 
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
@@ -574,7 +580,6 @@ services:
         class: Contao\CoreBundle\Routing\RouteProvider
         arguments:
             - '@contao.framework'
-            - '@database_connection'
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
 
@@ -626,7 +631,6 @@ services:
             - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
             - []
-            - '@scheb_two_factor.token_factory'
             - '@?logger'
             - '@?event_dispatcher'
         tags:
@@ -725,7 +729,6 @@ services:
             - '@session'
             - '@security.authentication.trust_resolver'
             - ~ # Simple or Role Hierarchy Voter
-            - '%contao.preview_script%'
         public: true
 
     contao.security.two_factor.authenticator:

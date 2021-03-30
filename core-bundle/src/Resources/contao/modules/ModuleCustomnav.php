@@ -32,7 +32,9 @@ class ModuleCustomnav extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['customnav'][0]) . ' ###';
@@ -47,14 +49,14 @@ class ModuleCustomnav extends Module
 		// Always return an array (see #4616)
 		$this->pages = StringUtil::deserialize($this->pages, true);
 
-		if (empty($this->pages) || $this->pages[0] == '')
+		if (empty($this->pages) || !$this->pages[0])
 		{
 			return '';
 		}
 
 		$strBuffer = parent::generate();
 
-		return ($this->Template->items != '') ? $strBuffer : '';
+		return $this->Template->items ? $strBuffer : '';
 	}
 
 	/**
@@ -69,7 +71,7 @@ class ModuleCustomnav extends Module
 		$groups = array();
 
 		// Get all groups of the current front end user
-		if (FE_USER_LOGGED_IN)
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 			$groups = $this->User->groups;
@@ -87,7 +89,7 @@ class ModuleCustomnav extends Module
 		$arrPages = array();
 
 		// Sort the array keys according to the given order
-		if ($this->orderPages != '')
+		if ($this->orderPages)
 		{
 			$tmp = StringUtil::deserialize($this->orderPages);
 

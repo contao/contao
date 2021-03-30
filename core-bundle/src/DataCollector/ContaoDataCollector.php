@@ -18,6 +18,7 @@ use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -159,7 +160,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return '';
         }
 
-        return sprintf('%s (ID %s)', $layout->name, $layout->id);
+        return sprintf('%s (ID %s)', StringUtil::decodeEntities($layout->name), $layout->id);
     }
 
     private function getTemplateName(): string

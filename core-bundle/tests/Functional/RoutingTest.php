@@ -19,7 +19,8 @@ use Contao\InsertTags;
 use Contao\System;
 use Contao\TestCase\ContaoDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class RoutingTest extends WebTestCase
 {
@@ -30,6 +31,13 @@ class RoutingTest extends WebTestCase
         parent::setUpBeforeClass();
 
         static::loadFileIntoDatabase(__DIR__.'/app/Resources/contao_test.sql');
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
     }
 
     protected function setUp(): void
@@ -58,14 +66,13 @@ class RoutingTest extends WebTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -87,7 +94,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-home.local/home.html',
             [],
             'root-with-home.local',
@@ -108,7 +115,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if there is an item with an empty key' => [
             '/home//.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -118,7 +125,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             '/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -128,7 +135,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -138,7 +145,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains duplicate keys' => [
             '/home/foo/bar1/foo/bar2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -148,7 +155,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument' => [
             '/home/foo/bar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -158,7 +165,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument without value' => [
             '/home/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -168,7 +175,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument with an empty value' => [
             '/home/foo/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => ''],
             'root-with-home.local',
             false,
@@ -188,7 +195,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an item with an empty key' => [
             '/home//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -198,7 +205,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the alias is empty' => [
             '/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -228,7 +235,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -238,7 +245,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
             '/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -247,7 +254,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home.html',
             [],
             'root-with-folder-urls.local',
@@ -317,14 +324,13 @@ class RoutingTest extends WebTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -336,7 +342,7 @@ class RoutingTest extends WebTestCase
     {
         yield 'Redirects to the language root if the request is empty' => [
             '/',
-            301,
+            302,
             'Redirecting to http://root-with-index.local/en/',
             ['language' => 'en'],
             'root-with-index.local',
@@ -366,7 +372,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects if the alias matches but no language is given' => [
             '/home.html',
-            301,
+            303,
             'Redirecting to http://root-with-home.local/en/home.html',
             [],
             'root-with-home.local',
@@ -377,7 +383,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             '/en/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -387,7 +393,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
             '/en/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -397,7 +403,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains duplicate keys' => [
             '/en/home/foo/bar1/foo/bar2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -407,7 +413,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument' => [
             '/en/home/foo/bar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -427,7 +433,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains item with an empty key' => [
             '/en/home//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             false,
@@ -437,8 +443,18 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the alias is empty' => [
             '/en/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
+            'root-with-home.local',
+            false,
+            false,
+        ];
+
+        yield 'Renders the 404 page for an unknown language' => [
+            '/fr/home.html',
+            404,
+            'Error 404 Page',
+            ['language' => 'fr'],
             'root-with-home.local',
             false,
             false,
@@ -467,7 +483,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and there is item with an empty key' => [
             '/en/home/foobar//foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'auto_item' => 'foobar'],
             'root-with-home.local',
             true,
@@ -477,7 +493,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the page if there is an item with an empty value and another item with an empty key' => [
             '/en/home/foobar///foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foobar' => ''],
             'root-with-home.local',
             true,
@@ -487,7 +503,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
             '/en/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             true,
@@ -497,7 +513,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
             '/en/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en'],
             'root-with-home.local',
             true,
@@ -565,14 +581,13 @@ class RoutingTest extends WebTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
 
         $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
         System::setContainer($client->getContainer());
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -594,7 +609,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-home.local/home',
             [],
             'root-with-home.local',
@@ -615,7 +630,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL suffix does not match' => [
             '/home.xml',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -625,7 +640,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -635,7 +650,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains duplicate keys' => [
             '/home/foo/bar1/foo/bar2',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar1'],
             'root-with-home.local',
             false,
@@ -645,7 +660,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an unused argument' => [
             '/home/foo/bar',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -665,7 +680,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if the path contains an item with item with an empty key' => [
             '/home//foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -695,7 +710,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains the "auto_item" keyword' => [
             '/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -705,7 +720,7 @@ class RoutingTest extends WebTestCase
         yield 'Renders the 404 page if auto items are enabled and the URL contains an auto item keyword' => [
             '/home/items/foobar',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -714,7 +729,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             '/',
-            302,
+            303,
             'Redirecting to http://root-with-folder-urls.local/folder/url/home',
             [],
             'root-with-folder-urls.local',
@@ -787,8 +802,6 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -839,7 +852,7 @@ class RoutingTest extends WebTestCase
 
         yield'Redirects to the first language root if the accept languages matches' => [
             '/',
-            302,
+            303,
             'Redirecting to http://same-domain-root.local/english-site.html',
             'en',
             'same-domain-root.local',
@@ -847,7 +860,7 @@ class RoutingTest extends WebTestCase
 
         yield'Redirects to the second language root if the accept languages matches' => [
             '/',
-            302,
+            303,
             'Redirecting to http://same-domain-root.local/german-site.html',
             'de',
             'same-domain-root.local',
@@ -855,7 +868,7 @@ class RoutingTest extends WebTestCase
 
         yield'Redirects to the fallback root if none of the accept languages matches' => [
             '/',
-            302,
+            303,
             'Redirecting to http://same-domain-root.local/english-site.html',
             'fr',
             'same-domain-root.local',
@@ -878,8 +891,6 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -890,7 +901,7 @@ class RoutingTest extends WebTestCase
     {
         yield 'Redirects to the language root if one of the accept languages matches' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'de,en',
             'same-domain-root.local',
@@ -898,7 +909,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the language fallback if one of the accept languages matches' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'en,de',
             'same-domain-root.local',
@@ -906,7 +917,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the language fallback if none of the accept languages matches' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'fr,es',
             'same-domain-root.local',
@@ -914,7 +925,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to "de" if "de-CH" is accepted and "de" is not' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'de-CH',
             'same-domain-root.local',
@@ -922,7 +933,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Ignores the case of the language code' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/de/',
             'dE-at',
             'same-domain-root.local',
@@ -930,7 +941,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
             '/',
-            301,
+            302,
             'Redirecting to http://same-domain-root.local/en/',
             'de-CH,en',
             'same-domain-root.local',
@@ -1006,11 +1017,57 @@ class RoutingTest extends WebTestCase
 
         $crawler = $client->request('GET', '/main/sub-zh.html');
         $title = trim($crawler->filterXPath('//head/title')->text());
-
-        /** @var Response $response */
         $response = $client->getResponse();
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('', $title);
+    }
+
+    public function testCorrectPageForUnknownLanguage(): void
+    {
+        static::loadFileIntoDatabase(__DIR__.'/app/Resources/issue-2465.sql');
+
+        Config::set('folderUrl', true);
+        Config::set('addLanguageToUrl', true);
+
+        $request = 'https://domain1.local/it/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'domain1.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de,en';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Domain1', $title);
+    }
+
+    public function testFindsFallbackPageForUnknownLanguage(): void
+    {
+        static::loadFileIntoDatabase(__DIR__.'/app/Resources/issue-2819.sql');
+
+        Config::set('folderUrl', true);
+        Config::set('addLanguageToUrl', true);
+
+        $request = 'https://domain1.local/de/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'domain1.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'af';
+
+        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Domain1', $title);
     }
 }

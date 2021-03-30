@@ -20,7 +20,6 @@ use Contao\Model;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -35,11 +34,6 @@ class RouteProvider implements RouteProviderInterface
     private $framework;
 
     /**
-     * @var Connection
-     */
-    private $database;
-
-    /**
      * @var string
      */
     private $urlSuffix;
@@ -52,10 +46,9 @@ class RouteProvider implements RouteProviderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $database, string $urlSuffix, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, string $urlSuffix, bool $prependLocale)
     {
         $this->framework = $framework;
-        $this->database = $database;
         $this->urlSuffix = $urlSuffix;
         $this->prependLocale = $prependLocale;
     }
@@ -100,7 +93,7 @@ class RouteProvider implements RouteProviderInterface
         $ids = $this->getPageIdsFromNames([$name]);
 
         if (empty($ids)) {
-            throw new RouteNotFoundException('Route name does not match a page ID');
+            throw new RouteNotFoundException('Route name "'.$name.'" is not supported by '.__METHOD__);
         }
 
         /** @var PageModel $pageModel */
@@ -309,7 +302,7 @@ class RouteProvider implements RouteProviderInterface
         if (!$config->get('doNotRedirectEmpty')) {
             $defaults['_controller'] = 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction';
             $defaults['path'] = '/'.$page->language.'/';
-            $defaults['permanent'] = true;
+            $defaults['permanent'] = false;
         }
 
         $routes['tl_page.'.$page->id.'.fallback'] = new Route(
@@ -345,13 +338,15 @@ class RouteProvider implements RouteProviderInterface
         $ids = [];
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+            $parts = explode('.', $name);
+
+            if ('tl_page' !== $parts[0] || 'error_404' === ($parts[2] ?? null)) {
                 continue;
             }
 
             [, $id] = explode('.', $name);
 
-            if (!is_numeric($id)) {
+            if (!preg_match('/^[1-9]\d*$/', $id)) {
                 continue;
             }
 
@@ -424,22 +419,23 @@ class RouteProvider implements RouteProviderInterface
                     return 0;
                 }
 
+                $langA = null;
+                $langB = null;
+
                 if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
                     $langA = $languages[$pageA->rootLanguage] ?? null;
                     $langB = $languages[$pageB->rootLanguage] ?? null;
+                }
 
-                    if (null === $langA && null === $langB) {
-                        if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
-                            return -1;
-                        }
-
-                        if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
-                            return 1;
-                        }
-
-                        return $pageA->rootSorting <=> $pageB->rootSorting;
+                if (null === $langA && null === $langB) {
+                    if ($pageA->rootIsFallback && !$pageB->rootIsFallback) {
+                        return -1;
                     }
 
+                    if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
+                        return 1;
+                    }
+                } else {
                     if (null === $langA && null !== $langB) {
                         return 1;
                     }
@@ -479,10 +475,10 @@ class RouteProvider implements RouteProviderInterface
         $aliases = [];
 
         foreach ($candidates as $candidate) {
-            if (is_numeric($candidate)) {
+            if (preg_match('/^[1-9]\d*$/', $candidate)) {
                 $ids[] = (int) $candidate;
             } else {
-                $aliases[] = $this->database->quote($candidate);
+                $aliases[] = $candidate;
             }
         }
 
@@ -493,12 +489,12 @@ class RouteProvider implements RouteProviderInterface
         }
 
         if (!empty($aliases)) {
-            $conditions[] = 'tl_page.alias IN ('.implode(',', $aliases).')';
+            $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
         /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy([implode(' OR ', $conditions)], []);
+        $pages = $pageModel->findBy([implode(' OR ', $conditions)], $aliases);
 
         if (!$pages instanceof Collection) {
             return [];

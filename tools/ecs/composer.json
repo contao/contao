@@ -1,0 +1,5 @@
+{
+    "require": {
+        "contao/easy-coding-standard": "^1.2.5"
+    }
+}

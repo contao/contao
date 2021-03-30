@@ -37,7 +37,7 @@ class AppKernel extends Kernel
             new FrameworkBundle(),
             new SecurityBundle(),
             new TwigBundle(),
-            new MonologBundle(),
+            new MonologBundle(), // prevents a lot of [debug] lines in the console output (see #1927)
             new SwiftmailerBundle(),
             new DoctrineBundle(),
             new SchebTwoFactorBundle(),

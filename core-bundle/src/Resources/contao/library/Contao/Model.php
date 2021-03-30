@@ -806,7 +806,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("$t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -869,10 +869,10 @@ abstract class Model
 
 			if ($objMissing !== null)
 			{
-				while ($objMissing->next())
+				foreach ($objMissing as $objCurrent)
 				{
-					$intId = $objMissing->{static::$strPk};
-					$arrRegistered[$intId] = $objMissing->current();
+					$intId = $objCurrent->{static::$strPk};
+					$arrRegistered[$intId] = $objCurrent;
 				}
 			}
 		}
@@ -1021,7 +1021,7 @@ abstract class Model
 	 */
 	protected static function find(array $arrOptions)
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return null;
 		}
@@ -1137,7 +1137,7 @@ abstract class Model
 	 */
 	public static function countBy($strColumn=null, $varValue=null, array $arrOptions=array())
 	{
-		if (static::$strTable == '')
+		if (!static::$strTable)
 		{
 			return 0;
 		}
@@ -1234,7 +1234,10 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		return new static($objResult);
+		/** @var static $strClass */
+		$strClass = static::getClassFromTable(static::$strTable);
+
+		return new $strClass($objResult);
 	}
 
 	/**

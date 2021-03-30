@@ -279,7 +279,7 @@ class Database
 	 */
 	public function tableExists($strTable, $strDatabase=null, $blnNoCache=false)
 	{
-		if ($strTable == '')
+		if (!$strTable)
 		{
 			return false;
 		}
@@ -336,7 +336,7 @@ class Database
 					$arrTmp['attributes'] = trim($arrChunks[2]);
 				}
 
-				if ($objFields->Key != '')
+				if ($objFields->Key)
 				{
 					switch ($objFields->Key)
 					{
@@ -374,7 +374,7 @@ class Database
 			{
 				$strColumnName = $objIndex->Column_name;
 
-				if ($objIndex->Sub_part != '')
+				if ($objIndex->Sub_part)
 				{
 					$strColumnName .= '(' . $objIndex->Sub_part . ')';
 				}
@@ -402,7 +402,7 @@ class Database
 	 */
 	public function fieldExists($strField, $strTable, $blnNoCache=false)
 	{
-		if ($strField == '' || $strTable == '')
+		if (!$strField || !$strTable)
 		{
 			return false;
 		}
@@ -429,7 +429,7 @@ class Database
 	 */
 	public function indexExists($strName, $strTable, $blnNoCache=false)
 	{
-		if ($strName == '' || $strTable == '')
+		if (!$strName || !$strTable)
 		{
 			return false;
 		}

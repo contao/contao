@@ -1,9 +1,9 @@
 includes:
-    - vendor/contao/phpstan/extension.neon
-    - vendor/phpstan/phpstan-phpunit/extension.neon
-    - vendor/phpstan/phpstan-phpunit/rules.neon
-    - vendor/phpstan/phpstan-symfony/extension.neon
-    - vendor/phpstan/phpstan-symfony/rules.neon
+    - tools/phpstan/vendor/contao/phpstan/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
+    - tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-symfony/rules.neon
 
 rules:
     - SlamPhpStan\SymfonyFilesystemRule
@@ -24,24 +24,11 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the missing TL_SCRIPT constant in the InitializeController class
-        - '#Constant TL_SCRIPT not found\.#'
+        # Ignore configuration tree errors
+        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\Node.*\.#'
 
         # Ignore backwards compatibility layers when preferring lowest dependencies
         - '#Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.#'
-
-        # Ingore forward compatibility layers
-        - '#Method Symfony\\Component\\HttpFoundation\\ResponseHeaderBag::all\(\) invoked with 1 parameter, 0 required\.#'
-
-        # Ignore configuration tree errors
-        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\)\.#'
-        - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::addDefaultsIfNotSet\(\)\.#'
-
-        # Ignore unused variables in the ArrayAttributeBagTest class
-        - '#Function testDoesNotReferenceValues\(\) has an unused variable#'
-
-        # Ignore test case classes not starting with "Abstract" (backwards compatibility)
-        - '#Abstract class Contao\\CoreBundle\\Tests\\.*TestCase should start with "Abstract" prefix\.#'
 
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false

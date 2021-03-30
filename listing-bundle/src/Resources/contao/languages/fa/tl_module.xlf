@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
         <source>Here you can select a list template.</source>
+        <target>اینجا می‌توانید قالب لیست را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
@@ -70,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
         <source>Here you can select a details page template.</source>
+        <target>اینجا می‌توانید قالب برگه‌ی جزئیات را انتخاب کنید.</target>
       </trans-unit>
     </body>
   </file>

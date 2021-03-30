@@ -209,7 +209,6 @@ class Email
 
 			default:
 				throw new \Exception(sprintf('Invalid argument "%s"', $strKey));
-				break;
 		}
 	}
 
@@ -365,7 +364,7 @@ class Email
 		}
 
 		// Default subject
-		if ($this->strSubject == '')
+		if (!$this->strSubject)
 		{
 			$this->strSubject = 'No subject';
 		}
@@ -373,12 +372,12 @@ class Email
 		$this->objMessage->setSubject($this->strSubject);
 
 		// HTML e-mail
-		if ($this->strHtml != '')
+		if ($this->strHtml)
 		{
 			// Embed images
 			if ($this->blnEmbedImages)
 			{
-				if ($this->strImageDir == '')
+				if (!$this->strImageDir)
 				{
 					$this->strImageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 				}
@@ -419,9 +418,9 @@ class Email
 		}
 
 		// Text content
-		if ($this->strText != '')
+		if ($this->strText)
 		{
-			if ($this->strHtml != '')
+			if ($this->strHtml)
 			{
 				$this->objMessage->addPart($this->strText, 'text/plain');
 			}
@@ -432,13 +431,13 @@ class Email
 		}
 
 		// Add the administrator e-mail as default sender
-		if ($this->strSender == '')
+		if (!$this->strSender)
 		{
 			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
 		}
 
 		// Sender
-		if ($this->strSenderName != '')
+		if ($this->strSenderName)
 		{
 			$this->objMessage->setFrom(array($this->strSender=>$this->strSenderName));
 		}
@@ -512,7 +511,7 @@ class Email
 				$strName = trim($strName, ' "');
 				$strEmail = Idna::encodeEmail($strEmail);
 
-				if ($strName != '')
+				if ($strName)
 				{
 					$arrReturn[$strEmail] = $strName;
 				}

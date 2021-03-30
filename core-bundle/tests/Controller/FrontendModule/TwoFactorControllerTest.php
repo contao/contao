@@ -227,6 +227,9 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testFailsIfTheTwoFactorCodeIsInvalid(): void
     {
         /** @var FrontendUser&MockObject $user */

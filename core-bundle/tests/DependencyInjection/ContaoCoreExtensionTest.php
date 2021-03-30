@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Ausi\SlugGenerator\SlugGenerator;
 use Contao\BackendUser;
+use Contao\ContentProxy;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
@@ -143,12 +144,14 @@ use Contao\FrontendUser;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
+use Contao\ModuleProxy;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -191,6 +194,10 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $this->container);
+
+        // Resolve private services (see #949)
+        $pass = new ResolvePrivatesPass();
+        $pass->process($this->container);
     }
 
     public function testReturnsTheCorrectAlias(): void
@@ -487,7 +494,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.request' => ['onKernelRequest', 36],
-                'kernel.response' => 'onKernelResponse',
+                'kernel.response' => ['onKernelResponse', -832],
             ],
             CsrfTokenCookieSubscriber::getSubscribedEvents()
         );
@@ -507,6 +514,68 @@ class ContaoCoreExtensionTest extends TestCase
                 'contao.hook' => [
                     [
                         'hook' => 'loadDataContainer',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheCustomElementTemplateOptionsListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.element_template_options'));
+
+        $definition = $this->container->getDefinition('contao.listener.element_template_options');
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('request_stack'),
+                'ce_',
+                ContentProxy::class,
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.callback' => [
+                    [
+                        'table' => 'tl_content',
+                        'target' => 'fields.customTpl.options',
+                    ],
+                ],
+            ],
+            $definition->getTags()
+        );
+    }
+
+    public function testRegistersTheCustomModuleTemplateOptionsListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.module_template_options'));
+
+        $definition = $this->container->getDefinition('contao.listener.module_template_options');
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('request_stack'),
+                'mod_',
+                ModuleProxy::class,
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.callback' => [
+                    [
+                        'table' => 'tl_module',
+                        'target' => 'fields.customTpl.options',
                     ],
                 ],
             ],
@@ -718,7 +787,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(
             [
                 'kernel.event_listener' => [
-                    [],
+                    [
+                        'priority' => -896,
+                    ],
                 ],
             ],
             $tags
@@ -732,6 +803,18 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Ensure that the listener is registered after the MergeHeaderListener
         $this->assertTrue($priority < $mergeHeadersListenerPriority);
+
+        $clearSessionDataListenerDefinition = $this->container->getDefinition('contao.listener.clear_session_data');
+        $clearSessionDataListenerTags = $clearSessionDataListenerDefinition->getTags();
+        $clearSessionDataListenerPriority = $clearSessionDataListenerTags['kernel.event_listener'][0]['priority'] ?? 0;
+
+        // Ensure that the listener is registered after the ClearSessionDataListener
+        $this->assertTrue($priority < $clearSessionDataListenerPriority);
+
+        $csrfCookieListenerPriority = CsrfTokenCookieSubscriber::getSubscribedEvents()['kernel.response'][1] ?? 0;
+
+        // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
+        $this->assertTrue($priority < (int) $csrfCookieListenerPriority);
     }
 
     public function testRegistersTheMergeHttpHeadersListener(): void
@@ -809,7 +892,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
-                new Reference('%contao.preview_script%'),
                 new Reference('contao.routing.scope_matcher'),
                 new Reference('twig'),
                 new Reference('router'),
@@ -1171,6 +1253,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('request_stack'),
+                new Reference('contao.framework'),
                 new Reference('staticPlugins'),
                 new Reference('%kernel.debug%'),
             ],
@@ -1190,6 +1273,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('request_stack'),
+                new Reference('contao.framework'),
                 new Reference('staticFiles'),
                 new Reference('%kernel.debug%'),
             ],
@@ -1533,7 +1617,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $this->container->getDefinition(LegacyCron::class);
 
-        $this->assertTrue($definition->isPublic());
+        $this->assertTrue($definition->isPrivate());
 
         $this->assertEquals(
             [
@@ -1765,7 +1849,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $this->assertTrue($this->container->has('contao.image.imagine'));
 
-        $definition = $this->container->findDefinition('contao.image.imagine');
+        $definition = $this->container->getAlias('contao.image.imagine');
 
         $this->assertTrue($definition->isPublic());
     }
@@ -2475,7 +2559,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $this->container->getDefinition('contao.routing.nested_404_matcher');
 
         $this->assertSame(NestedMatcher::class, $definition->getClass());
-        $this->assertTrue($definition->isPrivate());
+        $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [
@@ -2598,7 +2682,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
-                new Reference('database_connection'),
                 new Reference('%contao.url_suffix%'),
                 new Reference('%contao.prepend_locale%'),
             ],
@@ -2697,7 +2780,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.authentication_success_handler'),
                 new Reference('contao.security.authentication_failure_handler'),
                 [],
-                new Reference('scheb_two_factor.token_factory'),
                 new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
                 new Reference('event_dispatcher', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
@@ -2938,7 +3020,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.simple_role_voter'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -2971,7 +3052,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('session'),
                 new Reference('security.authentication.trust_resolver'),
                 new Reference('security.access.role_hierarchy_voter'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );
@@ -3529,7 +3609,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.security.token_checker'),
                 new Reference('router'),
                 new Reference('uri_signer'),
-                new Reference('%contao.preview_script%'),
             ],
             $definition->getArguments()
         );

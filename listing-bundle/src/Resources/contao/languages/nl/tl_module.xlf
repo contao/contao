@@ -63,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
         <source>Here you can select a list template.</source>
+        <target>Selecteer een template voor opsomming.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
@@ -70,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
         <source>Here you can select a details page template.</source>
+        <target>Selecteer een detailpagina template.</target>
       </trans-unit>
     </body>
   </file>

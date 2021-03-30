@@ -22,7 +22,7 @@ class DocumentTest extends TestCase
 {
     public function testCreatesADocumentFromRequestAndResponse(): void
     {
-        $request = Request::create('https://example.com/foo?bar=baz', 'GET');
+        $request = Request::create('https://example.com/foo?bar=baz');
         $response = new Response('body', 200, ['content-type' => ['text/html']]);
         $document = Document::createFromRequestResponse($request, $response);
 
@@ -38,7 +38,7 @@ class DocumentTest extends TestCase
     /**
      * @dataProvider documentProvider
      */
-    public function testExtractsTheJsdonLdScript(string $body, array $expectedJsonLds): void
+    public function testExtractsTheJsdonLdScript(string $body, array $expectedJsonLds, string $context = 'https://contao.org/'): void
     {
         $document = new Document(
             new Uri('https://example.com'),
@@ -50,7 +50,7 @@ class DocumentTest extends TestCase
         $this->assertSame('https://example.com', (string) $document->getUri());
         $this->assertSame(200, $document->getStatusCode());
         $this->assertSame(['content-type' => ['text/html']], $document->getHeaders());
-        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts('https://contao.org/'));
+        $this->assertSame($expectedJsonLds, $document->extractJsonLdScripts($context));
     }
 
     public function documentProvider(): \Generator
@@ -61,57 +61,87 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with one valid json ld element' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>',
             [
                 [
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
             ],
         ];
 
         yield 'Test with one valid json ld element without context' => [
-            '<html><body><script type="application/ld+json">{"@type":"https:\/\/contao.org\/PageMetaData","https:\/\/contao.org\/foobar":true}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@type":"https:\/\/contao.org\/Page","https:\/\/contao.org\/foobar":true}</script></body></html>',
             [
                 [
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
             ],
         ];
 
         yield 'Test with one valid json ld element with context prefix' => [
-            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/contao.org\/"},"@type":"contao:PageMetaData","contao:foobar":true}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/contao.org\/"},"@type":"contao:Page","contao:foobar":true}</script></body></html>',
             [
                 [
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
             ],
         ];
 
         yield 'Test with two valid json ld elements' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":false}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":false}</script></body></html>',
             [
                 [
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
                 [
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => false,
                 ],
             ],
         ];
 
         yield 'Test with one valid and one invalid json ld element' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/", ...</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/", ...</script></body></html>',
             [
                 [
-                    '@type' => 'PageMetaData',
+                    '@type' => 'Page',
                     'foobar' => true,
                 ],
             ],
+        ];
+
+        yield 'Test with context without trailing slash' => [
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.org","@type":"WebPage","name":"Foobar"}</script></body></html>',
+            [
+                [
+                    '@type' => 'WebPage',
+                    'name' => 'Foobar',
+                ],
+            ],
+            'https://schema.org',
+        ];
+
+        yield 'Test with no context filter provided' => [
+            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"Welcome to the official Contao Demo Site","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
+            [
+                [
+                    '@context' => [
+                        'contao' => 'https://schema.contao.org/',
+                    ],
+                    '@type' => 'https://schema.contao.org/Page',
+                    'https://schema.contao.org/title' => 'Welcome to the official Contao Demo Site',
+                    'https://schema.contao.org/pageId' => 2,
+                    'https://schema.contao.org/noSearch' => false,
+                    'https://schema.contao.org/protected' => false,
+                    'https://schema.contao.org/groups' => [],
+                    'https://schema.contao.org/fePreview' => false,
+                ],
+            ],
+            '',
         ];
     }
 
@@ -121,7 +151,7 @@ class DocumentTest extends TestCase
             new Uri('https://example.com'),
             200,
             ['Content-Type' => ['text/html']],
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"PageMetaData","foobar":true}</script></body></html>'
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>'
         );
 
         $this->assertSame([], $document->extractJsonLdScripts('https://example.com/'));

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_module.name.0">
         <source>Title</source>
-        <target>Nagłówek</target>
+        <target>Nazwa</target>
       </trans-unit>
       <trans-unit id="tl_module.name.1">
         <source>Please enter the module title.</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.1">
         <source>Enter a value greater than 0 to show only submenu items.</source>
-        <target>Zdefiniuj, od którego poziomu, pozycje w menu powinny być widoczne. Wybierz 0 lub zostaw puste aby zacząć od najwyższego poziomu.</target>
+        <target>Zdefiniuj, od którego poziomu pozycje w menu powinny być widoczne. Wybierz 0 lub zostaw puste, aby zacząć od najwyższego poziomu.</target>
       </trans-unit>
       <trans-unit id="tl_module.showLevel.0">
         <source>Stop level</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.showLevel.1">
         <source>Enter a value greater than 0 to limit the nesting level of the menu.</source>
-        <target>Zdefiniuj jaki poziom menu powinien być widoczny. Np. wybierając 1 wyświetlą się tylko główne elementy menu oraz podelementy aktualnej strony. Wybierając 0 wyświetlą się wszystkie główne elementy i ich podelementy.</target>
+        <target>Zdefiniuj jaki poziom menu powinien być widoczny. Np. gdy wpisane 1, wyświetlą się tylko główne elementy menu oraz podelementy aktualnej strony. Gdy wpisane 0, wyświetlą się wszystkie główne elementy i ich podelementy.</target>
       </trans-unit>
       <trans-unit id="tl_module.hardLimit.0">
         <source>Hard limit</source>
@@ -54,8 +54,8 @@
         <target>Pokaż zastrzeżone elementy</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Domyślnie zastrzeżone elementy nie są widoczne, dopóki użytkownik nie zaloguje się na stronie. Jednakże, jeśli wybierzesz tę opcję, zastrzeżone elementy będą widoczne cały czas.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Pokaż elementy, które są widoczne tylko dla zalogowanych użytkowników.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
         <source>Please choose the reference page from the site structure.</source>
-        <target>Tutaj możesz wybrać inny punk startowy do wygenerowania mapy serwisu.</target>
+        <target>Tutaj możesz wybrać inny punkt startowy do wygenerowania mapy serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -79,13 +79,15 @@
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.1">
         <source>Here you can select the navigation template.</source>
-        <target>Wybierz szablon menu. Możesz dodać własne szablony wydarzeń do katalogu templates. Pliki szablonów wydarzeń muszą zaczynać się od nav_ i muszą mieć rozszerzenie .tpl.</target>
+        <target>Wybierz szablon menu. Możesz dodać własne szablony nawigacji do katalogu templates. Pliki szablonów nawigacji muszą zaczynać się od nav_ i muszą mieć rozszerzenie &lt;code&gt;html5&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Szablon modułu</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Tutaj możesz wybrać szablon modułu.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -105,11 +107,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customLabel.0">
         <source>Custom label</source>
-        <target>Własna etykietka</target>
+        <target>Własna etykieta</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
         <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Tu możesz wprowadzić nazwę własnej etykietki w zastępstwie &lt;em&gt;Szybkiego odnośnika&lt;/em&gt; lub &lt;em&gt;Szybkiej nawigacji&lt;/em&gt;.</target>
+        <target>Tu możesz wprowadzić nazwę własnej etykiety w zastępstwie &lt;em&gt;Szybkiego odnośnika&lt;/em&gt; lub &lt;em&gt;Szybkiej nawigacji&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -117,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_module.autologin.1">
         <source>Allow members to log into the front end automatically.</source>
-        <target>Zezwól użytkownikom serwisu na automatyczne logowanie do serwisu</target>
+        <target>Zezwól użytkownikom na automatyczne logowanie do serwisu</target>
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.0">
         <source>Redirect page</source>
@@ -125,15 +127,15 @@
       </trans-unit>
       <trans-unit id="tl_module.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
-        <target>Te ustawienia definiują, na którą stronę zostanie przekierowany użytkownik po jakiejś operacji. (np. kliknięcie na link lub przesłanie formularza).</target>
+        <target>Te ustawienia definiują, na którą stronę zostanie przekierowany użytkownik po jakiejś operacji (np. kliknięcie na link lub przesłanie formularza).</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
         <target>Przekieruj do ostatnio odwiedzonej strony</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Przekieruj użytkownika do strony, ostatnio odwiedzonej przed logowaniem/wylogowaniem.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Przekieruj użytkownika z powrotem do ostatnio odwiedzanej strony, zamiast do określonej strony docelowej.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -165,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.1">
         <source>Here you can select the form template.</source>
-        <target>Wybierz szablon formularza. Domyślnym szablonem jest &lt;em&gt;member_default&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;tpl&lt;/em&gt;).</target>
+        <target>Wybierz szablon formularza. Domyślnym szablonem jest &lt;em&gt;member_default&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;html5&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.form.0">
         <source>Form</source>
@@ -189,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_module.and.1">
         <source>Returns only pages that contain all keywords.</source>
-        <target>Wyszukiwarka odnajdzie strony gdzie występują wszystkie podane słowa kluczowe.</target>
+        <target>Wyszukiwarka odnajdzie strony, gdzie występują wszystkie podane słowa kluczowe.</target>
       </trans-unit>
       <trans-unit id="tl_module.or.0">
         <source>Find any word</source>
@@ -197,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_module.or.1">
         <source>Returns all pages that contain any of the keywords.</source>
-        <target>Wyszukiwarka odnajdzie strony gdzie występuje przynajmniej jedno z podanych słów kluczowych.</target>
+        <target>Wyszukiwarka odnajdzie strony, gdzie występuje przynajmniej jedno z podanych słów kluczowych.</target>
       </trans-unit>
       <trans-unit id="tl_module.fuzzy.0">
         <source>Fuzzy search</source>
@@ -221,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_module.advanced.1">
         <source>Contains an input field and a radio button menu to choose the query type.</source>
-        <target>W zaawansowanym szukaniu możesz wybrać rodzaj zapytania jaki będzie używać wyszukiwarka.</target>
+        <target>W zaawansowanym szukaniu możesz wybrać rodzaj zapytania, jaki będzie używać wyszukiwarka.</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
@@ -229,7 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
-        <target>Pierwsze pole określa liczbę znaków po lewej i prawej stronie każdego słowa kluczowego, a drugie ogólną długość kontekstu w wyinku.</target>
+        <target>Pierwsze pole określa liczbę znaków po lewej i prawej stronie każdego słowa kluczowego, a drugie ogólną długość kontekstu w wyniku.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
@@ -261,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.1">
         <source>Here you can select the search results template.</source>
-        <target>Wybierz szablon wyników wyszukiwania. Domyślnym szablonem jest &lt;em&gt;search_default&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;tpl&lt;/em&gt;).</target>
+        <target>Wybierz szablon wyników wyszukiwania. Domyślnym szablonem jest &lt;em&gt;search_default&lt;/em&gt;. Jeśli chcesz dodać własny szablon, wgraj go do katalogu &lt;em&gt;templates&lt;/em&gt; (rozszerzenie pliku musi być &lt;em&gt;html5&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
@@ -273,11 +275,11 @@
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
-        <target>Pomiń pierwszy artykuł</target>
+        <target>Pomiń artykuły</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.1">
         <source>Here you can define how many items will be skipped.</source>
-        <target>Po wybieraniu tej opcji wykluczony z listy zostanie pierwszy artykuł.</target>
+        <target>Określ, ile artykułów ma zostać wykluczonych z listy.</target>
       </trans-unit>
       <trans-unit id="tl_module.loadFirst.0">
         <source>Load the first item</source>
@@ -285,7 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_module.loadFirst.1">
         <source>Automatically redirect to the first item if none is selected.</source>
-        <target>Automatycznie przekieruj do pierwszego artykułu jeśli żaden nie został wybrany.</target>
+        <target>Automatycznie przekieruj do pierwszego artykułu, jeśli żaden nie został wybrany.</target>
       </trans-unit>
       <trans-unit id="tl_module.singleSRC.0">
         <source>Source file</source>
@@ -349,7 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>Tutaj możesz zdefiniować okres czasu przez jaki kanał RSS będzie przechowywany w pamięci podręcznej.</target>
+        <target>Tutaj możesz zdefiniować czas, przez jaki kanał RSS będzie przechowywany w pamięci podręcznej.</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>
@@ -365,7 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_template.1">
         <source>Here you can select the feed template.</source>
-        <target>Wybierz szablon układ graficznego. Własne szablony można zapisać do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów muszą zaczynać się &lt;em&gt;rss_&lt;/em&gt; a kończyć &lt;em&gt;.tpl&lt;/em&gt;.</target>
+        <target>Wybierz szablon układ graficznego. Własne szablony można zapisać do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów muszą zaczynać się &lt;em&gt;rss_&lt;/em&gt; a kończyć &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.numberOfItems.0">
         <source>Number of items</source>
@@ -385,7 +387,7 @@
       </trans-unit>
       <trans-unit id="tl_module.groups.0">
         <source>Allowed member groups</source>
-        <target>Zezwolone grupy użytkowników</target>
+        <target>Dozwolone grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_module.groups.1">
         <source>These groups will be able to see the module.</source>
@@ -397,7 +399,7 @@
       </trans-unit>
       <trans-unit id="tl_module.guests.1">
         <source>Hide the module if a member is logged in.</source>
-        <target>Ukryj ten moduł jeśli użytkownik jest zalogowany.</target>
+        <target>Ukryj ten moduł, jeśli użytkownik jest zalogowany.</target>
       </trans-unit>
       <trans-unit id="tl_module.cssID.0">
         <source>CSS ID/class</source>
@@ -409,25 +411,27 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Wyłącz ochronę przeciw spamowi</target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Tutaj możesz wyłączyć ochronę przed spamem (niezalecane).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
         <target>Grupy użytkowników</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Każdy redaktor, który nie jest administratorem dziedziczy zezwolenia po grupie, w której się znajduje. Dlatego każdy redaktor musi być członkiem co najmniej jednej grupy! Jeśli redaktor jest w więcej niż jednej grupie, zezwolenia się łączą.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Tutaj mozesz przypisać użytkownika do jednej lub więcej grup.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Zezwól na logowanie</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Wybierz ta opcje aby użytkownik mógł się zalogować przy pomocy nazwy użytkownika i hasła.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>Zezwól nowemu użytkownikowi na logowanie do serwisu.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -435,7 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.1">
         <source>Do not require the username to request a new password.</source>
-        <target>Nie wymagaj nazwy użytkownika podczas zgłoszenia o nowe hasło.</target>
+        <target>Nie wymagaj nazwy użytkownika podczas żądania nowego hasła.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_close.0">
         <source>Mode</source>
@@ -451,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.1">
         <source>Create a home directory from the registered username.</source>
-        <target>Wybierz tę opcję aby automatycznie założyć katalog użytkownika.</target>
+        <target>Wybierz tę opcję, aby automatycznie założyć katalog użytkownika.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_homeDir.0">
         <source>Home directory path</source>
@@ -467,15 +471,15 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_activate.1">
         <source>Send an activation e-mail to the registered e-mail address.</source>
-        <target>Wybierz tę opcję aby wysłać do rejestrującego się użytkownika e-maila z aktywacją konta.</target>
+        <target>Wybierz tę opcję, aby wysłać do rejestrującego się użytkownika e-maila z aktywacją konta.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.0">
         <source>Confirmation page</source>
         <target>Przekierowanie po aktywacji</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Wybierz stronę, na którą zostanie przekierowany użytkownik po aktywacji konta.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Wybierz stronę, na którą zostanie przekierowany użytkownik po zakończonym żądaniu.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -490,8 +494,8 @@
         <target>Email potwierdzajacy</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Podaj tekst maila potwierdzającego. Dozwolone są także informacje o użytkowniku (np. &lt;em&gt;##lastname##&lt;/em&gt;) jak również &lt;em&gt;##domain##&lt;/em&gt; (aktualna domena) oraz &lt;em&gt;##link##&lt;/em&gt; (link aktywacyjny).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>Możesz używać wildcardów &lt;em&gt;##domain##&lt;/em&gt; (nazwa domeny), &lt;em&gt;##link##&lt;/em&gt; (link aktywacyjny) i dowolnych danych użytkownika (np. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -599,11 +603,11 @@ Jeśli nie prosiłeś o ten e-mail, skontaktuj się z administratorem strony.
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
-        <target>wewnętrzny plik</target>
+        <target>Wewnętrzny plik</target>
       </trans-unit>
       <trans-unit id="tl_module.external">
         <source>External URL</source>
-        <target>zewnętrzny URL</target>
+        <target>Zewnętrzny URL</target>
       </trans-unit>
       <trans-unit id="tl_module.close_deactivate">
         <source>Deactivate account</source>

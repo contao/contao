@@ -319,6 +319,18 @@ class StringUtilTest extends TestCase
             ['number' => 6],
             'This is my ',
         ];
+
+        yield 'Test unknown token is treated as null (match)' => [
+            'This is my {if foo===null}match{endif}',
+            ['value' => 1],
+            'This is my match',
+        ];
+
+        yield 'Test unknown token is treated as null (no match)' => [
+            'This is my {if foo!="bar"}match{endif}',
+            ['value' => 1],
+            'This is my match',
+        ];
     }
 
     /**
@@ -498,6 +510,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
         $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
     }
 
     public function testFailsIfThePathIsOutsideTheRootDirectory(): void
@@ -526,6 +539,15 @@ class StringUtilTest extends TestCase
         $this->expectException('InvalidArgumentException');
 
         StringUtil::stripRootDir($this->getFixturesDir());
+    }
+
+    public function testHandlesFalseyValuesWhenDecodingEntities(): void
+    {
+        $this->assertSame('0', StringUtil::decodeEntities(0));
+        $this->assertSame('0', StringUtil::decodeEntities('0'));
+        $this->assertSame('', StringUtil::decodeEntities(''));
+        $this->assertSame('', StringUtil::decodeEntities(false));
+        $this->assertSame('', StringUtil::decodeEntities(null));
     }
 
     /**

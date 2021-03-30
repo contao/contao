@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\ResponseException;
 use Patchwork\Utf8;
 
 /**
@@ -34,7 +35,10 @@ class ModulePersonalData extends Module
 	 */
 	public function generate()
 	{
-		if (TL_MODE == 'BE')
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
@@ -49,12 +53,12 @@ class ModulePersonalData extends Module
 		$this->editable = StringUtil::deserialize($this->editable);
 
 		// Return if there are not editable fields or if there is no logged in user
-		if (empty($this->editable) || !\is_array($this->editable) || !FE_USER_LOGGED_IN)
+		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
 		}
 
-		if ($this->memberTpl != '')
+		if ($this->memberTpl)
 		{
 			$this->strTemplate = $this->memberTpl;
 		}
@@ -201,7 +205,7 @@ class ModulePersonalData extends Module
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof FormPassword)
 			{
-				if ($objMember->password != '')
+				if ($objMember->password)
 				{
 					$objWidget->mandatory = false;
 				}
@@ -232,7 +236,7 @@ class ModulePersonalData extends Module
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
 				{
 					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
 				}
@@ -253,6 +257,10 @@ class ModulePersonalData extends Module
 							{
 								$varValue = $callback($varValue, $this->User, $this);
 							}
+						}
+						catch (ResponseException $e)
+						{
+							throw $e;
 						}
 						catch (\Exception $e)
 						{

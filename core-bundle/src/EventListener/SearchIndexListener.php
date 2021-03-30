@@ -71,7 +71,26 @@ class SearchIndexListener
             return;
         }
 
-        $document = Document::createFromRequestResponse($request, $event->getResponse());
+        $response = $event->getResponse();
+
+        // Do not index if the X-Robots-Tag header contains "noindex"
+        if (false !== strpos($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return;
+        }
+
+        $document = Document::createFromRequestResponse($request, $response);
+
+        try {
+            $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
+
+            // Do not index if the meta robots tag contains "noindex"
+            if (false !== strpos($robots, 'noindex')) {
+                return;
+            }
+        } catch (\Exception $e) {
+            // No meta robots tag found
+        }
+
         $lds = $document->extractJsonLdScripts();
 
         // If there are no json ld scripts at all, this should not be handled by our indexer

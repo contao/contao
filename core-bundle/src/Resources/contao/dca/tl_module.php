@@ -233,10 +233,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options_callback' => static function (Contao\DataContainer $dc)
-			{
-				return Contao\Controller::getTemplateGroup('mod_' . $dc->activeRecord->type . '_', array(), 'mod_' . $dc->activeRecord->type);
-			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -786,7 +782,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getActivationDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
 			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['emailText']) ? $GLOBALS['TL_LANG']['tl_module']['emailText'][1] : $GLOBALS['TL_LANG']['tl_module']['emailText']);
 		}
@@ -803,7 +799,7 @@ class tl_module extends Contao\Backend
 	 */
 	public function getPasswordDefault($varValue)
 	{
-		if (!trim($varValue))
+		if (trim($varValue) === '')
 		{
 			$varValue = (is_array($GLOBALS['TL_LANG']['tl_module']['passwordText']) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : $GLOBALS['TL_LANG']['tl_module']['passwordText']);
 		}

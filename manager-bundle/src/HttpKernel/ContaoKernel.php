@@ -22,6 +22,7 @@ use Contao\ManagerPlugin\Bundle\Parser\IniParser;
 use Contao\ManagerPlugin\Bundle\Parser\JsonParser;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\HttpKernel\HttpCacheSubscriberPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use ProxyManager\Configuration;
@@ -212,7 +213,18 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             return $this->httpCache;
         }
 
-        return $this->httpCache = new ContaoCache($this, $this->getProjectDir().'/var/cache/prod/http_cache');
+        $this->httpCache = new ContaoCache($this, $this->getProjectDir().'/var/cache/prod/http_cache');
+
+        /** @var array<HttpCacheSubscriberPluginInterface> $plugins */
+        $plugins = $this->getPluginLoader()->getInstancesOf(HttpCacheSubscriberPluginInterface::class);
+
+        foreach ($plugins as $plugin) {
+            foreach ($plugin->getHttpCacheSubscribers() as $subscriber) {
+                $this->httpCache->addSubscriber($subscriber);
+            }
+        }
+
+        return $this->httpCache;
     }
 
     /**
@@ -251,7 +263,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $jwtManager = new JwtManager($projectDir);
             $jwt = $jwtManager->parseRequest($request);
 
-            if (\is_array($jwt) && $jwt['debug'] ?? false) {
+            if (\is_array($jwt) && ($jwt['debug'] ?? false)) {
                 $env = 'dev';
             }
 
@@ -358,7 +370,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private static function create(string $projectDir, string $env = null): self
     {
         if (null === $env) {
-            $env = (string) ($_SERVER['APP_ENV'] ?? 'prod');
+            $env = $_SERVER['APP_ENV'] ?? 'prod';
         }
 
         if ('dev' !== $env && 'prod' !== $env) {
@@ -377,11 +389,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
-        // Do not load .env files if they are already loaded or actual env variables are used
-        if (isset($_SERVER['APP_ENV'])) {
-            return;
-        }
-
         // Load cached env vars if the .env.local.php file exists
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
         if (\is_array($env = @include $projectDir.'/.env.local.php')) {

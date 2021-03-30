@@ -33,7 +33,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findByPk' => $newsModel]),
-            News::class => $this->mockConfiguredAdapter(['generateNewsUrl' => 'news/james-wilson-returns.html']),
+            News::class => $this->mockConfiguredAdapter(['generateNewsUrl' => 'http://localhost/news/james-wilson-returns.html']),
         ];
 
         $framework = $this->mockContaoFramework($adapters);

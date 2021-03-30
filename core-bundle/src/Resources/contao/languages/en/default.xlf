@@ -140,6 +140,9 @@
       <trans-unit id="ERR.aliasExists">
         <source>The alias "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.aliasNumeric">
+        <source>Numeric aliases are not supported!</source>
+      </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder "%s" cannot be imported!</source>
       </trans-unit>
@@ -1999,6 +2002,9 @@
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+      </trans-unit>
+      <trans-unit id="MSC.unknownOption">
+        <source>Unknown option</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

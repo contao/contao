@@ -75,7 +75,13 @@ you can submit your pull request directly from within your application.
 
 ## Running scripts
 
-You can use Composer to run the code quality scripts:
+First install the code quality tools:
+
+```bash
+composer bin all update
+```
+
+Then run the code quality scripts via Composer:
 
 ```bash
 composer run all

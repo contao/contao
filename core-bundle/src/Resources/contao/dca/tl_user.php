@@ -523,7 +523,7 @@ class tl_user extends Contao\Backend
 										  ->limit(1)
 										  ->execute(Contao\Input::get('id'));
 
-				if ($objUser->admin && Contao\Input::get('act') != '')
+				if ($objUser->admin && Contao\Input::get('act'))
 				{
 					throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to ' . Contao\Input::get('act') . ' administrator account ID ' . Contao\Input::get('id') . '.');
 				}
@@ -614,9 +614,7 @@ class tl_user extends Contao\Backend
 	public function addIcon($row, $label, Contao\DataContainer $dc, $args)
 	{
 		$image = $row['admin'] ? 'admin' : 'user';
-		$time = Contao\Date::floorToMinute();
-
-		$disabled = ($row['start'] !== '' && $row['start'] > $time) || ($row['stop'] !== '' && $row['stop'] < $time);
+		$disabled = ($row['start'] !== '' && $row['start'] > time()) || ($row['stop'] !== '' && $row['stop'] <= time());
 
 		if ($row['useTwoFactor'])
 		{
@@ -863,9 +861,9 @@ class tl_user extends Contao\Backend
 	 */
 	public function checkAdminStatus($varValue, Contao\DataContainer $dc)
 	{
-		if ($varValue == '' && $this->User->id == $dc->id)
+		if (!$varValue && $this->User->id == $dc->id)
 		{
-			$varValue = 1;
+			$varValue = '1';
 		}
 
 		return $varValue;
@@ -1021,17 +1019,19 @@ class tl_user extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_user WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid user ID ' . $intId . '.');
+		}
+
 		// Get the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_user WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_user', $intId);
@@ -1087,5 +1087,10 @@ class tl_user extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

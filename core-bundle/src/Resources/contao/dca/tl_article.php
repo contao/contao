@@ -539,9 +539,8 @@ class tl_article extends Contao\Backend
 	public function addIcon($row, $label)
 	{
 		$image = 'articles';
-		$time = Contao\Date::floorToMinute();
 
-		$unpublished = ($row['start'] != '' && $row['start'] > $time) || ($row['stop'] != '' && $row['stop'] < $time);
+		$unpublished = ($row['start'] && $row['start'] > time()) || ($row['stop'] && $row['stop'] <= time());
 
 		if ($unpublished || !$row['published'])
 		{
@@ -574,9 +573,13 @@ class tl_article extends Contao\Backend
 		};
 
 		// Generate an alias if there is none
-		if ($varValue == '')
+		if (!$varValue)
 		{
 			$varValue = Contao\System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, $dc->activeRecord->pid, $aliasExists);
+		}
+		elseif (preg_match('/^[1-9]\d*$/', $varValue))
+		{
+			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasNumeric'], $varValue));
 		}
 		elseif ($aliasExists($varValue))
 		{
@@ -940,17 +943,19 @@ class tl_article extends Contao\Backend
 			throw new Contao\CoreBundle\Exception\AccessDeniedException('Not enough permissions to publish/unpublish article ID "' . $intId . '".');
 		}
 
+		$objRow = $this->Database->prepare("SELECT * FROM tl_article WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new Contao\CoreBundle\Exception\AccessDeniedException('Invalid article ID "' . $intId . '".');
+		}
+
 		// Set the current record
 		if ($dc)
 		{
-			$objRow = $this->Database->prepare("SELECT * FROM tl_article WHERE id=?")
-									 ->limit(1)
-									 ->execute($intId);
-
-			if ($objRow->numRows)
-			{
-				$dc->activeRecord = $objRow;
-			}
+			$dc->activeRecord = $objRow;
 		}
 
 		$objVersions = new Contao\Versions('tl_article', $intId);
@@ -1003,5 +1008,10 @@ class tl_article extends Contao\Backend
 		}
 
 		$objVersions->create();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

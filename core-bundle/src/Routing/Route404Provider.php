@@ -56,17 +56,24 @@ class Route404Provider implements RouteProviderInterface
 
     public function getRouteByName($name): Route
     {
-        throw new RouteNotFoundException('This router cannot load routes by name');
+        $routes = $this->getRoutes();
+
+        if (!isset($routes[$name])) {
+            throw new RouteNotFoundException('Route name "'.$name.'" is not supported by '.__METHOD__);
+        }
+
+        return $routes[$name];
     }
 
     public function getRoutesByNames($names): array
     {
-        // Support console and web inspector profiling
+        $routes = $this->getRoutes();
+
         if (null === $names) {
-            return $this->getRoutes();
+            return $routes;
         }
 
-        return [];
+        return array_intersect_key($routes, array_flip($names));
     }
 
     private function getRoutes(array $languages = null): array

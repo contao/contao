@@ -66,6 +66,11 @@ abstract class System
 	protected static $objContainer;
 
 	/**
+	 * @var array|null
+	 */
+	private static $removedServiceIds;
+
+	/**
 	 * Cache
 	 * @var array
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
@@ -175,25 +180,42 @@ abstract class System
 			{
 				$this->arrObjects[$strKey] = $strClass;
 			}
-			elseif (isset(static::$arrSingletons[$strKey]))
+			elseif (isset(static::$arrSingletons[$strClass]))
 			{
-				$this->arrObjects[$strKey] = static::$arrSingletons[$strKey];
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass];
 			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				$this->arrObjects[$strKey] = $container->get($strClass);
 			}
-			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
+				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::import() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = $this->arrObjects[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				$this->arrObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
-				$this->arrObjects[$strKey] = new $strClass();
+				try
+				{
+					$this->arrObjects[$strKey] = new $strClass();
+				}
+				catch (\Throwable $t)
+				{
+					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
+					{
+						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+					}
+
+					throw $t;
+				}
 			}
 		}
 	}
@@ -231,25 +253,63 @@ abstract class System
 			{
 				static::$arrStaticObjects[$strKey] = $strClass;
 			}
+			elseif (isset(static::$arrSingletons[$strClass]))
+			{
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass];
+			}
 			elseif ($container->has($strClass) && (strpos($strClass, '\\') !== false || !class_exists($strClass)))
 			{
 				static::$arrStaticObjects[$strKey] = $container->get($strClass);
 			}
-			elseif ($container instanceof Container && isset($container->getRemovedIds()[$strClass]))
+			elseif (($container->getParameter('kernel.debug') || !class_exists($strClass)) && self::isServiceInlined($strClass))
 			{
+				// In debug mode, we check for inlined services before trying to create a new instance of the class
 				throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+			}
+			elseif (!class_exists($strClass))
+			{
+				throw new \RuntimeException('System::importStatic() failed because class "' . $strClass . '" is not a valid class name or does not exist.');
 			}
 			elseif (\in_array('getInstance', get_class_methods($strClass)))
 			{
-				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strKey] = \call_user_func(array($strClass, 'getInstance'));
+				static::$arrStaticObjects[$strKey] = static::$arrSingletons[$strClass] = \call_user_func(array($strClass, 'getInstance'));
 			}
 			else
 			{
-				static::$arrStaticObjects[$strKey] = new $strClass();
+				try
+				{
+					static::$arrStaticObjects[$strKey] = new $strClass();
+				}
+				catch (\Throwable $t)
+				{
+					if (!$container->getParameter('kernel.debug') && self::isServiceInlined($strClass))
+					{
+						throw new ServiceNotFoundException($strClass, null, null, array(), sprintf('The "%s" service or alias has been removed or inlined when the container was compiled. You should either make it public, or stop using the container directly and use dependency injection instead.', $strClass));
+					}
+
+					throw $t;
+				}
 			}
 		}
 
 		return static::$arrStaticObjects[$strKey];
+	}
+
+	private static function isServiceInlined($strClass)
+	{
+		$container = static::getContainer();
+
+		if (!$container instanceof Container)
+		{
+			return false;
+		}
+
+		if (null === self::$removedServiceIds)
+		{
+			self::$removedServiceIds = $container->getRemovedIds();
+		}
+
+		return isset(self::$removedServiceIds[$strClass]);
 	}
 
 	/**
@@ -308,54 +368,57 @@ abstract class System
 		$ref = Input::get('ref');
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
+		$return = null;
 
-		// Unique referer ID
-		if ($ref && isset($session[$ref]))
+		if (null !== $session)
 		{
-			$session = $session[$ref];
-		}
-		elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
-		{
-			$session = end($session);
-		}
-
-		// Use a specific referer
-		if ($strTable != '' && isset($session[$strTable]) && Input::get('act') != 'select')
-		{
-			$session['current'] = $session[$strTable];
-		}
-
-		// Remove parameters helper
-		$cleanUrl = static function ($url, $params=array('rt', 'ref'))
-		{
-			if ($url == '' || strpos($url, '?') === false)
+			// Unique referer ID
+			if ($ref && isset($session[$ref]))
 			{
-				return $url;
+				$session = $session[$ref];
+			}
+			elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
+			{
+				$session = end($session);
 			}
 
-			list($path, $query) = explode('?', $url, 2);
+			// Use a specific referer
+			if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
+			{
+				$session['current'] = $session[$strTable];
+			}
 
-			/** @var Query $queryObj */
-			$queryObj = new Query($query);
-			$queryObj = $queryObj->withoutPairs($params);
+			// Remove parameters helper
+			$cleanUrl = static function ($url, $params = array('rt', 'ref'))
+			{
+				if (!$url || strpos($url, '?') === false)
+				{
+					return $url;
+				}
 
-			return $path . $queryObj->getUriComponent();
-		};
+				list($path, $query) = explode('?', $url, 2);
 
-		// Determine current or last
-		$strUrl = ($cleanUrl($session['current']) != $cleanUrl(Environment::get('request'))) ? $session['current'] : $session['last'];
+				$queryObj = new Query($query);
+				$queryObj = $queryObj->withoutPairs($params);
 
-		// Remove the "toggle" and "toggle all" parameters
-		$return = $cleanUrl($strUrl, array('tg', 'ptg'));
+				return $path . $queryObj->getUriComponent();
+			};
+
+			// Determine current or last
+			$strUrl = ($cleanUrl($session['current']) != $cleanUrl(Environment::get('request'))) ? $session['current'] : $session['last'];
+
+			// Remove the "toggle" and "toggle all" parameters
+			$return = $cleanUrl($strUrl, array('tg', 'ptg'));
+		}
 
 		// Fallback to the generic referer in the front end
-		if ($return == '' && \defined('TL_MODE') && TL_MODE == 'FE')
+		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
 		{
 			$return = Environment::get('httpReferer');
 		}
 
 		// Fallback to the current URL if there is no referer
-		if ($return == '')
+		if (!$return)
 		{
 			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
 		}
@@ -379,7 +442,7 @@ abstract class System
 		}
 
 		// Fall back to English
-		if ($strLanguage == '')
+		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
 		}
@@ -654,19 +717,29 @@ abstract class System
 	/**
 	 * Set a cookie
 	 *
-	 * @param string  $strName     The cookie name
-	 * @param mixed   $varValue    The cookie value
-	 * @param integer $intExpires  The expiration date
-	 * @param string  $strPath     An optional path
-	 * @param string  $strDomain   An optional domain name
-	 * @param boolean $blnSecure   If true, the secure flag will be set
-	 * @param boolean $blnHttpOnly If true, the http-only flag will be set
+	 * @param string       $strName     The cookie name
+	 * @param mixed        $varValue    The cookie value
+	 * @param integer      $intExpires  The expiration date
+	 * @param string|null  $strPath     An optional path
+	 * @param string|null  $strDomain   An optional domain name
+	 * @param boolean|null $blnSecure   If true, the secure flag will be set
+	 * @param boolean      $blnHttpOnly If true, the http-only flag will be set
 	 */
-	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=false, $blnHttpOnly=false)
+	public static function setCookie($strName, $varValue, $intExpires, $strPath=null, $strDomain=null, $blnSecure=null, $blnHttpOnly=false)
 	{
-		if ($strPath == '')
+		if (!$strPath)
 		{
 			$strPath = Environment::get('path') ?: '/'; // see #4390
+		}
+
+		if ($blnSecure === null)
+		{
+			$blnSecure = false;
+
+			if ($request = static::getContainer()->get('request_stack')->getCurrentRequest())
+			{
+				$blnSecure = $request->isSecure();
+			}
 		}
 
 		$objCookie = new \stdClass();

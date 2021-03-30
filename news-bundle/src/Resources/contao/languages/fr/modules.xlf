@@ -14,8 +14,8 @@
         <target>Flux RSS d'actualités</target>
       </trans-unit>
       <trans-unit id="MOD.tl_news">
-        <source>Articles</source>
-        <target>Articles</target>
+        <source>Items</source>
+        <target>Éléments</target>
       </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>

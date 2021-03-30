@@ -75,6 +75,17 @@ Request.Contao = new Class(
 		}
 
 		this.onSuccess(json.content, json);
+	},
+
+	failure: function() {
+		var url = this.getHeader('X-Ajax-Location');
+
+		if (url && this.options.followRedirects && this.status >= 300 && this.status < 400) {
+			location.replace(url);
+			return;
+		}
+
+		this.onFailure();
 	}
 });
 
@@ -394,7 +405,8 @@ Contao.SerpPreview = new Class(
 		titleFallbackField: null,
 		aliasField: null,
 		descriptionField: null,
-		descriptionFallbackField: null
+		descriptionFallbackField: null,
+		titleTag: null
 	},
 
 	shorten: function(str, max) {
@@ -425,13 +437,14 @@ Contao.SerpPreview = new Class(
 			aliasField = $(this.options.aliasField),
 			descriptionField = $(this.options.descriptionField),
 			descriptionFallbackField = $(this.options.descriptionFallbackField),
-			indexEmpty = this.options.trail.indexOf('›') === -1;
+			indexEmpty = this.options.trail.indexOf('›') === -1,
+			titleTag = this.options.titleTag || '%s';
 
 		titleField && titleField.addEvent('input', function() {
 			if (titleField.value) {
-				serpTitle.set('text', this.shorten(titleField.value, 64));
+				serpTitle.set('text', this.shorten(titleTag.replace(/\%s/, titleField.value), 64));
 			} else if (titleFallbackField && titleFallbackField.value) {
-				serpTitle.set('text', this.shorten(this.html2string(titleFallbackField.value), 64));
+				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/\%s/, titleFallbackField.value)), 64));
 			} else {
 				serpTitle.set('text', '');
 			}
@@ -439,7 +452,7 @@ Contao.SerpPreview = new Class(
 
 		titleFallbackField && titleFallbackField.addEvent('input', function() {
 			if (titleField && titleField.value) return;
-			serpTitle.set('text', this.shorten(this.html2string(titleFallbackField.value), 64));
+			serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/\%s/, titleFallbackField.value)), 64));
 		}.bind(this));
 
 		aliasField && aliasField.addEvent('input', function() {

@@ -40,7 +40,7 @@ class ContentGallery extends ContentElement
 	public function generate()
 	{
 		// Use the home directory of the current user as file source
-		if ($this->useHomeDir && FE_USER_LOGGED_IN)
+		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
 
@@ -178,7 +178,7 @@ class ContentGallery extends ContentElement
 				// no break
 
 			case 'custom':
-				if ($this->orderSRC != '')
+				if ($this->orderSRC)
 				{
 					$tmp = StringUtil::deserialize($this->orderSRC);
 
@@ -315,8 +315,10 @@ class ContentGallery extends ContentElement
 			++$rowcount;
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		// Always use the default template in the back end
-		if (TL_MODE == 'BE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$this->galleryTpl = '';
 		}

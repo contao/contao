@@ -338,7 +338,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function testOverridesTheErrorLevel(): void
@@ -438,7 +438,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->initialize();
 
-        $this->addToAssertionCount(1);  // does not throw an exception
+        $this->addToAssertionCount(1); // does not throw an exception
     }
 
     public function getInstallRoutes(): \Generator
@@ -496,7 +496,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAnObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacyClass::class;
@@ -508,7 +507,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreateASingeltonObjectInstance(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
 
         $class = LegacySingletonClass::class;
@@ -520,7 +518,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAdaptersForLegacyClasses(): void
     {
-        /** @var ContaoFramework $framework */
         $framework = $this->mockFramework();
         $adapter = $framework->getAdapter(LegacyClass::class);
 

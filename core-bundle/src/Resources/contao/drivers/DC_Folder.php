@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
+use Doctrine\DBAL\Exception\DriverException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Response;
@@ -128,7 +129,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Check whether the table is defined
-		if ($strTable == '' || !isset($GLOBALS['TL_DCA'][$strTable]))
+		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
 			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
@@ -312,82 +313,85 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$for = $session['search'][$this->strTable]['value'];
 
 		// Limit the results by modifying $this->arrFilemounts
-		if ($for != '')
+		if ((string) $for !== '')
 		{
-			// Wrap in a try catch block in case the regular expression is invalid (see #7743)
 			try
 			{
-				$strPattern = "CAST(name AS CHAR) REGEXP ?";
-
-				if (substr(Config::get('dbCollation'), -3) == '_ci')
-				{
-					$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-				}
-
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
-				{
-					list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
-
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
-											  ->execute($for, $for);
-				}
-				else
-				{
-					$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-											  ->execute($for);
-				}
-
-				if ($objRoot->numRows < 1)
-				{
-					$this->arrFilemounts = array();
-				}
-				else
-				{
-					$arrRoot = array();
-
-					// Respect existing limitations (root IDs)
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']))
-					{
-						while ($objRoot->next())
-						{
-							foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
-							{
-								if (strncmp($root . '/', $objRoot->path . '/', \strlen($root) + 1) === 0)
-								{
-									if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-									{
-										$arrFound[] = $objRoot->path;
-									}
-
-									$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-									continue 2;
-								}
-							}
-						}
-					}
-					else
-					{
-						while ($objRoot->next())
-						{
-							if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
-							{
-								$arrFound[] = $objRoot->path;
-							}
-
-							$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
-						}
-					}
-
-					$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
-				}
+				$this->Database->prepare("SELECT '' REGEXP ?")->execute($for);
 			}
-			catch (\Exception $e)
+			catch (DriverException $exception)
 			{
+				// Quote search string if it is not a valid regular expression
+				$for = preg_quote($for);
+			}
+
+			$strPattern = "CAST(name AS CHAR) REGEXP ?";
+
+			if (substr(Config::get('dbCollation'), -3) == '_ci')
+			{
+				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+			}
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
+			{
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+
+				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
+										  ->execute($for, $for);
+			}
+			else
+			{
+				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+										  ->execute($for);
+			}
+
+			if ($objRoot->numRows < 1)
+			{
+				$this->arrFilemounts = array();
+			}
+			else
+			{
+				$arrRoot = array();
+
+				// Respect existing limitations (root IDs)
+				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']))
+				{
+					while ($objRoot->next())
+					{
+						foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] as $root)
+						{
+							if (strncmp($root . '/', $objRoot->path . '/', \strlen($root) + 1) === 0)
+							{
+								if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+								{
+									$arrFound[] = $objRoot->path;
+								}
+
+								$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+								continue 2;
+							}
+						}
+					}
+				}
+				else
+				{
+					while ($objRoot->next())
+					{
+						if ($objRoot->type == 'folder' || empty($this->arrValidFileTypes) || \in_array($objRoot->extension, $this->arrValidFileTypes))
+						{
+							$arrFound[] = $objRoot->path;
+						}
+
+						$arrRoot[] = ($objRoot->type == 'folder') ? $objRoot->path : \dirname($objRoot->path);
+					}
+				}
+
+				$this->arrFilemounts = $this->eliminateNestedPaths(array_unique($arrRoot));
 			}
 		}
 
 		// Call recursive function tree()
-		if ($for != '' && empty($this->arrFilemounts))
+		if ((string) $for !== '' && empty($this->arrFilemounts))
 		{
 			// Show an empty tree if there are no search results
 		}
@@ -399,7 +403,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			for ($i=0, $c=\count($this->arrFilemounts); $i<$c; $i++)
 			{
-				if ($this->arrFilemounts[$i] != '' && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
+				if ($this->arrFilemounts[$i] && is_dir($this->strRootDir . '/' . $this->arrFilemounts[$i]))
 				{
 					$return .= $this->generateTree($this->strRootDir . '/' . $this->arrFilemounts[$i], 0, true, $this->isProtectedPath($this->arrFilemounts[$i]), ($blnClipboard ? $arrClipboard : false), $arrFound);
 				}
@@ -423,7 +427,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
 
-		if ($session['search'][$this->strTable]['value'] != '')
+		if ((string) $for !== '')
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['searchExclude']);
 		}
@@ -459,7 +463,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <div id="paste_hint" data-add-to-scroll-offset="20">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
-<div class="tl_listing_container tree_view" id="tl_listing">' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] ?? '') . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
+<div class="tl_listing_container tree_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['breadcrumb'] ?? '') . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
@@ -600,7 +604,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
-		if ($strFolder == '' || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
+		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
@@ -1313,7 +1317,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
+				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
 				{
 					$objVersions->restore(Input::post('version'));
 					$this->reload();
@@ -1374,7 +1378,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						$objFile = is_dir($this->strRootDir . '/' . $this->intId) ? new Folder($this->intId) : new File($this->intId);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = ($objFile->origext != '') ? '.' . $objFile->origext : '';
+						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
@@ -1687,7 +1691,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						$objFile = is_dir($this->strRootDir . '/' . $id) ? new Folder($id) : new File($id);
 
 						$this->strPath = StringUtil::stripRootDir($objFile->dirname);
-						$this->strExtension = ($objFile->origext != '') ? '.' . $objFile->origext : '';
+						$this->strExtension = $objFile->origext ? '.' . $objFile->origext : '';
 						$this->varValue = $objFile->filename;
 
 						// Fix hidden Unix system files
@@ -1972,7 +1976,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version') != '')
+				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
 				{
 					$objVersions->restore(Input::post('version'));
 
@@ -2305,7 +2309,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Make sure unique fields are unique
-			if ($varValue != '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if ((string) $varValue !== '' && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2369,16 +2373,16 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Save the value if there was no error
-			if (($varValue != '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue != $varValue || $arrData['eval']['alwaysSave']))
+			if (((string) $varValue !== '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue != $varValue || $arrData['eval']['alwaysSave']))
 			{
 				// If the field is a fallback field, empty all other columns
-				if ($varValue != '' && $arrData['eval']['fallback'])
+				if ($varValue && $arrData['eval']['fallback'])
 				{
 					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
 				}
 
 				// Set the correct empty value (see #6284, #6373)
-				if ($varValue === '')
+				if ((string) $varValue === '')
 				{
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']);
 				}
@@ -2869,29 +2873,26 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		{
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
-			// Make sure the regular expression is valid
-			if ($strKeyword)
-			{
-				try
-				{
-					$this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE name REGEXP ?")
-								   ->limit(1)
-								   ->execute($strKeyword);
-				}
-				catch (\Exception $e)
-				{
-					$strKeyword = '';
-				}
-			}
-
 			$session['search'][$this->strTable]['value'] = $strKeyword;
 
 			$objSessionBag->replace($session);
 		}
 
 		// Set the search value from the session
-		elseif ($session['search'][$this->strTable]['value'] != '')
+		elseif ((string) $session['search'][$this->strTable]['value'] !== '')
 		{
+			$searchValue = $session['search'][$this->strTable]['value'];
+
+			try
+			{
+				$this->Database->prepare("SELECT '' REGEXP ?")->execute($searchValue);
+			}
+			catch (DriverException $exception)
+			{
+				// Quote search string if it is not a valid regular expression
+				$searchValue = preg_quote($searchValue);
+			}
+
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";
 
 			if (substr(Config::get('dbCollation'), -3) == '_ci')
@@ -2903,17 +2904,17 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
 				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
-				$this->values[] = $session['search'][$this->strTable]['value'];
+				$this->values[] = $searchValue;
 			}
 			else
 			{
 				$this->procedure[] = $strPattern;
 			}
 
-			$this->values[] = $session['search'][$this->strTable]['value'];
+			$this->values[] = $searchValue;
 		}
 
-		$active = isset($session['search'][$this->strTable]['value']) && $session['search'][$this->strTable]['value'] != '';
+		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		return '
     <div class="tl_search tl_subpanel">
@@ -2935,7 +2936,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 */
 	protected function isMounted($strFolder)
 	{
-		if ($strFolder == '')
+		if (!$strFolder)
 		{
 			return false;
 		}
