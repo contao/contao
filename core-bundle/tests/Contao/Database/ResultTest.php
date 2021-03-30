@@ -181,6 +181,7 @@ class ResultTest extends TestCase
 
     /**
      * @param array<array<string,string>> $data
+     *
      * @return array<Result|object>
      */
     private function createResults(array $data): array
