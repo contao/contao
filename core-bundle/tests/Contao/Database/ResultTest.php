@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao\Database;
 
 use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
+use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\ForwardCompatibility\Result as ForwardCompatibilityResult;
 use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\Error\Warning;
@@ -155,6 +156,21 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->field);
             $this->assertNull($result->{'0'});
         }
+    }
+
+    public function testResultStatementInterface(): void
+    {
+        $resultStatement = $this->createMock(ResultStatement::class);
+        $resultStatement
+            ->expects($this->exactly(3))
+            ->method('fetch')
+            ->with(\PDO::FETCH_ASSOC)
+            ->willReturnOnConsecutiveCalls(['field' => 'value1'], ['field' => 'value2'], false)
+        ;
+
+        $result = new Result($resultStatement, 'SELECT * FROM test');
+
+        $this->assertSame(2, $result->count());
     }
 
     /**

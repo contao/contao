@@ -10,7 +10,10 @@
 
 namespace Contao\Database;
 
-use Doctrine\DBAL\Driver\ResultStatement as DoctrineStatement;
+use Doctrine\DBAL\Driver\Result as DoctrineDriverResult;
+use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
+use Doctrine\DBAL\Result as DoctrineResult;
 
 /**
  * Lazy load the result set rows
@@ -37,7 +40,7 @@ class Result
 {
 	/**
 	 * Database result
-	 * @var DoctrineStatement
+	 * @var ResultStatement
 	 */
 	protected $resResult;
 
@@ -74,12 +77,12 @@ class Result
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param DoctrineStatement|array $statement The database statement
-	 * @param string                  $strQuery  The query string
+	 * @param ResultStatement|array $statement The database statement
+	 * @param string                $strQuery  The query string
 	 */
 	public function __construct($statement, $strQuery)
 	{
-		if ($statement instanceof DoctrineStatement)
+		if ($statement instanceof ResultStatement)
 		{
 			$this->resResult = $statement;
 		}
@@ -363,7 +366,13 @@ class Result
 	{
 		if ($this->rowCount === null)
 		{
-			$this->rowCount = $this->resResult->rowCount();
+			if (
+				$this->resResult instanceof DoctrineStatement
+				|| $this->resResult instanceof DoctrineResult
+				|| $this->resResult instanceof DoctrineDriverResult
+			) {
+				$this->rowCount = $this->resResult->rowCount();
+			}
 
 			// rowCount() might incorrectly return 0 for some platforms
 			if ($this->rowCount < 1)
@@ -427,8 +436,15 @@ class Result
 	private function preload($index)
 	{
 		// Optimize memory usage for single row results
-		if ($index === 0 && $this->resResult && $this->resResult->rowCount() === 1)
-		{
+		if (
+			$index === 0
+			&& (
+				$this->resResult instanceof DoctrineStatement
+				|| $this->resResult instanceof DoctrineResult
+				|| $this->resResult instanceof DoctrineDriverResult
+			)
+			&& $this->resResult->rowCount() === 1
+		) {
 			++$index;
 		}
 
