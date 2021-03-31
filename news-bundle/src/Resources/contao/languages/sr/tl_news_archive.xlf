@@ -70,11 +70,12 @@
         <target>Захтевај пријављивање ради коментарисања</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Дозволи само аутентификованим корисницима да пишу коментаре.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Дозволи само пријављеним корисницима да пишу коментаре.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Искључи заштиту од спама</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -138,6 +139,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
+        <target>Управљај приказивачем вести</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
@@ -145,15 +147,19 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Креирај нову архиву вести</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Прикажи детаље архиве вести  ID%s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Уреди архиву вести %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Уреди подешавања архиве вести ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -161,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Копирај архиву вести  ID </target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Обриши архиву вести ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Прикажи коментаре архиве вести ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Preusmeri uporabnika nazaj na zadnjo obiskano stran namesto na preusmeritveno stran.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -90,12 +91,14 @@
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
+        <target>Favicon</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
+        <target>Poljubna vsebina datoteke robots.txt</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>

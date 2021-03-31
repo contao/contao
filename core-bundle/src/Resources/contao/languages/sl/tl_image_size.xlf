@@ -68,6 +68,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.formats.1">
         <source>Here you can select which image formats shall be converted.</source>
+        <target>Tu lahko nastavite, kateri formati slik bodo pretvorjeni.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formatsWebpNotSupported">
         <source>WEBP is not supported on your server.</source>
@@ -100,6 +101,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.source_legend">
         <source>Image source settings</source>
+        <target>Nastavitve slikovnega vira</target>
       </trans-unit>
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>

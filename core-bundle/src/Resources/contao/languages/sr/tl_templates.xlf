@@ -59,9 +59,11 @@
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.0">
         <source>Paste into the root folder</source>
+        <target>Налепи у root фолдер</target>
       </trans-unit>
       <trans-unit id="tl_templates.pasteinto.1">
         <source>Paste into folder &quot;%s&quot;</source>
+        <target>Налепи у фолдер &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_templates.compare">
         <source>Compare &quot;%s&quot; with another template</source>
