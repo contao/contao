@@ -1179,8 +1179,16 @@ abstract class DataContainer extends Backend
 			{
 				$panel = '';
 
+				// The limit menu depends on other panels that may set a filter query, e.g. search and filter.
+				// In order to correctly calculate the total row count, the limit menu must be compiled last.
+				// We isnert a placeholder here and compile the limit menu after all other panels.
+				if ($strSubPanel == 'limit')
+				{
+					// Set placeholder to inject compiled limit menu later
+					$panel = '###limit_menu###';
+				}
 				// Regular panels
-				if ($strSubPanel == 'search' || $strSubPanel == 'limit' || $strSubPanel == 'sort')
+				elseif ($strSubPanel == 'search' || $strSubPanel == 'sort')
 				{
 					$panel = $this->{$strSubPanel . 'Menu'}();
 				}
@@ -1224,6 +1232,16 @@ abstract class DataContainer extends Backend
 		if (empty($arrPanels))
 		{
 			return '';
+		}
+
+		// Compile limit menu if placeholder is present
+		foreach ($arrPanels as $key => $strPanel) {
+			if (strpos('###limit_menu###', $strPanel) === false) {
+				continue;
+			}
+
+			$limitPanel = $this->limitMenu();
+			$arrPanels[$key] = str_replace('###limit_menu###', $limitPanel, $strPanel);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
