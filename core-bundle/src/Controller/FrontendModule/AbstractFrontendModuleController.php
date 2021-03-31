@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model /* , string $section, array $classes = null */): Response
     {
         if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
@@ -31,9 +31,21 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $type = $this->getType();
         $template = $this->createTemplate($model, 'mod_'.$type);
 
+        $classes = func_num_args() > 3 ? func_get_arg(3) : $request->attributes->get('classes');
+        $templateProps = $request->attributes->get('templateProps', []);
+
         $this->addHeadlineToTemplate($template, $model->headline);
         $this->addCssAttributesToTemplate($template, 'mod_'.$type, $model->cssID, $classes);
-        $this->addSectionToTemplate($template, $section);
+        $this->addPropertiesToTemplate($template, $templateProps);
+
+        if (func_num_args() > 2) {
+            @trigger_error('Passing $section and $classes to '.__METHOD__.' is deprecated since Contao 4.9.14.', E_USER_DEPRECATED);
+
+            if (!empty($section = func_get_arg(2))) {
+                $this->addSectionToTemplate($template, $section);
+            }
+        }
+
         $this->tagResponse(['contao.db.tl_module.'.$model->id]);
 
         $response = $this->getResponse($template, $model, $request);
