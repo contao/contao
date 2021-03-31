@@ -21,12 +21,18 @@ class FrontendModuleReference extends FragmentReference
     public const GLOBALS_KEY = 'FE_MOD';
     public const PROXY_CLASS = ModuleProxy::class;
 
-    public function __construct(ModuleModel $model, string $section = 'main')
+    public function __construct(ModuleModel $model, /* array */ $templateProps = ['section' => 'main'])
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
+        if (!\is_array($templateProps)) {
+            @trigger_error('The second argument to '.__METHOD__.' must be an array of template properties since Contao 4.9.14');
+
+            $templateProps = ['section' => (string) $templateProps];
+        }
+
         $this->attributes['moduleModel'] = $model->id;
-        $this->attributes['section'] = $section;
+        $this->attributes['templateProps'] = $templateProps;
         $this->attributes['classes'] = $model->classes;
     }
 }

@@ -20,10 +20,13 @@ use Contao\Model\Collection;
  */
 class ContentProxy extends ContentElement
 {
+	/**
+	 * @var ContentElementReference
+	 */
 	private $reference;
 
 	/**
-	 * @param ContentElement|Collection $objElement
+	 * @param ContentModel|Collection $objElement
 	 */
 	public function __construct($objElement, $strColumn = 'main')
 	{
@@ -31,19 +34,13 @@ class ContentProxy extends ContentElement
 		{
 			$objElement = $objElement->current();
 		}
-		elseif (!$objElement instanceof Model)
+
+		if (!$objElement instanceof ContentModel)
 		{
-			throw new \RuntimeException('ContentProxy must be constructed with a model');
+			throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
 		}
 
 		$this->reference = new ContentElementReference($objElement, ['section' => $strColumn]);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
-		{
-			$this->reference->setBackendScope();
-		}
-
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor
@@ -54,6 +51,13 @@ class ContentProxy extends ContentElement
 	 */
 	public function generate()
 	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$this->reference->setBackendScope();
+		}
+
 		return System::getContainer()->get('fragment.handler')->render($this->reference);
 	}
 

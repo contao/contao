@@ -26,7 +26,7 @@ class ContentElementReference extends FragmentReference
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
         if (!\is_array($templateProps)) {
-            @trigger_error('The second argument to '.__METHOD__.' should be an array of template properties since Contao 4.9.14');
+            @trigger_error('The second argument to '.__METHOD__.' must be an array of template properties since Contao 4.9.14');
 
             $templateProps = ['section' => (string) $templateProps];
         }
