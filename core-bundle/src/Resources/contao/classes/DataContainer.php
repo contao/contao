@@ -1235,8 +1235,10 @@ abstract class DataContainer extends Backend
 		}
 
 		// Compile limit menu if placeholder is present
-		foreach ($arrPanels as $key => $strPanel) {
-			if (strpos('###limit_menu###', $strPanel) === false) {
+		foreach ($arrPanels as $key => $strPanel)
+		{
+			if (strpos('###limit_menu###', $strPanel) === false)
+			{
 				continue;
 			}
 
