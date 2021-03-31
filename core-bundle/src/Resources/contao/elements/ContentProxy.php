@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\Model\Collection;
 
 /**
  * Proxy for new content element fragments so they are accessible via $GLOBALS['TL_CTE'].
@@ -19,35 +20,56 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
  */
 class ContentProxy extends ContentElement
 {
+	private $reference;
+
 	/**
-	 * @var array
+	 * @param ContentElement|Collection $objElement
 	 */
-	private $fragmentAttributes = [];
+	public function __construct($objElement, $strColumn = 'main')
+	{
+		if ($objElement instanceof Collection)
+		{
+			$objElement = $objElement->current();
+		}
+		elseif (!$objElement instanceof Model)
+		{
+			throw new \RuntimeException('ContentProxy must be constructed with a model');
+		}
+
+		$this->reference = new ContentElementReference($objElement, ['section' => $strColumn]);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$this->reference->setBackendScope();
+		}
+
+		$this->strColumn = $strColumn;
+
+		// Do not call parent constructor
+	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function generate()
 	{
-		$reference = new ContentElementReference($this->objModel, $this->strColumn);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
-		{
-			$reference->setBackendScope();
-		}
-
-		foreach ($this->fragmentAttributes as $k => $v)
-		{
-			$reference->attributes[$k] = $v;
-		}
-
-		return System::getContainer()->get('fragment.handler')->render($reference);
+		return System::getContainer()->get('fragment.handler')->render($this->reference);
 	}
 
-	public function addFragmentAttributes(array $attributes)
+	public function __set($strKey, $varValue)
 	{
-		$this->fragmentAttributes = array_merge($this->fragmentAttributes, $attributes);
+		$this->reference->attributes['templateProps'][$strKey] = $varValue;
+	}
+
+	public function __get($strKey)
+	{
+		return $this->reference->attributes[$strKey]['templateProps'];
+	}
+
+	public function __isset($strKey)
+	{
+		return isset($this->reference->attributes['templateProps'][$strKey]);
 	}
 
 	/**

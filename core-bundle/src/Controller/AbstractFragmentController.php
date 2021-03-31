@@ -114,22 +114,27 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * @param string|array $cssID
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, array $classes = null, string $overrideCssID = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, $cssID, array $classes = null): void
     {
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));
-
-        if (!empty($overrideCssID)) {
-            $template->cssID = ' id="'.$overrideCssID.'"';
-        } else {
-            $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
-        }
+        $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
         if (!empty($classes)) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }
 
+    protected function addPropertiesToTemplate(Template $template, array $properties): void
+    {
+        foreach ($properties as $k => $v) {
+            $template->{$k} = $v;
+        }
+    }
+
+    /**
+     * @deprecated Deprecated since Contao 4.9.13. Use addPropertiesToTemplate instead.
+     */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
         $template->inColumn = $section;

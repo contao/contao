@@ -21,12 +21,18 @@ class ContentElementReference extends FragmentReference
     public const GLOBALS_KEY = 'TL_CTE';
     public const PROXY_CLASS = ContentProxy::class;
 
-    public function __construct(ContentModel $model, string $section = 'main')
+    public function __construct(ContentModel $model, /* array */ $templateProps = ['section' => 'main'])
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
+        if (!\is_array($templateProps)) {
+            @trigger_error('The second argument to '.__METHOD__.' should be an array of template properties since Contao 4.9.14');
+
+            $templateProps = ['section' => (string) $templateProps];
+        }
+
         $this->attributes['contentModel'] = $model->id;
-        $this->attributes['section'] = $section;
+        $this->attributes['templateProps'] = $templateProps;
         $this->attributes['classes'] = $model->classes;
     }
 }

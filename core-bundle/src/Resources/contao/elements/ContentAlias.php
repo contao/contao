@@ -50,7 +50,7 @@ class ContentAlias extends ContentElement
 
 			if (!empty($this->cssID[0]))
 			{
-				$proxy->addFragmentAttributes(['cssID' => $this->cssID[0]]);
+				$proxy->cssID = ' id="'.$this->cssID[0].'"';
 			}
 
 			return $proxy->generate();
