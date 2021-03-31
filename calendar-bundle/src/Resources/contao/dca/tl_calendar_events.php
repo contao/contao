@@ -426,7 +426,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'recurring' => array
 		(
 			'exclude'                 => true,
-			'search'                  => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
