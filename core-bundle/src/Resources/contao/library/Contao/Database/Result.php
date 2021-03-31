@@ -10,10 +10,7 @@
 
 namespace Contao\Database;
 
-use Doctrine\DBAL\Driver\Result as DoctrineDriverResult;
 use Doctrine\DBAL\Driver\ResultStatement;
-use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
-use Doctrine\DBAL\Result as DoctrineResult;
 
 /**
  * Lazy load the result set rows
@@ -366,11 +363,8 @@ class Result
 	{
 		if ($this->rowCount === null)
 		{
-			if (
-				$this->resResult instanceof DoctrineStatement
-				|| $this->resResult instanceof DoctrineResult
-				|| $this->resResult instanceof DoctrineDriverResult
-			) {
+			if (method_exists($this->resResult, 'rowCount'))
+			{
 				$this->rowCount = $this->resResult->rowCount();
 			}
 
@@ -438,11 +432,8 @@ class Result
 		// Optimize memory usage for single row results
 		if (
 			$index === 0
-			&& (
-				$this->resResult instanceof DoctrineStatement
-				|| $this->resResult instanceof DoctrineResult
-				|| $this->resResult instanceof DoctrineDriverResult
-			)
+			&& $this->resResult
+			&& method_exists($this->resResult, 'rowCount')
 			&& $this->resResult->rowCount() === 1
 		) {
 			++$index;
