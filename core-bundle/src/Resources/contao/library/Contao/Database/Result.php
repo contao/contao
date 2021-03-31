@@ -430,7 +430,8 @@ class Result
 	private function preload($index)
 	{
 		// Optimize memory usage for single row results
-		if ($index === 0 && $this->resResult && method_exists($this->resResult, 'rowCount') && $this->resResult->rowCount() === 1) {
+		if ($index === 0 && $this->resResult && method_exists($this->resResult, 'rowCount') && $this->resResult->rowCount() === 1)
+		{
 			++$index;
 		}
 
