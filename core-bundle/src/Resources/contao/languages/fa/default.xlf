@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>نام مستعار عددی پشتیبانی نمی‌شود!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -2574,6 +2575,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>به این دستگاه اعتماد کن</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2638,6 +2640,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option</source>
+        <target>انتخاب نامشخص</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

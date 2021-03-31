@@ -1881,6 +1881,7 @@
       </trans-unit>
       <trans-unit id="MSC.dashboard">
         <source>Dashboard</source>
+        <target>Nadzorna plošča</target>
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
@@ -2283,6 +2284,7 @@
       </trans-unit>
       <trans-unit id="MSC.first">
         <source>First</source>
+        <target>Prvi</target>
       </trans-unit>
       <trans-unit id="MSC.previous">
         <source>Previous</source>
@@ -2294,6 +2296,7 @@
       </trans-unit>
       <trans-unit id="MSC.last">
         <source>Last</source>
+        <target>Zadnji</target>
       </trans-unit>
       <trans-unit id="MSC.goToPage">
         <source>Go to page %s</source>
@@ -2522,6 +2525,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
+        <target>Prosimo, skenirajte kodo QR z vašo aplikacijo za 2FA/TOTP.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorActive">
         <source>Two-factor authentication has been enabled.</source>
@@ -2627,6 +2631,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option</source>
+        <target>Neznana možnost</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

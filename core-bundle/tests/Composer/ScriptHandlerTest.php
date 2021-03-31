@@ -22,6 +22,7 @@ use Contao\CoreBundle\Composer\ScriptHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ScriptHandlerTest extends TestCase
 {
@@ -49,7 +50,7 @@ class ScriptHandlerTest extends TestCase
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => $this->getFixturesDir().'/app/config/parameters.yml',
+                        'file' => Path::join($this->getFixturesDir(), 'app/config/parameters.yml'),
                     ],
                 ]
             )
@@ -62,20 +63,22 @@ class ScriptHandlerTest extends TestCase
     {
         $this->assertRandomSecretDoesNotExist();
 
-        $fs = new Filesystem();
-        $fs->touch($this->getFixturesDir().'/app/config/parameters.yml');
+        $parameterFile = Path::join($this->getTempDir(), 'parameters.yml');
+
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($parameterFile, '');
 
         $this->handler->generateRandomSecret(
             $this->getComposerEvent(
                 [
                     'incenteev-parameters' => [
-                        'file' => __DIR__.'/../Fixtures/app/config/parameters.yml',
+                        'file' => $parameterFile,
                     ],
                 ]
             )
         );
 
-        $fs->remove($this->getFixturesDir().'/app/config/parameters.yml');
+        $filesystem->remove($parameterFile);
 
         $this->assertRandomSecretDoesNotExist();
     }

@@ -269,7 +269,14 @@ class Picker extends Widget
 		}
 
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
-		$label = vsprintf($labelConfig['format'], array_intersect_key($arrRow, array_flip($labelConfig['fields'])));
+		$labelValues = array();
+
+		foreach ($labelConfig['fields'] as $field)
+		{
+			$labelValues[] = $arrRow[$field] ?? '';
+		}
+
+		$label = vsprintf($labelConfig['format'], $labelValues);
 
 		if (\is_array($labelConfig['label_callback']))
 		{

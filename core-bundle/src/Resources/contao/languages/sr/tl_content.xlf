@@ -391,12 +391,15 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select a gallery template.</source>
+        <target>Овде можете одабрати шаблон галерије.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
+        <target>Шаблон елемента садржаја</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>
+        <target>Овде можете одабрати шаблон елемента садржаја.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -488,9 +491,11 @@
       </trans-unit>
       <trans-unit id="tl_content.splashImage.0">
         <source>Use a splash image</source>
+        <target>Користи сплеш слику</target>
       </trans-unit>
       <trans-unit id="tl_content.splashImage.1">
         <source>Only load the video after the user has clicked on the splash image.</source>
+        <target>Учитај видео тек када корисник кликне на сплеш слику.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
@@ -618,6 +623,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ако желите да се елемент не приказује на сајту пре одређеног датума/времена, можете то унети овде. У супротном, оставите поље празним.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -625,6 +631,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ако желите да се елемент не приказује на сајту након одређеног датума/времена, можете то унети овде. У супротном, оставите поље празним.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -688,6 +695,7 @@
       </trans-unit>
       <trans-unit id="tl_content.splash_legend">
         <source>Splash image</source>
+        <target>Сплеш слика</target>
       </trans-unit>
       <trans-unit id="tl_content.expert_legend">
         <source>Expert settings</source>
@@ -810,8 +818,8 @@
         <target>Сакриј YouTube лого</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
-        <source>Do not show related videos at the end</source>
-        <target>Не приказуј повезане видео фајлове на крају</target>
+        <source>Limit related videos to the same channel</source>
+        <target>Видео фајлови морају да припадају истом каналу</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>
@@ -875,6 +883,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
+        <target>Сакриј/прикажи елемент садржаја  ID%s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -886,9 +895,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
+        <target>Креирај нови елемент на врху</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
+        <target>Креирај нови елемент након елемента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>

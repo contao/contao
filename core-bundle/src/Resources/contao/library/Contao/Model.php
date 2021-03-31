@@ -869,10 +869,10 @@ abstract class Model
 
 			if ($objMissing !== null)
 			{
-				while ($objMissing->next())
+				foreach ($objMissing as $objCurrent)
 				{
-					$intId = $objMissing->{static::$strPk};
-					$arrRegistered[$intId] = $objMissing->current();
+					$intId = $objCurrent->{static::$strPk};
+					$arrRegistered[$intId] = $objCurrent;
 				}
 			}
 		}

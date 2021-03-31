@@ -54,7 +54,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
 
-            if (0 === strpos($legacyPath, $projectDir.'/') || 0 === strpos($legacyPath, $projectDir.'\\')) {
+            if (Path::isBasePath($projectDir, $legacyPath)) {
                 $legacyPath = substr($legacyPath, \strlen($projectDir) + 1);
                 $this->legacyImage = new LegacyImage(new File($legacyPath));
                 $this->legacyImage->setTargetWidth($config->getWidth());
@@ -62,10 +62,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
                 $this->legacyImage->setResizeMode($config->getMode());
                 $this->legacyImage->setZoomLevel($config->getZoomLevel());
 
-                if (
-                    ($targetPath = $options->getTargetPath())
-                    && (0 === strpos($targetPath, $projectDir.'/') || 0 === strpos($targetPath, $projectDir.'\\'))
-                ) {
+                if (($targetPath = $options->getTargetPath()) && Path::isBasePath($projectDir, $targetPath)) {
                     $this->legacyImage->setTargetPath(substr($targetPath, \strlen($projectDir) + 1));
                 }
 

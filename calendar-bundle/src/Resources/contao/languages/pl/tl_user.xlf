@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="tl_user.calendarp.0">
         <source>Calendar permissions</source>
-        <target>Uprawnienia kalednarzy</target>
+        <target>Uprawnienia kalendarzy</target>
       </trans-unit>
       <trans-unit id="tl_user.calendarp.1">
         <source>Here you can define the calendar permissions.</source>

@@ -89,7 +89,7 @@ Kliknij tutaj, aby edytować lub odpowiedzieć na komentarz:
       </trans-unit>
       <trans-unit id="MSC.com_moderated">
         <source>This comment has to be published in the back end before it will appear on the website!</source>
-        <target>Ten komentarz musi zostać opublikowany w backendzie zanim pojawi się na stronie!</target>
+        <target>Ten komentarz musi zostać opublikowany w backendzie, zanim pojawi się na stronie!</target>
       </trans-unit>
       <trans-unit id="MSC.com_confirm">
         <source>Your comment has been added and is now pending for approval.</source>
@@ -196,9 +196,7 @@ Click here to cancel your subscription:
 </source>
         <target>Witaj %s,
 
-nowa odpowiedź na komentarz została dodana do subskrybowanej strony:
-
----
+została dodana nowa odpowiedź na komentarz na stronie, którą subskrybujesz:
 
 %s
 

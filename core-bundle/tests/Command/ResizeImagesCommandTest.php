@@ -23,22 +23,26 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ResizeImagesCommandTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'assets/images'));
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        $fs = new Filesystem();
-        $fs->remove($this->getFixturesDir().'/assets/images');
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
     }
 
     public function testExecutesWithoutPendingImages(): void
     {
-        $fs = new Filesystem();
-        $fs->mkdir($this->getFixturesDir().'/assets/images');
-
         $storage = $this->createMock(DeferredImageStorageInterface::class);
         $storage
             ->method('listPaths')
@@ -56,9 +60,6 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testResizesImages(): void
     {
-        $fs = new Filesystem();
-        $fs->mkdir($this->getFixturesDir().'/assets/images');
-
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
@@ -90,9 +91,6 @@ class ResizeImagesCommandTest extends TestCase
 
     public function testTimeLimit(): void
     {
-        $fs = new Filesystem();
-        $fs->mkdir($this->getFixturesDir().'/assets/images');
-
         $factory = $this->createMock(ImageFactoryInterface::class);
         $factory
             ->method('create')
@@ -143,7 +141,7 @@ class ResizeImagesCommandTest extends TestCase
         return new ResizeImagesCommand(
             $factory ?? $this->createMock(ImageFactoryInterface::class),
             $resizer ?? $this->createMock(DeferredResizerInterface::class),
-            $this->getFixturesDir().'/assets/images',
+            Path::join($this->getTempDir(), 'assets/images'),
             $storage ?? $this->createMock(DeferredImageStorageInterface::class)
         );
     }

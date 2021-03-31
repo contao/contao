@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_fields.1">
         <source>Please enter a comma separated list of the fields you want to list.</source>
-        <target>Wprowadź rozdzieloną przecinkami listę pól, którą chcesz wylistować.</target>
+        <target>Wprowadź rozdzieloną przecinkami listę pól, które chcesz wylistować.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_where.0">
         <source>Condition</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_search.1">
         <source>Here you can enter a comma seperated list of fields that you want to be searchable.</source>
-        <target>Wprowadź rozdzieloną przecinkami listę pól, które chcesz aby były przeszukiwane.</target>
+        <target>Wprowadź rozdzieloną przecinkami listę pól, które chcesz, aby były przeszukiwane.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_sort.0">
         <source>Order by</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_sort.1">
         <source>Here you can enter a comma seperated list of fields to sort the results by.</source>
-        <target>Wprowadź rozdzieloną przecinkami listę pól, które będą użyte do ustawienia domyślnej kolejności wyników. Dodaj &lt;em&gt;DESC&lt;/em&gt; po nazwie pola by uporządkować malejąco (np. &lt;em&gt;name, date DESC&lt;/em&gt;).</target>
+        <target>Wprowadź rozdzieloną przecinkami listę pól, które będą użyte do ustawienia domyślnej kolejności wyników. Dodaj &lt;em&gt;DESC&lt;/em&gt; po nazwie pola, aby uporządkować malejąco (np. &lt;em&gt;name, date DESC&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info.0">
         <source>Details page fields</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_info.1">
         <source>Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.</source>
-        <target>Wprowadź rozdzieloną przecinkami listę pól, które chcesz aby znajdowały się na stronie ze szczegółami. Pozostaw to pole puste aby wyłączyć funkcje strony ze szczegółami.</target>
+        <target>Wprowadź rozdzieloną przecinkami listę pól, które chcesz, aby znajdowały się na stronie ze szczegółami. Pozostaw to pole puste, aby wyłączyć funkcje strony ze szczegółami.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_where.0">
         <source>Details page condition</source>
@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_layout.1">
         <source>Here you can select a list template.</source>
-        <target>Tutaj możesz wybrać szablon listy.</target>
+        <target>Tutaj możesz wybrać szablon listy. Możesz dodać dowolny szablon do folderu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów zaczynają się od &lt;em&gt;list_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.0">
         <source>Details page template</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_info_layout.1">
         <source>Here you can select a details page template.</source>
-        <target>Tutaj możesz wybrać szablon strony szczegółów.</target>
+        <target>Tutaj możesz wybrać szablon strony szczegółów. Możesz dodać dowolny szablon do folderu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów zaczynają się od &lt;em&gt;info_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
     </body>
   </file>
