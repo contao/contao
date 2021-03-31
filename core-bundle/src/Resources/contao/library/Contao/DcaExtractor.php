@@ -423,7 +423,7 @@ class DcaExtractor extends Controller
 						$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
 					}
 
-					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id', 'load'=>'lazy', 'type'=>null), $config['relation']);
+					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
 
 					// Store the field delimiter if the related IDs are stored in CSV format (see #257)
 					if (isset($config['eval']['csv']))

@@ -45,9 +45,9 @@ class QueryBuilder
 			foreach ($objBase->getRelations() as $strKey=>$arrConfig)
 			{
 				// Automatically join the single-relation records
-				if ($arrConfig['load'] == 'eager' || ($arrOptions['eager'] ?? false))
+				if (($arrConfig['load'] ?? null) == 'eager' || ($arrOptions['eager'] ?? false))
 				{
-					if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
+					if (($arrConfig['type'] ?? null) == 'hasOne' || ($arrConfig['type'] ?? null) == 'belongsTo')
 					{
 						++$intCount;
 						$objRelated = DcaExtractor::getInstance($arrConfig['table']);
