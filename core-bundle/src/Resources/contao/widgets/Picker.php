@@ -284,9 +284,7 @@ class Picker extends Widget
 
 			if (\in_array($mode, array(5, 6)))
 			{
-				$isProtected = 'tl_page' === $dc->table && $arrRow['protected'];
-
-				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, $isProtected);
+				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
 			}
 
 			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
@@ -296,9 +294,7 @@ class Picker extends Widget
 		{
 			if (\in_array($mode, array(5, 6)))
 			{
-				$isProtected = 'tl_page' === $dc->table && $arrRow['protected'];
-
-				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, $isProtected);
+				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
 			}
 
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
