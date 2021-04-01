@@ -40,7 +40,7 @@ class ContentProxy extends ContentElement
 			throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
 		}
 
-		$this->reference = new ContentElementReference($objElement, ['section' => $strColumn]);
+		$this->reference = new ContentElementReference($objElement, $strColumn);
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor
