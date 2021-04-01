@@ -21,7 +21,7 @@ class FrontendModuleReference extends FragmentReference
     public const GLOBALS_KEY = 'FE_MOD';
     public const PROXY_CLASS = ModuleProxy::class;
 
-    public function __construct(ModuleModel $model, string $section, array  $templateProps = [])
+    public function __construct(ModuleModel $model, string $section, array $templateProps = [])
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
