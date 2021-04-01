@@ -94,6 +94,28 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame('alias', $pageModel->alias);
     }
 
+    public function testFindByPk(): void
+    {
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturn(new Result([['id' => '1', 'alias' => 'alias']], ''))
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $pageModel = PageModel::findByPk(1);
+
+        $this->assertSame('1', $pageModel->id);
+        $this->assertSame('alias', $pageModel->alias);
+    }
+
     public function testFindPublishedSubpagesWithoutGuestsByPid(): void
     {
         $databaseResultData = [
