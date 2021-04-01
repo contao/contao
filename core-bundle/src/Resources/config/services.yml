@@ -133,6 +133,16 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\InitializeController:
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '@event_dispatcher'
+            - '@http_kernel'
+            - '@kernel'
+        tags:
+            - controller.service_arguments
+
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController

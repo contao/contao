@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -144,42 +146,17 @@ class ModuleSearch extends Module
 				return;
 			}
 
-			$arrResult = null;
-			$strChecksum = md5($strKeywords . $strQueryType . $varRootId . $blnFuzzy);
 			$query_starttime = microtime(true);
-			$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-			$strCacheFile = $strCachePath . '/contao/search/' . $strChecksum . '.json';
 
-			// Load the cached result
-			if (file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strCacheFile))
+			try
 			{
-				$objFile = new File($strCacheFile);
-
-				if ($objFile->mtime > time() - 1800)
-				{
-					$arrResult = json_decode($objFile->getContent(), true);
-				}
-				else
-				{
-					$objFile->delete();
-				}
+				$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $this->minKeywordLength);
+				$arrResult = $objSearch->fetchAllAssoc();
 			}
-
-			// Cache the result
-			if ($arrResult === null)
+			catch (\Exception $e)
 			{
-				try
-				{
-					$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $this->minKeywordLength);
-					$arrResult = $objSearch->fetchAllAssoc();
-				}
-				catch (\Exception $e)
-				{
-					$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-					$arrResult = array();
-				}
-
-				File::putContent($strCacheFile, json_encode($arrResult));
+				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+				$arrResult = array();
 			}
 
 			$query_endtime = microtime(true);
@@ -187,26 +164,18 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (Config::get('indexProtected'))
 			{
-				$this->import(FrontendUser::class, 'User');
-				$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+				$user = null;
+
+				if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+				{
+					$user = FrontendUser::getInstance();
+				}
 
 				foreach ($arrResult as $k=>$v)
 				{
-					if ($v['protected'] ?? null)
+					if (($v['protected'] ?? null) && (!$user || !$user->isMemberOf(StringUtil::deserialize($v['groups'] ?? null))))
 					{
-						if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
-						{
-							unset($arrResult[$k]);
-						}
-						else
-						{
-							$groups = StringUtil::deserialize($v['groups']);
-
-							if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
-							{
-								unset($arrResult[$k]);
-							}
-						}
+						unset($arrResult[$k]);
 					}
 				}
 
@@ -321,11 +290,59 @@ class ModuleSearch extends Module
 					$objTemplate->hasContext = true;
 				}
 
+				$this->addImageToTemplateFromSearchResult($arrResult[$i], $objTemplate);
+
 				$this->Template->results .= $objTemplate->parse();
 			}
 
 			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));
 			$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
+		}
+	}
+
+	protected function addImageToTemplateFromSearchResult(array $result, Template $template): void
+	{
+		$template->hasImage = false;
+
+		if (!isset($result['meta']))
+		{
+			return;
+		}
+
+		$meta = json_decode($result['meta'], true);
+
+		foreach ($meta as $v)
+		{
+			if (!isset($v['https://schema.org/primaryImageOfPage']['contentUrl']))
+			{
+				continue;
+			}
+
+			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+
+			$figureMeta = new Metadata(array_filter(array(
+				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,
+				Metadata::VALUE_TITLE => $v['https://schema.org/primaryImageOfPage']['name'] ?? null,
+				Metadata::VALUE_ALT => $v['https://schema.org/primaryImageOfPage']['alternateName'] ?? null,
+			)));
+
+			$figure = $figureBuilder
+				->setSize($this->imgSize)
+				->setMetadata($figureMeta)
+				->setLinkHref($result['url'])
+				->buildIfResourceExists();
+
+			if (null === $figure)
+			{
+				continue;
+			}
+
+			$template->hasImage = true;
+			$template->figure = $figure;
+			$template->image = (object) $figure->getLegacyTemplateData();
+
+			return;
 		}
 	}
 }

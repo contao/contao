@@ -60,6 +60,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.title">
         <source>Unable to generate front end URL</source>
+        <target>امکان ایجاد URL بخش کاربری نیست</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.matter">
         <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
@@ -76,6 +77,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
         <source>Requirement (Regex)</source>
+        <target>لازم (Regex)</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterDefault">
         <source>Default value</source>
@@ -83,6 +85,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
         <source>empty</source>
+        <target>خالی</target>
       </trans-unit>
     </body>
   </file>

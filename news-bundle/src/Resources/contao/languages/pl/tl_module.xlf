@@ -23,11 +23,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_jumpToCurrent.1">
         <source>Here you can define what to display if no period is selected.</source>
-        <target>Jeśli wybierzesz tą opcję, Contao automatycznie przeskoczy do archiwum aktualności obecnego miesiąca, gdy poszczególne archiwum zostało określone.</target>
+        <target>Jeśli wybierzesz tę opcję, Contao automatycznie przeskoczy do archiwum aktualności obecnego miesiąca, gdy poszczególne archiwum zostało określone.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.0">
         <source>News reader module</source>
-        <target>Moduł czytinka aktualności</target>
+        <target>Moduł czytnika aktualności</target>
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.1">
         <source>Automatically switch to the news reader if an item has been selected.</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_metaFields.1">
         <source>Here you can select the meta fields.</source>
-        <target>Wybierz pola, które chcesz by zawierały w aktualnościach nagłówek.</target>
+        <target>Wybierz pola, które mają zostać wyświetlone.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.0">
         <source>News template</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_template.1">
         <source>Here you can select a news template.</source>
-        <target>Tutaj możesz wybrać szablon aktualności.</target>
+        <target>Tutaj możesz wybrać szablon aktualności. Możesz dodać dowolny szablon do folderu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów zaczynają się od &lt;em&gt;news_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_showQuantity.1">
         <source>Show the number of news items of each month.</source>
-        <target>Jeśli wybierzesz tą opcję, liczba aktualności w miesiącu będzie wyświetlana w menu archiwum.</target>
+        <target>Jeśli wybierzesz tę opcję, ilość aktualności w miesiącu będzie wyświetlana w menu archiwum.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>

@@ -4,16 +4,7 @@
     <?php foreach ($row as $col): ?>
       <?php if ($col->addImage): ?>
         <li class="<?= $class ?> <?= $col->class ?>">
-          <figure class="image_container"<?php if ($col->margin): ?> style="<?= $col->margin ?>"<?php endif; ?>>
-            <?php if ($col->href): ?>
-              <a href="<?= $col->href ?>"<?= $col->attributes ?><?php if ($col->linkTitle): ?> title="<?= $col->linkTitle ?>"<?php endif; ?>><?php $this->insert('picture_default', $col->picture); ?></a>
-            <?php else: ?>
-              <?php $this->insert('picture_default', $col->picture); ?>
-            <?php endif; ?>
-            <?php if ($col->caption): ?>
-              <figcaption class="caption"><?= $col->caption ?></figcaption>
-            <?php endif; ?>
-          </figure>
+          <?php $this->insert('image', (array) $col); ?>
         </li>
       <?php endif; ?>
     <?php endforeach; ?>

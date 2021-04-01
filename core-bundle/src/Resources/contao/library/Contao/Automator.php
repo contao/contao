@@ -46,12 +46,6 @@ class Automator extends System
 		// Clear the index
 		$searchIndexer->clear();
 
-		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-
-		// Purge the cache folder
-		$objFolder = new Folder($strCachePath . '/contao/search');
-		$objFolder->purge();
-
 		// Add a log entry
 		$this->log('Purged the search tables', __METHOD__, TL_CRON);
 	}
@@ -194,9 +188,13 @@ class Automator extends System
 
 	/**
 	 * Purge the search cache
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
 	public function purgeSearchCache()
 	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Automator::purgeSearchCache()" has been deprecated and will no longer work in Contao 5.0.');
+
 		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
 		$objFolder = new Folder($strCacheDir . '/contao/search');

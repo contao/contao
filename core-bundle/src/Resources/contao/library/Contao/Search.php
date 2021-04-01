@@ -55,10 +55,11 @@ class Search
 		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
-		$arrSet['filesize'] = $arrData['filesize'];
+		$arrSet['filesize'] = $arrData['filesize'] ?? null;
 		$arrSet['groups'] = $arrData['groups'];
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
+		$arrSet['meta'] = json_encode((array) $arrData['meta']);
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
@@ -154,10 +155,12 @@ class Search
 			$arrData['description'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
+		$arrData['keywords'] = '';
+
 		// Get the keywords
 		if (preg_match('/<meta[^>]+name="keywords"[^>]+content="([^"]*)"[^>]*>/i', $strHead, $tags))
 		{
-			$arrData['keywords'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
+			$arrData['keywords'] .= trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($tags[1])));
 		}
 
 		// Read the title and alt attributes
@@ -175,7 +178,7 @@ class Search
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
-		$arrSet['checksum'] = md5($arrSet['text']);
+		$arrSet['checksum'] = md5($arrSet['text'] . $arrSet['meta']);
 
 		$blnIndexExists = $objDatabase
 			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
@@ -623,7 +626,15 @@ class Search
 		$strQuery .= ") variables, tl_search_term HAVING";
 
 		// Select all terms in the sub query that match any of the keywords or wildcards
-		$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
+		if ($arrAllKeywords)
+		{
+			$strQuery .= " match" . implode(" = 1 OR match", array_keys($arrAllKeywords)) . " = 1";
+		}
+		else
+		{
+			$strQuery .= " 0";
+		}
+
 		$strQuery .= ") matchedTerm JOIN tl_search_index ON tl_search_index.termId = matchedTerm.id";
 		$strQuery .= " GROUP BY tl_search_index.pid";
 

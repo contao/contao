@@ -74,6 +74,10 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		'vectorLength' => array
 		(
 			'sql'                     => "double NOT NULL default 0"
-		)
+		),
+		'meta' => array
+		(
+			'sql'                     => "mediumtext NULL"
+		),
 	)
 );

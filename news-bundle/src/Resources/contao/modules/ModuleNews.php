@@ -39,29 +39,23 @@ abstract class ModuleNews extends Module
 			return $arrArchives;
 		}
 
-		$this->import(FrontendUser::class, 'User');
 		$objArchive = NewsArchiveModel::findMultipleByIds($arrArchives);
 		$arrArchives = array();
 
 		if ($objArchive !== null)
 		{
-			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+			$user = null;
+
+			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$user = FrontendUser::getInstance();
+			}
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected)
+				if ($objArchive->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objArchive->groups))))
 				{
-					if (!$blnFeUserLoggedIn || !\is_array($this->User->groups))
-					{
-						continue;
-					}
-
-					$groups = StringUtil::deserialize($objArchive->groups);
-
-					if (empty($groups) || !\is_array($groups) || !\count(array_intersect($groups, $this->User->groups)))
-					{
-						continue;
-					}
+					continue;
 				}
 
 				$arrArchives[] = $objArchive->id;
@@ -154,12 +148,12 @@ abstract class ModuleNews extends Module
 		$arrMeta = $this->getMetaFields($objArticle);
 
 		// Add the meta information
-		$objTemplate->date = $arrMeta['date'];
+		$objTemplate->date = $arrMeta['date'] ?? null;
 		$objTemplate->hasMetaFields = !empty($arrMeta);
 		$objTemplate->numberOfComments = $arrMeta['ccount'] ?? null;
 		$objTemplate->commentCount = $arrMeta['comments'] ?? null;
 		$objTemplate->timestamp = $objArticle->date;
-		$objTemplate->author = $arrMeta['author'];
+		$objTemplate->author = $arrMeta['author'] ?? null;
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
 		$objTemplate->addImage = false;
 		$objTemplate->addBefore = false;
@@ -189,7 +183,7 @@ abstract class ModuleNews extends Module
 			$figure = $figureBuilder
 				->setSize($imgSize)
 				->setMetadata($objArticle->getOverwriteMetadata())
-				->enableLightbox($objArticle->fullsize)
+				->enableLightbox((bool) $objArticle->fullsize)
 				->build();
 
 			// Rebuild with link to news article if none is set

@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="18" resname="allow_cookies">
         <source>You have to allow cookies to use Contao.</source>
-        <target>Musisz zaakceptować cisteczka (cookies) aby używać Contao.</target>
+        <target>Musisz zaakceptować cisteczka (cookies), aby używać Contao.</target>
       </trans-unit>
       <trans-unit id="19" resname="login">
         <source>Login</source>
@@ -179,7 +179,7 @@
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>
-        <target>Import się nie powiódł! Czy baza danych jest aktualna a pliki szablonów kompatybilne z twoją wersją Conto?</target>
+        <target>Import się nie powiódł! Czy baza danych jest aktualna, a pliki szablonów kompatybilne z twoją wersją Contao?</target>
       </trans-unit>
       <trans-unit id="46" resname="import_empty_source">
         <source>Please choose a template file!</source>
@@ -259,7 +259,7 @@
       </trans-unit>
       <trans-unit id="65" resname="admin_error">
         <source>Please fill in all fields to create an admin user!</source>
-        <target>Prosimy wypełnić wszystkie pola aby utworzyć administratora!</target>
+        <target>Prosimy wypełnić wszystkie pola, aby utworzyć administratora!</target>
       </trans-unit>
       <trans-unit id="66" resname="congratulations">
         <source>Congratulations!</source>

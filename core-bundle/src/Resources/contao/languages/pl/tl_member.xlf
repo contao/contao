@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>
-        <target>Podgląd front end jako użytkownik ID %s</target>
+        <target>Podgląd serwisu jako użytkownik ID %s</target>
       </trans-unit>
     </body>
   </file>

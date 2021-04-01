@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
@@ -73,16 +72,14 @@ class FigureRenderer
             }
         }
 
-        try {
-            $figure = $this->buildFigure($configuration);
-        } catch (InvalidResourceException $e) {
+        if (null === ($figure = $this->buildFigure($configuration))) {
             return null;
         }
 
         return $this->renderTemplate($figure, $template);
     }
 
-    private function buildFigure(array $configuration): Figure
+    private function buildFigure(array $configuration): ?Figure
     {
         $figureBuilder = $this->studio->createFigureBuilder();
 
@@ -90,7 +87,7 @@ class FigureRenderer
             $this->propertyAccessor->setValue($figureBuilder, $property, $value);
         }
 
-        return $figureBuilder->build();
+        return $figureBuilder->buildIfResourceExists();
     }
 
     private function renderTemplate(Figure $figure, string $template): string

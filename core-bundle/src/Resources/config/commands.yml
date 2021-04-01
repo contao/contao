@@ -30,6 +30,11 @@ services:
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand
 
+    Contao\CoreBundle\Command\DebugPagesCommand:
+        arguments:
+            - '@contao.framework'
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
 

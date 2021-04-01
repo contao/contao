@@ -51,7 +51,7 @@ class ContentText extends ContentElement
 			$figureBuilder
 				->setSize($this->size)
 				->setMetadata($this->objModel->getOverwriteMetadata())
-				->enableLightbox($this->fullsize)
+				->enableLightbox((bool) $this->fullsize)
 				->build()
 				->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
 		}

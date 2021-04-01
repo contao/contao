@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_style.selector.1">
         <source>The selector defines to which element(s) the format definition applies.</source>
-        <target>Selektor definiuje do jakiego elementu HTML lub to jakiej grupy elementów stosuje się format definicji. Możesz wprowadzić jeden lub więcej - oddzielonych przecinkami - selektorów.</target>
+        <target>Selektor definiuje, do jakiego elementu HTML lub do jakiej grupy elementów stosuje się definicja formatu. Możesz wprowadzić jeden lub więcej - oddzielonych przecinkami - selektorów.</target>
       </trans-unit>
       <trans-unit id="tl_style.category.0">
         <source>Category</source>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_style.category.1">
         <source>Categories can be used to group format definitions in the back end.</source>
-        <target>Np. wybierasz &quot;nawigacja&quot; a system pokazuje ci tylko te klasy css, które obsługują nawigację.</target>
+        <target>Np. wybierasz &quot;nawigacja&quot;, a system pokazuje ci tylko te klasy css, które obsługują nawigację.</target>
       </trans-unit>
       <trans-unit id="tl_style.comment.0">
         <source>Comment</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_style.comment.1">
         <source>Here you can add a comment.</source>
-        <target>Komentarze będą pokazywane powyżej przekazaniu formatu definicji.</target>
+        <target>Komentarze będą pokazywane powyżej definicji formatu.</target>
       </trans-unit>
       <trans-unit id="tl_style.size.0">
         <source>Size</source>
@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_style.padding.1">
         <source>Here you can enter the top, right, bottom and left padding.</source>
-        <target>Wprowadź dopełnienie kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę. Dopełnienie to dystans pomiędzy zawartością elementu i jego obramowaniem.</target>
+        <target>Wprowadź dopełnienie kolejno od: góry, prawej strony, dołu, lewej strony; oraz wybierz jednostkę. Dopełnienie, to dystans pomiędzy zawartością elementu i jego obramowaniem.</target>
       </trans-unit>
       <trans-unit id="tl_style.align.0">
         <source>Element alignment</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_style.align.1">
         <source>To align an element, its left and right margin will be overwritten.</source>
-        <target>Podczas wyrównywania elementu jego ustawienia marginesów zostaną zmienione.</target>
+        <target>Podczas wyrównywania elementu, jego ustawienia marginesów zostaną zmienione.</target>
       </trans-unit>
       <trans-unit id="tl_style.verticalalign.0">
         <source>Vertical alignment</source>
@@ -211,7 +211,7 @@
       </trans-unit>
       <trans-unit id="tl_style.bgcolor.0">
         <source>Background color and opacity</source>
-        <target>Kolor tła</target>
+        <target>Kolor tła i przezroczystość</target>
       </trans-unit>
       <trans-unit id="tl_style.bgcolor.1">
         <source>Here you can enter a hexadecimal background color (e.g. ff0000 for red) and an optional opacity in percent (e.g. 75).</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_style.bordercollapse.1">
         <source>Here you can choose the border handling.</source>
-        <target>Określ czy obramowanie sąsiadujących komórek tabeli ma być wyświetlane jako jedno obramowanie czy jako dwa oddzielne.</target>
+        <target>Określ czy obramowanie sąsiadujących komórek tabeli ma być wyświetlane, jako jedno obramowanie czy jako dwa oddzielne.</target>
       </trans-unit>
       <trans-unit id="tl_style.borderspacing.0">
         <source>Border spacing</source>
@@ -343,7 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_style.fontfamily.1">
         <source>Here you can enter a comma separated list of font types.</source>
-        <target>Wporwadź typy czcionek oddzielone od siebie przecinkami (np. Arial,Helvetica). Użyj znaków cudzysłowia jeśli nazwa czcionki zawiera puste pola (spacje) i dostarcza co najmniej jednej ogólnej czcionki rodzinnej (font family), np. &lt;em&gt;sans-serif&lt;/em&gt;.</target>
+        <target>Wporwadź typy czcionek oddzielone od siebie przecinkami (np. Arial,Helvetica). Użyj znaków cudzysłowu, jeśli nazwa czcionki zawiera puste pola (spacje) i dostarcza co najmniej jedną ogólną rodzinę czcionek (font family), np. &lt;em&gt;sans-serif&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_style.fontsize.0">
         <source>Font size</source>
@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_style.align_legend">
         <source>Margin and alignment</source>
-        <target>margines i wyrównanie</target>
+        <target>Margines i wyrównanie</target>
       </trans-unit>
       <trans-unit id="tl_style.background_legend">
         <source>Background settings</source>

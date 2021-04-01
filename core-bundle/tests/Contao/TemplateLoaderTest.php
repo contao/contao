@@ -21,6 +21,7 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class TemplateLoaderTest extends TestCase
 {
@@ -30,8 +31,7 @@ class TemplateLoaderTest extends TestCase
     {
         parent::setUp();
 
-        $fs = new Filesystem();
-        $fs->mkdir($this->getFixturesDir().'/templates');
+        (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         $GLOBALS['TL_CTE'] = [
             'texts' => [
@@ -51,23 +51,23 @@ class TemplateLoaderTest extends TestCase
 
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getFixturesDir()));
+        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        $fs = new Filesystem();
-        $fs->remove($this->getFixturesDir().'/templates');
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
+
+        TemplateLoader::reset();
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD']);
     }
 
     public function testReturnsACustomTemplateInTemplates(): void
     {
-        $fs = new Filesystem();
-        $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');
+        (new Filesystem())->touch(Path::join($this->getTempDir(), 'templates/mod_article_custom.html5'));
 
         TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
 
@@ -85,10 +85,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        $fs->remove($this->getFixturesDir().'/templates/mod_article_custom.html5');
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsACustomTemplateInContaoTemplates(): void
@@ -110,8 +106,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsACustomTemplateInAnotherBundle(): void
@@ -133,8 +127,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsMultipleRootTemplatesWithTheSamePrefix(): void
@@ -158,15 +150,14 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('ctlg_view_')
         );
-
-        TemplateLoader::reset();
     }
 
     public function testReturnsATemplateGroup(): void
     {
-        $fs = new Filesystem();
-        $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');
-        $fs->touch($this->getFixturesDir().'/templates/mod_article_list_custom.html5');
+        (new Filesystem())->touch([
+            Path::join($this->getTempDir(), 'templates/mod_article_custom.html5'),
+            Path::join($this->getTempDir(), 'templates/mod_article_list_custom.html5'),
+        ]);
 
         TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
         TemplateLoader::addFile('mod_article_list', 'core-bundle/src/Resources/contao/templates/modules');
@@ -206,11 +197,6 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_list_')
         );
-
-        $fs->remove($this->getFixturesDir().'/templates/mod_article_custom.html5');
-        $fs->remove($this->getFixturesDir().'/templates/mod_article_list_custom.html5');
-
-        TemplateLoader::reset();
     }
 
     public function testSupportsAdditionalMappers(): void
@@ -248,9 +234,10 @@ class TemplateLoaderTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.9: Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.');
 
-        $fs = new Filesystem();
-        $fs->touch($this->getFixturesDir().'/templates/mod_article-custom.html5');
-        $fs->touch($this->getFixturesDir().'/templates/mod_article_custom.html5');
+        (new Filesystem())->touch([
+            Path::join($this->getTempDir(), '/templates/mod_article-custom.html5'),
+            Path::join($this->getTempDir(), '/templates/mod_article_custom.html5'),
+        ]);
 
         TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
 
@@ -270,10 +257,5 @@ class TemplateLoaderTest extends TestCase
             ],
             Controller::getTemplateGroup('mod_article_')
         );
-
-        $fs->remove($this->getFixturesDir().'/templates/mod_article-custom.html5');
-        $fs->remove($this->getFixturesDir().'/templates/mod_article_custom.html5');
-
-        TemplateLoader::reset();
     }
 }

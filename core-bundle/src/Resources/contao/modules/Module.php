@@ -236,10 +236,10 @@ abstract class Module extends Frontend
 		}
 
 		// Tag the module (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger') && !empty($tags = $this->getResponseCacheTags()))
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_module.' . $this->id));
+			$responseTagger->addTags($tags);
 		}
 
 		return $this->Template->parse();
@@ -249,6 +249,14 @@ abstract class Module extends Frontend
 	 * Compile the current element
 	 */
 	abstract protected function compile();
+
+	/**
+	 * Get a list of tags that should be applied to the response when calling generate().
+	 */
+	protected function getResponseCacheTags(): array
+	{
+		return array('contao.db.tl_module.' . $this->id);
+	}
 
 	/**
 	 * Recursively compile the navigation menu and return it as HTML string
@@ -271,13 +279,11 @@ abstract class Module extends Frontend
 		}
 
 		$items = array();
-		$groups = array();
+		$user = null;
 
-		// Get all groups of the current front end user
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-			$groups = $this->User->groups;
+			$user = FrontendUser::getInstance();
 		}
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
@@ -300,7 +306,6 @@ abstract class Module extends Frontend
 			}
 
 			$subitems = '';
-			$_groups = StringUtil::deserialize($objSubpage->groups);
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -309,7 +314,7 @@ abstract class Module extends Frontend
 			}
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || ($user && $user->isMemberOf(StringUtil::deserialize($objSubpage->groups))))
 			{
 				// Check whether there will be subpages
 				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))

@@ -23,6 +23,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class MigrateCommandTest extends TestCase
 {
@@ -68,7 +69,7 @@ class MigrateCommandTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.');
 
-        $runOnceFile = $this->getFixturesDir().'/runonceFile.php';
+        $runOnceFile = Path::join($this->getTempDir(), 'runonceFile.php');
 
         (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
 
@@ -87,6 +88,7 @@ class MigrateCommandTest extends TestCase
         $this->assertSame(0, $code);
         $this->assertRegExp('/runonceFile.php/', $display);
         $this->assertRegExp('/All migrations completed/', $display);
+        $this->assertFileNotExists($runOnceFile, 'File should be gone once executed');
     }
 
     public function testExecutesSchemaDiff(): void
@@ -221,7 +223,7 @@ class MigrateCommandTest extends TestCase
         return new MigrateCommand(
             $migrations,
             $fileLocator,
-            $this->getFixturesDir(),
+            $this->getTempDir(),
             $this->createMock(ContaoFramework::class),
             $installer ?? $this->createMock(Installer::class)
         );

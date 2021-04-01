@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
-use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -101,7 +100,7 @@ class FigureRendererTest extends TestCase
 
         $figureBuilder = $this->createMock(FigureBuilder::class);
         $figureBuilder
-            ->method('build')
+            ->method('buildIfResourceExists')
             ->willReturn(new Figure($image))
         ;
 
@@ -153,9 +152,8 @@ class FigureRendererTest extends TestCase
     {
         $figureBuilder = $this->createMock(FigureBuilder::class);
         $figureBuilder
-            ->method('from')
-            ->with('invalid-resource')
-            ->willThrowException(new InvalidResourceException())
+            ->method('buildIfResourceExists')
+            ->willReturn(null)
         ;
 
         $studio = $this->createMock(Studio::class);
@@ -176,7 +174,7 @@ class FigureRendererTest extends TestCase
 
         $figureBuilder = $this->createMock(FigureBuilder::class);
         $figureBuilder
-            ->method('build')
+            ->method('buildIfResourceExists')
             ->willReturn($figure)
         ;
 

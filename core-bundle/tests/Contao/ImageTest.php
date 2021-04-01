@@ -29,45 +29,49 @@ use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
-        $fs = new Filesystem();
-        $fs->mkdir(static::getTempDir().'/assets');
-        $fs->mkdir(static::getTempDir().'/assets/images');
+        $filesystem = new Filesystem();
+
+        $filesystem->copy(
+            Path::join((new self())->getFixturesDir(), 'images/dummy.jpg'),
+            Path::join(self::getTempDir(), 'dummy.jpg')
+        );
 
         foreach ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'] as $subdir) {
-            $fs->mkdir(static::getTempDir().'/assets/images/'.$subdir);
+            $filesystem->mkdir(Path::join(self::getTempDir(), 'assets/images', (string) $subdir));
         }
 
-        $fs->mkdir(static::getTempDir().'/system');
-        $fs->mkdir(static::getTempDir().'/system/tmp');
+        $filesystem->mkdir(Path::join(static::getTempDir(), 'system/tmp'));
     }
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->filesystem = new Filesystem();
-        $this->filesystem->copy(__DIR__.'/../Fixtures/images/dummy.jpg', $this->getTempDir().'/dummy.jpg');
+        System::setContainer($this->getContainerWithImageServices());
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
+    }
 
-        System::setContainer($this->getContainerWithImageServices());
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+
+        unset($GLOBALS['TL_CONFIG']);
     }
 
     /**
@@ -1130,8 +1134,8 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        $this->filesystem->dumpFile(
-            $this->getTempDir().'/dummy1.svg',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'dummy1.svg'),
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1174,8 +1178,8 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        $this->filesystem->dumpFile(
-            $this->getTempDir().'/dummy2.svg',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'dummy2.svg'),
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1218,8 +1222,8 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        $this->filesystem->dumpFile(
-            $this->getTempDir().'/dummy3.svg',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'dummy3.svg'),
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1260,8 +1264,8 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        $this->filesystem->dumpFile(
-            $this->getTempDir().'/dummy4.svg',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'dummy4.svg'),
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1303,8 +1307,8 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        $this->filesystem->dumpFile(
-            $this->getTempDir().'/dummy5.svg',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'dummy5.svg'),
             '<?xml version="1.0" encoding="utf-8"?>
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
             <svg
@@ -1331,8 +1335,8 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        $this->filesystem->dumpFile(
-            $this->getTempDir().'/dummy.svgz',
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'dummy.svgz'),
             gzencode(
                 '<?xml version="1.0" encoding="utf-8"?>
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -1404,7 +1408,7 @@ class ImageTest extends TestCase
         $imageObj = new Image($file);
         $imageObj->setTargetWidth($file->width)->setTargetHeight($file->height);
 
-        $this->filesystem->dumpFile($this->getTempDir().'/target.jpg', '');
+        (new Filesystem())->dumpFile(Path::join($this->getTempDir(), 'target.jpg'), '');
 
         $imageObj->setTargetPath('target.jpg');
         $imageObj->executeResize();
@@ -1430,8 +1434,7 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        $fs = new Filesystem();
-        $fs->dumpFile(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
+        (new Filesystem())->dumpFile(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), '');
 
         return $path;
     }
@@ -1453,7 +1456,10 @@ class ImageTest extends TestCase
         /** @var DeferredImageInterface $deferredImage */
         $deferredImage = System::getContainer()
             ->get('contao.image.image_factory')
-            ->create(System::getContainer()->getParameter('kernel.project_dir').'/'.$imageObj->getResizedPath())
+            ->create(Path::join(
+                System::getContainer()->getParameter('kernel.project_dir'),
+                $imageObj->getResizedPath()
+            ))
         ;
 
         System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
@@ -1508,8 +1514,7 @@ class ImageTest extends TestCase
             .'_'.str_replace('\\', '-', \get_class($imageObj))
             .'.jpg';
 
-        $fs = new Filesystem();
-        $fs->dumpFile(System::getContainer()->getParameter('kernel.project_dir').'/'.$path, '');
+        (new Filesystem())->dumpFile(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), '');
 
         return $path;
     }
@@ -1542,8 +1547,8 @@ class ImageTest extends TestCase
     private function getContainerWithImageServices(): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->setParameter('contao.image.target_dir', $this->getTempDir().'/assets/images');
-        $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $container->setParameter('contao.image.target_dir', Path::join($this->getTempDir(), 'assets/images'));
+        $container->setParameter('contao.web_dir', Path::join($this->getTempDir(), 'web'));
 
         $framework = $this->mockContaoFramework([
             FilesModel::class => $this->createMock(Adapter::class),
@@ -1561,7 +1566,7 @@ class ImageTest extends TestCase
             $container->getParameter('contao.image.bypass_cache'),
             $container->getParameter('contao.image.imagine_options'),
             $container->getParameter('contao.image.valid_extensions'),
-            $container->getParameter('kernel.project_dir').'/'.$container->getParameter('contao.upload_path')
+            Path::join($container->getParameter('kernel.project_dir'), $container->getParameter('contao.upload_path'))
         );
 
         $container->set('contao.image.resizer', $resizer);

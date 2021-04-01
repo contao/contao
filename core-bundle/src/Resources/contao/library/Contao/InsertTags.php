@@ -170,7 +170,7 @@ class InsertTags extends Controller
 
 				// Accessibility tags
 				case 'lang':
-					if (!$elements[1])
+					if (empty($elements[1]))
 					{
 						$arrCache[$strTag] = '</span>';
 					}
@@ -189,7 +189,7 @@ class InsertTags extends Controller
 				case 'email':
 				case 'email_open':
 				case 'email_url':
-					if (!$elements[1])
+					if (empty($elements[1]))
 					{
 						$arrCache[$strTag] = '';
 						break;
@@ -742,7 +742,7 @@ class InsertTags extends Controller
 				case 'ua':
 					$ua = Environment::get('agent');
 
-					if ($elements[1])
+					if (!empty($elements[1]))
 					{
 						$arrCache[$strTag] = $ua->{$elements[1]};
 					}
@@ -755,7 +755,7 @@ class InsertTags extends Controller
 				// Abbreviations
 				case 'abbr':
 				case 'acronym':
-					if ($elements[1])
+					if (!empty($elements[1]))
 					{
 						$arrCache[$strTag] = '<abbr title="' . StringUtil::specialchars($elements[1]) . '">';
 					}

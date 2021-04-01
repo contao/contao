@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_noSpan.1">
         <source>Show events only once even if they span multiple days.</source>
-        <target>Pokaż wydarzenia tylko raz nawet jeśli są to wydarzenia wielodniowe.</target>
+        <target>Pokaż wydarzenia tylko raz, nawet jeśli są to wydarzenia wielodniowe.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_hideRunning.0">
         <source>Hide running events</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_ignoreDynamic.1">
         <source>Do not switch the time period based on the date/month/year URL parameters.</source>
-        <target>Nie zmieniaj okresu czasu na podstawie parametrów URL date/month/year.</target>
+        <target>Nie zmieniaj przedziału czasu na podstawie parametrów URL date/month/year.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_order.0">
         <source>Sort order</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_limit.1">
         <source>Here you can limit the number of events. Enter 0 to show all.</source>
-        <target>Tu możesz ustalić ilość wydarzeń. Jeśli wpiszesz 0 zostaną pokazane wszystkie wydarzenia.</target>
+        <target>Tu możesz ustalić ilość wydarzeń. Jeśli wpiszesz 0, zostaną pokazane wszystkie wydarzenia.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_template.0">
         <source>Event template</source>
@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select an event template.</source>
-        <target>Tutaj możesz wybrać szablon wydarzenia.</target>
+        <target>Wybierz szablon wydarzeń. Możesz dodać własne szablony wydarzeń do katalogu &lt;em&gt;templates&lt;/em&gt;. Pliki szablonów wydarzeń muszą zaczynać się od &lt;em&gt;event_&lt;/em&gt; i muszą mieć rozszerzenie &lt;em&gt;.html5&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
