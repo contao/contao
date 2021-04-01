@@ -132,9 +132,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.9.13. Use addPropertiesToTemplate instead.
-     */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
         $template->inColumn = $section;

@@ -20,26 +20,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractContentElementController extends AbstractFragmentController
 {
-    public function __invoke(Request $request, ContentModel $model /* , string $section, array $classes = null */): Response
+    public function __invoke(Request $request, ContentModel $model , string $section, array $classes = null): Response
     {
         $type = $this->getType();
         $template = $this->createTemplate($model, 'ce_'.$type);
 
-        $classes = func_num_args() > 3 ? func_get_arg(3) : $request->attributes->get('classes');
-        $templateProps = $request->attributes->get('templateProps', []);
-
         $this->addHeadlineToTemplate($template, $model->headline);
         $this->addCssAttributesToTemplate($template, 'ce_'.$type, $model->cssID, $classes);
-        $this->addPropertiesToTemplate($template, $templateProps);
-
-        if (func_num_args() > 2) {
-            @trigger_error('Passing $section and $classes to '.__METHOD__.' is deprecated since Contao 4.9.14.', E_USER_DEPRECATED);
-
-            if (!empty($section = func_get_arg(2))) {
-                $this->addSectionToTemplate($template, $section);
-            }
-        }
-
+        $this->addPropertiesToTemplate($template, $request->attributes->get('templateProps', []));
+        $this->addSectionToTemplate($template, $section);
         $this->tagResponse(['contao.db.tl_content.'.$model->id]);
 
         $response = $this->getResponse($template, $model, $request);
