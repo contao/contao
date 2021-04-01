@@ -1242,8 +1242,7 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			$limitPanel = $this->limitMenu();
-			$arrPanels[$key] = str_replace('###limit_menu###', $limitPanel, $strPanel);
+			$arrPanels[$key] = str_replace('###limit_menu###', $this->limitMenu(), $strPanel);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
