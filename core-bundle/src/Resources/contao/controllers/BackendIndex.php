@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\BackendTheme\BackendThemes;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
@@ -104,9 +103,7 @@ class BackendIndex extends Backend
 			$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		}
 
-		$themeName = Config::get('backendTheme') ?: Backend::getTheme();
-
-		$objTemplate->theme = $themeName;
+		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->messages = Message::generate();
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
@@ -124,14 +121,6 @@ class BackendIndex extends Backend
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
 		$objTemplate->REQUEST_TOKEN = REQUEST_TOKEN;
-
-		$backendThemes = $container->get(BackendThemes::class);
-
-		if ('flexible' !== $themeName && null === $theme = $backendThemes->getTheme($themeName))
-		{
-			// Legacy theme detected.
-			return $objTemplate->getResponse();
-		}
 
 		$twig = $container->get('twig');
 

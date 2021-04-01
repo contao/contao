@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\BackendTheme\BackendThemes;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
@@ -239,9 +238,7 @@ class BackendMain extends Backend
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
-		$themeName = Config::get('backendTheme') ?: Backend::getTheme();
-
-		$this->Template->theme = $themeName;
+		$this->Template->theme = Backend::getTheme();
 		$this->Template->base = Environment::get('base');
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
 		$this->Template->title = StringUtil::specialchars(strip_tags($this->Template->title));
@@ -258,14 +255,6 @@ class BackendMain extends Backend
 
 		$this->Template->localeString = $this->Template->getLocaleString();
 		$this->Template->dateString = $this->Template->getDateString();
-
-		$backendThemes = $container->get(BackendThemes::class);
-
-		if ('flexible' !== $themeName && null === $theme = $backendThemes->getTheme($themeName))
-		{
-			// Legacy theme detected.
-			return $this->Template->getResponse();
-		}
 
 		return $this->Template->getResponse()->setContent(
 			$twig->render('@ContaoCore/Backend/Layout/main.html.twig', $this->Template->getData())

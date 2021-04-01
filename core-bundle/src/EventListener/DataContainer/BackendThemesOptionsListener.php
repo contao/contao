@@ -37,7 +37,6 @@ class BackendThemesOptionsListener
     public function options(DataContainer $dc): array
     {
         $themes = $this->backendThemes->getThemeNames();
-        $themes = array_merge($themes, array_values(Backend::getThemes()));
 
         return array_combine($themes, $themes);
     }
