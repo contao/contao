@@ -1181,7 +1181,7 @@ abstract class DataContainer extends Backend
 
 				// The limit menu depends on other panels that may set a filter query, e.g. search and filter.
 				// In order to correctly calculate the total row count, the limit menu must be compiled last.
-				// We isnert a placeholder here and compile the limit menu after all other panels.
+				// We insert a placeholder here and compile the limit menu after all other panels.
 				if ($strSubPanel == 'limit')
 				{
 					// Set placeholder to inject compiled limit menu later
