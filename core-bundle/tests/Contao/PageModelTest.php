@@ -104,6 +104,7 @@ class PageModelTest extends ContaoTestCase
 
         $database = $this->createMock(Database::class);
         $database
+            ->expects($this->once())
             ->method('prepare')
             ->willReturn($statement)
         ;
@@ -132,6 +133,7 @@ class PageModelTest extends ContaoTestCase
 
         $database = $this->createMock(Database::class);
         $database
+            ->expects($this->once())
             ->method('prepare')
             ->willReturn($statement)
         ;
@@ -141,7 +143,7 @@ class PageModelTest extends ContaoTestCase
         $pages = PageModel::findPublishedSubpagesWithoutGuestsByPid(1);
 
         $this->assertInstanceOf(Collection::class, $pages);
-        $this->assertSame(3, $pages->count());
+        $this->assertCount(3, $pages);
 
         $this->assertSame($databaseResultData[0]['id'], $pages->offsetGet(0)->id);
         $this->assertSame($databaseResultData[0]['alias'], $pages->offsetGet(0)->alias);

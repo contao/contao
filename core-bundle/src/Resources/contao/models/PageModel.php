@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\Database\Result;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -611,7 +612,28 @@ class PageModel extends Model
 			return null;
 		}
 
-		return static::createCollectionFromDbResult($objSubpages, 'tl_page');
+		$resultArray = $objSubpages->fetchAllAssoc();
+		$arrSubpages = array();
+
+		foreach ($resultArray as $index => $row)
+		{
+			$arrSubpages[$index] = $row['subpages'];
+			unset($resultArray[$index]['subpages']);
+		}
+
+		// Save the models in the registry without the computed subpages column
+		$collection = static::createCollectionFromDbResult(new Result($resultArray, $objSubpages->query), static::$strTable);
+
+		return new Collection(
+			array_map(static function (self $model, $subpages): self
+			{
+				$model = $model->cloneOriginal();
+				$model->mergeRow(array('subpages' => $subpages));
+
+				return $model;
+			}, $collection->getModels(), $arrSubpages),
+			static::$strTable
+		);
 	}
 
 	/**
