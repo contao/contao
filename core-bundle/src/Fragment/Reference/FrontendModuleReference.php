@@ -33,6 +33,7 @@ class FrontendModuleReference extends FragmentReference
 
         $this->attributes['moduleModel'] = $model->id;
         $this->attributes['templateProps'] = $templateProps;
+        $this->attributes['section'] = $templateProps['section'];
         $this->attributes['classes'] = $model->classes;
     }
 }
