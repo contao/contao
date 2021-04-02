@@ -168,6 +168,14 @@ class BackendMain extends Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
+		/** @var \Twig\Environment $twig */
+		$twig = System::getContainer()->get('twig');
+
+		$this->Template->main = $twig->render(
+			'@ContaoCore/Backend/Layout/_container.html.twig',
+			['content' => $this->Template->main]
+		);
+
 		return $this->output();
 	}
 

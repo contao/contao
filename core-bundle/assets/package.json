@@ -6,9 +6,10 @@
   "scripts": {
     "build": "env NODE_ENV=production node_modules/.bin/encore production",
     "dev": "node_modules/.bin/encore dev",
-    "watch": "node_modules/.bin/encore dev --watch"
+    "watch": "env NODE_ENV=development node_modules/.bin/encore dev --watch"
   },
   "dependencies": {
+    "@tailwindcss/jit": "^0.1.18",
     "alpinejs": "^2.8.0",
     "autoprefixer": "^10.2.3",
     "postcss": "^8.2.4",

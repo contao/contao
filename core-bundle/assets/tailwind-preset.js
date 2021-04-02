@@ -17,6 +17,7 @@ module.exports = {
             gray: colors.coolGray,
             red: colors.rose,
             primary: {
+                'DEFAULT': 'var(--color-primary, #F47C00)',
                 50: 'var(--color-primary-50, #FFF8F1)',
                 100: 'var(--color-primary-100, #FFEBD5)',
                 200: 'var(--color-primary-200, #FFCF9D)',

@@ -1,4 +1,4 @@
-<nav class="flex-shrink-0 bg-primary-500 z-10" x-data="{ sidebarOpen: false }">
+<nav class="flex-shrink-0 bg-primary z-10" x-data="{ sidebarOpen: false }">
     <!-- Offcanvas (hidden on desktop) -->
     <div class="lg:hidden">
         <div x-show="sidebarOpen" class="fixed inset-0 flex z-40">
@@ -83,7 +83,7 @@
                        x-data=""
                        title="{{ alertsLabel|escape }}"
                        @click="{{ 'Backend.openModalIframe({"title":"'~alertsLabel|escape~'","url":this.href});return false' }}"
-                       class="ml-4 p-1 rounded-full text-primary-100 hover:text-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                       class="ml-4 p-1 rounded-full text-primary-100 hover:text-primary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                         <span class="sr-only">{{ alertsLabel }}</span>
                         <span class="block h-6 w-6" aria-hidden="true">{{ source('@ContaoCore/Backend/Icon/bell.svg') }}</span>
                     </a>
@@ -106,7 +106,7 @@
                         <div
                             x-show="dropdownOpen"
                             x-cloak
-                            class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
+                            class="origin-top-right absolute right-0 mt-2 w-48 rounded shadow py-1 bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100"
                             x-transition:enter="transition ease-out duration-100"
                             x-transition:enter-start="transform opacity-0 scale-95"
                             x-transition:enter-end="transform opacity-100 scale-100"
