@@ -290,15 +290,15 @@ class Environment
 	 */
 	protected static function httpHost()
 	{
-		if (!empty($_SERVER['HTTP_HOST']))
+		if (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST']))
 		{
 			$host = $_SERVER['HTTP_HOST'];
 		}
 		else
 		{
-			$host = $_SERVER['SERVER_NAME'];
+			$host = $_SERVER['SERVER_NAME'] ?? '';
 
-			if ($_SERVER['SERVER_PORT'] != 80)
+			if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80)
 			{
 				$host .= ':' . $_SERVER['SERVER_PORT'];
 			}
