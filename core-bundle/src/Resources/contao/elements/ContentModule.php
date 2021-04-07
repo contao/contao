@@ -47,7 +47,7 @@ class ContentModule extends ContentElement
 		{
 			if (!empty($this->cssID[1]))
 			{
-				$objModel->classes = array_merge((array) $objModel->classes, [$this->cssID[1]]);
+				$objModel->classes = array_merge((array) $objModel->classes, array($this->cssID[1]));
 			}
 
 			/** @var ContentProxy $proxy */
@@ -55,7 +55,7 @@ class ContentModule extends ContentElement
 
 			if (!empty($this->cssID[0]))
 			{
-				$proxy->cssID = ' id="'.$this->cssID[0].'"';
+				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
 			}
 
 			return $proxy->generate();

@@ -42,7 +42,7 @@ class ContentAlias extends ContentElement
 		{
 			if (!empty($this->cssID[1]))
 			{
-				$objElement->classes = array_merge((array) $objElement->classes, [$this->cssID[1]]);
+				$objElement->classes = array_merge((array) $objElement->classes, array($this->cssID[1]));
 			}
 
 			/** @var ContentProxy $proxy */
@@ -50,7 +50,7 @@ class ContentAlias extends ContentElement
 
 			if (!empty($this->cssID[0]))
 			{
-				$proxy->cssID = ' id="'.$this->cssID[0].'"';
+				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
 			}
 
 			return $proxy->generate();
