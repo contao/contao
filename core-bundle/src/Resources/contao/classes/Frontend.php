@@ -316,7 +316,6 @@ abstract class Frontend extends Controller
 		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
 		{
 			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
-			$strError = 'No root page found (host "' . $host . '", language "' . Input::get('language') . '")';
 		}
 
 		// No language given
@@ -329,7 +328,6 @@ abstract class Frontend extends Controller
 			}
 
 			$strUri = Environment::get('url') . '/';
-			$strError = 'No root page found (host "' . Environment::get('host') . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
 		}
 
 		$objRequest = Request::create($strUri);
