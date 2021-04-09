@@ -144,20 +144,18 @@ class Calendar extends Frontend
 					continue;
 				}
 
+				$objParent = PageModel::findWithDetails($jumpTo);
+
+				// A jumpTo page is set but does no longer exist (see #5781)
+				if ($objParent === null)
+				{
+					continue;
+				}
+
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$objParent = PageModel::findWithDetails($jumpTo);
-
-					// A jumpTo page is set but does no longer exist (see #5781)
-					if ($objParent === null)
-					{
-						$arrUrls[$jumpTo] = false;
-					}
-					else
-					{
-						$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
-					}
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
 				}
 
 				// Skip the event if it requires a jumpTo URL but there is none
@@ -215,6 +213,9 @@ class Calendar extends Frontend
 			$request->attributes->set('_scope', 'frontend');
 		}
 
+		global $objPage;
+		$origObjPage = $objPage;
+
 		// Add the feed items
 		foreach ($this->arrEvents as $days)
 		{
@@ -226,6 +227,9 @@ class Calendar extends Frontend
 					{
 						break 3;
 					}
+
+					// Override the global page object
+					$objPage = CalendarModel::findByPk($event['pid'])->getRelated('jumpTo');
 
 					$objItem = new FeedItem();
 
@@ -293,6 +297,8 @@ class Calendar extends Frontend
 		{
 			$request->attributes->set('_scope', $origScope);
 		}
+
+		$objPage = $origObjPage;
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
