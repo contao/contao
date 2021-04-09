@@ -228,7 +228,7 @@ class Calendar extends Frontend
 						break 3;
 					}
 
-					// Override the global page object
+					// Override the global page object (#2946)
 					$objPage = CalendarModel::findByPk($event['pid'])->getRelated('jumpTo');
 
 					$objItem = new FeedItem();

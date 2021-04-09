@@ -167,7 +167,7 @@ class News extends Frontend
 					continue;
 				}
 
-				// Override the global page object
+				// Override the global page object (#2946)
 				$objPage = $objParent;
 
 				// Get the jumpTo URL
