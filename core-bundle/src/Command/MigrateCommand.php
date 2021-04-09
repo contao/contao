@@ -75,9 +75,9 @@ class MigrateCommand extends Command
     {
         $this
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
-            ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
-            ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Execute migrations only and skip schema diff.')
-            ->setDescription('Executes migrations and the database schema diff.')
+            ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Only update the database schema.')
+            ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
+            ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
 
