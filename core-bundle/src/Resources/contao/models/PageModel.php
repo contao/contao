@@ -626,7 +626,7 @@ class PageModel extends Model
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 */
-	public static function findPublishedWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
+	public static function findPublishedWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
 	{
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
