@@ -271,9 +271,9 @@ abstract class Module extends Frontend
 	protected function renderNavigation($pid, $level=1, $host=null, $language=null)
 	{
 		// Get all active subpages
-		$objSubpages = PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
+		$arrSubpages = PageModel::findPublishedWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
 
-		if ($objSubpages === null)
+		if ($arrSubpages === null)
 		{
 			return '';
 		}
@@ -299,7 +299,7 @@ abstract class Module extends Frontend
 		global $objPage;
 
 		// Browse subpages
-		foreach ($objSubpages as $objSubpage)
+		foreach ($arrSubpages as list('page' => $objSubpage, 'hasSubpages' => $blnHasSubpages))
 		{
 			// Skip hidden sitemap pages
 			if ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_never')
@@ -320,7 +320,7 @@ abstract class Module extends Frontend
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
 			{
 				// Check whether there will be subpages
-				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
+				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
