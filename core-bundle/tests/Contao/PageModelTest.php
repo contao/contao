@@ -117,6 +117,11 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame('alias', $pageModel->alias);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s
+     */
     public function testFindPublishedSubpagesWithoutGuestsByPid(): void
     {
         $databaseResultData = [
@@ -154,13 +159,57 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame($databaseResultData[2]['id'], $pages->offsetGet(2)->id);
         $this->assertSame($databaseResultData[2]['alias'], $pages->offsetGet(2)->alias);
         $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
+    }
+
+    public function testFindPublishedWithoutGuestsByPid(): void
+    {
+        $databaseResultFirstQuery = [
+            ['id' => '1', 'hasSubpages' => '0'],
+            ['id' => '2', 'hasSubpages' => '1'],
+            ['id' => '3', 'hasSubpages' => '1'],
+        ];
+
+        $databaseResultSecondQuery = [
+            ['id' => '1', 'alias' => 'alias1'],
+            ['id' => '2', 'alias' => 'alias2'],
+            ['id' => '3', 'alias' => 'alias3'],
+        ];
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnOnConsecutiveCalls(new Result($databaseResultFirstQuery, ''), new Result($databaseResultSecondQuery, ''))
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $pages = PageModel::findPublishedWithoutGuestsByPid(1);
+
+        $this->assertIsArray($pages);
+        $this->assertCount(3, $pages);
+
+        $this->assertSame($databaseResultSecondQuery[0]['id'], $pages[0]['page']->id);
+        $this->assertSame($databaseResultSecondQuery[0]['alias'], $pages[0]['page']->alias);
+        $this->assertFalse($pages[0]['hasSubpages']);
+        $this->assertSame($databaseResultSecondQuery[1]['id'], $pages[1]['page']->id);
+        $this->assertSame($databaseResultSecondQuery[1]['alias'], $pages[1]['page']->alias);
+        $this->assertTrue($pages[1]['hasSubpages']);
+        $this->assertSame($databaseResultSecondQuery[2]['id'], $pages[2]['page']->id);
+        $this->assertSame($databaseResultSecondQuery[2]['alias'], $pages[2]['page']->alias);
+        $this->assertTrue($pages[2]['hasSubpages']);
 
         // Get from model registry
         $page2 = PageModel::findByPk(2);
 
-        $this->assertSame($databaseResultData[1]['id'], $page2->id);
-        $this->assertSame($databaseResultData[1]['alias'], $page2->alias);
-        $this->assertNull($page2->subpages, 'The subpages values should not be set in the model registry as it is contains generated data based on the query');
+        $this->assertSame($databaseResultSecondQuery[1]['id'], $page2->id);
+        $this->assertSame($databaseResultSecondQuery[1]['alias'], $page2->alias);
+        $this->assertNull($page2->hasSubpages, 'The hasSubpages values should not be set in the model registry as it is contains generated data based on the query');
     }
 
     private function mockDatabase(Database $database): void

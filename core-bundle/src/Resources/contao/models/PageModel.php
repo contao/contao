@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\Database\Result;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -93,7 +92,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean $rootIsFallback
  * @property boolean $rootUseSSL
  * @property string  $rootFallbackLanguage
- * @property integer $subpages
  * @property boolean $minifyMarkup
  * @property integer $layoutId
  * @property boolean $hasJQuery
@@ -596,9 +594,13 @@ class PageModel extends Model
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
 	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0. Use PageModel::findPublishedWithoutGuestsByPid() instead.
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
+		@trigger_error('Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedWithoutGuestsByPid() instead.', E_USER_DEPRECATED);
+
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
@@ -612,27 +614,46 @@ class PageModel extends Model
 			return null;
 		}
 
-		$resultArray = $objSubpages->fetchAllAssoc();
-		$arrSubpages = array();
+		return static::createCollectionFromDbResult($objSubpages, static::$strTable);
+	}
 
-		foreach ($resultArray as $index => $row)
+	/**
+	 * Find all published pages by their parent ID and exclude pages only visible for guests
+	 *
+	 * @param integer $intPid        The parent page's ID
+	 * @param boolean $blnShowHidden If true, hidden pages will be included
+	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
+	 *
+	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
+	 */
+	public static function findPublishedWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
+	{
+		$time = Date::floorToMinute();
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
+		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+			->execute($intPid)
+			->fetchAllAssoc();
+
+		if (\count($arrPages) < 1)
 		{
-			$arrSubpages[$index] = $row['subpages'];
-			unset($resultArray[$index]['subpages']);
+			return null;
 		}
 
-		// Save the models in the registry without the computed subpages column
-		$collection = static::createCollectionFromDbResult(new Result($resultArray, $objSubpages->query), static::$strTable);
+		// Load models into the registry with a single query
+		static::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
 
-		return new Collection(
-			array_map(static function (self $model, $subpages): self
+		return array_map(
+			static function (array $row): array
 			{
-				$model = $model->cloneOriginal();
-				$model->mergeRow(array('subpages' => $subpages));
-
-				return $model;
-			}, $collection->getModels(), $arrSubpages),
-			static::$strTable
+				return array(
+					'page' => static::findByPk($row['id']),
+					'hasSubpages' => (bool) $row['hasSubpages'],
+				);
+			},
+			$arrPages
 		);
 	}
 
