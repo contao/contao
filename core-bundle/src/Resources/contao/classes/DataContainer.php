@@ -777,7 +777,7 @@ abstract class DataContainer extends Backend
 				if (\is_array($v['label']))
 				{
 					$label = $v['label'][0] ?? $k;
-					$title = sprintf($v['label'][1] ?? $k, $id);
+					$title = sprintf($v['label'][1] ?? '', $id);
 				}
 				else
 				{
