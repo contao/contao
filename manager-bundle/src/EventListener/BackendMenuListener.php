@@ -157,9 +157,11 @@ class BackendMenuListener
 
         $item = $event->getFactory()
             ->createItem('contao_manager')
-            ->setLabel('Contao Manager')
+            ->setLabel('contao_manager')
             ->setUri('/'.$this->managerPath)
             ->setLinkAttribute('class', 'navigation contao_manager')
+            ->setLinkAttribute('title', $this->translator->trans('contao_manager', [], 'ContaoManagerBundle'))
+            ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
         $categoryNode->addChild($item);
