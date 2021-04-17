@@ -1330,6 +1330,31 @@ var Backend =
 	},
 
 	/**
+	 * Retrieve the interactive help
+	 */
+	retrieveInteractiveHelp: function (element) {
+		var buttons = element.getElements('button,a');
+		buttons && buttons.each(function (button) {
+			var title = button.retrieve('tip:title');
+			title && button.set('title', title);
+		});
+	},
+
+	/**
+	 * Hide the interactive help
+	 */
+	hideInteractiveHelp: function () {
+		var hideTips = function () {
+			document.querySelectorAll('.tip-wrap').forEach(function (tip) {
+				tip.setStyle('display', 'none');
+			});
+		};
+		hideTips();
+		// hide delayed tips - timeout: Tips.Contao.options.showDelay
+		setTimeout(hideTips, 1000);
+	},
+
+	/**
 	 * Make parent view items sortable
 	 *
 	 * @param {object} ul The DOM element
@@ -1724,6 +1749,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
+									Backend.retrieveInteractiveHelp(childs[i]);
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (textarea = childs[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1732,6 +1758,7 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'rdelete':
@@ -1741,6 +1768,7 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
+								Backend.hideInteractiveHelp();
 							});
 							break;
 						case 'ccopy':
@@ -1750,15 +1778,19 @@ var Backend =
 								childs = tbody.getChildren();
 								for (i=0; i<childs.length; i++) {
 									current = childs[i].getChildren()[index];
+									Backend.retrieveInteractiveHelp(current);
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
 									}
 									addEventsTo(next);
 								}
-								next = head.getFirst('td').clone(true).inject(head.getLast('td'), 'before');
+								var headFirst = head.getFirst('td');
+								Backend.retrieveInteractiveHelp(headFirst);
+								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
+								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'cmovel':
@@ -1811,6 +1843,7 @@ var Backend =
 									head.getFirst('td').destroy();
 								}
 								makeSortable(tbody);
+								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1951,6 +1984,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
+									Backend.retrieveInteractiveHelp(childs[i]);
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (select = childs[i].getElement('select')) {
 										next.getElement('select').value = select.value;
@@ -1961,6 +1995,7 @@ var Backend =
 								new Chosen(ntr.getElement('select.tl_select'));
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -1970,6 +2005,7 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
+								Backend.hideInteractiveHelp();
 							});
 							break;
 						case 'enable':
@@ -2067,6 +2103,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
+									Backend.retrieveInteractiveHelp(childs[i]);
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
@@ -2078,6 +2115,7 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -2087,6 +2125,7 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
+								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -2166,6 +2205,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
+									Backend.retrieveInteractiveHelp(childs[i]);
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst().value = input.value;
@@ -2174,6 +2214,7 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -2183,6 +2224,7 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
+								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -2407,6 +2449,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
+									Backend.retrieveInteractiveHelp(childs[i]);
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									selects = childs[i].getElements('select');
 									nselects = next.getElements('select');
@@ -2417,6 +2460,7 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -2426,6 +2470,7 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
+								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
