@@ -286,25 +286,18 @@ class Environment
 	/**
 	 * Return the HTTP Host
 	 *
-	 * @return string The host name
+	 * @return string|null The host name
 	 */
 	protected static function httpHost()
 	{
-		if (!empty($_SERVER['HTTP_HOST']))
-		{
-			$host = $_SERVER['HTTP_HOST'];
-		}
-		else
-		{
-			$host = $_SERVER['SERVER_NAME'] ?? null;
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-			if (($_SERVER['SERVER_PORT'] ?? null) != 80)
-			{
-				$host .= ':' . $_SERVER['SERVER_PORT'];
-			}
+		if ($request === null)
+		{
+			return null;
 		}
 
-		return preg_replace('/[^A-Za-z0-9[\].:_-]/', '', $host);
+		return $request->getHttpHost();
 	}
 
 	/**
