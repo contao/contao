@@ -14,6 +14,10 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\Page\Metadata\ContaoPageSchema;
+use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
+use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
+use Spatie\SchemaOrg\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -701,9 +705,15 @@ class PageRegular extends Frontend
 			}
 		}
 
-		// Add search index metadata
+		// Add JSON-LD metadata
 		if ($objPage !== null)
 		{
+			$jsonLdManager = System::getContainer()->get(PageMetadataContainer::class)->getJsonLdManager();
+
+			// General schema.org WebPage schema
+			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(Schema::webPage());
+
+			// Custom Contao search index meta data
 			$noSearch = (bool) $objPage->noSearch;
 
 			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
@@ -712,19 +722,14 @@ class PageRegular extends Frontend
 				$noSearch = true;
 			}
 
-			$meta = array
-			(
-				'@context' => array('contao' => 'https://schema.contao.org/'),
-				'@type' => 'contao:Page',
-				'contao:title' => $objPage->pageTitle ?: $objPage->title,
-				'contao:pageId' => (int) $objPage->id,
-				'contao:noSearch' => $noSearch,
-				'contao:protected' => (bool) $objPage->protected,
-				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),
-				'contao:fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
-			);
-
-			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
+			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->add(new ContaoPageSchema(
+				$objPage->pageTitle ?: $objPage->title,
+				(int) $objPage->id,
+				$noSearch,
+				(bool) $objPage->protected,
+				array_map('intval', array_filter((array) $objPage->groups)),
+				System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
+			));
 		}
 
 		// Add the custom JavaScript

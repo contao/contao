@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Event\BuildFigureEvent;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -551,7 +552,7 @@ class FigureBuilder
         ;
 
         // Define the values via closure to make their evaluation lazy
-        return new Figure(
+        $figure = new Figure(
             $imageResult,
             \Closure::bind(
                 function (Figure $figure): ?Metadata {
@@ -573,6 +574,12 @@ class FigureBuilder
             ),
             $settings->options
         );
+
+        if ($this->locator->has('event_dispatcher')) {
+            $this->locator->get('event_dispatcher')->dispatch(new BuildFigureEvent($figure));
+        }
+
+        return $figure;
     }
 
     /**

@@ -11,7 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
+use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
 use Contao\Model\Collection;
+use Spatie\SchemaOrg\Schema;
 
 /**
  * Parent class for news modules.
@@ -103,6 +106,10 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasText = false;
 		$objTemplate->hasTeaser = false;
 
+		$jsonLdSchema = Schema::newsArticle()
+			->url(News::generateNewsUrl($objArticle, $blnAddArchive, true))
+			->headline($objTemplate->headline);
+
 		// Clean the RTE output
 		if ($objArticle->teaser)
 		{
@@ -157,6 +164,12 @@ abstract class ModuleNews extends Module
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
 		$objTemplate->addImage = false;
 		$objTemplate->addBefore = false;
+
+		$jsonLdSchema
+			->datePublished($objTemplate->datetime)
+			->description(strip_tags(StringUtil::decodeEntities(StringUtil::restoreBasicEntities($objTemplate->teaser))))
+			->author(Schema::person()->name($arrMeta['author_raw'] ?? null))
+		;
 
 		// Add an image
 		if ($objArticle->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objArticle->singleSRC)))
@@ -225,6 +238,12 @@ abstract class ModuleNews extends Module
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
 		}
+
+		// Add the JSON LD meta data
+		System::getContainer()->get(PageMetadataContainer::class)
+			->getJsonLdManager()
+			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+			->set($jsonLdSchema, $objTemplate->link);
 
 		return $objTemplate->parse();
 	}
@@ -302,7 +321,8 @@ abstract class ModuleNews extends Module
 					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span itemprop="author">' . $objAuthor->name . '</span>';
+						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span class="author">' . $objAuthor->name . '</span>';
+						$return['author_raw'] = $objAuthor->name;
 					}
 					break;
 
