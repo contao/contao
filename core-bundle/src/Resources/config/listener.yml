@@ -16,8 +16,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer'
         tags:
-            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
-            - { name: kernel.event_listener, event: 'Contao\CoreBundle\Image\Studio\Event\BuildFigureEvent', method: onBuildFigure }
+            - { name: kernel.event_listener }
 
     Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener:
         arguments:

@@ -12,12 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Event\BuildFigureEvent;
-use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
 use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Spatie\SchemaOrg\Schema;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
@@ -39,7 +35,7 @@ class AddJsonLdListener
         $this->pageMetadataContainer = $pageMetadataContainer;
     }
 
-    public function onKernelResponse(ResponseEvent $event): void
+    public function __invoke(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
             return;
@@ -66,28 +62,6 @@ class AddJsonLdListener
         }
 
         $this->injectJsonLd($response);
-    }
-
-    public function onBuildFigure(BuildFigureEvent $event): void
-    {
-        if (!$event->getFigure()->hasMetadata()) {
-            return;
-        }
-
-        $metadata = $event->getFigure()->getMetadata();
-        $contentUrl = $event->getFigure()->getImage()->getFilePath(true);
-
-        $imageObject = Schema::imageObject()
-            ->contentUrl($contentUrl)
-            ->name($metadata->get(Metadata::VALUE_TITLE))
-            ->caption($metadata->get(Metadata::VALUE_CAPTION))
-        ;
-
-        $this->pageMetadataContainer
-            ->getJsonLdManager()
-            ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
-            ->add($imageObject, $contentUrl)
-        ;
     }
 
     private function injectJsonLd(Response $response): void
