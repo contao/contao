@@ -14,3 +14,20 @@
     <figcaption class="caption"><?= $this->caption ?></figcaption>
   <?php endif; ?>
 </figure>
+
+<?php
+$jsondLd = [
+    '@type' => 'ImageObject',
+    'identifier' => $this->figure->getImage()->getImageSrc(),
+    'contentUrl' => $this->figure->getImage()->getImageSrc(),
+];
+
+if ($this->figure->getMetaData()->has('title')) {
+    $jsondLd['name'] = $this->figure->getMetaData()->get('title');
+}
+
+if ($this->figure->getMetaData()->has('caption')) {
+    $jsondLd['caption'] = $this->figure->getMetaData()->get('caption');
+}
+
+$this->jsonLd($jsondLd, $this->figure->getImage()->getImageSrc());

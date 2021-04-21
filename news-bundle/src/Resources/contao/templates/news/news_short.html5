@@ -16,3 +16,5 @@
   <?php endif; ?>
 
 </div>
+
+<?php $this->insert('jsonld_news', $this->getData()); ?>

@@ -12,10 +12,13 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
+use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -390,6 +393,52 @@ abstract class Template extends Controller
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+	}
+
+	/**
+	 * Decodes a value for raw usage (DO NOT USE THIS IN HTML OUTPUT IF THE SOURCE IS UNKNOWN)
+	 */
+	public function raw(string $value): string
+	{
+		return StringUtil::decodeEntities(StringUtil::restoreBasicEntities($value));
+	}
+
+	/**
+	 * Adds JSON-LD data to the current page.
+	 */
+	public function jsonLd(array $jsonLd, string $schema = JsonLdManager::SCHEMA_ORG): void
+	{
+		// TODO: Create a PR for https://github.com/spatie/schema-org to see if we can get the factories inside that library
+		$factory = static function (array $jsonLd) use (&$factory)
+		{
+			if (!isset($jsonLd['@type']))
+			{
+				throw new \InvalidArgumentException('Must provide the @type property!');
+			}
+
+			$schemaClass = '\Spatie\SchemaOrg\\' . $jsonLd['@type'];
+			$schema = new $schemaClass();
+			unset($jsonLd['@type']);
+
+			foreach ($jsonLd as $k => $v)
+			{
+				if (\is_array($v) && isset($v['@type']))
+				{
+					$v = $factory($v);
+				}
+				$schema->setProperty($k, $v);
+			}
+
+			return $schema;
+		};
+
+		$schema = $factory($jsonLd);
+		$id = isset($jsonLd['identifier']) ?: Graph::IDENTIFIER_DEFAULT;
+
+		System::getContainer()->get(PageMetadataContainer::class)
+			->getJsonLdManager()
+			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+			->set($schema, $id);
 	}
 
 	/**

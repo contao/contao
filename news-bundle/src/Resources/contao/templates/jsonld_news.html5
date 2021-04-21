@@ -1,0 +1,25 @@
+<?php
+
+$jsonLd = [
+    '@type' => 'NewsArticle',
+    'identifier' => $this->absoluteLink,
+    'url' => $this->absoluteLink,
+    'headline' => $this->raw($this->headline),
+    'datePublished' => $this->datetime,
+    'description' => strip_tags($this->raw($this->teaser)),
+];
+
+if ($this->addImage) {
+    $jsonLd['image'] = [
+        '@id' => $this->figure->getImage()->getImageSrc(),
+    ];
+}
+
+if ($this->authorModel) {
+    $jsonLd['author'] = [
+        '@type' => 'Person',
+        'name' => $this->authorModel->name,
+    ];
+}
+
+$this->jsonLd($jsonLd);
