@@ -11,10 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
-use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
-use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
 use Contao\Model\Collection;
-use Spatie\SchemaOrg\Schema;
 
 /**
  * Parent class for news modules.
@@ -100,15 +97,12 @@ abstract class ModuleNews extends Module
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
 		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
+		$objTemplate->absoluteLink = News::generateNewsUrl($objArticle, $blnAddArchive, true);
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
 		$objTemplate->hasText = false;
 		$objTemplate->hasTeaser = false;
-
-		$jsonLdSchema = Schema::newsArticle()
-			->url(News::generateNewsUrl($objArticle, $blnAddArchive, true))
-			->headline($objTemplate->headline);
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -161,15 +155,10 @@ abstract class ModuleNews extends Module
 		$objTemplate->commentCount = $arrMeta['comments'] ?? null;
 		$objTemplate->timestamp = $objArticle->date;
 		$objTemplate->author = $arrMeta['author'] ?? null;
+		$objTemplate->authorModel = $arrMeta['author_model'] ?? null;
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
 		$objTemplate->addImage = false;
 		$objTemplate->addBefore = false;
-
-		$jsonLdSchema
-			->datePublished($objTemplate->datetime)
-			->description(strip_tags(StringUtil::decodeEntities(StringUtil::restoreBasicEntities($objTemplate->teaser))))
-			->author(Schema::person()->name($arrMeta['author_raw'] ?? null))
-		;
 
 		// Add an image
 		if ($objArticle->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objArticle->singleSRC)))
@@ -238,12 +227,6 @@ abstract class ModuleNews extends Module
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
 		}
-
-		// Add the JSON LD meta data
-		System::getContainer()->get(PageMetadataContainer::class)
-			->getJsonLdManager()
-			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
-			->set($jsonLdSchema, $objTemplate->link);
 
 		return $objTemplate->parse();
 	}
@@ -322,7 +305,7 @@ abstract class ModuleNews extends Module
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
 						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span class="author">' . $objAuthor->name . '</span>';
-						$return['author_raw'] = $objAuthor->name;
+						$return['author_model'] = $objAuthor;
 					}
 					break;
 
