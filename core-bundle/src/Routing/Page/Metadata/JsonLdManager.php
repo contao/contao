@@ -20,7 +20,7 @@ class JsonLdManager
     /**
      * @var array<Graph>
      */
-    private array $graphs = [];
+    private $graphs = [];
 
     public function getGraphForSchema(string $schema): Graph
     {
