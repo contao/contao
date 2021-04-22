@@ -169,6 +169,20 @@ class Database
 	}
 
 	/**
+	 * Reset all instances
+	 */
+	public static function reset(): void
+	{
+		/** @var self $instance */
+		foreach (self::$arrInstances as $instance)
+		{
+			$instance->arrCache = array();
+		}
+
+		static::$arrInstances = array();
+	}
+
+	/**
 	 * Prepare a query and return a Statement object
 	 *
 	 * @param string $strQuery The query string
