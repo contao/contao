@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\Database;
 use Contao\Environment;
 use Contao\Files;
 use Contao\Input;
@@ -110,13 +111,71 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function reset(): void
     {
         $this->adapterCache = [];
-        $this->isFrontend = false;
+        $this->hookListeners = [];
 
         if (!$this->isInitialized()) {
             return;
         }
 
+        // Reset internal state
+        self::$initialized = false;
+        $this->request = null;
+        $this->isFrontend = false;
+
+        // Reset session
+        if (null !== ($session = $this->getSession())) {
+            $session->getBag('contao_backend')->clear();
+            $session->getBag('contao_frontend')->clear();
+        }
+
+        if (($_SESSION ?? null) instanceof LazySessionAccess) {
+            $_SESSION = [];
+        }
+
+        // Reset globals
+        unset(
+            $GLOBALS['BE_FFL'],
+            $GLOBALS['BE_MOD'],
+            $GLOBALS['FE_MOD'],
+            $GLOBALS['TL_ADMIN_EMAIL'],
+            $GLOBALS['TL_ADMIN_NAME'],
+            $GLOBALS['TL_AUTO_ITEM'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_CONFIG'],
+            $GLOBALS['TL_CRON'],
+            $GLOBALS['TL_CROP'],
+            $GLOBALS['TL_CSS'],
+            $GLOBALS['TL_CSS_UNITS'],
+            $GLOBALS['TL_CTE'],
+            $GLOBALS['TL_DCA'],
+            $GLOBALS['TL_DEBUG'],
+            $GLOBALS['TL_FFL'],
+            $GLOBALS['TL_FRAMEWORK_CSS'],
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_HOOKS'],
+            $GLOBALS['TL_JAVASCRIPT'],
+            $GLOBALS['TL_JQUERY'],
+            $GLOBALS['TL_KEYWORDS'],
+            $GLOBALS['TL_LANG'],
+            $GLOBALS['TL_LANGUAGE'],
+            $GLOBALS['TL_MAINTENANCE'],
+            $GLOBALS['TL_MIME'],
+            $GLOBALS['TL_MODELS'],
+            $GLOBALS['TL_MOOTOOLS'],
+            $GLOBALS['TL_NOINDEX_KEYS'],
+            $GLOBALS['TL_PERMISSIONS'],
+            $GLOBALS['TL_PTY'],
+            $GLOBALS['TL_PURGE'],
+            $GLOBALS['TL_USERNAME'],
+            $GLOBALS['TL_USER_CSS'],
+            $GLOBALS['TL_WRAPPERS'],
+            $GLOBALS['objPage'],
+        );
+
+        // Reset framework classes
+        Config::reset();
         ClassLoader::reset();
+        Database::reset();
         Environment::reset();
         Files::reset();
         Input::resetCache();
