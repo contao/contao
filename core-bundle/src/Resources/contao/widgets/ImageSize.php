@@ -181,7 +181,7 @@ class ImageSize extends Widget
 		// Add an unknown option, so it is not lost when saving the record (see #920)
 		if (isset($this->unknownOption[2]))
 		{
-			$arrAllOptions[] = array('value'=>$this->unknownOption[2], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+			$arrAllOptions[] = array('value' => $this->unknownOption[2], 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[2]));
 		}
 
 		foreach ($arrAllOptions as $strKey=>$arrOption)
