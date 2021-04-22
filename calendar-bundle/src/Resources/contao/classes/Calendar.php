@@ -127,6 +127,7 @@ class Calendar extends Frontend
 		$arrUrls = array();
 		$this->arrEvents = array();
 		$time = time();
+		$arrParentPages = array();
 
 		// Get the upcoming events
 		$objArticle = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
@@ -144,7 +145,12 @@ class Calendar extends Frontend
 					continue;
 				}
 
-				$objParent = PageModel::findWithDetails($jumpTo);
+				if (!isset($arrParentPages[$jumpTo]))
+				{
+					$arrParentPages[$jumpTo] = PageModel::findWithDetails($jumpTo);
+				}
+
+				$objParent = $arrParentPages[$jumpTo];
 
 				// A jumpTo page is set but does no longer exist (see #5781)
 				if ($objParent === null)
@@ -213,8 +219,7 @@ class Calendar extends Frontend
 			$request->attributes->set('_scope', 'frontend');
 		}
 
-		global $objPage;
-		$origObjPage = $objPage;
+		$origObjPage = $GLOBALS['objPage'] ?? null;
 
 		// Add the feed items
 		foreach ($this->arrEvents as $days)
@@ -229,7 +234,7 @@ class Calendar extends Frontend
 					}
 
 					// Override the global page object (#2946)
-					$objPage = CalendarModel::findByPk($event['pid'])->getRelated('jumpTo');
+					$GLOBALS['objPage'] = $arrParentPages[CalendarModel::findByPk($event['pid'])->jumpTo];
 
 					$objItem = new FeedItem();
 
@@ -298,7 +303,7 @@ class Calendar extends Frontend
 			$request->attributes->set('_scope', $origScope);
 		}
 
-		$objPage = $origObjPage;
+		$GLOBALS['objPage'] = $origObjPage;
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 

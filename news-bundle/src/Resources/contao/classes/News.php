@@ -137,6 +137,7 @@ class News extends Frontend
 		if ($objArticle !== null)
 		{
 			$arrUrls = array();
+			$arrParentPages = array();
 
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
@@ -146,8 +147,7 @@ class News extends Frontend
 				$request->attributes->set('_scope', 'frontend');
 			}
 
-			global $objPage;
-			$origObjPage = $objPage;
+			$origObjPage = $GLOBALS['objPage'] ?? null;
 
 			while ($objArticle->next())
 			{
@@ -159,7 +159,12 @@ class News extends Frontend
 					continue;
 				}
 
-				$objParent = PageModel::findWithDetails($jumpTo);
+				if (!isset($arrParentPages[$jumpTo]))
+				{
+					$arrParentPages[$jumpTo] = PageModel::findWithDetails($jumpTo);
+				}
+
+				$objParent = $arrParentPages[$jumpTo];
 
 				// A jumpTo page is set but does no longer exist (see #5781)
 				if ($objParent === null)
@@ -168,7 +173,7 @@ class News extends Frontend
 				}
 
 				// Override the global page object (#2946)
-				$objPage = $objParent;
+				$GLOBALS['objPage'] = $objParent;
 
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
@@ -261,7 +266,7 @@ class News extends Frontend
 				$request->attributes->set('_scope', $origScope);
 			}
 
-			$objPage = $origObjPage;
+			$GLOBALS['objPage'] = $origObjPage;
 		}
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
