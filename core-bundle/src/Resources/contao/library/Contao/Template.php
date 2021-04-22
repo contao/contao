@@ -398,9 +398,16 @@ abstract class Template extends Controller
 	/**
 	 * Decodes a value for raw usage (DO NOT USE THIS IN HTML OUTPUT IF THE SOURCE IS UNKNOWN)
 	 */
-	public function raw(string $value): string
+	public function raw(string $value, bool $stripTags = true): string
 	{
-		return StringUtil::decodeEntities(StringUtil::restoreBasicEntities($value));
+		$value = StringUtil::decodeEntities(StringUtil::restoreBasicEntities($value));
+
+		if ($stripTags)
+		{
+			$value = strip_tags($value);
+		}
+
+		return $value;
 	}
 
 	/**

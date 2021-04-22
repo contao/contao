@@ -6,8 +6,12 @@ $jsonLd = [
     'url' => $this->absoluteLink,
     'headline' => $this->raw($this->headline),
     'datePublished' => $this->datetime,
-    'description' => strip_tags($this->raw($this->teaser)),
+    'description' => $this->raw($this->teaser),
 ];
+
+if ($this->hasText()) {
+    $jsonLd['text'] = $this->raw($this->text);
+}
 
 if ($this->addImage) {
     $jsonLd['image'] = [
