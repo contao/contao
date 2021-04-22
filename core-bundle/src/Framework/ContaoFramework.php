@@ -180,36 +180,50 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $this->adapterCache[$class];
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
-     */
     private function setConstants(): void
     {
-        if (!\defined('TL_MODE')) {
-            \define('TL_MODE', $this->getMode());
-        }
+        $defineIfNotSet = static function (string $constant, $value): void {
+            if (\defined($constant)) {
+                return;
+            }
 
-        \define('TL_START', microtime(true));
-        \define('TL_ROOT', $this->projectDir);
-        \define('TL_REFERER_ID', $this->getRefererId());
+            \define($constant, $value);
+        };
 
-        if (!\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', $this->getRoute());
-        }
+        $define = static function (string $constant, $value): void {
+            if (\defined($constant)) {
+                if ($value !== \constant($constant)) {
+                    throw new \RuntimeException(sprintf('Cannot set constant "%s" to "%s", it is already defined as "%s".', $constant, $value, \constant($constant)));
+                }
+
+                return;
+            }
+
+            \define($constant, $value);
+        };
+
+        // Tolerate being set already
+        $defineIfNotSet('TL_START', microtime(true));
+        $defineIfNotSet('TL_SCRIPT', $this->getRoute());
+
+        // Throw if a different value would be set (see #2518)
+        $define('TL_MODE', $this->getMode());
+        $define('TL_ROOT', $this->projectDir);
+        $define('TL_REFERER_ID', $this->getRefererId());
 
         // Define the login status constants (see #4099, #5279)
         if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
             $session->start();
 
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
+            $define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            $define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
         } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
+            $define('BE_USER_LOGGED_IN', false);
+            $define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->getPath());
+        $define('TL_PATH', $this->getPath());
     }
 
     private function getMode(): ?string
@@ -299,8 +313,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function includeHelpers(): void
     {
-        require __DIR__.'/../Resources/contao/helper/functions.php';
-        require __DIR__.'/../Resources/contao/config/constants.php';
+        require_once __DIR__.'/../Resources/contao/helper/functions.php';
+        require_once __DIR__.'/../Resources/contao/config/constants.php';
     }
 
     /**
