@@ -732,6 +732,9 @@ class PageRegular extends Frontend
 			));
 		}
 
+		// Add the JSON-LD data
+		$strScripts .= "\n" . $jsonLdManager->collectFinalScriptFromGraphs();
+
 		// Add the custom JavaScript
 		if ($objLayout->script)
 		{

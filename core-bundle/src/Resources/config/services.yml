@@ -596,6 +596,7 @@ services:
     Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer:
         arguments:
             - '@request_stack'
+            - '@event_dispatcher'
         public: true
 
     contao.routing.page_router:

@@ -12,15 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Page\Metadata;
 
+use Contao\CoreBundle\Event\JsonLdEvent;
+
 class JsonLdManager
 {
     public const SCHEMA_ORG = 'https://schema.org';
     public const SCHEMA_CONTAO = 'https://schema.contao.org';
 
     /**
+     * @var PageMetadataContainer
+     */
+    private $pageMetadataContainer;
+
+    /**
      * @var array<Graph>
      */
     private $graphs = [];
+
+    public function __construct(PageMetadataContainer $pageMetadataContainer)
+    {
+        $this->pageMetadataContainer = $pageMetadataContainer;
+    }
 
     public function getGraphForSchema(string $schema): Graph
     {
@@ -36,5 +48,25 @@ class JsonLdManager
     public function getGraphs(): array
     {
         return $this->graphs;
+    }
+
+    public function collectFinalScriptFromGraphs(): string
+    {
+        $data = [];
+
+        $this->pageMetadataContainer->getEventDispatcher()->dispatch(new JsonLdEvent($this));
+
+        foreach ($this->getGraphs() as $graph) {
+            $data[] = $graph->toArray();
+        }
+
+        // Reset graphs
+        $this->graphs = [];
+
+        if (0 === \count($data)) {
+            return '';
+        }
+
+        return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n".'</script>';
     }
 }

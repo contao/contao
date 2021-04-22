@@ -11,13 +11,6 @@ services:
             calls:
                 - [setContainer, ['@service_container']]
 
-    Contao\CoreBundle\EventListener\AddJsonLdListener:
-        arguments:
-            - '@contao.routing.scope_matcher'
-            - '@Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer'
-        tags:
-            - { name: kernel.event_listener }
-
     Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener:
         arguments:
             - '@contao.routing.scope_matcher'
