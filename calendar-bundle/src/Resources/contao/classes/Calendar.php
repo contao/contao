@@ -24,6 +24,12 @@ class Calendar extends Frontend
 	protected $arrEvents = array();
 
 	/**
+	 * Page cache array
+	 * @var array
+	 */
+	private static $arrPageCache = array();
+
+	/**
 	 * Update a particular RSS feed
 	 *
 	 * @param integer $intId
@@ -127,7 +133,6 @@ class Calendar extends Frontend
 		$arrUrls = array();
 		$this->arrEvents = array();
 		$time = time();
-		$arrParentPages = array();
 
 		// Get the upcoming events
 		$objArticle = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
@@ -145,12 +150,7 @@ class Calendar extends Frontend
 					continue;
 				}
 
-				if (!isset($arrParentPages[$jumpTo]))
-				{
-					$arrParentPages[$jumpTo] = PageModel::findWithDetails($jumpTo);
-				}
-
-				$objParent = $arrParentPages[$jumpTo];
+				$objParent = $this->getPageWithDetails($jumpTo);
 
 				// A jumpTo page is set but does no longer exist (see #5781)
 				if ($objParent === null)
@@ -234,7 +234,7 @@ class Calendar extends Frontend
 					}
 
 					// Override the global page object (#2946)
-					$GLOBALS['objPage'] = $arrParentPages[CalendarModel::findByPk($event['pid'])->jumpTo];
+					$GLOBALS['objPage'] = $objParent = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
 					$objItem = new FeedItem();
 
@@ -603,6 +603,22 @@ class Calendar extends Frontend
 		}
 
 		return $arrFeeds;
+	}
+
+	/**
+	 * Return the page object with loaded details for the given page ID
+	 * 
+	 * @param integer $intPageId
+	 * @return PageModel|null
+	 */
+	private function getPageWithDetails($intPageId)
+	{
+		if (isset(self::$arrPageCache[$intPageId]))
+		{
+			return self::$arrPageCache[$intPageId];
+		}
+
+		return (self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId));
 	}
 }
 
