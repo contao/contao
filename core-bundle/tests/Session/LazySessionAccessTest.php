@@ -197,7 +197,6 @@ class LazySessionAccessTest extends TestCase
         $_SESSION = new LazySessionAccess($session, false);
 
         $this->assertFalse($session->isStarted());
-
         $this->assertCount(0, $_SESSION);
         $this->assertFalse($session->isStarted());
     }
