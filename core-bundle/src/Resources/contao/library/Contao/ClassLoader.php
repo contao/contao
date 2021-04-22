@@ -232,6 +232,17 @@ class ClassLoader
 	}
 
 	/**
+	 * Unregister the autoloader and reset the internal cache
+	 */
+	public static function reset()
+	{
+		self::$namespaces = array('Contao');
+		self::$classes = array();
+
+		spl_autoload_unregister('ClassLoader::load');
+	}
+
+	/**
 	 * Scan the module directories for config/autoload.php files and then
 	 * register the autoloader on the SPL stack
 	 */

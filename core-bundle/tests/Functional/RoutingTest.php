@@ -13,9 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\Config;
-use Contao\Environment;
-use Contao\Input;
-use Contao\InsertTags;
 use Contao\System;
 use Contao\TestCase\ContaoDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -44,16 +41,16 @@ class RoutingTest extends WebTestCase
     {
         parent::setUp();
 
-        $_GET = [];
-
-        Input::resetCache();
-        Input::resetUnusedGet();
-        Environment::reset();
-        InsertTags::reset();
-
         Config::set('debugMode', false);
         Config::set('useAutoItem', true);
         Config::set('addLanguageToUrl', false);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $_GET = [];
     }
 
     /**

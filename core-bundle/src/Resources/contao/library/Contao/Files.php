@@ -74,6 +74,14 @@ class Files
 	}
 
 	/**
+	 * Reset the singleton instance
+	 */
+	public static function reset(): void
+	{
+		self::$objInstance = null;
+	}
+
+	/**
 	 * Create a directory
 	 *
 	 * @param string $strDirectory The directory name

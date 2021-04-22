@@ -120,6 +120,17 @@ class Config
 	}
 
 	/**
+	 * Reset the singleton instance, internal cache and global state
+	 */
+	public static function reset(): void
+	{
+		static::$objInstance = null;
+		static::$blnHasLcf = null;
+
+		unset($GLOBALS['TL_CONFIG']);
+	}
+
+	/**
 	 * Load all configuration files
 	 */
 	protected function initialize()

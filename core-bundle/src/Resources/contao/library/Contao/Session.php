@@ -99,6 +99,14 @@ class Session
 	}
 
 	/**
+	 * Reset the singleton instance
+	 */
+	public static function reset(): void
+	{
+		static::$objInstance = null;
+	}
+
+	/**
 	 * Return a session variable
 	 *
 	 * @param string $strKey The variable name

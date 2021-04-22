@@ -18,11 +18,14 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\Database;
 use Contao\Environment;
+use Contao\Files;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\Model\Registry;
 use Contao\RequestToken;
+use Contao\Session;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -108,17 +111,79 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     public function reset(): void
     {
         $this->adapterCache = [];
-        $this->isFrontend = false;
+        $this->hookListeners = [];
 
         if (!$this->isInitialized()) {
             return;
         }
 
+        // Reset internal state
+        self::$initialized = false;
+        $this->request = null;
+        $this->isFrontend = false;
+
+        // Reset session
+        if (null !== ($session = $this->getSession())) {
+            $session->getBag('contao_backend')->clear();
+            $session->getBag('contao_frontend')->clear();
+        }
+
+        if (($_SESSION ?? null) instanceof LazySessionAccess) {
+            $_SESSION = [];
+        }
+
+        // Reset globals
+        unset(
+            $GLOBALS['BE_FFL'],
+            $GLOBALS['BE_MOD'],
+            $GLOBALS['FE_MOD'],
+            $GLOBALS['TL_ADMIN_EMAIL'],
+            $GLOBALS['TL_ADMIN_NAME'],
+            $GLOBALS['TL_AUTO_ITEM'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_CONFIG'],
+            $GLOBALS['TL_CRON'],
+            $GLOBALS['TL_CROP'],
+            $GLOBALS['TL_CSS'],
+            $GLOBALS['TL_CSS_UNITS'],
+            $GLOBALS['TL_CTE'],
+            $GLOBALS['TL_DCA'],
+            $GLOBALS['TL_DEBUG'],
+            $GLOBALS['TL_FFL'],
+            $GLOBALS['TL_FRAMEWORK_CSS'],
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_HOOKS'],
+            $GLOBALS['TL_JAVASCRIPT'],
+            $GLOBALS['TL_JQUERY'],
+            $GLOBALS['TL_KEYWORDS'],
+            $GLOBALS['TL_LANG'],
+            $GLOBALS['TL_LANGUAGE'],
+            $GLOBALS['TL_MAINTENANCE'],
+            $GLOBALS['TL_MIME'],
+            $GLOBALS['TL_MODELS'],
+            $GLOBALS['TL_MOOTOOLS'],
+            $GLOBALS['TL_NOINDEX_KEYS'],
+            $GLOBALS['TL_PERMISSIONS'],
+            $GLOBALS['TL_PTY'],
+            $GLOBALS['TL_PURGE'],
+            $GLOBALS['TL_USERNAME'],
+            $GLOBALS['TL_USER_CSS'],
+            $GLOBALS['TL_WRAPPERS'],
+            $GLOBALS['objPage'],
+        );
+
+        // Reset framework classes
+        Config::reset();
+        ClassLoader::reset();
+        Database::reset();
         Environment::reset();
+        Files::reset();
         Input::resetCache();
         Input::resetUnusedGet();
         InsertTags::reset();
         Registry::getInstance()->reset();
+        Session::reset();
+        System::reset();
     }
 
     public function isInitialized(): bool
@@ -174,36 +239,50 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $this->adapterCache[$class];
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
-     */
     private function setConstants(): void
     {
-        if (!\defined('TL_MODE')) {
-            \define('TL_MODE', $this->getMode());
-        }
+        $defineIfNotSet = static function (string $constant, $value): void {
+            if (\defined($constant)) {
+                return;
+            }
 
-        \define('TL_START', microtime(true));
-        \define('TL_ROOT', $this->projectDir);
-        \define('TL_REFERER_ID', $this->getRefererId());
+            \define($constant, $value);
+        };
 
-        if (!\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', $this->getRoute());
-        }
+        $define = static function (string $constant, $value): void {
+            if (\defined($constant)) {
+                if ($value !== \constant($constant)) {
+                    throw new \RuntimeException(sprintf('Cannot set constant "%s" to "%s", it is already defined as "%s".', $constant, $value, \constant($constant)));
+                }
+
+                return;
+            }
+
+            \define($constant, $value);
+        };
+
+        // Tolerate being set already
+        $defineIfNotSet('TL_START', microtime(true));
+        $defineIfNotSet('TL_SCRIPT', $this->getRoute());
+
+        // Throw if a different value would be set (see #2518)
+        $define('TL_MODE', $this->getMode());
+        $define('TL_ROOT', $this->projectDir);
+        $define('TL_REFERER_ID', $this->getRefererId());
 
         // Define the login status constants (see #4099, #5279)
         if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
             $session->start();
 
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
+            $define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            $define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
         } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
+            $define('BE_USER_LOGGED_IN', false);
+            $define('FE_USER_LOGGED_IN', false);
         }
 
         // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->getPath());
+        $define('TL_PATH', $this->getPath());
     }
 
     private function getMode(): ?string
@@ -293,8 +372,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function includeHelpers(): void
     {
-        require __DIR__.'/../Resources/contao/helper/functions.php';
-        require __DIR__.'/../Resources/contao/config/constants.php';
+        require_once __DIR__.'/../Resources/contao/helper/functions.php';
+        require_once __DIR__.'/../Resources/contao/config/constants.php';
     }
 
     /**

@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Tests\Fragment\Reference;
 use Contao\ContentModel;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ContentElementReferenceTest extends TestCase
 {
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
-        $model = new ContentModel();
+        /** @var ContentModel&MockObject $model */
+        $model = $this->mockClassWithProperties(ContentModel::class);
         $model->type = 'foobar';
 
         $reference = new ContentElementReference($model);
@@ -30,8 +32,7 @@ class ContentElementReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = new ContentModel();
-        $model->type = 'foobar';
+        $model = $this->createMock(ContentModel::class);
 
         $reference = new ContentElementReference($model);
         $this->assertSame('main', $reference->attributes['section']);

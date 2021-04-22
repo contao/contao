@@ -639,7 +639,7 @@ class ContaoFrameworkTest extends TestCase
         );
     }
 
-    public function testServiceIsResetable(): void
+    public function testServiceIsResettable(): void
     {
         $this->assertInstanceOf(ResetInterface::class, $this->mockFramework());
 
