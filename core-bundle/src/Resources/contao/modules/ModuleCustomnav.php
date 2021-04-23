@@ -118,6 +118,9 @@ class ModuleCustomnav extends Module
 		{
 			$_groups = StringUtil::deserialize($objModel->groups);
 
+			// Inherit protected status from the parent pages
+			$objModel->loadDetails();
+
 			// Do not show protected pages unless a front end user is logged in
 			if (!$objModel->protected || $this->showProtected || (\is_array($_groups) && \is_array($groups) && \count(array_intersect($_groups, $groups))))
 			{
