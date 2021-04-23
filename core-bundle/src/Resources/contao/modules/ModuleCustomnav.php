@@ -249,10 +249,12 @@ class ModuleCustomnav extends Module
 			}
 		}
 
-		// Add classes first and last
-		$items[0]['class'] = trim($items[0]['class'] . ' first');
-		$last = \count($items) - 1;
-		$items[$last]['class'] = trim($items[$last]['class'] . ' last');
+		if (!empty($items)) {
+			// Add classes first and last
+			$items[0]['class'] = trim($items[0]['class'] . ' first');
+			$last = \count($items) - 1;
+			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
+		}
 
 		$objTemplate->items = $items;
 
