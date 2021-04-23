@@ -613,12 +613,12 @@ class Calendar extends Frontend
 	 */
 	private function getPageWithDetails($intPageId)
 	{
-		if (isset(self::$arrPageCache[$intPageId]))
+		if (!isset(self::$arrPageCache[$intPageId]))
 		{
-			return self::$arrPageCache[$intPageId];
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId)
 		}
 
-		return (self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId));
+		return self::$arrPageCache[$intPageId];
 	}
 }
 
