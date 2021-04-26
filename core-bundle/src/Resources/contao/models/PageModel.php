@@ -11,6 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -304,6 +307,24 @@ class PageModel extends Model
 		if (\in_array($strKey, array('pageTitle', 'description', 'robots'), true))
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
+
+			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+			if ($responseContext instanceof WebpageContext)
+			{
+				switch ($strKey)
+				{
+					case 'pageTitle':
+						$responseContext->setTitle($varValue);
+						break;
+					case 'description':
+						$responseContext->setDescription($varValue);
+						break;
+					case 'robots':
+						$responseContext->setRobotsMetaTagContent($varValue);
+						break;
+				}
+			}
 		}
 
 		return parent::__set($strKey, $varValue);
