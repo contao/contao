@@ -299,6 +299,16 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
+	public function __set($strKey, $varValue)
+	{
+		if (\in_array($strKey, array('pageTitle', 'description', 'robots'), true))
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
+		}
+
+		return parent::__set($strKey, $varValue);
+	}
+
 	/**
 	 * Find a published page by its ID
 	 *

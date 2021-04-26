@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContextAccessor;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -87,6 +89,9 @@ class FrontendIndex extends Frontend
 	 */
 	public function renderPage($pageModel)
 	{
+		// Set WebpageContext by default for these controllers
+		System::getContainer()->get(ResponseContextAccessor::class)->setResponseContext(new WebpageContext());
+
 		/** @var PageModel $objPage */
 		global $objPage;
 

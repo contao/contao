@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -45,7 +47,15 @@ class PageRegular extends Frontend
 	{
 		$this->prepare($objPage);
 
-		return $this->Template->getResponse($blnCheckRequest);
+		$response = $this->Template->getResponse($blnCheckRequest);
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if ($responseContext instanceof WebpageContext)
+		{
+			$responseContext->mapToResponse($response);
+		}
+
+		return $response;
 	}
 
 	/**
@@ -70,6 +80,13 @@ class PageRegular extends Frontend
 
 		// Static URLs
 		$this->setStaticUrls();
+
+		// Set response context
+		$responseContext = (new WebpageContext())
+			->setTitle($objPage->pageTitle ?: $objPage->title)
+			->setDescription(str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description))
+		;
+		$container->get(ResponseContextAccessor::class)->setResponseContext($responseContext);
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
@@ -196,14 +213,14 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = $objPage->pageTitle ?: $objPage->title;
-
-		// Meta robots tag
-		$this->Template->robots = $objPage->robots ?: 'index,follow';
+		$this->Template->pageTitle = $responseContext->getTitle(); // $objPage->pageTitle ?: $objPage->title;
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
+
+		// Meta robots tag
+		$this->Template->robots = $responseContext->getRobotsMetaTagContent();
 
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
@@ -213,7 +230,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description);
+		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $responseContext->getDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
