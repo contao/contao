@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContextAccessor;
 use Patchwork\Utf8;
 
 /**
@@ -134,29 +136,33 @@ class ModuleNewsReader extends ModuleNews
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
-		// Overwrite the page title (see #2853, #4955 and #87)
-		if ($objArticle->pageTitle)
-		{
-			$objPage->pageTitle = $objArticle->pageTitle;
-		}
-		elseif ($objArticle->headline)
-		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objArticle->headline));
-		}
+		// Overwrite the page meta data (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		// Overwrite the page description
-		if ($objArticle->description)
+		if ($responseContext instanceof WebpageContext)
 		{
-			$objPage->description = $objArticle->description;
-		}
-		elseif ($objArticle->teaser)
-		{
-			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
-		}
+			if ($objArticle->pageTitle)
+			{
+				$responseContext->setTitle($objArticle->pageTitle);
+			}
+			elseif ($objArticle->headline)
+			{
+				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objArticle->headline)));
+			}
 
-		if ($objArticle->robots)
-		{
-			$objPage->robots = $objArticle->robots;
+			if ($objArticle->description)
+			{
+				$responseContext->setDescription($objArticle->description);
+			}
+			elseif ($objArticle->teaser)
+			{
+				$responseContext->setDescription($this->prepareMetaDescription($objArticle->teaser));
+			}
+
+			if ($objArticle->robots)
+			{
+				$responseContext->setRobotsMetaTagContent($objArticle->robots);
+			}
 		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
