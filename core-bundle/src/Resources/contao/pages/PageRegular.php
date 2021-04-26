@@ -11,8 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
-use Contao\CoreBundle\Routing\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -82,11 +83,12 @@ class PageRegular extends Frontend
 		$this->setStaticUrls();
 
 		// Set response context
-		$responseContext = (new WebpageContext())
+		/** @var WebpageContext $responseContext */
+		$responseContext = $container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageContext::class);
+		$responseContext
 			->setTitle($objPage->pageTitle ?: $objPage->title)
 			->setDescription(str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description))
 		;
-		$container->get(ResponseContextAccessor::class)->setResponseContext($responseContext);
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);

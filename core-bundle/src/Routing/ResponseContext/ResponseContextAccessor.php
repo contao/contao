@@ -10,9 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Routing;
+namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ResponseContextAccessor

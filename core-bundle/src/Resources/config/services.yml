@@ -652,10 +652,20 @@ services:
             - '@contao.routing.frontend_matcher'
         public: true
 
-    Contao\CoreBundle\Routing\ResponseContextAccessor:
+    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
         arguments:
             - '@request_stack'
-        public: true;
+        public: true
+
+    Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory:
+        arguments:
+            - !tagged_iterator contao.routing.response_context_provider
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
+        public: true
+
+    Contao\CoreBundle\Routing\ResponseContext\Factory\Provider\CoreProvider:
+        tags:
+            - contao.routing.response_context_provider
 
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer

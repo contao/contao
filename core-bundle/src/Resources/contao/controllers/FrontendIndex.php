@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
-use Contao\CoreBundle\Routing\ResponseContextAccessor;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -89,8 +89,10 @@ class FrontendIndex extends Frontend
 	 */
 	public function renderPage($pageModel)
 	{
+		$container = System::getContainer();
+
 		// Set WebpageContext by default for these controllers
-		System::getContainer()->get(ResponseContextAccessor::class)->setResponseContext(new WebpageContext());
+		$container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageContext::class);
 
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -134,7 +136,7 @@ class FrontendIndex extends Frontend
 			}
 
 			// Use the first result (see #4872)
-			if (!System::getContainer()->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
+			if (!$container->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
 			{
 				$objNewPage = current($arrLangs);
 			}
@@ -268,7 +270,6 @@ class FrontendIndex extends Frontend
 		// Authenticate the user if the page is protected
 		if ($objPage->protected)
 		{
-			$container = System::getContainer();
 			$token = $container->get('security.token_storage')->getToken();
 
 			if ($container->get('security.authentication.trust_resolver')->isAnonymous($token))
