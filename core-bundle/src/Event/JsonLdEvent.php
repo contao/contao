@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
-use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class JsonLdEvent extends Event

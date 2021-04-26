@@ -12,12 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\Factory\Provider;
 
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextInterface;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreProvider implements ResponseContextProviderInterface
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     public function supports(string $responseContextClassName): bool
     {
         return \in_array($responseContextClassName, [
@@ -28,6 +40,10 @@ class CoreProvider implements ResponseContextProviderInterface
 
     public function create(string $responseContextClassName): ResponseContextInterface
     {
-        return new $responseContextClassName();
+        if (WebpageContext::class === $responseContextClassName) {
+            return new WebpageContext(new JsonLdManager($this->eventDispatcher));
+        }
+
+        return new ResponseContext();
     }
 }

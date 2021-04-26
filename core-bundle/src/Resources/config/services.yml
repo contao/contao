@@ -593,12 +593,6 @@ services:
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer:
-        arguments:
-            - '@request_stack'
-            - '@event_dispatcher'
-        public: true
-
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
@@ -670,6 +664,8 @@ services:
         public: true
 
     Contao\CoreBundle\Routing\ResponseContext\Factory\Provider\CoreProvider:
+        arguments:
+            - '@event_dispatcher'
         tags:
             - contao.routing.response_context_provider
 

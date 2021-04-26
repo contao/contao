@@ -12,8 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
-use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
-use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLdProvidingResponseContextInterface;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -415,37 +416,34 @@ abstract class Template extends Controller
 	 */
 	public function jsonLd(array $jsonLd, string $schema = JsonLdManager::SCHEMA_ORG): void
 	{
-		// TODO: Create a PR for https://github.com/spatie/schema-org to see if we can get the factories inside that library
-		$factory = static function (array $jsonLd) use (&$factory)
+		$container = System::getContainer();
+		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if (!$responseContext instanceof JsonLdProvidingResponseContextInterface)
 		{
-			if (!isset($jsonLd['@type']))
-			{
-				throw new \InvalidArgumentException('Must provide the @type property!');
-			}
+			return;
+		}
 
-			$schemaClass = '\Spatie\SchemaOrg\\' . $jsonLd['@type'];
-			$schema = new $schemaClass();
-			unset($jsonLd['@type']);
-
-			foreach ($jsonLd as $k => $v)
-			{
-				if (\is_array($v) && isset($v['@type']))
-				{
-					$v = $factory($v);
-				}
-				$schema->setProperty($k, $v);
-			}
-
-			return $schema;
-		};
-
-		$schema = $factory($jsonLd);
+		$jsonLdManager = $responseContext->getJsonLdManager();
+		$schema = $jsonLdManager->createSchemaFromArray($jsonLd);
 		$id = isset($jsonLd['identifier']) ?: Graph::IDENTIFIER_DEFAULT;
 
-		System::getContainer()->get(PageMetadataContainer::class)
-			->getJsonLdManager()
+		$jsonLdManager
 			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
 			->set($schema, $id);
+	}
+
+	public function finalizeJsonLd()
+	{
+		$container = System::getContainer();
+		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if (!$responseContext instanceof JsonLdProvidingResponseContextInterface)
+		{
+			return;
+		}
+
+		return $responseContext->getJsonLdManager()->collectFinalScriptFromGraphs();
 	}
 
 	/**

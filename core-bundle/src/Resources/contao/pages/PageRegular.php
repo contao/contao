@@ -12,11 +12,11 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLdProvidingResponseContextInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
-use Contao\CoreBundle\Routing\Page\Metadata\ContaoPageSchema;
-use Contao\CoreBundle\Routing\Page\Metadata\JsonLdManager;
-use Contao\CoreBundle\Routing\Page\Metadata\PageMetadataContainer;
 use Spatie\SchemaOrg\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -705,10 +705,13 @@ class PageRegular extends Frontend
 			}
 		}
 
-		// Add JSON-LD metadata
-		if ($objPage !== null)
+		// Add JSON-LD metadata (in fact wouldn't need to get the container here again as we already have and know the
+		// response context but this class might have been extended and overridden so we fetch it again)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if ($objPage !== null && $responseContext instanceof JsonLdProvidingResponseContextInterface)
 		{
-			$jsonLdManager = System::getContainer()->get(PageMetadataContainer::class)->getJsonLdManager();
+			$jsonLdManager = $responseContext->getJsonLdManager();
 
 			// General schema.org WebPage schema
 			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(Schema::webPage());
@@ -731,9 +734,6 @@ class PageRegular extends Frontend
 				System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
 			));
 		}
-
-		// Add the JSON-LD data
-		$strScripts .= "\n" . $jsonLdManager->collectFinalScriptFromGraphs();
 
 		// Add the custom JavaScript
 		if ($objLayout->script)

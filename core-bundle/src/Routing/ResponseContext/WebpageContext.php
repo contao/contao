@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-class WebpageContext extends ResponseContext
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+
+class WebpageContext extends ResponseContext implements JsonLdProvidingResponseContextInterface
 {
     /**
      * @var string
@@ -27,6 +29,16 @@ class WebpageContext extends ResponseContext
      * @var string
      */
     private $robotsMetaTagContent = 'index,follow';
+
+    /**
+     * @var JsonLdManager
+     */
+    private $jsonLdManager;
+
+    public function __construct(JsonLdManager $jsonLdManager)
+    {
+        $this->jsonLdManager = $jsonLdManager;
+    }
 
     public function getTitle(): string
     {
@@ -62,5 +74,10 @@ class WebpageContext extends ResponseContext
         $this->robotsMetaTagContent = $robotsMetaTagContent;
 
         return $this;
+    }
+
+    public function getJsonLdManager(): JsonLdManager
+    {
+        return $this->jsonLdManager;
     }
 }

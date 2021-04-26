@@ -93,5 +93,7 @@
   <?php $this->endblock(); ?>
 
   <?= $this->mootools ?>
+
+  <?= $this->finalizeJsonLd() ?>
 </body>
 </html>
