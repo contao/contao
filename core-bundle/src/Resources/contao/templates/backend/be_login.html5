@@ -50,11 +50,11 @@
             <h1><?= $this->headline ?></h1>
             <div class="widget widget-text">
               <label for="username"><?= $this->username ?></label>
-              <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" placeholder="<?= $this->username ?>" required>
+              <input type="text" name="username" id="username" class="tl_text" value="<?= $this->curUsername ?>" autocapitalize="off" autocomplete="username" placeholder="<?= $this->username ?>" required>
             </div>
             <div class="widget widget-password">
               <label for="password"><?= $this->password ?></label>
-              <input type="password" name="password" id="password" class="tl_text" value="" placeholder="<?= $this->password ?>" required>
+              <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
             </div>
             <div class="submit_container cf">
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
