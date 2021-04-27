@@ -28,7 +28,7 @@ use Contao\Template;
 final class Figure
 {
     /**
-     * @var MediaResultInterface
+     * @var MediaResultInterface|(\Closure(self):MediaResultInterface)
      */
     private $media;
 
@@ -55,16 +55,15 @@ final class Figure
     /**
      * Creates a figure container.
      *
-     * All arguments but the main image result can also be set via a Closure
-     * that only returns the value on demand.
+     * All arguments also be set via a Closure that returns the value on demand.
      *
-     * @param MediaResultInterface                                                        $media          Main media
+     * @param MediaResultInterface|(\Closure(self):MediaResultInterface)                  $media          Main media
      * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(MediaResultInterface $media, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
+    public function __construct($media, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
     {
         $this->media = $media;
         $this->metadata = $metadata;
@@ -78,6 +77,8 @@ final class Figure
      */
     public function getMedia(): MediaResultInterface
     {
+        $this->resolveIfClosure($this->media);
+
         return $this->media;
     }
 
@@ -86,6 +87,8 @@ final class Figure
      */
     public function hasImage(): bool
     {
+        $this->resolveIfClosure($this->media);
+
         return $this->media instanceof ImageResult;
     }
 

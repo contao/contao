@@ -545,14 +545,17 @@ class FigureBuilder
         // Freeze settings to allow reusing this builder object
         $settings = clone $this;
 
-        $imageResult = $this->locator
-            ->get(Studio::class)
-            ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
-        ;
-
         // Define the values via closure to make their evaluation lazy
         return new Figure(
-            $imageResult,
+            \Closure::bind(
+                function (Figure $figure): ImageResult {
+                    return $this->locator
+                        ->get(Studio::class)
+                        ->createImage($this->filePath, $this->sizeConfiguration, $this->resizeOptions)
+                    ;
+                },
+                $settings
+            ),
             \Closure::bind(
                 function (Figure $figure): ?Metadata {
                     return $this->onDefineMetadata();
