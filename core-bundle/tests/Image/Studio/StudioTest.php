@@ -43,6 +43,7 @@ class StudioTest extends TestCase
             ResizerInterface::class,
             ContaoFramework::class,
             ContaoContext::class,
+            'event_dispatcher',
         ];
 
         $this->assertEqualsCanonicalizing($services, Studio::getSubscribedServices());

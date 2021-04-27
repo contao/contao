@@ -14,6 +14,11 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Event\DefineLightboxResultEvent;
+use Contao\CoreBundle\Image\Studio\Event\DefineLinkAttributesEvent;
+use Contao\CoreBundle\Image\Studio\Event\DefineMediaResultEvent;
+use Contao\CoreBundle\Image\Studio\Event\DefineMetadataEvent;
+use Contao\CoreBundle\Image\Studio\Event\DefineOptionsEvent;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -549,7 +554,10 @@ class FigureBuilder
         return new Figure(
             \Closure::bind(
                 function (Figure $figure): ImageResult {
-                    return $this->locator
+                    /** @var DefineMediaResultEvent $event */
+                    $event = $this->eventDispatcher()->dispatch(new DefineMediaResultEvent($this, $figure));
+
+                    return $event->getMediaResult() ?? $this->locator
                         ->get(Studio::class)
                         ->createImage($this->filePath, $this->sizeConfiguration, $this->resizeOptions)
                     ;
@@ -558,23 +566,36 @@ class FigureBuilder
             ),
             \Closure::bind(
                 function (Figure $figure): ?Metadata {
+                    $this->eventDispatcher()->dispatch(new DefineMetadataEvent($this, $figure));
+
                     return $this->onDefineMetadata();
                 },
                 $settings
             ),
             \Closure::bind(
                 function (Figure $figure): array {
+                    $this->eventDispatcher()->dispatch(new DefineLinkAttributesEvent($this, $figure));
+
                     return $this->onDefineLinkAttributes($figure);
                 },
                 $settings
             ),
             \Closure::bind(
                 function (Figure $figure): ?LightboxResult {
+                    $this->eventDispatcher()->dispatch(new DefineLightboxResultEvent($this, $figure));
+
                     return $this->onDefineLightboxResult($figure);
                 },
                 $settings
             ),
-            $settings->options
+            \Closure::bind(
+                function (Figure $figure): array {
+                    $this->eventDispatcher()->dispatch(new DefineOptionsEvent($this, $figure));
+
+                    return $this->options;
+                },
+                $settings
+            ),
         );
     }
 
@@ -706,6 +727,11 @@ class FigureBuilder
         $framework->initialize();
 
         return $framework->getAdapter(Validator::class);
+    }
+
+    private function eventDispatcher()
+    {
+        return $this->locator->get('event_dispatcher');
     }
 
     /**

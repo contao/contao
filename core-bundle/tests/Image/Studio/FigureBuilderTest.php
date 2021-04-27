@@ -29,6 +29,7 @@ use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
@@ -1114,6 +1115,7 @@ class FigureBuilderTest extends TestCase
             ->willReturnMap([
                 [Studio::class, $studio],
                 ['contao.framework', $framework],
+                ['event_dispatcher', new EventDispatcher()],
             ])
         ;
 
