@@ -112,7 +112,7 @@ final class Figure
     }
 
     /**
-     * Returns the lightbox result (if available).
+     * Returns the lightbox result.
      */
     public function getLightbox(): LightboxResult
     {
@@ -124,6 +124,9 @@ final class Figure
         return $this->lightbox;
     }
 
+    /**
+     * Returns true if metadata can be obtained.
+     */
     public function hasMetadata(): bool
     {
         $this->resolveIfClosure($this->metadata);
