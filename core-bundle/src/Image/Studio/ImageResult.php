@@ -26,7 +26,7 @@ use Contao\Image\ResizeOptions;
 use Psr\Container\ContainerInterface;
 use Webmozart\PathUtil\Path;
 
-class ImageResult
+class ImageResult implements MediaResultInterface
 {
     /**
      * @var ContainerInterface

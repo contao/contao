@@ -19,7 +19,7 @@ use Contao\StringUtil;
 use Contao\Template;
 
 /**
- * A Figure object holds image and metadata ready to be applied to a
+ * A Figure object holds media and metadata ready to be applied to a
  * template's context. If you are using the legacy PHP templates, you can still
  * use the provided legacy helper methods to manually apply the data to them.
  *
@@ -28,9 +28,9 @@ use Contao\Template;
 final class Figure
 {
     /**
-     * @var ImageResult
+     * @var MediaResultInterface
      */
-    private $image;
+    private $media;
 
     /**
      * @var Metadata|(\Closure(self):Metadata|null)|null
@@ -58,15 +58,15 @@ final class Figure
      * All arguments but the main image result can also be set via a Closure
      * that only returns the value on demand.
      *
-     * @param ImageResult                                                                 $image          Main image
+     * @param MediaResultInterface                                                        $media          Main media
      * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
+    public function __construct(MediaResultInterface $media, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
     {
-        $this->image = $image;
+        $this->media = $media;
         $this->metadata = $metadata;
         $this->linkAttributes = $linkAttributes;
         $this->lightbox = $lightbox;
@@ -74,11 +74,31 @@ final class Figure
     }
 
     /**
+     * Returns the main media result.
+     */
+    public function getMedia(): MediaResultInterface
+    {
+        return $this->media;
+    }
+
+    /**
+     * Returns true if an image result can be obtained.
+     */
+    public function hasImage(): bool
+    {
+        return $this->media instanceof ImageResult;
+    }
+
+    /**
      * Returns the image result of the main resource.
      */
     public function getImage(): ImageResult
     {
-        return $this->image;
+        if (!$this->hasImage()) {
+            throw new \LogicException('This result container does not include an image.');
+        }
+
+        return $this->media;
     }
 
     /**
@@ -211,6 +231,11 @@ final class Figure
      */
     public function getLegacyTemplateData($margin = null, string $floating = null, bool $includeFullMetadata = true): array
     {
+        // Legacy template data is only supported with ImageResults.
+        if (!$this->hasImage()) {
+            return [];
+        }
+
         // Create a key-value list of the metadata and apply some renaming and
         // formatting transformations to fit the legacy templates.
         $createLegacyMetadataMapping = static function (Metadata $metadata): array {
