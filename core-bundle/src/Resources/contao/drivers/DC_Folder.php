@@ -1633,6 +1633,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			foreach ($ids as $id)
 			{
 				$this->intId = $id;
+				$this->initialId = $id;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
 
 				$objModel = null;

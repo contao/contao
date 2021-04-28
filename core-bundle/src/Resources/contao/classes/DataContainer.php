@@ -42,6 +42,12 @@ abstract class DataContainer extends Backend
 	protected $intId;
 
 	/**
+	 * Initial ID of the same record
+	 * @var integer
+	 */
+	protected $initialId;
+
+	/**
 	 * Name of the current table
 	 * @var string
 	 */
@@ -325,7 +331,8 @@ abstract class DataContainer extends Backend
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$suffix = ($this instanceof DC_Folder ? md5($this->intId) : $this->intId);
+			$initialId = $this->initialId ?: $this->intId;
+			$suffix = ($this instanceof DC_Folder ? md5($initialId) : $this->intId);
 			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
 
 			// Calculate the current palette
