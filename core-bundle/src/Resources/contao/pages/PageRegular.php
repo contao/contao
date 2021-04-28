@@ -53,7 +53,7 @@ class PageRegular extends Frontend
 
 		if ($responseContext instanceof WebpageContext)
 		{
-			$responseContext->mapToResponse($response);
+			$responseContext->mapHeaderBagToResponse($response);
 		}
 
 		return $response;

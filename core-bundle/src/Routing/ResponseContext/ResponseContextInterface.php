@@ -21,5 +21,5 @@ interface ResponseContextInterface
 
     public function getHeaderBag(): ResponseHeaderBag;
 
-    public function mapToResponse(Response $response): void;
+    public function mapHeaderBagToResponse(Response $response): void;
 }
