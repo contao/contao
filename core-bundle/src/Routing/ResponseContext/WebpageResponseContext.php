@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-class WebpageContext extends ResponseContext
+class WebpageResponseContext extends ResponseContext
 {
     /**
      * @var string

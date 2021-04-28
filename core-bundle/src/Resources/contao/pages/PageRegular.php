@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -51,7 +51,7 @@ class PageRegular extends Frontend
 		$response = $this->Template->getResponse($blnCheckRequest);
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageContext)
+		if ($responseContext instanceof WebpageResponseContext)
 		{
 			$responseContext->mapHeaderBagToResponse($response);
 		}
@@ -83,8 +83,8 @@ class PageRegular extends Frontend
 		$this->setStaticUrls();
 
 		// Set response context
-		/** @var WebpageContext $responseContext */
-		$responseContext = $container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageContext::class);
+		/** @var WebpageResponseContext $responseContext */
+		$responseContext = $container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageResponseContext::class);
 		$responseContext
 			->setTitle($objPage->pageTitle ?: $objPage->title)
 			->setDescription(str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description))

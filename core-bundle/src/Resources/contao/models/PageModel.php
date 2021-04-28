@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -309,7 +309,7 @@ class PageModel extends Model
 
 			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($responseContext instanceof WebpageContext)
+			if ($responseContext instanceof WebpageResponseContext)
 			{
 				switch ($strKey)
 				{

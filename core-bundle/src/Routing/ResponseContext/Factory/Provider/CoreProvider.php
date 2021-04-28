@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Routing\ResponseContext\Factory\Provider;
 
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextInterface;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 
 class CoreProvider implements ResponseContextProviderInterface
 {
@@ -22,7 +22,7 @@ class CoreProvider implements ResponseContextProviderInterface
     {
         return \in_array($responseContextClassName, [
             ResponseContext::class,
-            WebpageContext::class,
+            WebpageResponseContext::class,
         ], true);
     }
 
