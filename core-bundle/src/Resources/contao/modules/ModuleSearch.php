@@ -234,7 +234,7 @@ class ModuleSearch extends Module
 			$contextLength = 48;
 			$totalLength = 360;
 
-			$lengths = StringUtil::deserialize($this->contextLength, true);
+			$lengths = StringUtil::deserialize($this->contextLength, true) + array(null, null);
 
 			if ($lengths[0] > 0)
 			{
