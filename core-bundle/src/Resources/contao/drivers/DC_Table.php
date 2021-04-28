@@ -3544,6 +3544,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
+		else
+		{
+			$arrClipboard = null;
+		}
 
 		if (isset($GLOBALS['TL_DCA'][$table]['config']['label']))
 		{
@@ -3838,6 +3842,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
+		}
+		else
+		{
+			$arrClipboard = null;
 		}
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
@@ -4163,10 +4171,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$table];
 
-			if (\is_array($arrClipboard['id']))
+			if (\is_array($arrClipboard['id'] ?? null))
 			{
 				$blnMultiboard = true;
 			}
+		}
+		else
+		{
+			$arrClipboard = null;
 		}
 
 		// Load the language file and data container array of the parent table

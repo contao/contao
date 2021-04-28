@@ -273,12 +273,12 @@ class Form extends Hybrid
 		$strAttributes = '';
 		$arrAttributes = StringUtil::deserialize($this->attributes, true);
 
-		if ($arrAttributes[0])
+		if (!empty($arrAttributes[0]))
 		{
 			$strAttributes .= ' id="' . $arrAttributes[0] . '"';
 		}
 
-		if ($arrAttributes[1])
+		if (!empty($arrAttributes[1]))
 		{
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
