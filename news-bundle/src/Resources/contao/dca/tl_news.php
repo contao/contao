@@ -502,6 +502,21 @@ class tl_news extends Contao\Backend
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields']);
 			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
+
+			// Add clr class to field that follows removed noComments field
+			foreach ($GLOBALS['TL_DCA']['tl_news']['palettes'] as $palette)
+			{
+				if (
+					is_array($palette)
+					|| !preg_match('/noComments\s*,\s*([^,;\s]+)\s*[,;]/', $palette, $matches)
+					|| preg_match('/(^|\s+)clr($|\s+)/', $GLOBALS['TL_DCA']['tl_news']['fields'][$matches[1]]['eval']['tl_class'])
+				) {
+					continue;
+				}
+
+				$GLOBALS['TL_DCA']['tl_news']['fields'][$matches[1]]['eval']['tl_class'] .= ' clr';
+				trim($GLOBALS['TL_DCA']['tl_news']['fields'][$matches[1]]['eval']['tl_class']);
+			}
 		}
 
 		if ($this->User->isAdmin)

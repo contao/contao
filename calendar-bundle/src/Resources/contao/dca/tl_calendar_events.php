@@ -550,6 +550,21 @@ class tl_calendar_events extends Contao\Backend
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields']);
 			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
+
+			// Add clr class to field that follows removed noComments field
+			foreach ($GLOBALS['TL_DCA']['tl_calendar_events']['palettes'] as $palette)
+			{
+				if (
+					is_array($palette)
+					|| !preg_match('/noComments\s*,\s*([^,;\s]+)\s*[,;]/', $palette, $matches)
+					|| preg_match('/(^|\s+)clr($|\s+)/', $GLOBALS['TL_DCA']['tl_calendar_events']['fields'][$matches[1]]['eval']['tl_class'])
+				) {
+					continue;
+				}
+
+				$GLOBALS['TL_DCA']['tl_calendar_events']['fields'][$matches[1]]['eval']['tl_class'] .= ' clr';
+				trim($GLOBALS['TL_DCA']['tl_calendar_events']['fields'][$matches[1]]['eval']['tl_class']);
+			}
 		}
 
 		if ($this->User->isAdmin)

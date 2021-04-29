@@ -341,6 +341,21 @@ class tl_faq extends Contao\Backend
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields']);
 			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments']);
+
+			// Add clr class to field that follows removed noComments field
+			foreach ($GLOBALS['TL_DCA']['tl_faq']['palettes'] as $palette)
+			{
+				if (
+					is_array($palette)
+					|| !preg_match('/noComments\s*,\s*([^,;\s]+)\s*[,;]/', $palette, $matches)
+					|| preg_match('/(^|\s+)clr($|\s+)/', $GLOBALS['TL_DCA']['tl_faq']['fields'][$matches[1]]['eval']['tl_class'])
+				) {
+					continue;
+				}
+
+				$GLOBALS['TL_DCA']['tl_faq']['fields'][$matches[1]]['eval']['tl_class'] .= ' clr';
+				trim($GLOBALS['TL_DCA']['tl_faq']['fields'][$matches[1]]['eval']['tl_class']);
+			}
 		}
 
 		if ($this->User->isAdmin)
