@@ -516,8 +516,8 @@ class News extends Frontend
 
 	/**
 	 * Return the page object with loaded details for the given page ID
-	 * 
-	 * @param integer $intPageId
+	 *
+	 * @param  integer        $intPageId
 	 * @return PageModel|null
 	 */
 	private function getPageWithDetails($intPageId)
