@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
-use Contao\CoreBundle\Routing\ResponseContextAccessor;
 use Patchwork\Utf8;
 
 /**
