@@ -549,7 +549,7 @@ class tl_calendar_events extends Contao\Backend
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields']);
-			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key]);
+			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
 		}
 
 		if ($this->User->isAdmin)

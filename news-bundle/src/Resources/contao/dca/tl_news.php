@@ -501,7 +501,7 @@ class tl_news extends Contao\Backend
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields']);
-			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key]);
+			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
 		}
 
 		if ($this->User->isAdmin)
