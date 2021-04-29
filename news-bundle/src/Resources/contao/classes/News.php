@@ -530,7 +530,7 @@ class News extends Frontend
 	{
 		if (!isset(self::$arrPageCache[$intPageId]))
 		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId)
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
 		}
 
 		return self::$arrPageCache[$intPageId];
