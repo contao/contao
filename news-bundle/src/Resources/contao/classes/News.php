@@ -181,12 +181,6 @@ class News extends Frontend
 					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
 				}
 
-				// Skip the event if it requires a jumpTo URL but there is none
-				if ($objArticle->source == 'default' && $arrUrls[$jumpTo] === false)
-				{
-					continue;
-				}
-
 				$strUrl = $arrUrls[$jumpTo];
 
 				$objItem = new FeedItem();
