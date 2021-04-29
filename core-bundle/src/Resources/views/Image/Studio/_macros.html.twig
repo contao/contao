@@ -82,11 +82,14 @@
     {%- if figure.image.sources %}
         <picture{{ _self.html_attributes(picture_attributes) }}>
             {% for source in figure.image.sources %}
+                {%- set defineProportions = source.width|default(false) and source.height|default(false) -%}
                 {%- set base_attributes = {
                     'srcset': source.srcset,
                     'sizes': source.sizes|default(null),
                     'media': source.media|default(null),
                     'type': source.type|default(null),
+                    'width': defineProportions ? source.width : null,
+                    'height': defineProportions ? source.height : null,
                 } -%}
                 <source{{ _self.html_attributes(base_attributes|merge(source_attributes)) }}>
             {%- endfor %}
@@ -106,7 +109,7 @@
         {% set img_attributes = figure.options.img_attr|default({})|merge(options.img_attr|default({})) %}
 
         {% set img = figure.image.img %}
-        {% set defineProportions = img.hasSingleAspectRatio|default(false) and img.width|default(false) and img.height|default(false) %}
+        {% set defineProportions = img.width|default(false) and img.height|default(false) %}
 
         {% set base_attributes = {
             'src': img.src,
