@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 interface ResponseContextInterface
 {
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
-    public function getHeaderBag(): ResponseHeaderBag;
+    public function getHeaderBag(): PartialResponseHeaderBag;
 
     public function mapHeaderBagToResponse(Response $response): void;
 }

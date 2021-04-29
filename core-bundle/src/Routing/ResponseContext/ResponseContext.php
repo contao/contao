@@ -13,19 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ResponseContext implements ResponseContextInterface
 {
     /**
-     * @var ResponseHeaderBag|null
+     * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
 
-    public function getHeaderBag(): ResponseHeaderBag
+    public function getHeaderBag(): PartialResponseHeaderBag
     {
         if (null === $this->headerBag) {
-            $this->headerBag = new ResponseHeaderBag();
+            $this->headerBag = new PartialResponseHeaderBag();
         }
 
         return $this->headerBag;
