@@ -67,6 +67,16 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
      */
     private $httpCache;
 
+    public function shutdown(): void
+    {
+        // Reset bundle loader to re-calculate bundle order after cache:clear
+        if ($this->booted) {
+            $this->bundleLoader = null;
+        }
+
+        parent::shutdown();
+    }
+
     public function registerBundles(): array
     {
         $bundles = [];

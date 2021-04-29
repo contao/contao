@@ -115,7 +115,7 @@ class RadioButton extends Widget
 		// Add an unknown option, so it is not lost when saving the record (see #920)
 		if (isset($this->unknownOption[0]))
 		{
-			$arrAllOptions[] = array('value'=>$this->unknownOption[0], 'label'=>$GLOBALS['TL_LANG']['MSC']['unknownOption']);
+			$arrAllOptions[] = array('value' => $this->unknownOption[0], 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[0]));
 		}
 
 		foreach ($arrAllOptions as $i=>$arrOption)

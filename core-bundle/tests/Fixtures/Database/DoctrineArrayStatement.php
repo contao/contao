@@ -13,10 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Fixtures\Database;
 
 use Doctrine\DBAL\Cache\ArrayStatement;
-use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\ParameterType;
 
-class DoctrineArrayStatement extends ArrayStatement implements Statement
+class DoctrineArrayStatement extends ArrayStatement
 {
     private $rowCount;
 

@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
         <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Prikaži elemente, ki so običajno vidni samo prijavljenim uporabnikom.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -134,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Preusmeri uporabnika nazaj na zadnjo obiskano stran namesto na preusmeritveno stran.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>

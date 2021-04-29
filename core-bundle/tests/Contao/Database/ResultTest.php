@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Contao\Database;
 
 use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
+use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\ForwardCompatibility\Result as ForwardCompatibilityResult;
 use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
@@ -22,11 +24,7 @@ class ResultTest extends TestCase
 {
     public function testEmptyResult(): void
     {
-        $resultStatement = new Result(new DoctrineArrayStatement([]), 'SELECT * FROM test');
-        $resultArray = new Result([], 'SELECT * FROM test');
-
-        /** @var Result|object $result */
-        foreach ([$resultStatement, $resultArray] as $result) {
+        foreach ($results = $this->createResults([]) as $result) {
             foreach ([null, 'first', 'last', 'reset'] as $methodName) {
                 if ($methodName) {
                     $this->assertSame($result, $result->$methodName());
@@ -54,7 +52,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
-        $resultStatement->fetchField();
+        $results[1]->fetchField();
     }
 
     public function testSingleRow(): void
@@ -63,11 +61,7 @@ class ResultTest extends TestCase
             ['field' => 'value1'],
         ];
 
-        $resultStatement = new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test');
-        $resultArray = new Result($data, 'SELECT * FROM test');
-
-        /** @var Result|object $result */
-        foreach ([$resultStatement, $resultArray] as $result) {
+        foreach ($results = $this->createResults($data) as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
             $this->assertSame(1, $result->numRows);
@@ -97,7 +91,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
-        $result->fetchField(1);
+        $results[1]->fetchField(1);
     }
 
     public function testMultipleRows(): void
@@ -107,11 +101,7 @@ class ResultTest extends TestCase
             ['field' => 'value2'],
         ];
 
-        $resultStatement = new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test');
-        $resultArray = new Result($data, 'SELECT * FROM test');
-
-        /** @var Result|object $result */
-        foreach ([$resultStatement, $resultArray] as $result) {
+        foreach ($results = $this->createResults($data) as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
             $this->assertSame(2, $result->numRows);
@@ -145,7 +135,7 @@ class ResultTest extends TestCase
         }
 
         $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
-        $result->fetchField(1);
+        $results[1]->fetchField(1);
     }
 
     public function testFetchRowAndAssoc(): void
@@ -155,11 +145,7 @@ class ResultTest extends TestCase
             ['field' => 'value2'],
         ];
 
-        $resultStatement = new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test');
-        $resultArray = new Result($data, 'SELECT * FROM test');
-
-        /** @var Result|object $result */
-        foreach ([$resultStatement, $resultArray] as $result) {
+        foreach ($this->createResults($data) as $result) {
             $this->assertSame(['field' => 'value1'], $result->fetchAssoc());
             $this->assertSame(['field' => 'value1'], $result->row());
             $this->assertSame('value1', $result->field);
@@ -170,6 +156,21 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->field);
             $this->assertNull($result->{'0'});
         }
+    }
+
+    public function testResultStatementInterface(): void
+    {
+        $resultStatement = $this->createMock(ResultStatement::class);
+        $resultStatement
+            ->expects($this->exactly(3))
+            ->method('fetch')
+            ->with(\PDO::FETCH_ASSOC)
+            ->willReturnOnConsecutiveCalls(['field' => 'value1'], ['field' => 'value2'], false)
+        ;
+
+        $result = new Result($resultStatement, 'SELECT * FROM test');
+
+        $this->assertSame(2, $result->count());
     }
 
     /**
@@ -188,5 +189,24 @@ class ResultTest extends TestCase
         yield 'Object' => [new \stdClass()];
         yield 'Single Array' => [['foo' => 'bar']];
         yield 'Mixed Array' => [[['foo' => 'bar'], 'baz']];
+    }
+
+    /**
+     * @param array<array<string,string>> $data
+     *
+     * @return array<Result|object>
+     */
+    private function createResults(array $data): array
+    {
+        $resultObjects = [
+            new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test'),
+            new Result($data, 'SELECT * FROM test'),
+        ];
+
+        if (class_exists(ForwardCompatibilityResult::class)) {
+            $resultObjects[] = new Result(new ForwardCompatibilityResult(new DoctrineArrayStatement($data)), 'SELECT * FROM test');
+        }
+
+        return $resultObjects;
     }
 }

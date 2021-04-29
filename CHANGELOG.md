@@ -2,6 +2,42 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.13] (2021-03-24)
+
+**Fixed issues:**
+
+- [#2905] Fix service tagging for url_callback + title_tag_callback ([rabauss])
+- [#2901] Respect _target_path on logout if set ([bytehead])
+- [#2884] Fix the version 4.8.0 migration ([ausi])
+- [#2899] Fix error when using return => Array for models ([fritzmg])
+- [#2893] Fix an "undefined index: filesize" error in the indexer ([fritzmg])
+- [#2883] Return a 404 status code if an image file does not exist ([ausi])
+- [#2887] Add the Cookiebot Cookie Consent cookie to the cookie deny list ([MarkejN])
+- [#2885] Remove a redundant strip cookie regex ([leofeyer])
+- [#2877] Fix the UNIX_TIMESTAMP function in MySQL 8 ([leofeyer])
+- [#2875] Fix two CSS issues in the back end ([leofeyer])
+- [#2876] Adjust the Google Analytics strip cookie regex ([leofeyer])
+- [#2762] Fix loading database.sql files in the DcaExtractor ([m-vo])
+- [#2780] Handle session being null in System::getReferer ([m-vo])
+- [#2864] Use the image template everywhere ([fritzmg])
+- [#2861] Fix table content element not showing zeros ([fritzmg])
+- [#2854] Respect the label field order in the picker ([bezin])
+- [#2837] Use eval.context in the picker if set ([ausi])
+- [#2836] Initialize the Contao framework in the Version480Update class ([leofeyer])
+- [#2838] Adjust the description of the YouTube "rel" option ([leofeyer])
+- [#2827] Fix generating error pages by name ([aschempp])
+- [#2829] Start the session to check for a user token ([aschempp])
+- [#2815] Do not tag contao.db.tl_module.<id> in articles ([m-vo])
+- [#2831] Always sort root pages by language first ([aschempp])
+- [#2674] Handle image URLs with a {{file::*}} insert tag in the lightbox ([fritzmg])
+- [#2799] Include table views in the listing module drop-down menu ([fritzmg])
+- [#2689] Follow redirects in the failure method of the Request.Contao class ([leofeyer])
+- [#2735] Handle non-regex values in the search filter ([ausi])
+- [#2777] Ignore empty authorization headers in the MakeResponsePrivateListener ([ausi])
+- [#2800] Fix the json+ld schema extraction ([Toflar])
+- [#2819] Sort root page routes after other page routes ([aschempp])
+- [#2779] Allow 0 as default value for range sliders ([fritzmg])
+
 ## [4.9.12] (2021-02-16)
 
 **Fixed issues:**
@@ -519,6 +555,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.13]: https://github.com/contao/contao/releases/tag/4.9.13
 [4.9.12]: https://github.com/contao/contao/releases/tag/4.9.12
 [4.9.11]: https://github.com/contao/contao/releases/tag/4.9.11
 [4.9.10]: https://github.com/contao/contao/releases/tag/4.9.10
@@ -539,6 +576,7 @@ This project adheres to [Semantic Versioning].
 [ausi]: https://github.com/ausi
 [baumannsven]: https://github.com/baumannsven
 [bennyborn]: https://github.com/bennyborn
+[bezin]: https://github.com/bezin
 [Blog404DE]: https://github.com/Blog404DE
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
@@ -547,6 +585,7 @@ This project adheres to [Semantic Versioning].
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[MarkejN]: https://github.com/MarkejN
 [Mynyx]: https://github.com/Mynyx
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
@@ -554,6 +593,37 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2905]: https://github.com/contao/contao/pull/2905
+[#2901]: https://github.com/contao/contao/pull/2901
+[#2884]: https://github.com/contao/contao/pull/2884
+[#2899]: https://github.com/contao/contao/pull/2899
+[#2893]: https://github.com/contao/contao/pull/2893
+[#2883]: https://github.com/contao/contao/pull/2883
+[#2887]: https://github.com/contao/contao/pull/2887
+[#2885]: https://github.com/contao/contao/pull/2885
+[#2877]: https://github.com/contao/contao/pull/2877
+[#2875]: https://github.com/contao/contao/pull/2875
+[#2876]: https://github.com/contao/contao/pull/2876
+[#2762]: https://github.com/contao/contao/pull/2762
+[#2780]: https://github.com/contao/contao/pull/2780
+[#2864]: https://github.com/contao/contao/pull/2864
+[#2861]: https://github.com/contao/contao/pull/2861
+[#2854]: https://github.com/contao/contao/pull/2854
+[#2837]: https://github.com/contao/contao/pull/2837
+[#2836]: https://github.com/contao/contao/pull/2836
+[#2838]: https://github.com/contao/contao/pull/2838
+[#2827]: https://github.com/contao/contao/pull/2827
+[#2829]: https://github.com/contao/contao/pull/2829
+[#2815]: https://github.com/contao/contao/pull/2815
+[#2831]: https://github.com/contao/contao/pull/2831
+[#2674]: https://github.com/contao/contao/pull/2674
+[#2799]: https://github.com/contao/contao/pull/2799
+[#2689]: https://github.com/contao/contao/pull/2689
+[#2735]: https://github.com/contao/contao/pull/2735
+[#2777]: https://github.com/contao/contao/pull/2777
+[#2800]: https://github.com/contao/contao/pull/2800
+[#2819]: https://github.com/contao/contao/pull/2819
+[#2779]: https://github.com/contao/contao/pull/2779
 [#2754]: https://github.com/contao/contao/pull/2754
 [#2755]: https://github.com/contao/contao/pull/2755
 [#1909]: https://github.com/contao/contao/pull/1909

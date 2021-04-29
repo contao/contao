@@ -794,7 +794,7 @@
         <target>پنهان کردن آرم YouTube</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
-        <source>Do not show related videos at the end</source>
+        <source>Limit related videos to the same channel</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube_showinfo">
         <source>Hide the top bar in the preview</source>

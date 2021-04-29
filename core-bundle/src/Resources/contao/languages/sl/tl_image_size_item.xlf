@@ -30,6 +30,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.source_legend">
         <source>Image source settings</source>
+        <target>Nastavitve slikovnega vira</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
@@ -57,15 +58,19 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.cut">
         <source>Move media query ID %s</source>
+        <target>Premakni &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy">
         <source>Duplicate media query ID %s</source>
+        <target>Podvoji &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete">
         <source>Delete media query ID %s</source>
+        <target>Izbriši &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle">
         <source>Activate/deactivate media query ID %s</source>
+        <target>Omogoči/onemogoči &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -73,12 +78,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
+        <target>Prilepi za &quot;media query&quot; z ID %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
+        <target>Ustvari nov &quot;media query&quot; na začetku</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
+        <target>Ustvari nov &quot;media query&quot; za &quot;media query&quot; z ID %s</target>
       </trans-unit>
     </body>
   </file>

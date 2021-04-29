@@ -10,7 +10,7 @@
 
 namespace Contao\Database;
 
-use Doctrine\DBAL\Driver\Statement as DoctrineStatement;
+use Doctrine\DBAL\Driver\ResultStatement;
 
 /**
  * Lazy load the result set rows
@@ -37,7 +37,7 @@ class Result
 {
 	/**
 	 * Database result
-	 * @var DoctrineStatement
+	 * @var ResultStatement
 	 */
 	protected $resResult;
 
@@ -74,12 +74,12 @@ class Result
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param DoctrineStatement|array $statement The database statement
-	 * @param string                  $strQuery  The query string
+	 * @param ResultStatement|array $statement The database statement
+	 * @param string                $strQuery  The query string
 	 */
 	public function __construct($statement, $strQuery)
 	{
-		if ($statement instanceof DoctrineStatement)
+		if ($statement instanceof ResultStatement)
 		{
 			$this->resResult = $statement;
 		}
@@ -363,7 +363,10 @@ class Result
 	{
 		if ($this->rowCount === null)
 		{
-			$this->rowCount = $this->resResult->rowCount();
+			if (method_exists($this->resResult, 'rowCount'))
+			{
+				$this->rowCount = $this->resResult->rowCount();
+			}
 
 			// rowCount() might incorrectly return 0 for some platforms
 			if ($this->rowCount < 1)
@@ -427,7 +430,7 @@ class Result
 	private function preload($index)
 	{
 		// Optimize memory usage for single row results
-		if ($index === 0 && $this->resResult && $this->resResult->rowCount() === 1)
+		if ($index === 0 && $this->resResult && method_exists($this->resResult, 'rowCount') && $this->resResult->rowCount() === 1)
 		{
 			++$index;
 		}

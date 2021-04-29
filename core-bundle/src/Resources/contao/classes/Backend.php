@@ -461,16 +461,16 @@ abstract class Backend extends Controller
 
 				if ($objRow->title)
 				{
-					$this->Template->headline .= ' › <span>' . $objRow->title . '</span>';
+					$this->Template->headline .= ' <span>' . $objRow->title . '</span>';
 				}
 				elseif ($objRow->name)
 				{
-					$this->Template->headline .= ' › <span>' . $objRow->name . '</span>';
+					$this->Template->headline .= ' <span>' . $objRow->name . '</span>';
 				}
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
+			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
 		}
 
 		// Default action
@@ -532,21 +532,21 @@ abstract class Backend extends Controller
 						// Add table name
 						if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
 						{
-							$trail[] = ' › <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
+							$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 						}
 
 						// Add object title or name
 						if ($objRow->title)
 						{
-							$trail[] = ' › <span>' . $objRow->title . '</span>';
+							$trail[] = ' <span>' . $objRow->title . '</span>';
 						}
 						elseif ($objRow->name)
 						{
-							$trail[] = ' › <span>' . $objRow->name . '</span>';
+							$trail[] = ' <span>' . $objRow->name . '</span>';
 						}
 						elseif ($objRow->headline)
 						{
-							$trail[] = ' › <span>' . $objRow->headline . '</span>';
+							$trail[] = ' <span>' . $objRow->headline . '</span>';
 						}
 					}
 
@@ -562,7 +562,7 @@ abstract class Backend extends Controller
 				// Add the last parent table
 				if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
 				{
-					$trail[] = ' › <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
+					$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 				}
 
 				// Add the breadcrumb trail in reverse order
@@ -579,14 +579,14 @@ abstract class Backend extends Controller
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all'][0]))
 				{
-					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
+					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all'][0] . '</span>';
 				}
 			}
 			elseif ($act == 'overrideAll')
 			{
 				if (isset($GLOBALS['TL_LANG']['MSC']['all_override'][0]))
 				{
-					$this->Template->headline .= ' › <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
+					$this->Template->headline .= ' <span>' . $GLOBALS['TL_LANG']['MSC']['all_override'][0] . '</span>';
 				}
 			}
 			elseif (Input::get('id'))
@@ -596,22 +596,22 @@ abstract class Backend extends Controller
 					// Handle new folders (see #7980)
 					if (strpos(Input::get('id'), '__new__') !== false)
 					{
-						$this->Template->headline .= ' › <span>' . \dirname(Input::get('id')) . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
+						$this->Template->headline .= ' <span>' . \dirname(Input::get('id')) . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' › <span>' . Input::get('id') . '</span>';
+						$this->Template->headline .= ' <span>' . Input::get('id') . '</span>';
 					}
 				}
 				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
 				{
 					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
+						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
+						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
 					}
 				}
 			}
@@ -621,22 +621,22 @@ abstract class Backend extends Controller
 				{
 					if ($act == 'move')
 					{
-						$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span> › <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
+						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['move'][1] . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' › <span>' . Input::get('pid') . '</span>';
+						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span>';
 					}
 				}
 				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
 				{
 					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
 					}
 					else
 					{
-						$this->Template->headline .= ' › <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
+						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}

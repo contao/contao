@@ -27,6 +27,15 @@ use Symfony\Component\Routing\Route;
 
 class RouteProviderTest extends TestCase
 {
+    private $pageModelAutoIncrement = 0;
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->pageModelAutoIncrement = 0;
+    }
+
     public function testGetsARouteByName(): void
     {
         /** @var PageModel&MockObject $page */
@@ -662,9 +671,11 @@ class RouteProviderTest extends TestCase
      */
     private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
     {
+        mt_srand(++$this->pageModelAutoIncrement);
+
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = random_int(1, 10000);
+        $page->id = $this->pageModelAutoIncrement;
         $page->rootId = 1;
         $page->type = 'regular';
         $page->alias = $alias;

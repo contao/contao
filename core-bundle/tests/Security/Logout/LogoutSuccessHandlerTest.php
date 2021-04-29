@@ -50,6 +50,35 @@ class LogoutSuccessHandlerTest extends TestCase
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
     }
 
+    public function testRedirectsToTargetPath(): void
+    {
+        $request = new Request();
+        $request->request->set('_target_path', 'http://localhost/home');
+
+        $httpUtils = $this->createMock(HttpUtils::class);
+        $httpUtils
+            ->expects($this->once())
+            ->method('createRedirectResponse')
+            ->with($request, 'http://localhost/home')
+            ->willReturn(new RedirectResponse('http://localhost/home'))
+        ;
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(false)
+        ;
+
+        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
+
+        /** @var RedirectResponse $response */
+        $response = $handler->onLogoutSuccess($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('http://localhost/home', $response->getTargetUrl());
+    }
+
     public function testRedirectsToTheRefererUrl(): void
     {
         $request = new Request();
