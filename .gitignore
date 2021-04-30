@@ -3,7 +3,6 @@
 /vendor/
 
 # Composer bin
-/tools/*/composer.lock
 /tools/*/vendor
 
 # Monorepo Tools
