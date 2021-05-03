@@ -152,7 +152,7 @@
 
     Example:
 
-        { 'foo': 'a', 'bar': 'b, 'foobar': null } --> ' foo="a" bar="b"'
+        { 'foo': 'a', 'bar': 'b', 'foobar': null } --> ' foo="a" bar="b"'
 #}
 {%- macro html_attributes(attributes) -%}
     {%- for attr, value in attributes|filter(v => v is not null) -%}
