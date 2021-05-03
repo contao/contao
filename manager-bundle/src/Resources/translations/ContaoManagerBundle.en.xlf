@@ -8,6 +8,9 @@
       <trans-unit id="2" resname="contao_manager">
         <source>Contao Manager</source>
       </trans-unit>
+      <trans-unit id="3" resname="contao_manager_title">
+        <source>Open the Contao Manager to administrate the Contao system.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -160,7 +160,7 @@ class BackendMenuListener
             ->setLabel('contao_manager')
             ->setUri('/'.$this->managerPath)
             ->setLinkAttribute('class', 'navigation contao_manager')
-            ->setLinkAttribute('title', $this->translator->trans('contao_manager', [], 'ContaoManagerBundle'))
+            ->setLinkAttribute('title', $this->translator->trans('contao_manager_title', [], 'ContaoManagerBundle'))
             ->setExtra('translation_domain', 'ContaoManagerBundle')
         ;
 
