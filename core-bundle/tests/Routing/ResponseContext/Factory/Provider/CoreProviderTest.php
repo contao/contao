@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext\Factory\Provider;
 use Contao\CoreBundle\Routing\ResponseContext\Factory\Provider\CoreProvider;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
+use Contao\CoreBundle\Tests\Fixtures\Routing\FooResponseContext;
 use PHPUnit\Framework\TestCase;
 
 class CoreProviderTest extends TestCase
@@ -25,7 +26,7 @@ class CoreProviderTest extends TestCase
 
         $this->assertTrue($provider->supports(ResponseContext::class));
         $this->assertTrue($provider->supports(WebpageResponseContext::class));
-        $this->assertFalse($provider->supports('Foobar'));
+        $this->assertFalse($provider->supports(FooResponseContext::class));
     }
 
     public function testCreate(): void
