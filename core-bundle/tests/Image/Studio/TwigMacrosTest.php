@@ -27,13 +27,13 @@ class TwigMacrosTest extends TestCase
     /**
      * @var string
      */
-    private $macros;
+    private static $macros;
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->macros = file_get_contents(
+        self::$macros = file_get_contents(
             Path::canonicalize(__DIR__.'/../../../src/Resources/views/Image/Studio/_macros.html.twig')
         );
     }
@@ -574,7 +574,7 @@ class TwigMacrosTest extends TestCase
     private function renderMacro(string $call, array $context = []): string
     {
         $templates = [
-            '_macros.html.twig' => $this->macros,
+            '_macros.html.twig' => self::$macros,
             'test.html.twig' => '{% import "_macros.html.twig" as studio %}'.
                 "{{ studio.$call }}",
         ];
