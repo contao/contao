@@ -220,7 +220,7 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $this->assertSame('contao_manager', $manager->getLabel());
         $this->assertSame('/contao-manager.phar.php', $manager->getUri());
-        $this->assertSame(['class' => 'navigation contao_manager'], $manager->getLinkAttributes());
+        $this->assertSame(['class' => 'navigation contao_manager', 'title' => 'contao_manager_title'], $manager->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'ContaoManagerBundle'], $manager->getExtras());
     }
 
