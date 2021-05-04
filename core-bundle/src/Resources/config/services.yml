@@ -888,6 +888,10 @@ services:
 
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
+    Contao\CoreBundle\Twig\Extension\InteropExtension:
+        arguments:
+            - '@twig'
+
     Contao\CoreBundle\Twig\Extension\TextExtension: ~
 
     Contao\CoreBundle\Twig\FailTolerantFilesystemLoader:
