@@ -353,6 +353,10 @@ trait TemplateInheritance
 
 		if (null !== ($page = $GLOBALS['objPage'] ?? null) && null !== $themePath = $page->templateGroup)
 		{
+			// fixme: a 'theme folder' can live anywhere - we should probably
+			//        either slugify the path (including subfolders), use
+			//        another identifier (e.g. slug from from tl_theme.name)
+			//        or add a new reference (e.g. tl_theme.slug)
 			$theme = Path::makeRelative($themePath, 'templates');
 
 			array_unshift(
