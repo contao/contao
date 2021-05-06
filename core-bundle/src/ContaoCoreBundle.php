@@ -27,10 +27,10 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\TwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
@@ -116,7 +116,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddCronJobsPass());
         $container->addCompilerPass(new AddAvailableTransportsPass());
         $container->addCompilerPass(new RegisterRouteEnhancersPass('contao.routing.page_router', 'contao.page_router_enhancer'));
-        $container->addCompilerPass(new RewireTwigPathsPass());
+        $container->addCompilerPass(new TwigPathsPass());
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
     }
 }

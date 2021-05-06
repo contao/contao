@@ -12,42 +12,54 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\TwigPathsPass;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\FilesystemLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Twig\Loader\FilesystemLoader;
+use Twig\Loader\FilesystemLoader as BaseFilesystemLoader;
+use Webmozart\PathUtil\Path;
 
 class TwigPathsPassTest extends TestCase
 {
-    public function testRewiresMethodCalls(): void
+    public function testRewiresAndAddsMethodCalls(): void
     {
         $container = new ContainerBuilder();
 
-        $originalService = (new Definition(FilesystemLoader::class))
+        $defaultPath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/templates');
+        $testBundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/vendor/contao/test-bundle');
+
+        $container->setParameter('twig.default_path', $defaultPath);
+        $container->setParameter('kernel.bundles_metadata', ['TestBundle' => ['path' => $testBundlePath]]);
+
+        $baseLoader = (new Definition(BaseFilesystemLoader::class))
             ->addMethodCall('addPath', ['path1', 'namespace1'])
             ->addMethodCall('addPath', ['path2', 'namespace2'])
             ->addMethodCall('foo')
         ;
 
-        $decoratedService = new Definition(FailTolerantFilesystemLoader::class);
+        $loader = new Definition(FilesystemLoader::class);
 
         $container->addDefinitions([
-            'twig.loader.native_filesystem' => $originalService,
-            FailTolerantFilesystemLoader::class => $decoratedService,
+            'twig.loader.native_filesystem' => $baseLoader,
+            FilesystemLoader::class => $loader,
         ]);
 
-        (new RewireTwigPathsPass())->process($container);
+        (new TwigPathsPass())->process($container);
 
-        $this->assertFalse($originalService->hasMethodCall('addPath'));
-        $this->assertTrue($originalService->hasMethodCall('foo'));
+        $this->assertFalse($baseLoader->hasMethodCall('addPath'));
+        $this->assertTrue($baseLoader->hasMethodCall('foo'));
 
         $expectedCalls = [
+            // Rewired
             ['addPath', ['path1', 'namespace1']],
             ['addPath', ['path2', 'namespace2']],
+            // Added
+            ['addPath', [Path::join($defaultPath, 'contao'), 'ContaoLegacy']],
+            ['addPath', [Path::join($testBundlePath, 'Resources/views/contao'), 'ContaoLegacy']],
+            ['addPath', [Path::join($defaultPath, 'contao/foo-theme'), 'ContaoLegacy_foo-theme']],
         ];
 
-        $this->assertSame($expectedCalls, $decoratedService->getMethodCalls());
+        $this->assertSame($expectedCalls, $loader->getMethodCalls());
     }
 }
