@@ -41,9 +41,13 @@ class ContaoTwigTemplateLocator
      */
     public function getAppThemePaths(string $twigDefaultPath): array
     {
+        if (null === ($appPath = $this->getAppPath($twigDefaultPath))) {
+            return [];
+        }
+
         $themePaths = (new Finder())
             ->directories()
-            ->in(Path::join($twigDefaultPath, 'contao'))
+            ->in($appPath)
             ->depth('< 1')
             ->sortByName()
         ;
