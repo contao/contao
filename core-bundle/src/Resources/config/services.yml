@@ -894,12 +894,12 @@ services:
 
     Contao\CoreBundle\Twig\Extension\TextExtension: ~
 
-    Contao\CoreBundle\Twig\FailTolerantFilesystemLoader:
-        decorates: twig.loader.native_filesystem
+    Contao\CoreBundle\Twig\Loader\FilesystemLoader:
         arguments:
-            - '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
-            - '@cache.system'
+            - []
             - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 2 }
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
