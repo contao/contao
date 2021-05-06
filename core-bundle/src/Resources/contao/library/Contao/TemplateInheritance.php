@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Twig\Extension\InteropExtension;
 use Psr\Log\LogLevel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -339,6 +340,13 @@ trait TemplateInheritance
 
 	private function renderTwigSurrogateIfExists(): ?string
 	{
+		$container = System::getContainer();
+
+		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		{
+			return null;
+		}
+
 		$templateCandidates = array(
 			"@ContaoLegacy/{$this->strTemplate}.html.twig",
 		);
@@ -352,10 +360,6 @@ trait TemplateInheritance
 				"@ContaoLegacy_$theme/{$this->strTemplate}.html.twig",
 			);
 		}
-
-		$container = System::getContainer();
-
-		$twig = $container->get('twig');
 
 		foreach ($templateCandidates as $templateCandidate)
 		{
