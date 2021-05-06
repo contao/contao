@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LogLevel;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provides the template inheritance logic
@@ -69,12 +70,23 @@ trait TemplateInheritance
 	protected $intBufferLevel = 0;
 
 	/**
+	 * Allow to delegate rendering to Twig
+	 * @var bool
+	 */
+	protected $blnEnableTwigSurrogateRendering = true;
+
+	/**
 	 * Parse the template file and return it as string
 	 *
 	 * @return string The template markup
 	 */
 	public function inherit()
 	{
+		if ($this->blnEnableTwigSurrogateRendering && null !== ($result = $this->renderTwigSurrogateIfExists()))
+		{
+			return $result;
+		}
+
 		$strBuffer = '';
 
 		// Start with the template itself
@@ -322,6 +334,35 @@ trait TemplateInheritance
 		}
 
 		return Controller::getTemplate($strTemplate);
+	}
+
+	private function renderTwigSurrogateIfExists(): ?string
+	{
+		$templateCandidates = array(
+			"@ContaoLegacy/{$this->strTemplate}.html.twig",
+		);
+
+		if (null !== ($page = $GLOBALS['objPage'] ?? null) && null !== $themePath = $page->templateGroup)
+		{
+			$theme = Path::makeRelative($themePath, 'templates');
+
+			array_unshift(
+				$templateCandidates,
+				"@ContaoLegacy_$theme/{$this->strTemplate}.html.twig",
+			);
+		}
+
+		$twig = System::getContainer()->get('twig');
+
+		foreach ($templateCandidates as $templateCandidate)
+		{
+			if ($twig->getLoader()->exists($templateCandidate))
+			{
+				return $twig->render($templateCandidate, $this->arrData);
+			}
+		}
+
+		return null;
 	}
 }
 
