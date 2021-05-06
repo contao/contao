@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Twig\Extension\InteropExtension;
 use Psr\Log\LogLevel;
 use Webmozart\PathUtil\Path;
 
@@ -352,12 +353,16 @@ trait TemplateInheritance
 			);
 		}
 
-		$twig = System::getContainer()->get('twig');
+		$container = System::getContainer();
+
+		$twig = $container->get('twig');
 
 		foreach ($templateCandidates as $templateCandidate)
 		{
 			if ($twig->getLoader()->exists($templateCandidate))
 			{
+				$container->get(InteropExtension::class)->registerTemplateForInputEncoding($templateCandidate);
+
 				return $twig->render($templateCandidate, $this->arrData);
 			}
 		}

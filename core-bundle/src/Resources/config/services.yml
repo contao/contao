@@ -891,6 +891,7 @@ services:
     Contao\CoreBundle\Twig\Extension\InteropExtension:
         arguments:
             - '@twig'
+        public: true
 
     Contao\CoreBundle\Twig\Extension\TextExtension: ~
 
