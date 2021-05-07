@@ -186,7 +186,7 @@ class ModuleBooknav extends Module
 	 */
 	protected function getBookPages($intParentId, $groups, $time)
 	{
-		$arrPages = PageModel::findPublishedWithoutGuestsByPid($intParentId, $this->showHidden);
+		$arrPages = static::getPublishedSubpagesWithoutGuestsByPid($intParentId, $this->showHidden);
 
 		if ($arrPages === null)
 		{
