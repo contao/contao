@@ -15,9 +15,20 @@ namespace Contao\CoreBundle\Routing\ResponseContext\Factory\Provider;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextInterface;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
+use Symfony\Contracts\Service\ServiceProviderInterface;
 
 class CoreProvider implements ResponseContextProviderInterface
 {
+    /**
+     * @var ServiceProviderInterface|null
+     */
+    private $serviceLocator;
+
+    public function __construct(ServiceProviderInterface $serviceLocator = null)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
     public function supports(string $responseContextClassName): bool
     {
         return \in_array($responseContextClassName, [
@@ -28,6 +39,6 @@ class CoreProvider implements ResponseContextProviderInterface
 
     public function create(string $responseContextClassName): ResponseContextInterface
     {
-        return new $responseContextClassName();
+        return new $responseContextClassName($this->serviceLocator);
     }
 }

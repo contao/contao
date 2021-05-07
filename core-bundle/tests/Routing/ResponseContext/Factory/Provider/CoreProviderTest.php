@@ -14,9 +14,13 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext\Factory\Provider;
 
 use Contao\CoreBundle\Routing\ResponseContext\Factory\Provider\CoreProvider;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\TerminateResponseContextEvent;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\CoreBundle\Tests\Fixtures\Routing\FooResponseContext;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\HttpFoundation\Response;
 
 class CoreProviderTest extends TestCase
 {
@@ -35,5 +39,25 @@ class CoreProviderTest extends TestCase
 
         $this->assertInstanceOf(ResponseContext::class, $provider->create(ResponseContext::class));
         $this->assertInstanceOf(WebpageResponseContext::class, $provider->create(WebpageResponseContext::class));
+    }
+
+    public function testWithEventDispatcher(): void
+    {
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->isInstanceOf(TerminateResponseContextEvent::class))
+        ;
+
+        $provider = new CoreProvider(new ServiceLocator([
+            'event_dispatcher' => static function () use ($eventDispatcher) {
+                return $eventDispatcher;
+            },
+        ]));
+
+        $context = $provider->create(ResponseContext::class);
+
+        $context->terminate(new Response());
     }
 }

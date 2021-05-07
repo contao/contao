@@ -25,7 +25,7 @@ class ResponseContextTest extends TestCase
 
         $response = new Response();
 
-        $context->mapHeaderBagToResponse($response);
+        $context->terminate($response);
 
         $this->assertSame('application/json', $response->headers->get('Content-Type'));
     }
