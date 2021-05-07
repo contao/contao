@@ -1095,7 +1095,8 @@ class tl_page extends Backend
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && !$request->isSecure()) {
+		if ($request && !$request->isSecure())
+		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = '';
 		}
 	}
