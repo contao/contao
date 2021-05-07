@@ -24,7 +24,7 @@
         </div>
         <div class="widget widget-text">
           <label for="verify"><?= $this->trans('MSC.twoFactorVerification') ?></label>
-          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="off" required>
+          <input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>
           <p class="help"><?= $this->trans('MSC.twoFactorVerificationHelp') ?></p>
         </div>
         <div class="submit_container">
