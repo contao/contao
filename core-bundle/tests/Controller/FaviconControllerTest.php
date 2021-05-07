@@ -46,7 +46,7 @@ class FaviconControllerTest extends TestCase
 
     public function testRegularFavicon(): void
     {
-        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.ico');
+        $controller = $this->getController('images/favicon.ico');
 
         $request = Request::create('/favicon.ico');
         $response = $controller($request);
@@ -57,7 +57,7 @@ class FaviconControllerTest extends TestCase
 
     public function testSvgFavicon(): void
     {
-        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.svg');
+        $controller = $this->getController('images/favicon.svg');
 
         $request = Request::create('/favicon.ico');
         $response = $controller($request);
