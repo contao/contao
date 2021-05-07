@@ -614,7 +614,7 @@ class PageModel extends Model
 			return null;
 		}
 
-		return static::createCollectionFromDbResult($objSubpages, static::$strTable);
+		return static::createCollectionFromDbResult($objSubpages, 'tl_page');
 	}
 
 	/**
