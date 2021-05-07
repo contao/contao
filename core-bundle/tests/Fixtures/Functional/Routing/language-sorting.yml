@@ -7,6 +7,7 @@ tl_page:
       alias: root-zh
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: zh
       dns: root-zh.local
       fallback: '1'
@@ -31,6 +32,7 @@ tl_page:
       alias: foot-fr
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: fr
       dns: root-fr.local
       fallback: '1'

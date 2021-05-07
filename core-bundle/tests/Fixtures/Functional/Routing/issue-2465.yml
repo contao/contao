@@ -17,6 +17,7 @@ tl_page:
       alias: de
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: de
       dns: domain1.local
       fallback: '1'
@@ -41,6 +42,7 @@ tl_page:
       alias: fr
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: fr
       dns: domain1.local
       includeLayout: '1'
@@ -55,6 +57,7 @@ tl_page:
       alias: it
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: it
       dns: domain1.local
       includeLayout: '1'
@@ -69,6 +72,7 @@ tl_page:
       alias: en
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: en
       dns: domain1.local
       includeLayout: '1'
@@ -83,6 +87,7 @@ tl_page:
       alias: de
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: de
       dns: domain2.local
       fallback: '1'
@@ -98,6 +103,7 @@ tl_page:
       alias: fr
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: fr
       dns: domain2.local
       includeLayout: '1'
@@ -112,6 +118,7 @@ tl_page:
       alias: it
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: it
       dns: domain2.local
       includeLayout: '1'
@@ -180,6 +187,7 @@ tl_page:
       alias: de
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: de
       dns: domain3.local
       fallback: '1'
@@ -195,6 +203,7 @@ tl_page:
       alias: fr
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: fr
       dns: domain3.local
       includeLayout: '1'
@@ -209,6 +218,7 @@ tl_page:
       alias: it
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: it
       dns: domain3.local
       includeLayout: '1'
@@ -250,6 +260,7 @@ tl_page:
       alias: en
       urlSuffix: .html
       type: root
+      useSSL: ''
       language: en
       dns: domain3.local
       includeLayout: '1'
