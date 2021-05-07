@@ -1361,6 +1361,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(
             [
                 new Reference('contao.framework'),
+                new Reference('%kernel.project_dir%'),
                 new Reference('fos_http_cache.http.symfony_response_tagger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ],
             $definition->getArguments()
