@@ -36,6 +36,13 @@ class ContaoEscaper
     {
         $string = (string) $string;
 
+        // Handle uppercase entities
+        $string = str_replace(
+            ['&AMP;', '&QUOT;', '&LT;', '&GT;'],
+            ['&amp;', '&quot;', '&lt;', '&gt;'],
+            $string
+        );
+
         // see https://secure.php.net/htmlspecialchars
 
         // Using a static variable to avoid initializing the array

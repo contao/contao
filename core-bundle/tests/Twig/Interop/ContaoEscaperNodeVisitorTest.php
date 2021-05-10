@@ -17,12 +17,15 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
     public function testEscapesEntities(): void
     {
-        $output = $this->getEnvironment()->render(
+        $templateContent = '<h1>{{ headline }}</h1><p>{{ content|raw }}</p>';
+
+        $output = $this->getEnvironment($templateContent)->render(
             'modern.html.twig',
             [
                 'headline' => '&amp; is the HTML entity for &',
@@ -38,7 +41,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
     public function testDoesNotDoubleEncode(): void
     {
-        $output = $this->getEnvironment()->render(
+        $templateContent = '<h1>{{ headline }}</h1><p>{{ content|raw }}</p>';
+
+        $output = $this->getEnvironment($templateContent)->render(
             'legacy.html.twig',
             [
                 'headline' => '&amp; will look like &',
@@ -52,10 +57,53 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         );
     }
 
-    protected function getEnvironment(): Environment
+    public function testHandlesFiltersAndFunctions(): void
     {
-        $templateContent = '<h1>{{ headline }}</h1><p>{{ content|raw }}</p>';
+        $templateContent = '{{ heart() }} {{ target|trim }}';
 
+        $environment = $this->getEnvironment($templateContent);
+
+        $environment->addFunction(
+            new TwigFunction(
+                'heart',
+                static function () {
+                    return '&#9829;';
+                }
+            )
+        );
+
+        $output = $environment->render(
+            'legacy.html.twig',
+            [
+                'target' => ' Twig &amp; Contao ',
+            ]
+        );
+
+        $this->assertSame(
+            '&#9829; Twig &amp; Contao',
+            $output
+        );
+    }
+
+    public function testUppercaseEntities(): void
+    {
+        $templateContent = '{{ content|upper }}';
+
+        $output = $this->getEnvironment($templateContent)->render(
+            'legacy.html.twig',
+            [
+                'content' => '&quot;a&quot; &amp; &lt;b&gt;',
+            ]
+        );
+
+        $this->assertSame(
+            '&quot;A&quot; &amp; &lt;B&gt;',
+            $output
+        );
+    }
+
+    private function getEnvironment(string $templateContent): Environment
+    {
         $loader = new ArrayLoader([
             'modern.html.twig' => $templateContent,
             'legacy.html.twig' => $templateContent,

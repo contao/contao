@@ -26,8 +26,6 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
-    // todo: handle filters, e.g. {{ foo|upper }} …
-
     /**
      * Evaluate affected templates on the fly so that they can be added after
      * building the container.
