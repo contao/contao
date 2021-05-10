@@ -63,17 +63,17 @@ class ContentProxy extends ContentElement
 
 	public function __set($strKey, $varValue)
 	{
-		$this->reference->attributes['templateProps'][$strKey] = $varValue;
+		$this->reference->attributes['templateProperties'][$strKey] = $varValue;
 	}
 
 	public function __get($strKey)
 	{
-		return $this->reference->attributes[$strKey]['templateProps'];
+		return $this->reference->attributes['templateProperties'][$strKey];
 	}
 
 	public function __isset($strKey)
 	{
-		return isset($this->reference->attributes['templateProps'][$strKey]);
+		return isset($this->reference->attributes['templateProperties'][$strKey]);
 	}
 
 	/**
