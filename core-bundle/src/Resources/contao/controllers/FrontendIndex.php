@@ -92,7 +92,12 @@ class FrontendIndex extends Frontend
 		$container = System::getContainer();
 
 		// Set WebpageResponseContext by default for these controllers
-		$container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageResponseContext::class);
+		$responseContext = $container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageResponseContext::class);
+		/** @var WebpageResponseContext $responseContext */
+		$responseContext
+			->setTitle($pageModel->pageTitle ?: $pageModel->title)
+			->setMetaDescription(str_replace(array("\n", "\r", '"'), array(' ', '', ''), $pageModel->description))
+		;
 
 		/** @var PageModel $objPage */
 		global $objPage;

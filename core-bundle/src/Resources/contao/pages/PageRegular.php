@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,14 +80,6 @@ class PageRegular extends Frontend
 
 		// Static URLs
 		$this->setStaticUrls();
-
-		// Set response context
-		/** @var WebpageResponseContext $responseContext */
-		$responseContext = $container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageResponseContext::class);
-		$responseContext
-			->setTitle($objPage->pageTitle ?: $objPage->title)
-			->setDescription(str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description))
-		;
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
@@ -213,6 +204,13 @@ class PageRegular extends Frontend
 			}
 		}
 
+		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if (!$responseContext instanceof WebpageResponseContext)
+		{
+			throw new \RuntimeException('PageRegular requires a WebpageResponseContext to be present.');
+		}
+
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
 		$this->Template->pageTitle = $responseContext->getTitle();
@@ -222,7 +220,7 @@ class PageRegular extends Frontend
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $responseContext->getRobotsMetaTagContent();
+		$this->Template->robots = $responseContext->getMetaRobots();
 
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
@@ -232,7 +230,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $responseContext->getDescription());
+		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $responseContext->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
