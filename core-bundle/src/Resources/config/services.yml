@@ -886,11 +886,16 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy:
+        arguments:
+            - '%kernel.bundles_metadata%'
+
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
-    Contao\CoreBundle\Twig\Extension\InteropExtension:
+    Contao\CoreBundle\Twig\Extension\ContaoExtension:
         arguments:
             - '@twig'
+            - '@Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy'
         public: true
 
     Contao\CoreBundle\Twig\Extension\TextExtension: ~

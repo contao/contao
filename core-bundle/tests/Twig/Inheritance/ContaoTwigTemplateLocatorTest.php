@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Twig\Interop;
+namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Interop\ContaoTwigTemplateLocator;
+use Contao\CoreBundle\Twig\Inheritance\ContaoTwigTemplateLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -52,13 +52,13 @@ class ContaoTwigTemplateLocatorTest extends TestCase
 
     public function testDiscoversAppThemeTemplateDirectories(): void
     {
-        $defaultPath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/templates');
+        $defaultPath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/locator');
 
         $locator = new ContaoTwigTemplateLocator();
 
         $this->assertSame(
             [
-                'foo-theme' => Path::join($defaultPath, 'contao/foo-theme'),
+                'foo-theme' => Path::join($defaultPath, 'contao/@foo-theme'),
             ],
             $locator->getAppThemePaths($defaultPath)
         );

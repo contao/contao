@@ -26,6 +26,8 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
+    // todo: handle filters, e.g. {{ foo|upper }} …
+
     /**
      * Evaluate affected templates on the fly so that they can be added after
      * building the container.
@@ -33,6 +35,11 @@ class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
      * @var \Closure():array<string>
      */
     private $affectedTemplates;
+
+    /**
+     * @var string|null
+     */
+    private $parentTemplate;
 
     /**
      * @var array|null
@@ -54,11 +61,19 @@ class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
     protected function doEnterNode(Node $node, Environment $env): Node
     {
-        if (
-            $node instanceof ModuleNode &&
-            \in_array($node->getTemplateName(), ($this->affectedTemplates)(), true)
-        ) {
+        $isAffected = function (?string $name): bool {
+            return \in_array($name, ($this->affectedTemplates)(), true) || $name === $this->parentTemplate;
+        };
+
+        if ($node instanceof ModuleNode && $isAffected($node->getTemplateName())) {
             $this->escaperFilterNodes = [];
+
+            // Propagate escape strategy to parent template
+            if ($node->hasNode('parent') && ($parent = $node->getNode('parent')) instanceof ConstantExpression) {
+                $this->parentTemplate = $parent->getAttribute('value');
+            } else {
+                $this->parentTemplate = null;
+            }
         } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpressionWithHtmlStrategy($node)) {
             $this->escaperFilterNodes[] = $node;
         }

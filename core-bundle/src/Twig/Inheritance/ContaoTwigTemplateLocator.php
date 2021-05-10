@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Twig\Interop;
+namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -48,6 +48,7 @@ class ContaoTwigTemplateLocator
         $themePaths = (new Finder())
             ->directories()
             ->in($appPath)
+            ->path('/^@/')
             ->depth('< 1')
             ->sortByName()
         ;
@@ -56,7 +57,7 @@ class ContaoTwigTemplateLocator
 
         /** @var SplFileInfo $path */
         foreach ($themePaths as $path) {
-            $paths[$path->getBasename()] = $path->getPathname();
+            $paths[substr($path->getBasename(), 1)] = $path->getPathname();
         }
 
         return $paths;
@@ -80,5 +81,28 @@ class ContaoTwigTemplateLocator
         }
 
         return $paths;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function findTemplates(string $path): array
+    {
+        $files = (new Finder())
+            ->files()
+            ->in($path)
+            ->name('*.html.twig')
+            ->notPath('/^@/')
+            ->sortByName()
+        ;
+
+        $templates = [];
+
+        /** @var SplFileInfo $file */
+        foreach ($files as $file) {
+            $templates[$file->getRelativePathname()] = $file->getPathname();
+        }
+
+        return $templates;
     }
 }

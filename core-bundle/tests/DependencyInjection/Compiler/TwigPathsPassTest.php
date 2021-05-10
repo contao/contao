@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\TwigPathsPass;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Contao\CoreBundle\Twig\Loader\FilesystemLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -26,7 +27,7 @@ class TwigPathsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $defaultPath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/templates');
+        $defaultPath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/locator');
         $testBundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/vendor/contao/test-bundle');
 
         $container->setParameter('twig.default_path', $defaultPath);
@@ -40,9 +41,12 @@ class TwigPathsPassTest extends TestCase
 
         $loader = new Definition(FilesystemLoader::class);
 
+        $templateHierarchy = new Definition(TemplateHierarchy::class);
+
         $container->addDefinitions([
             'twig.loader.native_filesystem' => $baseLoader,
             FilesystemLoader::class => $loader,
+            TemplateHierarchy::class => $templateHierarchy,
         ]);
 
         (new TwigPathsPass())->process($container);
@@ -50,16 +54,36 @@ class TwigPathsPassTest extends TestCase
         $this->assertFalse($baseLoader->hasMethodCall('addPath'));
         $this->assertTrue($baseLoader->hasMethodCall('foo'));
 
-        $expectedCalls = [
+        $expectedLoaderCalls = [
             // Rewired
             ['addPath', ['path1', 'namespace1']],
             ['addPath', ['path2', 'namespace2']],
             // Added
-            ['addPath', [Path::join($defaultPath, 'contao'), 'ContaoLegacy']],
-            ['addPath', [Path::join($testBundlePath, 'Resources/views/contao'), 'ContaoLegacy']],
-            ['addPath', [Path::join($defaultPath, 'contao/foo-theme'), 'ContaoLegacy_foo-theme']],
+            ['addPath', [Path::join($defaultPath, 'contao/@foo-theme'), 'Contao_App_foo-theme']],
+            ['addPath', [Path::join($defaultPath, 'contao'), 'Contao']],
+            ['addPath', [Path::join($defaultPath, 'contao'), 'Contao_App']],
+            ['addPath', [Path::join($testBundlePath, 'Resources/views/contao'), 'Contao']],
+            ['addPath', [Path::join($testBundlePath, 'Resources/views/contao'), 'Contao_TestBundle']],
         ];
 
-        $this->assertSame($expectedCalls, $loader->getMethodCalls());
+        $this->assertSame(
+            $expectedLoaderCalls,
+            $loader->getMethodCalls(),
+            'paths are registered in the loader'
+        );
+
+        $expectedTemplateHierarchyCalls = [
+            ['setAppThemeTemplates', [
+                ['bar/baz.html.twig' => Path::join($defaultPath, 'contao/@foo-theme/bar/baz.html.twig')], 'foo-theme', ],
+            ],
+            ['setAppTemplates', [[]]],
+            ['setBundleTemplates', [[], 'TestBundle']],
+        ];
+
+        $this->assertSame(
+            $expectedTemplateHierarchyCalls,
+            $templateHierarchy->getMethodCalls(),
+            'templates are registered in the hierarchy'
+        );
     }
 }

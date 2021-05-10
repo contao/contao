@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Extension\InteropExtension;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
@@ -25,26 +27,27 @@ use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Source;
 
-class InteropExtensionTest extends TestCase
+class ContaoExtensionTest extends TestCase
 {
     public function testAddsTheContaoEscaperNodeVisitor(): void
     {
-        $environment = $this->createMock(Environment::class);
-        $environment
-            ->method('getExtension')
-            ->with(EscaperExtension::class)
-            ->willReturn(new EscaperExtension())
-        ;
-
-        $nodeVisitors = $this->getInteropExtension()->getNodeVisitors();
+        $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
         $this->assertCount(1, $nodeVisitors);
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
     }
 
+    public function testAddsTheDynamicExtendsTokenParser(): void
+    {
+        $tokenParsers = $this->getContaoExtension()->getTokenParsers();
+
+        $this->assertCount(1, $tokenParsers);
+        $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
+    }
+
     public function testAllowsOnTheFlyRegisteringTemplatesForInputEncoding(): void
     {
-        $interopExtension = $this->getInteropExtension();
+        $interopExtension = $this->getContaoExtension();
 
         $escaperNodeVisitor = $interopExtension->getNodeVisitors()[0];
 
@@ -88,7 +91,7 @@ class InteropExtensionTest extends TestCase
         $this->assertStringContainsString("'contao_html'", $iteration2);
     }
 
-    private function getInteropExtension(): InteropExtension
+    private function getContaoExtension(): ContaoExtension
     {
         $environment = $this->createMock(Environment::class);
         $environment
@@ -97,6 +100,9 @@ class InteropExtensionTest extends TestCase
             ->willReturn(new EscaperExtension())
         ;
 
-        return new InteropExtension($environment);
+        return new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchy::class)
+        );
     }
 }

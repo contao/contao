@@ -11,10 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Twig\Extension\InteropExtension;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Webmozart\PathUtil\Path;
 
 /**
  * Provides the template inheritance logic
@@ -348,20 +348,19 @@ trait TemplateInheritance
 		}
 
 		$templateCandidates = array(
-			"@ContaoLegacy/{$this->strTemplate}.html.twig",
+			"@Contao/{$this->strTemplate}.html.twig",
 		);
 
-		if (null !== ($page = $GLOBALS['objPage'] ?? null) && null !== $themePath = $page->templateGroup)
-		{
-			// fixme: a 'theme folder' can live anywhere - we should probably
-			//        either slugify the path (including subfolders), use
-			//        another identifier (e.g. slug from from tl_theme.name)
-			//        or add a new reference (e.g. tl_theme.slug)
-			$theme = Path::makeRelative($themePath, 'templates');
+		if (
+			// todo: add alias/slug to tl_theme
+			null !== ($page = $GLOBALS['objPage'] ?? null) &&
+			null !== ($theme = ThemeModel::findOneByFolders($page->templateGroup)) &&
+			!empty($slug = $theme->slug)
+		) {
+			$themeNamespace = TemplateHierarchy::getAppThemeNamespace($slug);
 
-			array_unshift(
-				$templateCandidates,
-				"@ContaoLegacy_$theme/{$this->strTemplate}.html.twig",
+			array_unshift($templateCandidates,
+				"@$themeNamespace/{$this->strTemplate}.html.twig",
 			);
 		}
 
@@ -369,7 +368,7 @@ trait TemplateInheritance
 		{
 			if ($twig->getLoader()->exists($templateCandidate))
 			{
-				$container->get(InteropExtension::class)->registerTemplateForInputEncoding($templateCandidate);
+				$container->get(ContaoExtension::class)->registerTemplateForInputEncoding($templateCandidate);
 
 				return $twig->render($templateCandidate, $this->arrData);
 			}

@@ -12,20 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Extension;
 
+use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\EscaperExtension;
 
-class InteropExtension extends AbstractExtension
+class ContaoExtension extends AbstractExtension
 {
+    /**
+     * @var TemplateHierarchy
+     */
+    private $templateHierarchy;
+
     /**
      * @var array
      */
     private $affectedTemplates = [];
 
-    public function __construct(Environment $environment)
+    public function __construct(Environment $environment, TemplateHierarchy $templateHierarchy)
     {
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
@@ -34,6 +41,8 @@ class InteropExtension extends AbstractExtension
             'contao_html',
             [(new ContaoEscaper()), '__invoke']
         );
+
+        $this->templateHierarchy = $templateHierarchy;
     }
 
     /**
@@ -55,11 +64,22 @@ class InteropExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
+            // Enables the 'contao_twig' escaper for Contao templates with
+            // input encoding
             new ContaoEscaperNodeVisitor(
                 function () {
                     return $this->affectedTemplates;
                 }
             ),
+        ];
+    }
+
+    public function getTokenParsers(): array
+    {
+        return [
+            // Registers a parser for the 'extends' tag which will overwrite
+            // the one of Twig's CoreExtension
+            new DynamicExtendsTokenParser($this->templateHierarchy),
         ];
     }
 }
