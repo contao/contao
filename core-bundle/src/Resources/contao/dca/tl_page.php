@@ -47,7 +47,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			array('tl_page', 'setRootType'),
 			array('tl_page', 'showFallbackWarning'),
 			array('tl_page', 'makeRedirectPageMandatory'),
-			array('tl_page', 'setUseSslDefault'),
 		),
 		'oncut_callback' => array
 		(
@@ -1085,19 +1084,6 @@ class tl_page extends Backend
 		if ($objPage->numRows && $objPage->type == 'logout')
 		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo']['eval']['mandatory'] = true;
-		}
-	}
-
-	/**
-	 * Set useSSL to HTTP if the current request does not use HTTPS
-	 */
-	public function setUseSslDefault(DataContainer $dc)
-	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request && !$request->isSecure())
-		{
-			$GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = '';
 		}
 	}
 
