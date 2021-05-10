@@ -15,18 +15,9 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Twig\Environment;
-use Twig\Extension\CoreExtension;
 
 class ContaoEscaperTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        // Make Twig functions available in tests
-        require_once (new \ReflectionClass(CoreExtension::class))->getFileName();
-    }
-
     /**
      * @dataProvider provideInput
      */

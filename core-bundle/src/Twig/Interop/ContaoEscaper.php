@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Interop;
 
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * The ContaoEscaper mimics Twig's default html escape filter but prevents
@@ -26,10 +27,10 @@ use Twig\Environment;
 class ContaoEscaper
 {
     /**
-     * This implementation is a clone of the html strategy inside.
+     * This implementation is a clone of Twig's html escape strategy but calls
+     * htmlspecialchars with the double_encode parameter set to false.
      *
-     * @see twig_escape_filter but calls htmlspecialchars with the
-     * double_encode parameter set to false.
+     * @see twig_escape_filter
      */
     public function __invoke(Environment $environment, $string, ?string $charset)
     {
@@ -68,7 +69,11 @@ class ContaoEscaper
             return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset, false);
         }
 
-        $string = twig_convert_encoding($string, 'UTF-8', $charset);
+        if (!\function_exists('iconv')) {
+            throw new RuntimeError('Unable to convert encoding: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');
+        }
+
+        $string = iconv($charset, 'UTF-8', $string);
         $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
 
         return iconv('UTF-8', $charset, $string);
