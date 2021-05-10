@@ -94,7 +94,7 @@ class ModuleChangePassword extends Module
 			'name'      => 'oldpassword',
 			'label'     => &$GLOBALS['TL_LANG']['MSC']['oldPassword'],
 			'inputType' => 'text',
-			'eval'      => array('mandatory'=>true, 'preserveTags'=>true, 'hideInput'=>true),
+			'eval'      => array('mandatory'=>true, 'preserveTags'=>true, 'hideInput'=>true, 'autocomplete'=>'current-password'),
 		);
 
 		// New password widget

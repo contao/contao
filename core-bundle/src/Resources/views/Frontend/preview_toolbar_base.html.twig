@@ -10,7 +10,7 @@
             {% if canSwitchUser %}
                 <div>
                     <label for="ctrl_user">{{ 'MSC.feUser'|trans }}:</label>
-                    <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}" autocomplete="off">
+                    <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}" autocomplete="username">
                     <datalist id="userlist"></datalist>
                 </div>
             {% endif %}
