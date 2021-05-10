@@ -152,16 +152,16 @@ class ModuleNewsReader extends ModuleNews
 
 			if ($objArticle->description)
 			{
-				$responseContext->setDescription($objArticle->description);
+				$responseContext->setMetaDescription($objArticle->description);
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setDescription($this->prepareMetaDescription($objArticle->teaser));
+				$responseContext->setMetaDescription($this->prepareMetaDescription($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)
 			{
-				$responseContext->setRobotsMetaTagContent($objArticle->robots);
+				$responseContext->setMetaRobots($objArticle->robots);
 			}
 		}
 

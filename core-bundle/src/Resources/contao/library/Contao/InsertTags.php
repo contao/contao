@@ -742,7 +742,7 @@ class InsertTags extends Controller
 								$arrCache[$strTag] = $responseContext->getTitle();
 								break;
 							case 'description':
-								$arrCache[$strTag] = $responseContext->getDescription();
+								$arrCache[$strTag] = $responseContext->getMetaDescription();
 								break;
 						}
 					}

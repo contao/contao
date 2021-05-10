@@ -22,11 +22,11 @@ class WebpageResponseContext extends ResponseContext
     /**
      * @var string
      */
-    private $description = '';
+    private $metaDescription = '';
     /**
      * @var string
      */
-    private $robotsMetaTagContent = 'index,follow';
+    private $metaRobots = 'index,follow';
 
     public function getTitle(): string
     {
@@ -40,26 +40,26 @@ class WebpageResponseContext extends ResponseContext
         return $this;
     }
 
-    public function getDescription(): string
+    public function getMetaDescription(): string
     {
-        return $this->description;
+        return $this->metaDescription;
     }
 
-    public function setDescription(string $description): self
+    public function setMetaDescription(string $metaDescription): self
     {
-        $this->description = $description;
+        $this->metaDescription = $metaDescription;
 
         return $this;
     }
 
-    public function getRobotsMetaTagContent(): string
+    public function getMetaRobots(): string
     {
-        return $this->robotsMetaTagContent;
+        return $this->metaRobots;
     }
 
-    public function setRobotsMetaTagContent(string $robotsMetaTagContent): self
+    public function setMetaRobots(string $metaRobots): self
     {
-        $this->robotsMetaTagContent = $robotsMetaTagContent;
+        $this->metaRobots = $metaRobots;
 
         return $this;
     }

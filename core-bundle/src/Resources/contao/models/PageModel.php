@@ -318,10 +318,10 @@ class PageModel extends Model
 						$responseContext->setTitle($varValue);
 						break;
 					case 'description':
-						$responseContext->setDescription($varValue);
+						$responseContext->setMetaDescription($varValue);
 						break;
 					case 'robots':
-						$responseContext->setRobotsMetaTagContent($varValue);
+						$responseContext->setMetaRobots($varValue);
 						break;
 				}
 			}
