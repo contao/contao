@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Symfony\Component\HttpFoundation\Response;
+
 class TerminateResponseContextEvent
 {
     /**
@@ -19,13 +21,24 @@ class TerminateResponseContextEvent
      */
     private $responseContext;
 
-    public function __construct(ResponseContext $responseContext)
+    /**
+     * @var Response
+     */
+    private $response;
+
+    public function __construct(ResponseContext $responseContext, Response $response)
     {
         $this->responseContext = $responseContext;
+        $this->response = $response;
     }
 
     public function getResponseContext(): ResponseContext
     {
         return $this->responseContext;
+    }
+
+    public function getResponse(): Response
+    {
+        return $this->response;
     }
 }

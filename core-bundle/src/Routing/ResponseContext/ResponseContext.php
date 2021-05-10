@@ -49,7 +49,7 @@ class ResponseContext implements ResponseContextInterface
     public function terminate(Response $response): void
     {
         if (null !== $this->serviceLocator && $this->serviceLocator->has('event_dispatcher')) {
-            $this->serviceLocator->get('event_dispatcher')->dispatch(new TerminateResponseContextEvent($this));
+            $this->serviceLocator->get('event_dispatcher')->dispatch(new TerminateResponseContextEvent($this, $response));
         }
 
         foreach ($this->getHeaderBag()->all() as $name => $values) {
