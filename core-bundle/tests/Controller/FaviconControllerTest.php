@@ -39,7 +39,7 @@ class FaviconControllerTest extends TestCase
         ;
 
         $request = Request::create('/robots.txt');
-        $controller = new FaviconController($framework, $this->createMock(ResponseTagger::class));
+        $controller = new FaviconController($framework, $this->getFixturesDir(), $this->createMock(ResponseTagger::class));
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -47,7 +47,7 @@ class FaviconControllerTest extends TestCase
 
     public function testRegularFavicon(): void
     {
-        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.ico');
+        $controller = $this->getController('images/favicon.ico');
 
         $request = Request::create('/favicon.ico');
         $response = $controller($request);
@@ -58,7 +58,7 @@ class FaviconControllerTest extends TestCase
 
     public function testSvgFavicon(): void
     {
-        $controller = $this->getController(__DIR__.'/../Fixtures/images/favicon.svg');
+        $controller = $this->getController('images/favicon.svg');
 
         $request = Request::create('/favicon.ico');
         $response = $controller($request);
@@ -111,6 +111,6 @@ class FaviconControllerTest extends TestCase
             ->with(['contao.db.tl_page.42'])
         ;
 
-        return new FaviconController($framework, $responseTagger);
+        return new FaviconController($framework, $this->getFixturesDir(), $responseTagger);
     }
 }
