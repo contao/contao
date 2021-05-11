@@ -195,6 +195,12 @@ class ModuleArticle extends Module
 
 			while ($objCte->next())
 			{
+				// Hide unsaved elements in the front end (see #2708)
+				if (!$objCte->tstamp)
+				{
+					continue;
+				}
+
 				$arrCss = array();
 
 				/** @var ContentModel $objRow */

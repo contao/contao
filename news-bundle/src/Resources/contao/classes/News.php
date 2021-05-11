@@ -208,6 +208,12 @@ class News extends Frontend
 
 						while ($objElement->next())
 						{
+							// Hide unsaved elements in the front end (see #2708)
+							if (!$objElement->tstamp)
+							{
+								continue;
+							}
+
 							$strDescription .= $this->getContentElement($objElement->current());
 						}
 
