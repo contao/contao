@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Automatically starts the session if someone accesses $_SESSION.
+ *
+ * @internal
  */
 class LazySessionAccess implements \ArrayAccess, \Countable
 {
@@ -24,13 +26,23 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    /**
+     * @var bool
+     */
+    private $hasPreviousSession;
+
+    public function __construct(SessionInterface $session, bool $hasPreviousSession = true)
     {
         $this->session = $session;
+        $this->hasPreviousSession = $hasPreviousSession;
     }
 
     public function offsetExists($offset): bool
     {
+        if (!$this->hasPreviousSession && !$this->session->isStarted()) {
+            return false;
+        }
+
         $this->startSession();
 
         return \array_key_exists($offset, $_SESSION);
@@ -59,6 +71,10 @@ class LazySessionAccess implements \ArrayAccess, \Countable
 
     public function count(): int
     {
+        if (!$this->hasPreviousSession && !$this->session->isStarted()) {
+            return 0;
+        }
+
         $this->startSession();
 
         return \count($_SESSION);
