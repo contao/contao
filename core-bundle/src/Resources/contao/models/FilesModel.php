@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Model\Collection;
 use Contao\Model\Registry;
+use Webmozart\PathUtil\Path;
 
 /**
  * Reads and writes file entries
@@ -256,12 +257,12 @@ class FilesModel extends Model
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$uploadPath = System::getContainer()->getParameter('contao.upload_path');
 
-		if (strncmp($path, $projectDir . '/', \strlen($projectDir) + 1) === 0)
+		if (Path::isBasePath($projectDir, $path))
 		{
-			$path = substr($path, \strlen($projectDir) + 1);
+			$path = Path::makeRelative($path, $projectDir);
 		}
 
-		if (strncmp($path, $uploadPath . '/', \strlen($uploadPath) + 1) !== 0)
+		if (!Path::isBasePath($uploadPath, $path))
 		{
 			return null;
 		}
