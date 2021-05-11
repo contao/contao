@@ -2649,7 +2649,7 @@
         <source>Close the Contao toolbar</source>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
+        <source>Unknown option: %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
