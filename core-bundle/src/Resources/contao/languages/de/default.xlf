@@ -2670,8 +2670,8 @@
         <target>Contao-Toolbar schließen</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Unbekannte Option</target>
+        <source>Unknown option: %s</source>
+        <target>Unbekannte Option: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
