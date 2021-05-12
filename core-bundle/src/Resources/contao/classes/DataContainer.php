@@ -925,7 +925,7 @@ abstract class DataContainer extends Backend
 				$title = $label;
 			}
 
-			$href = $v['href'] ?? '';
+			$href = $v['href'] ?? null;
 			if (!empty($v['route']))
 			{
 				$href = System::getContainer()->get('router')->generate($v['route']);
