@@ -48,12 +48,9 @@ class PageRegular extends Frontend
 		$this->prepare($objPage);
 
 		$response = $this->Template->getResponse($blnCheckRequest);
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
-		{
-			$responseContext->terminate($response);
-		}
+		// Finalize response context so it cannot be used anymore
+		System::getContainer()->get(ResponseContextAccessor::class)->finalize($response);
 
 		return $response;
 	}

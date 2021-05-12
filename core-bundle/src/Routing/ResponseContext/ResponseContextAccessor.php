@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextAccessor
 {
@@ -40,13 +41,30 @@ class ResponseContextAccessor
         return $request->attributes->get(ResponseContextInterface::REQUEST_ATTRIBUTE_NAME, null);
     }
 
-    public function setResponseContext(ResponseContextInterface $responseContext): self
+    public function setResponseContext(?ResponseContextInterface $responseContext): self
     {
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
             $request->attributes->set(ResponseContextInterface::REQUEST_ATTRIBUTE_NAME, $responseContext);
         }
+
+        return $this;
+    }
+
+    public function finalize(Response $response): self
+    {
+        $responseContext = $this->getResponseContext();
+
+        if (null === $responseContext) {
+            return $this;
+        }
+
+        foreach ($responseContext->getHeaderBag()->all() as $name => $values) {
+            $response->headers->set($name, $values, false); // Do not replace but add
+        }
+
+        $this->setResponseContext(null);
 
         return $this;
     }

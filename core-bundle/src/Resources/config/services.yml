@@ -657,18 +657,10 @@ services:
             - '@request_stack'
         public: true
 
-    Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory:
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
         arguments:
-            - !tagged_iterator contao.routing.response_context_provider
             - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
         public: true
-
-    Contao\CoreBundle\Routing\ResponseContext\Factory\Provider\CoreProvider:
-        arguments:
-            - !service_locator
-                  'event_dispatcher': '@event_dispatcher'
-        tags:
-            - contao.routing.response_context_provider
 
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer

@@ -17,12 +17,12 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextAccessorTest extends TestCase
 {
     public function testGettingAndSettingTheResponseContext(): void
     {
-        $request = new Request();
         $requestStack = new RequestStack();
         $context = new ResponseContext();
         $accessor = new ResponseContextAccessor($requestStack);
@@ -31,9 +31,27 @@ class ResponseContextAccessorTest extends TestCase
         $this->assertSame($accessor, $accessor->setResponseContext($context));
         $this->assertNull($accessor->getResponseContext());
 
-        $requestStack->push($request);
+        $requestStack->push(new Request());
 
         $this->assertSame($accessor, $accessor->setResponseContext($context));
         $this->assertSame($context, $accessor->getResponseContext());
+    }
+
+    public function testFinalizing(): void
+    {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+        $accessor = new ResponseContextAccessor($requestStack);
+
+        $accessor->setResponseContext(new ResponseContext());
+        $accessor->getResponseContext()->getHeaderBag()->set('Foo', 'Bar');
+
+        $this->assertNotNull($accessor->getResponseContext());
+
+        $response = new Response();
+        $accessor->finalize($response);
+
+        $this->assertSame('Bar', $response->headers->get('Foo'));
+        $this->assertNull($accessor->getResponseContext());
     }
 }
