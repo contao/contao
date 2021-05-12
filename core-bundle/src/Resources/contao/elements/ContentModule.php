@@ -43,6 +43,24 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
+		if (is_a($strClass, ContentProxy::class, true))
+		{
+			if (!empty($this->cssID[1]))
+			{
+				$objModel->classes = array_merge((array) $objModel->classes, array($this->cssID[1]));
+			}
+
+			/** @var ContentProxy $proxy */
+			$proxy = new $strClass($objModel, $this->strColumn);
+
+			if (!empty($this->cssID[0]))
+			{
+				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
+			}
+
+			return $proxy->generate();
+		}
+
 		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)

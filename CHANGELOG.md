@@ -2,6 +2,38 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.14] (2021-05-11)
+
+**Fixed issues:**
+
+- [#2996] Correctly strip the root path in the FilesModel and Dbafs classes ([leofeyer])
+- [#2930] Add template properties to fragment proxy ([aschempp])
+- [#2971] Do not render an empty custom navigation ([patrickjDE])
+- [#2946] Fix the page context when generating RSS feeds ([fritzmg])
+- [#2935] Fix the PageModel registry state ([ausi])
+- [#2977] Fix external news targets not opening in a new window ([fritzmg])
+- [#2989] Fix the favicon.ico route ([fritzmg])
+- [#2967] Use the date formats from the page context for insert tags ([fritzmg])
+- [#2894] Fix a normalize whitespace error in the DomCrawler ([fritzmg])
+- [#2811] Add width/height attributes to the picture source ([ausi])
+- [#2979] Fix a regression in the limit menu compilation ([bezin])
+- [#2973] Backport the autocomplete changes ([leofeyer])
+- [#2954] Do not start the session to check if a property exists ([aschempp])
+- [#2957] Show zero values in the list view and DCA filters ([fritzmg])
+- [#2878] Support "submitOnChange" in the FileTree widget ([AlexejKossmann])
+- [#2965] Reset the bundle loader on kernel shutdown ([aschempp])
+- [#2956] Show the values of unknown options ([cliffparnitzky])
+- [#2948] Fix array to string conversion in the picker ([ausi])
+- [#2945] Add the `--migrations-only` option to the migrate command ([ausi])
+- [#2942] Do not count to check if there is a language file ([aschempp])
+- [#2941] Remove the system log entry for 'no root page found' ([fritzmg])
+- [#2933] Compile the limit menu after all other filter panels ([bezin])
+- [#2906] Fix label callback for tree view in picker widget ([rabauss])
+- [#2926] Use CSS to add the main headline separators ([leofeyer])
+- [#2929] Fix compatibility with doctrine/dbal 2.13 ([ausi])
+- [#2914] Reset invalid important part values in the version 4.8.0 migration ([ausi])
+- [#2913] Fix the "runContextLength" migration when the previous migration has failed ([fritzmg])
+
 ## [4.9.13] (2021-03-24)
 
 **Fixed issues:**
@@ -555,6 +587,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.14]: https://github.com/contao/contao/releases/tag/4.9.14
 [4.9.13]: https://github.com/contao/contao/releases/tag/4.9.13
 [4.9.12]: https://github.com/contao/contao/releases/tag/4.9.12
 [4.9.11]: https://github.com/contao/contao/releases/tag/4.9.11
@@ -571,6 +604,7 @@ This project adheres to [Semantic Versioning].
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
+[AlexejKossmann]: https://github.com/AlexejKossmann
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -580,6 +614,7 @@ This project adheres to [Semantic Versioning].
 [Blog404DE]: https://github.com/Blog404DE
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
+[cliffparnitzky]: https://github.com/cliffparnitzky
 [denniserdmann]: https://github.com/denniserdmann
 [dmolineus]: https://github.com/dmolineus
 [fritzmg]: https://github.com/fritzmg
@@ -587,12 +622,40 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
 [Mynyx]: https://github.com/Mynyx
+[patrickjDE]: https://github.com/patrickjDE
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2996]: https://github.com/contao/contao/pull/2996
+[#2930]: https://github.com/contao/contao/pull/2930
+[#2971]: https://github.com/contao/contao/pull/2971
+[#2946]: https://github.com/contao/contao/pull/2946
+[#2935]: https://github.com/contao/contao/pull/2935
+[#2977]: https://github.com/contao/contao/pull/2977
+[#2989]: https://github.com/contao/contao/pull/2989
+[#2967]: https://github.com/contao/contao/pull/2967
+[#2894]: https://github.com/contao/contao/pull/2894
+[#2811]: https://github.com/contao/contao/pull/2811
+[#2979]: https://github.com/contao/contao/pull/2979
+[#2973]: https://github.com/contao/contao/pull/2973
+[#2954]: https://github.com/contao/contao/pull/2954
+[#2957]: https://github.com/contao/contao/pull/2957
+[#2878]: https://github.com/contao/contao/pull/2878
+[#2965]: https://github.com/contao/contao/pull/2965
+[#2956]: https://github.com/contao/contao/pull/2956
+[#2948]: https://github.com/contao/contao/pull/2948
+[#2945]: https://github.com/contao/contao/pull/2945
+[#2942]: https://github.com/contao/contao/pull/2942
+[#2941]: https://github.com/contao/contao/pull/2941
+[#2933]: https://github.com/contao/contao/pull/2933
+[#2906]: https://github.com/contao/contao/pull/2906
+[#2926]: https://github.com/contao/contao/pull/2926
+[#2929]: https://github.com/contao/contao/pull/2929
+[#2914]: https://github.com/contao/contao/pull/2914
+[#2913]: https://github.com/contao/contao/pull/2913
 [#2905]: https://github.com/contao/contao/pull/2905
 [#2901]: https://github.com/contao/contao/pull/2901
 [#2884]: https://github.com/contao/contao/pull/2884

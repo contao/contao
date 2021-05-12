@@ -186,14 +186,14 @@ class ModuleBooknav extends Module
 	 */
 	protected function getBookPages($intParentId, $groups, $time)
 	{
-		$objPages = PageModel::findPublishedSubpagesWithoutGuestsByPid($intParentId, $this->showHidden);
+		$arrPages = static::getPublishedSubpagesWithoutGuestsByPid($intParentId, $this->showHidden);
 
-		if ($objPages === null)
+		if ($arrPages === null)
 		{
 			return;
 		}
 
-		foreach ($objPages as $objPage)
+		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
 			$_groups = StringUtil::deserialize($objPage->groups);
 
@@ -202,7 +202,7 @@ class ModuleBooknav extends Module
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 
-				if ($objPage->subpages > 0)
+				if ($blnHasSubpages)
 				{
 					$this->getBookPages($objPage->id, $groups, $time);
 				}

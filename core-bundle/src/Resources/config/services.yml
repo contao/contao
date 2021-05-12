@@ -108,6 +108,7 @@ services:
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
+            - '%kernel.project_dir%'
             - '@?fos_http_cache.http.symfony_response_tagger'
         tags:
             - controller.service_arguments
