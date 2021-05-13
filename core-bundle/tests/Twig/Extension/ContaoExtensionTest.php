@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Tests\Twig\Extension;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
 use Twig\Node\Expression\ConstantExpression;
@@ -47,9 +47,9 @@ class ContaoExtensionTest extends TestCase
 
     public function testAllowsOnTheFlyRegisteringTemplatesForInputEncoding(): void
     {
-        $interopExtension = $this->getContaoExtension();
+        $contaoExtension = $this->getContaoExtension();
 
-        $escaperNodeVisitor = $interopExtension->getNodeVisitors()[0];
+        $escaperNodeVisitor = $contaoExtension->getNodeVisitors()[0];
 
         $traverser = new NodeTraverser(
             $this->createMock(Environment::class),
@@ -81,8 +81,8 @@ class ContaoExtensionTest extends TestCase
         $traverser->traverse($node);
         $iteration1 = $node->__toString();
 
-        // Register a template and traverse tree a second time (change expected)
-        $interopExtension->registerTemplateForInputEncoding('foo.html.twig');
+        // Add rule that allows the template and traverse tree a second time (change expected)
+        $contaoExtension->addContaoEscaperRule('/foo.html.twig/');
         $traverser->traverse($node);
         $iteration2 = $node->__toString();
 
@@ -102,7 +102,7 @@ class ContaoExtensionTest extends TestCase
 
         return new ContaoExtension(
             $environment,
-            $this->createMock(TemplateHierarchy::class)
+            $this->createMock(ContaoFilesystemLoader::class)
         );
     }
 }

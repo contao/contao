@@ -27,13 +27,13 @@ use Twig\TokenStream;
 class DynamicExtendsTokenParser extends AbstractTokenParser
 {
     /**
-     * @var TemplateHierarchy
+     * @var HierarchyProvider
      */
-    private $templateHierarchy;
+    private $hierarchyProvider;
 
-    public function __construct(TemplateHierarchy $templateHierarchy)
+    public function __construct(HierarchyProvider $hierarchyProvider)
     {
-        $this->templateHierarchy = $templateHierarchy;
+        $this->hierarchyProvider = $hierarchyProvider;
     }
 
     public function parse(Token $token): Node
@@ -83,7 +83,7 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
         // Adjust parent template according to the template hierarchy
         $parent->setAttribute(
             'value',
-            $this->templateHierarchy->getDynamicParent($matches[1], $sourcePath)
+            $this->hierarchyProvider->getDynamicParent($matches[1], $sourcePath)
         );
     }
 }

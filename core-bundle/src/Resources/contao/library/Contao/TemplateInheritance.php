@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -347,31 +345,11 @@ trait TemplateInheritance
 			return null;
 		}
 
-		$templateCandidates = array(
-			"@Contao/{$this->strTemplate}.html.twig",
-		);
+		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
 
-		if (
-			// todo: add alias/slug to tl_theme
-			null !== ($page = $GLOBALS['objPage'] ?? null) &&
-			null !== ($theme = ThemeModel::findOneByFolders($page->templateGroup)) &&
-			!empty($slug = $theme->slug)
-		) {
-			$themeNamespace = TemplateHierarchy::getAppThemeNamespace($slug);
-
-			array_unshift($templateCandidates,
-				"@$themeNamespace/{$this->strTemplate}.html.twig",
-			);
-		}
-
-		foreach ($templateCandidates as $templateCandidate)
+		if ($twig->getLoader()->exists($templateCandidate))
 		{
-			if ($twig->getLoader()->exists($templateCandidate))
-			{
-				$container->get(ContaoExtension::class)->registerTemplateForInputEncoding($templateCandidate);
-
-				return $twig->render($templateCandidate, $this->arrData);
-			}
+			return $twig->render($templateCandidate, $this->arrData);
 		}
 
 		return null;

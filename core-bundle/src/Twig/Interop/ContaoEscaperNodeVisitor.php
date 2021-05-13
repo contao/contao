@@ -27,26 +27,23 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
     /**
-     * Evaluate affected templates on the fly so that they can be added after
-     * building the container.
+     * We evaluate affected templates on the fly so that rules can be adjusted
+     * after building the container. Expects a list of regular expressions to
+     * be returned. A template counts as 'affected' if it matches any of the
+     * rules.
      *
      * @var \Closure():array<string>
      */
-    private $affectedTemplates;
-
-    /**
-     * @var string|null
-     */
-    private $parentTemplate;
+    private $rules;
 
     /**
      * @var array|null
      */
     private $escaperFilterNodes;
 
-    public function __construct(\Closure $affectedTemplates)
+    public function __construct(\Closure $rules)
     {
-        $this->affectedTemplates = $affectedTemplates;
+        $this->rules = $rules;
     }
 
     /**
@@ -59,19 +56,18 @@ class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
     protected function doEnterNode(Node $node, Environment $env): Node
     {
-        $isAffected = function (?string $name): bool {
-            return \in_array($name, ($this->affectedTemplates)(), true) || $name === $this->parentTemplate;
+        $isAffected = static function (array $rules, string $name): bool {
+            foreach ($rules as $rule) {
+                if (1 === preg_match($rule, $name)) {
+                    return true;
+                }
+            }
+
+            return false;
         };
 
-        if ($node instanceof ModuleNode && $isAffected($node->getTemplateName())) {
+        if ($node instanceof ModuleNode && $isAffected(($this->rules)(), $node->getTemplateName() ?? '')) {
             $this->escaperFilterNodes = [];
-
-            // Propagate escape strategy to parent template
-            if ($node->hasNode('parent') && ($parent = $node->getNode('parent')) instanceof ConstantExpression) {
-                $this->parentTemplate = $parent->getAttribute('value');
-            } else {
-                $this->parentTemplate = null;
-            }
         } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpressionWithHtmlStrategy($node)) {
             $this->escaperFilterNodes[] = $node;
         }

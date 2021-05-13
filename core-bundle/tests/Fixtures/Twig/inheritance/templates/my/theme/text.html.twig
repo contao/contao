@@ -1,5 +1,5 @@
 {% extends '@Contao/text.html.twig' %}
 
-{% block headline %}
-    {{- headline }}!!!
+{% block wrapper -%}
+    <theme>{{ parent() }}</theme>
 {%- endblock %}

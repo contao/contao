@@ -886,26 +886,36 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy:
-        arguments:
-            - '%kernel.bundles_metadata%'
-
     Contao\CoreBundle\Twig\Extension\ImageExtension: ~
 
     Contao\CoreBundle\Twig\Extension\ContaoExtension:
         arguments:
             - '@twig'
-            - '@Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy'
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
         public: true
 
     Contao\CoreBundle\Twig\Extension\TextExtension: ~
 
-    Contao\CoreBundle\Twig\Loader\FilesystemLoader:
+    Contao\CoreBundle\Twig\Loader\TemplateLocator:
         arguments:
-            - []
+            - '%kernel.project_dir%'
+
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
+        arguments:
+            - '@cache.system'
+            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
+
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
+        arguments:
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '%contao.resources_paths%'
+            - '%kernel.project_dir%'
+        tags:
+            - { name: kernel.cache_warmer }
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:

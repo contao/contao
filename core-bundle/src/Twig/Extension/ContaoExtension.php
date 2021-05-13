@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
+use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Twig\Environment;
@@ -23,16 +23,16 @@ use Twig\Extension\EscaperExtension;
 class ContaoExtension extends AbstractExtension
 {
     /**
-     * @var TemplateHierarchy
+     * @var HierarchyProvider
      */
-    private $templateHierarchy;
+    private $hierarchyProvider;
 
     /**
      * @var array
      */
-    private $affectedTemplates = [];
+    private $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchy $templateHierarchy)
+    public function __construct(Environment $environment, HierarchyProvider $hierarchyProvider)
     {
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
@@ -42,23 +42,27 @@ class ContaoExtension extends AbstractExtension
             [(new ContaoEscaper()), '__invoke']
         );
 
-        $this->templateHierarchy = $templateHierarchy;
+        $this->hierarchyProvider = $hierarchyProvider;
+
+        // Use our escaper on all templates in the `@Contao` and `@Contao_*`
+        // namespaces
+        $this->addContaoEscaperRule('%^@Contao(_.*)?/%');
     }
 
     /**
-     * Register a template to be processed with the `contao_html` escaper
-     * strategy. Only register templates that will receive input encoded
-     * contexts!
+     * Add a contao escaper rule.
      *
-     * @internal
+     * If a template name matches any of the defined rules it will be processed
+     * with the `contao_html` escaper strategy. Make sure your rule will only
+     * match templates with input encoded contexts!
      */
-    public function registerTemplateForInputEncoding(string $template): void
+    public function addContaoEscaperRule(string $regularExpression): void
     {
-        if (\in_array($template, $this->affectedTemplates, true)) {
+        if (\in_array($regularExpression, $this->contaoEscaperFilterRules, true)) {
             return;
         }
 
-        $this->affectedTemplates[] = $template;
+        $this->contaoEscaperFilterRules[] = $regularExpression;
     }
 
     public function getNodeVisitors(): array
@@ -68,7 +72,7 @@ class ContaoExtension extends AbstractExtension
             // input encoding
             new ContaoEscaperNodeVisitor(
                 function () {
-                    return $this->affectedTemplates;
+                    return $this->contaoEscaperFilterRules;
                 }
             ),
         ];
@@ -79,7 +83,7 @@ class ContaoExtension extends AbstractExtension
         return [
             // Registers a parser for the 'extends' tag which will overwrite
             // the one of Twig's CoreExtension
-            new DynamicExtendsTokenParser($this->templateHierarchy),
+            new DynamicExtendsTokenParser($this->hierarchyProvider),
         ];
     }
 }

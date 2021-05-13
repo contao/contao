@@ -14,123 +14,77 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\ContaoTwigTemplateLocator;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
-use Contao\CoreBundle\Twig\Loader\FilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Webmozart\PathUtil\Path;
 
 /**
- * Integration tests for our multi-inheritance model.
+ * Integration tests.
  */
 class InheritanceTest extends TestCase
 {
-    public function testExpandsMultiInheritance(): void
+    public function testInheritsMultipleTimes(): void
     {
         $environment = $this->getDemoEnvironment();
 
         $html = $environment->render(
             '@Contao/text.html.twig',
-            ['headline' => 'This &amp; that', 'body' => 'This is <b>amazing</b>!']
+            ['content' => 'This &amp; that']
         );
 
-        $expected = <<<'TAG'
-    <section>
-        <div class="app-headline">This &amp; that!!!</div>
-        <div class="app-body">This is <b>amazing</b>!</div>
-    </section>
-
-TAG;
+        // Global > App > BarBundle > FooBundle > CoreBundle
+        $expected = '<global><app><bar><foo>Content: This &amp; that</foo></bar></app></global>';
 
         $this->assertSame($expected, $html);
     }
 
-    public function testExpandsMultiInheritanceWithTheme(): void
+    public function testInheritsMultipleTimesWithTheme(): void
     {
         $environment = $this->getDemoEnvironment();
 
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my/theme';
+
+        $GLOBALS['objPage'] = $page;
+
         $html = $environment->render(
-            '@Contao_App_my-theme/text.html.twig',
-            ['headline' => 'This &amp; that', 'body' => 'This is <b>amazing</b>!']
+            '@Contao/text.html.twig',
+            ['content' => 'This &amp; that']
         );
 
-        $expected = <<<'TAG'
-    <section>
-        <div class="app-headline">This &amp; that!!!</div>
-        <div class="app-body">This is <b>amazing</b>!</div>
-    </section>
-
-    <footer>by my-theme</footer>
-TAG;
+        // Theme > Global > App > BarBundle > FooBundle > CoreBundle
+        $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';
 
         $this->assertSame($expected, $html);
+
+        unset($GLOBALS['objPage']);
     }
 
     private function getDemoEnvironment(): Environment
     {
-        $myTheme = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates/@my-theme');
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $app = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates');
-
-        $bundles = [
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/bundles/Core'),
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/bundles/Foo'),
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/bundles/Bar'),
+        $resourcesPaths = [
+            'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle'),
+            'FooBundle' => Path::join($projectDir, 'vendor-bundles/FooBundle'),
+            'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle'),
+            'App' => Path::join($projectDir, 'contao'),
         ];
 
-        $templateHierarchy = new TemplateHierarchy([
-            'Core' => ['path' => $bundles[0]],
-            'Foo' => ['path' => $bundles[1]],
-            'Bar' => ['path' => $bundles[2]],
-        ]);
+        $templateLocator = new TemplateLocator($projectDir);
 
-        $templateLocator = new ContaoTwigTemplateLocator();
-        $loader = new FilesystemLoader();
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
 
-        $templateHierarchy->setAppThemeTemplates(
-            $templateLocator->findTemplates($myTheme),
-            'my-theme'
-        );
-
-        $loader->addPath($myTheme, TemplateHierarchy::getAppThemeNamespace('my-theme'));
-
-        $templateHierarchy->setAppTemplates(
-            $templateLocator->findTemplates($app)
-        );
-
-        $loader->addPath($app, 'Contao');
-        $loader->addPath($app, TemplateHierarchy::getAppNamespace());
-
-        $templateHierarchy->setBundleTemplates(
-            $templateLocator->findTemplates($bundles[2]),
-            'Bar'
-        );
-
-        $loader->addPath($bundles[2], 'Contao');
-        $loader->addPath($bundles[2], TemplateHierarchy::getBundleNamespace('Bar'));
-
-        $templateHierarchy->setBundleTemplates(
-            $templateLocator->findTemplates($bundles[1]),
-            'Foo'
-        );
-
-        $loader->addPath($bundles[1], 'Contao');
-        $loader->addPath($bundles[1], TemplateHierarchy::getBundleNamespace('Foo'));
-
-        $templateHierarchy->setBundleTemplates(
-            $templateLocator->findTemplates($bundles[0]),
-            'Core'
-        );
-
-        $loader->addPath($bundles[0], 'Contao');
-        $loader->addPath($bundles[0], TemplateHierarchy::getBundleNamespace('Core'));
+        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $resourcesPaths, $projectDir);
+        $warmer->warmUp('');
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $templateHierarchy);
+        $contaoExtension = new ContaoExtension($environment, $loader);
         $environment->addExtension($contaoExtension);
-
-        $contaoExtension->registerTemplateForInputEncoding('@Contao/text.html.twig');
 
         return $environment;
     }
