@@ -7,7 +7,6 @@ tl_page:
       alias: root-with-index-page
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: root-with-index.local
       fallback: '1'

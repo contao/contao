@@ -7,7 +7,6 @@ tl_page:
       alias: domain-without-hostname
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       fallback: '1'
       includeLayout: '1'

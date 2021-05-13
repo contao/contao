@@ -7,7 +7,6 @@ tl_page:
       alias: same-domain-root-english-with-index
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: same-domain-root-with-index.local
       fallback: '1'
@@ -32,7 +31,6 @@ tl_page:
       alias: same-domain-root-german-with-index
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: same-domain-root-with-index.local
       includeLayout: '1'

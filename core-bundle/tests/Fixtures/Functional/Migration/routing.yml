@@ -2,12 +2,9 @@ tl_page:
     - id: 1
       type: root
       language: de
-      useSSL: ''
     - id: 2
       type: regular
       language: de
-      useSSL: ''
     - id: 3
       type: root
       language: de
-      useSSL: ''

@@ -17,7 +17,6 @@ tl_page:
       alias: domain3
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain3.local
       fallback: ''
@@ -33,7 +32,6 @@ tl_page:
       alias: domain1_de
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain1.local
       fallback: '1'
@@ -49,7 +47,6 @@ tl_page:
       alias: domain1_fr-CH
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: fr-CH
       dns: domain1.local
       fallback: ''
@@ -65,7 +62,6 @@ tl_page:
       alias: domain7_de
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain7.local
       fallback: '1'
@@ -81,7 +77,6 @@ tl_page:
       alias: domain7_fr-CH
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: fr-CH
       dns: domain7.local
       fallback: ''
@@ -142,7 +137,6 @@ tl_page:
       alias: domain8
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain8.local
       fallback: '1'
@@ -158,7 +152,6 @@ tl_page:
       alias: domain4
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain4.local
       fallback: '1'
@@ -174,7 +167,6 @@ tl_page:
       alias: domain10_de
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain10.local
       fallback: ''
@@ -199,7 +191,6 @@ tl_page:
       alias: domain9
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain9.local
       fallback: '1'
@@ -224,7 +215,6 @@ tl_page:
       alias: domain6
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain6.local
       fallback: '1'
@@ -240,7 +230,6 @@ tl_page:
       alias: domain10_de
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain10.local
       fallback: '1'
@@ -256,7 +245,6 @@ tl_page:
       alias: domain2
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain2.local
       fallback: '1'
@@ -272,7 +260,6 @@ tl_page:
       alias: domain5
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: domain5.local
       fallback: '1'

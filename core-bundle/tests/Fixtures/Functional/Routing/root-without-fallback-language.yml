@@ -7,7 +7,6 @@ tl_page:
       alias: root-without-fallback-language
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: root-without-fallback-language.local
       includeLayout: '1'

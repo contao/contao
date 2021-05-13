@@ -8,7 +8,6 @@ tl_page:
       urlPrefix: ''
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: root-with-home.local
       fallback: '1'

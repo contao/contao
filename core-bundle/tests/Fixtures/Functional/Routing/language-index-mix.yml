@@ -7,7 +7,6 @@ tl_page:
       alias: english-root
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: example.com
       fallback: '1'
@@ -32,7 +31,6 @@ tl_page:
       alias: german-root
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: de
       dns: example.com
       fallback: ''

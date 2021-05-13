@@ -7,7 +7,6 @@ tl_page:
       alias: localhost
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: 127.0.0.1
       fallback: '1'

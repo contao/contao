@@ -7,7 +7,6 @@ tl_page:
       alias: root-with-special-chars
       urlSuffix: .html
       type: root
-      useSSL: ''
       language: en
       dns: root-with-special-chars.local
       fallback: '1'
