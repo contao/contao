@@ -1,0 +1,43 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\EventListener\DataContainer;
+
+use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\DataContainer;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+/**
+ * @Callback(table="tl_page", target="config.onload")
+ */
+class PageUseSslDefaultListener
+{
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
+    }
+
+    public function __invoke(DataContainer $dc): void
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        // Set useSSL to HTTP if the current request does not use HTTPS
+        if ($request && !$request->isSecure()) {
+            $GLOBALS['TL_DCA']['tl_page']['fields']['useSSL']['default'] = '';
+        }
+    }
+}

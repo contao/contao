@@ -3544,6 +3544,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
 		}
+		else
+		{
+			$arrClipboard = null;
+		}
 
 		if (isset($GLOBALS['TL_DCA'][$table]['config']['label']))
 		{
@@ -3838,6 +3842,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$this->strTable];
+		}
+		else
+		{
+			$arrClipboard = null;
 		}
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
@@ -4163,10 +4171,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$blnClipboard = true;
 			$arrClipboard = $arrClipboard[$table];
 
-			if (\is_array($arrClipboard['id']))
+			if (\is_array($arrClipboard['id'] ?? null))
 			{
 				$blnMultiboard = true;
 			}
+		}
+		else
+		{
+			$arrClipboard = null;
 		}
 
 		// Load the language file and data container array of the parent table
@@ -5045,7 +5057,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					foreach ($args as $j=>$arg)
 					{
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null) == $firstOrderBy) ? ' ordered_by' : '') . '">' . ($arg ?: '-') . '</td>';
+						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
+
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
+						{
+							$value = $arg ?: '-';
+						}
+						else
+						{
+							$value = (string) $arg !== '' ? $arg : '-';
+						}
+
+						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $field . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}
 				}
 				else
@@ -5942,7 +5965,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 					// No empty options allowed
 					if (!$option_label)
 					{
-						$option_label = $vv ?: '-';
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
+						{
+							$option_label = $vv ?: '-';
+						}
+						else
+						{
+							$option_label = (string) $vv !== '' ? $vv : '-';
+						}
 					}
 
 					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . $option_label . '</option>'] = Utf8::toAscii($option_label);

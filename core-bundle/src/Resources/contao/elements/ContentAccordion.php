@@ -50,7 +50,7 @@ class ContentAccordion extends ContentElement
 				->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
 		}
 
-		$classes = StringUtil::deserialize($this->mooClasses);
+		$classes = StringUtil::deserialize($this->mooClasses, true) + array(null, null);
 
 		$this->Template->toggler = $classes[0] ?: 'toggler';
 		$this->Template->accordion = $classes[1] ?: 'accordion';
