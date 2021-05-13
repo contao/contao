@@ -2694,8 +2694,8 @@
         <target>Невозможно создать URL-адрес предварительного просмотра, так как маршрут имеет обязательные параметры.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Неизвестный параметр</target>
+        <source>Unknown option: %s</source>
+        <target>Неизвестный параметр: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

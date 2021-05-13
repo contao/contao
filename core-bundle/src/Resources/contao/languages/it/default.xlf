@@ -2689,8 +2689,7 @@
         <target>L'URL di anteprima non può essere generato, perché il percorso ha dei parametri obbligatori.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Opzione sconosciuta</target>
+        <source>Unknown option: %s</source>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
