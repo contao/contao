@@ -223,7 +223,7 @@ class ContentDownloads extends ContentElement
 					}
 
 					// Use the file name as title if none is given
-					if (!$arrMeta['title'])
+					if (empty($arrMeta['title']))
 					{
 						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}
@@ -246,7 +246,7 @@ class ContentDownloads extends ContentElement
 						'name'      => $objFile->basename,
 						'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 						'link'      => $arrMeta['title'],
-						'caption'   => $arrMeta['caption'],
+						'caption'   => $arrMeta['caption'] ?? null,
 						'href'      => $strHref,
 						'filesize'  => $this->getReadableSize($objFile->filesize),
 						'icon'      => Image::getPath($objFile->icon),

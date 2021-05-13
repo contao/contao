@@ -101,12 +101,10 @@ composer run cs-fixer -- --clear-cache
 
 ## Functional tests
 
-To set up functional tests, create a database named `contao_test` and import
-the `core-bundle/tests/Functional/app/Resources/contao_test.sql` file.
+To set up functional tests, create a database named `contao_test`:
 
 ```bash
 mysql -e "CREATE DATABASE contao_test"
-mysql contao_test < core-bundle/tests/Functional/app/Resources/contao_test.sql
 ```
 
 If your database uses credentials, copy the file `core-bundle/phpunit.xml.dist`

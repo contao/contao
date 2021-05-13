@@ -332,7 +332,7 @@ class ModuleRegistration extends Module
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
-			$arrFields['captcha']['captcha'] .= $strCaptcha;
+			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;
 		}
 
 		$this->Template->rowLast = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
@@ -358,7 +358,7 @@ class ModuleRegistration extends Module
 			$this->Template->$k = $v;
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
-			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
+			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? $key] = $v;
 		}
 
 		$this->Template->categories = array_filter($arrGroups);

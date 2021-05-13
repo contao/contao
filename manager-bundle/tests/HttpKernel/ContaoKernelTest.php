@@ -86,6 +86,35 @@ class ContaoKernelTest extends ContaoTestCase
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
     }
 
+    public function testResetsTheBundleLoaderOnShutdown(): void
+    {
+        $bundleLoader = $this->createMock(BundleLoader::class);
+
+        $kernel = $this->getKernel($this->getTempDir());
+        $kernel->setBundleLoader($bundleLoader);
+        $kernel->boot();
+
+        $this->assertSame($bundleLoader, $kernel->getBundleLoader());
+
+        $kernel->shutdown();
+
+        $this->assertNotSame($bundleLoader, $kernel->getBundleLoader());
+    }
+
+    public function testDoesNotResetsTheBundleLoaderOnShutdownIfKernelIsNotBooted(): void
+    {
+        $bundleLoader = $this->createMock(BundleLoader::class);
+
+        $kernel = $this->getKernel($this->getTempDir());
+        $kernel->setBundleLoader($bundleLoader);
+
+        $this->assertSame($bundleLoader, $kernel->getBundleLoader());
+
+        $kernel->shutdown();
+
+        $this->assertSame($bundleLoader, $kernel->getBundleLoader());
+    }
+
     public function testRegisterBundles(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);

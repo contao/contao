@@ -479,7 +479,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array(''=>'http://', '1'=>'https://'),
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'autoforward' => array
 		(

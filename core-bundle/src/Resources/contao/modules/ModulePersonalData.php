@@ -390,7 +390,7 @@ class ModulePersonalData extends Module
 			$this->Template->$k = $v;
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
-			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key]] = $v;
+			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? $key] = $v;
 		}
 
 		// Confirmation message

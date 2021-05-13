@@ -301,7 +301,8 @@ final class Figure
                 static function (string $attribute, string $value) {
                     return sprintf('%s="%s"', $attribute, $value);
                 },
-                array_keys($linkAttributes), $linkAttributes
+                array_keys($linkAttributes),
+                $linkAttributes
             );
 
             $templateData['attributes'] = ' '.implode(' ', $htmlAttributes);
