@@ -22,5 +22,9 @@ class ContaoWebpageResponseContext extends WebpageResponseContext
             ->setTitle($pageModel->pageTitle ?: $pageModel->title ?: '')
             ->setMetaDescription(str_replace(["\n", "\r", '"'], [' ', '', ''], $pageModel->description ?: ''))
         ;
+
+        if ($pageModel->robots) {
+            $this->setMetaRobots($pageModel->robots);
+        }
     }
 }

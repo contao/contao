@@ -24,10 +24,12 @@ class ContaoWebpageResponseContextTest extends ContaoTestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
+        $pageModel->robots = 'noindex,nofollow';
 
         $context = new ContaoWebpageResponseContext($pageModel);
 
         $this->assertSame('My title', $context->getTitle());
         $this->assertSame('My description', $context->getMetaDescription());
+        $this->assertSame('noindex,nofollow', $context->getMetaRobots());
     }
 }
