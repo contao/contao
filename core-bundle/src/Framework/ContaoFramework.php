@@ -83,7 +83,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $legacyRouting;
 
     /**
-     * @var Request
+     * @var Request|null
      */
     private $request;
 
@@ -339,7 +339,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         if (!$session->isStarted()) {
-            $_SESSION = new LazySessionAccess($session);
+            $_SESSION = new LazySessionAccess($session, $this->request && $this->request->hasPreviousSession());
         } else {
             $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
             $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');

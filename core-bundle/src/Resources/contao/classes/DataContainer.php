@@ -1180,32 +1180,41 @@ abstract class DataContainer extends Backend
 			{
 				$panel = '';
 
-				// Regular panels
-				if ($strSubPanel == 'search' || $strSubPanel == 'limit' || $strSubPanel == 'sort')
+				switch ($strSubPanel)
 				{
-					$panel = $this->{$strSubPanel . 'Menu'}();
-				}
+					case 'limit':
+						// The limit menu depends on other panels that may set a filter query, e.g. search and filter.
+						// In order to correctly calculate the total row count, the limit menu must be compiled last.
+						// We insert a placeholder here and compile the limit menu after all other panels.
+						$panel = '###limit_menu###';
+						break;
 
-				// Multiple filter subpanels can be defined to split the fields across panels
-				elseif ($strSubPanel == 'filter')
-				{
-					$panel = $this->{$strSubPanel . 'Menu'}(++$intFilterPanel);
-				}
+					case 'search':
+						$panel = $this->searchMenu();
+						break;
 
-				// Call the panel_callback
-				else
-				{
-					$arrCallback = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panel_callback'][$strSubPanel] ?? null;
+					case 'sort':
+						$panel = $this->sortMenu();
+						break;
 
-					if (\is_array($arrCallback))
-					{
-						$this->import($arrCallback[0]);
-						$panel = $this->{$arrCallback[0]}->{$arrCallback[1]}($this);
-					}
-					elseif (\is_callable($arrCallback))
-					{
-						$panel = $arrCallback($this);
-					}
+					case 'filter':
+						// Multiple filter subpanels can be defined to split the fields across panels
+						$panel = $this->filterMenu(++$intFilterPanel);
+						break;
+
+					default:
+						// Call the panel_callback
+						$arrCallback = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panel_callback'][$strSubPanel] ?? null;
+
+						if (\is_array($arrCallback))
+						{
+							$this->import($arrCallback[0]);
+							$panel = $this->{$arrCallback[0]}->{$arrCallback[1]}($this);
+						}
+						elseif (\is_callable($arrCallback))
+						{
+							$panel = $arrCallback($this);
+						}
 				}
 
 				// Add the panel if it is not empty
@@ -1225,6 +1234,17 @@ abstract class DataContainer extends Backend
 		if (empty($arrPanels))
 		{
 			return '';
+		}
+
+		// Compile limit menu if placeholder is present
+		foreach ($arrPanels as $key => $strPanel)
+		{
+			if (strpos($strPanel, '###limit_menu###') === false)
+			{
+				continue;
+			}
+
+			$arrPanels[$key] = str_replace('###limit_menu###', $this->limitMenu(), $strPanel);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')

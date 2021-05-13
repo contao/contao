@@ -31,7 +31,10 @@ class FigureRendererRuntimeTest extends TestCase
         $figureRendererRuntime = new FigureRendererRuntime($figureRenderer);
 
         $result = $figureRendererRuntime->render(
-            '123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig'
+            '123',
+            '_my_size',
+            ['foo' => 'bar'],
+            'my_template.html.twig'
         );
 
         $this->assertSame('<result>', $result);

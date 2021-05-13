@@ -564,9 +564,7 @@ abstract class System
 			}
 			else
 			{
-				/** @var SplFileInfo[] $files */
-				$files = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage);
-				static::$arrLanguages[$strLanguage] = \count($files) > 0;
+				static::$arrLanguages[$strLanguage] = static::getContainer()->get('contao.resource_finder')->findIn('languages')->depth(0)->directories()->name($strLanguage)->hasResults();
 			}
 		}
 

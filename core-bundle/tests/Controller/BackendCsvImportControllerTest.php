@@ -59,11 +59,11 @@ class BackendCsvImportControllerTest extends TestCase
         ;
 
         $expect = <<<'EOF'
-<form id="tl_csv_import_lw">
-  <div class="uploader"></div>
-</form>
+            <form id="tl_csv_import_lw">
+              <div class="uploader"></div>
+            </form>
 
-EOF;
+            EOF;
 
         $this->assertSame($expect, $html);
     }
@@ -112,11 +112,11 @@ EOF;
         ;
 
         $expect = <<<'EOF'
-<form id="tl_csv_import_tw">
-  <div class="uploader"></div>
-</form>
+            <form id="tl_csv_import_tw">
+              <div class="uploader"></div>
+            </form>
 
-EOF;
+            EOF;
 
         $this->assertSame($expect, $html);
     }
@@ -165,11 +165,11 @@ EOF;
         ;
 
         $expect = <<<'EOF'
-<form id="tl_csv_import_ow">
-  <div class="uploader"></div>
-</form>
+            <form id="tl_csv_import_ow">
+              <div class="uploader"></div>
+            </form>
 
-EOF;
+            EOF;
 
         $this->assertSame($expect, $html);
     }

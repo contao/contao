@@ -2658,8 +2658,7 @@
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>انتخاب نامشخص</target>
+        <source>Unknown option: %s</source>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

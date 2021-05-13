@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.3] (2021-05-13)
+
+**Fixed issues:**
+
+- [#2991] Enable "useSSL" by default unless the backend request is insecure ([ausi])
+- [#2969] Fix more PHP 8 undefined array index errors ([ausi])
+- [#2982] Add width/height attributes to the picture source ([ausi])
+- [#2966] Update the functional tests section in README.md ([ArndtZiegler])
+- [#2927] Use CSS to add the main headline separators ([leofeyer])
+- [#2919] Prevent an 'Undefined array key "id"' warning in the clipboard ([leofeyer])
+- [#2923] Fix more PHP 8 undefined array index errors ([ausi])
+- [#2922] Fix another PHP 8 undefined array index error ([ausi])
+
 ## [4.11.2] (2021-03-25)
 
 **Fixed issues:**
@@ -107,11 +120,13 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.3]: https://github.com/contao/contao/releases/tag/4.11.3
 [4.11.2]: https://github.com/contao/contao/releases/tag/4.11.2
 [4.11.1]: https://github.com/contao/contao/releases/tag/4.11.1
 [4.11.0]: https://github.com/contao/contao/releases/tag/4.11.0
 [4.11.0-RC2]: https://github.com/contao/contao/releases/tag/4.11.0-RC2
 [4.11.0-RC1]: https://github.com/contao/contao/releases/tag/4.11.0-RC1
+[ArndtZiegler]: https://github.com/ArndtZiegler
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
@@ -123,6 +138,14 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#2991]: https://github.com/contao/contao/pull/2991
+[#2969]: https://github.com/contao/contao/pull/2969
+[#2982]: https://github.com/contao/contao/pull/2982
+[#2966]: https://github.com/contao/contao/pull/2966
+[#2927]: https://github.com/contao/contao/pull/2927
+[#2919]: https://github.com/contao/contao/pull/2919
+[#2923]: https://github.com/contao/contao/pull/2923
+[#2922]: https://github.com/contao/contao/pull/2922
 [#2915]: https://github.com/contao/contao/pull/2915
 [#2911]: https://github.com/contao/contao/pull/2911
 [#2908]: https://github.com/contao/contao/pull/2908

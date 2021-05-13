@@ -24,6 +24,12 @@ class News extends Frontend
 	private static $arrUrlCache = array();
 
 	/**
+	 * Page cache array
+	 * @var array
+	 */
+	private static $arrPageCache = array();
+
+	/**
 	 * Update a particular RSS feed
 	 *
 	 * @param integer $intId
@@ -145,6 +151,8 @@ class News extends Frontend
 				$request->attributes->set('_scope', 'frontend');
 			}
 
+			$origObjPage = $GLOBALS['objPage'] ?? null;
+
 			while ($objArticle->next())
 			{
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
@@ -155,26 +163,21 @@ class News extends Frontend
 					continue;
 				}
 
+				$objParent = $this->getPageWithDetails($jumpTo);
+
+				// A jumpTo page is set but does no longer exist (see #5781)
+				if ($objParent === null)
+				{
+					continue;
+				}
+
+				// Override the global page object (#2946)
+				$GLOBALS['objPage'] = $objParent;
+
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$objParent = PageModel::findWithDetails($jumpTo);
-
-					// A jumpTo page is set but does no longer exist (see #5781)
-					if ($objParent === null)
-					{
-						$arrUrls[$jumpTo] = false;
-					}
-					else
-					{
-						$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
-					}
-				}
-
-				// Skip the event if it requires a jumpTo URL but there is none
-				if ($objArticle->source == 'default' && $arrUrls[$jumpTo] === false)
-				{
-					continue;
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
@@ -255,6 +258,8 @@ class News extends Frontend
 			{
 				$request->attributes->set('_scope', $origScope);
 			}
+
+			$GLOBALS['objPage'] = $origObjPage;
 		}
 
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
@@ -511,6 +516,22 @@ class News extends Frontend
 		}
 
 		return $arrFeeds;
+	}
+
+	/**
+	 * Return the page object with loaded details for the given page ID
+	 *
+	 * @param  integer        $intPageId
+	 * @return PageModel|null
+	 */
+	private function getPageWithDetails($intPageId)
+	{
+		if (!isset(self::$arrPageCache[$intPageId]))
+		{
+			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+		}
+
+		return self::$arrPageCache[$intPageId];
 	}
 }
 
