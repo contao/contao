@@ -162,6 +162,10 @@ class ResultTest extends TestCase
 
     public function testResultStatementInterface(): void
     {
+        if (!class_exists(ForwardCompatibilityResult::class)) {
+            $this->markTestSkipped('The forward compatibility layer is not available in doctrine/dbal <2.13.');
+        }
+
         $resultStatement = $this->createMock(ForwardCompatibilityResult::class);
         $resultStatement
             ->expects($this->exactly(3))
