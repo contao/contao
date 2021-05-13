@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
 
@@ -22,9 +23,21 @@ class TemplateLocator
      */
     private $projectDir;
 
-    public function __construct(string $projectDir)
+    /**
+     * @var array<string,string>
+     */
+    private $bundles;
+
+    /**
+     * @var array<string, array<string, string>>
+     */
+    private $bundlesMetadata;
+
+    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata)
     {
         $this->projectDir = $projectDir;
+        $this->bundles = $bundles;
+        $this->bundlesMetadata = $bundlesMetadata;
     }
 
     /**
@@ -51,6 +64,45 @@ class TemplateLocator
         }
 
         return $directories;
+    }
+
+    /**
+     * @return array<string, array<string>>
+     */
+    public function findResourcesPaths(): array
+    {
+        $paths = [];
+
+        $add = function (string $group, string $basePath) use (&$paths): void {
+            $paths[$group] = array_merge(
+                $paths[$group] ?? [],
+                $this->expandSubdirectories($basePath))
+            ;
+        };
+
+        if (is_dir($path = Path::join($this->projectDir, 'contao'))) {
+            $add('App', $path);
+        }
+
+        if (is_dir($path = Path::join($this->projectDir, 'src/Resources/contao'))) {
+            $add('App', $path);
+        }
+
+        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao'))) {
+            $add('App', $path);
+        }
+
+        foreach (array_reverse($this->bundles) as $name => $class) {
+            if (ContaoModuleBundle::class === $class) {
+                $add($name, $this->bundlesMetadata[$name]['path']);
+            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'Resources/contao'))) {
+                $add($name, $path);
+            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'contao'))) {
+                $add($name, $path);
+            }
+        }
+
+        return $paths;
     }
 
     /**
@@ -83,5 +135,24 @@ class TemplateLocator
     public static function createDirectorySlug(string $path): string
     {
         return str_replace('/', '_', Path::normalize($path));
+    }
+
+    private function expandSubdirectories(string $path): array
+    {
+        $finder = (new Finder())
+            ->directories()
+            ->in($path)
+            ->sortByName()
+        ;
+
+        $paths = [
+            $path,
+        ];
+
+        foreach ($finder as $item) {
+            $paths[] = $item->getPathname();
+        }
+
+        return array_reverse($paths);
     }
 }

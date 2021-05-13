@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -67,18 +68,25 @@ class InheritanceTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $resourcesPaths = [
-            'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle'),
-            'FooBundle' => Path::join($projectDir, 'vendor-bundles/FooBundle'),
-            'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle'),
-            'App' => Path::join($projectDir, 'contao'),
+        $bundles = [
+            'CoreBundle' => ContaoModuleBundle::class,
+            'FooBundle' => ContaoModuleBundle::class,
+            'BarBundle' => ContaoModuleBundle::class,
+            'App' => ContaoModuleBundle::class,
         ];
 
-        $templateLocator = new TemplateLocator($projectDir);
+        $bundlesMetadata = [
+            'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
+            'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
+            'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
+            'App' => ['path' => Path::join($projectDir, 'contao')],
+        ];
+
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
 
-        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $resourcesPaths, $projectDir);
+        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir);
         $warmer->warmUp('');
 
         $environment = new Environment($loader);

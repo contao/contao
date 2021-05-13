@@ -28,7 +28,7 @@ class AddResourcesPathsPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string>
      */
     private function getResourcesPaths(ContainerBuilder $container): array
     {
@@ -40,26 +40,26 @@ class AddResourcesPathsPass implements CompilerPassInterface
 
         foreach ($bundles as $name => $class) {
             if (ContaoModuleBundle::class === $class) {
-                $paths[$name] = $meta[$name]['path'];
+                $paths[] = $meta[$name]['path'];
             } elseif (is_dir($path = Path::join($meta[$name]['path'], 'Resources/contao'))) {
-                $paths[$name] = $path;
+                $paths[] = $path;
             } elseif (is_dir($path = Path::join($meta[$name]['path'], 'contao'))) {
-                $paths[$name] = $path;
+                $paths[] = $path;
             }
         }
 
         if (is_dir($path = Path::join($projectDir, 'contao'))) {
-            $paths['App'] = $path;
+            $paths[] = $path;
         }
 
         if (is_dir($path = Path::join($projectDir, 'app/Resources/contao'))) {
             trigger_deprecation('contao/core-bundle', '4.9', 'Using "app/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.');
-            $paths['App'] = $path;
+            $paths[] = $path;
         }
 
         if (is_dir($path = Path::join($projectDir, 'src/Resources/contao'))) {
             trigger_deprecation('contao/core-bundle', '4.9', 'Using "src/Resources/contao" has been deprecated and will no longer work in Contao 5.0. Use the "contao" folder instead.');
-            $paths['App'] = $path;
+            $paths[] = $path;
         }
 
         return $paths;

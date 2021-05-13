@@ -899,6 +899,8 @@ services:
     Contao\CoreBundle\Twig\Loader\TemplateLocator:
         arguments:
             - '%kernel.project_dir%'
+            - '%kernel.bundles%'
+            - '%kernel.bundles_metadata%'
 
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
         arguments:
