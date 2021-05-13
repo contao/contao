@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,6 +73,7 @@ class PageRegular extends Frontend
 		$container = System::getContainer();
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
+		$responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
 
@@ -199,13 +201,6 @@ class PageRegular extends Frontend
 				$this->import($callback[0]);
 				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
 			}
-		}
-
-		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
-
-		if (!$responseContext instanceof WebpageResponseContext)
-		{
-			throw new \RuntimeException('PageRegular requires a WebpageResponseContext to be present.');
 		}
 
 		// Set the page title and description AFTER the modules have been generated

@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -88,11 +87,6 @@ class FrontendIndex extends Frontend
 	 */
 	public function renderPage($pageModel)
 	{
-		$container = System::getContainer();
-
-		// Set ContaoWebpageResponseContext by default for these controllers
-		$container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($pageModel);
-
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -135,7 +129,7 @@ class FrontendIndex extends Frontend
 			}
 
 			// Use the first result (see #4872)
-			if (!$container->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
+			if (!System::getContainer()->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
 			{
 				$objNewPage = current($arrLangs);
 			}
@@ -269,6 +263,7 @@ class FrontendIndex extends Frontend
 		// Authenticate the user if the page is protected
 		if ($objPage->protected)
 		{
+			$container = System::getContainer();
 			$token = $container->get('security.token_storage')->getToken();
 
 			if ($container->get('security.authentication.trust_resolver')->isAnonymous($token))
