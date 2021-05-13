@@ -31,10 +31,10 @@ JavaScript if you need information about the user agent on the client side.
 
 ### MediaElement.js
 
-The [MediaElement.js](https://www.mediaelementjs.com/) component along with its
-`js_mediaelement` template has been removed in Contao 4.8 due to widespread support
-of HTML5 videos in current browsers. Use the HTML5 video element natively or integrate
-your own video player solution manually.
+The [MediaElement.js][2] component along with its `js_mediaelement` template has
+been removed in Contao 4.8 due to widespread support of HTML5 videos in current
+browsers. Use the HTML5 video element natively or integrate your own video player
+solution manually.
 
 ## Version 4.* to 4.6
 
@@ -470,3 +470,4 @@ tables and views. However, the Doctrine schema manager, which is used in Contao
 4, only processes tables.
 
 [1]: https://github.com/contao/image/blob/master/UPGRADE.md#version-03-to-10
+[2]: https://www.mediaelementjs.com
