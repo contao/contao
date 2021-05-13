@@ -2694,8 +2694,7 @@
         <target>L'URL d'aperçu ne peut pas être générée, car la route comporte des paramètres obligatoires.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Option inconnue</target>
+        <source>Unknown option: %s</source>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

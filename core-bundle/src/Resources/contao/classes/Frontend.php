@@ -12,9 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Search\Document;
-use Psr\Log\LogLevel;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -342,14 +340,12 @@ abstract class Frontend extends Controller
 		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
 		{
 			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
-			$strError = 'No root page found (host "' . $host . '", language "' . Input::get('language') . '")';
 		}
 
 		// No language given
 		else
 		{
 			$strUri = Environment::get('url') . '/';
-			$strError = 'No root page found (host "' . $host . '", languages "' . implode(', ', Environment::get('httpAcceptLanguage')) . '")';
 		}
 
 		$objRequest = Request::create($strUri);
@@ -367,8 +363,6 @@ abstract class Frontend extends Controller
 			}
 			catch (RoutingExceptionInterface $exception)
 			{
-				$logger->log(LogLevel::ERROR, $strError, array('contao' => new ContaoContext(__METHOD__, 'ERROR')));
-
 				throw new NoRootPageFoundException('No root page found', 0, $exception);
 			}
 		}

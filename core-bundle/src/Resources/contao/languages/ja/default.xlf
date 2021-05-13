@@ -2694,8 +2694,8 @@
         <target>ルートに必須のパラメーターがあるため、プレビューのURLを生成できません。</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>不明なオプション</target>
+        <source>Unknown option: %s</source>
+        <target>不明なオプション: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

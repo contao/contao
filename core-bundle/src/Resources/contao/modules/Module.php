@@ -271,9 +271,9 @@ abstract class Module extends Frontend
 	protected function renderNavigation($pid, $level=1, $host=null, $language=null)
 	{
 		// Get all active subpages
-		$objSubpages = PageModel::findPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
+		$arrSubpages = static::getPublishedSubpagesWithoutGuestsByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
 
-		if ($objSubpages === null)
+		if ($arrSubpages === null)
 		{
 			return '';
 		}
@@ -297,7 +297,7 @@ abstract class Module extends Frontend
 		global $objPage;
 
 		// Browse subpages
-		foreach ($objSubpages as $objSubpage)
+		foreach ($arrSubpages as list('page' => $objSubpage, 'hasSubpages' => $blnHasSubpages))
 		{
 			// Skip hidden sitemap pages
 			if ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_never')
@@ -317,7 +317,7 @@ abstract class Module extends Frontend
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || ($user && $user->isMemberOf(StringUtil::deserialize($objSubpage->groups))))
 			{
 				// Check whether there will be subpages
-				if ($objSubpage->subpages > 0 && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
+				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
@@ -473,6 +473,46 @@ abstract class Module extends Frontend
 		}
 
 		return $row;
+	}
+
+	/**
+	 * Get all published pages by their parent ID and exclude pages only visible for guests
+	 *
+	 * @param integer $intPid        The parent page's ID
+	 * @param boolean $blnShowHidden If true, hidden pages will be included
+	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
+	 *
+	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
+	 */
+	protected static function getPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
+	{
+		$time = Date::floorToMinute();
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
+		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+										   ->execute($intPid)
+										   ->fetchAllAssoc();
+
+		if (\count($arrPages) < 1)
+		{
+			return null;
+		}
+
+		// Load models into the registry with a single query
+		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
+
+		return array_map(
+			static function (array $row): array
+			{
+				return array(
+					'page' => PageModel::findByPk($row['id']),
+					'hasSubpages' => (bool) $row['hasSubpages'],
+				);
+			},
+			$arrPages
+		);
 	}
 
 	/**

@@ -123,7 +123,7 @@ class Picker extends Widget
 		$arrSet = array_keys($arrValues);
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
-  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $this->{$this->orderField} . '">' : '') . '
+  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . implode(',', $this->{$this->orderField}) . '">' : '') . '
   <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
     <ul id="sort_' . $this->strId . '" class="' . (($blnHasOrder || $this->isSortable) ? 'sortable' : '') . '">';
@@ -265,11 +265,21 @@ class Picker extends Widget
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
+			if (\in_array($mode, array(5, 6)))
+			{
+				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
+			}
+
 			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
 		}
 
 		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
+			if (\in_array($mode, array(5, 6)))
+			{
+				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
+			}
+
 			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
 		}
 

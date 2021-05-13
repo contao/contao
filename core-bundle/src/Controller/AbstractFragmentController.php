@@ -125,6 +125,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
     }
 
+    protected function addPropertiesToTemplate(Template $template, array $properties): void
+    {
+        foreach ($properties as $k => $v) {
+            $template->{$k} = $v;
+        }
+    }
+
     protected function addSectionToTemplate(Template $template, string $section): void
     {
         $template->inColumn = $section;
