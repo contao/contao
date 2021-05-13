@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\Filter\SyncExclude;
 use Contao\Model\Collection;
+use Webmozart\PathUtil\Path;
 
 /**
  * Handles the database assisted file system (DBAFS)
@@ -852,7 +853,7 @@ class Dbafs
 		$uploadPath = System::getContainer()->getParameter('contao.upload_path');
 
 		// Outside the files directory
-		if (strncmp($strPath . '/', $uploadPath . '/', \strlen($uploadPath) + 1) !== 0)
+		if (!Path::isBasePath($uploadPath, $strPath))
 		{
 			return true;
 		}

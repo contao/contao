@@ -2694,8 +2694,8 @@
         <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route Parameter benötigt.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Unbekannte Option</target>
+        <source>Unknown option: %s</source>
+        <target>Unbekannte Option: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

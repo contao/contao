@@ -21,12 +21,13 @@ class ContentElementReference extends FragmentReference
     public const GLOBALS_KEY = 'TL_CTE';
     public const PROXY_CLASS = ContentProxy::class;
 
-    public function __construct(ContentModel $model, string $section = 'main')
+    public function __construct(ContentModel $model, string $section = 'main', array $templateProperties = [])
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
         $this->attributes['contentModel'] = $model->id;
         $this->attributes['section'] = $section;
         $this->attributes['classes'] = $model->classes;
+        $this->attributes['templateProperties'] = $templateProperties;
     }
 }

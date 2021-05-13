@@ -19,6 +19,7 @@ use Contao\InstallationBundle\Database\Installer;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -75,14 +76,27 @@ class MigrateCommand extends Command
     {
         $this
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
-            ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Execute database schema migration only.')
-            ->setDescription('Executes migrations and the database schema diff.')
+            ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Only update the database schema.')
+            ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
+            ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+
+        if ($input->getOption('migrations-only')) {
+            if ($input->getOption('schema-only')) {
+                throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
+            }
+
+            if ($input->getOption('with-deletes')) {
+                throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
+            }
+
+            return $this->executeMigrations() ? 0 : 1;
+        }
 
         if ($input->getOption('schema-only')) {
             return $this->executeSchemaDiff($input->getOption('with-deletes')) ? 0 : 1;
