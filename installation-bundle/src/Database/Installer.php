@@ -108,7 +108,7 @@ class Installer
     /**
      * Compiles the command required to update the database.
      */
-    public function compileCommands(): void
+    public function compileCommands(bool $splitAlterTableStatements = true): void
     {
         $return = [
             'CREATE' => [],
@@ -166,9 +166,16 @@ class Installer
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
+                    if (!$splitAlterTableStatements) {
+                        $return['ALTER_TABLE'][md5($sql)] = $sql;
+                        $order[] = md5($sql);
+                        break;
+                    }
+
                     $prefix = $matches[1];
                     $sql = substr($sql, \strlen($prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
+                    $partsOrder = [];
 
                     for ($i = 0, $count = \count($parts); $i < $count; ++$i) {
                         $part = $parts[$i];
@@ -177,18 +184,18 @@ class Installer
                         switch (true) {
                             case 0 === strncmp($part, 'DROP ', 5):
                                 $return['ALTER_DROP'][md5($command)] = $command;
-                                $order[] = md5($command);
+                                $partsOrder[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'ADD ', 4):
                                 $return['ALTER_ADD'][md5($command)] = $command;
-                                $order[] = md5($command);
+                                $partsOrder[] = md5($command);
                                 break;
 
                             case 0 === strncmp($part, 'CHANGE ', 7):
                             case 0 === strncmp($part, 'RENAME ', 7):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
-                                $order[] = md5($command);
+                                $partsOrder[] = md5($command);
                                 break;
 
                             default:
@@ -196,6 +203,9 @@ class Installer
                                 break;
                         }
                     }
+
+                    $order = array_merge($order, array_reverse($partsOrder));
+
                     break;
 
                 default:
@@ -209,6 +219,8 @@ class Installer
 
         // HOOK: allow third-party developers to modify the array (see #3281)
         if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && \is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
+            @trigger_error('Using the "sqlCompileCommands" hook has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
             foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
                 $return = System::importStatic($callback[0])->{$callback[1]}($return);
             }
