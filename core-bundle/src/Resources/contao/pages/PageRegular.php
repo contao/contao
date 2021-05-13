@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -51,7 +50,7 @@ class PageRegular extends Frontend
 		$response = $this->Template->getResponse($blnCheckRequest);
 
 		// Finalize response context so it cannot be used anymore
-		System::getContainer()->get(ResponseContextAccessor::class)->finalize($response);
+		System::getContainer()->get(ResponseContextAccessor::class)->finalizeCurrentContext($response);
 
 		return $response;
 	}

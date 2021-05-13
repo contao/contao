@@ -52,7 +52,14 @@ class ResponseContextAccessor
         return $this;
     }
 
-    public function finalize(Response $response): self
+    public function endCurrentContext(): self
+    {
+        $this->setResponseContext(null);
+
+        return $this;
+    }
+
+    public function finalizeCurrentContext(Response $response): self
     {
         $responseContext = $this->getResponseContext();
 
@@ -60,11 +67,8 @@ class ResponseContextAccessor
             return $this;
         }
 
-        foreach ($responseContext->getHeaderBag()->all() as $name => $values) {
-            $response->headers->set($name, $values, false); // Do not replace but add
-        }
-
-        $this->setResponseContext(null);
+        $responseContext->finalize($response);
+        $this->endCurrentContext();
 
         return $this;
     }

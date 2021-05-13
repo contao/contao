@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -42,16 +43,22 @@ class ResponseContextAccessorTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
         $accessor = new ResponseContextAccessor($requestStack);
+        $response = new Response();
 
-        $accessor->setResponseContext(new ResponseContext());
-        $accessor->getResponseContext()->getHeaderBag()->set('Foo', 'Bar');
+        $responseContext = $this->createMock(ResponseContextInterface::class);
+        $responseContext
+            ->expects($this->once())
+            ->method('finalize')
+            ->with($response)
+        ;
+
+        $accessor->setResponseContext($responseContext);
 
         $this->assertNotNull($accessor->getResponseContext());
 
         $response = new Response();
-        $accessor->finalize($response);
+        $accessor->finalizeCurrentContext($response);
 
-        $this->assertSame('Bar', $response->headers->get('Foo'));
         $this->assertNull($accessor->getResponseContext());
     }
 }
