@@ -89,7 +89,7 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
         $sourcePath = $stream->getSourceContext()->getPath();
         $parentName = $this->hierarchyProvider->getDynamicParent($matches[1], $sourcePath);
 
-        // Handle loops
+        // Detect loops
         if (\in_array($parentName, $this->inheritanceChain[$shortName] ?? [], true)) {
             $chain = implode(' -> ', $this->inheritanceChain[$shortName]);
 

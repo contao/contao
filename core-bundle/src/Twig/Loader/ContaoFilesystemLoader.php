@@ -94,10 +94,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      * Adds a path where templates are stored (if it exists).
      *
      * If $trackTemplates is enabled, the path will be searched for templates
-     * that should be available in the Contao template hierarchy. Choose
-     * TRACKING_DEEP to include subdirectories and TRACKING_SHALLOW to only
-     * search one level. This replaces the path used for tracking should there
-     * have been any previously set for this namespace.
+     * that should be available in the Contao template hierarchy.
      *
      * @param string $path      A path where to look for templates
      * @param string $namespace A path namespace
