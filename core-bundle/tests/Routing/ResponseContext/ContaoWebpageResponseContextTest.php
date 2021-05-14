@@ -20,7 +20,7 @@ class ContaoWebpageResponseContextTest extends ContaoTestCase
 {
     public function testResponseContext(): void
     {
-        /** @var PageModel&MockObject $pageModel */
+        /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
