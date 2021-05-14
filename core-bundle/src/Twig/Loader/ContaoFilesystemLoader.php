@@ -246,6 +246,15 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         return $next;
     }
 
+    public function getHierarchy(): array
+    {
+        if (null === $this->hierarchy) {
+            $this->buildHierarchy();
+        }
+
+        return $this->hierarchy;
+    }
+
     /**
      * Refreshes the template hierarchy. Bear in mind that this will issue
      * filesystem operations for each of the tracked template paths.

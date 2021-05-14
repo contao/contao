@@ -15,4 +15,6 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 interface HierarchyProvider
 {
     public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string;
+
+    public function getHierarchy(): array;
 }
