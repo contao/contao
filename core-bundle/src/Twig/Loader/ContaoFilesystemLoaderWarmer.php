@@ -72,6 +72,13 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         return [];
     }
 
+    public function refresh(): void
+    {
+        $this->loader->clear();
+
+        $this->warmUp('');
+    }
+
     public function isOptional(): bool
     {
         return false;
