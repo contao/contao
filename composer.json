@@ -87,7 +87,7 @@
         "symfony/console": "4.4.* || 5.2.*",
         "symfony/debug": "4.4.* || 5.2.*",
         "symfony/debug-bundle": "4.4.* || 5.2.*",
-        "symfony/dependency-injection": "4.4.* || 5.2.*",
+        "symfony/dependency-injection": "^4.4.20 || ^5.2.4",
         "symfony/deprecation-contracts": "^2.1",
         "symfony/doctrine-bridge": "4.4.* || 5.2.*",
         "symfony/dom-crawler": "4.4.* || 5.2.*",
