@@ -64,6 +64,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     private $hierarchy;
 
     /**
+     * @var string|null
+     */
+    private $hierarchyHash;
+
+    /**
      * @var string|false|null
      */
     private $currentThemeSlug;
@@ -87,6 +92,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
 
         if ($hierarchyItem->isHit()) {
             $this->hierarchy = $hierarchyItem->get();
+            $this->hierarchyHash = $this->createHash($this->hierarchy);
         }
     }
 
@@ -139,7 +145,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     {
         $this->paths = $this->trackedTemplatesPaths = $this->cache = $this->errorCache = [];
 
-        $this->hierarchy = null;
+        $this->hierarchy = $this->hierarchyHash = null;
     }
 
     /**
@@ -172,11 +178,17 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      */
     public function getCacheKey($name): string
     {
+        // We're basically cache busting `@Contao` and `@Contao_*` namespaced
+        // templates by appending a hash that changes whenever the registered
+        // hierarchy changes
+        $suffix = null !== $this->hierarchyHash && 1 === preg_match('%^(@Contao(_.*)?)/%', $name) ?
+            "_$this->hierarchyHash" : '';
+
         if (null !== ($themeTemplateName = $this->getThemeTemplateName($name))) {
-            return parent::getCacheKey($themeTemplateName);
+            return parent::getCacheKey($themeTemplateName).$suffix;
         }
 
-        return parent::getCacheKey($name);
+        return parent::getCacheKey($name).$suffix;
     }
 
     /**
@@ -269,6 +281,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         }
 
         $this->hierarchy = $hierarchy;
+        $this->hierarchyHash = $this->createHash($hierarchy);
+    }
+
+    private function createHash(array $array): string
+    {
+        return substr(md5(json_encode($array, JSON_THROW_ON_ERROR)), 0, 6);
     }
 
     private function getIdentifier(string $shortName): string
