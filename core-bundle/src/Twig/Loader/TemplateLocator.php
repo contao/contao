@@ -80,24 +80,24 @@ class TemplateLocator
             );
         };
 
-        if (is_dir($path = Path::join($this->projectDir, 'contao'))) {
+        if (is_dir($path = Path::join($this->projectDir, 'contao/templates'))) {
             $add('App', $path);
         }
 
-        if (is_dir($path = Path::join($this->projectDir, 'src/Resources/contao'))) {
+        if (is_dir($path = Path::join($this->projectDir, 'src/Resources/contao/templates'))) {
             $add('App', $path);
         }
 
-        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao'))) {
+        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/templates'))) {
             $add('App', $path);
         }
 
         foreach (array_reverse($this->bundles) as $name => $class) {
-            if (ContaoModuleBundle::class === $class) {
-                $add($name, $this->bundlesMetadata[$name]['path']);
-            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'Resources/contao'))) {
+            if (ContaoModuleBundle::class === $class && is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'templates'))) {
                 $add($name, $path);
-            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'contao'))) {
+            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'Resources/contao/templates'))) {
+                $add($name, $path);
+            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'contao/templates'))) {
                 $add($name, $path);
             }
         }
@@ -152,6 +152,6 @@ class TemplateLocator
             $paths[] = Path::canonicalize($item->getPathname());
         }
 
-        return array_reverse($paths);
+        return $paths;
     }
 }
