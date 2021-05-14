@@ -914,7 +914,6 @@ services:
         arguments:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
             - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
-            - '%contao.resources_paths%'
             - '%kernel.project_dir%'
         tags:
             - { name: kernel.cache_warmer }
