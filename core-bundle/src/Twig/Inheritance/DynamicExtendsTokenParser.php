@@ -31,6 +31,13 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
      */
     private $hierarchyProvider;
 
+    /**
+     * Track chain to prevent endless loops.
+     *
+     * @var array<string,array<string>>
+     */
+    private $inheritanceChain = [];
+
     public function __construct(HierarchyProvider $hierarchyProvider)
     {
         $this->hierarchyProvider = $hierarchyProvider;
@@ -78,12 +85,20 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
             return;
         }
 
+        $shortName = $matches[1];
         $sourcePath = $stream->getSourceContext()->getPath();
+        $parentName = $this->hierarchyProvider->getDynamicParent($matches[1], $sourcePath);
+
+        // Handle loops
+        if (\in_array($parentName, $this->inheritanceChain[$shortName] ?? [], true)) {
+            $chain = implode(' -> ', $this->inheritanceChain[$shortName]);
+
+            throw new \LogicException("Loop detected when extending '$parentName': $chain -> &0");
+        }
+
+        $this->inheritanceChain[$shortName][] = $parentName;
 
         // Adjust parent template according to the template hierarchy
-        $parent->setAttribute(
-            'value',
-            $this->hierarchyProvider->getDynamicParent($matches[1], $sourcePath)
-        );
+        $parent->setAttribute('value', $parentName);
     }
 }
