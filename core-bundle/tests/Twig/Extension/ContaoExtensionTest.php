@@ -82,7 +82,7 @@ class ContaoExtensionTest extends TestCase
         $iteration1 = $node->__toString();
 
         // Add rule that allows the template and traverse tree a second time (change expected)
-        $contaoExtension->addContaoEscaperRule('/foo.html.twig/');
+        $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
         $traverser->traverse($node);
         $iteration2 = $node->__toString();
 

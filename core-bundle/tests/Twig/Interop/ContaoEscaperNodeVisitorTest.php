@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchy;
+use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\TwigFunction;
@@ -111,8 +111,8 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchy::class));
-        $contaoExtension->registerTemplateForInputEncoding('legacy.html.twig');
+        $contaoExtension = new ContaoExtension($environment, $this->createMock(HierarchyProvider::class));
+        $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);
 
