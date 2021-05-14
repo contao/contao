@@ -77,8 +77,7 @@ class TemplateLocator
             $paths[$group] = array_merge(
                 $paths[$group] ?? [],
                 $this->expandSubdirectories($basePath)
-            )
-            ;
+            );
         };
 
         if (is_dir($path = Path::join($this->projectDir, 'contao'))) {
@@ -126,7 +125,7 @@ class TemplateLocator
         $templates = [];
 
         foreach ($finder as $file) {
-            $templates[$file->getFilename()] = $file->getPathname();
+            $templates[$file->getFilename()] = Path::canonicalize($file->getPathname());
         }
 
         return $templates;
@@ -150,7 +149,7 @@ class TemplateLocator
         ];
 
         foreach ($finder as $item) {
-            $paths[] = $item->getPathname();
+            $paths[] = Path::canonicalize($item->getPathname());
         }
 
         return array_reverse($paths);

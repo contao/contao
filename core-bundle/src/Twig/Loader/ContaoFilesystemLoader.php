@@ -224,7 +224,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         }
 
         // Find the next element in the hierarchy or use the first if it cannot be found
-        $index = array_search($sourcePath, array_keys($chain), true);
+        $index = array_search(Path::canonicalize($sourcePath), array_keys($chain), true);
         $next = array_values($chain)[false !== $index ? $index + 1 : 0] ?? null;
 
         if (null === $next) {
