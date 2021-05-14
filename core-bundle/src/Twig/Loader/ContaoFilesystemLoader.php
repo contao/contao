@@ -249,13 +249,10 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
             $templates = $this->templateLocator->findTemplates($searchPath);
 
             foreach ($templates as $shortName => $templatePath) {
-                // There can only be one candidate per namespace - make sure the
-                // first one gets precedence so that it matches the paths
-                // hierarchy of the namespace.
                 $identifier = $this->getIdentifier($shortName);
 
                 if (isset($templatesByNamespace[$namespace][$identifier])) {
-                    continue;
+                    throw new \OutOfBoundsException("There cannot be more than one '$identifier' template in '$searchPath'.");
                 }
 
                 $templatesByNamespace[$namespace][$identifier] = [$shortName, $templatePath];

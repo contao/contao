@@ -18,6 +18,7 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use OutOfBoundsException;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Webmozart\PathUtil\Path;
@@ -64,23 +65,33 @@ class InheritanceTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    private function getDemoEnvironment(): Environment
+    public function testThrowsIfTemplatesAreAmbiguous(): void
+    {
+        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle');
+
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage("There cannot be more than one 'foo' template in '$bundlePath'.");
+
+        $this->getDemoEnvironment([
+            'InvalidBundle' => ['path' => $bundlePath],
+        ]);
+    }
+
+    private function getDemoEnvironment(array $bundlesMetadata = null): Environment
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundles = [
-            'CoreBundle' => ContaoModuleBundle::class,
-            'FooBundle' => ContaoModuleBundle::class,
-            'BarBundle' => ContaoModuleBundle::class,
-            'App' => ContaoModuleBundle::class,
-        ];
-
-        $bundlesMetadata = [
+        $bundlesMetadata = $bundlesMetadata ?? [
             'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
             'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
             'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
             'App' => ['path' => Path::join($projectDir, 'contao')],
         ];
+
+        $bundles = array_combine(
+            array_keys($bundlesMetadata),
+            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
+        );
 
         $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
 

@@ -119,6 +119,7 @@ class TemplateLocator
             ->in($path)
             ->depth('< 1')
             ->name('*.html.twig')
+            ->sortByName()
         ;
 
         $templates = [];
@@ -126,8 +127,6 @@ class TemplateLocator
         foreach ($finder as $file) {
             $templates[$file->getFilename()] = $file->getPathname();
         }
-
-        ksort($templates);
 
         return $templates;
     }

@@ -1,1 +1,5 @@
-should be ignored
+{% extends '@Contao/text.html.twig' %}
+
+{% block wrapper -%}
+    <bar>{{ parent() }}</bar>
+{%- endblock %}
