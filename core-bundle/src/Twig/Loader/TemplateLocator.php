@@ -76,7 +76,8 @@ class TemplateLocator
         $add = function (string $group, string $basePath) use (&$paths): void {
             $paths[$group] = array_merge(
                 $paths[$group] ?? [],
-                $this->expandSubdirectories($basePath))
+                $this->expandSubdirectories($basePath)
+            )
             ;
         };
 
