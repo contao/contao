@@ -18,7 +18,6 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
-use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
