@@ -916,6 +916,7 @@ services:
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
+            - { name: kernel.reset, method: reset }
 
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
         arguments:

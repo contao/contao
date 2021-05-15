@@ -90,9 +90,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         // Restore hierarchy from cache
         $hierarchyItem = $cachePool->getItem(self::CACHE_KEY_HIERARCHY);
 
-        if ($hierarchyItem->isHit()) {
-            $this->hierarchy = $hierarchyItem->get();
-            $this->hierarchyHash = $this->createHash($this->hierarchy);
+        if ($hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
+            $this->hierarchy = $hierarchy;
+            $this->hierarchyHash = $this->createHash($hierarchy);
         }
     }
 
@@ -103,10 +103,14 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      * that should be available in the Contao template hierarchy.
      *
      * @param string $path      A path where to look for templates
-     * @param string $namespace A path namespace
+     * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
-    public function addPath($path, $namespace = self::MAIN_NAMESPACE, bool $trackTemplates = false): void
+    public function addPath($path, $namespace = 'Contao', bool $trackTemplates = false): void
     {
+        if (null === $this->parseName("@$namespace")) {
+            throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
+        }
+
         try {
             parent::addPath($path, $namespace);
         } catch (LoaderError $error) {
@@ -127,15 +131,24 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      * Prepends a path where templates are stored (if it exists).
      *
      * @param string $path      A path where to look for templates
-     * @param string $namespace A path namespace
+     * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
-    public function prependPath($path, $namespace = self::MAIN_NAMESPACE): void
+    public function prependPath($path, $namespace = 'Contao'): void
     {
+        if (null === $this->parseName("@$namespace")) {
+            throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
+        }
+
         try {
             parent::prependPath($path, $namespace);
         } catch (LoaderError $error) {
             // Ignore
         }
+    }
+
+    public function getPaths($namespace = 'Contao'): array
+    {
+        return parent::getPaths($namespace);
     }
 
     /**
@@ -178,11 +191,13 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      */
     public function getCacheKey($name): string
     {
-        // We're basically cache busting `@Contao` and `@Contao_*` namespaced
-        // templates by appending a hash that changes whenever the registered
-        // hierarchy changes
-        $suffix = null !== $this->hierarchyHash && 1 === preg_match('%^(@Contao(_.*)?)/%', $name) ?
-            "_$this->hierarchyHash" : '';
+        // We're basically cache busting templates by appending a hash that
+        // changes whenever the registered hierarchy changes
+        if (null === $this->hierarchyHash) {
+            $this->buildHierarchy();
+        }
+
+        $suffix = "_$this->hierarchyHash";
 
         if (null !== ($themeTemplateName = $this->getThemeTemplateName($name))) {
             return parent::getCacheKey($themeTemplateName).$suffix;
@@ -295,9 +310,20 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         $this->hierarchyHash = $this->createHash($hierarchy);
     }
 
-    private function createHash(array $array): string
+    /**
+     * Split a Contao name into [namespace, short name]. The short name part
+     * will be null if $name is only a namespace.
+     *
+     * If parsing fails - i.e. if the given name does not describe a "Contao"
+     * or "Contao_*" namespace - null is returned instead.
+     */
+    private function parseName(string $logicalNameOrNamespace): ?array
     {
-        return substr(md5(json_encode($array, JSON_THROW_ON_ERROR)), 0, 6);
+        if (1 === preg_match('%^@(Contao(?:_[A-za-z0-9]+)?)(?:/(.*))?$%', $logicalNameOrNamespace, $matches)) {
+            return [$matches[1], $matches[2] ?? null];
+        }
+
+        return null;
     }
 
     private function getIdentifier(string $shortName): string
@@ -306,13 +332,18 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         return preg_replace('/(.*)(\.html5|\.html.twig)/', '$1', $shortName);
     }
 
+    private function createHash(array $array): string
+    {
+        return substr(md5(json_encode($array, JSON_THROW_ON_ERROR)), 0, 6);
+    }
+
     /**
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
      */
     private function getThemeTemplateName(string $name): ?string
     {
-        if (1 !== preg_match('%^@Contao/(.*)%', $name, $matches)) {
+        if (null === ($parts = $this->parseName($name)) || 'Contao' !== $parts[0]) {
             return null;
         }
 
@@ -320,7 +351,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
             return null;
         }
 
-        $template = "@Contao_Theme_$themeSlug/$matches[1]";
+        $template = "@Contao_Theme_$themeSlug/$parts[1]";
 
         return $this->exists($template) ? $template : null;
     }
