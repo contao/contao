@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Webmozart\PathUtil\Path;
 
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
@@ -32,17 +33,20 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
      */
     private $projectDir;
 
-    public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir)
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $environment)
     {
         $this->loader = $contaoFilesystemLoader;
         $this->templateLocator = $templateLocator;
         $this->projectDir = $projectDir;
+        $this->environment = $environment;
     }
 
-    /**
-     * @param string $cacheDir
-     */
-    public function warmUp($cacheDir): array
+    public function warmUp($cacheDir = null): array
     {
         // Theme paths
         $themePaths = $this->templateLocator->findThemeDirectories();
@@ -72,15 +76,25 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         return [];
     }
 
+    public function isOptional(): bool
+    {
+        return false;
+    }
+
     public function refresh(): void
     {
         $this->loader->clear();
 
-        $this->warmUp('');
+        $this->warmUp();
     }
 
-    public function isOptional(): bool
+    /**
+     * Auto refresh in dev mode.
+     */
+    public function onKernelRequest(RequestEvent $event): void
     {
-        return false;
+        if ('dev' === $this->environment) {
+            $this->refresh();
+        }
     }
 }
