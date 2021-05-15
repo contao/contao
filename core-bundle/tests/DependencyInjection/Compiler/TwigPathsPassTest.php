@@ -14,10 +14,10 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\TwigPathsPass;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Twig\Loader\FilesystemLoader as BaseFilesystemLoader;
+use Twig\Loader\FilesystemLoader;
 
 class TwigPathsPassTest extends TestCase
 {
@@ -25,17 +25,17 @@ class TwigPathsPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $baseLoader = (new Definition(BaseFilesystemLoader::class))
+        $baseLoader = (new Definition(FilesystemLoader::class))
             ->addMethodCall('addPath', ['path1', 'namespace1'])
             ->addMethodCall('addPath', ['path2', 'namespace2'])
             ->addMethodCall('foo')
         ;
 
-        $loader = new Definition(ContaoFilesystemLoader::class);
+        $loader = new Definition(FailTolerantFilesystemLoader::class);
 
         $container->addDefinitions([
             'twig.loader.native_filesystem' => $baseLoader,
-            ContaoFilesystemLoader::class => $loader,
+            FailTolerantFilesystemLoader::class => $loader,
         ]);
 
         (new TwigPathsPass())->process($container);

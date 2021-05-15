@@ -97,7 +97,7 @@ class InheritanceTest extends TestCase
 
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
 
-        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir);
+        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
         $warmer->warmUp('');
 
         $environment = new Environment($loader);
