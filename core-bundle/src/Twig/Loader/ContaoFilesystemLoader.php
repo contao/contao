@@ -319,7 +319,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      */
     private function parseName(string $logicalNameOrNamespace): ?array
     {
-        if (1 === preg_match('%^@(Contao(?:_[A-za-z0-9]+)?)(?:/(.*))?$%', $logicalNameOrNamespace, $matches)) {
+        if (1 === preg_match('%^@(Contao(?:_[a-zA-Z0-9_-]+)?)(?:/(.*))?$%', $logicalNameOrNamespace, $matches)) {
             return [$matches[1], $matches[2] ?? null];
         }
 

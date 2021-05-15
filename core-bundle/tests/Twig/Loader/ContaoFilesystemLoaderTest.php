@@ -32,12 +32,12 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $loader->addPath($path1);
         $loader->addPath($path2, 'Contao');
-        $loader->addPath($path1, 'Contao_Foo');
+        $loader->addPath($path1, 'Contao_foo-Bar_Baz2');
 
         $this->assertTrue($loader->exists('@Contao/1.html.twig'));
         $this->assertTrue($loader->exists('@Contao/2.html.twig'));
-        $this->assertTrue($loader->exists('@Contao_Foo/1.html.twig'));
-        $this->assertFalse($loader->exists('@Contao_Foo/2.html.twig'));
+        $this->assertTrue($loader->exists('@Contao_foo-Bar_Baz2/1.html.twig'));
+        $this->assertFalse($loader->exists('@Contao_foo-Bar_Baz2/2.html.twig'));
     }
 
     public function testPrependPath(): void

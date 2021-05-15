@@ -46,7 +46,7 @@ class ContaoExtension extends AbstractExtension
 
         // Use our escaper on all templates in the `@Contao` and `@Contao_*`
         // namespaces
-        $this->addContaoEscaperRule('%^@Contao(_.*)?/%');
+        $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
     }
 
     /**
