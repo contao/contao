@@ -902,6 +902,13 @@ services:
             - '%kernel.bundles%'
             - '%kernel.bundles_metadata%'
 
+    Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
+        arguments:
+            - []
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 1 }
+
     Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
         arguments:
             - '@cache.system'

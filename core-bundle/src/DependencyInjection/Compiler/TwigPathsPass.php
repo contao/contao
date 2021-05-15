@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -26,16 +26,13 @@ class TwigPathsPass implements CompilerPassInterface
     {
         $this->migrateSymfonyTwigPaths(
             $container->getDefinition('twig.loader.native_filesystem'),
-            $container->getDefinition(ContaoFilesystemLoader::class)
+            $container->getDefinition(FailTolerantFilesystemLoader::class)
         );
     }
 
     /**
-     * Rewires Symfony's "addPath" method calls to our filesystem loader.
-     *
-     * For regular operation this would not be necessary because the original
-     * loader still exists (with a lower priority) and would still handle the
-     * requests. However, our loader tolerates missing paths which will occur
+     * Rewires Symfony's "addPath" method calls to our fail tolerant version
+     * of a filesystem loader which tolerates missing paths that will occur
      * as soon as a user removes registered directories (e.g. from within the
      * backend) and that would otherwise require the container to be rebuild.
      */
