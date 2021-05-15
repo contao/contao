@@ -12,12 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Twig\Error\LoaderError;
 use Webmozart\PathUtil\Path;
 
@@ -126,16 +129,206 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame([$path2], $loader2->getPaths('Contao_Foo'));
     }
 
-    // todo:
-    //  - getCacheKey (with theme)
-    //  - getSourceContext (with theme)
-    //  - everything hierarchy related
+    public function testGetCacheKey(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
 
-    private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null): ContaoFilesystemLoader
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
+
+        $loader->addPath($path);
+
+        $this->assertSame(
+            "$path/1.html.twig_d75171",
+            $loader->getCacheKey('@Contao/1.html.twig')
+        );
+    }
+
+    public function testCacheKeyChangesWhenHierarchyChanges(): void
+    {
+        $filesystem = new Filesystem();
+        $tempDir = $this->getTempDir();
+
+        $addFile = static function (string $filename) use ($tempDir, $filesystem): void {
+            $filesystem->copy(
+                __DIR__.'/../../Fixtures/Twig/paths/1/1.html.twig',
+                Path::join($tempDir, $filename)
+            );
+        };
+
+        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('', [], []));
+        $loader->addPath($tempDir, 'Contao_Test', true);
+        $addFile('1.html.twig');
+
+        $cacheKey = $loader->getCacheKey('@Contao_Test/1.html.twig');
+
+        // Hierarchy should have been built automatically: expect no change
+        $loader->buildHierarchy();
+        $this->assertSame($cacheKey, $loader->getCacheKey('@Contao_Test/1.html.twig'));
+
+        // Add a template in the tracked path and refresh: expect change
+        $addFile('2.html.twig');
+        $loader->buildHierarchy();
+
+        $this->assertNotSame($cacheKey, $loader->getCacheKey('@Contao_Test/1.html.twig'));
+
+        $filesystem->remove($tempDir);
+    }
+
+    public function testGetCacheKeyDelegatesToThemeTemplate(): void
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $loader = $this->getContaoFilesystemLoader();
+
+        $loader->addPath(Path::join($basePath, 'templates/'));
+        $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
+
+        $this->assertSame(
+            Path::join($basePath, 'templates/text.html.twig_d75171'),
+            $loader->getCacheKey('@Contao/text.html.twig')
+        );
+
+        // Reset and switch context
+        $loader->reset();
+
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my/theme';
+
+        $GLOBALS['objPage'] = $page;
+
+        $this->assertSame(
+            Path::join($basePath, 'templates/my/theme/text.html.twig_d75171'),
+            $loader->getCacheKey('@Contao/text.html.twig')
+        );
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function testGetSourceContext(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
+
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
+
+        $loader->addPath($path);
+
+        $source = $loader->getSourceContext('@Contao/1.html.twig');
+
+        $this->assertSame('@Contao/1.html.twig', $source->getName());
+        $this->assertSame(Path::join($path, '1.html.twig'), $source->getPath());
+    }
+
+    public function testGetSourceContextDelegatesToThemeTemplate(): void
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $loader = $this->getContaoFilesystemLoader();
+
+        $loader->addPath(Path::join($basePath, 'templates/'));
+        $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
+
+        $source = $loader->getSourceContext('@Contao/text.html.twig');
+
+        $this->assertSame('@Contao/text.html.twig', $source->getName());
+        $this->assertSame(Path::join($basePath, 'templates/text.html.twig'), $source->getPath());
+
+        // Reset and switch context
+        $loader->reset();
+
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my/theme';
+
+        $GLOBALS['objPage'] = $page;
+
+        $source = $loader->getSourceContext('@Contao/text.html.twig');
+
+        $this->assertSame('@Contao_Theme_my_theme/text.html.twig', $source->getName());
+        $this->assertSame(Path::join($basePath, 'templates/my/theme/text.html.twig'), $source->getPath());
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function testGetDynamicParentAndHistory(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $bundles = [
+            'CoreBundle' => 'class',
+            'FooBundle' => ContaoModuleBundle::class,
+            'BarBundle' => 'class',
+            'App' => 'class',
+        ];
+
+        $bundlesMetadata = [
+            'App' => ['path' => Path::join($projectDir, 'contao')],
+            'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
+            'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
+            'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
+        ];
+
+        $locator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
+
+        $loader = $this->getContaoFilesystemLoader(null, $locator);
+
+        $warmer = new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod');
+        $warmer->warmUp();
+
+        $expectedHierarchy = [
+            'text' => [
+                $globalPath = Path::join($projectDir, '/templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                $appPath = Path::join($projectDir, '/contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
+                $barPath = Path::join($projectDir, '/vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
+                $fooPath = Path::join($projectDir, '/vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
+                $corePath = Path::join($projectDir, '/vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
+            ],
+        ];
+
+        // Full hierarchy
+        $this->assertSame($expectedHierarchy, $loader->getHierarchy());
+
+        // Next element by path
+        $this->assertSame(
+            '@Contao_Global/text.html.twig',
+            $loader->getDynamicParent('text.html.twig', 'other/template.html.twig'),
+        );
+
+        $this->assertSame(
+            '@Contao_Global/text.html.twig',
+            $loader->getDynamicParent('text', 'other/template.html.twig'),
+        );
+
+        $this->assertSame(
+            '@Contao_App/text.html.twig',
+            $loader->getDynamicParent('text.html.twig', $globalPath),
+        );
+
+        $this->assertSame(
+            '@Contao_BarBundle/text.html.twig',
+            $loader->getDynamicParent('text.html.twig', $appPath),
+        );
+
+        $this->assertSame(
+            '@Contao_FooBundle/text.html.twig',
+            $loader->getDynamicParent('text.html.twig', $barPath),
+        );
+
+        $this->assertSame(
+            '@Contao_CoreBundle/text.html.twig',
+            $loader->getDynamicParent('text.html.twig', $fooPath),
+        );
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("The template '$corePath' does not have a parent 'text' it can extend from.");
+
+        $loader->getDynamicParent('text.html.twig', $corePath);
+    }
+
+    private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null, TemplateLocator $templateLocator = null): ContaoFilesystemLoader
     {
         return new ContaoFilesystemLoader(
             $cacheAdapter ?? new NullAdapter(),
-            $this->createMock(TemplateLocator::class)
+            $templateLocator ?? $this->createMock(TemplateLocator::class),
+            '/',
         );
     }
 }
