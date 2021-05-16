@@ -131,47 +131,16 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetCacheKey(): void
     {
-        $loader = $this->getContaoFilesystemLoader();
+        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
 
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
 
-        $loader->addPath($path);
+        $loader->addPath($path, 'Contao', true);
 
         $this->assertSame(
-            "$path/1.html.twig_d75171",
-            $loader->getCacheKey('@Contao/1.html.twig')
+            Path::join($path, '1.html.twig'),
+            Path::normalize($loader->getCacheKey('@Contao/1.html.twig'))
         );
-    }
-
-    public function testCacheKeyChangesWhenHierarchyChanges(): void
-    {
-        $filesystem = new Filesystem();
-        $tempDir = $this->getTempDir();
-
-        $addFile = static function (string $filename) use ($tempDir, $filesystem): void {
-            $filesystem->copy(
-                __DIR__.'/../../Fixtures/Twig/paths/1/1.html.twig',
-                Path::join($tempDir, $filename)
-            );
-        };
-
-        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('', [], []));
-        $loader->addPath($tempDir, 'Contao_Test', true);
-        $addFile('1.html.twig');
-
-        $cacheKey = $loader->getCacheKey('@Contao_Test/1.html.twig');
-
-        // Hierarchy should have been built automatically: expect no change
-        $loader->buildHierarchy();
-        $this->assertSame($cacheKey, $loader->getCacheKey('@Contao_Test/1.html.twig'));
-
-        // Add a template in the tracked path and refresh: expect change
-        $addFile('2.html.twig');
-        $loader->buildHierarchy();
-
-        $this->assertNotSame($cacheKey, $loader->getCacheKey('@Contao_Test/1.html.twig'));
-
-        $filesystem->remove($tempDir);
     }
 
     public function testGetCacheKeyDelegatesToThemeTemplate(): void
@@ -184,8 +153,8 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
 
         $this->assertSame(
-            Path::join($basePath, 'templates/text.html.twig_d75171'),
-            $loader->getCacheKey('@Contao/text.html.twig')
+            Path::join($basePath, 'templates/text.html.twig'),
+            Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
         );
 
         // Reset and switch context
@@ -197,8 +166,8 @@ class ContaoFilesystemLoaderTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $this->assertSame(
-            Path::join($basePath, 'templates/my/theme/text.html.twig_d75171'),
-            $loader->getCacheKey('@Contao/text.html.twig')
+            Path::join($basePath, 'templates/my/theme/text.html.twig'),
+            Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
         );
 
         unset($GLOBALS['objPage']);
@@ -215,7 +184,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $source = $loader->getSourceContext('@Contao/1.html.twig');
 
         $this->assertSame('@Contao/1.html.twig', $source->getName());
-        $this->assertSame(Path::join($path, '1.html.twig'), $source->getPath());
+        $this->assertSame(Path::join($path, '1.html.twig'), Path::normalize($source->getPath()));
     }
 
     public function testGetSourceContextDelegatesToThemeTemplate(): void
@@ -230,7 +199,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $source = $loader->getSourceContext('@Contao/text.html.twig');
 
         $this->assertSame('@Contao/text.html.twig', $source->getName());
-        $this->assertSame(Path::join($basePath, 'templates/text.html.twig'), $source->getPath());
+        $this->assertSame(Path::join($basePath, 'templates/text.html.twig'), Path::normalize($source->getPath()));
 
         // Reset and switch context
         $loader->reset();
@@ -243,7 +212,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $source = $loader->getSourceContext('@Contao/text.html.twig');
 
         $this->assertSame('@Contao_Theme_my_theme/text.html.twig', $source->getName());
-        $this->assertSame(Path::join($basePath, 'templates/my/theme/text.html.twig'), $source->getPath());
+        $this->assertSame(Path::join($basePath, 'templates/my/theme/text.html.twig'), Path::normalize($source->getPath()));
 
         unset($GLOBALS['objPage']);
     }
