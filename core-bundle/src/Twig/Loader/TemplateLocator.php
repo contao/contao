@@ -118,7 +118,7 @@ class TemplateLocator
             ->files()
             ->in($path)
             ->depth('< 1')
-            ->name('*.html.twig')
+            ->name('/(\.html\.twig|\.html5)$/')
             ->sortByName()
         ;
 

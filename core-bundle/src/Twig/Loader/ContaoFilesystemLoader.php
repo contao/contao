@@ -221,7 +221,28 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        return parent::getSourceContext($templateName);
+        $source = parent::getSourceContext($templateName);
+
+        // The Contao PHP templates will still be rendered by the Contao
+        // framework via a PhpTemplateProxyNode. We're removing the source to
+        // not confuse Twig's lexer and parser and just keep the block names.
+        // At some point we may transpile the source to valid Twig instead and
+        // drop the proxy.
+        if ('html5' !== Path::getExtension($source->getPath(), true)) {
+            return $source;
+        }
+
+        preg_match_all(
+            '/\$this->block\s*\(\s*[\'"]([a-zA-Z0-9_-]+)[\'"]\s*\)/i',
+            file_get_contents($source->getPath()),
+            $matches
+        );
+
+        return new Source(
+            implode("\n", $matches[1] ?? []),
+            $source->getName(),
+            $source->getPath()
+        );
     }
 
     /**

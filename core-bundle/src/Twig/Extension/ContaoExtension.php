@@ -16,9 +16,12 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\Template;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\EscaperExtension;
+use Webmozart\PathUtil\Path;
 
 class ContaoExtension extends AbstractExtension
 {
@@ -75,6 +78,9 @@ class ContaoExtension extends AbstractExtension
                     return $this->contaoEscaperFilterRules;
                 }
             ),
+            // Allows rendering PHP templates with the legacy framework by
+            // installing proxy nodes
+            new PhpTemplateProxyNodeVisitor(self::class),
         ];
     }
 
@@ -85,5 +91,50 @@ class ContaoExtension extends AbstractExtension
             // the one of Twig's CoreExtension
             new DynamicExtendsTokenParser($this->hierarchyProvider),
         ];
+    }
+
+    /**
+     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode
+     * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor
+     *
+     * @internal
+     */
+    public function renderLegacyTemplate(string $name, array $blocks, array $context): string
+    {
+        $template = Path::getFilenameWithoutExtension($name);
+
+        $renderedBlocks = $this->renderBlocks($blocks, $context);
+
+        $partialTemplate = new class($template, $renderedBlocks, $context) extends Template {
+            public function __construct(string $template, array $blocks, array $context)
+            {
+                parent::__construct($template);
+
+                $this->arrData = $context;
+                $this->arrBlocks = $blocks;
+                $this->arrBlockNames = array_keys($blocks);
+
+                // Do not delegate to Twig to prevent an endless loop
+                $this->blnEnableTwigSurrogateRendering = false;
+            }
+        };
+
+        return $partialTemplate->parse();
+    }
+
+    private function renderBlocks(array $blocks, array $context): array
+    {
+        $rendered = [];
+
+        foreach ($blocks as $name => $block) {
+            ob_start();
+
+            // Display block
+            $block($context);
+
+            $rendered[$name] = ob_get_clean();
+        }
+
+        return $rendered;
     }
 }
