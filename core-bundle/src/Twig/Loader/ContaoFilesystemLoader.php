@@ -64,11 +64,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     private $hierarchy;
 
     /**
-     * @var array<string,string>|null
-     */
-    private $hierarchyHashes;
-
-    /**
      * @var string|false|null
      */
     private $currentThemeSlug;
@@ -92,7 +87,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
 
         if ($hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
             $this->hierarchy = $hierarchy;
-            $this->hierarchyHashes = $this->createHashesForValues($hierarchy);
         }
     }
 
@@ -157,8 +151,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     public function clear(): void
     {
         $this->paths = $this->trackedTemplatesPaths = $this->cache = $this->errorCache = [];
-
-        $this->hierarchy = $this->hierarchyHashes = null;
+        $this->hierarchy = null;
     }
 
     /**
@@ -181,7 +174,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      * given template name.
      *
      * If we're currently in a theme context and a theme specific variant of
-     * the template exists, it's cache key will be returned instead.
+     * the template exists, its cache key will be returned instead.
      *
      * @param string $name The name of the template to load
      *
@@ -193,25 +186,14 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        $cacheKey = parent::getCacheKey($templateName);
-
-        // We're basically cache busting templates by appending a hash that
-        // changes whenever the registered hierarchy changes
-        if (null === $this->hierarchy) {
-            $this->buildHierarchy();
-        }
-
-        $identifier = $this->getIdentifier($this->parseContaoName($templateName)[1] ?? '');
-        $hash = $this->hierarchyHashes[$identifier] ?? null;
-
-        return null !== $hash ? "{$cacheKey}_$hash" : $cacheKey;
+        return parent::getCacheKey($templateName);
     }
 
     /**
      * Returns the source context for a given template logical name.
      *
      * If we're currently in a theme context and a theme specific variant of
-     * the template exists, it's source context will be returned instead.
+     * the template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
      *
@@ -246,6 +228,65 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     }
 
     /**
+     * Check if we have the source code of a template, given its name.
+     *
+     * If we're currently in a theme context and a theme specific variant of
+     * the template exists, its availability will be checked as well.
+     *
+     * @param string $name The name of the template to check if we can load
+     *
+     * @return bool If the template source code is handled by this loader or not
+     */
+    public function exists($name): bool
+    {
+        if (parent::exists($name)) {
+            return true;
+        }
+
+        if (null !== ($themeTemplate = $this->getThemeTemplateName($name))) {
+            return parent::exists($themeTemplate);
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns true if the template or any variant of it in the hierarchy is
+     * still fresh.
+     *
+     * If we're currently in a theme context and a theme specific variant of
+     * the template exists, its state will be checked as well.
+     *
+     * @param string $name The template name
+     * @param int    $time Timestamp of the last modification time of the
+     *                     cached template
+     *
+     * @throws LoaderError When $name is not found
+     *
+     * @return bool true if the template is fresh, false otherwise
+     */
+    public function isFresh($name, $time): bool
+    {
+        if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
+            return false;
+        }
+
+        $chain = $this->getHierarchy()[$this->getIdentifier($name)] ?? [];
+
+        foreach (array_keys($chain) as $path) {
+            try {
+                if (filemtime($path) < $time) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @internal
      *
      * Resets the cached theme context
@@ -260,13 +301,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
      */
     public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string
     {
-        if (null === $this->hierarchy) {
-            $this->buildHierarchy();
-        }
+        $hierarchy = $this->getHierarchy();
 
         $identifier = $this->getIdentifier($shortNameOrIdentifier);
 
-        if (null === ($chain = $this->hierarchy[$identifier] ?? null)) {
+        if (null === ($chain = $hierarchy[$identifier] ?? null)) {
             throw new \LogicException("The Contao extend target '$identifier' could not be found in the template hierarchy.");
         }
 
@@ -327,7 +366,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         }
 
         $this->hierarchy = $hierarchy;
-        $this->hierarchyHashes = $this->createHashesForValues($hierarchy);
     }
 
     /**
@@ -346,20 +384,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         return null;
     }
 
-    private function getIdentifier(string $shortName): string
+    private function getIdentifier(string $name): string
     {
-        // Strip .html5/.html.twig extension
-        return preg_replace('/(.*)(\.html5|\.html.twig)/', '$1', $shortName);
-    }
-
-    private function createHashesForValues(array $array): array
-    {
-        return array_map(
-            static function ($data): string {
-                return substr(md5(json_encode($data, JSON_THROW_ON_ERROR)), 0, 6);
-            },
-            $array
-        );
+        return preg_replace('%(?:.*/)?(.*)(\.html5|\.html.twig)%', '$1', $name);
     }
 
     /**
