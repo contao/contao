@@ -103,38 +103,24 @@ class ContaoExtension extends AbstractExtension
     {
         $template = Path::getFilenameWithoutExtension($name);
 
-        $renderedBlocks = $this->renderBlocks($blocks, $context);
+        $partialTemplate = new class($template, $context) extends Template {
+            protected $blnEnableTwigSurrogateRendering = false;
 
-        $partialTemplate = new class($template, $renderedBlocks, $context) extends Template {
-            public function __construct(string $template, array $blocks, array $context)
+            public function setBlocks(array $blocks): void
             {
-                parent::__construct($template);
-
-                $this->arrData = $context;
                 $this->arrBlocks = $blocks;
                 $this->arrBlockNames = array_keys($blocks);
+            }
 
-                // Do not delegate to Twig to prevent an endless loop
-                $this->blnEnableTwigSurrogateRendering = false;
+            public function parse(): string
+            {
+                return $this->inherit();
             }
         };
 
+        $partialTemplate->setData($context);
+        $partialTemplate->setBlocks($blocks);
+
         return $partialTemplate->parse();
-    }
-
-    private function renderBlocks(array $blocks, array $context): array
-    {
-        $rendered = [];
-
-        foreach ($blocks as $name => $block) {
-            ob_start();
-
-            // Display block
-            $block($context);
-
-            $rendered[$name] = ob_get_clean();
-        }
-
-        return $rendered;
     }
 }

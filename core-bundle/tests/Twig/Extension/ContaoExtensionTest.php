@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
@@ -29,12 +30,14 @@ use Twig\Source;
 
 class ContaoExtensionTest extends TestCase
 {
-    public function testAddsTheContaoEscaperNodeVisitor(): void
+    public function testAddsTheNodeVisitors(): void
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(1, $nodeVisitors);
+        $this->assertCount(2, $nodeVisitors);
+
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
+        $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
     }
 
     public function testAddsTheDynamicExtendsTokenParser(): void
