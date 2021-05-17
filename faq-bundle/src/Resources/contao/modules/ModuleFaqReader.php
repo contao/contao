@@ -144,7 +144,9 @@ class ModuleFaqReader extends Module
 		// Add image
 		if ($objFaq->addImage)
 		{
-			$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
 				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)
 				->setMetadata($objFaq->getOverwriteMetadata())

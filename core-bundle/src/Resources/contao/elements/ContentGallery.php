@@ -215,7 +215,9 @@ class ContentGallery extends ContentElement
 		$colwidth = floor(100/$this->perRow);
 		$body = array();
 
-		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder()
+		$figureBuilder = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder()
 			->setSize($this->size)
 			->setLightboxGroupIdentifier('lb' . $this->id)
 			->enableLightbox((bool) $this->fullsize);

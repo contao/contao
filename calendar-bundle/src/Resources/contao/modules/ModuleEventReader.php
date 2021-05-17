@@ -303,7 +303,9 @@ class ModuleEventReader extends Events
 				}
 			}
 
-			$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
 				->from($objEvent->singleSRC)
 				->setSize($imgSize)
 				->setMetadata($objEvent->getOverwriteMetadata())

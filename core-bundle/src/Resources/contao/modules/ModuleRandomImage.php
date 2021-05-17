@@ -123,7 +123,9 @@ class ModuleRandomImage extends Module
 			return;
 		}
 
-		$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+		$figure = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder()
 			->fromFilesModel($images[array_rand($images)])
 			->setSize($this->imgSize)
 			->enableLightbox((bool) $this->fullsize)

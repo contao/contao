@@ -61,7 +61,9 @@ class ContentImage extends ContentElement
 	 */
 	protected function compile()
 	{
-		$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+		$figure = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder()
 			->from($this->objFilesModel)
 			->setSize($this->size)
 			->setMetadata($this->objModel->getOverwriteMetadata())

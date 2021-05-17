@@ -172,7 +172,9 @@ abstract class ModuleNews extends Module
 				}
 			}
 
-			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder()
+			$figureBuilder = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
 				->from($objArticle->singleSRC)
 				->setSize($imgSize)
 				->setMetadata($objArticle->getOverwriteMetadata())

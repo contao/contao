@@ -129,7 +129,9 @@ class ContentYouTube extends ContentElement
 		// Add a splash image
 		if ($this->splashImage)
 		{
-			$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)
 				->buildIfResourceExists();

@@ -40,7 +40,9 @@ class ContentAccordion extends ContentElement
 		// Add an image
 		if ($this->addImage)
 		{
-			$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)
 				->setMetadata($this->objModel->getOverwriteMetadata())

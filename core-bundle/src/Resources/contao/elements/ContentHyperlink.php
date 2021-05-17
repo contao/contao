@@ -44,7 +44,9 @@ class ContentHyperlink extends ContentElement
 		// Use an image instead of the title
 		if ($this->useImage)
 		{
-			$figure = System::getContainer()->get(Studio::class)->createFigureBuilder()
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)
 				->setMetadata($this->objModel->getOverwriteMetadata())
