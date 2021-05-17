@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 
 /**
  * Front end content element "hyperlink".
@@ -19,8 +19,6 @@ use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
  */
 class ContentHyperlink extends ContentElement
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -44,15 +42,22 @@ class ContentHyperlink extends ContentElement
 		$embed = explode('%s', $this->embed);
 
 		// Use an image instead of the title
-		if ($this->useImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
+		if ($this->useImage)
 		{
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($this->singleSRC)
 				->setSize($this->size)
 				->setMetadata($this->objModel->getOverwriteMetadata())
-				->build()
-				->applyLegacyTemplateData($this->Template);
+				->buildIfResourceExists();
 
-			$this->Template->useImage = true;
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($this->Template);
+
+				$this->Template->useImage = true;
+			}
 		}
 
 		if ($this->rel)

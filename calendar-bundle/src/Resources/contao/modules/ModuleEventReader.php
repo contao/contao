@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -28,8 +28,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -290,7 +288,7 @@ class ModuleEventReader extends Events
 		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
+		if ($objEvent->addImage)
 		{
 			$imgSize = $objEvent->size ?: null;
 
@@ -305,12 +303,19 @@ class ModuleEventReader extends Events
 				}
 			}
 
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($objEvent->singleSRC)
 				->setSize($imgSize)
 				->setMetadata($objEvent->getOverwriteMetadata())
 				->enableLightbox((bool) $objEvent->fullsize)
-				->build()
-				->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+				->buildIfResourceExists();
+
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+			}
 		}
 
 		$objTemplate->enclosure = array();

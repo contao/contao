@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -25,8 +25,6 @@ use Patchwork\Utf8;
  */
 class ModuleFaqReader extends Module
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -144,14 +142,21 @@ class ModuleFaqReader extends Module
 		$this->Template->before = false;
 
 		// Add image
-		if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
+		if ($objFaq->addImage)
 		{
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)
 				->setMetadata($objFaq->getOverwriteMetadata())
 				->enableLightbox((bool) $objFaq->fullsize)
-				->build()
-				->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
+				->buildIfResourceExists();
+
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
+			}
 		}
 
 		$this->Template->enclosure = array();

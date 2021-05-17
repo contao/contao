@@ -84,10 +84,10 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testHtaccessIsNotChangedIfRewriteRuleExists(): void
     {
         $existingHtaccess = <<<'EOT'
-<IfModule mod_headers.c>
-  RewriteRule ^ %{ENV:BASE}/index.php [L]
-</IfModule>
-EOT;
+            <IfModule mod_headers.c>
+              RewriteRule ^ %{ENV:BASE}/index.php [L]
+            </IfModule>
+            EOT;
 
         $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
 
@@ -100,9 +100,9 @@ EOT;
     public function testHtaccessIsChangedIfRewriteRuleDoesNotExists(): void
     {
         $existingHtaccess = <<<'EOT'
-# Enable PHP 7.2
-AddHandler application/x-httpd-php72 .php
-EOT;
+            # Enable PHP 7.2
+            AddHandler application/x-httpd-php72 .php
+            EOT;
 
         $this->filesystem->dumpFile($this->getTempDir().'/web/.htaccess', $existingHtaccess);
 

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Model\Collection;
 
 /**
@@ -20,8 +20,6 @@ use Contao\Model\Collection;
  */
 class ModuleRandomImage extends Module
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Files object
 	 * @var Collection|FilesModel
@@ -125,8 +123,9 @@ class ModuleRandomImage extends Module
 			return;
 		}
 
-		$figure = $this
-			->getFigureBuilder()
+		$figure = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder()
 			->fromFilesModel($images[array_rand($images)])
 			->setSize($this->imgSize)
 			->enableLightbox((bool) $this->fullsize)
