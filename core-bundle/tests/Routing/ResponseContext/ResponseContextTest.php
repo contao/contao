@@ -24,7 +24,6 @@ class ResponseContextTest extends TestCase
         $context->getHeaderBag()->set('Content-Type', 'application/json');
 
         $response = new Response();
-
         $context->finalize($response);
 
         $this->assertSame('application/json', $response->headers->get('Content-Type'));
@@ -33,6 +32,7 @@ class ResponseContextTest extends TestCase
     public function testHeaderBagIsInitializedCompletelyEmpty(): void
     {
         $context = new ResponseContext();
+
         $this->assertCount(0, $context->getHeaderBag()->all());
     }
 }

@@ -15,9 +15,9 @@ namespace Contao\CoreBundle\Routing\ResponseContext;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
- * Symfony's core ResponseHeaderBag forces a Date header to be present
- * which in case of the ResponseContext handling is not required.
- * We have to ensure a completely empty header bag.
+ * Symfony's core ResponseHeaderBag forces a Date header to be present which in
+ * case of the ResponseContext handling is not required. We have to ensure a
+ * completely empty header bag.
  */
 class PartialResponseHeaderBag extends ResponseHeaderBag
 {

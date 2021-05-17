@@ -741,6 +741,7 @@ class InsertTags extends Controller
 							case 'pageTitle':
 								$arrCache[$strTag] = $responseContext->getTitle();
 								break;
+
 							case 'description':
 								$arrCache[$strTag] = $responseContext->getMetaDescription();
 								break;
