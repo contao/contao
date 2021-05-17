@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
@@ -104,10 +106,15 @@ class ModuleNewsletterReader extends Module
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		// Overwrite the page title (see #2853 and #4955)
+		// Overwrite the page meta data (see #2853, #4955 and #87)
 		if ($objNewsletter->subject)
 		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objNewsletter->subject));
+			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+			if ($responseContext instanceof WebpageResponseContext)
+			{
+				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objNewsletter->subject)));
+			}
 		}
 
 		// Add enclosure
