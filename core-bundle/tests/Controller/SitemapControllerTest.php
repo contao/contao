@@ -184,19 +184,19 @@ class SitemapControllerTest extends TestCase
     private function getExpectedSitemapContent(): string
     {
         return <<<'SITEMAP'
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.foobar.com/en/page1.html</loc>
-  </url>
-  <url>
-    <loc>https://www.foobar.com/en/page2.html</loc>
-  </url>
-  <url>
-    <loc>https://www.foobar.com/de/page1.html</loc>
-  </url>
-</urlset>
+            <?xml version="1.0" encoding="UTF-8"?>
+            <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+              <url>
+                <loc>https://www.foobar.com/en/page1.html</loc>
+              </url>
+              <url>
+                <loc>https://www.foobar.com/en/page2.html</loc>
+              </url>
+              <url>
+                <loc>https://www.foobar.com/de/page1.html</loc>
+              </url>
+            </urlset>
 
-SITEMAP;
+            SITEMAP;
     }
 }
