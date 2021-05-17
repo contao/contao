@@ -157,7 +157,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objArticle->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objArticle->singleSRC)))
+		if ($objArticle->addImage)
 		{
 			$imgSize = $objArticle->size ?: null;
 
