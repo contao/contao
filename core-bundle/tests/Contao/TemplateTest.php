@@ -88,16 +88,16 @@ class TemplateTest extends TestCase
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
             <<<'EOF'
-<?php
-    echo 'test1';
-    $this->block('a');
-    echo 'test2';
-    $this->block('b');
-    echo 'test3';
-    $this->block('c');
-    echo 'test4';
-    throw new Exception;
-EOF
+                <?php
+                    echo 'test1';
+                    $this->block('a');
+                    echo 'test2';
+                    $this->block('b');
+                    echo 'test3';
+                    $this->block('c');
+                    echo 'test4';
+                    throw new Exception;
+                EOF
         );
 
         $template = new BackendTemplate('test_template');
@@ -123,42 +123,42 @@ EOF
         $filesystem->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_parent.html5'),
             <<<'EOF'
-<?php
-    echo 'test1';
-    $this->block('a');
-    echo 'test2';
-    $this->endblock();
-    $this->block('b');
-    echo 'test3';
-    $this->endblock();
-    $this->block('c');
-    echo 'test4';
-    $this->block('d');
-    echo 'test5';
-    $this->block('e');
-    echo 'test6';
-    throw new Exception;
-EOF
+                <?php
+                    echo 'test1';
+                    $this->block('a');
+                    echo 'test2';
+                    $this->endblock();
+                    $this->block('b');
+                    echo 'test3';
+                    $this->endblock();
+                    $this->block('c');
+                    echo 'test4';
+                    $this->block('d');
+                    echo 'test5';
+                    $this->block('e');
+                    echo 'test6';
+                    throw new Exception;
+                EOF
         );
 
         $filesystem->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
             <<<'EOF'
-<?php
-    echo 'test1';
-    $this->extend('test_parent');
-    echo 'test2';
-    $this->block('a');
-    echo 'test3';
-    $this->parent();
-    echo 'test4';
-    $this->endblock('a');
-    echo 'test5';
-    $this->block('b');
-    echo 'test6';
-    $this->endblock('b');
-    echo 'test7';
-EOF
+                <?php
+                    echo 'test1';
+                    $this->extend('test_parent');
+                    echo 'test2';
+                    $this->block('a');
+                    echo 'test3';
+                    $this->parent();
+                    echo 'test4';
+                    $this->endblock('a');
+                    echo 'test5';
+                    $this->block('b');
+                    echo 'test6';
+                    $this->endblock('b');
+                    echo 'test7';
+                EOF
         );
 
         $template = new BackendTemplate('test_template');
@@ -185,19 +185,19 @@ EOF
         $filesystem->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
             <<<'EOF'
-<?php
-    echo 'test1';
-    $this->extend('test_parent');
-    echo 'test2';
-    $this->block('a');
-    echo 'test3';
-    $this->block('b');
-    echo 'test4';
-    $this->endblock('b');
-    echo 'test5';
-    $this->endblock('a');
-    echo 'test6';
-EOF
+                <?php
+                    echo 'test1';
+                    $this->extend('test_parent');
+                    echo 'test2';
+                    $this->block('a');
+                    echo 'test3';
+                    $this->block('b');
+                    echo 'test4';
+                    $this->endblock('b');
+                    echo 'test5';
+                    $this->endblock('a');
+                    echo 'test6';
+                EOF
         );
 
         $template = new BackendTemplate('test_template');

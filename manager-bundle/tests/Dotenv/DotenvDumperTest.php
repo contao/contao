@@ -31,16 +31,16 @@ class DotenvDumperTest extends ContaoTestCase
         $dotenv->dump();
 
         $expected = <<<'EOT'
-FOO1=42
-FOO2=42
-FOO3=String
-FOO4='String with spaces'
-FOO5='"DoubleQuotes"'
-FOO6="'SingleQuotes'"
-FOO7='$variable'
-FOO8="String with \"double quotes\" and 'single quotes' and a \$variable"
+            FOO1=42
+            FOO2=42
+            FOO3=String
+            FOO4='String with spaces'
+            FOO5='"DoubleQuotes"'
+            FOO6="'SingleQuotes'"
+            FOO7='$variable'
+            FOO8="String with \"double quotes\" and 'single quotes' and a \$variable"
 
-EOT;
+            EOT;
 
         $this->assertSame($expected, file_get_contents($this->getTempDir().'/.env'));
     }
