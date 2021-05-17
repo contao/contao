@@ -28,7 +28,7 @@ tl_page:
       pid: 1
       sorting: 256
       tstamp: 1539698035
-      title: Error 404 Page (404 Not Found)
+      title: Error 404 Page
       alias: error404
       type: error_404
       published: '1'

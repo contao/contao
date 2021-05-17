@@ -65,6 +65,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -92,6 +93,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'legacy'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -193,7 +195,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/foo/bar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -213,7 +215,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/home/foo/.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => ''],
             'root-with-home.local',
             false,
@@ -329,7 +331,7 @@ class RoutingTest extends FunctionalTestCase
             true,
         ];
 
-        yield 'Renders the 404 page if auto items are enabled and the folder URL contains the "auto_item" keyword' => [
+        yield 'Renders the 404 exception if auto items are enabled and the folder URL contains the "auto_item" keyword' => [
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo.html',
             404,
@@ -339,7 +341,7 @@ class RoutingTest extends FunctionalTestCase
             true,
         ];
 
-        yield 'Renders the 404 page if auto items are enabled and the folder URL contains an auto item keyword' => [
+        yield 'Renders the 404 exception if auto items are enabled and the folder URL contains an auto item keyword' => [
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/items/foobar.html',
             404,
@@ -363,7 +365,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -379,6 +381,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -414,6 +417,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -489,7 +493,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en//',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             false,
@@ -519,7 +523,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en/home/foo/bar.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['language' => 'en', 'foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -655,7 +659,7 @@ class RoutingTest extends FunctionalTestCase
             true,
         ];
 
-        yield 'Renders the 404 page if auto items are enabled and the folder URL contains the "auto_item" keyword' => [
+        yield 'Renders the 404 exception if auto items are enabled and the folder URL contains the "auto_item" keyword' => [
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/auto_item/foo.html',
             404,
@@ -665,7 +669,7 @@ class RoutingTest extends FunctionalTestCase
             true,
         ];
 
-        yield 'Renders the 404 page if auto items are enabled and the folder URL contains an auto item keyword' => [
+        yield 'Renders the 404 exception if auto items are enabled and the folder URL contains an auto item keyword' => [
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/items/foobar.html',
             404,
@@ -689,7 +693,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home'],
             '/en/2.html',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             [],
             'root-with-home.local',
             true,
@@ -715,6 +719,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -749,6 +754,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -830,7 +836,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-home', 'news'],
             '/home/foo/bar',
             404,
-            '(404 Not Found)',
+            'Error 404 Page',
             ['foo' => 'bar'],
             'root-with-home.local',
             false,
@@ -936,7 +942,7 @@ class RoutingTest extends FunctionalTestCase
             true,
         ];
 
-        yield 'Renders the 404 page if auto items are enabled and the folder URL contains the "auto_item" keyword' => [
+        yield 'Renders the 404 exception if auto items are enabled and the folder URL contains the "auto_item" keyword' => [
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo',
             404,
@@ -946,7 +952,7 @@ class RoutingTest extends FunctionalTestCase
             true,
         ];
 
-        yield 'Renders the 404 page if auto items are enabled and the folder URL contains an auto item keyword' => [
+        yield 'Renders the 404 exception if auto items are enabled and the folder URL contains an auto item keyword' => [
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/items/foobar',
             404,
@@ -965,6 +971,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -1017,7 +1024,7 @@ class RoutingTest extends FunctionalTestCase
             '127.0.0.1:8080',
         ];
 
-        yield 'Renders the 404 page if no language matches' => [
+        yield 'Renders the 404 exception if no language matches' => [
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
@@ -1062,6 +1069,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -1095,6 +1103,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -1165,7 +1174,7 @@ class RoutingTest extends FunctionalTestCase
             'same-domain-root.local',
         ];
 
-        yield 'Renders the 404 page if none of the accept languages matches' => [
+        yield 'Renders the 404 exception if none of the accept languages matches' => [
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
@@ -1210,7 +1219,7 @@ class RoutingTest extends FunctionalTestCase
             'same-domain-root-with-index.local',
         ];
 
-        yield 'Renders the 404 page if the locale does not match' => [
+        yield 'Renders the 404 exception if the locale does not match' => [
             ['theme', 'root-with-index'],
             '/de/',
             404,
@@ -1219,7 +1228,7 @@ class RoutingTest extends FunctionalTestCase
             'root-with-index.local',
         ];
 
-        yield 'Renders the 404 page if the locale does not exist' => [
+        yield 'Renders the 404 exception if the locale does not exist' => [
             ['theme', 'root-without-fallback-language'],
             '/fr/',
             404,
@@ -1247,6 +1256,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = 'root-zh.local';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
@@ -1276,6 +1286,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = 'domain1.local';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de,en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
@@ -1305,6 +1316,7 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = 'domain1.local';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'af';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'locale'], $_SERVER);
         System::setContainer($client->getContainer());
