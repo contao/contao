@@ -103,7 +103,7 @@ class ContaoExtension extends AbstractExtension
     {
         $template = Path::getFilenameWithoutExtension($name);
 
-        $partialTemplate = new class($template, $context) extends Template {
+        $partialTemplate = new class($template) extends Template {
             protected $blnEnableTwigSurrogateRendering = false;
 
             public function setBlocks(array $blocks): void
