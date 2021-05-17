@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -22,8 +22,6 @@ use Patchwork\Utf8;
  */
 class ModuleFaqPage extends Module
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -103,15 +101,22 @@ class ModuleFaqPage extends Module
 			$objTemp->addBefore = false;
 
 			// Add an image
-			if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
+			if ($objFaq->addImage)
 			{
-				$figureBuilder
+				$figure = System::getContainer()
+					->get(Studio::class)
+					->createFigureBuilder()
+					->from($objFaq->singleSRC)
 					->setSize($objFaq->size)
 					->setMetadata($objFaq->getOverwriteMetadata())
 					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
 					->enableLightbox((bool) $objFaq->fullsize)
-					->build()
-					->applyLegacyTemplateData($objTemp, $objFaq->imagemargin, $objFaq->floating);
+					->buildIfResourceExists();
+
+				if (null !== $figure)
+				{
+					$figure->applyLegacyTemplateData($objTemp, $objFaq->imagemargin, $objFaq->floating);
+				}
 			}
 
 			$objTemp->enclosure = array();

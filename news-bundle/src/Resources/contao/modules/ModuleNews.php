@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Model\Collection;
 
 /**
@@ -23,8 +23,6 @@ use Contao\Model\Collection;
  */
 abstract class ModuleNews extends Module
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Sort out protected archives
 	 *
@@ -174,31 +172,36 @@ abstract class ModuleNews extends Module
 				}
 			}
 
+			$figureBuilder = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($objArticle->singleSRC)
+				->setSize($imgSize)
+				->setMetadata($objArticle->getOverwriteMetadata())
+				->enableLightbox((bool) $objArticle->fullsize);
+
 			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
 			if ('external' === $objTemplate->source && $objTemplate->target)
 			{
 				$figureBuilder->setLinkAttribute('target', '_blank');
 			}
 
-			$figure = $figureBuilder
-				->setSize($imgSize)
-				->setMetadata($objArticle->getOverwriteMetadata())
-				->enableLightbox((bool) $objArticle->fullsize)
-				->build();
-
-			// Rebuild with link to news article if none is set
-			if (!$figure->getLinkHref())
+			if (null !== ($figure = $figureBuilder->buildIfResourceExists()))
 			{
-				$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+				// Rebuild with link to news article if none is set
+				if (!$figure->getLinkHref())
+				{
+					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
-				$figure = $figureBuilder
-					->setLinkHref($objTemplate->link)
-					->setLinkAttribute('title', $linkTitle)
-					->setOptions(array('linkTitle' => $linkTitle)) // Backwards compatibility
-					->build();
+					$figure = $figureBuilder
+						->setLinkHref($objTemplate->link)
+						->setLinkAttribute('title', $linkTitle)
+						->setOptions(array('linkTitle' => $linkTitle)) // Backwards compatibility
+						->build();
+				}
+
+				$figure->applyLegacyTemplateData($objTemplate, $objArticle->imagemargin, $objArticle->floating);
 			}
-
-			$figure->applyLegacyTemplateData($objTemplate, $objArticle->imagemargin, $objArticle->floating);
 		}
 
 		$objTemplate->enclosure = array();

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 
 /**
  * Content element "Vimeo".
@@ -19,8 +19,6 @@ use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
  */
 class ContentVimeo extends ContentElement
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -114,14 +112,20 @@ class ContentVimeo extends ContentElement
 		}
 
 		// Add a splash image
-		if ($this->splashImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
+		if ($this->splashImage)
 		{
-			$figure = $figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($this->singleSRC)
 				->setSize($this->size)
-				->build();
+				->buildIfResourceExists();
 
-			$this->Template->splashImage = (object) $figure->getLegacyTemplateData();
-			$this->Template->splashImage->figure = $figure;
+			if (null !== $figure)
+			{
+				$this->Template->splashImage = (object) $figure->getLegacyTemplateData();
+				$this->Template->splashImage->figure = $figure;
+			}
 		}
 
 		$this->Template->src = $url;
