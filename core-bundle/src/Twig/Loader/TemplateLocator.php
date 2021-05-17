@@ -60,7 +60,7 @@ class TemplateLocator
         foreach ($finder as $directory) {
             $slug = self::createDirectorySlug($directory->getRelativePathname());
 
-            $directories[$slug] = $directory->getPathname();
+            $directories[$slug] = Path::canonicalize($directory->getPathname());
         }
 
         return $directories;

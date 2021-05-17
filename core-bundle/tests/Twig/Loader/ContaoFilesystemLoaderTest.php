@@ -20,7 +20,6 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
-use Symfony\Component\Filesystem\Filesystem;
 use Twig\Error\LoaderError;
 use Webmozart\PathUtil\Path;
 
