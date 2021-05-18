@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -108,28 +110,33 @@ class ModuleFaqReader extends Module
 		// Add the FAQ record to the template (see #221)
 		$this->Template->faq = $objFaq->row();
 
-		// Overwrite the page title and description (see #2853 and #4955)
-		if ($objFaq->pageTitle)
-		{
-			$objPage->pageTitle = $objFaq->pageTitle;
-		}
-		elseif ($objFaq->question)
-		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->question));
-		}
+		// Overwrite the page meta data (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($objFaq->description)
+		if ($responseContext instanceof WebpageResponseContext)
 		{
-			$objPage->description = $objFaq->description;
-		}
-		elseif ($objFaq->question)
-		{
-			$objPage->description = $this->prepareMetaDescription($objFaq->question);
-		}
+			if ($objFaq->pageTitle)
+			{
+				$responseContext->setTitle($objFaq->pageTitle);
+			}
+			elseif ($objFaq->question)
+			{
+				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objFaq->question)));
+			}
 
-		if ($objFaq->robots)
-		{
-			$objPage->robots = $objFaq->robots;
+			if ($objFaq->description)
+			{
+				$responseContext->setMetaDescription($objFaq->description);
+			}
+			elseif ($objFaq->question)
+			{
+				$responseContext->setMetaDescription($this->prepareMetaDescription($objFaq->question));
+			}
+
+			if ($objFaq->robots)
+			{
+				$responseContext->setMetaRobots($objFaq->robots);
+			}
 		}
 
 		$this->Template->question = $objFaq->question;

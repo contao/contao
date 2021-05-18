@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -297,6 +299,37 @@ class PageModel extends Model
 	 * @var boolean
 	 */
 	protected $blnDetailsLoaded = false;
+
+	public function __set($strKey, $varValue)
+	{
+		// Deprecate setting dynamic page attributes if they are set on the global $objPage
+		if (\in_array($strKey, array('pageTitle', 'description', 'robots'), true) && ($GLOBALS['objPage'] ?? null) === $this)
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
+
+			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+			if ($responseContext instanceof WebpageResponseContext)
+			{
+				switch ($strKey)
+				{
+					case 'pageTitle':
+						$responseContext->setTitle($varValue);
+						break;
+
+					case 'description':
+						$responseContext->setMetaDescription($varValue);
+						break;
+
+					case 'robots':
+						$responseContext->setMetaRobots($varValue);
+						break;
+				}
+			}
+		}
+
+		return parent::__set($strKey, $varValue);
+	}
 
 	/**
 	 * Find a published page by its ID

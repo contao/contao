@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -721,11 +723,7 @@ class InsertTags extends Controller
 
 				// Page
 				case 'page':
-					if (!$objPage->pageTitle && $elements[1] == 'pageTitle')
-					{
-						$elements[1] = 'title';
-					}
-					elseif (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
+					if (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
 					{
 						$elements[1] = 'parentTitle';
 					}
@@ -734,8 +732,26 @@ class InsertTags extends Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					// Do not use StringUtil::specialchars() here (see #4687)
-					$arrCache[$strTag] = $objPage->{$elements[1]};
+					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+					if ($responseContext instanceof WebpageResponseContext && \in_array($elements[1], array('pageTitle', 'description'), true))
+					{
+						switch ($elements[1])
+						{
+							case 'pageTitle':
+								$arrCache[$strTag] = $responseContext->getTitle();
+								break;
+
+							case 'description':
+								$arrCache[$strTag] = $responseContext->getMetaDescription();
+								break;
+						}
+					}
+					else
+					{
+						// Do not use StringUtil::specialchars() here (see #4687)
+						$arrCache[$strTag] = $objPage->{$elements[1]};
+					}
 					break;
 
 				// User agent

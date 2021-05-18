@@ -653,6 +653,16 @@ services:
             - '@contao.routing.frontend_matcher'
         public: true
 
+    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
+        arguments:
+            - '@request_stack'
+        public: true
+
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
+        arguments:
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
+        public: true
+
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
         arguments:
