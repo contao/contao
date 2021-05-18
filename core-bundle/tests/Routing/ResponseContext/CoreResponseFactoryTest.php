@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 
@@ -30,9 +28,8 @@ class CoreResponseFactoryTest extends ContaoTestCase
         ;
 
         $factory = new CoreResponseContextFactory($responseAccessor);
-
-        $this->assertInstanceOf(ResponseContext::class, $factory->createResponseContext());
-        $this->assertInstanceOf(WebpageResponseContext::class, $factory->createWebpageResponseContext());
-        $this->assertInstanceOf(WebpageResponseContext::class, $factory->createContaoWebpageResponseContext($this->createMock(PageModel::class)));
+        $factory->createResponseContext();
+        $factory->createWebpageResponseContext();
+        $factory->createContaoWebpageResponseContext($this->createMock(PageModel::class));
     }
 }
