@@ -113,7 +113,7 @@ class ModuleNewsletterReader extends Module
 
 			if ($responseContext instanceof WebpageResponseContext)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objNewsletter->subject)));
+				$responseContext->setTitle(Controller::replaceInsertTags($objNewsletter->subject)); // Already stored decoded
 			}
 		}
 

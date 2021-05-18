@@ -143,20 +143,20 @@ class ModuleNewsReader extends ModuleNews
 		{
 			if ($objArticle->pageTitle)
 			{
-				$responseContext->setTitle($objArticle->pageTitle);
+				$responseContext->setTitle($objArticle->pageTitle); // Already stored decoded
 			}
 			elseif ($objArticle->headline)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objArticle->headline)));
+				$responseContext->setTitle(StringUtil::decodeEntities(Controller::replaceInsertTags($objArticle->headline)));
 			}
 
 			if ($objArticle->description)
 			{
-				$responseContext->setMetaDescription($objArticle->description);
+				$responseContext->setMetaDescription(StringUtil::decodeEntities(Controller::replaceInsertTags($objArticle->description)));
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setMetaDescription($this->prepareMetaDescription($objArticle->teaser));
+				$responseContext->setMetaDescription(StringUtil::decodeEntities(Controller::replaceInsertTags($objArticle->teaser)));
 			}
 
 			if ($objArticle->robots)

@@ -171,11 +171,11 @@ class ModuleArticle extends Module
 
 			if ($responseContext instanceof WebpageResponseContext)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
+				$responseContext->setTitle(StringUtil::decodeEntities($this->title));
 
 				if ($this->teaser)
 				{
-					$responseContext->setMetaDescription($this->prepareMetaDescription($this->teaser));
+					$responseContext->setMetaDescription(Controller::replaceInsertTags($this->teaser));
 				}
 			}
 		}

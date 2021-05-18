@@ -568,6 +568,8 @@ abstract class Frontend extends Controller
 	}
 
 	/**
+	 * @deprecated Use the ResponseContext instead.
+	 *
 	 * Prepare a text to be used in the meta description tag
 	 *
 	 * @param string $strText
@@ -576,6 +578,8 @@ abstract class Frontend extends Controller
 	 */
 	protected function prepareMetaDescription($strText)
 	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use the ResponseContext instead.');
+
 		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);
