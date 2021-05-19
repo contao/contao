@@ -230,6 +230,12 @@ class PageRegular extends Frontend
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objLayout, $objPage);
 		$this->createHeaderScripts($objPage, $objLayout);
+
+		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
+		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+		{
+			$responseContext->setIsSearchable(false);
+		}
 	}
 
 	/**
@@ -688,32 +694,6 @@ class PageRegular extends Frontend
 					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
 				}
 			}
-		}
-
-		// Add search index metadata
-		if ($objPage !== null)
-		{
-			$noSearch = (bool) $objPage->noSearch;
-
-			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
-			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
-			{
-				$noSearch = true;
-			}
-
-			$meta = array
-			(
-				'@context' => array('contao' => 'https://schema.contao.org/'),
-				'@type' => 'contao:Page',
-				'contao:title' => $objPage->pageTitle ?: $objPage->title,
-				'contao:pageId' => (int) $objPage->id,
-				'contao:noSearch' => $noSearch,
-				'contao:protected' => (bool) $objPage->protected,
-				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),
-				'contao:fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
-			);
-
-			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
 		}
 
 		// Add the custom JavaScript

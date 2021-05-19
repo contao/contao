@@ -6,8 +6,11 @@ $jsonLd = [
     'url' => $this->absoluteLink,
     'headline' => $this->raw($this->headline),
     'datePublished' => $this->datetime,
-    'description' => $this->raw($this->teaser),
 ];
+
+if ($this->hasTeaser) {
+    $jsonLd['description'] = $this->raw($this->teaser);
+}
 
 if ($this->hasText()) {
     $jsonLd['text'] = $this->raw($this->text);
