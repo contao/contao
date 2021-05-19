@@ -52,7 +52,6 @@ class WebpageResponseContext extends ResponseContext
     public function setMetaDescription(string $metaDescription): self
     {
         $metaDescription = self::cleanString($metaDescription);
-        $metaDescription = StringUtil::substr($metaDescription, 320);
 
         $this->metaDescription = $metaDescription;
 
