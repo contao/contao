@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Contao\StringUtil;
-
 class WebpageResponseContext extends ResponseContext
 {
     /**

@@ -974,6 +974,10 @@ class StringUtil
 
 	/**
 	 * Converts an input-encoded string back to its raw UTF-8 value it originated from.
+	 *
+	 * It handles all Contao input encoding specifics like insert tags, basic entities and encoded entities.
+	 *
+	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
 	 */
 	public static function getRawDecodedValue(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
@@ -1003,6 +1007,34 @@ class StringUtil
 
 		// TODO: We have to prevent insert tags from existing in this stage for security reasons, is using a ZWNJ the best we can do?
 		$strValue = str_replace('{', "\u{200C}{", $strValue);
+
+		return $strValue;
+	}
+
+	/**
+	 * Gets the raw text value of an HTML string with normalized white space.
+	 *
+	 * It handles all Contao input encoding specifics like insert tags, basic
+	 * entities and encoded entities and is meant to be used with content from
+	 * fields that have the allowHtml flag enabled.
+	 *
+	 * @see StringUtil::getRawDecodedValue()
+	 *
+	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 */
+	public static function getRawDecodedValueFromHtml(string $strValue, bool $blnRemoveInsertTags = false): string
+	{
+		// Add new lines before and after block level elements
+		$strValue = preg_replace(
+			array('/[\r\n]+/', '/</?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'),
+			array(' ', "\n$0"),
+			$strValue
+		);
+
+		$strValue = static::getRawDecodedValue($strValue, $blnRemoveInsertTags);
+
+		// Remove duplicate line breaks and spaces
+		$strValue = trim(preg_replace(array('/[^\S\n]+/', '/\s*\n\s*/'), array(' ', "\n"), $strValue));
 
 		return $strValue;
 	}

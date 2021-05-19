@@ -156,7 +156,7 @@ class ModuleNewsReader extends ModuleNews
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setMetaDescription(trim(preg_replace('/\s+/', ' ', StringUtil::getRawDecodedValue($objArticle->teaser))));
+				$responseContext->setMetaDescription(StringUtil::getRawDecodedValueFromHtml($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)

@@ -175,7 +175,7 @@ class ModuleArticle extends Module
 
 				if ($this->teaser)
 				{
-					$responseContext->setMetaDescription(trim(preg_replace('/\s+/', ' ', StringUtil::getRawDecodedValue($this->teaser))));
+					$responseContext->setMetaDescription(StringUtil::getRawDecodedValueFromHtml($this->teaser));
 				}
 			}
 		}

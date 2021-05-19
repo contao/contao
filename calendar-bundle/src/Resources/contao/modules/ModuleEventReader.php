@@ -149,7 +149,7 @@ class ModuleEventReader extends Events
 			}
 			elseif ($objEvent->teaser)
 			{
-				$responseContext->setMetaDescription(trim(preg_replace('/\s+/', ' ', StringUtil::getRawDecodedValue($objEvent->teaser))));
+				$responseContext->setMetaDescription(StringUtil::getRawDecodedValueFromHtml($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)
