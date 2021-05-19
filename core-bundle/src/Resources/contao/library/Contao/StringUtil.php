@@ -1005,7 +1005,7 @@ class StringUtil
 			mb_substitute_character($substituteCharacter);
 		}
 
-		$strValue = str_replace(['{{', '}}'], ['[{]', '[}]'], $strValue);
+		$strValue = str_replace(array('{{', '}}'), array('[{]', '[}]'), $strValue);
 
 		return $strValue;
 	}

@@ -165,11 +165,11 @@ class StringUtilTest extends TestCase
         yield ['{{date::...}}', '...'];
         yield ['{{date::...}}', '', true];
         yield ["&lt;&#62;&\u{A0}[lt][gt][&][nbsp]", "<>&\u{A0}<>&\u{A0}", true];
-        yield ["I &lt;3 Contao", "I <3 Contao"];
-        yield ["Remove unexpected <span>HTML tags", "Remove unexpected HTML tags"];
-        yield ["Keep non-HTML &lt;tags&#62; intact", "Keep non-HTML <tags> intact"];
+        yield ['I &lt;3 Contao', 'I <3 Contao'];
+        yield ['Remove unexpected <span>HTML tags', 'Remove unexpected HTML tags'];
+        yield ['Keep non-HTML &lt;tags&#62; intact', 'Keep non-HTML <tags> intact'];
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
-        yield ["&#123;&#123;date&#125;&#125;", "[{]date[}]"];
+        yield ['&#123;&#123;date&#125;&#125;', '[{]date[}]'];
     }
 
     /**
@@ -185,10 +185,10 @@ class StringUtilTest extends TestCase
         yield from $this->getRawDecodedValueProvider();
 
         yield ['foo<br>bar{{br}}baz', "foo\nbar\nbaz"];
-        yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", "foo bar"];
+        yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", 'foo bar'];
         yield [" \t\r\n<br>foo \t<br>\r\n \r\n\t<br> bar <br>\t\r\n", "foo\nbar"];
         yield [
-            "<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p>",
+            '<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p>',
             "Headline\nText\nList 1\nList 2\nInlinetext and link",
         ];
     }
