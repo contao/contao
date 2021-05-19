@@ -169,7 +169,7 @@ class StringUtilTest extends TestCase
         yield ["Remove unexpected <span>HTML tags", "Remove unexpected HTML tags"];
         yield ["Keep non-HTML &lt;tags&#62; intact", "Keep non-HTML <tags> intact"];
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
-        yield ["&#123;&#123;date&#125;&#125;", "\u{200C}{\u{200C}{date}}"];
+        yield ["&#123;&#123;date&#125;&#125;", "[{]date[}]"];
     }
 
     /**

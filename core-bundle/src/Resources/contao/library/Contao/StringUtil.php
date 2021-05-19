@@ -1005,8 +1005,7 @@ class StringUtil
 			mb_substitute_character($substituteCharacter);
 		}
 
-		// TODO: We have to prevent insert tags from existing in this stage for security reasons, is using a ZWNJ the best we can do?
-		$strValue = str_replace('{', "\u{200C}{", $strValue);
+		$strValue = str_replace(['{{', '}}'], ['[{]', '[}]'], $strValue);
 
 		return $strValue;
 	}
