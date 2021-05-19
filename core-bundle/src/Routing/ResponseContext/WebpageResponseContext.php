@@ -37,8 +37,6 @@ class WebpageResponseContext extends ResponseContext
 
     public function setTitle(string $title): self
     {
-        $title = self::cleanString($title);
-
         $this->title = $title;
 
         return $this;
@@ -51,8 +49,6 @@ class WebpageResponseContext extends ResponseContext
 
     public function setMetaDescription(string $metaDescription): self
     {
-        $metaDescription = self::cleanString($metaDescription);
-
         $this->metaDescription = $metaDescription;
 
         return $this;
@@ -68,13 +64,5 @@ class WebpageResponseContext extends ResponseContext
         $this->metaRobots = $metaRobots;
 
         return $this;
-    }
-
-    protected static function cleanString(string $string): string
-    {
-        $string = strip_tags($string);
-        $string = str_replace("\n", ' ', $string);
-
-        return trim($string);
     }
 }

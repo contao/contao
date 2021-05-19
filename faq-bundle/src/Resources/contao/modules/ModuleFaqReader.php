@@ -121,16 +121,16 @@ class ModuleFaqReader extends Module
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setTitle(StringUtil::decodeEntities(Controller::replaceInsertTags($objFaq->title)));
+				$responseContext->setTitle(StringUtil::getRawDecodedValue($objFaq->question));
 			}
 
 			if ($objFaq->description)
 			{
-				$responseContext->setMetaDescription(StringUtil::decodeEntities(Controller::replaceInsertTags($objFaq->description)));
+				$responseContext->setMetaDescription(StringUtil::getRawDecodedValue($objFaq->description));
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setMetaDescription(StringUtil::decodeEntities(Controller::replaceInsertTags($objFaq->question)));
+				$responseContext->setMetaDescription(StringUtil::getRawDecodedValue($objFaq->question));
 			}
 
 			if ($objFaq->robots)

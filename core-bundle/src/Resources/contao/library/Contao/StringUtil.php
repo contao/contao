@@ -971,6 +971,41 @@ class StringUtil
 	{
 		return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
 	}
+
+	/**
+	 * Converts an input-encoded string back to its raw UTF-8 value it originated from.
+	 */
+	public static function getRawDecodedValue(string $strValue, bool $blnRemoveInsertTags = false): string
+	{
+		if ($blnRemoveInsertTags)
+		{
+			$strValue = static::stripInsertTags($strValue);
+		}
+		else
+		{
+			$strValue = Controller::replaceInsertTags($strValue, false);
+		}
+
+		$strValue = strip_tags($strValue);
+		$strValue = static::restoreBasicEntities($strValue);
+		$strValue = static::decodeEntities($strValue);
+
+		// Ensure valid UTF-8
+		if (preg_match('//u', $strValue) !== 1)
+		{
+			$substituteCharacter = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+
+			$strValue = mb_convert_encoding($strValue, 'UTF-8', 'UTF-8');
+
+			mb_substitute_character($substituteCharacter);
+		}
+
+		// TODO: We have to prevent insert tags from existing in this stage for security reasons, is using a ZWNJ the best we can do?
+		$strValue = str_replace('{', "\u{200C}{", $strValue);
+
+		return $strValue;
+	}
 }
 
 class_alias(StringUtil::class, 'StringUtil');
