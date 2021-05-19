@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\NullLogger;
@@ -155,6 +156,14 @@ class StringUtilTest extends TestCase
     public function testGetsRawDecodedValues(string $source, string $expected, bool $removeInsertTags = false): void
     {
         $this->assertSame($expected, StringUtil::getRawDecodedValue($source, $removeInsertTags));
+
+        Input::setGet('value', $expected);
+        $inputEncoded = Input::get('value');
+        Input::setGet('value', null);
+
+        // Test input encoding round trip
+        $this->assertSame($expected, StringUtil::getRawDecodedValue($inputEncoded, true));
+        $this->assertSame($expected, StringUtil::getRawDecodedValue($inputEncoded, false));
     }
 
     public function getRawDecodedValueProvider(): \Generator
@@ -178,6 +187,12 @@ class StringUtilTest extends TestCase
     public function testGetsRawDecodedValuesFromHtml(string $source, string $expected, bool $removeInsertTags = false): void
     {
         $this->assertSame($expected, StringUtil::getRawDecodedValueFromHtml($source, $removeInsertTags));
+
+        Input::setPost('value', str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source));
+        $inputXssStripped = str_replace(['&#123;&#123;', '&#125;&#125;'], ['{{', '}}'], Input::postHtml('value', true));
+        Input::setPost('value', null);
+
+        $this->assertSame($expected, StringUtil::getRawDecodedValueFromHtml($inputXssStripped, $removeInsertTags));
     }
 
     public function getRawDecodedValueFromHtmlProvider(): \Generator
