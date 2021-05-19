@@ -126,21 +126,21 @@ final class Figure
 
     public function getJsonLd(): array
     {
-        $jsondLd = [
+        $jsonLd = [
             '@type' => 'ImageObject',
             'identifier' => $this->getImage()->getImageSrc(),
             'contentUrl' => $this->getImage()->getImageSrc(),
         ];
 
         if ($this->getMetaData()->has('title')) {
-            $jsondLd['name'] = $this->getMetaData()->get('title');
+            $jsonLd['name'] = $this->getMetaData()->get('title');
         }
 
         if ($this->getMetaData()->has('caption')) {
-            $jsondLd['caption'] = $this->getMetaData()->get('caption');
+            $jsonLd['caption'] = $this->getMetaData()->get('caption');
         }
 
-        return $jsondLd;
+        return $jsonLd;
     }
 
     /**

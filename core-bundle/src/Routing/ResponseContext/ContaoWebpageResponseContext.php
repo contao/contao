@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Contao\CoreBundle\Event\JsonLdEvent;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\PageModel;
 
@@ -55,9 +54,10 @@ class ContaoWebpageResponseContext extends WebpageResponseContext
         return $this->isSearchable;
     }
 
-    public function setIsSearchable(bool $isSearchable): ContaoWebpageResponseContext
+    public function setIsSearchable(bool $isSearchable): self
     {
         $this->isSearchable = $isSearchable;
+
         return $this;
     }
 }
