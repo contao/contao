@@ -1024,14 +1024,19 @@ class StringUtil
 	 */
 	public static function getRawDecodedValueFromHtml(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
+		if (!$blnRemoveInsertTags)
+		{
+			$strValue = Controller::replaceInsertTags($strValue, false);
+		}
+
 		// Add new lines before and after block level elements
 		$strValue = preg_replace(
-			array('/[\r\n]+/', '/</?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'),
+			array('/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'),
 			array(' ', "\n$0"),
 			$strValue
 		);
 
-		$strValue = static::getRawDecodedValue($strValue, $blnRemoveInsertTags);
+		$strValue = static::getRawDecodedValue($strValue, true);
 
 		// Remove duplicate line breaks and spaces
 		$strValue = trim(preg_replace(array('/[^\S\n]+/', '/\s*\n\s*/'), array(' ', "\n"), $strValue));
