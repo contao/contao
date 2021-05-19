@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext\JsonLd;
 
 use Contao\CoreBundle\Event\JsonLdEvent;
+use Spatie\SchemaOrg\Graph;
 use Spatie\SchemaOrg\Type;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -41,7 +42,7 @@ class JsonLdManager
         $schema = rtrim($schema, '/');
 
         if (!\array_key_exists($schema, $this->graphs)) {
-            $this->graphs[$schema] = new Graph($schema); // TODO: To be replaced by original implementation once https://github.com/spatie/schema-org/pull/160 is merged
+            $this->graphs[$schema] = new Graph($schema);
         }
 
         return $this->graphs[$schema];

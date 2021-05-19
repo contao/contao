@@ -11,13 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLdProvidingResponseContextInterface;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
-use Spatie\SchemaOrg\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -53,12 +48,9 @@ class PageRegular extends Frontend
 		$this->prepare($objPage);
 
 		$response = $this->Template->getResponse($blnCheckRequest);
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageContext)
-		{
-			$responseContext->mapToResponse($response);
-		}
+		// Finalize the response context so it cannot be used anymore
+		System::getContainer()->get(ResponseContextAccessor::class)->finalizeCurrentContext($response);
 
 		return $response;
 	}
@@ -80,19 +72,12 @@ class PageRegular extends Frontend
 		$container = System::getContainer();
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
+		$responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
 
 		// Static URLs
 		$this->setStaticUrls();
-
-		// Set response context
-		/** @var WebpageContext $responseContext */
-		$responseContext = $container->get(ResponseContextFactory::class)->createAndSetCurrent(WebpageContext::class);
-		$responseContext
-			->setTitle($objPage->pageTitle ?: $objPage->title)
-			->setDescription(str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description))
-		;
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
@@ -219,14 +204,14 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = $responseContext->getTitle(); // $objPage->pageTitle ?: $objPage->title;
+		$this->Template->pageTitle = $responseContext->getTitle();
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $responseContext->getRobotsMetaTagContent();
+		$this->Template->robots = $responseContext->getMetaRobots();
 
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
@@ -236,7 +221,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $responseContext->getDescription());
+		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $responseContext->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
@@ -705,18 +690,9 @@ class PageRegular extends Frontend
 			}
 		}
 
-		// Add JSON-LD metadata (in fact wouldn't need to get the container here again as we already have and know the
-		// response context but this class might have been extended and overridden so we fetch it again)
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
-
-		if ($objPage !== null && $responseContext instanceof JsonLdProvidingResponseContextInterface)
+		// Add search index metadata
+		if ($objPage !== null)
 		{
-			$jsonLdManager = $responseContext->getJsonLdManager();
-
-			// General schema.org WebPage schema
-			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(Schema::webPage());
-
-			// Custom Contao search index meta data
 			$noSearch = (bool) $objPage->noSearch;
 
 			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
@@ -725,14 +701,19 @@ class PageRegular extends Frontend
 				$noSearch = true;
 			}
 
-			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->add(new ContaoPageSchema(
-				$objPage->pageTitle ?: $objPage->title,
-				(int) $objPage->id,
-				$noSearch,
-				(bool) $objPage->protected,
-				array_map('intval', array_filter((array) $objPage->groups)),
-				System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
-			));
+			$meta = array
+			(
+				'@context' => array('contao' => 'https://schema.contao.org/'),
+				'@type' => 'contao:Page',
+				'contao:title' => $objPage->pageTitle ?: $objPage->title,
+				'contao:pageId' => (int) $objPage->id,
+				'contao:noSearch' => $noSearch,
+				'contao:protected' => (bool) $objPage->protected,
+				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),
+				'contao:fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
+			);
+
+			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
 		}
 
 		// Add the custom JavaScript

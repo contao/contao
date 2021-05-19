@@ -111,6 +111,7 @@ services:
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
+            - '%kernel.project_dir%'
             - '@?fos_http_cache.http.symfony_response_tagger'
         tags:
             - controller.service_arguments
@@ -657,17 +658,11 @@ services:
             - '@request_stack'
         public: true
 
-    Contao\CoreBundle\Routing\ResponseContext\Factory\ResponseContextFactory:
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
         arguments:
-            - !tagged_iterator contao.routing.response_context_provider
             - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
-        public: true
-
-    Contao\CoreBundle\Routing\ResponseContext\Factory\Provider\CoreProvider:
-        arguments:
             - '@event_dispatcher'
-        tags:
-            - contao.routing.response_context_provider
+        public: true
 
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer

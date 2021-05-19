@@ -67,44 +67,44 @@ class RobotsTxtListenerTest extends TestCase
         yield 'Empty robots.txt content in root page' => [
             '',
             <<<'EOF'
-user-agent:*
-disallow:/contao/
+                user-agent:*
+                disallow:/contao/
 
-sitemap:https://www.foobar.com/sitemap.xml
-EOF
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF
         ];
 
         yield 'Tests merging with existing user-agent' => [
             <<<'EOF'
-user-agent:*
-allow:/
-EOF
+                user-agent:*
+                allow:/
+                EOF
             ,
             <<<'EOF'
-user-agent:*
-allow:/
-disallow:/contao/
+                user-agent:*
+                allow:/
+                disallow:/contao/
 
-sitemap:https://www.foobar.com/sitemap.xml
-EOF
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF
         ];
 
         yield 'Tests works with specific user-agent' => [
             <<<'EOF'
-user-agent:googlebot
-allow:/
-EOF
+                user-agent:googlebot
+                allow:/
+                EOF
             ,
             <<<'EOF'
-user-agent:googlebot
-allow:/
-disallow:/contao/
+                user-agent:googlebot
+                allow:/
+                disallow:/contao/
 
-user-agent:*
-disallow:/contao/
+                user-agent:*
+                disallow:/contao/
 
-sitemap:https://www.foobar.com/sitemap.xml
-EOF
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF
         ];
     }
 }

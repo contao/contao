@@ -18,23 +18,25 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class ResponseContext implements ResponseContextInterface
 {
     /**
-     * @var ResponseHeaderBag|null
+     * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
 
     public function getHeaderBag(): ResponseHeaderBag
     {
         if (null === $this->headerBag) {
-            $this->headerBag = new ResponseHeaderBag();
+            $this->headerBag = new PartialResponseHeaderBag();
         }
 
         return $this->headerBag;
     }
 
-    public function mapToResponse(Response $response): void
+    public function finalize(Response $response): ResponseContextInterface
     {
         foreach ($this->getHeaderBag()->all() as $name => $values) {
             $response->headers->set($name, $values, false); // Do not replace but add
         }
+
+        return $this;
     }
 }

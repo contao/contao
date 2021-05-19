@@ -13,7 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -28,8 +30,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -129,29 +129,33 @@ class ModuleEventReader extends Events
 				throw new InternalServerErrorException('Empty target URL');
 		}
 
-		// Overwrite the page title (see #2853, #4955 and #87)
-		if ($objEvent->pageTitle)
-		{
-			$objPage->pageTitle = $objEvent->pageTitle;
-		}
-		elseif ($objEvent->title)
-		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objEvent->title));
-		}
+		// Overwrite the page meta data (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		// Overwrite the page description
-		if ($objEvent->description)
+		if ($responseContext instanceof WebpageResponseContext)
 		{
-			$objPage->description = $objEvent->description;
-		}
-		elseif ($objEvent->teaser)
-		{
-			$objPage->description = $this->prepareMetaDescription($objEvent->teaser);
-		}
+			if ($objEvent->pageTitle)
+			{
+				$responseContext->setTitle($objEvent->pageTitle);
+			}
+			elseif ($objEvent->title)
+			{
+				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objEvent->title)));
+			}
 
-		if ($objEvent->robots)
-		{
-			$objPage->robots = $objEvent->robots;
+			if ($objEvent->description)
+			{
+				$responseContext->setMetaDescription($objEvent->description);
+			}
+			elseif ($objEvent->teaser)
+			{
+				$responseContext->setMetaDescription($this->prepareMetaDescription($objEvent->teaser));
+			}
+
+			if ($objEvent->robots)
+			{
+				$responseContext->setMetaRobots($objEvent->robots);
+			}
 		}
 
 		$intStartTime = $objEvent->startTime;
@@ -290,7 +294,7 @@ class ModuleEventReader extends Events
 		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
+		if ($objEvent->addImage)
 		{
 			$imgSize = $objEvent->size ?: null;
 
@@ -305,12 +309,19 @@ class ModuleEventReader extends Events
 				}
 			}
 
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($objEvent->singleSRC)
 				->setSize($imgSize)
 				->setMetadata($objEvent->getOverwriteMetadata())
 				->enableLightbox((bool) $objEvent->fullsize)
-				->build()
-				->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+				->buildIfResourceExists();
+
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+			}
 		}
 
 		$objTemplate->enclosure = array();

@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -96,7 +98,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean $rootIsFallback
  * @property boolean $rootUseSSL
  * @property string  $rootFallbackLanguage
- * @property array   $subpages
  * @property boolean $minifyMarkup
  * @property integer $layoutId
  * @property boolean $hasJQuery
@@ -301,9 +302,30 @@ class PageModel extends Model
 
 	public function __set($strKey, $varValue)
 	{
-		if (\in_array($strKey, array('pageTitle', 'description', 'robots'), true))
+		// Deprecate setting dynamic page attributes if they are set on the global $objPage
+		if (\in_array($strKey, array('pageTitle', 'description', 'robots'), true) && ($GLOBALS['objPage'] ?? null) === $this)
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
+
+			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+			if ($responseContext instanceof WebpageResponseContext)
+			{
+				switch ($strKey)
+				{
+					case 'pageTitle':
+						$responseContext->setTitle($varValue);
+						break;
+
+					case 'description':
+						$responseContext->setMetaDescription($varValue);
+						break;
+
+					case 'robots':
+						$responseContext->setMetaRobots($varValue);
+						break;
+				}
+			}
 		}
 
 		return parent::__set($strKey, $varValue);
@@ -622,14 +644,20 @@ class PageModel extends Model
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
 	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0. Use Module::getPublishedSubpagesWithoutGuestsByPid() instead.
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
-		$time = Date::floorToMinute();
-		$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+		@trigger_error('Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesWithoutGuestsByPid() instead.', E_USER_DEPRECATED);
 
-		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
-											   ->execute($intPid);
+		$time = Date::floorToMinute();
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
+		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+											  ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
 		{

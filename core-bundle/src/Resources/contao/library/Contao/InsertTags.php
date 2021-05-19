@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -167,7 +167,7 @@ class InsertTags extends Controller
 			{
 				// Date
 				case 'date':
-					$arrCache[$strTag] = Date::parse($elements[1] ?: Config::get('dateFormat'));
+					$arrCache[$strTag] = Date::parse($elements[1] ?: $objPage->dateFormat);
 					break;
 
 				// Accessibility tags
@@ -326,15 +326,15 @@ class InsertTags extends Controller
 
 						if ($rgxp == 'date')
 						{
-							$arrCache[$strTag] = Date::parse(Config::get('dateFormat'), $value);
+							$arrCache[$strTag] = Date::parse($objPage->dateFormat, $value);
 						}
 						elseif ($rgxp == 'time')
 						{
-							$arrCache[$strTag] = Date::parse(Config::get('timeFormat'), $value);
+							$arrCache[$strTag] = Date::parse($objPage->timeFormat, $value);
 						}
 						elseif ($rgxp == 'datim')
 						{
-							$arrCache[$strTag] = Date::parse(Config::get('datimFormat'), $value);
+							$arrCache[$strTag] = Date::parse($objPage->datimFormat, $value);
 						}
 						elseif (\is_array($value))
 						{
@@ -586,7 +586,7 @@ class InsertTags extends Controller
 
 					if ($objUpdate->numRows)
 					{
-						$arrCache[$strTag] = Date::parse($elements[1] ?: Config::get('datimFormat'), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+						$arrCache[$strTag] = Date::parse($elements[1] ?: $objPage->datimFormat, max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
 					}
 					break;
 
@@ -734,15 +734,16 @@ class InsertTags extends Controller
 
 					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-					if ($responseContext instanceof WebpageContext && \in_array($elements[1], array('pageTitle', 'description'), true))
+					if ($responseContext instanceof WebpageResponseContext && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
 						switch ($elements[1])
 						{
 							case 'pageTitle':
 								$arrCache[$strTag] = $responseContext->getTitle();
 								break;
+
 							case 'description':
-								$arrCache[$strTag] = $responseContext->getDescription();
+								$arrCache[$strTag] = $responseContext->getMetaDescription();
 								break;
 						}
 					}

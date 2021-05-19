@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 
-class WebpageContext extends ResponseContext implements JsonLdProvidingResponseContextInterface
+class WebpageResponseContext extends ResponseContext implements JsonLdProvidingResponseContextInterface
 {
     /**
      * @var string
@@ -24,11 +24,11 @@ class WebpageContext extends ResponseContext implements JsonLdProvidingResponseC
     /**
      * @var string
      */
-    private $description = '';
+    private $metaDescription = '';
     /**
      * @var string
      */
-    private $robotsMetaTagContent = 'index,follow';
+    private $metaRobots = 'index,follow';
 
     /**
      * @var JsonLdManager
@@ -52,26 +52,26 @@ class WebpageContext extends ResponseContext implements JsonLdProvidingResponseC
         return $this;
     }
 
-    public function getDescription(): string
+    public function getMetaDescription(): string
     {
-        return $this->description;
+        return $this->metaDescription;
     }
 
-    public function setDescription(string $description): self
+    public function setMetaDescription(string $metaDescription): self
     {
-        $this->description = $description;
+        $this->metaDescription = $metaDescription;
 
         return $this;
     }
 
-    public function getRobotsMetaTagContent(): string
+    public function getMetaRobots(): string
     {
-        return $this->robotsMetaTagContent;
+        return $this->metaRobots;
     }
 
-    public function setRobotsMetaTagContent(string $robotsMetaTagContent): self
+    public function setMetaRobots(string $metaRobots): self
     {
-        $this->robotsMetaTagContent = $robotsMetaTagContent;
+        $this->metaRobots = $metaRobots;
 
         return $this;
     }

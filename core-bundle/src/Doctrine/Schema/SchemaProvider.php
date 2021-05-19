@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 
 class SchemaProvider
@@ -34,6 +35,8 @@ class SchemaProvider
     public function createSchema(): Schema
     {
         $schemaTool = new SchemaTool($this->entityManager);
+
+        /** @var array<ClassMetadata> $metadata */
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
         // Triggers the contao.listener.doctrine_schema listener that appends the DCA definitions

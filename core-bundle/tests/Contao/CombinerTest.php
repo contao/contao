@@ -117,16 +117,16 @@ class CombinerTest extends ContaoTestCase
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url(foo.bar) }
-test2 { background: url("foo.bar") }
-test3 { background: url('foo.bar') }
-EOF;
+            test1 { background: url(foo.bar) }
+            test2 { background: url("foo.bar") }
+            test3 { background: url('foo.bar') }
+            EOF;
 
         $expected = <<<'EOF'
-test1 { background: url(../../foo.bar) }
-test2 { background: url("../../foo.bar") }
-test3 { background: url('../../foo.bar') }
-EOF;
+            test1 { background: url(../../foo.bar) }
+            test2 { background: url("../../foo.bar") }
+            test3 { background: url('../../foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
@@ -141,16 +141,16 @@ EOF;
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url(foo.bar) }
-test2 { background: url("foo.bar") }
-test3 { background: url('foo.bar') }
-EOF;
+            test1 { background: url(foo.bar) }
+            test2 { background: url("foo.bar") }
+            test3 { background: url('foo.bar') }
+            EOF;
 
         $expected = <<<'EOF'
-test1 { background: url("../../\"test\"/foo.bar") }
-test2 { background: url("../../\"test\"/foo.bar") }
-test3 { background: url('../../"test"/foo.bar') }
-EOF;
+            test1 { background: url("../../\"test\"/foo.bar") }
+            test2 { background: url("../../\"test\"/foo.bar") }
+            test3 { background: url('../../"test"/foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
@@ -158,10 +158,10 @@ EOF;
         );
 
         $expected = <<<'EOF'
-test1 { background: url("../../'test'/foo.bar") }
-test2 { background: url("../../'test'/foo.bar") }
-test3 { background: url('../../\'test\'/foo.bar') }
-EOF;
+            test1 { background: url("../../'test'/foo.bar") }
+            test2 { background: url("../../'test'/foo.bar") }
+            test3 { background: url('../../\'test\'/foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
@@ -169,10 +169,10 @@ EOF;
         );
 
         $expected = <<<'EOF'
-test1 { background: url("../../(test)/foo.bar") }
-test2 { background: url("../../(test)/foo.bar") }
-test3 { background: url('../../(test)/foo.bar') }
-EOF;
+            test1 { background: url("../../(test)/foo.bar") }
+            test2 { background: url("../../(test)/foo.bar") }
+            test3 { background: url('../../(test)/foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
@@ -187,9 +187,9 @@ EOF;
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
-test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
-EOF;
+            test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
+            test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
+            EOF;
 
         $this->assertSame(
             $css,
@@ -204,10 +204,10 @@ EOF;
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url('/path/to/file.jpg') }
-test2 { background: url(https://example.com/file.jpg) }
-test3 { background: url('#foo') }
-EOF;
+            test1 { background: url('/path/to/file.jpg') }
+            test2 { background: url(https://example.com/file.jpg) }
+            test3 { background: url('#foo') }
+            EOF;
 
         $this->assertSame(
             $css,

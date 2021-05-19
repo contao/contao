@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
+
 /**
  * Provides methodes to handle articles.
  *
@@ -161,14 +164,19 @@ class ModuleArticle extends Module
 		$strSection = $chunks[0] ?? null;
 		$strArticle = $chunks[1] ?? $strSection;
 
-		// Overwrite the page title (see #2853 and #4955)
+		// Overwrite the page meta data (see #2853, #4955 and #87)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($this->title));
+			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($this->teaser)
+			if ($responseContext instanceof WebpageResponseContext)
 			{
-				$objPage->description = $this->prepareMetaDescription($this->teaser);
+				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
+
+				if ($this->teaser)
+				{
+					$responseContext->setMetaDescription($this->prepareMetaDescription($this->teaser));
+				}
 			}
 		}
 

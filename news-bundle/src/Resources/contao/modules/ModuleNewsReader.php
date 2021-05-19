@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageContext;
-use Contao\CoreBundle\Routing\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -139,7 +139,7 @@ class ModuleNewsReader extends ModuleNews
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageContext)
+		if ($responseContext instanceof WebpageResponseContext)
 		{
 			if ($objArticle->pageTitle)
 			{
@@ -152,16 +152,16 @@ class ModuleNewsReader extends ModuleNews
 
 			if ($objArticle->description)
 			{
-				$responseContext->setDescription($objArticle->description);
+				$responseContext->setMetaDescription($objArticle->description);
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setDescription($this->prepareMetaDescription($objArticle->teaser));
+				$responseContext->setMetaDescription($this->prepareMetaDescription($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)
 			{
-				$responseContext->setRobotsMetaTagContent($objArticle->robots);
+				$responseContext->setMetaRobots($objArticle->robots);
 			}
 		}
 

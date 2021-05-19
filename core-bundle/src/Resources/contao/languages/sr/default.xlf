@@ -2694,8 +2694,7 @@
         <target>Преглед URL не може да буде генерисан, зато што путања има обавезне параметре.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Непозната опција</target>
+        <source>Unknown option: %s</source>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

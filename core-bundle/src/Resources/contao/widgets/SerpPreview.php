@@ -83,26 +83,26 @@ class SerpPreview extends Widget
 		}
 
 		return <<<EOT
-<div class="serp-preview">
-  <p id="serp_url_$id" class="url">$url</p>
-  <p id="serp_title_$id" class="title">$title</p>
-  <p id="serp_description_$id" class="description">$description</p>
-</div>
-<script>
-  window.addEvent('domready', function() {
-    new Contao.SerpPreview({
-      id: '$id',
-      trail: '$trail',
-      titleField: '$titleField',
-      titleFallbackField: '$titleFallbackField',
-      aliasField: '$aliasField',
-      descriptionField: '$descriptionField',
-      descriptionFallbackField: '$descriptionFallbackField',
-      titleTag: '$titleTag'
-    });
-  });
-</script>
-EOT;
+			<div class="serp-preview">
+			  <p id="serp_url_$id" class="url">$url</p>
+			  <p id="serp_title_$id" class="title">$title</p>
+			  <p id="serp_description_$id" class="description">$description</p>
+			</div>
+			<script>
+			  window.addEvent('domready', function() {
+			    new Contao.SerpPreview({
+			      id: '$id',
+			      trail: '$trail',
+			      titleField: '$titleField',
+			      titleFallbackField: '$titleFallbackField',
+			      aliasField: '$aliasField',
+			      descriptionField: '$descriptionField',
+			      descriptionFallbackField: '$descriptionFallbackField',
+			      titleTag: '$titleTag'
+			    });
+			  });
+			</script>
+			EOT;
 	}
 
 	private function getTitle(Model $model)
