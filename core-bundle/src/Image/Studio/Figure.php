@@ -124,6 +124,25 @@ final class Figure
         return $this->metadata;
     }
 
+    public function getJsonLd(): array
+    {
+        $jsondLd = [
+            '@type' => 'ImageObject',
+            'identifier' => $this->getImage()->getImageSrc(),
+            'contentUrl' => $this->getImage()->getImageSrc(),
+        ];
+
+        if ($this->getMetaData()->has('title')) {
+            $jsondLd['name'] = $this->getMetaData()->get('title');
+        }
+
+        if ($this->getMetaData()->has('caption')) {
+            $jsondLd['caption'] = $this->getMetaData()->get('caption');
+        }
+
+        return $jsondLd;
+    }
+
     /**
      * Returns a key-value list of all link attributes. This excludes "href" by
      * default.
