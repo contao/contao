@@ -42,7 +42,7 @@ class ContaoWebpageResponseContextTest extends ContaoTestCase
 
         $context = new ContaoWebpageResponseContext($pageModel);
 
-        $this->assertSame('We went from Alpha > Omega', $context->getTitle());
+        $this->assertSame('We went from Alpha > Omega ', $context->getTitle());
         $this->assertSame('My description contains HTML.', $context->getMetaDescription());
     }
 }

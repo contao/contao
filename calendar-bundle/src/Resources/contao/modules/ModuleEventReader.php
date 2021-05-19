@@ -140,16 +140,16 @@ class ModuleEventReader extends Events
 			}
 			elseif ($objEvent->title)
 			{
-				$responseContext->setTitle(StringUtil::decodeEntities(Controller::replaceInsertTags($objEvent->title)));
+				$responseContext->setTitle(StringUtil::getRawDecodedValue($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$responseContext->setMetaDescription(StringUtil::decodeEntities(Controller::replaceInsertTags($objEvent->description)));
+				$responseContext->setMetaDescription(StringUtil::getRawDecodedValue($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$responseContext->setMetaDescription(StringUtil::decodeEntities(Controller::replaceInsertTags($objEvent->teaser)));
+				$responseContext->setMetaDescription(StringUtil::getRawDecodedValueFromHtml($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)

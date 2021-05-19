@@ -19,11 +19,11 @@ class ContaoWebpageResponseContext extends WebpageResponseContext
 {
     public function __construct(PageModel $pageModel)
     {
-        $title = $pageModel->pageTitle ?: StringUtil::decodeEntities($pageModel->title ?: '');
+        $title = $pageModel->pageTitle ?: StringUtil::getRawDecodedValue($pageModel->title ?: '');
 
         $this
             ->setTitle($title ?: '')
-            ->setMetaDescription($pageModel->description ?: '')
+            ->setMetaDescription(StringUtil::getRawDecodedValue($pageModel->description ?: ''))
         ;
 
         if ($pageModel->robots) {
