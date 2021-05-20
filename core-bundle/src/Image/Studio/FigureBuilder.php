@@ -705,6 +705,11 @@ class FigureBuilder
         return $framework->getAdapter(Validator::class);
     }
 
+    private function eventDispatcher()
+    {
+        return $this->locator->get('event_dispatcher');
+    }
+
     /**
      * Returns a list of locales (if available) in the following order:
      *  1. language of current page,
