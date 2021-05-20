@@ -234,7 +234,7 @@ class PageRegular extends Frontend
 		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
 		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
 		{
-			$responseContext->setIsSearchable(false);
+			$responseContext->disableSearch();
 		}
 	}
 

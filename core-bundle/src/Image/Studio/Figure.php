@@ -135,7 +135,7 @@ final class Figure
             'contentUrl' => $this->getImage()->getImageSrc(),
         ];
 
-        if(!$this->hasMetadata()) {
+        if (!$this->hasMetadata()) {
             return $jsonLd;
         }
 

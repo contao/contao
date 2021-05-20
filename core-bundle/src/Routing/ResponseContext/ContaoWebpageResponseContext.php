@@ -54,9 +54,16 @@ class ContaoWebpageResponseContext extends WebpageResponseContext
         return $this->isSearchable;
     }
 
-    public function setIsSearchable(bool $isSearchable): self
+    public function disableSearch(): self
     {
-        $this->isSearchable = $isSearchable;
+        $this->isSearchable = false;
+
+        return $this;
+    }
+
+    public function enableSearch(): self
+    {
+        $this->isSearchable = true;
 
         return $this;
     }
