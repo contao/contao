@@ -27,6 +27,7 @@ class Metadata
     public const VALUE_CAPTION = 'caption';
     public const VALUE_TITLE = 'title';
     public const VALUE_URL = 'link';
+    public const VALUE_UUID = 'uuid';
 
     /**
      * Key-value pairs of metadata.
@@ -84,6 +85,11 @@ class Metadata
     public function getUrl(): string
     {
         return $this->values[self::VALUE_URL] ?? '';
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->values[self::VALUE_UUID] ?? null;
     }
 
     /**

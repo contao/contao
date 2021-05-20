@@ -38,6 +38,7 @@ class MetadataTest extends TestCase
             Metadata::VALUE_CAPTION => 'caption',
             Metadata::VALUE_TITLE => 'title',
             Metadata::VALUE_URL => 'url',
+            Metadata::VALUE_UUID => '1234-5678',
             'foo' => 'bar',
         ]);
 
@@ -55,6 +56,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_CAPTION => 'caption',
                 Metadata::VALUE_TITLE => 'title',
                 Metadata::VALUE_URL => 'url',
+                Metadata::VALUE_UUID => '1234-5678',
                 'foo' => 'bar',
             ],
             $metadata->all()
