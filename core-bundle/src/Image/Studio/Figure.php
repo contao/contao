@@ -135,6 +135,10 @@ final class Figure
             'contentUrl' => $this->getImage()->getImageSrc(),
         ];
 
+        if(!$this->hasMetadata()) {
+            return $jsonLd;
+        }
+
         return array_merge($jsonLd, $this->getMetadata()->getJsonLd('ImageObject'));
     }
 
