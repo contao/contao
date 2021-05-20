@@ -35,9 +35,27 @@ class Metadata
      */
     private $values;
 
+    /**
+     * @param array<string, mixed> $values
+     */
     public function __construct(array $values)
     {
         $this->values = $values;
+    }
+
+    /**
+     * Get a new metadata representation that also contains the given values.
+     * Existing keys will get overwritten.
+     *
+     * @param array<string, mixed> $values
+     */
+    public function with(array $values): self
+    {
+        if (empty($values)) {
+            return $this;
+        }
+
+        return new self(array_merge($this->values, $values));
     }
 
     /**

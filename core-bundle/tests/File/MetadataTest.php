@@ -185,4 +185,31 @@ class MetadataTest extends TestCase
             'return null if no metadata is available for a locale'
         );
     }
+
+    public function testMergesMetadata(): void
+    {
+        $metadata = new Metadata(['foo' => 'FOO', 'bar' => 'BAR']);
+
+        $newMetadata = $metadata->with(['foobar' => 'FOOBAR', 'bar' => 'BAZ']);
+
+        $this->assertNotSame($metadata, $newMetadata, 'Should be a different instance.');
+
+        $this->assertSame(
+            [
+                'foo' => 'FOO',
+                'bar' => 'BAZ',
+                'foobar' => 'FOOBAR',
+            ],
+            $newMetadata->all()
+        );
+    }
+
+    public function testDoesNotCreateANewInstanceWhenMergingEmptyMetadata(): void
+    {
+        $metadata = new Metadata(['foo' => 'FOO', 'bar' => 'BAR']);
+
+        $newMetadata = $metadata->with([]);
+
+        $this->assertSame($metadata, $newMetadata, 'Should be the same instance.');
+    }
 }
