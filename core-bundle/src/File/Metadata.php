@@ -106,8 +106,12 @@ class Metadata
         return empty($this->values);
     }
 
-    public function getJsonLd(string $type): array
+    public function getJsonLd(string $type = null): array
     {
+        if (null === $type) {
+            return $this->jsonLd;
+        }
+        
         return $this->jsonLd[$type] ?? [];
     }
 
