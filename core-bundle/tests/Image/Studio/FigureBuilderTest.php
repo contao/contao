@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Event\DefineMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -29,6 +30,7 @@ use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
@@ -1040,6 +1042,32 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($lightboxImageResult, $figure2->getLightbox());
     }
 
+    public function testDispatchesDefineMetadataEvent(): void
+    {
+        [$absoluteFilePath] = $this->getTestFilePaths();
+
+        $studio = $this->getStudioMockForImage($absoluteFilePath);
+
+        $eventDispatcher = new EventDispatcher();
+
+        $eventDispatcher->addListener(
+            DefineMetadataEvent::class,
+            function (DefineMetadataEvent $event): void {
+                $this->assertSame([Metadata::VALUE_TITLE => 'foo'], $event->getMetadata()->all());
+
+                $event->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'bar']));
+            }
+        );
+
+        $figure = $this->getFigureBuilder($studio, null, $eventDispatcher)
+            ->fromPath($absoluteFilePath, false)
+            ->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'foo']))
+            ->build()
+        ;
+
+        $this->assertSame([Metadata::VALUE_TITLE => 'bar'], $figure->getMetadata()->all());
+    }
+
     private function getFigure(\Closure $configureBuilderCallback = null, Studio $studio = null): Figure
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
@@ -1097,7 +1125,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null): FigureBuilder
+    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null, EventDispatcher $eventDispatcher = null): FigureBuilder
     {
         [, , $projectDir, $uploadPath] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();
@@ -1109,6 +1137,7 @@ class FigureBuilderTest extends TestCase
             ->willReturnMap([
                 [Studio::class, $studio],
                 ['contao.framework', $framework],
+                ['event_dispatcher', $eventDispatcher ?? new EventDispatcher()],
             ])
         ;
 
