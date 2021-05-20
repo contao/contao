@@ -611,7 +611,7 @@ class FigureBuilder
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
         $data = array_merge(
-            array_combine($metaFields, array_fill(0, \count($metaFields), '')).
+            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
             $fileReferenceData
         );
 
