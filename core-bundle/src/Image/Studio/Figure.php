@@ -125,17 +125,14 @@ final class Figure
         return $this->metadata;
     }
 
-    /**
-     * Returns the basic Json
-     */
     public function getJsonLd(Request $request = null): array
     {
         $schemaBase = $request ? $request->getSchemeAndHttpHost() : '';
 
         $jsonLd = [
             '@type' => 'ImageObject',
-            'identifier' => $schemaBase . '#/schema/' .$this->getImage()->getImageSrc(), // TODO: replace with UUID once this is available
-            'contentUrl' => $this->getImage()->getImageSrc()
+            'identifier' => $schemaBase.'#/schema/image/'.$this->getImage()->getImageSrc(), // TODO: replace with UUID once this is available
+            'contentUrl' => $this->getImage()->getImageSrc(),
         ];
 
         return array_merge($jsonLd, $this->getMetadata()->getJsonLd('ImageObject'));

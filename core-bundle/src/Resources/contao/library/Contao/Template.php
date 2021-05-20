@@ -20,9 +20,9 @@ use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
 use Spatie\SchemaOrg\Graph;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Parses and outputs template files

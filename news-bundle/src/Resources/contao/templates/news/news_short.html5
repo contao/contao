@@ -15,5 +15,3 @@
     <p class="more"><?= $this->more ?></p>
   <?php endif; ?>
 </div>
-
-<?php $this->insert('jsonld_news', $this->getData()); ?>

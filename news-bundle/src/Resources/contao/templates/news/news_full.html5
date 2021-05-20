@@ -41,4 +41,35 @@
 
 </div>
 
-<?php $this->insert('jsonld_news', $this->getData()); ?>
+<?php
+
+$jsonLd = [
+    '@type' => 'NewsArticle',
+    'identifier' => $this->absoluteLink,
+    'url' => $this->absoluteLink,
+    'headline' => $this->raw($this->headline),
+    'datePublished' => $this->datetime,
+];
+
+if ($this->hasTeaser) {
+    $jsonLd['description'] = $this->raw($this->teaser);
+}
+
+if ($this->hasText()) {
+    $jsonLd['text'] = $this->raw($this->text);
+}
+
+if ($this->addImage) {
+    $jsonLd['image'] = [
+        '@id' => $this->figure->getJsonLd($this->request())['identifier'],
+    ];
+}
+
+if ($this->authorModel) {
+    $jsonLd['author'] = [
+        '@type' => 'Person',
+        'name' => $this->authorModel->name,
+    ];
+}
+
+$this->jsonLd($jsonLd);

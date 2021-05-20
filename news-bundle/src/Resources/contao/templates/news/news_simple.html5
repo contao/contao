@@ -3,5 +3,3 @@
   <?php if ($this->date): ?><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time><?php endif; ?>
   <?= $this->linkHeadline ?>
 </div>
-
-<?php $this->insert('jsonld_news', $this->getData()); ?>

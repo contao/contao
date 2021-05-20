@@ -111,20 +111,20 @@ class Metadata
         if (null === $type) {
             return $this->jsonLd;
         }
-        
+
         return $this->jsonLd[$type] ?? [];
     }
 
-    public static function extractBasicJsonLd(Metadata $metadata): array
+    public static function extractBasicJsonLd(self $metadata): array
     {
         $jsonLd = [];
 
         if ($metadata->has('title')) {
-            $jsonLd['ImageObject']['name']['title'] = $metadata->getTitle();
+            $jsonLd['ImageObject']['name'] = $metadata->getTitle();
         }
 
         if ($metadata->has('caption')) {
-            $jsonLd['ImageObject']['name']['title'] = $metadata->getCaption();
+            $jsonLd['ImageObject']['caption'] = $metadata->getCaption();
         }
 
         return $jsonLd;
