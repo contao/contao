@@ -120,7 +120,7 @@ class Metadata
         }
 
         if ($metadata->has('caption')) {
-            $jsonLd['ImageObject']['name']['title'] = $metadata->getTitle();
+            $jsonLd['ImageObject']['name']['title'] = $metadata->getCaption();
         }
 
         return $jsonLd;
