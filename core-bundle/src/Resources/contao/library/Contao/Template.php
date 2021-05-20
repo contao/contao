@@ -22,6 +22,7 @@ use MatthiasMullie\Minify\JS;
 use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Parses and outputs template files
@@ -396,11 +397,18 @@ abstract class Template extends Controller
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
 	}
 
+	public function request(): ?Request
+	{
+		return System::getContainer()->get('request_stack')->getCurrentRequest();
+	}
+
 	/**
 	 * Decodes a value for raw usage (DO NOT USE THIS IN HTML OUTPUT IF THE SOURCE IS UNKNOWN)
 	 */
 	public function raw(string $value, bool $stripTags = true): string
 	{
+		// TODO: Use StringUtil::getRawDecodedValue() once https://github.com/contao/contao/pull/3014 is merged.
+
 		$value = StringUtil::decodeEntities(StringUtil::restoreBasicEntities($value));
 
 		if ($stripTags)

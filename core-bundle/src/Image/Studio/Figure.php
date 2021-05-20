@@ -17,6 +17,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A Figure object holds image and metadata ready to be applied to a
@@ -124,23 +125,20 @@ final class Figure
         return $this->metadata;
     }
 
-    public function getJsonLd(): array
+    /**
+     * Returns the basic Json
+     */
+    public function getJsonLd(Request $request = null): array
     {
+        $schemaBase = $request ? $request->getSchemeAndHttpHost() : '';
+
         $jsonLd = [
             '@type' => 'ImageObject',
-            'identifier' => $this->getImage()->getImageSrc(),
-            'contentUrl' => $this->getImage()->getImageSrc(),
+            'identifier' => $schemaBase . '#/schema/' .$this->getImage()->getImageSrc(), // TODO: replace with UUID once this is available
+            'contentUrl' => $this->getImage()->getImageSrc()
         ];
 
-        if ($this->getMetaData()->has('title')) {
-            $jsonLd['name'] = $this->getMetaData()->get('title');
-        }
-
-        if ($this->getMetaData()->has('caption')) {
-            $jsonLd['caption'] = $this->getMetaData()->get('caption');
-        }
-
-        return $jsonLd;
+        return array_merge($jsonLd, $this->getMetadata()->getJsonLd('ImageObject'));
     }
 
     /**

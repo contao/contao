@@ -17,5 +17,4 @@
 
 <?php
 
-$jsonLd = $this->figure->getJsonLd();
-$this->jsonLd($jsonLd, $jsonLd['identifier']);
+$this->jsonLd($this->figure->getJsonLd($this->request()));

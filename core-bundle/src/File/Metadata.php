@@ -35,9 +35,23 @@ class Metadata
      */
     private $values;
 
-    public function __construct(array $values)
+    /**
+     * JSON-LD data where the key matches the schema.org
+     * type.
+     *
+     * @var array<string, array>
+     */
+    private $jsonLd;
+
+    public function __construct(array $values, array $jsonLd = null)
     {
         $this->values = $values;
+
+        if (null === $jsonLd) {
+            $jsonLd = self::extractBasicJsonLd($this);
+        }
+
+        $this->jsonLd = $jsonLd;
     }
 
     /**
@@ -90,5 +104,25 @@ class Metadata
     public function empty(): bool
     {
         return empty($this->values);
+    }
+
+    public function getJsonLd(string $type): array
+    {
+        return $this->jsonLd[$type] ?? [];
+    }
+
+    public static function extractBasicJsonLd(Metadata $metadata): array
+    {
+        $jsonLd = [];
+
+        if ($metadata->has('title')) {
+            $jsonLd['ImageObject']['name']['title'] = $metadata->getTitle();
+        }
+
+        if ($metadata->has('caption')) {
+            $jsonLd['ImageObject']['name']['title'] = $metadata->getTitle();
+        }
+
+        return $jsonLd;
     }
 }
