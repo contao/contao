@@ -5049,7 +5049,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							$value = (string) $arg !== '' ? $arg : '-';
 						}
 
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] == $firstOrderBy) ? ' ordered_by' : '') . '">' . $value . '</td>';
+						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $field . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}
 				}
 				else
