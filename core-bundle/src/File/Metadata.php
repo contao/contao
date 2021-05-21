@@ -87,6 +87,9 @@ class Metadata
         return $this->values[self::VALUE_URL] ?? '';
     }
 
+    /**
+     * Get a UUID reference in ASCII format or null if not set.
+     */
     public function getUuid(): ?string
     {
         return $this->values[self::VALUE_UUID] ?? null;

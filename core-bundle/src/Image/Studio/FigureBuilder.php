@@ -19,6 +19,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -584,8 +585,18 @@ class FigureBuilder
             return null;
         }
 
+        $getUuid = static function (?FilesModel $filesModel): ?string {
+            if (null === $filesModel || null === $filesModel->uuid) {
+                return null;
+            }
+
+            // Normalize UUID to ASCII format
+            return Validator::isBinaryUuid($filesModel->uuid) ?
+                StringUtil::binToUuid($filesModel->uuid) : $filesModel->uuid;
+        };
+
         $fileReferenceData = array_filter([
-            Metadata::VALUE_UUID => null !== $this->filesModel ? $this->filesModel->uuid : null,
+            Metadata::VALUE_UUID => $getUuid($this->filesModel),
         ]);
 
         if (null !== $this->metadata) {
