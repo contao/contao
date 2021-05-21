@@ -23,6 +23,7 @@ use Contao\PageModel;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -710,7 +711,7 @@ class FigureBuilder
         return $framework->getAdapter(Validator::class);
     }
 
-    private function eventDispatcher()
+    private function eventDispatcher(): EventDispatcherInterface
     {
         return $this->locator->get('event_dispatcher');
     }
