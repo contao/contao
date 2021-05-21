@@ -591,18 +591,15 @@ class FigureBuilder
             }
 
             // Normalize UUID to ASCII format
-            return Validator::isBinaryUuid($filesModel->uuid) ?
-                StringUtil::binToUuid($filesModel->uuid) : $filesModel->uuid;
+            return Validator::isBinaryUuid($filesModel->uuid)
+                ? StringUtil::binToUuid($filesModel->uuid)
+                : $filesModel->uuid;
         };
 
-        $fileReferenceData = array_filter([
-            Metadata::VALUE_UUID => $getUuid($this->filesModel),
-        ]);
+        $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
 
         if (null !== $this->metadata) {
-            return $this->metadata
-                ->with($fileReferenceData)
-            ;
+            return $this->metadata->with($fileReferenceData);
         }
 
         if (null === $this->filesModel) {
@@ -617,8 +614,8 @@ class FigureBuilder
             return $metadata->with($fileReferenceData);
         }
 
-        // If no metadata can be obtained from the model, we create a
-        // container from the default meta fields with empty values instead
+        // If no metadata can be obtained from the model, we create a container
+        // from the default meta fields with empty values instead
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
         $data = array_merge(

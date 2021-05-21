@@ -781,30 +781,21 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'explicitly set metadata with files model (ASCII uuid)' => [
-            $getFilesModel(
-                ['foobar' => 'baz'],
-                'beefaff3-434a-106e-8ff0-f0b59095e5a1'
-            ),
+            $getFilesModel(['foobar' => 'baz'], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
             new Metadata(['foo' => 'bar']),
             'de',
             ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
         ];
 
         yield 'explicitly set metadata with files model (binary uuid)' => [
-            $getFilesModel(
-                ['foobar' => 'baz'],
-                StringUtil::uuidToBin('beefaff3-434a-106e-8ff0-f0b59095e5a1')
-            ),
+            $getFilesModel(['foobar' => 'baz'], StringUtil::uuidToBin('beefaff3-434a-106e-8ff0-f0b59095e5a1')),
             new Metadata(['foo' => 'bar']),
             'de',
             ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
         ];
 
         yield 'metadata from files model in a matching locale' => [
-            $getFilesModel(
-                ['en' => ['foo' => 'bar']],
-                'beefaff3-434a-106e-8ff0-f0b59095e5a1'
-            ),
+            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
             null,
             'en',
             [
@@ -815,10 +806,7 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'default metadata from meta fields' => [
-            $getFilesModel(
-                ['en' => ['foo' => 'bar']],
-                'beefaff3-434a-106e-8ff0-f0b59095e5a1'
-            ),
+            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
             null,
             'es',
             [

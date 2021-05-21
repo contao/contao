@@ -45,8 +45,8 @@ class Metadata
     }
 
     /**
-     * Get a new metadata representation that also contains the given values.
-     * Existing keys will get overwritten.
+     * Returns a new metadata representation that also contains the given
+     * values. Existing keys will be overwritten.
      *
      * @param array<string, mixed> $values
      */
@@ -88,7 +88,7 @@ class Metadata
     }
 
     /**
-     * Get a UUID reference in ASCII format or null if not set.
+     * Returns a UUID reference in ASCII format or null if not set.
      */
     public function getUuid(): ?string
     {
