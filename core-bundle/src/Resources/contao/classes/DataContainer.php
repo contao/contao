@@ -892,7 +892,7 @@ abstract class DataContainer extends Backend
 
 			$v = \is_array($v) ? $v : array($v);
 			$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-			$title = \is_array($v['label']) ? ($v['label'][1] ?? '') : $v['label'];
+			$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
