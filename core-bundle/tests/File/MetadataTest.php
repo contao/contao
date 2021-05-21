@@ -38,6 +38,7 @@ class MetadataTest extends TestCase
             Metadata::VALUE_CAPTION => 'caption',
             Metadata::VALUE_TITLE => 'title',
             Metadata::VALUE_URL => 'url',
+            Metadata::VALUE_UUID => '1234-5678',
             'foo' => 'bar',
         ]);
 
@@ -55,6 +56,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_CAPTION => 'caption',
                 Metadata::VALUE_TITLE => 'title',
                 Metadata::VALUE_URL => 'url',
+                Metadata::VALUE_UUID => '1234-5678',
                 'foo' => 'bar',
             ],
             $metadata->all()
@@ -184,5 +186,30 @@ class MetadataTest extends TestCase
             $model->getMetadata('es'),
             'return null if no metadata is available for a locale'
         );
+    }
+
+    public function testMergesMetadata(): void
+    {
+        $metadata = new Metadata(['foo' => 'FOO', 'bar' => 'BAR']);
+        $newMetadata = $metadata->with(['foobar' => 'FOOBAR', 'bar' => 'BAZ']);
+
+        $this->assertNotSame($metadata, $newMetadata, 'Should be a different instance.');
+
+        $this->assertSame(
+            [
+                'foo' => 'FOO',
+                'bar' => 'BAZ',
+                'foobar' => 'FOOBAR',
+            ],
+            $newMetadata->all()
+        );
+    }
+
+    public function testDoesNotCreateANewInstanceWhenMergingEmptyMetadata(): void
+    {
+        $metadata = new Metadata(['foo' => 'FOO', 'bar' => 'BAR']);
+        $newMetadata = $metadata->with([]);
+
+        $this->assertSame($metadata, $newMetadata, 'Should be the same instance.');
     }
 }

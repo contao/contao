@@ -27,6 +27,7 @@ class Metadata
     public const VALUE_CAPTION = 'caption';
     public const VALUE_TITLE = 'title';
     public const VALUE_URL = 'link';
+    public const VALUE_UUID = 'uuid';
 
     /**
      * Key-value pairs of metadata.
@@ -35,9 +36,27 @@ class Metadata
      */
     private $values;
 
+    /**
+     * @param array<string, mixed> $values
+     */
     public function __construct(array $values)
     {
         $this->values = $values;
+    }
+
+    /**
+     * Returns a new metadata representation that also contains the given
+     * values. Existing keys will be overwritten.
+     *
+     * @param array<string, mixed> $values
+     */
+    public function with(array $values): self
+    {
+        if (empty($values)) {
+            return $this;
+        }
+
+        return new self(array_merge($this->values, $values));
     }
 
     /**
@@ -66,6 +85,14 @@ class Metadata
     public function getUrl(): string
     {
         return $this->values[self::VALUE_URL] ?? '';
+    }
+
+    /**
+     * Returns a UUID reference in ASCII format or null if not set.
+     */
+    public function getUuid(): ?string
+    {
+        return $this->values[self::VALUE_UUID] ?? null;
     }
 
     /**
