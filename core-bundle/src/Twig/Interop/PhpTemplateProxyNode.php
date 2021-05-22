@@ -31,7 +31,8 @@ class PhpTemplateProxyNode extends Node
          *     $this->getTemplateName(),
          *     array_map(
          *         static function(callable $block) use ($context): string {
-         *             ob_start(); $block($context); return ob_get_clean();
+         *             if ($this->env->isDebug()) { ob_start(); } else { ob_start(function () { return ''; }); }
+         *             try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
          *         }, $blocks
          *     ), $context
          * );
@@ -47,7 +48,8 @@ class PhpTemplateProxyNode extends Node
             ->indent()
             ->write('static function(callable $block) use ($context): string {'."\n")
             ->indent()
-            ->write('ob_start(); $block($context); return ob_get_clean();'."\n")
+            ->write('if ($this->env->isDebug()) { ob_start(); } else { ob_start(function () { return \'\'; }); }'."\n")
+            ->write('try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }'."\n")
             ->outdent()
             ->write('}, $blocks'."\n")
             ->outdent()
