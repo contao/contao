@@ -215,7 +215,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         }
 
         preg_match_all(
-            '/\$this->block\s*\(\s*[\'"]([a-zA-Z0-9_-]+)[\'"]\s*\)/i',
+            '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             file_get_contents($source->getPath()),
             $matches
         );
