@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
-use Contao\CoreBundle\Event\DefineMetadataEvent;
+use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -1051,8 +1051,8 @@ class FigureBuilderTest extends TestCase
         $eventDispatcher = new EventDispatcher();
 
         $eventDispatcher->addListener(
-            DefineMetadataEvent::class,
-            function (DefineMetadataEvent $event): void {
+            FileMetadataEvent::class,
+            function (FileMetadataEvent $event): void {
                 $this->assertSame([Metadata::VALUE_TITLE => 'foo'], $event->getMetadata()->all());
 
                 $event->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'bar']));

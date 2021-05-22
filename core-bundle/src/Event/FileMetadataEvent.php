@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Event;
 
 use Contao\CoreBundle\File\Metadata;
 
-class DefineMetadataEvent
+class FileMetadataEvent
 {
     /**
      * @var Metadata|null

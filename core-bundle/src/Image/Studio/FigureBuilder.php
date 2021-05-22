@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\CoreBundle\Event\DefineMetadataEvent;
+use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\FilesModel;
@@ -557,7 +557,7 @@ class FigureBuilder
             $imageResult,
             \Closure::bind(
                 function (Figure $figure): ?Metadata {
-                    $event = new DefineMetadataEvent($this->onDefineMetadata());
+                    $event = new FileMetadataEvent($this->onDefineMetadata());
 
                     $this->eventDispatcher()->dispatch($event);
 
