@@ -1332,11 +1332,10 @@ var Backend =
 	/**
 	 * Retrieve the interactive help
 	 */
-	retrieveInteractiveHelp: function (element) {
-		var buttons = element.getElements('button,a');
-		buttons && buttons.each(function (button) {
-			var title = button.retrieve('tip:title');
-			title && button.set('title', title);
+	retrieveInteractiveHelp: function (elements) {
+		elements && elements.each(function (element) {
+			var title = element.retrieve('tip:title');
+			title && element.set('title', title);
 		});
 	},
 
@@ -1749,7 +1748,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i]);
+									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (textarea = childs[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1778,7 +1777,7 @@ var Backend =
 								childs = tbody.getChildren();
 								for (i=0; i<childs.length; i++) {
 									current = childs[i].getChildren()[index];
-									Backend.retrieveInteractiveHelp(current);
+									Backend.retrieveInteractiveHelp(current.getElements('button,a'));
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1786,7 +1785,7 @@ var Backend =
 									addEventsTo(next);
 								}
 								var headFirst = head.getFirst('td');
-								Backend.retrieveInteractiveHelp(headFirst);
+								Backend.retrieveInteractiveHelp(headFirst.getElements('button,a'));
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
@@ -1984,7 +1983,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i]);
+									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (select = childs[i].getElement('select')) {
 										next.getElement('select').value = select.value;
@@ -2103,7 +2102,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i]);
+									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
@@ -2205,7 +2204,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i]);
+									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst().value = input.value;
@@ -2449,7 +2448,7 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i]);
+									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									selects = childs[i].getElements('select');
 									nselects = next.getElements('select');
