@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -25,6 +26,7 @@ use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -693,6 +695,125 @@ class FigureBuilderTest extends TestCase
 
         // Note: $GLOBALS['objPage'] is not set at this point
         $this->assertSame($emptyMetadata, $figure->getMetadata()->all());
+    }
+
+    /**
+     * @dataProvider provideUuidMetadataAutoFetchCases
+     */
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
+    {
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', $this->createMock(RequestStack::class));
+
+        System::setContainer($container);
+
+        $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];
+
+        /** @var PageModel&MockObject $currentPage */
+        $currentPage = $this->mockClassWithProperties(PageModel::class);
+        $currentPage->language = 'en';
+        $currentPage->rootFallbackLanguage = 'de';
+
+        $GLOBALS['objPage'] = $currentPage;
+
+        [$absoluteFilePath] = $this->getTestFilePaths();
+
+        $filesModelAdapter = $this->mockAdapter(['getMetaFields', 'findByPath']);
+        $filesModelAdapter
+            ->method('getMetaFields')
+            ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
+        ;
+
+        $filesModelAdapter
+            ->method('findByPath')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            FilesModel::class => $filesModelAdapter,
+            Validator::class => new Adapter(Validator::class),
+        ]);
+
+        $studio = $this->getStudioMockForImage($absoluteFilePath);
+
+        $figure = $this->getFigureBuilder($studio, $framework)
+            ->from($resource)
+            ->setMetadata($metadataToSet)
+            ->setLocale($locale)
+            ->build()
+        ;
+
+        $this->assertSame($expectedMetadata, $figure->getMetadata()->all());
+
+        unset($GLOBALS['TL_DCA'], $GLOBALS['objPage']);
+    }
+
+    public function provideUuidMetadataAutoFetchCases(): \Generator
+    {
+        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+
+        $getFilesModel = static function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+            /** @var FilesModel $filesModel */
+            $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
+
+            $filesModel->setRow([
+                'type' => 'file',
+                'path' => $relativeFilePath,
+                'meta' => serialize($metaData),
+                'uuid' => $uuid,
+            ]);
+
+            return $filesModel;
+        };
+
+        yield 'explicitly set metadata without files model' => [
+            $absoluteFilePath,
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar'],
+        ];
+
+        yield 'explicitly set metadata with files model (no uuid)' => [
+            $getFilesModel(['foobar' => 'baz'], null),
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar'],
+        ];
+
+        yield 'explicitly set metadata with files model (ASCII uuid)' => [
+            $getFilesModel(['foobar' => 'baz'], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
+        ];
+
+        yield 'explicitly set metadata with files model (binary uuid)' => [
+            $getFilesModel(['foobar' => 'baz'], StringUtil::uuidToBin('beefaff3-434a-106e-8ff0-f0b59095e5a1')),
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
+        ];
+
+        yield 'metadata from files model in a matching locale' => [
+            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            null,
+            'en',
+            [
+                Metadata::VALUE_TITLE => '',
+                'foo' => 'bar',
+                Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1',
+            ],
+        ];
+
+        yield 'default metadata from meta fields' => [
+            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            null,
+            'es',
+            [
+                Metadata::VALUE_TITLE => '',
+                Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1',
+            ],
+        ];
     }
 
     public function testSetLinkAttribute(): void

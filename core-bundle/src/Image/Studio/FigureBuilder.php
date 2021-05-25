@@ -19,6 +19,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -584,8 +585,21 @@ class FigureBuilder
             return null;
         }
 
+        $getUuid = static function (?FilesModel $filesModel): ?string {
+            if (null === $filesModel || null === $filesModel->uuid) {
+                return null;
+            }
+
+            // Normalize UUID to ASCII format
+            return Validator::isBinaryUuid($filesModel->uuid)
+                ? StringUtil::binToUuid($filesModel->uuid)
+                : $filesModel->uuid;
+        };
+
+        $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
+
         if (null !== $this->metadata) {
-            return $this->metadata;
+            return $this->metadata->with($fileReferenceData);
         }
 
         if (null === $this->filesModel) {
@@ -597,14 +611,19 @@ class FigureBuilder
         $metadata = $this->filesModel->getMetadata(...$locales);
 
         if (null !== $metadata) {
-            return $metadata;
+            return $metadata->with($fileReferenceData);
         }
 
-        // If no metadata can be obtained from the model, we create a
-        // container from the default meta fields with empty values instead
+        // If no metadata can be obtained from the model, we create a container
+        // from the default meta fields with empty values instead
         $metaFields = $this->filesModelAdapter()->getMetaFields();
 
-        return new Metadata(array_combine($metaFields, array_fill(0, \count($metaFields), '')));
+        $data = array_merge(
+            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+            $fileReferenceData
+        );
+
+        return new Metadata($data);
     }
 
     /**
