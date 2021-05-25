@@ -21,13 +21,11 @@ class FileMetadataEventTest extends TestCase
     public function testGetsAndSetsMetadata(): void
     {
         $metadata = new Metadata([Metadata::VALUE_TITLE => 'foo']);
-
         $event = new FileMetadataEvent($metadata);
 
         $this->assertSame($metadata, $event->getMetadata());
 
         $newMetadata = new Metadata([Metadata::VALUE_ALT => 'bar']);
-
         $event->setMetadata($newMetadata);
 
         $this->assertSame($newMetadata, $event->getMetadata());

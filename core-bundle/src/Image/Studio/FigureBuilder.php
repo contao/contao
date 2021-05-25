@@ -23,7 +23,6 @@ use Contao\PageModel;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -559,7 +558,7 @@ class FigureBuilder
                 function (Figure $figure): ?Metadata {
                     $event = new FileMetadataEvent($this->onDefineMetadata());
 
-                    $this->eventDispatcher()->dispatch($event);
+                    $this->locator->get('event_dispatcher')->dispatch($event);
 
                     return $event->getMetadata();
                 },
@@ -709,11 +708,6 @@ class FigureBuilder
         $framework->initialize();
 
         return $framework->getAdapter(Validator::class);
-    }
-
-    private function eventDispatcher(): EventDispatcherInterface
-    {
-        return $this->locator->get('event_dispatcher');
     }
 
     /**
