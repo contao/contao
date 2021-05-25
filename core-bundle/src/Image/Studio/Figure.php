@@ -54,6 +54,11 @@ final class Figure
     private $options;
 
     /**
+     * @var Request|null
+     */
+    private $request;
+
+    /**
      * Creates a figure container.
      *
      * All arguments but the main image result can also be set via a Closure
@@ -64,14 +69,16 @@ final class Figure
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
+     * @param Request|null                                                                $request        Current request
      */
-    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
+    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null, Request $request = null)
     {
         $this->image = $image;
         $this->metadata = $metadata;
         $this->linkAttributes = $linkAttributes;
         $this->lightbox = $lightbox;
         $this->options = $options;
+        $this->request = $request;
     }
 
     /**
@@ -125,13 +132,18 @@ final class Figure
         return $this->metadata;
     }
 
-    public function getJsonLd(Request $request = null): array
+    public function getJsonLd(): array
     {
-        $schemaBase = $request ? $request->getSchemeAndHttpHost() : '';
+        $imageIdentifier = $this->getImage()->getImageSrc();
+
+        if ($this->hasMetadata() && $this->getMetadata()->has(Metadata::VALUE_UUID)) {
+            $schemaBase = $this->request ? $this->request->getSchemeAndHttpHost() : '';
+            $imageIdentifier = $schemaBase.'#/schema/image/'.$this->getMetadata()->getUuid();
+        }
 
         $jsonLd = [
             '@type' => 'ImageObject',
-            'identifier' => $schemaBase.'#/schema/image/'.$this->getImage()->getImageSrc(), // TODO: replace with UUID once this is available
+            'identifier' => $imageIdentifier,
             'contentUrl' => $this->getImage()->getImageSrc(),
         ];
 

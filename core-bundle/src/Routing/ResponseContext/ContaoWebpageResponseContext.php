@@ -36,8 +36,9 @@ class ContaoWebpageResponseContext extends WebpageResponseContext
         $this
             ->setTitle($pageModel->pageTitle ?: $pageModel->title ?: '')
             ->setMetaDescription(str_replace(["\n", "\r", '"'], [' ', '', ''], $pageModel->description ?: ''))
-            ->setIsSearchable(!(bool) $pageModel->noSearch)
         ;
+
+        $pageModel->noSearch ? $this->disableSearch() : $this->enableSearch();
 
         if ($pageModel->robots) {
             $this->setMetaRobots($pageModel->robots);

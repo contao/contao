@@ -397,11 +397,6 @@ abstract class Template extends Controller
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
 	}
 
-	public function request(): ?Request
-	{
-		return System::getContainer()->get('request_stack')->getCurrentRequest();
-	}
-
 	/**
 	 * Decodes a value for raw usage (DO NOT USE THIS IN HTML OUTPUT IF THE SOURCE IS UNKNOWN)
 	 */

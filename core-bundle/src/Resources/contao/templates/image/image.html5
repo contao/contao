@@ -17,4 +17,4 @@
 
 <?php
 
-$this->jsonLd($this->figure->getJsonLd($this->request()));
+$this->jsonLd($this->figure->getJsonLd());

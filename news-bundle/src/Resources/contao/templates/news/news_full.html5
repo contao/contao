@@ -60,9 +60,7 @@ if ($this->hasText()) {
 }
 
 if ($this->addImage) {
-    $jsonLd['image'] = [
-        '@id' => $this->figure->getJsonLd($this->request())['identifier'],
-    ];
+    $jsonLd['image'] = $this->figure->getJsonLd();
 }
 
 if ($this->authorModel) {
