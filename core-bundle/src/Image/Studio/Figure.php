@@ -137,9 +137,10 @@ final class Figure
         $imageIdentifier = $this->getImage()->getImageSrc();
 
         if ($this->hasMetadata() && $this->getMetadata()->has(Metadata::VALUE_UUID)) {
-            $schemaBase = $this->request ? $this->request->getSchemeAndHttpHost() : '';
-            $imageIdentifier = $schemaBase.'#/schema/image/'.$this->getMetadata()->getUuid();
+            $imageIdentifier = '#/schema/image/'.$this->getMetadata()->getUuid();
         }
+
+        $imageIdentifier = $this->request ? $this->request->getSchemeAndHttpHost() : '' . $imageIdentifier;
 
         $jsonLd = [
             '@type' => 'ImageObject',
