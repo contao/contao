@@ -84,7 +84,7 @@ class Studio implements ServiceSubscriberInterface
             'contao.image.resizer' => ResizerInterface::class,
             'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
-            'request_stack' => 'request_stack'
+            'request_stack' => 'request_stack',
         ];
     }
 }
