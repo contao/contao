@@ -776,8 +776,8 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($v['label']))
 				{
-					$label = $v['label'][0];
-					$title = sprintf($v['label'][1], $id);
+					$label = $v['label'][0] ?? null;
+					$title = sprintf($v['label'][1] ?? '', $id);
 				}
 				else
 				{
@@ -892,7 +892,7 @@ abstract class DataContainer extends Backend
 
 			$v = \is_array($v) ? $v : array($v);
 			$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-			$title = \is_array($v['label']) ? $v['label'][1] : $v['label'];
+			$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
