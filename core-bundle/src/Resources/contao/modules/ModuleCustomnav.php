@@ -116,6 +116,9 @@ class ModuleCustomnav extends Module
 		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)
 		{
+			// Inherit settings from the parent pages
+			$objModel->loadDetails();
+
 			$_groups = StringUtil::deserialize($objModel->groups);
 
 			// Do not show protected pages unless a front end user is logged in
