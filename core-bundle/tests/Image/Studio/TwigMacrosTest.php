@@ -77,10 +77,7 @@ class TwigMacrosTest extends TestCase
             $figureOptions
         );
 
-        $html = $this->renderMacro(
-            "caption(figure, $templateOptions)",
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro("caption(figure, $templateOptions)", ['figure' => $figure]);
 
         $this->assertSame($expected, trim($html));
     }
@@ -95,9 +92,7 @@ class TwigMacrosTest extends TestCase
 
         yield 'figure options' => [
             '{}',
-            [
-                'caption_attr' => ['data-foo' => 'bar', 'data-foobar' => 'baz'],
-            ],
+            ['caption_attr' => ['data-foo' => 'bar', 'data-foobar' => 'baz']],
             '<figcaption itemprop="caption" data-foo="bar" data-foobar="baz">my <b>caption</b></figcaption>',
         ];
 
@@ -126,15 +121,7 @@ class TwigMacrosTest extends TestCase
             ->willReturn($imageData)
         ;
 
-        $figure = new Figure(
-            $image,
-            $metadata,
-        );
-
-        $html = $this->renderMacro(
-            'img(figure)',
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro('img(figure)', ['figure' => new Figure($image, $metadata)]);
 
         $this->assertSame($expected, trim($html));
     }
@@ -142,25 +129,19 @@ class TwigMacrosTest extends TestCase
     public function provideImgData(): \Generator
     {
         yield 'minimal' => [
-            [
-                'src' => 'foo.png',
-            ],
+            ['src' => 'foo.png'],
             null,
             '<img src="foo.png" alt itemprop="image">',
         ];
 
         yield 'minimal with empty metadata' => [
-            [
-                'src' => 'foo.png',
-            ],
+            ['src' => 'foo.png'],
             new Metadata([]),
             '<img src="foo.png" alt itemprop="image">',
         ];
 
         yield 'with metadata' => [
-            [
-                'src' => 'foo.png',
-            ],
+            ['src' => 'foo.png'],
             new Metadata([
                 Metadata::VALUE_ALT => 'my alt',
                 Metadata::VALUE_TITLE => 'my title',
@@ -222,18 +203,13 @@ class TwigMacrosTest extends TestCase
 
         $figure = new Figure(
             $image,
-            new Metadata([
-                Metadata::VALUE_ALT => 'my alt',
-            ]),
+            new Metadata([Metadata::VALUE_ALT => 'my alt']),
             null,
             null,
             $figureOptions
         );
 
-        $html = $this->renderMacro(
-            "img(figure, $templateOptions)",
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro("img(figure, $templateOptions)", ['figure' => $figure]);
 
         $this->assertSame($expected, trim($html));
     }
@@ -277,12 +253,7 @@ class TwigMacrosTest extends TestCase
             ->willReturn($sources)
         ;
 
-        $figure = new Figure($image);
-
-        $html = $this->renderMacro(
-            'picture(figure)',
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro('picture(figure)', ['figure' => new Figure($image)]);
 
         // Do not care about the img tag internals
         $html = preg_replace('#<img.*>#', '<img>', $html);
@@ -362,10 +333,7 @@ class TwigMacrosTest extends TestCase
             $figureOptions
         );
 
-        $html = $this->renderMacro(
-            "picture(figure, $templateOptions)",
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro("picture(figure, $templateOptions)", ['figure' => $figure]);
 
         // Do not care about the img tag internals
         $html = preg_replace('#<img.*>#', '<img>', $html);
@@ -421,10 +389,7 @@ class TwigMacrosTest extends TestCase
             $lightbox
         );
 
-        $html = $this->renderMacro(
-            'figure(figure)',
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
 
         // Do not care about the img/picture or figcaption tag internals
         $html = preg_replace('#<img.*>#', '<picture>', $html);
@@ -475,18 +440,14 @@ class TwigMacrosTest extends TestCase
         ];
 
         yield 'with lightbox link and title' => [
-            new Metadata([
-                Metadata::VALUE_TITLE => 'foo title',
-            ]),
+            new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
             $lightbox,
             '<figure itemscope itemtype="http://schema.org/ImageObject"><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with caption' => [
-            new Metadata([
-                Metadata::VALUE_CAPTION => 'foo caption',
-            ]),
+            new Metadata([Metadata::VALUE_CAPTION => 'foo caption']),
             [],
             null,
             '<figure itemscope itemtype="http://schema.org/ImageObject"><picture><figcaption></figure>',
@@ -512,9 +473,7 @@ class TwigMacrosTest extends TestCase
 
         $figure = new Figure(
             $this->createMock(ImageResult::class),
-            new Metadata([
-                Metadata::VALUE_TITLE => 'foo title',
-            ]),
+            new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [
                 'href' => 'foo.html',
                 'data-link' => 'bar',
@@ -523,10 +482,7 @@ class TwigMacrosTest extends TestCase
             $figureOptions
         );
 
-        $html = $this->renderMacro(
-            "figure(figure, $templateOptions)",
-            ['figure' => $figure]
-        );
+        $html = $this->renderMacro("figure(figure, $templateOptions)", ['figure' => $figure]);
 
         // Do not care about the img/picture or figcaption tag internals
         $html = preg_replace('#<img.*>#', '<picture>', $html);
