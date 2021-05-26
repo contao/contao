@@ -451,6 +451,8 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'mysqli',
+                            'host' => 'localhost',
+                            'user' => 'root',
                         ],
                     ],
                 ],
