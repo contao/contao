@@ -60,30 +60,6 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Return the back end themes as array
-	 *
-	 * @return array An array of available back end themes
-	 */
-	public static function getThemes()
-	{
-		$arrReturn = array();
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrThemes = Folder::scan($projectDir . '/system/themes');
-
-		foreach ($arrThemes as $strTheme)
-		{
-			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($projectDir . '/system/themes/' . $strTheme))
-			{
-				continue;
-			}
-
-			$arrReturn[$strTheme] = $strTheme;
-		}
-
-		return $arrReturn;
-	}
-
-	/**
 	 * Return the TinyMCE language
 	 *
 	 * @return string

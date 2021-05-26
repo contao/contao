@@ -168,6 +168,14 @@ class BackendMain extends Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
+		/** @var \Twig\Environment $twig */
+		$twig = System::getContainer()->get('twig');
+
+		$this->Template->main = $twig->render(
+			'@ContaoCore/Backend/Layout/_container.html.twig',
+			['content' => $this->Template->main]
+		);
+
 		return $this->output();
 	}
 
@@ -253,7 +261,12 @@ class BackendMain extends Backend
 		$this->Template->menu = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
 		$this->Template->headerMenu = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
 
-		return $this->Template->getResponse();
+		$this->Template->localeString = $this->Template->getLocaleString();
+		$this->Template->dateString = $this->Template->getDateString();
+
+		return $this->Template->getResponse()->setContent(
+			$twig->render('@ContaoCore/Backend/Layout/main.html.twig', $this->Template->getData())
+		);
 	}
 }
 

@@ -1,0 +1,12 @@
+{
+  "entrypoints": {
+    "app": {
+      "css": [
+        "/bundles/contaocore/theme/app.css"
+      ],
+      "js": [
+        "/bundles/contaocore/theme/app.js"
+      ]
+    }
+  }
+}

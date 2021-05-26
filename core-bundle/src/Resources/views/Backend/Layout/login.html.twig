@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    {% block head %}
+        <meta charset="{{ charset }}">
+        <title>Contao | {{ host }}</title>
+        <base href="{{ base }}">
+
+        {% block meta %}
+            <meta name="generator" content="Contao Open Source CMS">
+            <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+            <meta name="referrer" content="origin">
+            <meta name="robots" content="noindex,follow">
+        {% endblock %}
+
+        {% block stylesheets %}
+            {{ contao_backend_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ contao_backend_script_tags('app') }}
+        {% endblock %}
+    {% endblock %}
+</head>
+<body>
+
+<div class="min-h-screen flex flex-col">
+    <div class="flex-1 flex items-center justify-center bg-gray-50 pb-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-sm w-full">
+            <div class="mb-10">
+                <img class="h-20 w-auto mx-auto" src="{{ asset('theme/images/contao-logo.svg', 'contao_core') }}" alt="">
+            </div>
+
+            {% if messages %}
+                <div class="rounded-md bg-red-100 p-4 mb-6 mt-6 shadow-sm">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <span class="block h-5 w-5 text-red-400" aria-hidden="true">
+                                {{ source('@ContaoCore/Backend/Icon/x-circle.solid.svg') }}
+                            </span>
+                        </div>
+                        <div class="ml-2 text-sm leading-5 text-red-700">
+                            {{ messages|raw }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% block form %}
+                <form method="POST">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_login">
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ REQUEST_TOKEN }}">
+                    <input type="hidden" name="_target_path" value="{{ targetPath }}">
+                    <input type="hidden" name="_always_use_target_path" value="1">
+
+                    <div class="rounded-md shadow-sm">
+                        <div>
+                            <input
+                                type="text"
+                                aria-label="{{ username }}"
+                                name="username"
+                                id="username"
+                                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5"
+                                value="{{ curUsername }}"
+                                autocapitalize="off"
+                                x-data="{}"
+                                x-init="$el.focus()"
+                                placeholder="{{ username }}"
+                                required>
+                        </div>
+                        <div class="-mt-px">
+                            <input
+                                type="password"
+                                aria-label="{{ password }}"
+                                name="password"
+                                id="password"
+                                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 sm:text-sm sm:leading-5"
+                                value=""
+                                placeholder="{{ password }}"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button
+                            type="submit"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-primary-600 hover:bg-primary focus:outline-none focus:border-primary-700 focus:shadow-outline-brand active:bg-primary-700 transition duration-150 ease-in-out">
+                              <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                                   <span class="block h-5 w-5 text-primary group-hover:text-primary-400 transition ease-in-out duration-150" aria-hidden="true">
+                                       {{ source('@ContaoCore/Backend/Icon/lock-closed.solid.svg') }}
+                                   </span>
+                              </span>
+                            {{ loginButton }}
+                        </button>
+                    </div>
+                </form>
+            {% endblock %}
+
+            <div class="mt-2 text-center">
+                <a href="{{ path('contao_root') }}" class="text-gray-600 hover:underline text-sm">{{ feLink }} ›</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -120,8 +120,16 @@ class BackendIndex extends Backend
 		$objTemplate->default = $GLOBALS['TL_LANG']['MSC']['default'];
 		$objTemplate->jsDisabled = $GLOBALS['TL_LANG']['MSC']['jsDisabled'];
 		$objTemplate->targetPath = StringUtil::specialchars(base64_encode($targetPath));
+		$objTemplate->REQUEST_TOKEN = REQUEST_TOKEN;
 
-		return $objTemplate->getResponse();
+		$twig = $container->get('twig');
+
+		return $objTemplate->getResponse()->setContent(
+			$twig->render(
+				sprintf('@ContaoCore/Backend/Layout/%s.html.twig', ltrim($objTemplate->getName(), 'be_')),
+				$objTemplate->getData()
+			)
+		);
 	}
 }
 

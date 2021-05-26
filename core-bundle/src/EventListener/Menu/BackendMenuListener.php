@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Menu;
 
-use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -73,8 +71,8 @@ class BackendMenuListener
 
         if ('mainMenu' === $name) {
             $this->buildMainMenu($event, $user);
-        } elseif ('headerMenu' === $name) {
-            $this->buildHeaderMenu($event, $user);
+        } elseif ('userMenu' === $name) {
+            $this->buildUserMenu($event, $user);
         }
     }
 
@@ -124,93 +122,34 @@ class BackendMenuListener
         }
     }
 
-    private function buildHeaderMenu(MenuEvent $event, BackendUser $user): void
+    private function buildUserMenu(MenuEvent $event, BackendUser $user): void
     {
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $ref = $this->getRefererId();
-        $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
-
-        $alerts = $event->getFactory()
-            ->createItem('alerts')
-            ->setLabel($this->getAlertsLabel($systemMessages))
-            ->setUri($this->router->generate('contao_backend_alerts'))
-            ->setLinkAttribute('class', 'icon-alert')
-            ->setLinkAttribute('title', $systemMessages)
-            ->setLinkAttribute('onclick', "Backend.openModalIframe({'title':'".StringUtil::specialchars(str_replace("'", "\\'", $systemMessages))."','url':this.href});return false")
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($alerts);
-
-        $submenu = $factory
-            ->createItem('submenu')
-            ->setLabel($this->trans('MSC.user').' '.$user->username)
-            ->setAttribute('class', 'submenu')
-            ->setLabelAttribute('class', 'h2')
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($submenu);
-
-        $info = $factory
-            ->createItem('info')
-            ->setLabel(sprintf('<strong>%s</strong> %s', $user->name, $user->email))
-            ->setAttribute('class', 'info')
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $submenu->addChild($info);
 
         $login = $factory
             ->createItem('login')
-            ->setLabel('MSC.profile')
+            ->setLabel($this->trans('MSC.profile'))
             ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'ref' => $ref]))
-            ->setLinkAttribute('class', 'icon-profile')
             ->setExtra('translation_domain', 'contao_default')
         ;
 
-        $submenu->addChild($login);
+        $tree->addChild($login);
 
         $security = $factory
             ->createItem('security')
-            ->setLabel('MSC.security')
+            ->setLabel($this->trans('MSC.security'))
             ->setUri($this->router->generate('contao_backend', ['do' => 'security', 'ref' => $ref]))
-            ->setLinkAttribute('class', 'icon-security')
             ->setExtra('translation_domain', 'contao_default')
         ;
 
-        $submenu->addChild($security);
-
-        $buger = $factory
-            ->createItem('burger')
-            ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
-            ->setAttribute('class', 'burger')
-            ->setExtra('safe_label', true)
-            ->setExtra('translation_domain', false)
-        ;
-
-        $tree->addChild($buger);
+        $tree->addChild($security);
     }
 
     private function trans(string $id): string
     {
         return $this->translator->trans($id, [], 'contao_default');
-    }
-
-    private function getAlertsLabel(string $systemMessages): string
-    {
-        /** @var Backend $adapter */
-        $adapter = $this->framework->getAdapter(Backend::class);
-        $count = substr_count($adapter->getSystemMessages(), 'class="tl_error');
-
-        if ($count > 0) {
-            $systemMessages .= ' <sup>'.$count.'</sup>';
-        }
-
-        return $systemMessages;
     }
 
     private function getRefererId(): string

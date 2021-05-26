@@ -32,12 +32,6 @@
       <trans-unit id="tl_user.backendTheme.1">
         <source>Here you can override the global back end theme.</source>
       </trans-unit>
-      <trans-unit id="tl_user.fullscreen.0">
-        <source>Fullscreen</source>
-      </trans-unit>
-      <trans-unit id="tl_user.fullscreen.1">
-        <source>Do not limit the width of the back end.</source>
-      </trans-unit>
       <trans-unit id="tl_user.uploader.0">
         <source>File uploader</source>
       </trans-unit>

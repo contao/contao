@@ -36,6 +36,11 @@ services:
             - '@?event_dispatcher'
         public: true
 
+    Contao\CoreBundle\EventListener\DataContainer\BackendThemesOptionsListener:
+        arguments:
+            - '@Contao\CoreBundle\BackendTheme\BackendThemes'
+            - '%contao.backend%'
+
     Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
         arguments:
             - '@contao.framework'

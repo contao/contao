@@ -83,10 +83,9 @@ class BackendPreviewListener
 
         $preview = $event->getFactory()
             ->createItem('preview')
-            ->setLabel('MSC.fePreview')
+            ->setLabel($this->trans('MSC.fePreview'))
             ->setUri($this->getPreviewUrl())
-            ->setLinkAttribute('class', 'icon-preview')
-            ->setLinkAttribute('title', $this->translator->trans('MSC.fePreviewTitle', [], 'contao_default'))
+            ->setLinkAttribute('title', $this->trans('MSC.fePreviewTitle'))
             ->setLinkAttribute('target', '_blank')
             ->setLinkAttribute('accesskey', 'f')
             ->setExtra('translation_domain', 'contao_default')
@@ -109,6 +108,11 @@ class BackendPreviewListener
         }
 
         $tree->setChildren($children);
+    }
+
+    private function trans(string $id): string
+    {
+        return $this->translator->trans($id, [], 'contao_default');
     }
 
     private function getPreviewUrl(): string

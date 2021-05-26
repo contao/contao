@@ -474,6 +474,26 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->scalarPrototype()->end()
                 ->end()
+                ->scalarNode('theme')
+                    ->info('Set a backend theme for all users.')
+                    ->defaultNull()
+                ->end()
+                ->scalarNode('theme_path')
+                    ->info('Point to Encore\'s entrypoints.json of your custom backend theme.')
+                    ->validate()
+                    ->always(
+                        static function ($value) {
+                            if (!file_exists($value)) {
+                                throw new \InvalidArgumentException(sprintf('The file "%s" does not exist.', $value));
+                            }
+
+                            return $value;
+                        }
+                    )
+                    ->end()
+                    ->example('%kernel.project_dir%/web/layout/backend/entrypoints.json')
+                    ->defaultNull()
+                ->end()
                 ->arrayNode('custom_css')
                     ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])

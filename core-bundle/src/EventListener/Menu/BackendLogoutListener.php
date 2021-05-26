@@ -61,7 +61,7 @@ class BackendLogoutListener
 
         $tree = $event->getTree();
 
-        if ('headerMenu' !== $tree->getName() || !$submenu = $tree->getChild('submenu')) {
+        if ('userMenu' !== $tree->getName()) {
             return;
         }
 
@@ -70,12 +70,11 @@ class BackendLogoutListener
             ->createItem('logout')
             ->setLabel($this->getLogoutLabel())
             ->setUri($this->getLogoutUrl())
-            ->setLinkAttribute('class', 'icon-logout')
             ->setLinkAttribute('accesskey', 'q')
             ->setExtra('translation_domain', false)
         ;
 
-        $submenu->addChild($logout);
+        $tree->addChild($logout);
     }
 
     private function getLogoutLabel(): string

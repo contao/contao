@@ -100,6 +100,7 @@
         "symfony/translation": "4.4.* || 5.2.*",
         "symfony/twig-bundle": "4.4.* || 5.2.*",
         "symfony/var-dumper": "4.4.* || 5.2.*",
+        "symfony/webpack-encore-bundle": "^1.10",
         "symfony/yaml": "4.4.* || 5.2.*",
         "terminal42/escargot": "^1.0",
         "terminal42/service-annotation-bundle": "^1.1",
