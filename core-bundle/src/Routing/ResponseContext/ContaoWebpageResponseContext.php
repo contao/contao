@@ -25,11 +25,11 @@ class ContaoWebpageResponseContext implements ResponseContextInterface, HtmlHead
     private $inner;
 
     /**
-     * @var ResponseContextInterface&HtmlHeadManagerProvidingInterface
+     * @param ResponseContextInterface&HtmlHeadManagerProvidingInterface $inner
      */
     public function __construct($inner, PageModel $pageModel)
     {
-        // So much looking forward to union types!
+        // So much looking forward to intersection types!
         if (!$inner instanceof ResponseContextInterface || !$inner instanceof HtmlHeadManagerProvidingInterface) {
             throw new \InvalidArgumentException('First argument must implement correct interfaces.!');
         }
