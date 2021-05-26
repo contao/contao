@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 1,
+			'mode'                    => DataContainer::MODE_FIXED_FIELD,
 			'fields'                  => array('title'),
 			'flag'                    => 1,
 			'panelLayout'             => 'search,limit'

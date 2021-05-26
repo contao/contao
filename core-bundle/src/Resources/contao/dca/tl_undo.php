@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SWITCHABLE_FIELD,
 			'fields'                  => array('tstamp'),
 			'panelLayout'             => 'sort,search,limit'
 		),
@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'tstamp' => array
 		(
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'fromTable' => array

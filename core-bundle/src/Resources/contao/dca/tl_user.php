@@ -58,9 +58,9 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SWITCHABLE_FIELD,
 			'fields'                  => array('dateAdded'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'unique'=>true, 'maxlength'=>64, 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
 			'sql'                     => "varchar(64) BINARY NULL"
@@ -157,7 +157,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -395,7 +395,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'exclude'                 => true,
 			'filter'                  => true,
-			'flag'                    => 2,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,
 			'inputType'               => 'checkbox',
 			'save_callback' => array
 			(
@@ -429,7 +429,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
 			'default'                 => time(),
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
@@ -452,7 +452,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['lastLogin'],
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),

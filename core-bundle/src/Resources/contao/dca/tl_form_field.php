@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_CHILD_RECORD,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;search,limit',
 			'headerFields'            => array('title', 'tstamp', 'formID', 'storeValues', 'sendViaEmail', 'recipient', 'subject'),

@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 1,
+			'mode'                    => DataContainer::MODE_FIXED_FIELD,
 			'fields'                  => array('title'),
 			'flag'                    => 1,
 			'panelLayout'             => 'filter;search,limit'

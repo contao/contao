@@ -47,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_CHILD_RECORD,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'limit',
 			'headerFields'            => array('name', 'tstamp', 'width', 'height', 'resizeMode', 'zoom'),

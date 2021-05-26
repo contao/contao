@@ -57,9 +57,9 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SWITCHABLE_FIELD,
 			'fields'                  => array('name'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'sort,search,limit'
 		),
 		'label' => array
@@ -163,7 +163,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
@@ -173,7 +173,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"

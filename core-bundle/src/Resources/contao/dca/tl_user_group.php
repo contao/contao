@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 1,
+			'mode'                    => DataContainer::MODE_FIXED_FIELD,
 			'fields'                  => array('name'),
 			'flag'                    => 1,
 			'panelLayout'             => 'filter;search,limit',
