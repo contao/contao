@@ -12,19 +12,58 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManager\HtmlHeadManager;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
-class ContaoWebpageResponseContext extends WebpageResponseContext
+class ContaoWebpageResponseContext implements ResponseContextInterface, HtmlHeadManagerProvidingInterface
 {
-    public function __construct(PageModel $pageModel)
+    /**
+     * @var ResponseContextInterface&HtmlHeadManagerProvidingInterface
+     */
+    private $inner;
+
+    /**
+     * @var ResponseContextInterface&HtmlHeadManagerProvidingInterface
+     */
+    public function __construct($inner, PageModel $pageModel)
     {
+        // So much looking forward to union types!
+        if (!$inner instanceof ResponseContextInterface || !$inner instanceof HtmlHeadManagerProvidingInterface) {
+            throw new \InvalidArgumentException('First argument must implement correct interfaces.!');
+        }
+
+        $this->inner = $inner;
+
         $this
+            ->getHtmlHeadManager()
             ->setTitle($pageModel->pageTitle ?: $pageModel->title ?: '')
             ->setMetaDescription(str_replace(["\n", "\r", '"'], [' ', '', ''], $pageModel->description ?: ''))
         ;
 
         if ($pageModel->robots) {
-            $this->setMetaRobots($pageModel->robots);
+            $this
+                ->getHtmlHeadManager()
+                ->setMetaRobots($pageModel->robots)
+            ;
         }
+    }
+
+    public function getHtmlHeadManager(): HtmlHeadManager
+    {
+        return $this->inner->getHtmlHeadManager();
+    }
+
+    public function getHeaderBag(): ResponseHeaderBag
+    {
+        return $this->inner->getHeaderBag();
+    }
+
+    public function finalize(Response $response): ResponseContextInterface
+    {
+        $this->inner->finalize($response);
+
+        return $this;
     }
 }

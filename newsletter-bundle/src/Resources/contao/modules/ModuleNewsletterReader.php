@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManagerProvidingInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
@@ -111,9 +111,9 @@ class ModuleNewsletterReader extends Module
 		{
 			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($responseContext instanceof WebpageResponseContext)
+			if ($responseContext instanceof HtmlHeadManagerProvidingInterface)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objNewsletter->subject)));
+				$responseContext->getHtmlHeadManager()->setTitle(strip_tags(StringUtil::stripInsertTags($objNewsletter->subject)));
 			}
 		}
 

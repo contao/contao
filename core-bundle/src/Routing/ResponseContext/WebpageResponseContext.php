@@ -12,54 +12,41 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-class WebpageResponseContext extends ResponseContext
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManager\HtmlHeadManager;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+
+class WebpageResponseContext implements ResponseContextInterface, HtmlHeadManagerProvidingInterface
 {
     /**
-     * @var string
+     * @var ResponseContextInterface
      */
-    private $title = '';
+    private $inner;
 
     /**
-     * @var string
+     * @var HtmlHeadManager
      */
-    private $metaDescription = '';
-    /**
-     * @var string
-     */
-    private $metaRobots = 'index,follow';
+    private $htmlHeadManager;
 
-    public function getTitle(): string
+    public function __construct(ResponseContextInterface $inner, HtmlHeadManager $htmlHeadManager)
     {
-        return $this->title;
+        $this->inner = $inner;
+        $this->htmlHeadManager = $htmlHeadManager;
     }
 
-    public function setTitle(string $title): self
+    public function getHtmlHeadManager(): HtmlHeadManager
     {
-        $this->title = $title;
-
-        return $this;
+        return $this->htmlHeadManager;
     }
 
-    public function getMetaDescription(): string
+    public function getHeaderBag(): ResponseHeaderBag
     {
-        return $this->metaDescription;
+        return $this->inner->getHeaderBag();
     }
 
-    public function setMetaDescription(string $metaDescription): self
+    public function finalize(Response $response): ResponseContextInterface
     {
-        $this->metaDescription = $metaDescription;
-
-        return $this;
-    }
-
-    public function getMetaRobots(): string
-    {
-        return $this->metaRobots;
-    }
-
-    public function setMetaRobots(string $metaRobots): self
-    {
-        $this->metaRobots = $metaRobots;
+        $this->inner->finalize($response);
 
         return $this;
     }

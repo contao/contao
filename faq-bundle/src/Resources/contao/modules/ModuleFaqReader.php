@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManagerProvidingInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -113,29 +113,29 @@ class ModuleFaqReader extends Module
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
+		if ($responseContext instanceof HtmlHeadManagerProvidingInterface)
 		{
 			if ($objFaq->pageTitle)
 			{
-				$responseContext->setTitle($objFaq->pageTitle);
+				$responseContext->getHtmlHeadManager()->setTitle($objFaq->pageTitle);
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objFaq->question)));
+				$responseContext->getHtmlHeadManager()->setTitle(strip_tags(StringUtil::stripInsertTags($objFaq->question)));
 			}
 
 			if ($objFaq->description)
 			{
-				$responseContext->setMetaDescription($objFaq->description);
+				$responseContext->getHtmlHeadManager()->setMetaDescription($objFaq->description);
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setMetaDescription($this->prepareMetaDescription($objFaq->question));
+				$responseContext->getHtmlHeadManager()->setMetaDescription($this->prepareMetaDescription($objFaq->question));
 			}
 
 			if ($objFaq->robots)
 			{
-				$responseContext->setMetaRobots($objFaq->robots);
+				$responseContext->getHtmlHeadManager()->setMetaRobots($objFaq->robots);
 			}
 		}
 

@@ -10,8 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManagerProvidingInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 
 /**
  * Provides methodes to handle articles.
@@ -169,13 +169,13 @@ class ModuleArticle extends Module
 		{
 			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($responseContext instanceof WebpageResponseContext)
+			if ($responseContext instanceof HtmlHeadManagerProvidingInterface)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
+				$responseContext->getHtmlHeadManager()->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
 
 				if ($this->teaser)
 				{
-					$responseContext->setMetaDescription($this->prepareMetaDescription($this->teaser));
+					$responseContext->getHtmlHeadManager()->setMetaDescription($this->prepareMetaDescription($this->teaser));
 				}
 			}
 		}

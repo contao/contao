@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\ContaoWebpageResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManager\HtmlHeadManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextInterface;
+use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 
@@ -26,10 +29,11 @@ class ContaoWebpageResponseContextTest extends ContaoTestCase
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
 
-        $context = new ContaoWebpageResponseContext($pageModel);
+        $inner = new WebpageResponseContext($this->createMock(ResponseContextInterface::class), new HtmlHeadManager());
+        $context = new ContaoWebpageResponseContext($inner, $pageModel);
 
-        $this->assertSame('My title', $context->getTitle());
-        $this->assertSame('My description', $context->getMetaDescription());
-        $this->assertSame('noindex,nofollow', $context->getMetaRobots());
+        $this->assertSame('My title', $context->getHtmlHeadManager()->getTitle());
+        $this->assertSame('My description', $context->getHtmlHeadManager()->getMetaDescription());
+        $this->assertSame('noindex,nofollow', $context->getHtmlHeadManager()->getMetaRobots());
     }
 }

@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManagerProvidingInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -734,16 +734,16 @@ class InsertTags extends Controller
 
 					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-					if ($responseContext instanceof WebpageResponseContext && \in_array($elements[1], array('pageTitle', 'description'), true))
+					if ($responseContext instanceof HtmlHeadManagerProvidingInterface && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
 						switch ($elements[1])
 						{
 							case 'pageTitle':
-								$arrCache[$strTag] = $responseContext->getTitle();
+								$arrCache[$strTag] = $responseContext->getHtmlHeadManager()->getTitle();
 								break;
 
 							case 'description':
-								$arrCache[$strTag] = $responseContext->getMetaDescription();
+								$arrCache[$strTag] = $responseContext->getHtmlHeadManager()->getMetaDescription();
 								break;
 						}
 					}

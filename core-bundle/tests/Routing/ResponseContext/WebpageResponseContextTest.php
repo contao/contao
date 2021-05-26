@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManager\HtmlHeadManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use PHPUnit\Framework\TestCase;
 
@@ -19,16 +21,8 @@ class WebpageResponseContextTest extends TestCase
 {
     public function testResponseContext(): void
     {
-        $context = new WebpageResponseContext();
-        $context->setTitle('foobar title');
-        $context->setMetaDescription('foobar description');
+        $context = new WebpageResponseContext($this->createMock(ResponseContext::class), new HtmlHeadManager());
 
-        $this->assertSame('index,follow', $context->getMetaRobots()); // Test default
-
-        $context->setMetaRobots('noindex,nofollow');
-
-        $this->assertSame('foobar title', $context->getTitle());
-        $this->assertSame('foobar description', $context->getMetaDescription());
-        $this->assertSame('noindex,nofollow', $context->getMetaRobots());
+        $this->assertInstanceOf(HtmlHeadManager::class, $context->getHtmlHeadManager());
     }
 }

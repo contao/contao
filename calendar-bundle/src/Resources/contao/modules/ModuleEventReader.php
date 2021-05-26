@@ -14,8 +14,8 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManagerProvidingInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -132,29 +132,29 @@ class ModuleEventReader extends Events
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
+		if ($responseContext instanceof HtmlHeadManagerProvidingInterface)
 		{
 			if ($objEvent->pageTitle)
 			{
-				$responseContext->setTitle($objEvent->pageTitle);
+				$responseContext->getHtmlHeadManager()->setTitle($objEvent->pageTitle);
 			}
 			elseif ($objEvent->title)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objEvent->title)));
+				$responseContext->getHtmlHeadManager()->setTitle(strip_tags(StringUtil::stripInsertTags($objEvent->title)));
 			}
 
 			if ($objEvent->description)
 			{
-				$responseContext->setMetaDescription($objEvent->description);
+				$responseContext->getHtmlHeadManager()->setMetaDescription($objEvent->description);
 			}
 			elseif ($objEvent->teaser)
 			{
-				$responseContext->setMetaDescription($this->prepareMetaDescription($objEvent->teaser));
+				$responseContext->getHtmlHeadManager()->setMetaDescription($this->prepareMetaDescription($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)
 			{
-				$responseContext->setMetaRobots($objEvent->robots);
+				$responseContext->getHtmlHeadManager()->setMetaRobots($objEvent->robots);
 			}
 		}
 

@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadManagerProvidingInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -139,29 +139,29 @@ class ModuleNewsReader extends ModuleNews
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
+		if ($responseContext instanceof HtmlHeadManagerProvidingInterface)
 		{
 			if ($objArticle->pageTitle)
 			{
-				$responseContext->setTitle($objArticle->pageTitle);
+				$responseContext->getHtmlHeadManager()->setTitle($objArticle->pageTitle);
 			}
 			elseif ($objArticle->headline)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objArticle->headline)));
+				$responseContext->getHtmlHeadManager()->setTitle(strip_tags(StringUtil::stripInsertTags($objArticle->headline)));
 			}
 
 			if ($objArticle->description)
 			{
-				$responseContext->setMetaDescription($objArticle->description);
+				$responseContext->getHtmlHeadManager()->setMetaDescription($objArticle->description);
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setMetaDescription($this->prepareMetaDescription($objArticle->teaser));
+				$responseContext->getHtmlHeadManager()->setMetaDescription($this->prepareMetaDescription($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)
 			{
-				$responseContext->setMetaRobots($objArticle->robots);
+				$responseContext->getHtmlHeadManager()->setMetaRobots($objArticle->robots);
 			}
 		}
 
