@@ -67,7 +67,6 @@
         "nelmio/security-bundle": "^2.2",
         "nikic/php-parser": "^4.9",
         "nyholm/psr7": "^1.2",
-        "ocramius/proxy-manager": "^2.1",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
         "phpspec/php-diff": "^1.0",
@@ -264,21 +263,11 @@
             "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --fix --ansi",
             "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --fix --ansi"
         ],
-        "functional-tests": [
-            "vendor/bin/phpunit --testsuite=functional --colors=always"
-        ],
-        "monorepo-tools": [
-            "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi"
-        ],
-        "phpstan": [
-            "tools/phpstan/vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=5 --memory-limit=1G --ansi"
-        ],
-        "psalm": [
-            "tools/psalm/vendor/bin/psalm --no-suggestions"
-        ],
-        "unit-tests": [
-            "vendor/bin/phpunit --colors=always"
-        ]
+        "functional-tests": "vendor/bin/phpunit --testsuite=functional --colors=always",
+        "monorepo-tools": "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "phpstan": "tools/phpstan/vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=5 --memory-limit=1G --ansi",
+        "psalm": "tools/psalm/vendor/bin/psalm --no-suggestions",
+        "unit-tests": "vendor/bin/phpunit --colors=always"
     },
     "support": {
         "issues": "https://github.com/contao/contao/issues",

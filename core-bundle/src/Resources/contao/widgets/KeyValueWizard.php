@@ -66,7 +66,7 @@ class KeyValueWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if (!$option['key'])
+				if (trim($option['key']) === '')
 				{
 					unset($options[$key]);
 					continue;
