@@ -5,6 +5,9 @@
       <trans-unit id="1" resname="debug_mode">
         <source>Debug mode</source>
       </trans-unit>
+      <trans-unit id="2" resname="contao_manager_title">
+        <source>Manage updates and extensions and maintain the application</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
