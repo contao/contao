@@ -51,7 +51,6 @@
         "doctrine/doctrine-bundle": "^1.8 || ^2.0",
         "doctrine/orm": "^2.6.3",
         "dragonmantank/cron-expression": "^2.3",
-        "friendsofphp/proxy-manager-lts": "^1.0",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "imagine/imagine": "^0.7 || ^1.0",

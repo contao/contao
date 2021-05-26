@@ -22,7 +22,6 @@
         "contao/manager-plugin": "^2.4",
         "doctrine/dbal": "^2.10",
         "doctrine/doctrine-bundle": "^1.8 || ^2.0",
-        "friendsofphp/proxy-manager-lts": "^1.0",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "lexik/maintenance-bundle": "^2.1.5",
