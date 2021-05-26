@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\PageModel;
 
 class CoreResponseContextFactory
@@ -26,26 +27,44 @@ class CoreResponseContextFactory
         $this->responseContextAccessor = $responseContextAccessor;
     }
 
-    public function createWebpageResponseContext(): WebpageResponseContext
-    {
-        $context = new WebpageResponseContext();
-        $this->responseContextAccessor->setResponseContext($context);
-
-        return $context;
-    }
-
     public function createResponseContext(): ResponseContext
     {
         $context = new ResponseContext();
+
         $this->responseContextAccessor->setResponseContext($context);
 
         return $context;
     }
 
-    public function createContaoWebpageResponseContext(PageModel $pageModel): ContaoWebpageResponseContext
+    public function createWebpageResponseContext(): ResponseContext
     {
-        $context = new ContaoWebpageResponseContext($pageModel);
-        $this->responseContextAccessor->setResponseContext($context);
+        $context = $this->createResponseContext();
+        $context->add(new HtmlHeadBag());
+
+        return $context;
+    }
+
+    public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
+    {
+        $context = $this->createWebpageResponseContext();
+
+        if (!$context->has(HtmlHeadBag::class)) {
+            return $context;
+        }
+
+        /** @var HtmlHeadBag $htmlHeadBag */
+        $htmlHeadBag = $context->get(HtmlHeadBag::class);
+
+        $htmlHeadBag
+            ->setTitle($pageModel->pageTitle ?: $pageModel->title ?: '')
+            ->setMetaDescription(str_replace(["\n", "\r", '"'], [' ', '', ''], $pageModel->description ?: ''))
+        ;
+
+        if ($pageModel->robots) {
+            $htmlHeadBag
+                ->setMetaRobots($pageModel->robots)
+            ;
+        }
 
         return $context;
     }

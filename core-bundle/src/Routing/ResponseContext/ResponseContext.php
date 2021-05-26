@@ -12,31 +12,46 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-
-class ResponseContext implements ResponseContextInterface
+final class ResponseContext
 {
+    public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
+
+    /**
+     * @var array
+     */
+    private $services = [];
+
     /**
      * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
 
-    public function getHeaderBag(): ResponseHeaderBag
+    public function add(object $service): self
+    {
+        $this->services[\get_class($service)] = $service;
+
+        return $this;
+    }
+
+    public function has(string $service): bool
+    {
+        return null !== $this->get($service);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function get(string $service)
+    {
+        return $this->services[$service] ?? null;
+    }
+
+    public function getHeaderBag(): PartialResponseHeaderBag
     {
         if (null === $this->headerBag) {
             $this->headerBag = new PartialResponseHeaderBag();
         }
 
         return $this->headerBag;
-    }
-
-    public function finalize(Response $response): ResponseContextInterface
-    {
-        foreach ($this->getHeaderBag()->all() as $name => $values) {
-            $response->headers->set($name, $values, false); // Do not replace but add
-        }
-
-        return $this;
     }
 }

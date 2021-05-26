@@ -12,21 +12,23 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextTest extends TestCase
 {
-    public function testFinalizingTheContext(): void
+    public function testAddingAndGettingServices(): void
     {
         $context = new ResponseContext();
-        $context->getHeaderBag()->set('Content-Type', 'application/json');
 
-        $response = new Response();
-        $context->finalize($response);
+        $this->assertFalse($context->has(HtmlHeadBag::class));
+        $this->assertNull($context->get(HtmlHeadBag::class));
 
-        $this->assertSame('application/json', $response->headers->get('Content-Type'));
+        $context->add(new HtmlHeadBag());
+
+        $this->assertTrue($context->has(HtmlHeadBag::class));
+        $this->assertInstanceOf(HtmlHeadBag::class, $context->get(HtmlHeadBag::class));
     }
 
     public function testHeaderBagIsInitializedCompletelyEmpty(): void
