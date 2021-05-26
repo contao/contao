@@ -65,7 +65,6 @@
         "nelmio/cors-bundle": "^1.5.3 || ^2.0.1",
         "nelmio/security-bundle": "^2.2",
         "nyholm/psr7": "^1.2",
-        "ocramius/proxy-manager": "^2.1",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
         "phpspec/php-diff": "^1.0",
