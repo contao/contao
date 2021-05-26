@@ -104,7 +104,7 @@
         "terminal42/escargot": "^1.0",
         "terminal42/service-annotation-bundle": "^1.1",
         "true/punycode": "^2.1",
-        "twig/twig": "^2.7",
+        "twig/twig": "^2.11.3",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
         "webmozart/path-util": "^2.2",

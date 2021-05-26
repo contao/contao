@@ -296,9 +296,9 @@ class Environment
 		}
 		else
 		{
-			$host = $_SERVER['SERVER_NAME'];
+			$host = $_SERVER['SERVER_NAME'] ?? null;
 
-			if ($_SERVER['SERVER_PORT'] != 80)
+			if (($_SERVER['SERVER_PORT'] ?? 80) != 80)
 			{
 				$host .= ':' . $_SERVER['SERVER_PORT'];
 			}

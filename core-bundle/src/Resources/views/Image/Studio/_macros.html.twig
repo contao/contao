@@ -114,7 +114,7 @@
         {% set base_attributes = {
             'src': img.src,
             'alt': figure.hasMetadata ? figure.metadata.alt : '',
-            'title': figure.hasMetadata ? figure.metadata.title : null,
+            'title': figure.hasMetadata ? (figure.metadata.title ?: null) : null,
             'srcset': img.srcset is defined and img.srcset != img.src ? img.srcset : null,
             'sizes': img.sizes|default(null),
             'width': defineProportions ? img.width : null,
@@ -152,7 +152,7 @@
 
     Example:
 
-        { 'foo': 'a', 'bar': 'b, 'foobar': null } --> ' foo="a" bar="b"'
+        { 'foo': 'a', 'bar': 'b', 'foobar': null } --> ' foo="a" bar="b"'
 #}
 {%- macro html_attributes(attributes) -%}
     {%- for attr, value in attributes|filter(v => v is not null) -%}

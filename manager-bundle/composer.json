@@ -27,7 +27,6 @@
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "nelmio/cors-bundle": "^1.5.3 || ^2.0.1",
         "nelmio/security-bundle": "^2.2",
-        "ocramius/proxy-manager": "^2.1",
         "symfony/cache": "4.4.* || 5.2.*",
         "symfony/config": "4.4.* || 5.2.*",
         "symfony/console": "4.4.* || 5.2.*",
