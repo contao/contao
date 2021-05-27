@@ -1349,8 +1349,8 @@ var Backend =
 			});
 		};
 		hideTips();
-		// hide delayed tips - timeout: Tips.Contao.options.showDelay
-		setTimeout(hideTips, 1000);
+		// hide delayed tips
+		setTimeout(hideTips, (new Tips.Contao).options.showDelay);
 	},
 
 	/**
