@@ -415,7 +415,7 @@ class Combiner extends System
 				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
 			}
 
-			return $this->fixPaths($objCompiler->compile($content, $this->strRootDir . '/' . $arrFile['name']), $arrFile);
+			return $this->fixPaths($objCompiler->compileString($content, $this->strRootDir . '/' . $arrFile['name'])->getCss(), $arrFile);
 		}
 
 		$strPath = \dirname($arrFile['name']);

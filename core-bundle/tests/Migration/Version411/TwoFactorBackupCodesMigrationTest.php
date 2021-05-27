@@ -88,18 +88,6 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
             ->willReturn(['backupcodes' => []])
         ;
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(2))
-            ->method('execute')
-        ;
-
-        $statement
-            ->expects($this->exactly(2))
-            ->method('fetchAllAssociative')
-            ->willReturn([])
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -109,8 +97,8 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
         $connection
             ->expects($this->exactly(2))
-            ->method('prepare')
-            ->willReturn($statement)
+            ->method('fetchAllAssociative')
+            ->willReturn([])
         ;
 
         $migration = new TwoFactorBackupCodesMigration($connection);
@@ -148,14 +136,9 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
         $statement = $this->createMock(Statement::class);
         $statement
-            ->expects($this->exactly(8))
-            ->method('execute')
-        ;
-
-        $statement
             ->expects($this->exactly(4))
-            ->method('fetchAllAssociative')
-            ->willReturn($rows)
+            ->method('executeStatement')
+            ->willReturn(1)
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -166,9 +149,15 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         ;
 
         $connection
-            ->expects($this->exactly(8))
+            ->expects($this->exactly(4))
             ->method('prepare')
             ->willReturn($statement)
+        ;
+
+        $connection
+            ->expects($this->exactly(4))
+            ->method('fetchAllAssociative')
+            ->willReturn($rows)
         ;
 
         $migration = new TwoFactorBackupCodesMigration($connection);
