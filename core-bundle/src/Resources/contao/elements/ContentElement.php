@@ -286,7 +286,7 @@ abstract class ContentElement extends Frontend
 	protected function isHidden()
 	{
 		// Skip unsaved elements (see #2708)
-		if (!$this->tstamp && !$this->invisible)
+		if (!$this->tstamp)
 		{
 			return true;
 		}

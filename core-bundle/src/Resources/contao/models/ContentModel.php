@@ -426,7 +426,7 @@ class ContentModel extends Model
 		}
 
 		// Skip unsaved elements (see #2708)
-		$arrColumns[] = "NOT ($t.tstamp=0 AND $t.invisible='')";
+		$arrColumns[] = "$t.tstamp!=0";
 
 		if (!isset($arrOptions['order']))
 		{
@@ -466,7 +466,7 @@ class ContentModel extends Model
 		}
 
 		// Skip unsaved elements (see #2708)
-		$arrColumns[] = "NOT ($t.tstamp=0 AND $t.invisible='')";
+		$arrColumns[] = "$t.tstamp!=0";
 
 		if (!isset($arrOptions['order']))
 		{

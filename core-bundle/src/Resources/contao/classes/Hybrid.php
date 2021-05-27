@@ -264,7 +264,7 @@ abstract class Hybrid extends Frontend
 		}
 
 		// Skip unsaved elements (see #2708)
-		if (!$this->objParent->tstamp && !$this->objParent->invisible)
+		if (!$this->objParent->tstamp)
 		{
 			return true;
 		}
