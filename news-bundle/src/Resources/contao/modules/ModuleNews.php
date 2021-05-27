@@ -135,12 +135,6 @@ abstract class ModuleNews extends Module
 				{
 					while ($objElement->next())
 					{
-						// Hide unsaved elements in the front end (see #2708)
-						if (!$objElement->tstamp)
-						{
-							continue;
-						}
-
 						$strText .= $this->getContentElement($objElement->current());
 					}
 				}

@@ -191,6 +191,9 @@ class FormFieldModel extends Model
 			$arrColumns[] = "$t.invisible=''";
 		}
 
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "NOT ($t.tstamp=0 AND $t.invisible='')";
+
 		if (!isset($arrOptions['order']))
 		{
 			$arrOptions['order'] = "$t.sorting";
