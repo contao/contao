@@ -470,13 +470,14 @@ class PluginTest extends ContaoTestCase
             ]]
         );
 
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-        $this->expectException('mysqli_sql_exception');
-        $this->expectExceptionMessage("Access denied for user ''@'localhost'");
+        // Adjust the error reporting to suppress mysqli warnings
+        $er = error_reporting();
+        error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        error_reporting($er);
 
         $this->assertSame($expect, $extensionConfig);
     }
