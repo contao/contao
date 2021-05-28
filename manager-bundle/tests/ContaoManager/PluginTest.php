@@ -451,7 +451,6 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'mysqli',
                             'host' => 'localhost',
-                            'user' => 'root',
                         ],
                     ],
                 ],
@@ -471,6 +470,11 @@ class PluginTest extends ContaoTestCase
             ]]
         );
 
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+        $this->expectException('mysqli_sql_exception');
+        $this->expectExceptionMessage("Access denied for user ''@'localhost'");
+
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
@@ -484,9 +488,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'driver' => 'mysqli',
-                            'host' => 'localhost',
-                            'user' => 'root',
+                            'driver' => 'pdo_mysql',
                             'options' => null,
                         ],
                     ],
