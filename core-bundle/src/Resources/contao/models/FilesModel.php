@@ -254,6 +254,13 @@ class FilesModel extends Model
 	 */
 	public static function findByPath($path, array $arrOptions=array())
 	{
+		if (!\is_string($path))
+		{
+			trigger_deprecation('contao/core-bundle', '4.9', 'Using Contao\FilesModel::findByPath() with a non-string argument has been deprecated and will no longer work in Contao 5.0.');
+
+			return null;
+		}
+
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$uploadPath = System::getContainer()->getParameter('contao.upload_path');
 
