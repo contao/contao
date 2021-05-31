@@ -36,7 +36,7 @@
         <source>Password</source>
       </trans-unit>
       <trans-unit id="12" resname="confirmation">
-        <source>Confirmation</source>
+        <source>Confirm password</source>
       </trans-unit>
       <trans-unit id="13" resname="save_password">
         <source>Save password</source>
