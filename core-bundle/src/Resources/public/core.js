@@ -878,20 +878,26 @@ var Backend =
 	openModalIframe: function(options) {
 		var opt = options || {},
 			maxWidth = (window.getSize().x - 20).toInt(),
-			maxHeight = (window.getSize().y - 137).toInt();
+			maxHeight = (window.getSize().y - 192).toInt();
 		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 900);
 		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,
-			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
+		M.addButton(Contao.lang.close, 'btn', function() {
+			if (this.buttons[0].hasClass('btn-disabled')) {
+				return;
+			}
+			this.hide();
+		});
 		M.show({
 			'title': opt.title,
-			'contents': '<iframe src="' + opt.url + '" width="100%" height="' + opt.height + '" frameborder="0"></iframe>'
+			'contents': '<iframe src="' + opt.url + '" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
+			'model': 'modal'
 		});
 	},
 
@@ -909,7 +915,6 @@ var Backend =
 		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,
-			'btn_ok': Contao.lang.close,
 			'draggable': false,
 			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
