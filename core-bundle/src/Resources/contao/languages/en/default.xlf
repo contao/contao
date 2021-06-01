@@ -1092,7 +1092,7 @@
         <source>Please enter a password.</source>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
+        <source>Confirm password</source>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
