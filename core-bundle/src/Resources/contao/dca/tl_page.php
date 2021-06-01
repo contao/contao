@@ -793,7 +793,7 @@ class tl_page extends Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_page']) && is_array($session['CLIPBOARD']['tl_page']['id']))
+		if (is_array($session['CLIPBOARD']['tl_page']['id'] ?? null))
 		{
 			$clipboard = array();
 
