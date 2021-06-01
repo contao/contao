@@ -99,7 +99,12 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
             // Used by the TwoFactorListener to redirect a user back to the authentication page
             if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
-                $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $request->getUri());
+                // Backwards compatibility with scheb/2fa-bundle <5.8
+                if (method_exists($token, 'getFirewallName')) {
+                    $this->saveTargetPath($request->getSession(), $token->getFirewallName(), $request->getUri());
+                } else {
+                    $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $request->getUri());
+                }
             }
 
             return $response;
@@ -129,8 +134,13 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->triggerPostLoginHook();
 
-        if ($request->hasSession() && method_exists($token, 'getProviderKey')) {
-            $this->removeTargetPath($request->getSession(), $token->getProviderKey());
+        if ($request->hasSession()) {
+            // Backwards compatibility with symfony/security <5.2
+            if (method_exists($token, 'getFirewallName')) {
+                $this->removeTargetPath($request->getSession(), $token->getFirewallName());
+            } elseif (method_exists($token, 'getProviderKey')) {
+                $this->removeTargetPath($request->getSession(), $token->getProviderKey());
+            }
         }
 
         return $response;
