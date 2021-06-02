@@ -113,7 +113,7 @@ class ModuleNewsletterReader extends Module
 
 			if ($responseContext instanceof WebpageResponseContext)
 			{
-				$responseContext->setTitle(StringUtil::getRawDecodedValue($objNewsletter->subject));
+				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objNewsletter->subject));
 			}
 		}
 

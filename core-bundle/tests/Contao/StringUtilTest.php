@@ -151,22 +151,48 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @dataProvider getRawDecodedValueProvider
+     * @dataProvider getRevertInputEncoding
      */
-    public function testGetsRawDecodedValues(string $source, string $expected, bool $removeInsertTags = false): void
+    public function testRevertInputEncoding(string $source, string $expected = null): void
     {
-        $this->assertSame($expected, StringUtil::getRawDecodedValue($source, $removeInsertTags));
+        Input::setGet('value', $source);
+        $inputEncoded = Input::get('value');
+        Input::setGet('value', null);
+
+        // Test input encoding round trip
+        $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
+    }
+
+    public function getRevertInputEncoding(): \Generator
+    {
+        yield ['foobar'];
+        yield ['foo{{email::test@example.com}}bar'];
+        yield ['{{date::...}}'];
+        yield ["<>&\u{A0}<>&\u{A0}"];
+        yield ['I <3 Contao'];
+        yield ['Remove unexpected <span>HTML tags'];
+        yield ['Keep non-HTML <tags> intact'];
+        yield ['Basic [&] entities [nbsp]', "Basic & entities \u{A0}"];
+        yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
+    }
+
+    /**
+     * @dataProvider getInputEncodedToPlainText
+     */
+    public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
+    {
+        $this->assertSame($expected, StringUtil::inputEncodedToPlainText($source, $removeInsertTags));
 
         Input::setGet('value', $expected);
         $inputEncoded = Input::get('value');
         Input::setGet('value', null);
 
         // Test input encoding round trip
-        $this->assertSame($expected, StringUtil::getRawDecodedValue($inputEncoded, true));
-        $this->assertSame($expected, StringUtil::getRawDecodedValue($inputEncoded, false));
+        $this->assertSame($expected, StringUtil::inputEncodedToPlainText($inputEncoded, true));
+        $this->assertSame($expected, StringUtil::inputEncodedToPlainText($inputEncoded, false));
     }
 
-    public function getRawDecodedValueProvider(): \Generator
+    public function getInputEncodedToPlainText(): \Generator
     {
         yield ['foobar', 'foobar'];
         yield ['foo{{email::test@example.com}}bar', 'footest@example.combar'];
@@ -182,29 +208,29 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @dataProvider getRawDecodedValueFromHtmlProvider
+     * @dataProvider getHtmlToPlainText
      */
-    public function testGetsRawDecodedValuesFromHtml(string $source, string $expected, bool $removeInsertTags = false): void
+    public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $this->assertSame($expected, StringUtil::getRawDecodedValueFromHtml($source, $removeInsertTags));
+        $this->assertSame($expected, StringUtil::htmlToPlainText($source, $removeInsertTags));
 
         Input::setPost('value', str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source));
         $inputXssStripped = str_replace(['&#123;&#123;', '&#125;&#125;'], ['{{', '}}'], Input::postHtml('value', true));
         Input::setPost('value', null);
 
-        $this->assertSame($expected, StringUtil::getRawDecodedValueFromHtml($inputXssStripped, $removeInsertTags));
+        $this->assertSame($expected, StringUtil::htmlToPlainText($inputXssStripped, $removeInsertTags));
     }
 
-    public function getRawDecodedValueFromHtmlProvider(): \Generator
+    public function getHtmlToPlainText(): \Generator
     {
-        yield from $this->getRawDecodedValueProvider();
+        yield from $this->getInputEncodedToPlainText();
 
         yield ['foo<br>bar{{br}}baz', "foo\nbar\nbaz"];
         yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", 'foo bar'];
         yield [" \t\r\n<br>foo \t<br>\r\n \r\n\t<br> bar <br>\t\r\n", "foo\nbar"];
         yield [
-            '<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p>',
-            "Headline\nText\nList 1\nList 2\nInlinetext and link",
+            '<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p><div><div><div>single newline',
+            "Headline\nText\nList 1\nList 2\nInlinetext and link\nsingle newline",
         ];
     }
 }

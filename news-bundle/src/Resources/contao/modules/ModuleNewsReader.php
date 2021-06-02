@@ -147,16 +147,16 @@ class ModuleNewsReader extends ModuleNews
 			}
 			elseif ($objArticle->headline)
 			{
-				$responseContext->setTitle(StringUtil::getRawDecodedValue($objArticle->headline));
+				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objArticle->headline));
 			}
 
 			if ($objArticle->description)
 			{
-				$responseContext->setMetaDescription(StringUtil::getRawDecodedValue($objArticle->description));
+				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objArticle->description));
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setMetaDescription(StringUtil::getRawDecodedValueFromHtml($objArticle->teaser));
+				$responseContext->setMetaDescription(StringUtil::htmlToPlainText($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)

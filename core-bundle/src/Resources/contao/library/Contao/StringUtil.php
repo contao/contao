@@ -975,22 +975,10 @@ class StringUtil
 	/**
 	 * Converts an input-encoded string back to its raw UTF-8 value it originated from.
 	 *
-	 * It handles all Contao input encoding specifics like insert tags, basic entities and encoded entities.
-	 *
-	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 * It handles all Contao input encoding specifics like basic entities and encoded entities.
 	 */
-	public static function getRawDecodedValue(string $strValue, bool $blnRemoveInsertTags = false): string
+	public static function revertInputEncoding(string $strValue): string
 	{
-		if ($blnRemoveInsertTags)
-		{
-			$strValue = static::stripInsertTags($strValue);
-		}
-		else
-		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
-		}
-
-		$strValue = strip_tags($strValue);
 		$strValue = static::restoreBasicEntities($strValue);
 		$strValue = static::decodeEntities($strValue);
 
@@ -1005,23 +993,48 @@ class StringUtil
 			mb_substitute_character($substituteCharacter);
 		}
 
+		return $strValue;
+	}
+
+	/**
+	 * Converts an input-encoded string to plain text UTF-8.
+	 *
+	 * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
+	 *
+	 * @see StringUtil::revertInputEncoding()
+	 *
+	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 */
+	public static function inputEncodedToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
+	{
+		if ($blnRemoveInsertTags)
+		{
+			$strValue = static::stripInsertTags($strValue);
+		}
+		else
+		{
+			$strValue = Controller::replaceInsertTags($strValue, false);
+		}
+
+		$strValue = strip_tags($strValue);
+		$strValue = static::revertInputEncoding($strValue);
 		$strValue = str_replace(array('{{', '}}'), array('[{]', '[}]'), $strValue);
 
 		return $strValue;
 	}
 
 	/**
-	 * Gets the raw text value of an HTML string with normalized white space.
+	 * Converts an HTML string to plain text with normalized white space.
 	 *
 	 * It handles all Contao input encoding specifics like insert tags, basic
 	 * entities and encoded entities and is meant to be used with content from
 	 * fields that have the allowHtml flag enabled.
 	 *
-	 * @see StringUtil::getRawDecodedValue()
+	 * @see StringUtil::inputEncodedToPlainText()
 	 *
 	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
 	 */
-	public static function getRawDecodedValueFromHtml(string $strValue, bool $blnRemoveInsertTags = false): string
+	public static function htmlToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
 		if (!$blnRemoveInsertTags)
 		{
@@ -1035,7 +1048,7 @@ class StringUtil
 			$strValue
 		);
 
-		$strValue = static::getRawDecodedValue($strValue, true);
+		$strValue = static::inputEncodedToPlainText($strValue, true);
 
 		// Remove duplicate line breaks and spaces
 		$strValue = trim(preg_replace(array('/[^\S\n]+/', '/\s*\n\s*/'), array(' ', "\n"), $strValue));

@@ -568,7 +568,7 @@ abstract class Frontend extends Controller
 	}
 
 	/**
-	 * @deprecated Use StringUtil::getRawDecodedValueFromHtml() instead.
+	 * @deprecated Use StringUtil::htmlToPlainText() instead.
 	 *
 	 * Prepare a text to be used in the meta description tag
 	 *
@@ -578,7 +578,7 @@ abstract class Frontend extends Controller
 	 */
 	protected function prepareMetaDescription($strText)
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use the StringUtil::getRawDecodedValueFromHtml() instead.');
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use the StringUtil::htmlToPlainText() instead.');
 
 		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
