@@ -1,6 +1,6 @@
 
 <!-- indexer::stop -->
-<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?><?= $this->attributes ?>>
 
   <?php $this->block('headline'); ?>
     <?php if ($this->headline): ?>
