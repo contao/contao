@@ -137,11 +137,11 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
-			'wizard' => array
+			'load_callback' => array
 			(
 				array('tl_templates', 'addFileLocation')
 			),
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false)
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50')
 		)
 	)
 );
@@ -588,15 +588,15 @@ class tl_templates extends Backend
 	/**
 	 * Add the file location instead of the help text (see #6503)
 	 *
+	 * @param mixed         $value
 	 * @param DataContainer $dc
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function addFileLocation(DataContainer $dc)
+	public function addFileLocation($value, DataContainer $dc)
 	{
-		// Unset the default help text
-		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
+		$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1] = sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id);
 
-		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
+		return $value;
 	}
 }
