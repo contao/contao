@@ -540,10 +540,7 @@ abstract class DataContainer extends Backend
 			$this->blnUploadable = true;
 		}
 
-		if (($arrData['inputType'] ?? null) != 'password')
-		{
-			$arrClasses[] = 'widget';
-		}
+		$arrClasses[] = 'widget';
 
 		// Mark floated single checkboxes
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
