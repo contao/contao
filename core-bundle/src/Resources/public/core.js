@@ -878,21 +878,16 @@ var Backend =
 	openModalIframe: function(options) {
 		var opt = options || {},
 			maxWidth = (window.getSize().x - 20).toInt(),
-			maxHeight = (window.getSize().y - 192).toInt();
+			maxHeight = (window.getSize().y - 137).toInt();
 		if (!opt.width || opt.width > maxWidth) opt.width = Math.min(maxWidth, 900);
 		if (!opt.height || opt.height > maxHeight) opt.height = maxHeight;
 		var M = new SimpleModal({
 			'width': opt.width,
+			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
-		});
-		M.addButton(Contao.lang.close, 'btn', function() {
-			if (this.buttons[0].hasClass('btn-disabled')) {
-				return;
-			}
-			this.hide();
 		});
 		M.show({
 			'title': opt.title,
@@ -920,7 +915,7 @@ var Backend =
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
-		M.addButton(Contao.lang.close, 'btn', function() {
+		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
 				return;
 			}
