@@ -256,8 +256,6 @@ class FilesModel extends Model
 	{
 		if (!\is_string($path))
 		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Using Contao\FilesModel::findByPath() with a non-string argument has been deprecated and will no longer work in Contao 5.0.');
-
 			return null;
 		}
 
