@@ -180,6 +180,7 @@ class BackendTemplate extends Template
 			'var Contao={'
 				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
+					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
 					. 'cancel:"' . $GLOBALS['TL_LANG']['MSC']['cancelBT'] . '",'
 					. 'collapse:"' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '",'
 					. 'expand:"' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '",'
