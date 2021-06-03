@@ -99,12 +99,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
             // Used by the TwoFactorListener to redirect a user back to the authentication page
             if ($request->hasSession() && $request->isMethodSafe() && !$request->isXmlHttpRequest()) {
-                // Backwards compatibility with scheb/2fa-bundle <5.8
-                if (method_exists($token, 'getFirewallName')) {
-                    $this->saveTargetPath($request->getSession(), $token->getFirewallName(), $request->getUri());
-                } else {
-                    $this->saveTargetPath($request->getSession(), $token->getProviderKey(), $request->getUri());
-                }
+                $this->saveTargetPath($request->getSession(), $token->getFirewallName(), $request->getUri());
             }
 
             return $response;

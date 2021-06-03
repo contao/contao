@@ -121,12 +121,7 @@ class TwoFactorFrontendListener
             return;
         }
 
-        // Backwards compatibility with scheb/2fa-bundle <5.8
-        if (method_exists($token, 'getFirewallName')) {
-            $targetPath = $this->getTargetPath($request->getSession(), $token->getFirewallName());
-        } else {
-            $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
-        }
+        $targetPath = $this->getTargetPath($request->getSession(), $token->getFirewallName());
 
         if ($targetPath) {
             // Redirect to the target path
