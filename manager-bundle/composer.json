@@ -21,7 +21,7 @@
         "contao/installation-bundle": "self.version",
         "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.4",
-        "doctrine/dbal": "^2.11",
+        "doctrine/dbal": "^2.13.1",
         "doctrine/doctrine-bundle": "^1.8 || ^2.0",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
