@@ -19,6 +19,13 @@ use Michelf\MarkdownExtra;
  */
 class ContentMarkdown extends ContentElement
 {
+	public function __construct($objElement, $strColumn = 'main')
+	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'ContentMarkdown has been deprecated and will be removed in Contao 5.0.');
+
+		parent::__construct($objElement, $strColumn);
+	}
+
 	/**
 	 * Template
 	 * @var string
@@ -54,6 +61,11 @@ class ContentMarkdown extends ContentElement
 	 */
 	protected function compile()
 	{
+		if (!class_exists(MarkdownExtra::class))
+		{
+			throw new \RuntimeException('You are using the deprecated Markdown content element class. If you want to keep using it, make sure to require "michelf/php-markdown" in your composer.json manually.');
+		}
+
 		$this->code = MarkdownExtra::defaultTransform($this->code);
 		$this->Template->content = strip_tags($this->code, Config::get('allowedTags'));
 	}
