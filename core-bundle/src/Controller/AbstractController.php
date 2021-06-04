@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -25,6 +26,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
         $services['contao.framework'] = ContaoFramework::class;
         $services['event_dispatcher'] = EventDispatcherInterface::class;
+        $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
 
         return $services;
