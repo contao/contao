@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class RootPageControllerTest extends TestCase
 {
@@ -59,7 +60,7 @@ class RootPageControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://example.com/foobar', $response->getTargetUrl());
-        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_SEE_OTHER, $response->getStatusCode());
     }
 
     public function testThrowsExceptionIfNoRedirectPageIsFound(): void

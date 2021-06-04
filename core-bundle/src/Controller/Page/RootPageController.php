@@ -24,7 +24,7 @@ class RootPageController extends AbstractController
     {
         $nextPage = $this->getNextPage((int) $pageModel->id);
 
-        return $this->redirect($nextPage->getAbsoluteUrl());
+        return $this->redirect($nextPage->getAbsoluteUrl(), Response::HTTP_SEE_OTHER);
     }
 
     private function getNextPage(int $rootPageId): PageModel
