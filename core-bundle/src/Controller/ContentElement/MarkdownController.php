@@ -65,7 +65,7 @@ class MarkdownController extends AbstractContentElementController
         $markdown = '';
 
         if ('sourceFile' === $model->markdownSource) {
-            /** @var FilesModel $filesModel */
+            /** @var FilesModel|null $filesModel */
             $filesModel = $this->get('contao.framework')->getAdapter(FilesModel::class)->findByPk($model->singleSRC);
 
             if (null !== $filesModel) {
