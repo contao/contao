@@ -830,11 +830,6 @@ class Dbafs
 	 */
 	protected static function isFileSyncExclude($strPath)
 	{
-		if (Config::get('uploadPath') == 'templates')
-		{
-			return true;
-		}
-
 		self::validateUtf8Path($strPath);
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');

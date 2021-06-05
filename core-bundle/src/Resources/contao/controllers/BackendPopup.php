@@ -73,7 +73,7 @@ class BackendPopup extends Backend
 		}
 
 		// Limit preview to the files directory
-		if (!preg_match('@^' . preg_quote(Config::get('uploadPath'), '@') . '@i', $this->strFile))
+		if (!preg_match('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '@i', $this->strFile))
 		{
 			die('Invalid path');
 		}
