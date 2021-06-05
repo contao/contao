@@ -86,7 +86,7 @@ function specialchars($strString, $blnStripInsertTags=false)
 	}
 
 	// Use ENT_COMPAT here (see #4889)
-	return htmlspecialchars($strString, ENT_COMPAT, $GLOBALS['TL_CONFIG']['characterSet'], false);
+	return htmlspecialchars($strString, ENT_COMPAT, System::getContainer()->getParameter('kernel.charset'), false);
 }
 
 /**
@@ -107,7 +107,7 @@ function standardize($strString, $blnPreserveUppercase=false)
 	$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 	$arrReplace = array('', '-');
 
-	$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
+	$strString = html_entity_decode($strString, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
 	$strString = strip_insert_tags($strString);
 	$strString = preg_replace($arrSearch, $arrReplace, $strString);
 

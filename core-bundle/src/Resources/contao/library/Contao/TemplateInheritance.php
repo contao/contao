@@ -134,7 +134,7 @@ trait TemplateInheritance
 		$this->arrBlocks = array();
 
 		// Add start and end markers in debug mode
-		if (Config::get('debugMode'))
+		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$strRelPath = StringUtil::stripRootDir($this->getTemplatePath($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";

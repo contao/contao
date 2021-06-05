@@ -193,7 +193,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyTemplates()
 	{
-		$strDir = Config::get('uploadPath') . '/tiny_templates';
+		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if (!is_dir($projectDir . '/' . $strDir))

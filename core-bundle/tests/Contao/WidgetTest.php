@@ -28,6 +28,7 @@ class WidgetTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
+        $container->setParameter('kernel.charset', 'UTF-8');
 
         System::setContainer($container);
     }

@@ -40,8 +40,6 @@ class StringUtilTest extends TestCase
 
     public function testGeneratesAliases(): void
     {
-        $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
-
         $this->assertSame('foo', StringUtil::generateAlias('foo'));
         $this->assertSame('foo', StringUtil::generateAlias('FOO'));
         $this->assertSame('foo-bar', StringUtil::generateAlias('foo bar'));

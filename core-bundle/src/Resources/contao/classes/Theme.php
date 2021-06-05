@@ -1082,19 +1082,21 @@ class Theme extends Backend
 	 */
 	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table, array $arrOrder=array())
 	{
+		$strUploadPath = System::getContainer()->getParameter('contao.upload_path');
+
 		// Strip the custom upload folder name
-		$strFolder = preg_replace('@^' . preg_quote(Config::get('uploadPath'), '@') . '/@', '', $strFolder);
+		$strFolder = preg_replace('@^' . preg_quote($strUploadPath, '@') . '/@', '', $strFolder);
 
 		// Add the default upload folder name
 		if (!$strFolder)
 		{
 			$strTarget = 'files';
-			$strFolder = Config::get('uploadPath');
+			$strFolder = $strUploadPath;
 		}
 		else
 		{
 			$strTarget = 'files/' . $strFolder;
-			$strFolder = Config::get('uploadPath') . '/' . $strFolder;
+			$strFolder = $strUploadPath . '/' . $strFolder;
 		}
 
 		if (Validator::isInsecurePath($strFolder))
@@ -1206,7 +1208,7 @@ class Theme extends Backend
 			return '';
 		}
 
-		return preg_replace('@^(tl_)?files/@', Config::get('uploadPath') . '/', $strPath);
+		return preg_replace('@^(tl_)?files/@', System::getContainer()->getParameter('contao.upload_path') . '/', $strPath);
 	}
 
 	/**
@@ -1223,7 +1225,7 @@ class Theme extends Backend
 			return '';
 		}
 
-		return preg_replace('@^' . preg_quote(Config::get('uploadPath'), '@') . '/@', 'files/', $strPath);
+		return preg_replace('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '/@', 'files/', $strPath);
 	}
 }
 

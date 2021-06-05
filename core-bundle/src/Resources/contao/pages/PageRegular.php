@@ -442,7 +442,7 @@ class PageRegular extends Frontend
 		// Default settings
 		$this->Template->layout = $objLayout;
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->charset = Config::get('characterSet');
+		$this->Template->charset = System::getContainer()->getParameter('kernel.charset');
 		$this->Template->base = Environment::get('base');
 		$this->Template->isRTL = false;
 	}

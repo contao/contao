@@ -440,7 +440,7 @@ class DC_File extends DataContainer implements \editable
 		}
 		elseif (\is_string($strCurrent))
 		{
-			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, Config::get('characterSet'));
+			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
 		}
 
 		// Save the value if there was no error

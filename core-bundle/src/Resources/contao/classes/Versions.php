@@ -597,7 +597,7 @@ class Versions extends Controller
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
 	}

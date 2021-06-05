@@ -120,7 +120,7 @@ class Feed
 	{
 		$this->adjustPublicationDate();
 
-		$xml  = '<?xml version="1.0" encoding="' . Config::get('characterSet') . '"?>';
+		$xml  = '<?xml version="1.0" encoding="' . System::getContainer()->getParameter('kernel.charset') . '"?>';
 		$xml .= '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">';
 		$xml .= '<channel>';
 		$xml .= '<title>' . StringUtil::specialchars($this->title) . '</title>';
@@ -191,7 +191,7 @@ class Feed
 	{
 		$this->adjustPublicationDate();
 
-		$xml  = '<?xml version="1.0" encoding="' . Config::get('characterSet') . '"?>';
+		$xml  = '<?xml version="1.0" encoding="' . System::getContainer()->getParameter('kernel.charset') . '"?>';
 		$xml .= '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="' . $this->language . '">';
 		$xml .= '<title>' . StringUtil::specialchars($this->title) . '</title>';
 		$xml .= '<subtitle>' . StringUtil::specialchars($this->description) . '</subtitle>';

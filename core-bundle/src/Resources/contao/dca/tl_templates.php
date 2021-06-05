@@ -499,7 +499,7 @@ class tl_templates extends Backend
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		System::getContainer()->setParameter('kernel.debug', false);
 		$GLOBALS['TL_CONFIG']['debugMode'] = false;

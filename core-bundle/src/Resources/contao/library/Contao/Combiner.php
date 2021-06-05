@@ -93,8 +93,6 @@ class Combiner extends System
 
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 		$this->strWebDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
-
-		parent::__construct();
 	}
 
 	/**

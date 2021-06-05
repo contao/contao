@@ -2271,7 +2271,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
 			}
 
-			$arrImageTypes = StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')));
+			$arrImageTypes = System::getContainer()->getParameter('contao.image.valid_extensions');
 
 			// Remove potentially existing thumbnails (see #6641)
 			if (\in_array(substr($this->strExtension, 1), $arrImageTypes))
@@ -2747,7 +2747,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
 
 			// Add the current folder
-			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), Config::get('characterSet'));
+			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), System::getContainer()->getParameter('kernel.charset'));
 			$return .= Image::getHtml($folderImg) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
 
 			// Paste buttons
@@ -2877,7 +2877,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 			}
 
-			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet'));
+			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), System::getContainer()->getParameter('kernel.charset'));
 
 			// No popup links for protected files, templates and in the popup file manager
 			if ($blnProtected || $this->strTable == 'tl_templates' || Input::get('popup'))
