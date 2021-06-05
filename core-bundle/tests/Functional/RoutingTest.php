@@ -50,7 +50,6 @@ class RoutingTest extends FunctionalTestCase
 
         $_GET = [];
 
-        Config::set('debugMode', false);
         Config::set('useAutoItem', true);
         Config::set('addLanguageToUrl', false);
     }

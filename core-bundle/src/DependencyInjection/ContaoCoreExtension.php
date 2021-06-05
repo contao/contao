@@ -48,6 +48,10 @@ class ContaoCoreExtension extends Extension
 
     public function load(array $configs, ContainerBuilder $container): void
     {
+        if ('UTF-8' !== $container->getParameter('kernel.charset')) {
+            trigger_error(sprintf('Using the charset "%s" is not supported by Contao, use "UTF-8" instead.', $container->getParameter('kernel.charset')), E_USER_WARNING);
+        }
+
         $configuration = new Configuration(
             $container->getParameter('kernel.project_dir'),
             $container->getParameter('kernel.default_locale')
