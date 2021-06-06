@@ -14,12 +14,6 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ausi/contao-test-case"
-        }
-    ],
     "require": {
         "php": "^7.3 || ^8.0",
         "ext-json": "*",
@@ -65,7 +59,7 @@
     },
     "require-dev": {
         "composer/composer": "^1.0 || ^2.0",
-        "contao/test-case": "dev-fix/missing-kernel-charset as 4.3.99",
+        "contao/test-case": "^4.3",
         "phpunit/phpunit": "^8.5",
         "symfony/phpunit-bridge": "^5.2"
     },

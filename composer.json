@@ -14,12 +14,6 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/ausi/contao-test-case"
-        }
-    ],
     "require": {
         "php": "^7.3 || ^8.0",
         "ext-dom": "*",
@@ -156,7 +150,7 @@
         "ext-fileinfo": "*",
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^1.0 || ^2.0",
-        "contao/test-case": "dev-fix/missing-kernel-charset as 4.3.99",
+        "contao/test-case": "^4.3",
         "phpunit/phpunit": "^8.5",
         "symfony/browser-kit": "4.4.* || 5.2.*",
         "symfony/phpunit-bridge": "^5.2"
