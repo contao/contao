@@ -133,35 +133,35 @@ class AbstractPageRouteProviderTest extends TestCase
             new Route('', ['pageModel' => $this->mockPageModel('en')]),
             new Route('', ['pageModel' => $this->mockPageModel('de')]),
             ['de-CH', 'en-US', 'en'],
-            -1,
+            1,
         ];
 
         yield 'Sorts route by language (1)' => [
             new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
             new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
             ['en', 'de'],
-            0,
+            1,
         ];
 
         yield 'Sorts route by language (2)' => [
             new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
             new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
             ['de', 'en'],
-            0,
+            -1,
         ];
 
         yield 'Sorts route by language (3)' => [
             new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
             new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
             ['de', 'en-US'],
-            1,
+            -1,
         ];
 
         yield 'Sorts route by language (4)' => [
             new Route('', ['pageModel' => $this->mockPageModel('de')]),
             new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
             ['en', 'de'],
-            -1,
+            1,
         ];
 
         yield 'Sorts route by language (5)' => [
@@ -175,7 +175,7 @@ class AbstractPageRouteProviderTest extends TestCase
             new Route('', ['pageModel' => $this->mockPageModel('de-CH')]),
             new Route('', ['pageModel' => $this->mockPageModel('en-US')]),
             ['en-GB', 'de', 'en-US'],
-            1,
+            -1,
         ];
 
         yield 'Sorts route by language (7)' => [
@@ -183,6 +183,13 @@ class AbstractPageRouteProviderTest extends TestCase
             new Route('', ['pageModel' => $this->mockPageModel('de-DE')]),
             ['de-AT', 'de-CH'],
             -1,
+        ];
+
+        yield 'Sorts route by root page priority' => [
+            new Route('', ['pageModel' => $this->mockPageModel('de-CH', false, false, 256)]),
+            new Route('', ['pageModel' => $this->mockPageModel('de-DE', false, false, 100)]),
+            ['de', 'en-US'],
+            1,
         ];
 
         yield 'Sorts route lower if it is a root page' => [
@@ -236,6 +243,79 @@ class AbstractPageRouteProviderTest extends TestCase
     }
 
     /**
+     * @dataProvider ordersRoutesByPreferredLanguages
+     */
+    public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
+    {
+        $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
+        $class = new \ReflectionClass($instance);
+
+        $method = $class->getMethod('convertLanguagesForSorting');
+        $method->setAccessible(true);
+        $preferredLanguages = $method->invoke($instance, $preferredLanguages);
+
+        $method = $class->getMethod('compareRoutes');
+        $method->setAccessible(true);
+
+        $sorting = 0;
+        $routes = array_map(
+            function ($language) use ($sorting) {
+                return new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]);
+            },
+            $pageLanguages
+        );
+
+        usort(
+            $routes,
+            static function ($a, $b) use ($method, $instance, $preferredLanguages) {
+                return $method->invoke($instance, $a, $b, $preferredLanguages);
+            }
+        );
+
+        $result = array_map(
+            static function (Route $route) {
+                return $route->getDefault('pageModel')->rootLanguage;
+            },
+            $routes
+        );
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function ordersRoutesByPreferredLanguages(): \Generator
+    {
+        yield [
+            ['de', 'en'],
+            ['en', 'de'],
+            ['en', 'de'],
+        ];
+
+        yield [
+            ['de-CH', 'fr-CH', 'it-CH'],
+            ['it-IT', 'de'],
+            ['it-CH', 'de-CH', 'fr-CH'],
+        ];
+
+        yield [
+            ['en-US', 'de-DE', 'en-GB'],
+            ['en', 'de'],
+            ['en-US', 'en-GB', 'de-DE'],
+        ];
+
+        yield [
+            ['en', 'de-DE', 'en-GB'],
+            ['en', 'de'],
+            ['en', 'en-GB', 'de-DE'],
+        ];
+
+        yield [
+            ['en-US', 'de-DE', 'fr-FR'],
+            ['fr', 'de-CH'],
+            ['fr-FR', 'de-DE', 'en-US'],
+        ];
+    }
+
+    /**
      * @dataProvider convertLanguageForSortingProvider
      */
     public function testConvertLanguagesForSorting(array $languages, array $expected): void
@@ -268,9 +348,9 @@ class AbstractPageRouteProviderTest extends TestCase
             array_flip(['de-DE', 'de']),
         ];
 
-        yield 'Adds all primary languages at the end' => [
+        yield 'Adds primary languages after first region' => [
             ['de_DE', 'de_CH', 'en', 'en_US', 'fr_FR'],
-            array_flip(['de-DE', 'de-CH', 'en', 'en-US', 'fr-FR', 'de', 'fr']),
+            array_flip(['de-DE', 'de', 'de-CH', 'en', 'en-US', 'fr-FR', 'fr']),
         ];
 
         yield 'Strips array keys' => [
@@ -280,14 +360,15 @@ class AbstractPageRouteProviderTest extends TestCase
     }
 
     /**
-     * @return PageModel&MockObject
+     * @return MockObject&PageModel
      */
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false): PageModel
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): MockObject
     {
         return $this->mockClassWithProperties(PageModel::class, [
+            'type' => $root ? 'root' : 'regular',
             'rootLanguage' => $language,
             'rootIsFallback' => $fallback,
-            'type' => $root ? 'root' : 'regular',
+            'rootSorting' => $rootSorting,
         ]);
     }
 }
