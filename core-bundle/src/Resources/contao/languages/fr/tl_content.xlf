@@ -778,8 +778,7 @@
         <target>Lecture inline (pas de mode plein écran)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
-        <target>Auto (précharge la vidéo complète)</target>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>

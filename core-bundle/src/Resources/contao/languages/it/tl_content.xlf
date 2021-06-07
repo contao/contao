@@ -778,8 +778,7 @@
         <target>Riproduzione in linea (nessuna modalità a schermo intero)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
-        <target>Auto (precarica il video di richiamo)</target>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>

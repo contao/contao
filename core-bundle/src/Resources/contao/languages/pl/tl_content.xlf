@@ -778,8 +778,7 @@
         <target>Odtwarzaj inline (bez trybu pełnoekranowego)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
-        <target>Auto (wczytaj wstępnie film wideo)</target>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
