@@ -364,11 +364,13 @@ class AbstractPageRouteProviderTest extends TestCase
      */
     private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): PageModel
     {
-        return $this->mockClassWithProperties(PageModel::class, [
-            'type' => $root ? 'root' : 'regular',
-            'rootLanguage' => $language,
-            'rootIsFallback' => $fallback,
-            'rootSorting' => $rootSorting,
-        ]);
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->type = $root ? 'root' : 'regular';
+        $pageModel->rootLanguage = $language;
+        $pageModel->rootIsFallback = $fallback;
+        $pageModel->rootSorting = $rootSorting;
+
+        return $pageModel;
     }
 }
