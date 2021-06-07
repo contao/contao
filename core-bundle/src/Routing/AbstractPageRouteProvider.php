@@ -220,8 +220,9 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             if (5 === \strlen($language)) {
                 $lng = substr($language, 0, 2);
 
-                // Append the language if only language plus dialect is given (see #430)
-                if (!\in_array($lng, $languages, true) && !\in_array($lng, $result, true)) {
+                // For [de-DE, fr, de] this will add "de" as second item in this loop,
+                // but the only last item will be kept by array_flip.
+                if (!\in_array($lng, $result, true)) {
                     $result[] = $lng;
                 }
             }

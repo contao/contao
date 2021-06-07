@@ -313,6 +313,12 @@ class AbstractPageRouteProviderTest extends TestCase
             ['fr', 'de-CH'],
             ['fr-FR', 'de-DE', 'en-US'],
         ];
+
+        yield [
+            ['de-CH', 'fr-CH', 'it-CH'],
+            ['de-DE', 'it-CH', 'fr-FR', 'de'],
+            ['it-CH', 'fr-CH', 'de-CH'],
+        ];
     }
 
     /**
@@ -340,7 +346,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Does not change the sorting' => [
             ['de-DE', 'de-CH', 'fr', 'de', 'en-US', 'en'],
-            array_flip(['de-DE', 'de-CH', 'fr', 'de', 'en-US', 'en']),
+            array_flip(['de-DE', 'de', 'de-CH', 'fr', 'de', 'en-US', 'en', 'en']),
         ];
 
         yield 'Adds primary language if it does not exist' => [
