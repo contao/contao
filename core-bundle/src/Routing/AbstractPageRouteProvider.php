@@ -134,6 +134,26 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
             $langA = $languages[$pageA->rootLanguage] ?? null;
             $langB = $languages[$pageB->rootLanguage] ?? null;
+
+            $primaryA = substr($pageA->rootLanguage, 0, 2);
+            $primaryB = substr($pageB->rootLanguage, 0, 2);
+
+            if ($primaryA !== $primaryB) {
+                // We must not compare by language (without region) if they are the same, otherwise
+                // two pages with same language but different regions might not be sorted by region priority.
+                if (null === $langA) {
+                    $langA = $languages[$primaryA] ?? null;
+                }
+
+                if (null === $langB) {
+                    $langB = $languages[$primaryB] ?? null;
+                }
+            } elseif (null === $langA && null === $langB) {
+                // If both pages have the same language without region and neither region has a priority,
+                // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
+                $langA = $pageA->rootSorting;
+                $langB = $pageB->rootSorting;
+            }
         }
 
         if (null === $langA && null === $langB) {
@@ -189,19 +209,23 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
     protected function convertLanguagesForSorting(array $languages): array
     {
-        foreach ($languages as &$language) {
+        $result = [];
+
+        foreach ($languages as $language) {
             $language = str_replace('_', '-', $language);
+            $result[] = $language;
 
             if (5 === \strlen($language)) {
                 $lng = substr($language, 0, 2);
 
-                // Append the language if only language plus dialect is given (see #430)
-                if (!\in_array($lng, $languages, true)) {
-                    $languages[] = $lng;
+                // For [de-DE, fr, de] this will add "de" as second item in this loop,
+                // but the only last item will be kept by array_flip.
+                if (!\in_array($lng, $result, true)) {
+                    $result[] = $lng;
                 }
             }
         }
 
-        return array_flip(array_values($languages));
+        return array_flip($result);
     }
 }
