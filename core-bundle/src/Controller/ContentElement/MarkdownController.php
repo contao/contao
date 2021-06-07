@@ -17,7 +17,12 @@ use Contao\ContentModel;
 use Contao\FilesModel;
 use Contao\Template;
 use League\CommonMark\Environment;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\DisallowedRawHtml\DisallowedRawHtmlExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\TaskList\TaskListExtension;
 use League\CommonMark\MarkdownConverter;
 use League\CommonMark\MarkdownConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +43,14 @@ class MarkdownController extends AbstractContentElementController
 
     public static function createController(RequestStack $requestStack): self
     {
-        $environment = Environment::createGFMEnvironment(); // Support GitHub flavoured Markdown
+        $environment = Environment::createCommonMarkEnvironment();
+
+        // Support GitHub flavoured Markdown (using the individual extensions because we don't want the
+        // DisallowedRawHtmlExtension which is included by default)
+        $environment->addExtension(new AutolinkExtension());
+        $environment->addExtension(new StrikethroughExtension());
+        $environment->addExtension(new TableExtension());
+        $environment->addExtension(new TaskListExtension());
 
         // Automatically mark external links as such if we have a request
         if (null !== ($request = $requestStack->getCurrentRequest())) {
