@@ -141,7 +141,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             if ($primaryA !== $primaryB) {
                 // We must not compare by language (without region) if they are the same, otherwise
                 // two pages with same language but different regions might not be sorted by region priority.
-
                 if (null === $langA) {
                     $langA = $languages[$primaryA] ?? null;
                 }
@@ -152,7 +151,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             } elseif (null === $langA && null === $langB) {
                 // If both pages have the same language without region and neither region has a priority,
                 // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
-
                 $langA = $pageA->rootSorting;
                 $langB = $pageB->rootSorting;
             }

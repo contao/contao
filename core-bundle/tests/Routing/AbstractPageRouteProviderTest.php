@@ -26,7 +26,6 @@ class AbstractPageRouteProviderTest extends TestCase
     public function testCompareRoutes(Route $a, Route $b, ?array $languages, int $expected): void
     {
         $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
-
         $class = new \ReflectionClass($instance);
 
         if (null !== $languages) {
@@ -258,6 +257,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $method->setAccessible(true);
 
         $sorting = 0;
+
         $routes = array_map(
             function ($language) use ($sorting) {
                 return new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]);
