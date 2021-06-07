@@ -18,7 +18,6 @@ use Contao\FilesModel;
 use Contao\Template;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
-use League\CommonMark\Extension\GithubFlavoredMarkdownExtension;
 use League\CommonMark\MarkdownConverter;
 use League\CommonMark\MarkdownConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
