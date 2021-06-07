@@ -228,6 +228,7 @@ class StringUtilTest extends TestCase
         yield ['foo<br>bar{{br}}baz', "foo\nbar\nbaz"];
         yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", 'foo bar'];
         yield [" \t\r\n<br>foo \t<br>\r\n \r\n\t<br> bar <br>\t\r\n", "foo\nbar"];
+
         yield [
             '<h1>Headline</h1>Text<ul><li>List 1</li><li>List 2</li></ul><p>Inline<span>text</span> and <a>link</a></p><div><div><div>single newline',
             "Headline\nText\nList 1\nList 2\nInlinetext and link\nsingle newline",

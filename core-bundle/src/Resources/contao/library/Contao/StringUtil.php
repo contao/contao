@@ -973,7 +973,7 @@ class StringUtil
 	}
 
 	/**
-	 * Converts an input-encoded string back to its raw UTF-8 value it originated from.
+	 * Convert an input-encoded string back to the raw UTF-8 value it originated from
 	 *
 	 * It handles all Contao input encoding specifics like basic entities and encoded entities.
 	 */
@@ -997,7 +997,7 @@ class StringUtil
 	}
 
 	/**
-	 * Converts an input-encoded string to plain text UTF-8.
+	 * Convert an input-encoded string to plain text UTF-8
 	 *
 	 * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
 	 *
@@ -1024,7 +1024,7 @@ class StringUtil
 	}
 
 	/**
-	 * Converts an HTML string to plain text with normalized white space.
+	 * Convert an HTML string to plain text with normalized white space
 	 *
 	 * It handles all Contao input encoding specifics like insert tags, basic
 	 * entities and encoded entities and is meant to be used with content from
