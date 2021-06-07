@@ -112,7 +112,6 @@ services:
         factory: ['Contao\CoreBundle\Controller\ContentElement\MarkdownController', 'createController']
         arguments:
             - '@request_stack'
-            - '%kernel.project'
         tags:
             - { name: contao.content_element, category: texts }
 
