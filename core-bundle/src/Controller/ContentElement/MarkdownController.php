@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\ContentElement;
 
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\FilesModel;
 use Contao\Template;
@@ -38,8 +39,7 @@ class MarkdownController extends AbstractContentElementController
 
     public static function createController(RequestStack $requestStack): self
     {
-        $environment = Environment::createCommonMarkEnvironment();
-        $environment->addExtension(new GithubFlavoredMarkdownExtension()); // Support GitHub flavoured Markdown
+        $environment = Environment::createGFMEnvironment(); // Support GitHub flavoured Markdown
 
         // Automatically mark external links as such if we have a request
         if (null !== ($request = $requestStack->getCurrentRequest())) {
@@ -62,6 +62,7 @@ class MarkdownController extends AbstractContentElementController
 
     protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
     {
+        $this->initializeContaoFramework();
         $markdown = '';
 
         if ('sourceFile' === $model->markdownSource) {
@@ -75,6 +76,8 @@ class MarkdownController extends AbstractContentElementController
             $markdown = $model->code;
         }
 
-        return new Response($this->converter->convertToHtml($markdown));
+        $html = $this->converter->convertToHtml($markdown);
+
+        return new Response(strip_tags($html, $this->get('contao.framework')->getAdapter(Config::class)->get('allowedTags')));
     }
 }
