@@ -360,9 +360,9 @@ class AbstractPageRouteProviderTest extends TestCase
     }
 
     /**
-     * @return MockObject&PageModel
+     * @return PageModel&MockObject
      */
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): MockObject
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): PageModel
     {
         return $this->mockClassWithProperties(PageModel::class, [
             'type' => $root ? 'root' : 'regular',
