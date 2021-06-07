@@ -103,7 +103,7 @@ class Picker extends Widget
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
 
-		$arrValue = array_map('\intval', array_filter(explode(',', $varInput)));
+		$arrValue = array_filter(explode(',', $varInput));
 
 		return $this->multiple ? $arrValue : $arrValue[0];
 	}
