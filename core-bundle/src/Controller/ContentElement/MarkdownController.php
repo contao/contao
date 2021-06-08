@@ -24,23 +24,40 @@ use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\TaskList\TaskListExtension;
 use League\CommonMark\MarkdownConverter;
 use League\CommonMark\MarkdownConverterInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 class MarkdownController extends AbstractContentElementController
 {
-    /**
-     * @var MarkdownConverterInterface
-     */
-    private $converter;
-
-    public function __construct(MarkdownConverterInterface $converter)
+    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
     {
-        $this->converter = $converter;
+        $this->initializeContaoFramework();
+
+        if ('sourceFile' === $model->markdownSource) {
+            /** @var FilesModel|null $filesModel */
+            $filesModel = $this->get('contao.framework')->getAdapter(FilesModel::class)->findByPk($model->singleSRC);
+            $markdown = $this->getContentFromModel($filesModel);
+        } else {
+            $markdown = $model->code;
+        }
+
+        if ('' === $markdown) {
+            return new Response();
+        }
+
+        $html = $this->createConverter($model, $request)->convertToHtml($markdown);
+        $template->content = strip_tags($html, $this->get('contao.framework')->getAdapter(Config::class)->get('allowedTags'));
+
+        return $template->getResponse();
     }
 
-    public static function createController(RequestStack $requestStack): self
+    /**
+     * Hint: This is protected on purpose so you can override it for your app specific requirements.
+     * If you want to provide an extension with additional logic, consider providing your own special
+     * content element for that.
+     */
+    protected function createConverter(ContentModel $model, Request $request): MarkdownConverterInterface
     {
         $environment = Environment::createCommonMarkEnvironment();
 
@@ -52,42 +69,32 @@ class MarkdownController extends AbstractContentElementController
         $environment->addExtension(new TaskListExtension());
 
         // Automatically mark external links as such if we have a request
-        if (null !== ($request = $requestStack->getCurrentRequest())) {
-            $environment->addExtension(new ExternalLinkExtension());
-            $environment->mergeConfig([
-                'external_link' => [
-                    'internal_hosts' => $request->getHost(),
-                    'open_in_new_window' => true,
-                    'html_class' => 'external-link',
-                    'noopener' => 'external',
-                    'noreferrer' => 'external',
-                ],
-            ]);
-        }
+        $environment->addExtension(new ExternalLinkExtension());
+        $environment->mergeConfig([
+            'external_link' => [
+                'internal_hosts' => $request->getHost(),
+                'open_in_new_window' => true,
+                'html_class' => 'external-link',
+                'noopener' => 'external',
+                'noreferrer' => 'external',
+            ],
+        ]);
 
-        $converter = new MarkdownConverter($environment);
-
-        return new self($converter);
+        return new MarkdownConverter($environment);
     }
 
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    private function getContentFromModel(?FilesModel $filesModel): string
     {
-        $this->initializeContaoFramework();
-        $markdown = '';
-
-        if ('sourceFile' === $model->markdownSource) {
-            /** @var FilesModel|null $filesModel */
-            $filesModel = $this->get('contao.framework')->getAdapter(FilesModel::class)->findByPk($model->singleSRC);
-
-            if (null !== $filesModel) {
-                $markdown = (string) $filesModel->getContent();
-            }
-        } else {
-            $markdown = $model->code;
+        if (null === $filesModel) {
+            return '';
         }
 
-        $html = $this->converter->convertToHtml($markdown);
+        $path = $filesModel->getAbsolutePath();
 
-        return new Response(strip_tags($html, $this->get('contao.framework')->getAdapter(Config::class)->get('allowedTags')));
+        if (!(new Filesystem())->exists($path)) {
+            return '';
+        }
+
+        return (string) file_get_contents($path);
     }
 }

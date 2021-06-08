@@ -12,6 +12,8 @@ namespace Contao;
 
 use Michelf\MarkdownExtra;
 
+trigger_deprecation('contao/core-bundle', '4.12', 'ContentMarkdown has been deprecated and will be removed in Contao 5.0.');
+
 /**
  * Front end content element "code".
  *
@@ -19,13 +21,6 @@ use Michelf\MarkdownExtra;
  */
 class ContentMarkdown extends ContentElement
 {
-	public function __construct($objElement, $strColumn = 'main')
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'ContentMarkdown has been deprecated and will be removed in Contao 5.0.');
-
-		parent::__construct($objElement, $strColumn);
-	}
-
 	/**
 	 * Template
 	 * @var string

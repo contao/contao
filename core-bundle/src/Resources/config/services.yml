@@ -109,9 +109,6 @@ services:
         public: true
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController:
-        factory: ['Contao\CoreBundle\Controller\ContentElement\MarkdownController', 'createController']
-        arguments:
-            - '@request_stack'
         tags:
             - { name: contao.content_element, category: texts }
 

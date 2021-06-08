@@ -97,21 +97,6 @@ class FilesModel extends Model
 	protected static $strTable = 'tl_files';
 
 	/**
-	 * Returns the full content of the file if it exists and null otherwise.
-	 */
-	public function getContent(): ?string
-	{
-		$path = $this->getAbsolutePath();
-
-		if (!file_exists($path))
-		{
-			return null;
-		}
-
-		return (string) file_get_contents($path);
-	}
-
-	/**
 	 * Returns the full absolute path.
 	 */
 	public function getAbsolutePath(): string

@@ -222,7 +222,7 @@
         <source>Markdown source</source>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.1">
-        <source>Please chose the source of the Markdown content.</source>
+        <source>Please choose the Markdown source.</source>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceText">
         <source>Text</source>
