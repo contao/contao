@@ -949,7 +949,7 @@ abstract class DataContainer extends Backend
 
 			if (empty($v['route']))
 			{
-				$href = $this->addToUrl($v['href']);
+				$href = $this->addToUrl($href);
 			}
 
 			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
