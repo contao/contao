@@ -344,11 +344,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.0">
         <source>Cache timeout</source>
-        <target>زمان انقضاء نهانگاه</target>
+        <target>مهلت کش</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_cache.1">
         <source>Here you can define how long the RSS feed is being cached.</source>
-        <target>اینجا می‌توانید مدت زمانی که خوراک آراس‌اس در نهانگاه بماند را تعیین کنید</target>
+        <target>اینجا می‌توانید مدت زمانی که خوراک آراس‌اس در کش بماند را تعیین کنید</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.0">
         <source>Feed URLs</source>

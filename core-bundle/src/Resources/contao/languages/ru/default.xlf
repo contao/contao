@@ -1454,8 +1454,8 @@
         <target>Введите пароль.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>Подтвердите пароль</target>
+        <source>Confirm password</source>
+        <target>Подтвердить пароль</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>

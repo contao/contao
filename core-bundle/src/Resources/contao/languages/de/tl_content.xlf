@@ -778,7 +778,7 @@
         <target>Inline abspielen (kein Vollbildmodus)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
+        <source>Auto (preload the entire video)</source>
         <target>Auto (das ganze Video vorab laden)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">

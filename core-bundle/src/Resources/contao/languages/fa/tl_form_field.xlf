@@ -184,6 +184,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
+        <target>مرحله</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
@@ -293,6 +294,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
         <source>Form field template</source>
+        <target>قالب فیلد فرم</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
         <source>Here you can select the form field template.</source>

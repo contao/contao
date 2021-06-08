@@ -74,32 +74,33 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
-        <target>پاکسازی نهان‌گاه تصویر</target>
+        <target>پاکسازی کش تصویر</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
-        <target>پاکسازی نهان‌گاه اسکریپت</target>
+        <target>پاکسازی کش اسکریپت</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
         <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
-        <target>پاک کردن نهان‌گاه مشترک</target>
+        <target>پاک کردن کش مشترک</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.1">
         <source>Removes the cached versions of the front end pages.</source>
-        <target>نسخه‌های نهان‌گاه برگه‌های بخش کاربری را پاک می‌کند.</target>
+        <target>نسخه‌های کش برگه‌های بخش کاربری را پاک می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.0">
         <source>Purge the search results cache</source>
+        <target>پاک‌سازی کش نتایج جستجو</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.search.1">
         <source>Removes the cached versions of the search results.</source>
-        <target>نسخه‌های ذخیره شده نتایج جستجو را حذف می‌کند.</target>
+        <target>نسخه‌های کش‌شده نتایج جستجو را حذف می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>

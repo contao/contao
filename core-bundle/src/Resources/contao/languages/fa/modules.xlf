@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
-        <target>افزودن یا ویرایش قالب‌های اختصاصی</target>
+        <target>افزودن یا ویرایش قالب‌های سفارشی</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
