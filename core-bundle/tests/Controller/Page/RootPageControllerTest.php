@@ -60,7 +60,7 @@ class RootPageControllerTest extends TestCase
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://example.com/foobar', $response->getTargetUrl());
-        $this->assertSame(Response::HTTP_SEE_OTHER, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_FOUND, $response->getStatusCode());
     }
 
     public function testThrowsExceptionIfNoRedirectPageIsFound(): void
