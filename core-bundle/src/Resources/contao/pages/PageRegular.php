@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Routing\ResponseContext\ContaoWebpageResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -75,7 +74,6 @@ class PageRegular extends Frontend
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
 
-		/** @var ContaoWebpageResponseContext $responseContext */
 		$responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
