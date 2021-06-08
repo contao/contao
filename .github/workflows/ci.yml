@@ -68,7 +68,7 @@ jobs:
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
-            - name: Analyze the code
+            - name: Analyze the PHP files
               run: |
                   tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
                   tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
@@ -76,6 +76,7 @@ jobs:
             - name: Analyze the YAML files
               run: |
                   python3 -m pip install --upgrade pip
+                  python3 -m pip install --upgrade setuptools
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
