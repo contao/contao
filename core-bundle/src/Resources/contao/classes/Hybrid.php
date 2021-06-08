@@ -263,6 +263,12 @@ abstract class Hybrid extends Frontend
 			return false;
 		}
 
+		// Skip unsaved elements (see #2708)
+		if (!$this->objParent->tstamp)
+		{
+			return true;
+		}
+
 		$isInvisible = $this->objParent->invisible || ($this->objParent->start && $this->objParent->start > time()) || ($this->objParent->stop && $this->objParent->stop <= time());
 
 		// The element is visible, so show it
