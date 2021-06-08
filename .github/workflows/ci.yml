@@ -76,7 +76,7 @@ jobs:
             - name: Analyze the YAML files
               run: |
                   python3 -m pip install --upgrade pip
-                  python3 -m pip install --upgrade setuptools
+                  python3 -m pip install --upgrade setuptools wheel
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
