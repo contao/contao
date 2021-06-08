@@ -18,9 +18,9 @@ use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ForwardCompatibility\Result;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Statement;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -624,8 +624,8 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturnSelf()
         ;
 
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $result = $this->createMock(Result::class);
+        $result
             ->expects($this->once())
             ->method('fetchAssociative')
             ->willReturn($data)
@@ -669,7 +669,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('execute')
-            ->willReturn($statement)
+            ->willReturn($result)
         ;
 
         $connection = $this->createMock(Connection::class);

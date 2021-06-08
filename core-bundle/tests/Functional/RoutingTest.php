@@ -1165,11 +1165,11 @@ class RoutingTest extends FunctionalTestCase
             'same-domain-root.local',
         ];
 
-        yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
+        yield 'Redirects to "de" if "de-CH" and "en" are accepted' => [
             ['theme', 'same-domain-root'],
             '/',
             302,
-            'Redirecting to https://same-domain-root.local/en/',
+            'Redirecting to https://same-domain-root.local/de/',
             'de-CH,en',
             'same-domain-root.local',
         ];
@@ -1243,6 +1243,33 @@ class RoutingTest extends FunctionalTestCase
             302,
             'Redirecting to https://example.com/de/',
             'de,en',
+            'example.com',
+        ];
+
+        yield 'Redirects to preferred language and region' => [
+            ['theme', 'language-and-region'],
+            '/',
+            302,
+            'Redirecting to https://example.com/de-CH/',
+            'de,de-CH,fr',
+            'example.com',
+        ];
+
+        yield 'Redirects to preferred language and ignores region if it does not exist' => [
+            ['theme', 'language-and-region'],
+            '/',
+            302,
+            'Redirecting to https://example.com/it-CH/',
+            'it-IT,de',
+            'example.com',
+        ];
+
+        yield 'Redirects to the language region by root page sorting' => [
+            ['theme', 'language-and-region'],
+            '/',
+            302,
+            'Redirecting to https://example.com/de-CH/',
+            'de',
             'example.com',
         ];
     }

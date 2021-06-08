@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\PageModel;
+use Contao\StringUtil;
 
 class CoreResponseContextFactory
 {
@@ -55,9 +56,11 @@ class CoreResponseContextFactory
         /** @var HtmlHeadBag $htmlHeadBag */
         $htmlHeadBag = $context->get(HtmlHeadBag::class);
 
+        $title = $pageModel->pageTitle ?: StringUtil::inputEncodedToPlainText($pageModel->title ?: '');
+
         $htmlHeadBag
-            ->setTitle($pageModel->pageTitle ?: $pageModel->title ?: '')
-            ->setMetaDescription(str_replace(["\n", "\r", '"'], [' ', '', ''], $pageModel->description ?: ''))
+            ->setTitle($title ?: '')
+            ->setMetaDescription(StringUtil::inputEncodedToPlainText($pageModel->description ?: ''))
         ;
 
         if ($pageModel->robots) {

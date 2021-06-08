@@ -115,7 +115,7 @@ class ModuleNewsletterReader extends Module
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle(strip_tags(StringUtil::stripInsertTags($objNewsletter->subject)));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objNewsletter->subject));
 			}
 		}
 

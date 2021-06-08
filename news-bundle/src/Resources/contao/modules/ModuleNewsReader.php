@@ -146,20 +146,20 @@ class ModuleNewsReader extends ModuleNews
 
 			if ($objArticle->pageTitle)
 			{
-				$htmlHeadBag->setTitle($objArticle->pageTitle);
+				$htmlHeadBag->setTitle($objArticle->pageTitle); // Already stored decoded
 			}
 			elseif ($objArticle->headline)
 			{
-				$htmlHeadBag->setTitle(strip_tags(StringUtil::stripInsertTags($objArticle->headline)));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objArticle->headline));
 			}
 
 			if ($objArticle->description)
 			{
-				$htmlHeadBag->setMetaDescription($objArticle->description);
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objArticle->description));
 			}
 			elseif ($objArticle->teaser)
 			{
-				$htmlHeadBag->setMetaDescription($this->prepareMetaDescription($objArticle->teaser));
+				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)

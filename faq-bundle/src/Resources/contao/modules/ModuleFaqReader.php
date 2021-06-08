@@ -120,20 +120,20 @@ class ModuleFaqReader extends Module
 
 			if ($objFaq->pageTitle)
 			{
-				$htmlHeadBag->setTitle($objFaq->pageTitle);
+				$htmlHeadBag->setTitle($objFaq->pageTitle); // Already stored decoded
 			}
 			elseif ($objFaq->question)
 			{
-				$htmlHeadBag->setTitle(strip_tags(StringUtil::stripInsertTags($objFaq->question)));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->description)
 			{
-				$htmlHeadBag->setMetaDescription($objFaq->description);
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->description));
 			}
 			elseif ($objFaq->question)
 			{
-				$htmlHeadBag->setMetaDescription($this->prepareMetaDescription($objFaq->question));
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->robots)

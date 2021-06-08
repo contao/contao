@@ -742,11 +742,11 @@ class InsertTags extends Controller
 						switch ($elements[1])
 						{
 							case 'pageTitle':
-								$arrCache[$strTag] = $htmlHeadBag->getTitle();
+								$arrCache[$strTag] = htmlspecialchars($htmlHeadBag->getTitle());
 								break;
 
 							case 'description':
-								$arrCache[$strTag] = $htmlHeadBag->getMetaDescription();
+								$arrCache[$strTag] = htmlspecialchars($htmlHeadBag->getMetaDescription());
 								break;
 						}
 					}

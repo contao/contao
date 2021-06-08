@@ -174,11 +174,11 @@ class ModuleArticle extends Module
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-				$htmlHeadBag->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
 
 				if ($this->teaser)
 				{
-					$htmlHeadBag->setMetaDescription($this->prepareMetaDescription($this->teaser));
+					$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($this->teaser));
 				}
 			}
 		}

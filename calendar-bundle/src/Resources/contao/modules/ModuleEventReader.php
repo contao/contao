@@ -139,20 +139,20 @@ class ModuleEventReader extends Events
 
 			if ($objEvent->pageTitle)
 			{
-				$htmlHeadBag->setTitle($objEvent->pageTitle);
+				$htmlHeadBag->setTitle($objEvent->pageTitle); // Already stored decoded
 			}
 			elseif ($objEvent->title)
 			{
-				$htmlHeadBag->setTitle(strip_tags(StringUtil::stripInsertTags($objEvent->title)));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$htmlHeadBag->setMetaDescription($objEvent->description);
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$htmlHeadBag->setMetaDescription($this->prepareMetaDescription($objEvent->teaser));
+				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)

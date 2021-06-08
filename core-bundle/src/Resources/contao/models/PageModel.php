@@ -317,11 +317,11 @@ class PageModel extends Model
 				switch ($strKey)
 				{
 					case 'pageTitle':
-						$htmlHeadBag->setTitle($varValue);
+						$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'description':
-						$htmlHeadBag->setMetaDescription($varValue);
+						$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'robots':
