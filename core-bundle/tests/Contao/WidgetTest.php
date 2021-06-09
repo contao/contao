@@ -29,6 +29,7 @@ class WidgetTest extends TestCase
         $container = new ContainerBuilder();
         $container->set('request_stack', new RequestStack());
         $container->setParameter('kernel.charset', 'UTF-8');
+        $container->setParameter('contao.image.valid_extensions', ['jpg', 'gif', 'png']);
 
         System::setContainer($container);
     }
@@ -167,5 +168,77 @@ class WidgetTest extends TestCase
             ->setInputCallback()
             ->validate() // getPost() should be called once here
 ;
+    }
+
+    /**
+     * @dataProvider getAttributesFromDca
+     */
+    public function testGetsAttributesFromDca(array $parameters, array $expected): void
+    {
+        $attrs = Widget::getAttributesFromDca(...$parameters);
+
+        foreach ($expected as $key => $value) {
+            $this->assertSame($value, $attrs[$key]);
+        }
+    }
+
+    public function getAttributesFromDca()
+    {
+        yield [
+            [[], 'foo'],
+            [
+                'name' => 'foo',
+                'id' => 'foo',
+            ],
+        ];
+
+        yield [
+            [['eval' => ['foo' => '%kernel.charset%']], 'name'],
+            [
+                'foo' => 'UTF-8',
+            ],
+        ];
+
+        yield [
+            [['eval' => ['foo' => 'bar%kernel.charset%baz']], 'name'],
+            [
+                'foo' => 'barUTF-8baz',
+            ],
+        ];
+
+        yield [
+            [['eval' => ['foo' => '%%b%%ar%kernel.charset%ba%%z']], 'name'],
+            [
+                'foo' => '%b%arUTF-8ba%z',
+            ],
+        ];
+
+        yield [
+            [['eval' => ['foo' => '%%% xxx %%%']], 'name'],
+            [
+                'foo' => '%%% xxx %%%',
+            ],
+        ];
+
+        yield [
+            [['eval' => ['foo' => '50% discount 20% VAT']], 'name'],
+            [
+                'foo' => '50% discount 20% VAT',
+            ],
+        ];
+
+        yield [
+            [['eval' => ['foo' => '%contao.image.valid_extensions%']], 'name'],
+            [
+                'foo' => ['jpg', 'gif', 'png'],
+            ],
+        ];
+
+        yield [
+            [['eval' => ['extensions' => '%contao.image.valid_extensions%']], 'name'],
+            [
+                'extensions' => 'jpg,gif,png',
+            ],
+        ];
     }
 }

@@ -1243,6 +1243,29 @@ abstract class Widget extends Controller
 	{
 		$arrAttributes = $arrData['eval'] ?? array();
 
+		if (method_exists(System::getContainer(), 'getParameterBag'))
+		{
+			$objParameterBag = System::getContainer()->getParameterBag();
+
+			foreach ($arrAttributes as $strAttrKey => $varAttrValue)
+			{
+				if (!\is_string($varAttrValue) || !preg_match('/%[a-z][a-z0-9_]*\.[a-z0-9_.]+%/i', $varAttrValue, $arrMatches))
+				{
+					continue;
+				}
+
+				$varAttrValue = $objParameterBag->resolveValue($varAttrValue);
+				$varAttrValue = $objParameterBag->unescapeValue($varAttrValue);
+
+				if ($strAttrKey === 'extensions' && \is_array($varAttrValue))
+				{
+					$varAttrValue = implode(',', $varAttrValue);
+				}
+
+				$arrAttributes[$strAttrKey] = $varAttrValue;
+			}
+		}
+
 		$arrAttributes['id'] = $strName;
 		$arrAttributes['name'] = $strName;
 		$arrAttributes['strField'] = $strField;
@@ -1252,19 +1275,6 @@ abstract class Widget extends Controller
 		$arrAttributes['type'] = $arrData['inputType'] ?? null;
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
-
-		if (method_exists(System::getContainer(), 'getParameterBag'))
-		{
-			if (isset($arrAttributes['extensions']))
-			{
-				$arrAttributes['extensions'] = System::getContainer()->getParameterBag()->resolveString($arrAttributes['extensions']);
-
-				if (\is_array($arrAttributes['extensions']))
-				{
-					$arrAttributes['extensions'] = implode(',', $arrAttributes['extensions']);
-				}
-			}
-		}
 
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
