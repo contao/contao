@@ -258,11 +258,19 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'decodeEntities'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''",
 			'save_callback'           => array(
 				static function ($value)
 				{
+					if (System::getContainer()->getParameter('contao.legacy_routing')) {
+						if (!\Contao\Validator::isLanguage($value)) {
+							throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['language']);
+						}
+
+						return $value;
+					}
+
 					return LocaleUtil::canonicalize($value);
 				}
 			)
