@@ -27,20 +27,20 @@ use Twig\TokenStream;
 class DynamicExtendsTokenParser extends AbstractTokenParser
 {
     /**
-     * @var HierarchyProvider
+     * @var TemplateHierarchyInterface
      */
-    private $hierarchyProvider;
+    private $hierarchy;
 
     /**
-     * Track chain to prevent endless loops.
+     * Track use of inherited templates to prevent endless loops.
      *
      * @var array<string,array<string>>
      */
-    private $inheritanceChain = [];
+    private $inheritanceChains = [];
 
-    public function __construct(HierarchyProvider $hierarchyProvider)
+    public function __construct(TemplateHierarchyInterface $hierarchy)
     {
-        $this->hierarchyProvider = $hierarchyProvider;
+        $this->hierarchy = $hierarchy;
     }
 
     public function parse(Token $token): Node
@@ -87,16 +87,16 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
 
         $shortName = $matches[1];
         $sourcePath = $stream->getSourceContext()->getPath();
-        $parentName = $this->hierarchyProvider->getDynamicParent($matches[1], $sourcePath);
+        $parentName = $this->hierarchy->getDynamicParent($matches[1], $sourcePath);
 
         // Detect loops
-        if (\in_array($parentName, $this->inheritanceChain[$shortName] ?? [], true)) {
-            $chain = implode(' -> ', $this->inheritanceChain[$shortName]);
+        if (\in_array($parentName, $this->inheritanceChains[$shortName] ?? [], true)) {
+            $chain = implode(' -> ', $this->inheritanceChains[$shortName]);
 
             throw new \LogicException("Loop detected when extending '$parentName': $chain -> &0");
         }
 
-        $this->inheritanceChain[$shortName][] = $parentName;
+        $this->inheritanceChains[$shortName][] = $parentName;
 
         // Adjust parent template according to the template hierarchy
         $parent->setAttribute('value', $parentName);

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -26,16 +26,16 @@ use Webmozart\PathUtil\Path;
 class ContaoExtension extends AbstractExtension
 {
     /**
-     * @var HierarchyProvider
+     * @var TemplateHierarchyInterface
      */
-    private $hierarchyProvider;
+    private $hierarchy;
 
     /**
      * @var array
      */
     private $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, HierarchyProvider $hierarchyProvider)
+    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
@@ -45,7 +45,7 @@ class ContaoExtension extends AbstractExtension
             [(new ContaoEscaper()), '__invoke']
         );
 
-        $this->hierarchyProvider = $hierarchyProvider;
+        $this->hierarchy = $hierarchy;
 
         // Use our escaper on all templates in the `@Contao` and `@Contao_*`
         // namespaces
@@ -89,7 +89,7 @@ class ContaoExtension extends AbstractExtension
         return [
             // Registers a parser for the 'extends' tag which will overwrite
             // the one of Twig's CoreExtension
-            new DynamicExtendsTokenParser($this->hierarchyProvider),
+            new DynamicExtendsTokenParser($this->hierarchy),
         ];
     }
 

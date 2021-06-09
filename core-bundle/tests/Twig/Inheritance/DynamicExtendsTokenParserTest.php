@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Twig\Environment;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
@@ -25,7 +25,7 @@ class DynamicExtendsTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicExtendsTokenParser($this->createMock(HierarchyProvider::class));
+        $tokenParser = new DynamicExtendsTokenParser($this->createMock(TemplateHierarchyInterface::class));
 
         $this->assertSame('extends', $tokenParser->getTag());
     }
@@ -35,7 +35,7 @@ class DynamicExtendsTokenParserTest extends TestCase
      */
     public function testSetsParent(string $code, string $expectedParent): void
     {
-        $templateHierarchy = $this->createMock(HierarchyProvider::class);
+        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $templateHierarchy
             ->method('getDynamicParent')
             ->with('foo.html.twig', '/path/to/the/template.html.twig')

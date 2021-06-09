@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Twig\Error\LoaderError;
@@ -38,7 +38,7 @@ use Webmozart\PathUtil\Path;
  *     to the directory paths, the hierarchy is also cacheable and gets
  *     automatically restored at construct time.
  */
-class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvider, ResetInterface
+class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
@@ -61,7 +61,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     /**
      * @var array<string,array<string,string>>|null
      */
-    private $hierarchy;
+    private $inheritanceChains;
 
     /**
      * @var string|false|null
@@ -86,7 +86,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         $hierarchyItem = $cachePool->getItem(self::CACHE_KEY_HIERARCHY);
 
         if ($hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
-            $this->hierarchy = $hierarchy;
+            $this->inheritanceChains = $hierarchy;
         }
     }
 
@@ -151,7 +151,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
     public function clear(): void
     {
         $this->paths = $this->trackedTemplatesPaths = $this->cache = $this->errorCache = [];
-        $this->hierarchy = null;
+        $this->inheritanceChains = null;
     }
 
     /**
@@ -165,7 +165,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         $this->cachePool->save($pathsItem);
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
-        $hierarchyItem->set($this->hierarchy);
+        $hierarchyItem->set($this->inheritanceChains);
         $this->cachePool->save($hierarchyItem);
     }
 
@@ -271,7 +271,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
             return false;
         }
 
-        $chain = $this->getHierarchy()[$this->getIdentifier($name)] ?? [];
+        $chain = $this->getInheritanceChains()[$this->getIdentifier($name)] ?? [];
 
         foreach (array_keys($chain) as $path) {
             try {
@@ -296,12 +296,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         $this->currentThemeSlug = null;
     }
 
-    /**
-     * Finds the next template in the hierarchy and returns the logical name.
-     */
     public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string
     {
-        $hierarchy = $this->getHierarchy();
+        $hierarchy = $this->getInheritanceChains();
 
         $identifier = $this->getIdentifier($shortNameOrIdentifier);
 
@@ -320,20 +317,20 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
         return $next;
     }
 
-    public function getHierarchy(): array
+    public function getInheritanceChains(): array
     {
-        if (null === $this->hierarchy) {
-            $this->buildHierarchy();
+        if (null === $this->inheritanceChains) {
+            $this->buildInheritanceChains();
         }
 
-        return $this->hierarchy;
+        return $this->inheritanceChains;
     }
 
     /**
-     * Refreshes the template hierarchy. Bear in mind that this will issue
+     * Refreshes the template hierarchy. Bear in mind that this will induce
      * filesystem operations for each of the tracked template paths.
      */
-    public function buildHierarchy(): void
+    public function buildInheritanceChains(): void
     {
         $templatesByNamespace = [];
 
@@ -365,7 +362,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements HierarchyProvid
             }
         }
 
-        $this->hierarchy = $hierarchy;
+        $this->inheritanceChains = $hierarchy;
     }
 
     /**

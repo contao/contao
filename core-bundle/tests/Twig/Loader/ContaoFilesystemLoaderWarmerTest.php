@@ -63,7 +63,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $loader
             ->expects($this->once())
-            ->method('buildHierarchy')
+            ->method('buildInheritanceChains')
         ;
 
         $loader

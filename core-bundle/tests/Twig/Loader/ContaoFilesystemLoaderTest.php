@@ -241,7 +241,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod');
         $warmer->warmUp();
 
-        $expectedHierarchy = [
+        $expectedChains = [
             'text' => [
                 $globalPath = Path::join($projectDir, '/templates/text.html.twig') => '@Contao_Global/text.html.twig',
                 $appPath = Path::join($projectDir, '/contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
@@ -252,7 +252,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
 
         // Full hierarchy
-        $this->assertSame($expectedHierarchy, $loader->getHierarchy());
+        $this->assertSame($expectedChains, $loader->getInheritanceChains());
 
         // Next element by path
         $this->assertSame(

@@ -69,7 +69,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
             }
         }
 
-        $this->loader->buildHierarchy();
+        $this->loader->buildInheritanceChains();
 
         $this->loader->persist();
 

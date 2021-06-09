@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Twig\Inheritance\HierarchyProvider;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -26,18 +26,18 @@ class DebugContaoTwigCommand extends Command
     protected static $defaultName = 'debug:contao-twig';
 
     /**
-     * @var HierarchyProvider
+     * @var TemplateHierarchyInterface
      */
-    private $hierarchyProvider;
+    private $hierarchy;
 
     /**
      * @var ContaoFilesystemLoaderWarmer
      */
     private $cacheWarmer;
 
-    public function __construct(HierarchyProvider $hierarchyProvider, ContaoFilesystemLoaderWarmer $cacheWarmer)
+    public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer)
     {
-        $this->hierarchyProvider = $hierarchyProvider;
+        $this->hierarchy = $hierarchy;
         $this->cacheWarmer = $cacheWarmer;
 
         parent::__construct();
@@ -58,19 +58,18 @@ class DebugContaoTwigCommand extends Command
         if ($input->hasOption('refresh')) {
             $this->cacheWarmer->refresh();
 
-            $io->success('Template loader cache and hierarchy was successfully rebuild.');
+            $io->success('Template loader cache and hierarchy was successfully rebuilt.');
         }
 
         $rows = [];
-        $hierarchy = $this->hierarchyProvider->getHierarchy();
 
-        foreach ($hierarchy as $identifier => $templates) {
+        foreach ($this->hierarchy->getInheritanceChains() as $identifier => $chain) {
             $i = 0;
 
-            foreach ($templates as $path => $namespace) {
+            foreach ($chain as $path => $name) {
                 $rows[] = [
                     0 === $i ? $identifier : '',
-                    $namespace,
+                    $name,
                     $path,
                 ];
                 ++$i;
@@ -82,7 +81,7 @@ class DebugContaoTwigCommand extends Command
         array_pop($rows);
 
         $io->title('Template hierarchy');
-        $io->table(['Identifier', 'Effective namespace', 'Path'], $rows);
+        $io->table(['Identifier', 'Effective logical name', 'Path'], $rows);
 
         return 0;
     }
