@@ -1462,8 +1462,7 @@
         <target>لطفا گذرواژه را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>تایید</target>
+        <source>Confirm password</source>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -2742,7 +2741,7 @@
       </trans-unit>
       <trans-unit id="COLS.header">
         <source>Header</source>
-        <target>سربرگ سایت</target>
+        <target>سربرگ</target>
       </trans-unit>
       <trans-unit id="COLS.left">
         <source>Left column</source>
@@ -2766,7 +2765,7 @@
       </trans-unit>
       <trans-unit id="SECTIONS.before">
         <source>After the page header</source>
-        <target>بعد از سربرگ</target>
+        <target>بعد از سربرگ صفحه</target>
       </trans-unit>
       <trans-unit id="SECTIONS.main">
         <source>Inside the main column</source>
@@ -2774,7 +2773,7 @@
       </trans-unit>
       <trans-unit id="SECTIONS.after">
         <source>Before the page footer</source>
-        <target>قبل از پاورقی</target>
+        <target>قبل از پاورقی برگه</target>
       </trans-unit>
       <trans-unit id="SECTIONS.bottom">
         <source>After the wrapper</source>

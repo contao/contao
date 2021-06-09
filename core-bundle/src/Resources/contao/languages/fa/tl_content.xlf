@@ -178,7 +178,7 @@
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
-        <target>استفاده از سربرگ ردیف</target>
+        <target>استفاده از سربرگ‌های ردیف</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.1">
         <source>Define the left column as row header.</source>
@@ -758,13 +758,14 @@
         <source>Play inline (no fullscreen mode)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.none">
         <source>None (do not preload anything)</source>
+        <target>هیچ (هیچ چیزی پیش‌بارگذاری نشود)</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_autoplay">
         <source>Autoplay</source>
