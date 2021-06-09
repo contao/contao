@@ -48,7 +48,7 @@ class LanguageFilter implements RouteFilterInterface
 
             if (
                 $pageModel->rootIsFallback
-                || preg_grep('/^'.substr($pageModel->rootLanguage, 0, 2).'/', $languages)
+                || preg_grep('/^'.LocaleUtil::getPrimaryLanguage($pageModel->rootLanguage).'/', $languages)
             ) {
                 continue;
             }

@@ -7,7 +7,7 @@ tl_page:
       alias: root-de-ch
       urlSuffix: .html
       type: root
-      language: de-CH
+      language: de_CH
       dns: example.com
       fallback: ''
       includeLayout: '1'
@@ -31,7 +31,7 @@ tl_page:
       alias: root-fr
       urlSuffix: .html
       type: root
-      language: fr-CH
+      language: fr_CH
       dns: example.com
       fallback: ''
       includeLayout: '1'
@@ -55,7 +55,7 @@ tl_page:
       alias: root-it
       urlSuffix: .html
       type: root
-      language: it-CH
+      language: it_CH
       dns: example.com
       fallback: ''
       includeLayout: '1'
@@ -79,7 +79,7 @@ tl_page:
       alias: root-de-de
       urlSuffix: .html
       type: root
-      language: de-DE
+      language: de_DE
       dns: example.com
       fallback: '1'
       includeLayout: '1'
