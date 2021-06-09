@@ -284,7 +284,7 @@ class PageModel extends Model
 	public function __get($strKey)
 	{
 		// Lazy-load the fallback language (see contao/core#6874)
-		if ($strKey == 'rootFallbackLanguage' && !\array_key_exists('rootFallbackLanguage', $this->arrData)) {
+		if ($strKey == 'rootFallbackLanguage' && $this->blnDetailsLoaded && !\array_key_exists('rootFallbackLanguage', $this->arrData)) {
 			$this->rootFallbackLanguage = $this->rootIsFallback ? $this->language : null;
 
 			if (!$this->rootIsFallback && ($objFallback = static::findPublishedFallbackByHostname($this->domain)) !== null)
@@ -294,6 +294,24 @@ class PageModel extends Model
 		}
 
 		return parent::__get($strKey);
+	}
+
+	public function __isset($strKey)
+	{
+		if ($strKey == 'rootFallbackLanguage' && $this->blnDetailsLoaded)
+		{
+			return true;
+		}
+
+		return parent::__isset($strKey);
+	}
+
+	public function row()
+	{
+		// Load lazy properties
+		$this->__get('rootFallbackLanguage');
+
+		return parent::row();
 	}
 
 	/**
