@@ -1478,8 +1478,8 @@
         <target>Bitte geben Sie ein Passwort ein.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>Bestätigung</target>
+        <source>Confirm password</source>
+        <target>Passwort bestätigen</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
