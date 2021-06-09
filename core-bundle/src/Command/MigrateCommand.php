@@ -77,6 +77,7 @@ class MigrateCommand extends Command
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Only update the database schema.')
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'text')
             ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
@@ -84,6 +85,22 @@ class MigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+
+        if ('json' === $input->getOption('format')) {
+            $data = [
+                'runonceFiles' => $this->getRunOnceFiles(),
+                'migrations' => $this->migrations->getPendingNames(),
+                'schema' => $this->installer->getCommands(false),
+            ];
+
+            $this->io->write(json_encode($data));
+
+            return 0;
+        }
+
+        if ('text' !== $input->getOption('format')) {
+            throw new \LogicException('Invalid format: '.$input->getOption('format'));
+        }
 
         if ($input->getOption('migrations-only')) {
             if ($input->getOption('schema-only')) {
