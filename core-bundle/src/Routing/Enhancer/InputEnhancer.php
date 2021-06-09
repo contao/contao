@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\Enhancer;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Input;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
@@ -49,7 +50,7 @@ class InputEnhancer implements RouteEnhancerInterface
         $input = $this->framework->getAdapter(Input::class);
 
         if (!empty($page->urlPrefix)) {
-            $input->setGet('language', $page->rootLanguage);
+            $input->setGet('language', LocaleUtil::formatAsLanguageTag($page->rootLanguage));
         }
 
         if (empty($defaults['parameters'])) {
