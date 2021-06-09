@@ -72,7 +72,7 @@ class CeAccessMigration extends AbstractMigration
                 fields = :fields
         ');
 
-        $stmt->execute([
+        $stmt->executeStatement([
             ':elements' => serialize(array_keys(array_merge(...array_values($GLOBALS['TL_CTE'])))),
             ':fields' => serialize(array_keys($GLOBALS['TL_FFL'])),
         ]);

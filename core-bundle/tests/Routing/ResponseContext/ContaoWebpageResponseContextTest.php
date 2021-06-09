@@ -32,4 +32,17 @@ class ContaoWebpageResponseContextTest extends ContaoTestCase
         $this->assertSame('My description', $context->getMetaDescription());
         $this->assertSame('noindex,nofollow', $context->getMetaRobots());
     }
+
+    public function testDecodingAndCleanup(): void
+    {
+        /** @var PageModel $pageModel */
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->title = 'We went from Alpha &#62; Omega ';
+        $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
+
+        $context = new ContaoWebpageResponseContext($pageModel);
+
+        $this->assertSame('We went from Alpha > Omega ', $context->getTitle());
+        $this->assertSame('My description contains HTML.', $context->getMetaDescription());
+    }
 }
