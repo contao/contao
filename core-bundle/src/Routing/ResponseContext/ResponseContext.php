@@ -12,38 +12,61 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+
 final class ResponseContext
 {
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     /**
-     * @var array
+     * @var Container
      */
-    private $services = [];
+    private $container;
 
     /**
      * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
 
-    public function add(object $service): self
+    public function __construct()
     {
-        $this->services[\get_class($service)] = $service;
+        $this->container = new Container();
+    }
+
+    public function remove(string $serviceId): self
+    {
+        $this->container->set($serviceId, null);
 
         return $this;
     }
 
-    public function has(string $service): bool
+    public function add(object $service): self
     {
-        return null !== $this->get($service);
+        $this->container->set(\get_class($service), $service);
+
+        // Automatically add aliases for all interfaces (last one added automatically wins by overriding here)
+        foreach ((new \ReflectionClass($service))->getInterfaceNames() as $interfaceName) {
+            $this->container->set($interfaceName, $service);
+        }
+
+        return $this;
+    }
+
+    public function has(string $serviceId): bool
+    {
+        return $this->container->has($serviceId);
     }
 
     /**
-     * @return mixed|null
+     * @throws ServiceNotFoundException
+     *
+     * @return mixed
      */
-    public function get(string $service)
+    public function get(string $serviceId)
     {
-        return $this->services[$service] ?? null;
+        return $this->container->get($serviceId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE);
     }
 
     public function getHeaderBag(): PartialResponseHeaderBag
