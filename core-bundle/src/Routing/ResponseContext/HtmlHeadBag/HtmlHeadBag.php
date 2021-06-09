@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
-class HtmlHeadBag
+final class HtmlHeadBag
 {
     /**
      * @var string
