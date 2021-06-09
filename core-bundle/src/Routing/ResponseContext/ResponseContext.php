@@ -60,9 +60,12 @@ final class ResponseContext
     }
 
     /**
-     * @throws ServiceNotFoundException
+     * @template T
+     * @psalm-param class-string<T> $serviceId
+     * @psalm-return T
      *
-     * @return mixed
+     * @return object
+     * @throws ServiceNotFoundException
      */
     public function get(string $serviceId)
     {
