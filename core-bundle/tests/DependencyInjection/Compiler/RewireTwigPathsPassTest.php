@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\DependencyInjection\Compiler\TwigPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Twig\Loader\FilesystemLoader;
 
-class TwigPathsPassTest extends TestCase
+class RewireTwigPathsPassTest extends TestCase
 {
     public function testRewiresAndAddsMethodCalls(): void
     {
@@ -38,7 +38,7 @@ class TwigPathsPassTest extends TestCase
             FailTolerantFilesystemLoader::class => $loader,
         ]);
 
-        (new TwigPathsPass())->process($container);
+        (new RewireTwigPathsPass())->process($container);
 
         $this->assertFalse($baseLoader->hasMethodCall('addPath'));
         $this->assertTrue($baseLoader->hasMethodCall('foo'));

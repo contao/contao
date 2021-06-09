@@ -15,31 +15,24 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * @internal
  */
-class TwigPathsPass implements CompilerPassInterface
+class RewireTwigPathsPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container): void
-    {
-        $this->migrateSymfonyTwigPaths(
-            $container->getDefinition('twig.loader.native_filesystem'),
-            $container->getDefinition(FailTolerantFilesystemLoader::class)
-        );
-    }
-
     /**
      * Rewires Symfony's "addPath" method calls to our fail tolerant version
-     * of a filesystem loader which tolerates missing paths that will occur
+     * of a filesystem loader which tolerates missing paths. Those will occur
      * as soon as a user removes registered directories (e.g. from within the
-     * backend) and that would otherwise require the container to be rebuild.
+     * backend) and that would otherwise require the container to be rebuilt.
      */
-    private function migrateSymfonyTwigPaths(Definition $from, Definition $to): void
+    public function process(ContainerBuilder $container): void
     {
+        $original = $container->getDefinition('twig.loader.native_filesystem');
+
         $calls = array_filter(
-            $from->getMethodCalls(),
+            $original->getMethodCalls(),
             static function (array $call): bool {
                 return 'addPath' === $call[0];
             }
@@ -49,10 +42,12 @@ class TwigPathsPass implements CompilerPassInterface
             return;
         }
 
-        $from->removeMethodCall('addPath');
+        $original->removeMethodCall('addPath');
+
+        $replaced = $container->getDefinition(FailTolerantFilesystemLoader::class);
 
         foreach ($calls as $call) {
-            $to->addMethodCall(...$call);
+            $replaced->addMethodCall(...$call);
         }
     }
 }
