@@ -836,7 +836,7 @@ class tl_module extends Backend
 		if ($dc->activeRecord && $dc->activeRecord->type == 'randomImage')
 		{
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
-			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'));
+			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = '%contao.image.valid_extensions%';
 		}
 
 		return $varValue;

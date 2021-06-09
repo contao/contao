@@ -351,7 +351,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'bgimage' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'))), 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%'), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'bgposition' => array
@@ -526,7 +526,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'liststyleimage' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'))), 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%'), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'own' => array

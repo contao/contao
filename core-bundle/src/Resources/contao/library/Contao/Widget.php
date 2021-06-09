@@ -1253,6 +1253,19 @@ abstract class Widget extends Controller
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
+		if (method_exists(System::getContainer(), 'getParameterBag'))
+		{
+			if (isset($arrAttributes['extensions']))
+			{
+				$arrAttributes['extensions'] = System::getContainer()->getParameterBag()->resolveString($arrAttributes['extensions']);
+
+				if (\is_array($arrAttributes['extensions']))
+				{
+					$arrAttributes['extensions'] = implode(',', $arrAttributes['extensions']);
+				}
+			}
+		}
+
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
