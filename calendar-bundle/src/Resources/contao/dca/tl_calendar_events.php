@@ -520,7 +520,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'noComments' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "char(1) NOT NULL default ''"
