@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
 use Contao\Template;
 use League\CommonMark\Environment;
@@ -36,7 +35,7 @@ class MarkdownController extends AbstractContentElementController
         $this->initializeContaoFramework();
 
         if ('sourceFile' === $model->markdownSource) {
-            $markdown = $this->getContentFromModel($this->getFilesModelAdapter()->findByPk($model->singleSRC));
+            $markdown = $this->getContentFromFile($model->singleSRC);
         } else {
             $markdown = $model->code ?? '';
         }
@@ -45,8 +44,11 @@ class MarkdownController extends AbstractContentElementController
             return new Response();
         }
 
+        /** @var Config $config */
+        $config = $this->get('contao.framework')->getAdapter(Config::class);
+
         $html = $this->createConverter($model, $request)->convertToHtml($markdown);
-        $template->content = strip_tags($html, $this->getConfigAdapter()->get('allowedTags'));
+        $template->content = strip_tags($html, $config->get('allowedTags'));
 
         return $template->getResponse();
     }
@@ -83,8 +85,18 @@ class MarkdownController extends AbstractContentElementController
         return new MarkdownConverter($environment);
     }
 
-    private function getContentFromModel(?FilesModel $filesModel): string
+    private function getContentFromFile(?string $file): string
     {
+        if (!$file) {
+            return '';
+        }
+
+        /** @var FilesModel $filesAdapter */
+        $filesAdapter = $this->get('contao.framework')->getAdapter(FilesModel::class);
+
+        /** @var FilesModel|null $filesModel */
+        $filesModel = $filesAdapter->findByPk($file);
+
         if (null === $filesModel) {
             return '';
         }
@@ -96,21 +108,5 @@ class MarkdownController extends AbstractContentElementController
         }
 
         return (string) file_get_contents($path);
-    }
-
-    /**
-     * @return Adapter&FilesModel
-     */
-    private function getFilesModelAdapter(): Adapter
-    {
-        return $this->get('contao.framework')->getAdapter(FilesModel::class);
-    }
-
-    /**
-     * @return Adapter&Config
-     */
-    private function getConfigAdapter(): Adapter
-    {
-        return $this->get('contao.framework')->getAdapter(Config::class);
     }
 }
