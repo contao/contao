@@ -16,7 +16,9 @@ use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\PageModel;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class CoreResponseContextFactoryTest extends ContaoTestCase
@@ -51,6 +53,10 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testContaoWebpageResponseContext(): void
     {
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', new RequestStack());
+        System::setContainer($container);
+
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
             ->expects($this->once())
@@ -74,6 +80,10 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', new RequestStack());
+        System::setContainer($container);
+
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'We went from Alpha &#62; Omega ';
