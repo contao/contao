@@ -779,7 +779,7 @@
         <target>インラインで再生(全画面モードにしない)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
+        <source>Auto (preload the entire video)</source>
         <target>自動(動画全体を先読み込み)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">

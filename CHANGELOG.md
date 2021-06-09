@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.4] (2021-06-09)
+
+**Fixed issues:**
+
+- [#3048] Fix another PHP 8 "undefined array key" issue ([leofeyer])
+- [#2987] Add tests for the image studio macros ([m-vo])
+- [#2937] Fix PHP 8 compat of DC_Table/Environment ([rabauss])
+- [#3004] Fix an inconsistency in the routing functional tests ([Toflar])
+
 ## [4.11.3] (2021-05-13)
 
 **Fixed issues:**
@@ -120,6 +129,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.4]: https://github.com/contao/contao/releases/tag/4.11.4
 [4.11.3]: https://github.com/contao/contao/releases/tag/4.11.3
 [4.11.2]: https://github.com/contao/contao/releases/tag/4.11.2
 [4.11.1]: https://github.com/contao/contao/releases/tag/4.11.1
@@ -138,6 +148,10 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#3048]: https://github.com/contao/contao/pull/3048
+[#2987]: https://github.com/contao/contao/pull/2987
+[#2937]: https://github.com/contao/contao/pull/2937
+[#3004]: https://github.com/contao/contao/pull/3004
 [#2991]: https://github.com/contao/contao/pull/2991
 [#2969]: https://github.com/contao/contao/pull/2969
 [#2982]: https://github.com/contao/contao/pull/2982
