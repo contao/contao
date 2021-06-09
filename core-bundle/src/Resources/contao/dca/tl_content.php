@@ -439,7 +439,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('sourceText', 'sourceFile'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['markdownSource'],
-			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(12) NOT NULL default 'sourceText'"
 		),
 		'code' => array

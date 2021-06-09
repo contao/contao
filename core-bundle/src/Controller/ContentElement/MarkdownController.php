@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
 use Contao\Template;
 use League\CommonMark\Environment;
@@ -35,11 +36,9 @@ class MarkdownController extends AbstractContentElementController
         $this->initializeContaoFramework();
 
         if ('sourceFile' === $model->markdownSource) {
-            /** @var FilesModel|null $filesModel */
-            $filesModel = $this->get('contao.framework')->getAdapter(FilesModel::class)->findByPk($model->singleSRC);
-            $markdown = $this->getContentFromModel($filesModel);
+            $markdown = $this->getContentFromModel($this->getFilesModelAdapter()->findByPk($model->singleSRC));
         } else {
-            $markdown = $model->code;
+            $markdown = $model->code ?? '';
         }
 
         if ('' === $markdown) {
@@ -47,7 +46,7 @@ class MarkdownController extends AbstractContentElementController
         }
 
         $html = $this->createConverter($model, $request)->convertToHtml($markdown);
-        $template->content = strip_tags($html, $this->get('contao.framework')->getAdapter(Config::class)->get('allowedTags'));
+        $template->content = strip_tags($html, $this->getConfigAdapter()->get('allowedTags'));
 
         return $template->getResponse();
     }
@@ -70,6 +69,7 @@ class MarkdownController extends AbstractContentElementController
 
         // Automatically mark external links as such if we have a request
         $environment->addExtension(new ExternalLinkExtension());
+
         $environment->mergeConfig([
             'external_link' => [
                 'internal_hosts' => $request->getHost(),
@@ -96,5 +96,21 @@ class MarkdownController extends AbstractContentElementController
         }
 
         return (string) file_get_contents($path);
+    }
+
+    /**
+     * @return Adapter&FilesModel
+     */
+    private function getFilesModelAdapter(): Adapter
+    {
+        return $this->get('contao.framework')->getAdapter(FilesModel::class);
+    }
+
+    /**
+     * @return Adapter&Config
+     */
+    private function getConfigAdapter(): Adapter
+    {
+        return $this->get('contao.framework')->getAdapter(Config::class);
     }
 }
