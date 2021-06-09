@@ -44,7 +44,7 @@ class ContentText extends ContentElement
 		$this->Template->addBefore = false;
 
 		// Add an image
-		if ($this->addImage)
+		if ($this->addImage && $this->singleSRC)
 		{
 			$figure = System::getContainer()
 				->get(Studio::class)
