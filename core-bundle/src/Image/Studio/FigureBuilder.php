@@ -283,10 +283,16 @@ class FigureBuilder
     /**
      * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
     public function from($identifier): self
     {
+        if (null === $identifier) {
+            $this->lastException = new InvalidResourceException("The defined resource is 'null'.");
+
+            return $this;
+        }
+
         if ($identifier instanceof FilesModel) {
             return $this->fromFilesModel($identifier);
         }
@@ -295,7 +301,9 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        if ($this->validatorAdapter()->isUuid($identifier)) {
+        $isString = \is_string($identifier);
+
+        if ($isString && $this->validatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -303,7 +311,13 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        return $this->fromPath($identifier);
+        if ($isString) {
+            return $this->fromPath($identifier);
+        }
+
+        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
+
+        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
     }
 
     /**

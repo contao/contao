@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
-use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
@@ -52,7 +51,6 @@ class CombinerTest extends ContaoTestCase
         $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
         $container->set('contao.assets.assets_context', $context);
 
-        Config::set('debugMode', false);
         System::setContainer($container);
     }
 
@@ -100,7 +98,7 @@ class CombinerTest extends ContaoTestCase
             "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n"
         );
 
-        Config::set('debugMode', true);
+        System::getContainer()->setParameter('kernel.debug', true);
 
         $hash = substr(md5((string) $mtime), 0, 8);
 
@@ -241,7 +239,7 @@ class CombinerTest extends ContaoTestCase
             "body{color:red}\nbody{color:green}\n"
         );
 
-        Config::set('debugMode', true);
+        System::getContainer()->setParameter('kernel.debug', true);
 
         $hash1 = substr(md5((string) $mtime1), 0, 8);
         $hash2 = substr(md5((string) $mtime2), 0, 8);
@@ -277,7 +275,7 @@ class CombinerTest extends ContaoTestCase
         $this->assertRegExp('/^assets\/js\/file1\.js\,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
-        Config::set('debugMode', true);
+        System::getContainer()->setParameter('kernel.debug', true);
 
         $hash1 = substr(md5((string) $mtime1), 0, 8);
         $hash2 = substr(md5((string) $mtime2), 0, 8);

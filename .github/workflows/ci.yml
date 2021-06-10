@@ -20,7 +20,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 7.4
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: pcov
 
@@ -48,7 +48,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.0
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -68,7 +68,7 @@ jobs:
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
-            - name: Analyze the code
+            - name: Analyze the PHP files
               run: |
                   tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
                   tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
@@ -76,6 +76,7 @@ jobs:
             - name: Analyze the YAML files
               run: |
                   python3 -m pip install --upgrade pip
+                  python3 -m pip install --upgrade setuptools wheel
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
@@ -88,7 +89,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.0
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -132,7 +133,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -155,6 +156,39 @@ jobs:
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
+    nightly:
+        name: PHP 8.1
+        runs-on: ubuntu-18.04
+        if: github.event_name != 'push'
+        continue-on-error: true
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: composer install --ignore-platform-reqs --no-interaction --no-progress
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --colors=always
+
+            - name: Run the functional tests
+              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
+
     prefer-lowest:
         name: Prefer Lowest
         runs-on: ubuntu-18.04
@@ -164,7 +198,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 7.4
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -196,7 +230,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 7.4
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 

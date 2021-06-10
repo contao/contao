@@ -61,7 +61,7 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,'
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,fla,flv,swf,'
 	. 'ttf,ttc,otf,eot,woff,woff2,'
-	. 'css,scss,less,js,html,htm,txt,zip,rar,7z,cto';
+	. 'css,scss,less,js,html,htm,txt,zip,rar,7z,cto,md';
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
@@ -92,7 +92,7 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 	. 'odt,ods,odp,odg,ott,ots,otp,otg,pdf,'
 	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,'
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,'
-	. 'zip,rar,7z';
+	. 'zip,rar,7z,md';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
 $GLOBALS['TL_CONFIG']['fullscreen']           = false;

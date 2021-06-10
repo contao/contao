@@ -204,7 +204,7 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = $responseContext->getTitle();
+		$this->Template->pageTitle = htmlspecialchars($responseContext->getTitle());
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
@@ -221,7 +221,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $responseContext->getMetaDescription());
+		$this->Template->description = htmlspecialchars($responseContext->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
@@ -442,7 +442,7 @@ class PageRegular extends Frontend
 		// Default settings
 		$this->Template->layout = $objLayout;
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->charset = Config::get('characterSet');
+		$this->Template->charset = System::getContainer()->getParameter('kernel.charset');
 		$this->Template->base = Environment::get('base');
 		$this->Template->isRTL = false;
 	}

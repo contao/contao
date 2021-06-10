@@ -309,7 +309,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>Config::get('validImageTypes'), 'mandatory'=>true),
+			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%', 'mandatory'=>true),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array

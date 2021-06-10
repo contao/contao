@@ -1,0 +1,112 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Controller\ContentElement;
+
+use Contao\Config;
+use Contao\ContentModel;
+use Contao\FilesModel;
+use Contao\Template;
+use League\CommonMark\Environment;
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
+use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
+use League\CommonMark\Extension\Table\TableExtension;
+use League\CommonMark\Extension\TaskList\TaskListExtension;
+use League\CommonMark\MarkdownConverter;
+use League\CommonMark\MarkdownConverterInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class MarkdownController extends AbstractContentElementController
+{
+    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    {
+        $this->initializeContaoFramework();
+
+        if ('sourceFile' === $model->markdownSource) {
+            $markdown = $this->getContentFromFile($model->singleSRC);
+        } else {
+            $markdown = $model->code ?? '';
+        }
+
+        if ('' === $markdown) {
+            return new Response();
+        }
+
+        /** @var Config $config */
+        $config = $this->get('contao.framework')->getAdapter(Config::class);
+
+        $html = $this->createConverter($model, $request)->convertToHtml($markdown);
+        $template->content = strip_tags($html, $config->get('allowedTags'));
+
+        return $template->getResponse();
+    }
+
+    /**
+     * Hint: This is protected on purpose so you can override it for your app specific requirements.
+     * If you want to provide an extension with additional logic, consider providing your own special
+     * content element for that.
+     */
+    protected function createConverter(ContentModel $model, Request $request): MarkdownConverterInterface
+    {
+        $environment = Environment::createCommonMarkEnvironment();
+
+        // Support GitHub flavoured Markdown (using the individual extensions because we don't want the
+        // DisallowedRawHtmlExtension which is included by default)
+        $environment->addExtension(new AutolinkExtension());
+        $environment->addExtension(new StrikethroughExtension());
+        $environment->addExtension(new TableExtension());
+        $environment->addExtension(new TaskListExtension());
+
+        // Automatically mark external links as such if we have a request
+        $environment->addExtension(new ExternalLinkExtension());
+
+        $environment->mergeConfig([
+            'external_link' => [
+                'internal_hosts' => $request->getHost(),
+                'open_in_new_window' => true,
+                'html_class' => 'external-link',
+                'noopener' => 'external',
+                'noreferrer' => 'external',
+            ],
+        ]);
+
+        return new MarkdownConverter($environment);
+    }
+
+    private function getContentFromFile(?string $file): string
+    {
+        if (!$file) {
+            return '';
+        }
+
+        /** @var FilesModel $filesAdapter */
+        $filesAdapter = $this->get('contao.framework')->getAdapter(FilesModel::class);
+
+        /** @var FilesModel|null $filesModel */
+        $filesModel = $filesAdapter->findByPk($file);
+
+        if (null === $filesModel) {
+            return '';
+        }
+
+        $path = $filesModel->getAbsolutePath();
+
+        if (!(new Filesystem())->exists($path)) {
+            return '';
+        }
+
+        return (string) file_get_contents($path);
+    }
+}

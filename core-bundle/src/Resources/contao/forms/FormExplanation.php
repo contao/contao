@@ -52,7 +52,7 @@ class FormExplanation extends Widget
 		// Add the static files URL to images
 		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
 		{
-			$path = Config::get('uploadPath') . '/';
+			$path = System::getContainer()->getParameter('contao.upload_path') . '/';
 			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, $this->text);
 		}
 

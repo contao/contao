@@ -1243,6 +1243,24 @@ abstract class Widget extends Controller
 	{
 		$arrAttributes = $arrData['eval'] ?? array();
 
+		if (method_exists(System::getContainer(), 'getParameterBag'))
+		{
+			$objParameterBag = System::getContainer()->getParameterBag();
+
+			foreach ($arrAttributes as $strAttrKey => $varAttrValue)
+			{
+				if (!\is_string($varAttrValue) || !preg_match('/%[a-z][a-z0-9_]*\.[a-z0-9_.]+%/i', $varAttrValue, $arrMatches))
+				{
+					continue;
+				}
+
+				$varAttrValue = $objParameterBag->resolveValue($varAttrValue);
+				$varAttrValue = $objParameterBag->unescapeValue($varAttrValue);
+
+				$arrAttributes[$strAttrKey] = $varAttrValue;
+			}
+		}
+
 		$arrAttributes['id'] = $strName;
 		$arrAttributes['name'] = $strName;
 		$arrAttributes['strField'] = $strField;

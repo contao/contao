@@ -13,14 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\PageModel;
+use Contao\StringUtil;
 
 class ContaoWebpageResponseContext extends WebpageResponseContext
 {
     public function __construct(PageModel $pageModel)
     {
+        $title = $pageModel->pageTitle ?: StringUtil::inputEncodedToPlainText($pageModel->title ?: '');
+
         $this
-            ->setTitle($pageModel->pageTitle ?: $pageModel->title ?: '')
-            ->setMetaDescription(str_replace(["\n", "\r", '"'], [' ', '', ''], $pageModel->description ?: ''))
+            ->setTitle($title ?: '')
+            ->setMetaDescription(StringUtil::inputEncodedToPlainText($pageModel->description ?: ''))
         ;
 
         if ($pageModel->robots) {

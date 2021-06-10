@@ -171,11 +171,11 @@ class ModuleArticle extends Module
 
 			if ($responseContext instanceof WebpageResponseContext)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
+				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
 
 				if ($this->teaser)
 				{
-					$responseContext->setMetaDescription($this->prepareMetaDescription($this->teaser));
+					$responseContext->setMetaDescription(StringUtil::htmlToPlainText($this->teaser));
 				}
 			}
 		}
@@ -280,7 +280,7 @@ class ModuleArticle extends Module
 
 		// Generate article
 		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, Config::get('characterSet'));
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

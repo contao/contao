@@ -314,11 +314,11 @@ class PageModel extends Model
 				switch ($strKey)
 				{
 					case 'pageTitle':
-						$responseContext->setTitle($varValue);
+						$responseContext->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'description':
-						$responseContext->setMetaDescription($varValue);
+						$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'robots':

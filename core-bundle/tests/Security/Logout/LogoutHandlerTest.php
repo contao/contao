@@ -18,7 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -154,7 +154,7 @@ class LogoutHandlerTest extends TestCase
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
-            ->method('getProviderKey')
+            ->method(method_exists($token, 'getFirewallName') ? 'getFirewallName' : 'getProviderKey')
             ->willReturn('contao_frontend')
         ;
 
@@ -183,11 +183,11 @@ class LogoutHandlerTest extends TestCase
             ->willReturn(true)
         ;
 
-        /** @var TwoFactorTokenInterface&MockObject $token */
-        $token = $this->createMock(TwoFactorTokenInterface::class);
+        /** @var TwoFactorToken&MockObject $token */
+        $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
-            ->method('getProviderKey')
+            ->method('getFirewallName')
             ->willReturn('contao_frontend')
         ;
 

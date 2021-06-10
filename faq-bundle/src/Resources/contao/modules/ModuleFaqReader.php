@@ -117,20 +117,20 @@ class ModuleFaqReader extends Module
 		{
 			if ($objFaq->pageTitle)
 			{
-				$responseContext->setTitle($objFaq->pageTitle);
+				$responseContext->setTitle($objFaq->pageTitle); // Already stored decoded
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objFaq->question)));
+				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->description)
 			{
-				$responseContext->setMetaDescription($objFaq->description);
+				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->description));
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setMetaDescription($this->prepareMetaDescription($objFaq->question));
+				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->robots)
