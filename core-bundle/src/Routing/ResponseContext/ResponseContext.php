@@ -64,8 +64,9 @@ final class ResponseContext
      * @psalm-param class-string<T> $serviceId
      * @psalm-return T
      *
-     * @return object
      * @throws ServiceNotFoundException
+     *
+     * @return object
      */
     public function get(string $serviceId)
     {
