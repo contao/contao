@@ -17,7 +17,9 @@ use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -76,8 +78,9 @@ class MarkdownControllerTest extends ContaoTestCase
 
     public function testWithFileInput(): void
     {
-        $tempTestFile = tempnam(sys_get_temp_dir(), '');
-        file_put_contents($tempTestFile, '# Headline');
+        $fs = new Filesystem();
+        $tempTestFile = $fs->tempnam($this->getTempDir(), '');
+        $fs->dumpFile($tempTestFile, '# Headline');
 
         /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
@@ -88,7 +91,6 @@ class MarkdownControllerTest extends ContaoTestCase
         ;
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPk' => $filesModel]);
-
         $container = $this->mockContainer('<h1>Headline</h1>'."\n", [FilesModel::class => $filesAdapter]);
 
         /** @var ContentModel&MockObject $contentModel */
@@ -100,17 +102,19 @@ class MarkdownControllerTest extends ContaoTestCase
         $controller->setContainer($container);
         $controller(new Request(), $contentModel, 'main');
 
-        unlink($tempTestFile);
+        $fs->remove($tempTestFile);
     }
 
-    private function mockContainer(string $expectedMarkdown, $frameworkAdapters = []): Container
+    private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container
     {
+        /** @var FrontendTemplate&MockObject $template */
         $template = $this->createMock(FrontendTemplate::class);
         $template
             ->expects($this->once())
             ->method('getResponse')
             ->willReturn(new Response())
         ;
+
         $template
             ->method('__set')
             ->withConsecutive(
