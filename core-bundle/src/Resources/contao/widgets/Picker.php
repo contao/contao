@@ -115,7 +115,8 @@ class Picker extends Widget
 	 */
 	public function generate()
 	{
-		$strContext = $this->context ?: 'dc.' . $this->getRelatedTable();
+		$strRelatedTable = $this->getRelatedTable();
+		$strContext = $this->context ?: 'dc.' . $strRelatedTable;
 		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
@@ -123,15 +124,66 @@ class Picker extends Widget
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . implode(',', $this->{$this->orderField}) . '">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
-    <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
+    <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '');
+
+		if ($GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['showColumns'] ?? null)
+		{
+			$showFields = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'];
+
+			$return .= '
+<table class="tl_listing showColumns">
+<thead>
+  <tr>';
+
+			foreach ($showFields as $f)
+			{
+				if (strpos($f, ':') !== false)
+				{
+					list($f) = explode(':', $f, 2);
+				}
+
+				$return .= '
+    <th class="tl_folder_tlist col_' . $f . '">' . (\is_array($GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) ? $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'][0] : $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) . '</th>';
+			}
+
+			$return .= '
+  </tr>
+</thead>
+<tbody id="sort_'.$this->strId.'">';
+
+			foreach ($arrValues as $k => $row) {
+				$return .= '
+  <tr data-id="'.$k.'">';
+
+				foreach ($showFields as $j=>$field)
+				{
+					$field = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'][$j];
+
+					$return .= '
+    <td class="tl_file_list col_' . $field . '">' . ($row[$j] ?: '-') . '</td>';
+				}
+
+				$return .= '
+  </tr>';
+			}
+
+			$return .= '
+</tbody>
+</table>';
+		}
+		else
+		{
+
+			$return .= '
     <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
 
-		foreach ($arrValues as $k=>$v)
-		{
-			$return .= '<li data-id="' . $k . '">' . $v . '</li>';
-		}
+			foreach ($arrValues as $k=>$v)
+			{
+				$return .= '<li data-id="' . $k . '">' . $v . '</li>';
+			}
 
-		$return .= '</ul>';
+			$return .= '</ul>';
+		}
 
 		if (!System::getContainer()->get('contao.picker.builder')->supportsContext($strContext))
 		{
@@ -174,14 +226,7 @@ class Picker extends Widget
 
 	protected function generateValues($blnHasOrder): array
 	{
-		if (substr($this->context ?? '', 0, 3) === 'dc.')
-		{
-			$strRelatedTable = substr($this->context, 3);
-		}
-		else
-		{
-			$strRelatedTable = $this->getRelatedTable();
-		}
+		$strRelatedTable = $this->getRelatedTable();
 
 		if (!$strRelatedTable)
 		{
@@ -208,12 +253,6 @@ class Picker extends Widget
 
 					$arrSet[] = $objRows->id;
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
-
-					// showColumns
-					if (\is_array($arrValues[$objRows->id]))
-					{
-						$arrValues[$objRows->id] = implode(', ', $arrValues[$objRows->id]);
-					}
 				}
 			}
 
@@ -305,6 +344,11 @@ class Picker extends Widget
 
 	protected function getRelatedTable(): string
 	{
+		if (substr($this->context ?? '', 0, 3) === 'dc.')
+		{
+			return substr($this->context, 3);
+		}
+
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
 		return (string) $arrRelations[$this->strField]['table'];
