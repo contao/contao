@@ -329,6 +329,22 @@ class FigureBuilderTest extends TestCase
         $this->getFigureBuilder($studio, $framework)->from($identifier)->build();
     }
 
+    public function testFromNullFails(): void
+    {
+        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder->from(null);
+
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame("The defined resource is 'null'.", $exception->getMessage());
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
+    }
+
     public function provideMixedIdentifiers(): \Generator
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
