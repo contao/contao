@@ -35,10 +35,13 @@
       <trans-unit id="11" resname="password">
         <source>Password</source>
       </trans-unit>
-      <trans-unit id="12" resname="confirmation">
-        <source>Confirm password</source>
+      <trans-unit id="12" resname="show_password">
+        <source>Show password</source>
       </trans-unit>
-      <trans-unit id="13" resname="save_password">
+      <trans-unit id="13" resname="hide_password">
+        <source>Hide password</source>
+      </trans-unit>
+      <trans-unit id="14" resname="save_password">
         <source>Save password</source>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">

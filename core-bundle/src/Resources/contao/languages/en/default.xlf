@@ -1112,6 +1112,12 @@
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
       </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
+      </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
       </trans-unit>

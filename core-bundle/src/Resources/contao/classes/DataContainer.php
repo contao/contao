@@ -501,6 +501,11 @@ abstract class DataContainer extends Backend
 			$wizard .= Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
 		}
 
+		if (($arrData['inputType'] ?? null) == 'password')
+		{
+			$wizard .= Backend::getTogglePasswordWizard($this->strInputName);
+		}
+
 		// Add a custom wizard
 		if (\is_array($arrData['wizard'] ?? null))
 		{
