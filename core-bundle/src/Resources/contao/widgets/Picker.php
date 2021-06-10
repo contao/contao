@@ -151,11 +151,11 @@ class Picker extends Widget
 			$return .= '
   </tr>
 </thead>
-<tbody id="sort_'.$this->strId.'">';
+<tbody id="sort_' . $this->strId . '">';
 
 			foreach ($arrValues as $k => $row) {
 				$return .= '
-  <tr data-id="'.$k.'">';
+  <tr data-id="' . $k . '">';
 
 				foreach ($row as $j=>$arg)
 				{
