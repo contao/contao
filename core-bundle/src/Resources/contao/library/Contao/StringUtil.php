@@ -233,7 +233,7 @@ class StringUtil
 
 		if ($strCharset === null)
 		{
-			$strCharset = $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8';
+			$strCharset = 'UTF-8';
 		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
