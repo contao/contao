@@ -126,7 +126,7 @@ class Picker extends Widget
   <div class="selector_container">' . (($blnHasOrder && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '');
 
-		if ($GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['showColumns'] ?? null)
+		if (($GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['showColumns'] ?? null) && !empty($arrValues))
 		{
 			System::loadLanguageFile($strRelatedTable);
 
