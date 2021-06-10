@@ -357,9 +357,11 @@ class FigureBuilderTest extends TestCase
         $figureBuilder = $this->getFigureBuilder(null, $framework);
 
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage(
-            sprintf('Contao\CoreBundle\Image\Studio\FigureBuilder::from(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', $typeString)
-        );
+
+        $this->expectExceptionMessage(sprintf(
+            'Contao\CoreBundle\Image\Studio\FigureBuilder::from(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given',
+            $typeString
+        ));
 
         $figureBuilder->from($invalidType);
     }
