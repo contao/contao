@@ -43,16 +43,20 @@ class CleanupCron
 
         $undoPeriod = (int) $this->framework->getAdapter(Config::class)->get('undoPeriod');
         $logPeriod = (int) $this->framework->getAdapter(Config::class)->get('logPeriod');
+        $versionPeriod = (int) $this->framework->getAdapter(Config::class)->get('versionPeriod');
 
-        // Clean up old tl_undo and tl_log entries
-        if ($undoPeriod > 0) {
-            $stmt = $this->connection->prepare('DELETE FROM tl_undo WHERE tstamp<:tstamp');
-            $stmt->executeStatement(['tstamp' => time() - $undoPeriod]);
+        $this->cleanTable('tl_undo', $undoPeriod);
+        $this->cleanTable('tl_log', $logPeriod);
+        $this->cleanTable('tl_version', $versionPeriod);
+    }
+
+    private function cleanTable(string $table, int $period): void
+    {
+        if ($period <= 0) {
+            return;
         }
 
-        if ($logPeriod > 0) {
-            $stmt = $this->connection->prepare('DELETE FROM tl_log WHERE tstamp<:tstamp');
-            $stmt->executeStatement(['tstamp' => time() - $logPeriod]);
-        }
+        $stmt = $this->connection->prepare(sprintf('DELETE FROM %s WHERE tstamp<:tstamp', $table));
+        $stmt->executeStatement(['tstamp' => time() - $period]);
     }
 }

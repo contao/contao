@@ -24,7 +24,7 @@ class CleanupCronTest extends ContaoTestCase
     /**
      * @dataProvider cleanupLogsAndUndoProvider
      */
-    public function testCleanupLogsAndUndo(int $undoPeriod, int $logPeriod): void
+    public function testCleanupLogsAndUndo(int $undoPeriod, int $logPeriod, int $versionPeriod): void
     {
         $mockedTime = 1142164800;
         ClockMock::withClockMock($mockedTime);
@@ -42,15 +42,21 @@ class CleanupCronTest extends ContaoTestCase
             $expectedExecuteParameters[] = [['tstamp' => $mockedTime - $logPeriod]];
         }
 
+        if ($versionPeriod > 0) {
+            $expectedStatements[] = ['DELETE FROM tl_version WHERE tstamp<:tstamp'];
+            $expectedExecuteParameters[] = [['tstamp' => $mockedTime - $versionPeriod]];
+        }
+
         $config = $this->mockAdapter(['get']);
         $config
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('get')
             ->withConsecutive(
                 ['undoPeriod'],
-                ['logPeriod']
+                ['logPeriod'],
+                ['versionPeriod']
             )
-            ->willReturn($undoPeriod, $logPeriod)
+            ->willReturn($undoPeriod, $logPeriod, $versionPeriod)
         ;
 
         $framework = $this->mockContaoFramework([Config::class => $config]);
@@ -81,19 +87,23 @@ class CleanupCronTest extends ContaoTestCase
         yield 'Do not execute any queries if the periods are configured to 0' => [
             0,
             0,
+            0,
         ];
 
         yield 'Query for the undo period only' => [
             100,
+            0,
             0,
         ];
 
         yield 'Query for the log period only' => [
             0,
             100,
+            0,
         ];
 
-        yield 'Query for both, undo and log periods' => [
+        yield 'Query for all periods' => [
+            100,
             100,
             100,
         ];
