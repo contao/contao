@@ -610,9 +610,7 @@ class FigureBuilder
         $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
 
         if (null !== $this->metadata) {
-            return $this->metadata
-                ->with($fileReferenceData)
-            ;
+            return $this->metadata->with($fileReferenceData);
         }
 
         if (null === $this->filesModel) {
