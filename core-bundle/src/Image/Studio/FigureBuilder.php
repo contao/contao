@@ -283,10 +283,16 @@ class FigureBuilder
     /**
      * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
     public function from($identifier): self
     {
+        if (null === $identifier) {
+            $this->lastException = new InvalidResourceException("The defined resource is 'null'.");
+
+            return $this;
+        }
+
         if ($identifier instanceof FilesModel) {
             return $this->fromFilesModel($identifier);
         }
@@ -604,7 +610,9 @@ class FigureBuilder
         $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
 
         if (null !== $this->metadata) {
-            return $this->metadata->with($fileReferenceData);
+            return $this->metadata
+                ->with($fileReferenceData)
+            ;
         }
 
         if (null === $this->filesModel) {
