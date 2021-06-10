@@ -83,11 +83,6 @@ class Metadata
         return $this->values[self::VALUE_TITLE] ?? '';
     }
 
-    public function getLicense(): string
-    {
-        return $this->values[self::VALUE_LICENSE] ?? '';
-    }
-
     public function getUrl(): string
     {
         return $this->values[self::VALUE_URL] ?? '';
@@ -99,6 +94,11 @@ class Metadata
     public function getUuid(): ?string
     {
         return $this->values[self::VALUE_UUID] ?? null;
+    }
+
+    public function getLicense(): string
+    {
+        return $this->values[self::VALUE_LICENSE] ?? '';
     }
 
     /**
