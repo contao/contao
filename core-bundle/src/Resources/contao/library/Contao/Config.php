@@ -102,7 +102,7 @@ class Config
 	private static $arrDeprecated = array
 	(
 		'validImageTypes' => 'contao.image.valid_extensions',
-		'jpgQuality'      => 'contao.image.imagine_options.jpeg_quality',
+		'jpgQuality'      => 'contao.image.imagine_options[jpeg_quality]',
 	);
 
 	/**
