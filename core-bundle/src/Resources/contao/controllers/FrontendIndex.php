@@ -247,7 +247,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Check wether the language matches the root page language
-		if (isset($_GET['language']) && !$objPage->urlPrefix && Input::get('language') != $objPage->rootLanguage)
+		if (isset($_GET['language']) && $objPage->urlPrefix && Input::get('language') != $objPage->rootLanguage)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
