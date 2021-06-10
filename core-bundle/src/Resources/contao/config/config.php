@@ -27,7 +27,6 @@ use Contao\ContentHtml;
 use Contao\ContentHyperlink;
 use Contao\ContentImage;
 use Contao\ContentList;
-use Contao\ContentMarkdown;
 use Contao\ContentMedia;
 use Contao\ContentModel;
 use Contao\ContentModule;
@@ -291,7 +290,6 @@ $GLOBALS['TL_CTE'] = array
 		'list'            => ContentList::class,
 		'table'           => ContentTable::class,
 		'code'            => ContentCode::class,
-		'markdown'        => ContentMarkdown::class
 	),
 	'accordion' => array
 	(

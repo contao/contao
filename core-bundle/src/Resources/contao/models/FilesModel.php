@@ -97,6 +97,16 @@ class FilesModel extends Model
 	protected static $strTable = 'tl_files';
 
 	/**
+	 * Returns the full absolute path.
+	 */
+	public function getAbsolutePath(): string
+	{
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		return Path::makeAbsolute($this->path, $projectDir);
+	}
+
+	/**
 	 * Find a file by its primary key
 	 *
 	 * @param mixed $varValue   The value

@@ -108,6 +108,10 @@ services:
         #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
 
+    Contao\CoreBundle\Controller\ContentElement\MarkdownController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
