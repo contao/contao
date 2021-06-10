@@ -301,7 +301,9 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        if ($this->validatorAdapter()->isUuid($identifier)) {
+        $isString = \is_string($identifier);
+
+        if ($isString && $this->validatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -309,7 +311,13 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        return $this->fromPath($identifier);
+        if ($isString) {
+            return $this->fromPath($identifier);
+        }
+
+        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
+
+        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
     }
 
     /**
