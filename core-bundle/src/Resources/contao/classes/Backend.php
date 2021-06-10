@@ -193,7 +193,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyTemplates()
 	{
-		$strDir = Config::get('uploadPath') . '/tiny_templates';
+		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if (!is_dir($projectDir . '/' . $strDir))
@@ -1034,8 +1034,8 @@ abstract class Backend extends Controller
 		}
 
 		$objUser  = BackendUser::getInstance();
-		$strPath  = Config::get('uploadPath');
-		$arrNodes = explode('/', preg_replace('/^' . preg_quote(Config::get('uploadPath'), '/') . '\//', '', $strNode));
+		$strPath  = System::getContainer()->getParameter('contao.upload_path');
+		$arrNodes = explode('/', preg_replace('/^' . preg_quote($strPath, '/') . '\//', '', $strNode));
 		$arrLinks = array();
 
 		// Add root link
@@ -1314,7 +1314,7 @@ abstract class Backend extends Controller
 
 		if ($this->User->isAdmin)
 		{
-			return $this->doCreateFileList(Config::get('uploadPath'), -1, $strFilter);
+			return $this->doCreateFileList(System::getContainer()->getParameter('contao.upload_path'), -1, $strFilter);
 		}
 
 		$return = '';

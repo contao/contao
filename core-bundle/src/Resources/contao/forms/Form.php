@@ -417,7 +417,7 @@ class Form extends Hybrid
 			{
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
-				$objTemplate->charset = Config::get('characterSet');
+				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 				$email->attachFileFromString($objTemplate->parse(), 'form.xml', 'application/xml');
 			}

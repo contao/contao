@@ -157,7 +157,7 @@ class ClassLoader
 		// The class file is set in the mapper
 		if (isset(self::$classes[$class]))
 		{
-			if (Config::get('debugMode'))
+			if (System::getContainer()->getParameter('kernel.debug'))
 			{
 				$GLOBALS['TL_DEBUG']['classes_set'][$class] = $class;
 			}
@@ -170,7 +170,7 @@ class ClassLoader
 		{
 			if (!class_exists($namespaced, false) && !interface_exists($namespaced, false) && !trait_exists($namespaced, false))
 			{
-				if (Config::get('debugMode'))
+				if (System::getContainer()->getParameter('kernel.debug'))
 				{
 					$GLOBALS['TL_DEBUG']['classes_aliased'][$class] = $namespaced;
 				}
@@ -188,7 +188,7 @@ class ClassLoader
 
 			if (class_exists($namespaced) || interface_exists($namespaced) || trait_exists($namespaced))
 			{
-				if (Config::get('debugMode'))
+				if (System::getContainer()->getParameter('kernel.debug'))
 				{
 					$GLOBALS['TL_DEBUG']['classes_composerized'][$class] = $namespaced;
 				}

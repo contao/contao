@@ -321,9 +321,10 @@ abstract class Frontend extends Controller
 		$host = Environment::get('host');
 		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
+		$blnAddLanguageToUrl = System::getContainer()->getParameter('contao.prepend_locale');
 
 		// Get the language from the URL if it is not set (see #456)
-		if (!isset($_GET['language']) && Config::get('addLanguageToUrl'))
+		if (!isset($_GET['language']) && $blnAddLanguageToUrl)
 		{
 			$arrMatches = array();
 
@@ -337,7 +338,7 @@ abstract class Frontend extends Controller
 		}
 
 		// The language is set in the URL
-		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
+		if (!empty($_GET['language']) && $blnAddLanguageToUrl)
 		{
 			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
 		}
@@ -377,7 +378,7 @@ abstract class Frontend extends Controller
 		// Redirect to the website root or language root (e.g. en/)
 		if (!Environment::get('relativeRequest'))
 		{
-			if (Config::get('addLanguageToUrl'))
+			if ($blnAddLanguageToUrl)
 			{
 				$arrParams = array('_locale' => $objRootPage->language);
 

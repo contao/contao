@@ -1275,7 +1275,7 @@ abstract class Controller extends System
 		}
 
 		// Limit downloads to the files directory
-		if (!preg_match('@^' . preg_quote(Config::get('uploadPath'), '@') . '@i', $strFile))
+		if (!preg_match('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '@i', $strFile))
 		{
 			throw new PageNotFoundException('Invalid path');
 		}

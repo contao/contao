@@ -35,6 +35,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'dataContainer'               => 'Folder',
 		'enableVersioning'            => true,
 		'databaseAssisted'            => true,
+		'uploadPath'                  => $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path'),
+		'editableFileTypes'           => $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files'),
 		'onload_callback' => array
 		(
 			array('tl_files', 'checkPermission'),
@@ -477,7 +479,7 @@ class tl_files extends Backend
 		}
 
 		// Only show the important part fields for images
-		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')))))
+		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
 			PaletteManipulator::create()
 				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
@@ -498,7 +500,7 @@ class tl_files extends Backend
 	{
 		$model = FilesModel::findByPk($pid);
 
-		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return;
 		}
@@ -530,7 +532,7 @@ class tl_files extends Backend
 	{
 		$model = FilesModel::findByPk($pid);
 
-		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return;
 		}
@@ -789,7 +791,10 @@ class tl_files extends Backend
 
 		$objFile = new File($strDecoded);
 
-		if (!in_array($objFile->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		/** @var DC_Folder $dc */
+		$dc = (@func_get_arg(12) ?: null);
+
+		if (!in_array($objFile->extension, $dc ? $dc->editableFileTypes : StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
