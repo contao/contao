@@ -77,7 +77,7 @@ class FormFileUpload extends Widget implements \uploadable
 			case 'extensions':
 				if ($varValue)
 				{
-					$this->arrAttributes['accept'] = '.' . implode(',.', StringUtil::trimsplit(',', strtolower($varValue)));
+					$this->arrAttributes['accept'] = '.' . implode(',.', StringUtil::trimsplit(',', strtolower(\is_array($varValue) ? implode(',', $varValue) : $varValue)));
 				}
 				parent::__set($strKey, $varValue);
 				break;

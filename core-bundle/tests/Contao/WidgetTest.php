@@ -228,16 +228,9 @@ class WidgetTest extends TestCase
         ];
 
         yield [
-            [['eval' => ['foo' => '%contao.image.valid_extensions%']], 'name'],
-            [
-                'foo' => ['jpg', 'gif', 'png'],
-            ],
-        ];
-
-        yield [
             [['eval' => ['extensions' => '%contao.image.valid_extensions%']], 'name'],
             [
-                'extensions' => 'jpg,gif,png',
+                'extensions' => ['jpg', 'gif', 'png'],
             ],
         ];
     }

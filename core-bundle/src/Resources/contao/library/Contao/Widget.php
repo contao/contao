@@ -1257,11 +1257,6 @@ abstract class Widget extends Controller
 				$varAttrValue = $objParameterBag->resolveValue($varAttrValue);
 				$varAttrValue = $objParameterBag->unescapeValue($varAttrValue);
 
-				if ($strAttrKey === 'extensions' && \is_array($varAttrValue))
-				{
-					$varAttrValue = implode(',', $varAttrValue);
-				}
-
 				$arrAttributes[$strAttrKey] = $varAttrValue;
 			}
 		}

@@ -63,6 +63,16 @@ class FileSelector extends Widget
 		parent::__construct($arrAttributes);
 	}
 
+	public function __set($strKey, $varValue)
+	{
+		if ($strKey === 'extensions' && \is_array($varValue))
+		{
+			$varValue = implode(',', $varValue);
+		}
+
+		parent::__set($strKey, $varValue);
+	}
+
 	/**
 	 * Generate the widget and return it as string
 	 *
