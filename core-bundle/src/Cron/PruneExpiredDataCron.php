@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Cron;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Doctrine\DBAL\Connection;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
+use Doctrine\DBAL\Connection;
 
 class PruneExpiredDataCron
 {
