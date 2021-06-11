@@ -17,13 +17,12 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\NewsBundle\ContaoNewsBundle;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class ResponseContextTest extends TestCase
 {
-    public function testCanAddRemoveAndGetServices(): void
+    public function testCanAddAndGetServices(): void
     {
         $context = new ResponseContext();
 
@@ -33,15 +32,11 @@ class ResponseContextTest extends TestCase
 
         $this->assertTrue($context->has(HtmlHeadBag::class));
         $this->assertInstanceOf(HtmlHeadBag::class, $context->get(HtmlHeadBag::class));
-
-        $context->remove(HtmlHeadBag::class);
-
-        $this->assertFalse($context->has(HtmlHeadBag::class));
     }
 
     public function testGettingANonExistentServiceThrows(): void
     {
-        $this->expectException(ServiceNotFoundException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $context = new ResponseContext();
         $context->get(HtmlHeadBag::class);

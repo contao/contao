@@ -21,40 +21,28 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     /**
-     * @var Container
+     * @var array
      */
-    private $container;
+    private $services;
 
     /**
      * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
 
-    public function __construct()
-    {
-        $this->container = new Container();
-    }
-
-    public function remove(string $serviceId): self
-    {
-        $this->container->set($serviceId, null);
-
-        return $this;
-    }
-
     public function add(object $service): self
     {
-        $this->container->set(\get_class($service), $service);
+        $this->services[\get_class($service)] = $service;
 
         $ref = new \ReflectionClass($service);
 
         // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
         foreach ($ref->getInterfaceNames() as $interfaceName) {
-            $this->container->set($interfaceName, $service);
+            $this->services[$interfaceName] = $service;
         }
 
         while ($ref = $ref->getParentClass()) {
-            $this->container->set($ref->getName(), $service);
+            $this->services[$ref->getName()] = $service;
         }
 
         return $this;
@@ -62,7 +50,7 @@ final class ResponseContext
 
     public function has(string $serviceId): bool
     {
-        return $this->container->has($serviceId);
+        return isset($this->services[$serviceId]);
     }
 
     /**
@@ -76,7 +64,11 @@ final class ResponseContext
      */
     public function get(string $serviceId)
     {
-        return $this->container->get($serviceId, ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE);
+        if (!$this->has($serviceId)) {
+            throw new \InvalidArgumentException(sprintf('Service "%s" does not exist.', $serviceId));
+        }
+
+        return $this->services[$serviceId];
     }
 
     public function getHeaderBag(): PartialResponseHeaderBag
