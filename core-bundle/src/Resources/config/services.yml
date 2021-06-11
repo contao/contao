@@ -199,14 +199,14 @@ services:
             - '@?logger'
         public: true
 
-    Contao\CoreBundle\Cron\PruneExpiredDataCron:
-        arguments:
-            - '@contao.framework'
-            - '@connection'
-
     Contao\CoreBundle\Cron\LegacyCron:
         arguments:
             - '@contao.framework'
+
+    Contao\CoreBundle\Cron\PurgeExpiredDataCron:
+        arguments:
+            - '@contao.framework'
+            - '@connection'
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
