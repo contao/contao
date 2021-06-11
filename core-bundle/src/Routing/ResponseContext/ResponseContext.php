@@ -46,9 +46,15 @@ final class ResponseContext
     {
         $this->container->set(\get_class($service), $service);
 
-        // Automatically add aliases for all interfaces (last one added automatically wins by overriding here)
-        foreach ((new \ReflectionClass($service))->getInterfaceNames() as $interfaceName) {
+        $ref = new \ReflectionClass($service);
+
+        // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
+        foreach ($ref->getInterfaceNames() as $interfaceName) {
             $this->container->set($interfaceName, $service);
+        }
+
+        while ($ref = $ref->getParentClass()) {
+            $this->container->set($ref->getName(), $service);
         }
 
         return $this;

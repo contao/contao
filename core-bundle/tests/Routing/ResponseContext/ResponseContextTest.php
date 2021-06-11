@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\NewsBundle\ContaoNewsBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class ResponseContextTest extends TestCase
@@ -46,7 +47,7 @@ class ResponseContextTest extends TestCase
         $context->get(HtmlHeadBag::class);
     }
 
-    public function testInterfacesAreAutomaticallyAddedAsAliases(): void
+    public function testInterfacesAndParentsAreAutomaticallyAddedAsAliases(): void
     {
         $context = new ResponseContext();
 
@@ -59,12 +60,14 @@ class ResponseContextTest extends TestCase
 
         $this->assertSame($coreBundle, $context->get(ContaoCoreBundle::class));
         $this->assertSame($coreBundle, $context->get(BundleInterface::class));
+        $this->assertSame($coreBundle, $context->get(Bundle::class));
 
         $context->add($newsBundle);
 
         $this->assertSame($coreBundle, $context->get(ContaoCoreBundle::class));
         $this->assertSame($newsBundle, $context->get(ContaoNewsBundle::class));
         $this->assertSame($newsBundle, $context->get(BundleInterface::class)); // NewsBundle was added later
+        $this->assertSame($newsBundle, $context->get(Bundle::class)); // NewsBundle was added later
     }
 
     public function testHeaderBagIsInitializedCompletelyEmpty(): void
