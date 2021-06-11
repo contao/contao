@@ -24,6 +24,11 @@ final class ResponseContext
     private $services = [];
 
     /**
+     * @var array
+     */
+    private $current = [];
+
+    /**
      * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
@@ -44,7 +49,7 @@ final class ResponseContext
 
     public function has(string $serviceId): bool
     {
-        return isset($this->services[$serviceId]);
+        return isset($this->current[$serviceId]);
     }
 
     /**
@@ -62,10 +67,12 @@ final class ResponseContext
             throw new \InvalidArgumentException(sprintf('Service "%s" does not exist.', $serviceId));
         }
 
+        $serviceId = $this->current[$serviceId];
+
         // Lazy load the ones with factories
         if ($this->services[$serviceId] instanceof \Closure) {
             $service = $this->services[$serviceId]();
-            $this->registerService($serviceId, $service);
+            $this->services[$serviceId] = $service;
         }
 
         return $this->services[$serviceId];
@@ -86,9 +93,11 @@ final class ResponseContext
     private function registerService(string $serviceId, $objectOrFactory): void
     {
         $this->services[$serviceId] = $objectOrFactory;
+        $this->current[$serviceId] = $serviceId;
 
         foreach ($this->getAliases($serviceId) as $alias) {
             $this->services[$alias] = $objectOrFactory;
+            $this->current[$alias] = $serviceId;
         }
     }
 
