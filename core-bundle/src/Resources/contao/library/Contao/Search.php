@@ -699,7 +699,6 @@ class Search
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
-
 		$objResult = $objResultStmt->execute($arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 

@@ -27,17 +27,17 @@ class SearchResult
 	/**
 	 * @var array
 	 */
-	private $arrKeywords = array();
+	private $arrKeywords;
 
 	/**
 	 * @var array
 	 */
-	private $arrWildcards = array();
+	private $arrWildcards;
 
 	/**
 	 * @var array
 	 */
-	private $arrPhrases = array();
+	private $arrPhrases;
 
 	public function __construct(array $arrResults, array $arrKeywords = array(), array $arrWildcards = array(), array $arrPhrases = array())
 	{
@@ -70,11 +70,8 @@ class SearchResult
 	public function getResults(int $intCount = PHP_INT_MAX, int $intOffset = 0): array
 	{
 		$arrResults = \array_slice($this->arrResultsById, $intOffset, $intCount, true);
-
 		$strIds = implode(',', array_keys($arrResults));
-
 		$strQuery = 'SELECT * FROM tl_search WHERE ID in (' . $strIds . ')';
-
 		$objResult = Database::getInstance()->prepare($strQuery)->execute();
 
 		while ($arrRow = $objResult->fetchAssoc())
