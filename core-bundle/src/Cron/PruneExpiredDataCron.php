@@ -15,8 +15,9 @@ namespace Contao\CoreBundle\Cron;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
 
-class CleanupCron
+class PruneExpiredDataCron
 {
     /**
      * @var ContaoFramework
@@ -35,9 +36,9 @@ class CleanupCron
     }
 
     /**
-     * @\Contao\CoreBundle\ServiceAnnotation\CronJob("daily")
+     * @CronJob("hourly")
      */
-    public function onDaily(): void
+    public function onHourly(): void
     {
         $this->framework->initialize();
 

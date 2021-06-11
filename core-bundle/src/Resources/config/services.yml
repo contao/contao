@@ -199,7 +199,7 @@ services:
             - '@?logger'
         public: true
 
-    Contao\CoreBundle\Cron\CleanupCron:
+    Contao\CoreBundle\Cron\PruneExpiredDataCron:
         arguments:
             - '@contao.framework'
             - '@connection'

@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cron;
 
 use Contao\Config;
-use Contao\CoreBundle\Cron\CleanupCron;
+use Contao\CoreBundle\Cron\PruneExpiredDataCron;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
-class CleanupCronTest extends ContaoTestCase
+class PruneExpiredDataCronTest extends ContaoTestCase
 {
     /**
      * @dataProvider cleanupLogsAndUndoProvider
@@ -76,8 +76,8 @@ class CleanupCronTest extends ContaoTestCase
             ->willReturn($statement)
         ;
 
-        $cron = new CleanupCron($framework, $connection);
-        $cron->onDaily();
+        $cron = new PruneExpiredDataCron($framework, $connection);
+        $cron->onHourly();
 
         ClockMock::withClockMock(false);
     }
