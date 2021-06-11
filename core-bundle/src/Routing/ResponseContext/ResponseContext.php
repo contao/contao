@@ -24,11 +24,6 @@ final class ResponseContext
     private $services;
 
     /**
-     * @var array<string, array>
-     */
-    private $aliases;
-
-    /**
      * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
@@ -99,22 +94,18 @@ final class ResponseContext
 
     private function getAliases(string $classname): array
     {
-        if (isset($this->aliases[$classname])) {
-            return $this->aliases[$classname];
-        }
-
-        $this->aliases[$classname] = [];
+        $aliases = [];
         $ref = new \ReflectionClass($classname);
 
         // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
         foreach ($ref->getInterfaceNames() as $interfaceName) {
-            $this->aliases[$classname][] = $interfaceName;
+            $aliases[] = $interfaceName;
         }
 
         while ($ref = $ref->getParentClass()) {
-            $this->aliases[$classname][] = $ref->getName();
+            $aliases[] = $ref->getName();
         }
 
-        return $this->aliases[$classname];
+        return $aliases;
     }
 }
