@@ -15,9 +15,13 @@ namespace Contao\CoreBundle\Controller\Page;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Page(contentComposition=false)
+ */
 class RootPageController extends AbstractController
 {
     public function __invoke(PageModel $pageModel): Response

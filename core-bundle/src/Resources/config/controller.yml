@@ -7,6 +7,4 @@ services:
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
 
-    Contao\CoreBundle\Controller\Page\RootPageController:
-        tags:
-            - { name: contao.page, contentComposition: false }
+    Contao\CoreBundle\Controller\Page\RootPageController: ~
