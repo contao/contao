@@ -46,6 +46,7 @@ contao:
     legacy_routing: false
     localconfig:
         licenseAccepted: true
+        disableCron: true
 
 scheb_two_factor:
     trusted_device:
