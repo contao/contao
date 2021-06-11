@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\NewsBundle\ContaoNewsBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -58,23 +56,28 @@ class ResponseContextTest extends TestCase
     {
         $context = new ResponseContext();
 
-        // Using some unrelated classes here so we don't have to create nonsense classes implementing nonsense
-        // interfaces here. We took classes that are very unlikely to change.
-        $coreBundle = new ContaoCoreBundle();
-        $newsBundle = new ContaoNewsBundle();
+        // Using some anonymous classes here so we don't have to create nonsense classes implementing nonsense
+        // interfaces here. We took the BundleInterface as that is very unlikely to change.
+        $serviceA = new class() extends Bundle implements BundleInterface {
+        };
+        $serviceB = new class() extends Bundle implements BundleInterface {
+        };
 
-        $context->add($coreBundle);
+        $serviceAClassname = \get_class($serviceA);
+        $serviceBClassname = \get_class($serviceB);
 
-        $this->assertSame($coreBundle, $context->get(ContaoCoreBundle::class));
-        $this->assertSame($coreBundle, $context->get(BundleInterface::class));
-        $this->assertSame($coreBundle, $context->get(Bundle::class));
+        $context->add($serviceA);
 
-        $context->add($newsBundle);
+        $this->assertSame($serviceA, $context->get($serviceAClassname));
+        $this->assertSame($serviceA, $context->get(BundleInterface::class));
+        $this->assertSame($serviceA, $context->get(Bundle::class));
 
-        $this->assertSame($coreBundle, $context->get(ContaoCoreBundle::class));
-        $this->assertSame($newsBundle, $context->get(ContaoNewsBundle::class));
-        $this->assertSame($newsBundle, $context->get(BundleInterface::class)); // NewsBundle was added later
-        $this->assertSame($newsBundle, $context->get(Bundle::class)); // NewsBundle was added later
+        $context->add($serviceB);
+
+        $this->assertSame($serviceA, $context->get($serviceAClassname));
+        $this->assertSame($serviceB, $context->get($serviceBClassname));
+        $this->assertSame($serviceB, $context->get(BundleInterface::class)); // Service B was added later
+        $this->assertSame($serviceB, $context->get(Bundle::class)); // Service B was added later
     }
 
     public function testHeaderBagIsInitializedCompletelyEmpty(): void
