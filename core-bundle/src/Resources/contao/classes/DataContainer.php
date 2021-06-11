@@ -501,6 +501,11 @@ abstract class DataContainer extends Backend
 			$wizard .= Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
 		}
 
+		if (($arrData['inputType'] ?? null) == 'password')
+		{
+			$wizard .= Backend::getTogglePasswordWizard($this->strInputName);
+		}
+
 		// Add a custom wizard
 		if (\is_array($arrData['wizard'] ?? null))
 		{
@@ -540,10 +545,7 @@ abstract class DataContainer extends Backend
 			$this->blnUploadable = true;
 		}
 
-		if (($arrData['inputType'] ?? null) != 'password')
-		{
-			$arrClasses[] = 'widget';
-		}
+		$arrClasses[] = 'widget';
 
 		// Mark floated single checkboxes
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))

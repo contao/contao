@@ -60,15 +60,9 @@ class BackendPassword extends Backend
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
 		{
 			$pw = $request->request->get('password');
-			$cnf = $request->request->get('confirm');
 
-			// The passwords do not match
-			if ($pw != $cnf)
-			{
-				Message::addError($GLOBALS['TL_LANG']['ERR']['passwordMatch']);
-			}
 			// Password too short
-			elseif (Utf8::strlen($pw) < Config::get('minPasswordLength'))
+			if (Utf8::strlen($pw) < Config::get('minPasswordLength'))
 			{
 				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
 			}
@@ -135,7 +129,6 @@ class BackendPassword extends Backend
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['confirm'][0];
 
 		return $objTemplate->getResponse();
 	}

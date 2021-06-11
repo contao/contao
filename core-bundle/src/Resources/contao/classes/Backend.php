@@ -1141,12 +1141,39 @@ abstract class Backend extends Controller
       Backend.openModalSelector({
         "id": "tl_listing",
         "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0]) . ',
-        "url": this.href + "&value=" + document.getElementById("ctrl_' . $inputName . '").value,
+        "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");
           $("ctrl_' . $inputName . '").fireEvent("change");
         }.bind(this)
       });
+    });
+  </script>';
+	}
+
+	/**
+	 * Generate the DCA toggle password wizard
+	 *
+	 * @param string $inputName
+	 *
+	 * @return string
+	 */
+	public static function getTogglePasswordWizard($inputName)
+	{
+		return ' ' . Image::getHtml('visible.svg', '', 'title="' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '" id="pw_' . $inputName . '"') . '
+  <script>
+    $("pw_' . $inputName . '").addEvent("click", function(e) {
+      e.preventDefault();
+      var el = $("ctrl_' . $inputName . '");
+      if (el.type == "password") {
+        el.type = "text";
+        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
+        this.src = this.src.replace("visible.svg", "visible_.svg");
+      } else {
+        el.type = "password";
+        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
+        this.src = this.src.replace("visible_.svg", "visible.svg");
+      }
     });
   </script>';
 	}
