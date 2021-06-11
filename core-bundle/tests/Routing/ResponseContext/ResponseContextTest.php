@@ -16,7 +16,10 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\InputBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\ServerBag;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
@@ -61,6 +64,19 @@ class ResponseContextTest extends TestCase
         $this->assertInstanceOf(ResponseHeaderBag::class, $original);
         $this->assertInstanceOf(ResponseHeaderBag::class, $parent);
         $this->assertSame($original, $parent);
+    }
+
+    public function testLastServiceWins(): void
+    {
+        $context = new ResponseContext();
+
+        $this->assertFalse($context->has(ParameterBag::class));
+
+        $context->addLazy(ServerBag::class, static function () { return new ServerBag(); });
+        $context->addLazy(InputBag::class, static function () { return new InputBag(); });
+
+        $this->assertInstanceOf(ServerBag::class, $context->get(ServerBag::class));
+        $this->assertInstanceOf(InputBag::class, $context->get(ParameterBag::class));
     }
 
     public function testGettingANonExistentServiceThrows(): void
