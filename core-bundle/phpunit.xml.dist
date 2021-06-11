@@ -53,6 +53,8 @@
                         <array>
                             <element key="0"><string>Contao\CoreBundle\Command</string></element>
                             <element key="1"><string>Contao\CoreBundle\Tests\Command</string></element>
+                            <element key="2"><string>Contao\CoreBundle\Cron\Command</string></element>
+                            <element key="3"><string>Contao\CoreBundle\Tests\Cron</string></element>
                         </array>
                     </element>
                 </array>
