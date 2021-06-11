@@ -50,8 +50,6 @@ class ResponseContextTest extends TestCase
     {
         $context = new ResponseContext();
 
-        $this->assertFalse($context->has(HtmlHeadBag::class));
-
         $context->addLazy(ResponseHeaderBag::class, static function () { return new ResponseHeaderBag(); });
 
         $this->assertTrue($context->has(ResponseHeaderBag::class));
