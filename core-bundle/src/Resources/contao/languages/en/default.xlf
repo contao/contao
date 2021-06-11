@@ -968,6 +968,9 @@
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
       </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
       </trans-unit>
