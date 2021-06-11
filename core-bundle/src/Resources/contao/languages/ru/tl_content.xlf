@@ -778,7 +778,7 @@
         <target>Воспроизвести inline (без полноэкранного режима)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
+        <source>Auto (preload the entire video)</source>
         <target>Авто (предварительная загрузка видео)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">

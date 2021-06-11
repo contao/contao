@@ -425,9 +425,9 @@ class RouteProviderTest extends TestCase
 
         yield 'Appends "de" in case "de_CH" is accepted and "de" is not' => [
             [
-                1 => $this->createPage('de', 'foo', false),
                 3 => $this->createPage('fr', 'foo', false),
-                0 => $this->createPage('en', 'foo', false),
+                0 => $this->createPage('de', 'foo', false),
+                1 => $this->createPage('en', 'foo', false),
                 2 => $this->createPage('it', 'foo'),
             ],
             ['de_CH', 'en'],

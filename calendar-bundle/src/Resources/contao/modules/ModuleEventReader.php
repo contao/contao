@@ -136,20 +136,20 @@ class ModuleEventReader extends Events
 		{
 			if ($objEvent->pageTitle)
 			{
-				$responseContext->setTitle($objEvent->pageTitle);
+				$responseContext->setTitle($objEvent->pageTitle); // Already stored decoded
 			}
 			elseif ($objEvent->title)
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($objEvent->title)));
+				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$responseContext->setMetaDescription($objEvent->description);
+				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$responseContext->setMetaDescription($this->prepareMetaDescription($objEvent->teaser));
+				$responseContext->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)

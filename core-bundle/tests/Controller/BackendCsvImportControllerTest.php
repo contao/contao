@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
-use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
@@ -44,7 +43,6 @@ class BackendCsvImportControllerTest extends TestCase
         $container->set('contao.resource_finder', $finder);
 
         System::setContainer($container);
-        Config::set('debugMode', false);
     }
 
     public function testRendersTheListWizardMarkup(): void

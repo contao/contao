@@ -121,7 +121,7 @@ class TwoFactorFrontendListener
             return;
         }
 
-        $targetPath = $this->getTargetPath($request->getSession(), $token->getProviderKey());
+        $targetPath = $this->getTargetPath($request->getSession(), $token->getFirewallName());
 
         if ($targetPath) {
             // Redirect to the target path

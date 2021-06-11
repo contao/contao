@@ -63,6 +63,16 @@ class FileSelector extends Widget
 		parent::__construct($arrAttributes);
 	}
 
+	public function __set($strKey, $varValue)
+	{
+		if ($strKey === 'extensions' && \is_array($varValue))
+		{
+			$varValue = implode(',', $varValue);
+		}
+
+		parent::__set($strKey, $varValue);
+	}
+
 	/**
 	 * Generate the widget and return it as string
 	 *
@@ -245,7 +255,7 @@ class FileSelector extends Widget
 		// Start from root
 		elseif ($this->User->isAdmin)
 		{
-			$tree .= $this->renderFiletree($projectDir . '/' . Config::get('uploadPath'), 0, false, true, $arrFound);
+			$tree .= $this->renderFiletree($projectDir . '/' . System::getContainer()->getParameter('contao.upload_path'), 0, false, true, $arrFound);
 		}
 
 		// Show mounted files to regular users
@@ -556,7 +566,7 @@ class FileSelector extends Widget
 					}
 				}
 
-				$return .= Image::getHtml($objFile->icon, $objFile->mime) . ' ' . StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet')) . $thumbnail . '</div> <div class="tl_right">';
+				$return .= Image::getHtml($objFile->icon, $objFile->mime) . ' ' . StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), System::getContainer()->getParameter('kernel.charset')) . $thumbnail . '</div> <div class="tl_right">';
 
 				// Add checkbox or radio button
 				switch ($this->fieldType)
@@ -603,7 +613,7 @@ class FileSelector extends Widget
 		}
 
 		// TinyMCE will pass the path instead of the ID
-		if (strpos($this->varValue[0], Config::get('uploadPath') . '/') === 0)
+		if (strpos($this->varValue[0], System::getContainer()->getParameter('contao.upload_path') . '/') === 0)
 		{
 			return;
 		}
@@ -615,7 +625,7 @@ class FileSelector extends Widget
 		}
 
 		// Return if the custom path is not within the upload path (see #8562)
-		if ($this->path && strpos($this->path, Config::get('uploadPath') . '/') !== 0)
+		if ($this->path && strpos($this->path, System::getContainer()->getParameter('contao.upload_path') . '/') !== 0)
 		{
 			return;
 		}

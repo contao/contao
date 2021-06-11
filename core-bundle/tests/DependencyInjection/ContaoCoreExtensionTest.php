@@ -4350,6 +4350,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
+                'kernel.charset' => 'UTF-8',
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
                 'kernel.default_locale' => 'en',
             ])
@@ -4377,6 +4378,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
+                'kernel.charset' => 'UTF-8',
                 'kernel.project_dir' => $this->getTempDir(),
                 'kernel.default_locale' => 'en',
             ])

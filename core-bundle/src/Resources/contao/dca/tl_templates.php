@@ -36,6 +36,8 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	'config' => array
 	(
 		'dataContainer'               => 'Folder',
+		'uploadPath'                  => 'templates',
+		'editableFileTypes'           => 'html5,twig',
 		'closed'                      => true,
 		'onload_callback' => array
 		(
@@ -158,8 +160,9 @@ class tl_templates extends Backend
 	 */
 	public function adjustSettings()
 	{
-		Config::set('uploadPath', 'templates');
-		Config::set('editableFiles', 'html5,twig');
+		// Backwards compatibility
+		$GLOBALS['TL_CONFIG']['uploadPath'] = $GLOBALS['TL_DCA']['tl_templates']['config']['uploadPath'];
+		$GLOBALS['TL_CONFIG']['editableFiles'] = $GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'];
 	}
 
 	/**
@@ -499,9 +502,10 @@ class tl_templates extends Backend
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
-		Config::set('debugMode', false);
+		System::getContainer()->setParameter('kernel.debug', false);
+		$GLOBALS['TL_CONFIG']['debugMode'] = false;
 
 		throw new ResponseException($objTemplate->getResponse());
 	}
@@ -582,7 +586,11 @@ class tl_templates extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		return in_array(Path::getExtension($row['id'], true), array('html5', 'twig')) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		/** @var DC_Folder $dc */
+		$dc = (@func_get_arg(12) ?: null);
+		$arrEditableFileTypes = $dc ? $dc->editableFileTypes : StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+
+		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

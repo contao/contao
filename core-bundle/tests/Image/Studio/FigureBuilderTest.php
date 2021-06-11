@@ -329,6 +329,61 @@ class FigureBuilderTest extends TestCase
         $this->getFigureBuilder($studio, $framework)->from($identifier)->build();
     }
 
+    public function testFromNullFails(): void
+    {
+        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder->from(null);
+
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame("The defined resource is 'null'.", $exception->getMessage());
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
+    }
+
+    /**
+     * @dataProvider provideInvalidTypes
+     */
+    public function testFromInvalidTypeThrowsTypeError($invalidType, string $typeString): void
+    {
+        $framework = $this->mockContaoFramework([
+            Validator::class => new Adapter(Validator::class),
+        ]);
+
+        $figureBuilder = $this->getFigureBuilder(null, $framework);
+
+        $this->expectException(\TypeError::class);
+
+        $this->expectExceptionMessage(sprintf(
+            'Contao\CoreBundle\Image\Studio\FigureBuilder::from(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given',
+            $typeString
+        ));
+
+        $figureBuilder->from($invalidType);
+    }
+
+    public function provideInvalidTypes(): \Generator
+    {
+        yield 'true' => [
+            true,
+            'boolean',
+        ];
+
+        yield 'false' => [
+            false,
+            'boolean',
+        ];
+
+        yield 'object' => [
+            new Metadata([]),
+            Metadata::class,
+        ];
+    }
+
     public function provideMixedIdentifiers(): \Generator
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
