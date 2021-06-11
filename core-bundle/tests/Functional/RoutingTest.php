@@ -124,7 +124,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             ['theme', 'root-with-home'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-home.local/home.html',
             [],
             'root-with-home.local',
@@ -294,7 +294,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             ['theme', 'root-with-folder-urls'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-folder-urls.local/folder/url/home.html',
             [],
             'root-with-folder-urls.local',
@@ -702,7 +702,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is only the prefix' => [
             ['theme', 'root-with-home-and-prefix'],
             '/en/',
-            303,
+            302,
             'Redirecting to https://root-with-home.local/en/home.html',
             ['language' => 'en'],
             'root-with-home.local',
@@ -785,7 +785,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             ['theme', 'root-with-home'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-home.local/home',
             [],
             'root-with-home.local',
@@ -905,7 +905,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             ['theme', 'root-with-folder-urls'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-folder-urls.local/folder/url/home',
             [],
             'root-with-folder-urls.local',
@@ -1036,7 +1036,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            303,
+            302,
             'Redirecting to https://same-domain-root.local/english-site.html',
             'en',
             'same-domain-root.local',
@@ -1045,7 +1045,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the second language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            303,
+            302,
             'Redirecting to https://same-domain-root.local/german-site.html',
             'de',
             'same-domain-root.local',
@@ -1054,7 +1054,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the fallback root if none of the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            303,
+            302,
             'Redirecting to https://same-domain-root.local/english-site.html',
             'fr',
             'same-domain-root.local',
