@@ -60,9 +60,7 @@ class CoreResponseContextFactory
         ;
 
         if ($pageModel->robots) {
-            $htmlHeadBag
-                ->setMetaRobots($pageModel->robots)
-            ;
+            $htmlHeadBag->setMetaRobots($pageModel->robots);
         }
 
         return $context;
