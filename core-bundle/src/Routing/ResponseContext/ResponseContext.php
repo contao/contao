@@ -19,7 +19,7 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     /**
-     * @var array<string,\Closure>
+     * @var array
      */
     private $services;
 
