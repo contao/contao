@@ -24,29 +24,25 @@ final class ResponseContext
     private $services;
 
     /**
+     * @var array<string, array>
+     */
+    private $aliases;
+
+    /**
      * @var PartialResponseHeaderBag|null
      */
     private $headerBag;
 
     public function add(object $service): self
     {
-        return $this->addLazy(\get_class($service), static function () use ($service) { return $service; });
+        $this->registerService(\get_class($service), $service);
+
+        return $this;
     }
 
     public function addLazy(string $classname, \Closure $factory)
     {
-        $this->services[$classname] = $factory;
-
-        $ref = new \ReflectionClass($classname);
-
-        // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
-        foreach ($ref->getInterfaceNames() as $interfaceName) {
-            $this->services[$interfaceName] = $factory;
-        }
-
-        while ($ref = $ref->getParentClass()) {
-            $this->services[$ref->getName()] = $factory;
-        }
+        $this->registerService($classname, $factory);
 
         return $this;
     }
@@ -73,7 +69,8 @@ final class ResponseContext
 
         // Lazy load the ones with factories
         if ($this->services[$serviceId] instanceof \Closure) {
-            $this->services[$serviceId] = $this->services[$serviceId]();
+            $service = $this->services[$serviceId]();
+            $this->registerService($serviceId, $service);
         }
 
         return $this->services[$serviceId];
@@ -86,5 +83,38 @@ final class ResponseContext
         }
 
         return $this->headerBag;
+    }
+
+    /**
+     * @param \Closure|object $objectOrFactory
+     */
+    private function registerService(string $serviceId, $objectOrFactory): void
+    {
+        $this->services[$serviceId] = $objectOrFactory;
+
+        foreach ($this->getAliases($serviceId) as $alias) {
+            $this->services[$alias] = $objectOrFactory;
+        }
+    }
+
+    private function getAliases(string $classname): array
+    {
+        if (isset($this->aliases[$classname])) {
+            return $this->aliases[$classname];
+        }
+
+        $this->aliases[$classname] = [];
+        $ref = new \ReflectionClass($classname);
+
+        // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
+        foreach ($ref->getInterfaceNames() as $interfaceName) {
+            $this->aliases[$classname][] = $interfaceName;
+        }
+
+        while ($ref = $ref->getParentClass()) {
+            $this->aliases[$classname][] = $ref->getName();
+        }
+
+        return $this->aliases[$classname];
     }
 }
