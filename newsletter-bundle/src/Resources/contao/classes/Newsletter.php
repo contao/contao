@@ -388,7 +388,7 @@ class Newsletter extends Backend
 			$objTemplate->setData($objNewsletter->row());
 			$objTemplate->title = $objNewsletter->subject;
 			$objTemplate->body = $simpleTokenParser->parse($html, $arrRecipient);
-			$objTemplate->charset = Config::get('characterSet');
+			$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 			$objTemplate->recipient = $arrRecipient['email'];
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0

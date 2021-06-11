@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Image;
@@ -405,7 +404,7 @@ class tl_image_size extends Backend
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
-		if (!in_array('webp', StringUtil::trimsplit(',', Config::get('validImageTypes'))))
+		if (!in_array('webp', System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
 			return $formats;
 		}

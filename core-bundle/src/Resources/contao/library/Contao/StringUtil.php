@@ -233,7 +233,7 @@ class StringUtil
 
 		if ($strCharset === null)
 		{
-			$strCharset = Config::get('characterSet');
+			$strCharset = 'UTF-8';
 		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
@@ -792,7 +792,7 @@ class StringUtil
 		}
 
 		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, Config::get('characterSet'), $blnDoubleEncode);
+		return htmlspecialchars($strString, ENT_COMPAT, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
@@ -827,7 +827,7 @@ class StringUtil
 		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
-		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
+		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8');
 		$strString = static::stripInsertTags($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 

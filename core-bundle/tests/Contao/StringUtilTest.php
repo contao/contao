@@ -31,6 +31,7 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
         $container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/cache');
         $container->setParameter('kernel.debug', false);
+        $container->setParameter('kernel.charset', 'UTF-8');
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
@@ -40,8 +41,6 @@ class StringUtilTest extends TestCase
 
     public function testGeneratesAliases(): void
     {
-        $GLOBALS['TL_CONFIG']['characterSet'] = 'UTF-8';
-
         $this->assertSame('foo', StringUtil::generateAlias('foo'));
         $this->assertSame('foo', StringUtil::generateAlias('FOO'));
         $this->assertSame('foo-bar', StringUtil::generateAlias('foo bar'));

@@ -156,7 +156,7 @@ class BackendConfirm extends Backend
 		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidToken']);
 		$objTemplate->host = Backend::getDecodedHostname();
-		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		return $objTemplate->getResponse();
 	}

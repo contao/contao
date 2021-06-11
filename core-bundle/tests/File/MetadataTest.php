@@ -39,6 +39,7 @@ class MetadataTest extends TestCase
             Metadata::VALUE_TITLE => 'title',
             Metadata::VALUE_URL => 'url',
             Metadata::VALUE_UUID => '1234-5678',
+            Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
             'foo' => 'bar',
         ]);
 
@@ -48,6 +49,7 @@ class MetadataTest extends TestCase
         $this->assertSame('caption', $metadata->getCaption());
         $this->assertSame('title', $metadata->getTitle());
         $this->assertSame('url', $metadata->getUrl());
+        $this->assertSame('https://creativecommons.org/licenses/by/4.0/', $metadata->getLicense());
         $this->assertSame('bar', $metadata->get('foo'));
 
         $this->assertSame(
@@ -57,6 +59,7 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_TITLE => 'title',
                 Metadata::VALUE_URL => 'url',
                 Metadata::VALUE_UUID => '1234-5678',
+                Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
                 'foo' => 'bar',
             ],
             $metadata->all()
@@ -71,6 +74,7 @@ class MetadataTest extends TestCase
         $this->assertSame('', $metadata->getCaption());
         $this->assertSame('', $metadata->getTitle());
         $this->assertSame('', $metadata->getUrl());
+        $this->assertSame('', $metadata->getLicense());
 
         $this->assertNull($metadata->get('foo'));
     }

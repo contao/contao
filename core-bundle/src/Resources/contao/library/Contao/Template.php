@@ -38,6 +38,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property string       $inColumn
  * @property string       $headline
  * @property array        $hl
+ * @property string       $content
  * @property string       $action
  * @property string       $enforceTwoFactor
  * @property string       $targetPath
@@ -308,7 +309,7 @@ abstract class Template extends Controller
 
 		$this->compile();
 
-		header('Content-Type: ' . $this->strContentType . '; charset=' . Config::get('characterSet'));
+		header('Content-Type: ' . $this->strContentType . '; charset=' . System::getContainer()->getParameter('kernel.charset'));
 
 		echo $this->strBuffer;
 	}
@@ -323,7 +324,8 @@ abstract class Template extends Controller
 		$this->compile();
 
 		$response = new Response($this->strBuffer);
-		$response->headers->set('Content-Type', $this->strContentType . '; charset=' . Config::get('characterSet'));
+		$response->headers->set('Content-Type', $this->strContentType);
+		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
 		$response->headers->set('Permissions-Policy', 'interest-cohort=()');
 
 		// Mark this response to affect the caching of the current page but remove any default cache headers
@@ -473,7 +475,7 @@ abstract class Template extends Controller
 	 */
 	public function minifyHtml($strHtml)
 	{
-		if (Config::get('debugMode'))
+		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			return $strHtml;
 		}

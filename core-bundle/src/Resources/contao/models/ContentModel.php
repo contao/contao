@@ -49,7 +49,7 @@ use Contao\Model\Collection;
  * @property string  $mooStyle
  * @property string  $mooClasses
  * @property string  $highlight
- * @property string  $shClass
+ * @property string  $markdownSource
  * @property string  $code
  * @property string  $url
  * @property boolean $target
@@ -145,7 +145,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByMooStyle($val, array $opt=array())
  * @method static ContentModel|null findOneByMooClasses($val, array $opt=array())
  * @method static ContentModel|null findOneByHighlight($val, array $opt=array())
- * @method static ContentModel|null findOneByShClass($val, array $opt=array())
+ * @method static ContentModel|null findOneByMarkdownSource($val, array $opt=array())
  * @method static ContentModel|null findOneByCode($val, array $opt=array())
  * @method static ContentModel|null findOneByUrl($val, array $opt=array())
  * @method static ContentModel|null findOneByTarget($val, array $opt=array())
@@ -235,7 +235,7 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByMooStyle($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByMooClasses($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByHighlight($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByShClass($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByMarkdownSource($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByCode($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByUrl($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByTarget($val, array $opt=array())
@@ -329,7 +329,7 @@ use Contao\Model\Collection;
  * @method static integer countByMooStyle($val, array $opt=array())
  * @method static integer countByMooClasses($val, array $opt=array())
  * @method static integer countByHighlight($val, array $opt=array())
- * @method static integer countByShClass($val, array $opt=array())
+ * @method static integer countByMarkdownSource($val, array $opt=array())
  * @method static integer countByCode($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())

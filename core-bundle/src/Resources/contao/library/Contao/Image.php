@@ -139,7 +139,7 @@ class Image
 		}
 
 		$this->fileObj = $file;
-		$arrAllowedTypes = StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')));
+		$arrAllowedTypes = System::getContainer()->getParameter('contao.image.valid_extensions');
 
 		// Check the file type
 		if (!\in_array($this->fileObj->extension, $arrAllowedTypes))

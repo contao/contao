@@ -243,7 +243,7 @@ class BackendMain extends Backend
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
 		$this->Template->title = StringUtil::specialchars(strip_tags($this->Template->title));
 		$this->Template->host = Backend::getDecodedHostname();
-		$this->Template->charset = Config::get('characterSet');
+		$this->Template->charset = System::getContainer()->getParameter('kernel.charset');
 		$this->Template->home = $GLOBALS['TL_LANG']['MSC']['home'];
 		$this->Template->isPopup = Input::get('popup');
 		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');

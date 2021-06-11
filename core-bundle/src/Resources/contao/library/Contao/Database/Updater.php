@@ -11,7 +11,6 @@
 namespace Contao\Database;
 
 use Contao\ArrayUtil;
-use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
 use Contao\Dbafs;
@@ -644,7 +643,7 @@ class Updater extends Controller
 	{
 		if ($strPath === null)
 		{
-			$strPath = Config::get('uploadPath');
+			$strPath = System::getContainer()->getParameter('contao.upload_path');
 		}
 
 		$arrMeta = array();
@@ -975,17 +974,18 @@ class Updater extends Controller
 	protected static function generateHelperObject($value)
 	{
 		$return = new \stdClass();
+		$strUploadPath = System::getContainer()->getParameter('contao.upload_path');
 
 		if (!\is_array($value))
 		{
 			$return->value = rtrim($value, "\x00");
-			$return->isUuid = (\strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, Config::get('uploadPath') . '/', \strlen(Config::get('uploadPath')) + 1) !== 0);
+			$return->isUuid = (\strlen($value) == 16 && !is_numeric($return->value) && strncmp($return->value, $strUploadPath . '/', \strlen($strUploadPath) + 1) !== 0);
 			$return->isNumeric = (is_numeric($return->value) && $return->value > 0);
 		}
 		else
 		{
 			$return->value = array_map(static function ($var) { return rtrim($var, "\x00"); }, $value);
-			$return->isUuid = (\strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], Config::get('uploadPath') . '/', \strlen(Config::get('uploadPath')) + 1) !== 0);
+			$return->isUuid = (\strlen($value[0]) == 16 && !is_numeric($return->value[0]) && strncmp($return->value[0], $strUploadPath . '/', \strlen($strUploadPath) + 1) !== 0);
 			$return->isNumeric = (is_numeric($return->value[0]) && $return->value[0] > 0);
 		}
 
