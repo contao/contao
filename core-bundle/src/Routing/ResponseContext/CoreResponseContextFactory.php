@@ -40,7 +40,7 @@ class CoreResponseContextFactory
     public function createWebpageResponseContext(): ResponseContext
     {
         $context = $this->createResponseContext();
-        $context->add(new HtmlHeadBag());
+        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
 
         return $context;
     }
@@ -48,10 +48,6 @@ class CoreResponseContextFactory
     public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
         $context = $this->createWebpageResponseContext();
-
-        if (!$context->has(HtmlHeadBag::class)) {
-            return $context;
-        }
 
         /** @var HtmlHeadBag $htmlHeadBag */
         $htmlHeadBag = $context->get(HtmlHeadBag::class);

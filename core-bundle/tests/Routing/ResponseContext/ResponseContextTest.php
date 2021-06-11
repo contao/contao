@@ -34,6 +34,18 @@ class ResponseContextTest extends TestCase
         $this->assertInstanceOf(HtmlHeadBag::class, $context->get(HtmlHeadBag::class));
     }
 
+    public function testLazyServices(): void
+    {
+        $context = new ResponseContext();
+
+        $this->assertFalse($context->has(HtmlHeadBag::class));
+
+        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
+
+        $this->assertTrue($context->has(HtmlHeadBag::class));
+        $this->assertInstanceOf(HtmlHeadBag::class, $context->get(HtmlHeadBag::class));
+    }
+
     public function testGettingANonExistentServiceThrows(): void
     {
         $this->expectException(\InvalidArgumentException::class);

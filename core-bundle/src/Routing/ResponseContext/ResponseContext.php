@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 final class ResponseContext
@@ -21,7 +19,7 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     /**
-     * @var array
+     * @var array<string,\Closure>
      */
     private $services;
 
@@ -32,17 +30,22 @@ final class ResponseContext
 
     public function add(object $service): self
     {
-        $this->services[\get_class($service)] = $service;
+        return $this->addLazy(\get_class($service), static function () use ($service) { return $service; });
+    }
 
-        $ref = new \ReflectionClass($service);
+    public function addLazy(string $classname, \Closure $factory)
+    {
+        $this->services[$classname] = $factory;
+
+        $ref = new \ReflectionClass($classname);
 
         // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
         foreach ($ref->getInterfaceNames() as $interfaceName) {
-            $this->services[$interfaceName] = $service;
+            $this->services[$interfaceName] = $factory;
         }
 
         while ($ref = $ref->getParentClass()) {
-            $this->services[$ref->getName()] = $service;
+            $this->services[$ref->getName()] = $factory;
         }
 
         return $this;
@@ -66,6 +69,11 @@ final class ResponseContext
     {
         if (!$this->has($serviceId)) {
             throw new \InvalidArgumentException(sprintf('Service "%s" does not exist.', $serviceId));
+        }
+
+        // Lazy load the ones with factories
+        if ($this->services[$serviceId] instanceof \Closure) {
+            $this->services[$serviceId] = $this->services[$serviceId]();
         }
 
         return $this->services[$serviceId];
