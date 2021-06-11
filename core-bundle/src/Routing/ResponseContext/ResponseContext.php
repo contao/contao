@@ -21,7 +21,7 @@ final class ResponseContext
     /**
      * @var array
      */
-    private $services;
+    private $services = [];
 
     /**
      * @var PartialResponseHeaderBag|null
