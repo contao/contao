@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
@@ -42,6 +44,25 @@ class ResponseContextTest extends TestCase
 
         $this->assertTrue($context->has(HtmlHeadBag::class));
         $this->assertInstanceOf(HtmlHeadBag::class, $context->get(HtmlHeadBag::class));
+    }
+
+    public function testLazyServicesAreNotDuplicated(): void
+    {
+        $context = new ResponseContext();
+
+        $this->assertFalse($context->has(HtmlHeadBag::class));
+
+        $context->addLazy(ResponseHeaderBag::class, static function () { return new ResponseHeaderBag(); });
+
+        $this->assertTrue($context->has(ResponseHeaderBag::class));
+        $this->assertTrue($context->has(HeaderBag::class));
+
+        $original = $context->get(ResponseHeaderBag::class);
+        $parent = $context->get(HeaderBag::class);
+
+        $this->assertInstanceOf(ResponseHeaderBag::class, $original);
+        $this->assertInstanceOf(ResponseHeaderBag::class, $parent);
+        $this->assertSame($original, $parent);
     }
 
     public function testGettingANonExistentServiceThrows(): void
