@@ -12,9 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
-trigger_deprecation('contao/core-bundle', '4.12', 'PageRoot is deprecated, use Symfony routing instead.');
+trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\PageRoot" class been deprecated and will no longer work in Contao 5.0. Use Symfony routing instead.');
 
 /**
  * Provide methods to handle a website root page.
@@ -54,7 +53,7 @@ class PageRoot extends Frontend
 	 */
 	public function getResponse($rootPageId)
 	{
-		return new RedirectResponse($this->getRedirectUrl($rootPageId), Response::HTTP_SEE_OTHER);
+		return new RedirectResponse($this->getRedirectUrl($rootPageId));
 	}
 
 	/**

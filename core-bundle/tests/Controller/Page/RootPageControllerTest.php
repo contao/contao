@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,9 +32,10 @@ class RootPageControllerTest extends TestCase
 
     public function testRedirectsToTheFirstChildPage(): void
     {
-        /** @var PageModel $rootPage */
+        /** @var PageModel&MockObject $rootPage */
         $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
+        /** @var PageModel&MockObject $childPage */
         $childPage = $this->mockClassWithProperties(PageModel::class);
         $childPage
             ->expects($this->once())
@@ -65,7 +67,7 @@ class RootPageControllerTest extends TestCase
 
     public function testThrowsExceptionIfNoRedirectPageIsFound(): void
     {
-        /** @var PageModel $rootPage */
+        /** @var PageModel&MockObject $rootPage */
         $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
         $adapter = $this->mockAdapter(['findFirstPublishedByPid']);
@@ -83,6 +85,7 @@ class RootPageControllerTest extends TestCase
         $controller->setContainer($container);
 
         $this->expectException(NoActivePageFoundException::class);
+        $this->expectExceptionMessage('No active page found under root page.');
 
         $controller($rootPage);
     }
