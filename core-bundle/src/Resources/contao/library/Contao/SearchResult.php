@@ -76,21 +76,20 @@ class SearchResult
 
 		while ($arrRow = $objResult->fetchAssoc())
 		{
-			$arrResults[$arrRow['id']] = array_merge($arrRow, $arrResults[$arrRow['id']]);
+			$arrRow['relevance'] = (float) $arrResults[$arrRow['id']]['relevance'] > 0
+				? $arrResults[$arrRow['id']]['relevance']
+				: PHP_FLOAT_EPSILON;
+
+			$arrResults[$arrRow['id']] = $arrRow;
 		}
 
-		return $this->fixMatchesAndRelevance($arrResults);
+		return array_values($this->addMatches($arrResults));
 	}
 
-	private function fixMatchesAndRelevance(array $arrResults): array
+	private function addMatches(array $arrResults): array
 	{
 		foreach ($arrResults as $k=>$v)
 		{
-			if ((float) $v['relevance'] === 0.0)
-			{
-				$arrResults[$k]['relevance'] = PHP_FLOAT_EPSILON;
-			}
-
 			$arrHighlight = array();
 			$arrWords = Search::splitIntoWords(Utf8::strtolower($v['text']), $v['language']);
 
@@ -125,6 +124,6 @@ class SearchResult
 			$arrResults[$k]['matches'] = implode(',', $arrHighlight);
 		}
 
-		return array_values($arrResults);
+		return $arrResults;
 	}
 }
