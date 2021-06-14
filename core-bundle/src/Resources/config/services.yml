@@ -206,7 +206,7 @@ services:
     Contao\CoreBundle\Cron\PurgeExpiredDataCron:
         arguments:
             - '@contao.framework'
-            - '@connection'
+            - '@database_connection'
 
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
