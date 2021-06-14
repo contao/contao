@@ -58,9 +58,9 @@ class InsecureInstallationListenerTest extends TestCase
     {
         $request = new Request();
         $request->server->set('SCRIPT_NAME', 'index.php');
-        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/web/index.php');
+        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/public/index.php');
         $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('REQUEST_URI', '/web/index.php?do=test');
+        $request->server->set('REQUEST_URI', '/public/index.php?do=test');
 
         return $request;
     }

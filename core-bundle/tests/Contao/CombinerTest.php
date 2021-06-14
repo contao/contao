@@ -31,8 +31,8 @@ class CombinerTest extends ContaoTestCase
 
         $fs = new Filesystem();
         $fs->mkdir(static::getTempDir().'/assets/css');
+        $fs->mkdir(static::getTempDir().'/public');
         $fs->mkdir(static::getTempDir().'/system/tmp');
-        $fs->mkdir(static::getTempDir().'/web');
     }
 
     protected function setUp(): void
@@ -48,7 +48,7 @@ class CombinerTest extends ContaoTestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $container->setParameter('contao.web_dir', $this->getTempDir().'/public');
         $container->set('contao.assets.assets_context', $context);
 
         System::setContainer($container);
@@ -57,9 +57,9 @@ class CombinerTest extends ContaoTestCase
     public function testCombinesCssFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');
-        $this->filesystem->dumpFile($this->getTempDir().'/web/file2.css', 'web/file2');
+        $this->filesystem->dumpFile($this->getTempDir().'/public/file2.css', 'public/file2');
         $this->filesystem->dumpFile($this->getTempDir().'/file3.css', 'file3');
-        $this->filesystem->dumpFile($this->getTempDir().'/web/file3.css', 'web/file3');
+        $this->filesystem->dumpFile($this->getTempDir().'/public/file3.css', 'public/file3');
 
         $mtime = filemtime($this->getTempDir().'/file1.css');
 
@@ -95,7 +95,7 @@ class CombinerTest extends ContaoTestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combinedFile,
-            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n"
+            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n"
         );
 
         System::getContainer()->setParameter('kernel.debug', true);
@@ -152,7 +152,7 @@ class CombinerTest extends ContaoTestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/"test"/file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/"test"/file.css']])
         );
 
         $expected = <<<'EOF'
@@ -163,7 +163,7 @@ class CombinerTest extends ContaoTestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/'test'/file.css"]])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "public/'test'/file.css"]])
         );
 
         $expected = <<<'EOF'
@@ -174,7 +174,7 @@ class CombinerTest extends ContaoTestCase
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/(test)/file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/(test)/file.css']])
         );
     }
 
@@ -253,10 +253,10 @@ class CombinerTest extends ContaoTestCase
     public function testCombinesJsFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.js', 'file1();');
-        $this->filesystem->dumpFile($this->getTempDir().'/web/file2.js', 'file2();');
+        $this->filesystem->dumpFile($this->getTempDir().'/public/file2.js', 'file2();');
 
         $mtime1 = filemtime($this->getTempDir().'/file1.js');
-        $mtime2 = filemtime($this->getTempDir().'/web/file2.js');
+        $mtime2 = filemtime($this->getTempDir().'/public/file2.js');
 
         $combiner = new Combiner();
         $combiner->add('file1.js');

@@ -1548,7 +1548,7 @@ class ImageTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->setParameter('contao.image.target_dir', Path::join($this->getTempDir(), 'assets/images'));
-        $container->setParameter('contao.web_dir', Path::join($this->getTempDir(), 'web'));
+        $container->setParameter('contao.web_dir', Path::join($this->getTempDir(), 'public'));
 
         $framework = $this->mockContaoFramework([
             FilesModel::class => $this->createMock(Adapter::class),
