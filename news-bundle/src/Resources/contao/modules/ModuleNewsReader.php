@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -139,29 +139,32 @@ class ModuleNewsReader extends ModuleNews
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+
 			if ($objArticle->pageTitle)
 			{
-				$responseContext->setTitle($objArticle->pageTitle); // Already stored decoded
+				$htmlHeadBag->setTitle($objArticle->pageTitle); // Already stored decoded
 			}
 			elseif ($objArticle->headline)
 			{
-				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objArticle->headline));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objArticle->headline));
 			}
 
 			if ($objArticle->description)
 			{
-				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objArticle->description));
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objArticle->description));
 			}
 			elseif ($objArticle->teaser)
 			{
-				$responseContext->setMetaDescription(StringUtil::htmlToPlainText($objArticle->teaser));
+				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)
 			{
-				$responseContext->setMetaRobots($objArticle->robots);
+				$htmlHeadBag->setMetaRobots($objArticle->robots);
 			}
 		}
 

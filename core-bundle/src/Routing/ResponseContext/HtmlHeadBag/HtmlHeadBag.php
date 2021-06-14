@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Routing\ResponseContext;
+namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
-class WebpageResponseContext extends ResponseContext
+final class HtmlHeadBag
 {
     /**
      * @var string

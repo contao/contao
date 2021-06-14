@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\PageModel;
+use Contao\StringUtil;
 
 class CoreResponseContextFactory
 {
@@ -26,26 +28,40 @@ class CoreResponseContextFactory
         $this->responseContextAccessor = $responseContextAccessor;
     }
 
-    public function createWebpageResponseContext(): WebpageResponseContext
-    {
-        $context = new WebpageResponseContext();
-        $this->responseContextAccessor->setResponseContext($context);
-
-        return $context;
-    }
-
     public function createResponseContext(): ResponseContext
     {
         $context = new ResponseContext();
+
         $this->responseContextAccessor->setResponseContext($context);
 
         return $context;
     }
 
-    public function createContaoWebpageResponseContext(PageModel $pageModel): ContaoWebpageResponseContext
+    public function createWebpageResponseContext(): ResponseContext
     {
-        $context = new ContaoWebpageResponseContext($pageModel);
-        $this->responseContextAccessor->setResponseContext($context);
+        $context = $this->createResponseContext();
+        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
+
+        return $context;
+    }
+
+    public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
+    {
+        $context = $this->createWebpageResponseContext();
+
+        /** @var HtmlHeadBag $htmlHeadBag */
+        $htmlHeadBag = $context->get(HtmlHeadBag::class);
+
+        $title = $pageModel->pageTitle ?: StringUtil::inputEncodedToPlainText($pageModel->title ?: '');
+
+        $htmlHeadBag
+            ->setTitle($title ?: '')
+            ->setMetaDescription(StringUtil::inputEncodedToPlainText($pageModel->description ?: ''))
+        ;
+
+        if ($pageModel->robots) {
+            $htmlHeadBag->setMetaRobots($pageModel->robots);
+        }
 
         return $context;
     }

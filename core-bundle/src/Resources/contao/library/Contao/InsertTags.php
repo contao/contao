@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -734,16 +734,19 @@ class InsertTags extends Controller
 
 					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-					if ($responseContext instanceof WebpageResponseContext && \in_array($elements[1], array('pageTitle', 'description'), true))
+					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
+						/** @var HtmlHeadBag $htmlHeadBag */
+						$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+
 						switch ($elements[1])
 						{
 							case 'pageTitle':
-								$arrCache[$strTag] = htmlspecialchars($responseContext->getTitle());
+								$arrCache[$strTag] = htmlspecialchars($htmlHeadBag->getTitle());
 								break;
 
 							case 'description':
-								$arrCache[$strTag] = htmlspecialchars($responseContext->getMetaDescription());
+								$arrCache[$strTag] = htmlspecialchars($htmlHeadBag->getMetaDescription());
 								break;
 						}
 					}

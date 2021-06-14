@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -113,29 +113,32 @@ class ModuleFaqReader extends Module
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+
 			if ($objFaq->pageTitle)
 			{
-				$responseContext->setTitle($objFaq->pageTitle); // Already stored decoded
+				$htmlHeadBag->setTitle($objFaq->pageTitle); // Already stored decoded
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objFaq->question));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->description)
 			{
-				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->description));
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->description));
 			}
 			elseif ($objFaq->question)
 			{
-				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->question));
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->robots)
 			{
-				$responseContext->setMetaRobots($objFaq->robots);
+				$htmlHeadBag->setMetaRobots($objFaq->robots);
 			}
 		}
 

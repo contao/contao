@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -72,6 +73,7 @@ class PageRegular extends Frontend
 		$container = System::getContainer();
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
+
 		$responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
@@ -204,14 +206,14 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($responseContext->getTitle());
+		$this->Template->pageTitle = htmlspecialchars($responseContext->get(HtmlHeadBag::class)->getTitle());
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $responseContext->getMetaRobots();
+		$this->Template->robots = $responseContext->get(HtmlHeadBag::class)->getMetaRobots();
 
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
@@ -221,7 +223,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($responseContext->getMetaDescription());
+		$this->Template->description = htmlspecialchars($responseContext->get(HtmlHeadBag::class)->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);

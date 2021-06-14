@@ -14,8 +14,8 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Patchwork\Utf8;
 
 /**
@@ -132,29 +132,32 @@ class ModuleEventReader extends Events
 		// Overwrite the page meta data (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($responseContext instanceof WebpageResponseContext)
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+
 			if ($objEvent->pageTitle)
 			{
-				$responseContext->setTitle($objEvent->pageTitle); // Already stored decoded
+				$htmlHeadBag->setTitle($objEvent->pageTitle); // Already stored decoded
 			}
 			elseif ($objEvent->title)
 			{
-				$responseContext->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$responseContext->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
+				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)
 			{
-				$responseContext->setMetaRobots($objEvent->robots);
+				$htmlHeadBag->setMetaRobots($objEvent->robots);
 			}
 		}
 

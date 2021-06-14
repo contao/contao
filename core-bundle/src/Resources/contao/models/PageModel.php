@@ -11,8 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -309,20 +309,23 @@ class PageModel extends Model
 
 			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($responseContext instanceof WebpageResponseContext)
+			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
+				/** @var HtmlHeadBag $htmlHeadBag */
+				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+
 				switch ($strKey)
 				{
 					case 'pageTitle':
-						$responseContext->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'description':
-						$responseContext->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'robots':
-						$responseContext->setMetaRobots($varValue);
+						$htmlHeadBag->setMetaRobots($varValue);
 						break;
 				}
 			}
