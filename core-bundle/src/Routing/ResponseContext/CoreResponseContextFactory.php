@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
 {
@@ -23,9 +25,15 @@ class CoreResponseContextFactory
      */
     private $responseContextAccessor;
 
-    public function __construct(ResponseContextAccessor $responseContextAccessor)
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher)
     {
         $this->responseContextAccessor = $responseContextAccessor;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function createResponseContext(): ResponseContext
@@ -39,8 +47,16 @@ class CoreResponseContextFactory
 
     public function createWebpageResponseContext(): ResponseContext
     {
+        $eventDispatcher = $this->eventDispatcher;
         $context = $this->createResponseContext();
+
         $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
+        $context->addLazy(
+            JsonLdManager::class,
+            static function () use ($eventDispatcher) {
+                return new JsonLdManager($eventDispatcher);
+            }
+        );
 
         return $context;
     }

@@ -134,25 +134,27 @@ final class Figure
 
     public function getJsonLd(): array
     {
+        $contentUrl = $this->getImage()->getImageSrc();
         $imageIdentifier = $this->getImage()->getImageSrc();
 
         if ($this->hasMetadata() && $this->getMetadata()->has(Metadata::VALUE_UUID)) {
             $imageIdentifier = '#/schema/image/'.$this->getMetadata()->getUuid();
         }
 
-        $imageIdentifier = $this->request ? $this->request->getSchemeAndHttpHost() : '' . $imageIdentifier;
+        $contentUrl = ($this->request ? $this->request->getSchemeAndHttpHost() : '').'/'.$contentUrl;
+        $imageIdentifier = ($this->request ? $this->request->getSchemeAndHttpHost() : '').$imageIdentifier;
 
         $jsonLd = [
             '@type' => 'ImageObject',
             'identifier' => $imageIdentifier,
-            'contentUrl' => $this->getImage()->getImageSrc(),
+            'contentUrl' => $contentUrl,
         ];
 
         if (!$this->hasMetadata()) {
             return $jsonLd;
         }
 
-        return array_merge($jsonLd, $this->getMetadata()->getJsonLd('ImageObject'));
+        return array_merge($this->getMetadata()->getJsonLd('ImageObject'), $jsonLd);
     }
 
     /**

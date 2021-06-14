@@ -46,17 +46,12 @@ class Metadata
     private $jsonLd;
 
     /**
-     * @param array<string, mixed> $values
-     * @param array<string, array> $jsonLd
+     * @param array<string, mixed>      $values
+     * @param array<string, array>|null $jsonLd
      */
     public function __construct(array $values, array $jsonLd = null)
     {
         $this->values = $values;
-
-        if (null === $jsonLd) {
-            $jsonLd = self::extractBasicJsonLd($this);
-        }
-
         $this->jsonLd = $jsonLd;
     }
 
@@ -142,6 +137,11 @@ class Metadata
 
     public function getJsonLd(string $type = null): array
     {
+        // Lazy initialize
+        if (null === $this->jsonLd) {
+            $this->extractBasicJsonLd();
+        }
+
         if (null === $type) {
             return $this->jsonLd;
         }
@@ -149,18 +149,24 @@ class Metadata
         return $this->jsonLd[$type] ?? [];
     }
 
-    public static function extractBasicJsonLd(self $metadata): array
+    private function extractBasicJsonLd(): void
     {
-        $jsonLd = [];
-
-        if ($metadata->has('title')) {
-            $jsonLd['ImageObject']['name'] = $metadata->getTitle();
+        if ($this->has(self::VALUE_TITLE)) {
+            $this->jsonLd['AudioObject']['name'] = $this->getTitle();
+            $this->jsonLd['ImageObject']['name'] = $this->getTitle();
+            $this->jsonLd['MediaObject']['name'] = $this->getTitle();
         }
 
-        if ($metadata->has('caption')) {
-            $jsonLd['ImageObject']['caption'] = $metadata->getCaption();
+        if ($this->has(self::VALUE_CAPTION)) {
+            $this->jsonLd['AudioObject']['caption'] = $this->getCaption();
+            $this->jsonLd['ImageObject']['caption'] = $this->getCaption();
+            $this->jsonLd['MediaObject']['caption'] = $this->getCaption();
         }
 
-        return $jsonLd;
+        if ($this->has(self::VALUE_LICENSE)) {
+            $this->jsonLd['AudioObject']['license'] = $this->getCaption();
+            $this->jsonLd['ImageObject']['license'] = $this->getCaption();
+            $this->jsonLd['MediaObject']['license'] = $this->getCaption();
+        }
     }
 }

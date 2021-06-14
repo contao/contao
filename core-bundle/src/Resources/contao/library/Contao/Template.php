@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLdProvidingResponseContextInterface;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -407,31 +406,40 @@ abstract class Template extends Controller
 		$container = System::getContainer();
 		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if (!$responseContext instanceof JsonLdProvidingResponseContextInterface)
+		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
 		{
 			return;
 		}
 
-		$jsonLdManager = $responseContext->getJsonLdManager();
+		/** @var JsonLdManager $jsonLdManager */
+		$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
 		$schema = $jsonLdManager->createSchemaFromArray($jsonLd);
-		$id = isset($jsonLd['identifier']) ?: Graph::IDENTIFIER_DEFAULT;
+		$id = $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT;
 
 		$jsonLdManager
 			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
 			->set($schema, $id);
 	}
 
-	public function finalizeJsonLd()
+	/**
+	 * Finalizes the JSON-LD data collected during the current response context
+	 * and returns the scripts ready to be output within HTML context.
+	 */
+	public function finalizeJsonLd(): string
 	{
 		$container = System::getContainer();
 		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if (!$responseContext instanceof JsonLdProvidingResponseContextInterface)
+		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
 		{
-			return;
+			return '';
 		}
 
-		return $responseContext->getJsonLdManager()->collectFinalScriptFromGraphs();
+		/** @var JsonLdManager $jsonLdManager */
+		$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+		return $jsonLdManager->collectFinalScriptFromGraphs();
 	}
 
 	/**
