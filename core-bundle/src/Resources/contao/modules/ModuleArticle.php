@@ -10,8 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ResponseContext\WebpageResponseContext;
 
 /**
  * Provides methodes to handle articles.
@@ -169,13 +169,15 @@ class ModuleArticle extends Module
 		{
 			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($responseContext instanceof WebpageResponseContext)
+			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
-				$responseContext->setTitle(strip_tags(StringUtil::stripInsertTags($this->title)));
+				/** @var HtmlHeadBag $htmlHeadBag */
+				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
 
 				if ($this->teaser)
 				{
-					$responseContext->setMetaDescription($this->prepareMetaDescription($this->teaser));
+					$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($this->teaser));
 				}
 			}
 		}
@@ -280,7 +282,7 @@ class ModuleArticle extends Module
 
 		// Generate article
 		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, Config::get('characterSet'));
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

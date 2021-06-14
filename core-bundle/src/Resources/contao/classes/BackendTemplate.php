@@ -185,6 +185,7 @@ class BackendTemplate extends Template
 				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
 					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
+					. 'cancel:"' . $GLOBALS['TL_LANG']['MSC']['cancelBT'] . '",'
 					. 'collapse:"' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '",'
 					. 'expand:"' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '",'
 					. 'loading:"' . $GLOBALS['TL_LANG']['MSC']['loadingData'] . '",'

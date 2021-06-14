@@ -30,7 +30,7 @@ class ResponseContextAccessor
         $this->requestStack = $requestStack;
     }
 
-    public function getResponseContext(): ?ResponseContextInterface
+    public function getResponseContext(): ?ResponseContext
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -38,15 +38,15 @@ class ResponseContextAccessor
             return null;
         }
 
-        return $request->attributes->get(ResponseContextInterface::REQUEST_ATTRIBUTE_NAME, null);
+        return $request->attributes->get(ResponseContext::REQUEST_ATTRIBUTE_NAME, null);
     }
 
-    public function setResponseContext(?ResponseContextInterface $responseContext): self
+    public function setResponseContext(?ResponseContext $responseContext): self
     {
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
-            $request->attributes->set(ResponseContextInterface::REQUEST_ATTRIBUTE_NAME, $responseContext);
+            $request->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
         }
 
         return $this;
@@ -59,6 +59,13 @@ class ResponseContextAccessor
         return $this;
     }
 
+    /**
+     * Every controller is free to call this method or not. After all, it's the
+     * controller that specifies the response context and which parts of it it
+     * wants to apply.
+     *
+     * This method applies the header bag and then ends the current context.
+     */
     public function finalizeCurrentContext(Response $response): self
     {
         $responseContext = $this->getResponseContext();
@@ -67,7 +74,10 @@ class ResponseContextAccessor
             return $this;
         }
 
-        $responseContext->finalize($response);
+        foreach ($responseContext->getHeaderBag()->all() as $name => $values) {
+            $response->headers->set($name, $values, false); // Do not replace but add
+        }
+
         $this->endCurrentContext();
 
         return $this;

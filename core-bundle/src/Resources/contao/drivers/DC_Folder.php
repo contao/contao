@@ -31,6 +31,8 @@ use Webmozart\PathUtil\Path;
  *
  * @property string  $path
  * @property string  $extension
+ * @property string  $uploadPath
+ * @property array   $editableFileTypes
  * @property boolean $createNewVersion
  * @property boolean $isDbAssisted
  *
@@ -57,6 +59,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	protected $strRootDir;
 
 	/**
+	 * Upload path
+	 * @var string
+	 */
+	protected $strUploadPath;
+
+	/**
 	 * Current filemounts
 	 * @var array
 	 */
@@ -67,6 +75,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	 * @var array
 	 */
 	protected $arrValidFileTypes = array();
+
+	/**
+	 * Editable file types
+	 * @var array
+	 */
+	protected $arrEditableFileTypes = array();
 
 	/**
 	 * Messages
@@ -211,6 +225,20 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 		}
 
+		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes']))
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.editableFileTypes for DC_Folder is deprecated and will no longer work in Contao 5.0.');
+		}
+
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+
+		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath']))
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.uploadPath for DC_Folder is deprecated and will no longer work in Contao 5.0.');
+		}
+
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path');
+
 		// Get all filemounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
 		{
@@ -235,8 +263,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			case 'extension':
 				return $this->strExtension;
 
+			case 'uploadPath':
+				return $this->strUploadPath;
+
 			case 'isDbAssisted':
 				return $this->blnIsDbAssisted;
+
+			case 'editableFileTypes':
+				return $this->arrEditableFileTypes;
 		}
 
 		return parent::__get($strKey);
@@ -287,7 +321,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			// Expand tree
 			if (empty($session['filetree']) || !\is_array($session['filetree']) || current($session['filetree']) != 1)
 			{
-				$session['filetree'] = $this->getMD5Folders(Config::get('uploadPath'));
+				$session['filetree'] = $this->getMD5Folders($this->strUploadPath);
 			}
 			// Collapse tree
 			else
@@ -404,7 +438,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 		elseif (empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false)
 		{
-			$return .= $this->generateTree($this->strRootDir . '/' . Config::get('uploadPath'), 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
+			$return .= $this->generateTree($this->strRootDir . '/' . $this->strUploadPath, 0, false, true, ($blnClipboard ? $arrClipboard : false), $arrFound);
 		}
 		else
 		{
@@ -475,7 +509,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left">' . $label . '</div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . Config::get('uploadPath') . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left">' . $label . '</div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -564,7 +598,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$return .= '<script>'
 				. 'Dropzone.autoDiscover = false;'
 				. 'Backend.enableFileTreeUpload("tl_listing", ' . json_encode(array(
-					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? Config::get('uploadPath')))),
+					'url' => html_entity_decode($this->addToUrl('act=move&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath))),
 					'paramName' => 'files',
 					'maxFilesize' => $intMaxSize,
 					'acceptedFiles' => $strAccepted,
@@ -578,7 +612,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 		$return .= '<script>'
 			. 'Backend.enableFileTreeDragAndDrop($("tl_listing").getChildren(".tl_file_manager")[0], ' . json_encode(array(
-				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? Config::get('uploadPath')))),
+				'url' => html_entity_decode($this->addToUrl('act=cut&mode=2&pid=' . urlencode($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'][0] ?? $this->strUploadPath))),
 			)) . ')</script>'
 		;
 
@@ -1091,7 +1125,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		if (!preg_match('/^' . preg_quote(Config::get('uploadPath'), '/') . '/i', $strFolder))
+		if (!preg_match('/^' . preg_quote($this->strUploadPath, '/') . '/i', $strFolder))
 		{
 			throw new AccessDeniedException('Parent folder "' . $strFolder . '" is not within the files directory.');
 		}
@@ -1956,7 +1990,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		$objFile = new File($this->intId);
 
 		// Check whether file type is editable
-		if (!\in_array($objFile->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		if (!\in_array($objFile->extension, $this->arrEditableFileTypes))
 		{
 			throw new AccessDeniedException('File type "' . $objFile->extension . '" (' . $this->intId . ') is not allowed to be edited.');
 		}
@@ -2271,7 +2305,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['fileExists'], $varValue));
 			}
 
-			$arrImageTypes = StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')));
+			$arrImageTypes = System::getContainer()->getParameter('contao.image.valid_extensions');
 
 			// Remove potentially existing thumbnails (see #6641)
 			if (\in_array(substr($this->strExtension, 1), $arrImageTypes))
@@ -2747,7 +2781,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$folderImg = $protected ? 'folderCP.svg' : 'folderC.svg';
 
 			// Add the current folder
-			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), Config::get('characterSet'));
+			$strFolderNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFolder)), System::getContainer()->getParameter('kernel.charset'));
 			$return .= Image::getHtml($folderImg) . ' <a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '"><strong>' . $strFolderNameEncoded . '</strong></a></div> <div class="tl_right">';
 
 			// Paste buttons
@@ -2877,7 +2911,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 			}
 
-			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), Config::get('characterSet'));
+			$strFileNameEncoded = StringUtil::convertEncoding(StringUtil::specialchars(basename($currentFile)), System::getContainer()->getParameter('kernel.charset'));
 
 			// No popup links for protected files, templates and in the popup file manager
 			if ($blnProtected || $this->strTable == 'tl_templates' || Input::get('popup'))
@@ -3051,13 +3085,13 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Check whether the file is within the files directory
-		if (!preg_match('/^' . preg_quote(Config::get('uploadPath'), '/') . '/i', $strFile))
+		if (!preg_match('/^' . preg_quote($this->strUploadPath, '/') . '/i', $strFile))
 		{
 			throw new AccessDeniedException('File or folder "' . $strFile . '" is not within the files directory.');
 		}
 
 		// Check whether the parent folder is within the files directory
-		if ($strFolder && !preg_match('/^' . preg_quote(Config::get('uploadPath'), '/') . '/i', $strFolder))
+		if ($strFolder && !preg_match('/^' . preg_quote($this->strUploadPath, '/') . '/i', $strFolder))
 		{
 			throw new AccessDeniedException('Parent folder "' . $strFolder . '" is not within the files directory.');
 		}

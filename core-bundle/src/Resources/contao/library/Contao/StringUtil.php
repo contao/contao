@@ -233,7 +233,7 @@ class StringUtil
 
 		if ($strCharset === null)
 		{
-			$strCharset = Config::get('characterSet');
+			$strCharset = 'UTF-8';
 		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
@@ -792,7 +792,7 @@ class StringUtil
 		}
 
 		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, Config::get('characterSet'), $blnDoubleEncode);
+		return htmlspecialchars($strString, ENT_COMPAT, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
@@ -827,7 +827,7 @@ class StringUtil
 		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
-		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet']);
+		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8');
 		$strString = static::stripInsertTags($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
@@ -970,6 +970,90 @@ class StringUtil
 	public static function ampersand($strString, $blnEncode=true): string
 	{
 		return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+	}
+
+	/**
+	 * Convert an input-encoded string back to the raw UTF-8 value it originated from
+	 *
+	 * It handles all Contao input encoding specifics like basic entities and encoded entities.
+	 */
+	public static function revertInputEncoding(string $strValue): string
+	{
+		$strValue = static::restoreBasicEntities($strValue);
+		$strValue = static::decodeEntities($strValue);
+
+		// Ensure valid UTF-8
+		if (preg_match('//u', $strValue) !== 1)
+		{
+			$substituteCharacter = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+
+			$strValue = mb_convert_encoding($strValue, 'UTF-8', 'UTF-8');
+
+			mb_substitute_character($substituteCharacter);
+		}
+
+		return $strValue;
+	}
+
+	/**
+	 * Convert an input-encoded string to plain text UTF-8
+	 *
+	 * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
+	 *
+	 * @see StringUtil::revertInputEncoding()
+	 *
+	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 */
+	public static function inputEncodedToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
+	{
+		if ($blnRemoveInsertTags)
+		{
+			$strValue = static::stripInsertTags($strValue);
+		}
+		else
+		{
+			$strValue = Controller::replaceInsertTags($strValue, false);
+		}
+
+		$strValue = strip_tags($strValue);
+		$strValue = static::revertInputEncoding($strValue);
+		$strValue = str_replace(array('{{', '}}'), array('[{]', '[}]'), $strValue);
+
+		return $strValue;
+	}
+
+	/**
+	 * Convert an HTML string to plain text with normalized white space
+	 *
+	 * It handles all Contao input encoding specifics like insert tags, basic
+	 * entities and encoded entities and is meant to be used with content from
+	 * fields that have the allowHtml flag enabled.
+	 *
+	 * @see StringUtil::inputEncodedToPlainText()
+	 *
+	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 */
+	public static function htmlToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
+	{
+		if (!$blnRemoveInsertTags)
+		{
+			$strValue = Controller::replaceInsertTags($strValue, false);
+		}
+
+		// Add new lines before and after block level elements
+		$strValue = preg_replace(
+			array('/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'),
+			array(' ', "\n$0"),
+			$strValue
+		);
+
+		$strValue = static::inputEncodedToPlainText($strValue, true);
+
+		// Remove duplicate line breaks and spaces
+		$strValue = trim(preg_replace(array('/[^\S\n]+/', '/\s*\n\s*/'), array(' ', "\n"), $strValue));
+
+		return $strValue;
 	}
 }
 

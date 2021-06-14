@@ -85,6 +85,7 @@ class Studio implements ServiceSubscriberInterface
             'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
             'request_stack' => 'request_stack',
+            'event_dispatcher' => 'event_dispatcher',
         ];
     }
 }

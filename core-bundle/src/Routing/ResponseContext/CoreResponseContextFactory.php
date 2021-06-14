@@ -12,84 +12,57 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Contao\CoreBundle\Event\JsonLdEvent;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\PageModel;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Contao\StringUtil;
 
-class CoreResponseContextFactory implements EventSubscriberInterface
+class CoreResponseContextFactory
 {
     /**
      * @var ResponseContextAccessor
      */
     private $responseContextAccessor;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker)
+    public function __construct(ResponseContextAccessor $responseContextAccessor)
     {
         $this->responseContextAccessor = $responseContextAccessor;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenChecker = $tokenChecker;
-    }
-
-    public function createWebpageResponseContext(): WebpageResponseContext
-    {
-        $context = new WebpageResponseContext(new JsonLdManager($this->eventDispatcher));
-        $this->responseContextAccessor->setResponseContext($context);
-
-        return $context;
     }
 
     public function createResponseContext(): ResponseContext
     {
         $context = new ResponseContext();
+
         $this->responseContextAccessor->setResponseContext($context);
 
         return $context;
     }
 
-    public function createContaoWebpageResponseContext(PageModel $pageModel): ContaoWebpageResponseContext
+    public function createWebpageResponseContext(): ResponseContext
     {
-        $context = new ContaoWebpageResponseContext(new JsonLdManager($this->eventDispatcher), $pageModel);
-        $this->responseContextAccessor->setResponseContext($context);
+        $context = $this->createResponseContext();
+        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
 
         return $context;
     }
 
-    public function onJsonLd(JsonLdEvent $event): void
+    public function createContaoWebpageResponseContext(PageModel $pageModel): ResponseContext
     {
-        $context = $this->responseContextAccessor->getResponseContext();
+        $context = $this->createWebpageResponseContext();
 
-        if (!$context instanceof ContaoWebpageResponseContext) {
-            return;
+        /** @var HtmlHeadBag $htmlHeadBag */
+        $htmlHeadBag = $context->get(HtmlHeadBag::class);
+
+        $title = $pageModel->pageTitle ?: StringUtil::inputEncodedToPlainText($pageModel->title ?: '');
+
+        $htmlHeadBag
+            ->setTitle($title ?: '')
+            ->setMetaDescription(StringUtil::inputEncodedToPlainText($pageModel->description ?: ''))
+        ;
+
+        if ($pageModel->robots) {
+            $htmlHeadBag->setMetaRobots($pageModel->robots);
         }
 
-        $event->getJsonLdManager()->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->add(new ContaoPageSchema(
-            $context->getTitle(),
-            (int) $context->getPage()->id,
-            !$context->isSearchable(),
-            (bool) $context->getPage()->protected,
-            array_map('intval', array_filter((array) $context->getPage()->groups)),
-            $this->tokenChecker->isPreviewMode()
-        ));
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            JsonLdEvent::class => ['onJsonLd'],
-        ];
+        return $context;
     }
 }

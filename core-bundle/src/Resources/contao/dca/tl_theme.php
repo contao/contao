@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\FilesModel;
 use Contao\Folder;
@@ -189,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>Config::get('validImageTypes')),
+			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'isGallery'=>true, 'extensions'=>'%contao.image.valid_extensions%'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'templates' => array

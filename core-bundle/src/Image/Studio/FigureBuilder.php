@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\FilesModel;
@@ -282,10 +283,16 @@ class FigureBuilder
     /**
      * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
     public function from($identifier): self
     {
+        if (null === $identifier) {
+            $this->lastException = new InvalidResourceException("The defined resource is 'null'.");
+
+            return $this;
+        }
+
         if ($identifier instanceof FilesModel) {
             return $this->fromFilesModel($identifier);
         }
@@ -294,7 +301,9 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        if ($this->validatorAdapter()->isUuid($identifier)) {
+        $isString = \is_string($identifier);
+
+        if ($isString && $this->validatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -302,7 +311,13 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        return $this->fromPath($identifier);
+        if ($isString) {
+            return $this->fromPath($identifier);
+        }
+
+        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
+
+        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
     }
 
     /**
@@ -556,7 +571,11 @@ class FigureBuilder
             $imageResult,
             \Closure::bind(
                 function (Figure $figure): ?Metadata {
-                    return $this->onDefineMetadata();
+                    $event = new FileMetadataEvent($this->onDefineMetadata());
+
+                    $this->locator->get('event_dispatcher')->dispatch($event);
+
+                    return $event->getMetadata();
                 },
                 $settings
             ),

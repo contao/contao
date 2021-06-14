@@ -109,7 +109,7 @@ class BackendIndex extends Backend
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->languages = System::getLanguages(true); // backwards compatibility
 		$objTemplate->host = Backend::getDecodedHostname();
-		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
 		$objTemplate->curLanguage = Input::post('language') ?: str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
 		$objTemplate->curUsername = Input::post('username') ?: '';

@@ -35,6 +35,7 @@ use Imagine\Gd\Imagine as ImagineGd;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
@@ -1665,6 +1666,7 @@ class FigureBuilderIntegrationTest extends TestCase
         $container->set('request_stack', new RequestStack());
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());
+        $container->set('event_dispatcher', new EventDispatcher());
     }
 
     private function assertSameTemplateData(array $expected, object $template): void

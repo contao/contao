@@ -77,6 +77,34 @@ class Config
 	 */
 	protected $strRootDir;
 
+	private static $arrDeprecatedMap = array
+	(
+		'dbHost'           => 'database_host',
+		'dbPort'           => 'database_port',
+		'dbUser'           => 'database_user',
+		'dbPass'           => 'database_password',
+		'dbDatabase'       => 'database_name',
+		'smtpHost'         => 'mailer_host',
+		'smtpUser'         => 'mailer_user',
+		'smtpPass'         => 'mailer_password',
+		'smtpPort'         => 'mailer_port',
+		'smtpEnc'          => 'mailer_encryption',
+		'addLanguageToUrl' => 'contao.prepend_locale',
+		'urlSuffix'        => 'contao.url_suffix',
+		'uploadPath'       => 'contao.upload_path',
+		'editableFiles'    => 'contao.editable_files',
+		'debugMode'        => 'kernel.debug',
+		'characterSet'     => 'kernel.charset',
+		'enableSearch'     => 'contao.search.default_indexer.enable',
+		'indexProtected'   => 'contao.search.index_protected',
+	);
+
+	private static $arrDeprecated = array
+	(
+		'validImageTypes' => 'contao.image.valid_extensions',
+		'jpgQuality'      => 'contao.image.imagine_options[jpeg_quality]',
+	);
+
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
@@ -380,6 +408,11 @@ class Config
 	 */
 	public static function get($strKey)
 	{
+		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+		}
+
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
 	}
 
@@ -391,6 +424,11 @@ class Config
 	 */
 	public static function set($strKey, $varValue)
 	{
+		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+		}
+
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
 	}
 
@@ -472,28 +510,7 @@ class Config
 			}
 		}
 
-		$arrMap = array
-		(
-			'dbHost'           => 'database_host',
-			'dbPort'           => 'database_port',
-			'dbUser'           => 'database_user',
-			'dbPass'           => 'database_password',
-			'dbDatabase'       => 'database_name',
-			'smtpHost'         => 'mailer_host',
-			'smtpUser'         => 'mailer_user',
-			'smtpPass'         => 'mailer_password',
-			'smtpPort'         => 'mailer_port',
-			'smtpEnc'          => 'mailer_encryption',
-			'addLanguageToUrl' => 'contao.prepend_locale',
-			'urlSuffix'        => 'contao.url_suffix',
-			'uploadPath'       => 'contao.upload_path',
-			'editableFiles'    => 'contao.editable_files',
-			'debugMode'        => 'kernel.debug',
-			'enableSearch'     => 'contao.search.default_indexer.enable',
-			'indexProtected'   => 'contao.search.index_protected',
-		);
-
-		foreach ($arrMap as $strKey=>$strParam)
+		foreach (self::$arrDeprecatedMap as $strKey=>$strParam)
 		{
 			if ($container->hasParameter($strParam))
 			{

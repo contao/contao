@@ -21,7 +21,7 @@ use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -343,8 +343,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        /** @var TwoFactorTokenInterface&MockObject $token */
-        $token = $this->createMock(TwoFactorTokenInterface::class);
+        /** @var TwoFactorToken&MockObject $token */
+        $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -395,8 +395,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
 
-        /** @var TwoFactorTokenInterface&MockObject $token */
-        $token = $this->createMock(TwoFactorTokenInterface::class);
+        /** @var TwoFactorToken&MockObject $token */
+        $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -405,7 +405,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $token
             ->expects($this->once())
-            ->method('getProviderKey')
+            ->method('getFirewallName')
             ->willReturn('contao_frontend')
         ;
 
@@ -445,7 +445,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $token
             ->expects($this->once())
-            ->method('getProviderKey')
+            ->method(method_exists($token, 'getFirewallName') ? 'getFirewallName' : 'getProviderKey')
             ->willReturn('contao_frontend')
         ;
 

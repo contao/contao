@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
-use Contao\Config;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
@@ -33,7 +32,6 @@ class TemplateTest extends TestCase
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
-        Config::set('debugMode', false);
     }
 
     protected function tearDown(): void
@@ -45,8 +43,6 @@ class TemplateTest extends TestCase
 
     public function testReplacesTheVariables(): void
     {
-        Config::set('debugMode', false);
-
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
             '<?= $this->value ?>'

@@ -35,6 +35,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'dataContainer'               => 'Folder',
 		'enableVersioning'            => true,
 		'databaseAssisted'            => true,
+		'uploadPath'                  => $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path'),
+		'editableFileTypes'           => $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files'),
 		'onload_callback' => array
 		(
 			array('tl_files', 'checkPermission'),
@@ -195,8 +197,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false),
-			'wizard' => array
+			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'load_callback' => array
 			(
 				array('tl_files', 'addFileLocation')
 			),
@@ -252,7 +254,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true),
-					'caption'         => array('type'=>'textarea')
+					'caption'         => array('type'=>'textarea'),
+					'license'         => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true)
 				)
 			),
 			'sql'                     => "blob NULL"
@@ -477,7 +480,7 @@ class tl_files extends Backend
 		}
 
 		// Only show the important part fields for images
-		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')))))
+		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
 			PaletteManipulator::create()
 				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
@@ -498,7 +501,7 @@ class tl_files extends Backend
 	{
 		$model = FilesModel::findByPk($pid);
 
-		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return;
 		}
@@ -530,7 +533,7 @@ class tl_files extends Backend
 	{
 		$model = FilesModel::findByPk($pid);
 
-		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return;
 		}
@@ -569,16 +572,16 @@ class tl_files extends Backend
 	/**
 	 * Add the file location instead of the help text (see #6503)
 	 *
+	 * @param mixed         $value
 	 * @param DataContainer $dc
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function addFileLocation(DataContainer $dc)
+	public function addFileLocation($value, DataContainer $dc)
 	{
-		// Unset the default help text
-		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
+		$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1] = sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id);
 
-		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
+		return $value;
 	}
 
 	/**
@@ -789,7 +792,10 @@ class tl_files extends Backend
 
 		$objFile = new File($strDecoded);
 
-		if (!in_array($objFile->extension, StringUtil::trimsplit(',', strtolower(Config::get('editableFiles')))))
+		/** @var DC_Folder $dc */
+		$dc = (@func_get_arg(12) ?: null);
+
+		if (!in_array($objFile->extension, $dc ? $dc->editableFileTypes : StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}

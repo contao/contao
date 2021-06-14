@@ -317,7 +317,7 @@
       </trans-unit>
       <trans-unit id="tl_user.session_legend">
         <source>Clear cache</source>
-        <target>پاک کردن نهانگاه</target>
+        <target>پاک کردن کش</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionLabel">
         <source>Session data</source>
@@ -325,11 +325,11 @@
       </trans-unit>
       <trans-unit id="tl_user.htmlLabel">
         <source>Image cache</source>
-        <target>نهانگاه تصویر</target>
+        <target>کش تصویر</target>
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
-        <target>نهان‌گاه مشترک</target>
+        <target>کش مشترک</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -337,10 +337,11 @@
       </trans-unit>
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
-        <target>نهانگاه تصویر پاک‌سازی شده است.</target>
+        <target>کش تصویر پاک‌سازی شده است.</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
+        <target>کش اشتراکی پاک شده است</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>

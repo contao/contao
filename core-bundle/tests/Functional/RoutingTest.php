@@ -50,9 +50,8 @@ class RoutingTest extends FunctionalTestCase
 
         $_GET = [];
 
-        Config::set('debugMode', false);
         Config::set('useAutoItem', true);
-        Config::set('addLanguageToUrl', false);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
     }
 
     /**
@@ -124,7 +123,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             ['theme', 'root-with-home'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-home.local/home.html',
             [],
             'root-with-home.local',
@@ -294,7 +293,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             ['theme', 'root-with-folder-urls'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-folder-urls.local/folder/url/home.html',
             [],
             'root-with-folder-urls.local',
@@ -412,7 +411,7 @@ class RoutingTest extends FunctionalTestCase
         $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
 
         Config::set('useAutoItem', $autoItem);
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -702,7 +701,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is only the prefix' => [
             ['theme', 'root-with-home-and-prefix'],
             '/en/',
-            303,
+            302,
             'Redirecting to https://root-with-home.local/en/home.html',
             ['language' => 'en'],
             'root-with-home.local',
@@ -785,7 +784,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the alias is not "index" and the request is empty' => [
             ['theme', 'root-with-home'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-home.local/home',
             [],
             'root-with-home.local',
@@ -905,7 +904,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first regular page if the folder URL alias is not "index" and the request is empty' => [
             ['theme', 'root-with-folder-urls'],
             '/',
-            303,
+            302,
             'Redirecting to https://root-with-folder-urls.local/folder/url/home',
             [],
             'root-with-folder-urls.local',
@@ -1036,7 +1035,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the first language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            303,
+            302,
             'Redirecting to https://same-domain-root.local/english-site.html',
             'en',
             'same-domain-root.local',
@@ -1045,7 +1044,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the second language root if the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            303,
+            302,
             'Redirecting to https://same-domain-root.local/german-site.html',
             'de',
             'same-domain-root.local',
@@ -1054,7 +1053,7 @@ class RoutingTest extends FunctionalTestCase
         yield 'Redirects to the fallback root if none of the accept languages matches' => [
             ['theme', 'same-domain-root'],
             '/',
-            303,
+            302,
             'Redirecting to https://same-domain-root.local/english-site.html',
             'fr',
             'same-domain-root.local',
@@ -1098,7 +1097,7 @@ class RoutingTest extends FunctionalTestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
 
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
@@ -1165,11 +1164,11 @@ class RoutingTest extends FunctionalTestCase
             'same-domain-root.local',
         ];
 
-        yield 'Redirects to "en" if "de-CH" and "en" are accepted and "de" is not' => [
+        yield 'Redirects to "de" if "de-CH" and "en" are accepted' => [
             ['theme', 'same-domain-root'],
             '/',
             302,
-            'Redirecting to https://same-domain-root.local/en/',
+            'Redirecting to https://same-domain-root.local/de/',
             'de-CH,en',
             'same-domain-root.local',
         ];
@@ -1245,6 +1244,33 @@ class RoutingTest extends FunctionalTestCase
             'de,en',
             'example.com',
         ];
+
+        yield 'Redirects to preferred language and region' => [
+            ['theme', 'language-and-region'],
+            '/',
+            302,
+            'Redirecting to https://example.com/de-CH/',
+            'de,de-CH,fr',
+            'example.com',
+        ];
+
+        yield 'Redirects to preferred language and ignores region if it does not exist' => [
+            ['theme', 'language-and-region'],
+            '/',
+            302,
+            'Redirecting to https://example.com/it-CH/',
+            'it-IT,de',
+            'example.com',
+        ];
+
+        yield 'Redirects to the language region by root page sorting' => [
+            ['theme', 'language-and-region'],
+            '/',
+            302,
+            'Redirecting to https://example.com/de-CH/',
+            'de',
+            'example.com',
+        ];
     }
 
     public function testOrdersThePageModelsByCandidates(): void
@@ -1279,7 +1305,7 @@ class RoutingTest extends FunctionalTestCase
         $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
 
         Config::set('folderUrl', true);
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $request = 'https://domain1.local/it/';
 
@@ -1309,7 +1335,7 @@ class RoutingTest extends FunctionalTestCase
         $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
 
         Config::set('folderUrl', true);
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $request = 'https://domain1.local/de/';
 

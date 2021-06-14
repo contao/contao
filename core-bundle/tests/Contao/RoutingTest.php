@@ -39,12 +39,13 @@ class RoutingTest extends ContaoTestCase
         parent::setUp();
 
         Config::set('urlSuffix', '.html');
-        Config::set('addLanguageToUrl', false);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
         Config::set('useAutoItem', false);
 
         Environment::reset();
 
         $container = new ContainerBuilder();
+        $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.legacy_routing', true);
 
         System::setContainer($container);
@@ -308,7 +309,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack->push($request);
 
         System::getContainer()->set('request_stack', $requestStack);
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $this->assertNull(Frontend::getPageIdFromUrl());
         $this->assertSame(['language' => 'en'], $_GET);
@@ -335,7 +336,7 @@ class RoutingTest extends ContaoTestCase
         $requestStack->push($request);
 
         System::getContainer()->set('request_stack', $requestStack);
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
         $this->assertEmpty($_GET);
@@ -363,7 +364,7 @@ class RoutingTest extends ContaoTestCase
 
         System::getContainer()->set('request_stack', $requestStack);
         System::getContainer()->set('contao.framework', $this->mockFrameworkWithPageAdapter());
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
         Config::set('useAutoItem', true);
 
         $this->assertFalse(Frontend::getPageIdFromUrl());
@@ -517,7 +518,7 @@ class RoutingTest extends ContaoTestCase
 
         System::getContainer()->set('request_stack', $requestStack);
         System::getContainer()->set('contao.framework', $framework);
-        Config::set('addLanguageToUrl', true);
+        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
 
         $this->assertSame('foo/bar/home', Frontend::getPageIdFromUrl());
         $this->assertSame(['language' => 'en', 'news' => 'test'], $_GET);

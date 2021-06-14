@@ -150,13 +150,12 @@ class ModuleSearch extends Module
 
 			try
 			{
-				$objSearch = Search::searchFor($strKeywords, ($strQueryType == 'or'), $arrPages, 0, 0, $blnFuzzy, $this->minKeywordLength);
-				$arrResult = $objSearch->fetchAllAssoc();
+				$objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, $this->minKeywordLength);
 			}
 			catch (\Exception $e)
 			{
 				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
-				$arrResult = array();
+				$objResult = new SearchResult(array());
 			}
 
 			$query_endtime = microtime(true);
@@ -171,18 +170,23 @@ class ModuleSearch extends Module
 					$user = FrontendUser::getInstance();
 				}
 
-				foreach ($arrResult as $k=>$v)
+				if ($user)
 				{
-					if (($v['protected'] ?? null) && (!$user || !$user->isMemberOf(StringUtil::deserialize($v['groups'] ?? null))))
+					$objResult->applyFilter(static function ($v) use ($user)
 					{
-						unset($arrResult[$k]);
-					}
+						return empty($v['protected']) || $user->isMemberOf(StringUtil::deserialize($v['groups'] ?? null));
+					});
 				}
-
-				$arrResult = array_values($arrResult);
+				else
+				{
+					$objResult->applyFilter(static function ($v)
+					{
+						return empty($v['protected']);
+					});
+				}
 			}
 
-			$count = \count($arrResult);
+			$count = $objResult->getCount();
 
 			$this->Template->count = $count;
 			$this->Template->page = null;
@@ -246,8 +250,10 @@ class ModuleSearch extends Module
 				$totalLength = $lengths[1];
 			}
 
+			$arrResult = $objResult->getResults($to-$from+1, $from-1);
+
 			// Get the results
-			for ($i=($from-1); $i<$to && $i<$count; $i++)
+			foreach (array_keys($arrResult) as $i)
 			{
 				$objTemplate = new FrontendTemplate($this->searchTpl ?: 'search_default');
 				$objTemplate->setData($arrResult[$i]);
@@ -255,7 +261,7 @@ class ModuleSearch extends Module
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
-				$objTemplate->class = (($i == ($from - 1)) ? 'first ' : '') . (($i == ($to - 1) || $i == ($count - 1)) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
+				$objTemplate->class = ($i == 0 ? 'first ' : '') . ((empty($arrResult[$i+1])) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
 				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
@@ -285,7 +291,7 @@ class ModuleSearch extends Module
 				if (!empty($arrContext))
 				{
 					$objTemplate->context = trim(StringUtil::substrHtml(implode('…', $arrContext), $totalLength));
-					$objTemplate->context = preg_replace('/(?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$)/ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
+					$objTemplate->context = preg_replace('((?<=^|\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan})(' . implode('|', array_map('preg_quote', $arrMatches)) . ')(?=\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}|$))ui', '<mark class="highlight">$1</mark>', $objTemplate->context);
 
 					$objTemplate->hasContext = true;
 				}

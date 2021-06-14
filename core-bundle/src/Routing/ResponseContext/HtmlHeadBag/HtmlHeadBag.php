@@ -10,11 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Routing\ResponseContext;
+namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-
-class WebpageResponseContext extends ResponseContext implements JsonLdProvidingResponseContextInterface
+final class HtmlHeadBag
 {
     /**
      * @var string
@@ -29,16 +27,6 @@ class WebpageResponseContext extends ResponseContext implements JsonLdProvidingR
      * @var string
      */
     private $metaRobots = 'index,follow';
-
-    /**
-     * @var JsonLdManager
-     */
-    private $jsonLdManager;
-
-    public function __construct(JsonLdManager $jsonLdManager)
-    {
-        $this->jsonLdManager = $jsonLdManager;
-    }
 
     public function getTitle(): string
     {
@@ -74,10 +62,5 @@ class WebpageResponseContext extends ResponseContext implements JsonLdProvidingR
         $this->metaRobots = $metaRobots;
 
         return $this;
-    }
-
-    public function getJsonLdManager(): JsonLdManager
-    {
-        return $this->jsonLdManager;
     }
 }

@@ -48,6 +48,10 @@ class ContaoCoreExtension extends Extension
 
     public function load(array $configs, ContainerBuilder $container): void
     {
+        if ('UTF-8' !== $container->getParameter('kernel.charset')) {
+            trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
+        }
+
         $configuration = new Configuration(
             $container->getParameter('kernel.project_dir'),
             $container->getParameter('kernel.default_locale')
@@ -61,6 +65,7 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
+        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
         $loader->load('migrations.yml');
