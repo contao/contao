@@ -91,7 +91,7 @@ class SymlinksCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'public')
             ->setDescription('Symlinks the public resources into the web directory.')
         ;
     }

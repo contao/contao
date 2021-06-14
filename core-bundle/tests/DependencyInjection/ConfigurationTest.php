@@ -113,6 +113,7 @@ class ConfigurationTest extends TestCase
         yield ['config'];
         yield ['contao'];
         yield ['plugins'];
+        yield ['public'];
         yield ['share'];
         yield ['system'];
         yield ['templates'];

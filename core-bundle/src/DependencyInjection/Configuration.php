@@ -103,7 +103,7 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(
                             static function (string $v): int {
-                                return preg_match('@^(app|assets|bin|config|contao|plugins|share|system|templates|var|vendor|web)(/|$)@', $v);
+                                return preg_match('@^(app|assets|bin|config|contao|plugins|public|share|system|templates|var|vendor|web)(/|$)@', $v);
                             }
                         )
                         ->thenInvalid('%s')
@@ -117,9 +117,9 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('.html')
                 ->end()
                 ->scalarNode('web_dir')
-                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/web.')
+                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'web'))
+                    ->defaultValue(Path::join($this->projectDir, 'public'))
                     ->validate()
                         ->always(
                             static function (string $value): string {

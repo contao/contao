@@ -71,7 +71,7 @@ class InstallCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'public')
             ->setDescription('Installs the required Contao directories')
         ;
     }
