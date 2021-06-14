@@ -96,7 +96,6 @@ final class ResponseContext
         $this->current[$serviceId] = $serviceId;
 
         foreach ($this->getAliases($serviceId) as $alias) {
-            $this->services[$alias] = $objectOrFactory;
             $this->current[$alias] = $serviceId;
         }
     }
