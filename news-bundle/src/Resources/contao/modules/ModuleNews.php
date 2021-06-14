@@ -95,7 +95,6 @@ abstract class ModuleNews extends Module
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
 		$objTemplate->more = $this->generateLink($GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
 		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
-		$objTemplate->absoluteLink = News::generateNewsUrl($objArticle, $blnAddArchive, true);
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
@@ -153,7 +152,6 @@ abstract class ModuleNews extends Module
 		$objTemplate->commentCount = $arrMeta['comments'] ?? null;
 		$objTemplate->timestamp = $objArticle->date;
 		$objTemplate->author = $arrMeta['author'] ?? null;
-		$objTemplate->authorModel = $arrMeta['author_model'] ?? null;
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
 		$objTemplate->addImage = false;
 		$objTemplate->addBefore = false;
@@ -307,8 +305,7 @@ abstract class ModuleNews extends Module
 					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span class="author">' . $objAuthor->name . '</span>';
-						$return['author_model'] = $objAuthor;
+						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span itemprop="author">' . $objAuthor->name . '</span>';
 					}
 					break;
 

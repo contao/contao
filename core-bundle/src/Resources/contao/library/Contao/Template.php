@@ -400,23 +400,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Decodes a value for raw usage (DO NOT USE THIS IN HTML OUTPUT IF THE SOURCE IS UNKNOWN)
-	 */
-	public function raw(string $value, bool $stripTags = true): string
-	{
-		// TODO: Use StringUtil::getRawDecodedValue() once https://github.com/contao/contao/pull/3014 is merged.
-
-		$value = StringUtil::decodeEntities(StringUtil::restoreBasicEntities($value));
-
-		if ($stripTags)
-		{
-			$value = strip_tags($value);
-		}
-
-		return $value;
-	}
-
-	/**
 	 * Adds JSON-LD data to the current page.
 	 */
 	public function jsonLd(array $jsonLd, string $schema = JsonLdManager::SCHEMA_ORG): void

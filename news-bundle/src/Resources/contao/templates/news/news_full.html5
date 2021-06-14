@@ -1,14 +1,14 @@
 
-<div class="layout_full block<?= $this->class ?>">
+<div class="layout_full block<?= $this->class ?>" itemscope itemtype="http://schema.org/Article">
 
-  <h1><?= $this->newsHeadline ?></h1>
+  <h1 itemprop="name"><?= $this->newsHeadline ?></h1>
 
   <?php if ($this->hasMetaFields): ?>
-    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
+    <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
   <?php endif; ?>
 
   <?php if ($this->hasSubHeadline): ?>
-    <h2><?= $this->subHeadline ?></h2>
+    <h2 itemprop="headline"><?= $this->subHeadline ?></h2>
   <?php endif; ?>
 
   <?php if ($this->hasText): ?>
@@ -33,41 +33,10 @@
     <ul class="enclosure">
       <?php foreach ($this->enclosure as $enclosure): ?>
         <li class="download-element ext-<?= $enclosure['extension'] ?>">
-           <a href="<?= $enclosure['href'] ?>" title="<?= $enclosure['title'] ?>"><?= $enclosure['link'] ?> <span class="size">(<?= $enclosure['filesize'] ?>)</span></a>
+          <a href="<?= $enclosure['href'] ?>" title="<?= $enclosure['title'] ?>"><?= $enclosure['link'] ?> <span class="size">(<?= $enclosure['filesize'] ?>)</span></a>
         </li>
       <?php endforeach; ?>
     </ul>
   <?php endif; ?>
 
 </div>
-
-<?php
-
-$jsonLd = [
-    '@type' => 'NewsArticle',
-    'identifier' => $this->absoluteLink,
-    'url' => $this->absoluteLink,
-    'headline' => $this->raw($this->headline),
-    'datePublished' => $this->datetime,
-];
-
-if ($this->hasTeaser) {
-    $jsonLd['description'] = $this->raw($this->teaser);
-}
-
-if ($this->hasText()) {
-    $jsonLd['text'] = $this->raw($this->text);
-}
-
-if ($this->addImage) {
-    $jsonLd['image'] = $this->figure->getJsonLd();
-}
-
-if ($this->authorModel) {
-    $jsonLd['author'] = [
-        '@type' => 'Person',
-        'name' => $this->authorModel->name,
-    ];
-}
-
-$this->jsonLd($jsonLd);
