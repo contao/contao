@@ -666,6 +666,7 @@ services:
         arguments:
             - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
             - '@event_dispatcher'
+            - '@contao.security.token_checker'
         public: true
 
     contao.search.indexer.default:

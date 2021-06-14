@@ -303,7 +303,7 @@ class PageModel extends Model
 	public function __set($strKey, $varValue)
 	{
 		// Deprecate setting dynamic page attributes if they are set on the global $objPage
-		if (\in_array($strKey, array('pageTitle', 'description', 'robots'), true) && ($GLOBALS['objPage'] ?? null) === $this)
+		if (\in_array($strKey, array('pageTitle', 'description', 'robots', 'noSearch'), true) && ($GLOBALS['objPage'] ?? null) === $this)
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
 
@@ -326,6 +326,10 @@ class PageModel extends Model
 
 					case 'robots':
 						$htmlHeadBag->setMetaRobots($varValue);
+						break;
+
+					case 'noSearch':
+						$htmlHeadBag->setMetaRobots($varValue ? 'index,nofollow' : 'noindex,nofollow');
 						break;
 				}
 			}

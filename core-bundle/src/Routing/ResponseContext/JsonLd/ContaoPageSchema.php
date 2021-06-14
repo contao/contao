@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\JsonLd;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Spatie\SchemaOrg\BaseType;
 
 class ContaoPageSchema extends BaseType
@@ -87,5 +88,12 @@ class ContaoPageSchema extends BaseType
         ];
 
         return $data;
+    }
+
+    public function updateFromHtmlHeadBag(HtmlHeadBag $bag): self
+    {
+        $this->title = $bag->getTitle();
+
+        return $this;
     }
 }
