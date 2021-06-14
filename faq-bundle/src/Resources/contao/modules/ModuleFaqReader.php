@@ -68,7 +68,7 @@ class ModuleFaqReader extends Module
 
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
-			throw new InternalServerErrorException('The faq reader ID ' . $this->id . ' has no categories specified.', $this->id);
+			throw new InternalServerErrorException('The faq reader ID ' . $this->id . ' has no categories specified.');
 		}
 
 		return parent::generate();

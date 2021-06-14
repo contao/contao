@@ -72,7 +72,7 @@ class ModuleEventReader extends Events
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
-			throw new InternalServerErrorException('The event reader ID ' . $this->id . ' has no calendars specified.', $this->id);
+			throw new InternalServerErrorException('The event reader ID ' . $this->id . ' has no calendars specified.');
 		}
 
 		return parent::generate();

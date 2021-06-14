@@ -66,7 +66,7 @@ class ModuleNewsletterReader extends Module
 
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
-			throw new InternalServerErrorException('The newsletter reader ID ' . $this->id . ' has no channels specified.', $this->id);
+			throw new InternalServerErrorException('The newsletter reader ID ' . $this->id . ' has no channels specified.');
 		}
 
 		return parent::generate();
