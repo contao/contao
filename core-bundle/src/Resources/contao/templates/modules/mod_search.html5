@@ -24,7 +24,7 @@
   </form>
 
   <?php if ($this->header): ?>
-    <p class="header"><?= $this->header ?> (<?= $this->duration ?>)</p>
+    <p class="header"><?= $this->header ?></p>
     <?php if ($this->keywordHint): ?>
       <p class="info"><?= $this->keywordHint ?></p>
     <?php endif; ?>
