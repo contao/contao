@@ -215,6 +215,12 @@ class PageRegular extends Frontend
 		// Meta robots tag
 		$this->Template->robots = $responseContext->get(HtmlHeadBag::class)->getMetaRobots();
 
+		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
+		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+		{
+			$this->Template->robots = 'noindex,nofollow';
+		}
+
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
 		{
@@ -232,12 +238,6 @@ class PageRegular extends Frontend
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objLayout, $objPage);
 		$this->createHeaderScripts($objPage, $objLayout);
-
-		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
-		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
-		{
-			$responseContext->disableSearch();
-		}
 	}
 
 	/**
