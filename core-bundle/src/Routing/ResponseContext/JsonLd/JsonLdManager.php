@@ -73,7 +73,7 @@ class JsonLdManager
         return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n".'</script>';
     }
 
-    public function createSchemaFromArray(array $jsonLd): Type
+    public function createTypeFromArray(array $jsonLd): Type
     {
         if (!isset($jsonLd['@type'])) {
             throw new \InvalidArgumentException('Must provide the @type property!');
@@ -85,7 +85,7 @@ class JsonLdManager
 
         foreach ($jsonLd as $k => $v) {
             if (\is_array($v) && isset($v['@type'])) {
-                $v = $this->createSchemaFromArray($v);
+                $v = $this->createTypeFromArray($v);
             }
 
             $schema->setProperty($k, $v);

@@ -414,12 +414,12 @@ abstract class Template extends Controller
 		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
 
-		$schema = $jsonLdManager->createSchemaFromArray($jsonLd);
+		$type = $jsonLdManager->createTypeFromArray($jsonLd);
 		$id = $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT;
 
 		$jsonLdManager
-			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
-			->set($schema, $id);
+			->getGraphForSchema($schema)
+			->set($type, $id);
 	}
 
 	/**
