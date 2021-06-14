@@ -1568,6 +1568,9 @@
       <trans-unit id="MSC.guests">
         <source>guests only</source>
       </trans-unit>
+      <trans-unit id="MSC.anonymous">
+        <source>Guests</source>
+      </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
       </trans-unit>

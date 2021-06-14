@@ -100,6 +100,8 @@ use Symfony\Component\HttpFoundation\Request;
  * @property integer       $rowClass
  * @property integer       $rowClassConfirm
  * @property integer       $storeValues
+ * @property boolean       $includeBlankOption
+ * @property string        $blankOptionLabel
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

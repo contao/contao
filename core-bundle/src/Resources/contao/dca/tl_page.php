@@ -502,7 +502,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
-			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
+			'eval'                    => array('mandatory'=>true, 'multiple'=>true, 'includeBlankOption'=>true, 'blankOptionLabel'=>$GLOBALS['TL_LANG']['MSC']['anonymous']),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
