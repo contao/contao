@@ -52,7 +52,6 @@ class ResponseContextTest extends TestCase
     public function testLazyServicesAreNotDuplicated(): void
     {
         $context = new ResponseContext();
-
         $context->addLazy(ResponseHeaderBag::class, static function () { return new ResponseHeaderBag(); });
 
         $this->assertTrue($context->has(ResponseHeaderBag::class));
@@ -95,6 +94,7 @@ class ResponseContextTest extends TestCase
         // interfaces here. We took the BundleInterface as that is very unlikely to change.
         $serviceA = new class() extends Bundle implements BundleInterface {
         };
+
         $serviceB = new class() extends Bundle implements BundleInterface {
         };
 

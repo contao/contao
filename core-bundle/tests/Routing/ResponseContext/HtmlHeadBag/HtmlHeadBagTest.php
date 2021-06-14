@@ -20,7 +20,6 @@ class HtmlHeadBagTest extends TestCase
     public function testHeadManagerBasics(): void
     {
         $manager = new HtmlHeadBag();
-
         $manager->setTitle('foobar title');
         $manager->setMetaDescription('foobar description');
 

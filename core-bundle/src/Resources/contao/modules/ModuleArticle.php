@@ -173,7 +173,6 @@ class ModuleArticle extends Module
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-
 				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
 
 				if ($this->teaser)
