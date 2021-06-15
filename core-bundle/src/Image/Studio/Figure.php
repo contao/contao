@@ -17,7 +17,6 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A Figure object holds image and metadata ready to be applied to a
@@ -54,11 +53,6 @@ final class Figure
     private $options;
 
     /**
-     * @var Request|null
-     */
-    private $request;
-
-    /**
      * Creates a figure container.
      *
      * All arguments but the main image result can also be set via a Closure
@@ -69,16 +63,14 @@ final class Figure
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
-     * @param Request|null                                                                $request        Current request
      */
-    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null, Request $request = null)
+    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
     {
         $this->image = $image;
         $this->metadata = $metadata;
         $this->linkAttributes = $linkAttributes;
         $this->lightbox = $lightbox;
         $this->options = $options;
-        $this->request = $request;
     }
 
     /**
@@ -134,20 +126,16 @@ final class Figure
 
     public function getJsonLd(): array
     {
-        $contentUrl = $this->getImage()->getImageSrc();
         $imageIdentifier = $this->getImage()->getImageSrc();
 
         if ($this->hasMetadata() && $this->getMetadata()->has(Metadata::VALUE_UUID)) {
             $imageIdentifier = '#/schema/image/'.$this->getMetadata()->getUuid();
         }
 
-        $contentUrl = ($this->request ? $this->request->getSchemeAndHttpHost() : '').'/'.$contentUrl;
-        $imageIdentifier = ($this->request ? $this->request->getSchemeAndHttpHost() : '').$imageIdentifier;
-
         $jsonLd = [
             '@type' => 'ImageObject',
             'identifier' => $imageIdentifier,
-            'contentUrl' => $contentUrl,
+            'contentUrl' => $this->getImage()->getImageSrc(),
         ];
 
         if (!$this->hasMetadata()) {

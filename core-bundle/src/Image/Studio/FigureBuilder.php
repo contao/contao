@@ -591,8 +591,7 @@ class FigureBuilder
                 },
                 $settings
             ),
-            $settings->options,
-            $this->locator->get('request_stack')->getCurrentRequest()
+            $settings->options
         );
     }
 
