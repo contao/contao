@@ -329,7 +329,7 @@ class PageModel extends Model
 						break;
 
 					case 'noSearch':
-						$htmlHeadBag->setMetaRobots($varValue ? 'index,nofollow' : 'noindex,nofollow');
+						$htmlHeadBag->setMetaRobots($varValue ? 'noindex,nofollow' : 'index,nofollow');
 						break;
 				}
 			}
