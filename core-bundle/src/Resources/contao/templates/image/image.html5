@@ -17,4 +17,6 @@
 
 <?php
 
-$this->jsonLd($this->figure->getJsonLd());
+if ($this->figure) {
+    $this->jsonLd($this->figure->getJsonLd());
+}
