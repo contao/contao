@@ -79,11 +79,6 @@ class CheckBox extends Widget
 	{
 		$arrOptions = $this->arrOptions;
 
-		if ($this->includeBlankOption)
-		{
-			array_unshift($this->arrOptions, array('value' => '0', 'label' => $this->blankOptionLabel ?: '-'));
-		}
-
 		if (\is_array($this->unknownOption))
 		{
 			foreach ($this->unknownOption as $v)
@@ -110,11 +105,6 @@ class CheckBox extends Widget
 		if (!$this->multiple && \count($this->arrOptions) > 1)
 		{
 			$this->arrOptions = array($this->arrOptions[0]);
-		}
-
-		if ($this->includeBlankOption)
-		{
-			array_unshift($this->arrOptions, array('value' => '0', 'label' => $this->blankOptionLabel ?: '-'));
 		}
 
 		// The "required" attribute only makes sense for single checkboxes
