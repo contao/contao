@@ -313,10 +313,10 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			$groups = StringUtil::deserialize($objSubpage->groups);
+			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \is_array($groups) && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				// Check whether there will be subpages
 				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
