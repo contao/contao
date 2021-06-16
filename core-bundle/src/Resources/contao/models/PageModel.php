@@ -337,18 +337,18 @@ class PageModel extends Model
 						$htmlHeadBag->setMetaRobots($varValue);
 						break;
 				}
+			}
 
-				if ('noSearch' === $strKey && $responseContext->has(JsonLdManager::class))
+			if ('noSearch' === $strKey && $responseContext->has(JsonLdManager::class))
+			{
+				/** @var JsonLdManager $jsonLdManager */
+				$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+				if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
 				{
-					/** @var JsonLdManager $jsonLdManager */
-					$jsonLdManager = $responseContext->get(JsonLdManager::class);
-
-					if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
-					{
-						/** @var ContaoPageSchema $schema */
-						$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-						$schema->setNoSearch($varValue);
-					}
+					/** @var ContaoPageSchema $schema */
+					$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+					$schema->setNoSearch($varValue);
 				}
 			}
 		}
