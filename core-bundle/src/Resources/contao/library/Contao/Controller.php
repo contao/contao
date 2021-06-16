@@ -415,7 +415,7 @@ abstract class Controller extends System
 		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.frontend_module.'.$objRow->type.' (ID '.$objRow->id.')', 'contao.layout');
+			$objStopwatch->start('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')', 'contao.layout');
 		}
 
 		$objRow->typePrefix = 'mod_';
@@ -441,7 +441,7 @@ abstract class Controller extends System
 
 		if ($objStopwatch)
 		{
-			$objStopwatch->stop('contao.frontend_module.'.$objRow->type.' (ID '.$objRow->id.')');
+			$objStopwatch->stop('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
@@ -525,7 +525,7 @@ abstract class Controller extends System
 		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.article (ID '.$objRow->id.')', 'contao.layout');
+			$objStopwatch->start('contao.article (ID ' . $objRow->id . ')', 'contao.layout');
 		}
 
 		$objArticle = new ModuleArticle($objRow, $strColumn);
@@ -539,7 +539,7 @@ abstract class Controller extends System
 
 		if ($objStopwatch)
 		{
-			$objStopwatch->stop('contao.article (ID '.$objRow->id.')');
+			$objStopwatch->stop('contao.article (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
@@ -595,7 +595,7 @@ abstract class Controller extends System
 		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.content_element.'.$objRow->type.' (ID '.$objRow->id.')', 'contao.layout');
+			$objStopwatch->start('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')', 'contao.layout');
 		}
 
 		/** @var ContentElement $objElement */
@@ -619,7 +619,7 @@ abstract class Controller extends System
 
 		if ($objStopwatch)
 		{
-			$objStopwatch->stop('contao.content_element.'.$objRow->type.' (ID '.$objRow->id.')');
+			$objStopwatch->stop('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;

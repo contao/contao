@@ -83,7 +83,7 @@ class ContentModule extends ContentElement
 		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.frontend_module.'.$objModel->type.' (ID '.$objModel->id.')', 'contao.layout');
+			$objStopwatch->start('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')', 'contao.layout');
 		}
 
 		/** @var Module $objModule */
@@ -100,7 +100,7 @@ class ContentModule extends ContentElement
 
 		if ($objStopwatch)
 		{
-			$objStopwatch->stop('contao.frontend_module.'.$objModel->type.' (ID '.$objModel->id.')');
+			$objStopwatch->stop('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')');
 		}
 
 		return $strBuffer;
