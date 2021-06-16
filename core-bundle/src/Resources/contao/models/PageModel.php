@@ -21,92 +21,93 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Reads and writes pages
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $sorting
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property string  $type
- * @property string  $pageTitle
- * @property string  $language
- * @property boolean $disableLanguageRedirect
- * @property boolean $useFolderUrl
- * @property boolean $useAutoItem
- * @property string  $robots
- * @property string  $description
- * @property string  $redirect
- * @property integer $jumpTo
- * @property string  $redirectBack
- * @property string  $url
- * @property string  $target
- * @property string  $dns
- * @property string  $staticFiles
- * @property string  $staticPlugins
- * @property string  $fallback
- * @property string  $favicon
- * @property string  $robotsTxt
- * @property string  $adminEmail
- * @property string  $dateFormat
- * @property string  $timeFormat
- * @property string  $datimFormat
- * @property string  $validAliasCharacters
- * @property string  $urlPrefix
- * @property string  $urlSuffix
- * @property string  $useSSL
- * @property string  $autoforward
- * @property string  $protected
- * @property string  $groups
- * @property string  $includeLayout
- * @property integer $layout
- * @property string  $includeCache
- * @property integer $cache
- * @property string  $alwaysLoadFromCache
- * @property integer $clientCache
- * @property string  $includeChmod
- * @property integer $cuser
- * @property integer $cgroup
- * @property string  $chmod
- * @property string  $noSearch
- * @property string  $requireItem
- * @property string  $cssClass
- * @property string  $sitemap
- * @property string  $hide
- * @property string  $guests
- * @property integer $tabindex
- * @property string  $accesskey
- * @property string  $published
- * @property string  $start
- * @property string  $stop
- * @property array   $trail
- * @property string  $mainAlias
- * @property string  $mainTitle
- * @property string  $mainPageTitle
- * @property string  $parentAlias
- * @property string  $parentTitle
- * @property string  $parentPageTitle
- * @property string  $folderUrl
- * @property boolean $isPublic
- * @property integer $rootId
- * @property string  $rootAlias
- * @property string  $rootTitle
- * @property string  $rootPageTitle
- * @property integer $rootSorting
- * @property string  $domain
- * @property string  $rootLanguage
- * @property boolean $rootIsPublic
- * @property boolean $rootIsFallback
- * @property boolean $rootUseSSL
- * @property string  $rootFallbackLanguage
- * @property boolean $minifyMarkup
- * @property integer $layoutId
- * @property boolean $hasJQuery
- * @property boolean $hasMooTools
- * @property string  $template
- * @property string  $templateGroup
- * @property string  $enforceTwoFactor
- * @property integer $twoFactorJumpTo
- * @property string  $mailerTransport
+ * @property string|integer    $id
+ * @property string|integer    $pid
+ * @property string|integer    $sorting
+ * @property string|integer    $tstamp
+ * @property string            $title
+ * @property string            $alias
+ * @property string            $type
+ * @property string            $pageTitle
+ * @property string            $language
+ * @property string            $robots
+ * @property string|null       $description
+ * @property string            $redirect
+ * @property string|integer    $jumpTo
+ * @property string|boolean    $redirectBack
+ * @property string            $url
+ * @property string|boolean    $target
+ * @property string            $dns
+ * @property string            $staticFiles
+ * @property string            $staticPlugins
+ * @property string|boolean    $fallback
+ * @property string|boolean    $disableLanguageRedirect
+ * @property string|null       $favicon
+ * @property string|null       $robotsTxt
+ * @property string            $mailerTransport
+ * @property string            $adminEmail
+ * @property string            $dateFormat
+ * @property string            $timeFormat
+ * @property string            $datimFormat
+ * @property string            $validAliasCharacters
+ * @property string|boolean    $useFolderUrl
+ * @property string            $urlPrefix
+ * @property string            $urlSuffix
+ * @property string|boolean    $useSSL
+ * @property string|boolean    $autoforward
+ * @property string|boolean    $protected
+ * @property string|array|null $groups
+ * @property string|boolean    $includeLayout
+ * @property string|integer    $layout
+ * @property string|boolean    $includeCache
+ * @property string|integer    $cache
+ * @property string|boolean    $alwaysLoadFromCache
+ * @property string|integer    $clientCache
+ * @property string|boolean    $includeChmod
+ * @property string|integer    $cuser
+ * @property string|integer    $cgroup
+ * @property string            $chmod
+ * @property string|boolean    $noSearch
+ * @property string|boolean    $requireItem
+ * @property string            $cssClass
+ * @property string            $sitemap
+ * @property string|boolean    $hide
+ * @property string|boolean    $guests
+ * @property string|integer    $tabindex
+ * @property string            $accesskey
+ * @property string|boolean    $published
+ * @property string|integer    $start
+ * @property string|integer    $stop
+ * @property string|boolean    $enforceTwoFactor
+ * @property string|integer    $twoFactorJumpTo
+ *
+ * @property array          $trail
+ * @property string         $mainAlias
+ * @property string         $mainTitle
+ * @property string         $mainPageTitle
+ * @property string         $parentAlias
+ * @property string         $parentTitle
+ * @property string         $parentPageTitle
+ * @property string         $folderUrl
+ * @property boolean        $isPublic
+ * @property integer        $rootId
+ * @property string         $rootAlias
+ * @property string         $rootTitle
+ * @property string         $rootPageTitle
+ * @property integer        $rootSorting
+ * @property string         $domain
+ * @property string         $rootLanguage
+ * @property boolean        $rootIsPublic
+ * @property boolean        $rootIsFallback
+ * @property string|boolean $rootUseSSL
+ * @property string         $rootFallbackLanguage
+ * @property boolean        $minifyMarkup
+ * @property integer        $layoutId
+ * @property boolean        $hasJQuery
+ * @property boolean        $hasMooTools
+ * @property string         $template
+ * @property string         $templateGroup
+ * @property boolean        $useAutoItem
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -120,8 +121,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByType($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
- * @method static PageModel|null findOneByDisableLanguageRedirect($val, array $opt=array())
- * @method static PageModel|null findOneByUseFolderUrl($val, array $opt=array())
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
  * @method static PageModel|null findOneByDescription($val, array $opt=array())
  * @method static PageModel|null findOneByRedirect($val, array $opt=array())
@@ -133,13 +132,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStaticFiles($val, array $opt=array())
  * @method static PageModel|null findOneByStaticPlugins($val, array $opt=array())
  * @method static PageModel|null findOneByFallback($val, array $opt=array())
+ * @method static PageModel|null findOneByDisableLanguageRedirect($val, array $opt=array())
  * @method static PageModel|null findOneByFavicon($val, array $opt=array())
  * @method static PageModel|null findOneByRobotsTxt($val, array $opt=array())
+ * @method static PageModel|null findOneByMailerTransport($val, array $opt=array())
  * @method static PageModel|null findOneByAdminEmail($val, array $opt=array())
  * @method static PageModel|null findOneByDateFormat($val, array $opt=array())
  * @method static PageModel|null findOneByTimeFormat($val, array $opt=array())
  * @method static PageModel|null findOneByDatimFormat($val, array $opt=array())
  * @method static PageModel|null findOneByValidAliasCharacters($val, array $opt=array())
+ * @method static PageModel|null findOneByUseFolderUrl($val, array $opt=array())
  * @method static PageModel|null findOneByUrlPrefix($val, array $opt=array())
  * @method static PageModel|null findOneByUrlSuffix($val, array $opt=array())
  * @method static PageModel|null findOneByUseSSL($val, array $opt=array())
@@ -166,7 +168,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
- * @method static PageModel|null findOneByMailerTransport($val, array $opt=array())
  *
  * @method static Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
@@ -176,8 +177,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByDisableLanguageRedirect($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByUseFolderUrl($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDescription($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRedirect($val, array $opt=array())
@@ -189,13 +188,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByStaticFiles($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByStaticPlugins($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByFallback($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByDisableLanguageRedirect($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByFavicon($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobotsTxt($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDatimFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByValidAliasCharacters($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByUseFolderUrl($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrlPrefix($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUrlSuffix($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByUseSSL($val, array $opt=array())
@@ -222,7 +224,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByEnforceTwoFactor($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTwoFactorJumpTo($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findAll(array $opt=array())
@@ -236,8 +237,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
- * @method static integer countByDisableLanguageRedirect($val, array $opt=array())
- * @method static integer countByUseFolderUrl($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
  * @method static integer countByRedirect($val, array $opt=array())
@@ -249,13 +248,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStaticFiles($val, array $opt=array())
  * @method static integer countByStaticPlugins($val, array $opt=array())
  * @method static integer countByFallback($val, array $opt=array())
+ * @method static integer countByDisableLanguageRedirect($val, array $opt=array())
  * @method static integer countByFavicon($val, array $opt=array())
  * @method static integer countByRobotsTxt($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countByAdminEmail($val, array $opt=array())
  * @method static integer countByDateFormat($val, array $opt=array())
  * @method static integer countByTimeFormat($val, array $opt=array())
  * @method static integer countByDatimFormat($val, array $opt=array())
  * @method static integer countByValidAliasCharacters($val, array $opt=array())
+ * @method static integer countByUseFolderUrl($val, array $opt=array())
  * @method static integer countByUrlPrefix($val, array $opt=array())
  * @method static integer countByUrlSuffix($val, array $opt=array())
  * @method static integer countByUseSSL($val, array $opt=array())
@@ -282,7 +284,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
- * @method static integer countByMailerTransport($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

@@ -16,98 +16,96 @@ use Contao\Model\Collection;
 /**
  * Reads and writes content elements
  *
- * @property integer $id
- * @property integer $pid
- * @property string  $ptable
- * @property integer $sorting
- * @property integer $tstamp
- * @property string  $type
- * @property string  $headline
- * @property string  $text
- * @property boolean $addImage
- * @property string  $singleSRC
- * @property string  $alt
- * @property string  $title
- * @property string  $size
- * @property string  $imagemargin
- * @property string  $imageUrl
- * @property boolean $fullsize
- * @property string  $caption
- * @property string  $floating
- * @property string  $html
- * @property string  $listtype
- * @property string  $listitems
- * @property string  $tableitems
- * @property string  $summary
- * @property boolean $thead
- * @property boolean $tfoot
- * @property boolean $tleft
- * @property boolean $sortable
- * @property integer $sortIndex
- * @property string  $sortOrder
- * @property string  $mooHeadline
- * @property string  $mooStyle
- * @property string  $mooClasses
- * @property string  $highlight
- * @property string  $markdownSource
- * @property string  $code
- * @property string  $url
- * @property boolean $target
- * @property string  $titleText
- * @property string  $linkTitle
- * @property string  $embed
- * @property string  $rel
- * @property boolean $useImage
- * @property string  $multiSRC
- * @property string  $orderSRC
- * @property boolean $useHomeDir
- * @property integer $perRow
- * @property integer $perPage
- * @property integer $numberOfItems
- * @property string  $sortBy
- * @property boolean $metaIgnore
- * @property string  $galleryTpl
- * @property string  $customTpl
- * @property string  $playerSRC
- * @property string  $youtube
- * @property string  $posterSRC
- * @property string  $playerSize
- * @property string  $playerOptions
- * @property integer $playerStart
- * @property integer $playerStop
- * @property string  $playerCaption
- * @property string  $playerAspect
- * @property boolean $splashImage
- * @property string  $playerPreload
- * @property string  $playerColor
- * @property string  $youtubeOptions
- * @property string  $vimeoOptions
- * @property integer $sliderDelay
- * @property integer $sliderSpeed
- * @property integer $sliderStartSlide
- * @property boolean $sliderContinuous
- * @property integer $cteAlias
- * @property integer $articleAlias
- * @property integer $article
- * @property integer $form
- * @property integer $module
- * @property boolean $protected
- * @property string  $groups
- * @property boolean $guests
- * @property string  $cssID
- * @property boolean $invisible
- * @property string  $start
- * @property string  $stop
- * @property string  $com_order
- * @property integer $com_perPage
- * @property boolean $com_moderate
- * @property boolean $com_bbcode
- * @property boolean $com_disableCaptcha
- * @property boolean $com_requireLogin
- * @property string  $com_template
- * @property string  $typePrefix
- * @property array   $classes
- * @property integer $origId
+ * @property string|integer    $id
+ * @property string|integer    $pid
+ * @property string            $ptable
+ * @property string|integer    $sorting
+ * @property string|integer    $tstamp
+ * @property string            $type
+ * @property string            $headline
+ * @property string|null       $text
+ * @property string|boolean    $addImage
+ * @property string|boolean    $inline
+ * @property string|boolean    $overwriteMeta
+ * @property string|null       $singleSRC
+ * @property string            $alt
+ * @property string            $imageTitle
+ * @property string|integer    $size
+ * @property string|array      $imagemargin
+ * @property string            $imageUrl
+ * @property string|boolean    $fullsize
+ * @property string            $caption
+ * @property string            $floating
+ * @property string|null       $html
+ * @property string            $listtype
+ * @property string|array|null $listitems
+ * @property string|array|null $tableitems
+ * @property string            $summary
+ * @property string|boolean    $thead
+ * @property string|boolean    $tfoot
+ * @property string|boolean    $tleft
+ * @property string|boolean    $sortable
+ * @property string|integer    $sortIndex
+ * @property string            $sortOrder
+ * @property string            $mooHeadline
+ * @property string            $mooStyle
+ * @property string            $mooClasses
+ * @property string            $highlight
+ * @property string            $markdownSource
+ * @property string|null       $code
+ * @property string            $url
+ * @property string|boolean    $target
+ * @property string|boolean    $overwriteLink
+ * @property string            $titleText
+ * @property string            $linkTitle
+ * @property string            $embed
+ * @property string            $rel
+ * @property string|boolean    $useImage
+ * @property string|array|null $multiSRC
+ * @property string|array|null $orderSRC
+ * @property string|boolean    $useHomeDir
+ * @property string|integer    $perRow
+ * @property string|integer    $perPage
+ * @property string|integer    $numberOfItems
+ * @property string            $sortBy
+ * @property string|boolean    $metaIgnore
+ * @property string            $galleryTpl
+ * @property string            $customTpl
+ * @property string|null       $playerSRC
+ * @property string            $youtube
+ * @property string            $vimeo
+ * @property string|null       $posterSRC
+ * @property string|array      $playerSize
+ * @property string|array|null $playerOptions
+ * @property string|integer    $playerStart
+ * @property string|integer    $playerStop
+ * @property string            $playerCaption
+ * @property string            $playerAspect
+ * @property string|boolean    $splashImage
+ * @property string            $playerPreload
+ * @property string            $playerColor
+ * @property string|array|null $youtubeOptions
+ * @property string|array|null $vimeoOptions
+ * @property string|integer    $sliderDelay
+ * @property string|integer    $sliderSpeed
+ * @property string|integer    $sliderStartSlide
+ * @property string|boolean    $sliderContinuous
+ * @property string|integer    $cteAlias
+ * @property string|integer    $articleAlias
+ * @property string|integer    $article
+ * @property string|integer    $form
+ * @property string|integer    $module
+ * @property string|boolean    $protected
+ * @property string|array|null $groups
+ * @property string|boolean    $guests
+ * @property string|array      $cssID
+ * @property string|boolean    $invisible
+ * @property string|integer    $start
+ * @property string|integer    $stop
+ *
+ * @property string         $typePrefix
+ * @property array          $classes
+ * @property string|integer $origId
  *
  * @method static ContentModel|null findById($id, array $opt=array())
  * @method static ContentModel|null findByPk($id, array $opt=array())
@@ -121,9 +119,11 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByHeadline($val, array $opt=array())
  * @method static ContentModel|null findOneByText($val, array $opt=array())
  * @method static ContentModel|null findOneByAddImage($val, array $opt=array())
+ * @method static ContentModel|null findOneByInline($val, array $opt=array())
+ * @method static ContentModel|null findOneByOverwriteMeta($val, array $opt=array())
  * @method static ContentModel|null findOneBySingleSRC($val, array $opt=array())
  * @method static ContentModel|null findOneByAlt($val, array $opt=array())
- * @method static ContentModel|null findOneByTitle($val, array $opt=array())
+ * @method static ContentModel|null findOneByImageTitle($val, array $opt=array())
  * @method static ContentModel|null findOneBySize($val, array $opt=array())
  * @method static ContentModel|null findOneByImagemargin($val, array $opt=array())
  * @method static ContentModel|null findOneByImageUrl($val, array $opt=array())
@@ -149,6 +149,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByCode($val, array $opt=array())
  * @method static ContentModel|null findOneByUrl($val, array $opt=array())
  * @method static ContentModel|null findOneByTarget($val, array $opt=array())
+ * @method static ContentModel|null findOneByOverwriteLink($val, array $opt=array())
  * @method static ContentModel|null findOneByTitleText($val, array $opt=array())
  * @method static ContentModel|null findOneByLinkTitle($val, array $opt=array())
  * @method static ContentModel|null findOneByEmbed($val, array $opt=array())
@@ -166,6 +167,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByCustomTpl($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerSRC($val, array $opt=array())
  * @method static ContentModel|null findOneByYoutube($val, array $opt=array())
+ * @method static ContentModel|null findOneByVimeo($val, array $opt=array())
  * @method static ContentModel|null findOneByPosterSRC($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerSize($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerOptions($val, array $opt=array())
@@ -195,13 +197,6 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByInvisible($val, array $opt=array())
  * @method static ContentModel|null findOneByStart($val, array $opt=array())
  * @method static ContentModel|null findOneByStop($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_order($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_perPage($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_moderate($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_bbcode($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_disableCaptcha($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_requireLogin($val, array $opt=array())
- * @method static ContentModel|null findOneByCom_template($val, array $opt=array())
  *
  * @method static Collection|ContentModel[]|ContentModel|null findByPid($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPtable($val, array $opt=array())
@@ -211,9 +206,11 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByHeadline($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByText($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByAddImage($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByInline($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByOverwriteMeta($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySingleSRC($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByAlt($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByTitle($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByImageTitle($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySize($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByImagemargin($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByImageUrl($val, array $opt=array())
@@ -239,6 +236,7 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByCode($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByUrl($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByTarget($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByOverwriteLink($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByTitleText($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByLinkTitle($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByEmbed($val, array $opt=array())
@@ -256,6 +254,7 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByCustomTpl($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPlayerSRC($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByYoutube($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByVimeo($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPosterSRC($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPlayerSize($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPlayerOptions($val, array $opt=array())
@@ -285,13 +284,6 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByInvisible($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStart($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStop($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_order($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_perPage($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_moderate($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_bbcode($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_disableCaptcha($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_requireLogin($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByCom_template($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findAll(array $opt=array())
@@ -305,9 +297,11 @@ use Contao\Model\Collection;
  * @method static integer countByHeadline($val, array $opt=array())
  * @method static integer countByText($val, array $opt=array())
  * @method static integer countByAddImage($val, array $opt=array())
+ * @method static integer countByInline($val, array $opt=array())
+ * @method static integer countByOverwriteMeta($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
  * @method static integer countByAlt($val, array $opt=array())
- * @method static integer countByTitle($val, array $opt=array())
+ * @method static integer countByImageTitle($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
  * @method static integer countByImagemargin($val, array $opt=array())
  * @method static integer countByImageUrl($val, array $opt=array())
@@ -333,6 +327,7 @@ use Contao\Model\Collection;
  * @method static integer countByCode($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())
+ * @method static integer countByOverwriteLink($val, array $opt=array())
  * @method static integer countByTitleText($val, array $opt=array())
  * @method static integer countByLinkTitle($val, array $opt=array())
  * @method static integer countByEmbed($val, array $opt=array())
@@ -350,6 +345,7 @@ use Contao\Model\Collection;
  * @method static integer countByCustomTpl($val, array $opt=array())
  * @method static integer countByPlayerSRC($val, array $opt=array())
  * @method static integer countByYoutube($val, array $opt=array())
+ * @method static integer countByVimeo($val, array $opt=array())
  * @method static integer countByPosterSRC($val, array $opt=array())
  * @method static integer countByPlayerSize($val, array $opt=array())
  * @method static integer countByPlayerOptions($val, array $opt=array())
@@ -379,13 +375,6 @@ use Contao\Model\Collection;
  * @method static integer countByInvisible($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
- * @method static integer countByCom_order($val, array $opt=array())
- * @method static integer countByCom_perPage($val, array $opt=array())
- * @method static integer countByCom_moderate($val, array $opt=array())
- * @method static integer countByCom_bbcode($val, array $opt=array())
- * @method static integer countByCom_disableCaptcha($val, array $opt=array())
- * @method static integer countByCom_requireLogin($val, array $opt=array())
- * @method static integer countByCom_template($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

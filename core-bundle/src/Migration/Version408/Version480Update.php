@@ -163,7 +163,7 @@ class Version480Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $row['id']]);
+                    $stmt->executeStatement([':jquery' => serialize(array_values($jquery)), ':id' => $row['id']]);
                 }
             }
 
@@ -182,7 +182,7 @@ class Version480Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $row['id']]);
+                    $stmt->executeStatement([':scripts' => serialize(array_values($scripts)), ':id' => $row['id']]);
                 }
             }
         }
@@ -343,7 +343,7 @@ class Version480Update extends AbstractMigration
                     WHERE
                         id = :id
                 ')
-                ->execute($updateData)
+                ->executeStatement($updateData)
             ;
         }
 
@@ -443,7 +443,7 @@ class Version480Update extends AbstractMigration
                     id = :id
             ');
 
-            $stmt->execute([
+            $stmt->executeStatement([
                 ':id' => $row['id'],
                 ':context' => serialize([$row['contextLength'], $row['totalLength']]),
             ]);

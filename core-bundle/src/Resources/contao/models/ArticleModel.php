@@ -15,28 +15,27 @@ use Contao\Model\Collection;
 /**
  * Reads and writes articles
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $sorting
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property integer $author
- * @property string  $inColumn
- * @property string  $keywords
- * @property boolean $showTeaser
- * @property string  $teaserCssID
- * @property string  $teaser
- * @property string  $printable
- * @property string  $customTpl
- * @property boolean $protected
- * @property string  $groups
- * @property boolean $guests
- * @property string  $cssID
- * @property boolean $published
- * @property string  $start
- * @property string  $stop
- * @property string  $classes
+ * @property string|integer $id
+ * @property string|integer $pid
+ * @property string|integer $sorting
+ * @property string|integer $tstamp
+ * @property string         $title
+ * @property string         $alias
+ * @property string|integer $author
+ * @property string         $inColumn
+ * @property string|null    $keywords
+ * @property string|boolean $showTeaser
+ * @property string         $teaserCssID
+ * @property string|null    $teaser
+ * @property string         $printable
+ * @property string         $customTpl
+ * @property string|boolean $protected
+ * @property string|null    $groups
+ * @property string|boolean $guests
+ * @property string|array   $cssID
+ * @property string|boolean $published
+ * @property string|integer $start
+ * @property string|integer $stop
  *
  * @method static ArticleModel|null findById($id, array $opt=array())
  * @method static ArticleModel|null findByPk($id, array $opt=array())

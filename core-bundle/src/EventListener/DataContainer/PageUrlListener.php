@@ -77,7 +77,7 @@ class PageUrlListener implements ResetInterface
 
         if ('' !== $value) {
             if (preg_match('/^[1-9]\d*$/', $value)) {
-                throw new \RuntimeException(sprintf($this->translator->trans('ERR.aliasNumeric', [], 'contao_default')));
+                throw new \RuntimeException($this->translator->trans('ERR.aliasNumeric', [], 'contao_default'));
             }
 
             try {
@@ -372,7 +372,7 @@ class PageUrlListener implements ResetInterface
         return $alias;
     }
 
-    private function regexArray(array $data, string $delimiter = '/'): ?string
+    private function regexArray(array $data): ?string
     {
         $data = array_filter(array_unique($data));
 
@@ -381,7 +381,7 @@ class PageUrlListener implements ResetInterface
         }
 
         foreach ($data as $k => $v) {
-            $data[$k] = preg_quote($v, $delimiter);
+            $data[$k] = preg_quote($v, '/');
         }
 
         return '('.implode('|', $data).')';

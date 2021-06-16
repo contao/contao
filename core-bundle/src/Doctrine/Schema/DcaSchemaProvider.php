@@ -85,7 +85,7 @@ class DcaSchemaProvider
             }
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
-                foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
+                foreach ($definitions['SCHEMA_FIELDS'] as $config) {
                     $options = $config;
                     unset($options['name'], $options['type']);
 
