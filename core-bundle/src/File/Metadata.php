@@ -164,9 +164,9 @@ class Metadata
         }
 
         if ($this->has(self::VALUE_LICENSE)) {
-            $this->jsonLd['AudioObject']['license'] = $this->getCaption();
-            $this->jsonLd['ImageObject']['license'] = $this->getCaption();
-            $this->jsonLd['MediaObject']['license'] = $this->getCaption();
+            $this->jsonLd['AudioObject']['license'] = $this->getLicense();
+            $this->jsonLd['ImageObject']['license'] = $this->getLicense();
+            $this->jsonLd['MediaObject']['license'] = $this->getLicense();
         }
     }
 }
