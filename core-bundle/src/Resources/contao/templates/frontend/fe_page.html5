@@ -94,6 +94,6 @@
 
   <?= $this->mootools ?>
 
-  <?= $this->finalizeJsonLd() ?>
+  <?= $this->jsonLdScripts ?>
 </body>
 </html>

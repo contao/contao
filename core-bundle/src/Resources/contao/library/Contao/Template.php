@@ -426,28 +426,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Finalizes the JSON-LD data collected during the current response context
-	 * and returns the scripts ready to be output within HTML context.
-	 */
-	public function finalizeJsonLd(): string
-	{
-		$container = System::getContainer();
-
-		/** @var ResponseContext $responseContext */
-		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
-
-		if (!$responseContext || !$responseContext->has(JsonLdManager::class) || !$responseContext->isInitialized(JsonLdManager::class))
-		{
-			return '';
-		}
-
-		/** @var JsonLdManager $jsonLdManager */
-		$jsonLdManager = $responseContext->get(JsonLdManager::class);
-
-		return $jsonLdManager->collectFinalScriptFromGraphs();
-	}
-
-	/**
 	 * Render a figure
 	 *
 	 * The provided configuration array is used to configure a FigureBuilder.

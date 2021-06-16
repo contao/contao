@@ -15,6 +15,7 @@ use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -715,6 +716,22 @@ class PageRegular extends Frontend
 		}
 
 		$this->Template->mootools = $strScripts;
+
+		/** @var ResponseContext $responseContext */
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+		$this->Template->jsonLdScripts = static function () use ($responseContext)
+		{
+			if (!$responseContext->isInitialized(JsonLdManager::class))
+			{
+				return '';
+			}
+
+			/** @var JsonLdManager $jsonLdManager */
+			$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+			return $jsonLdManager->collectFinalScriptFromGraphs();
+		};
 	}
 }
 
