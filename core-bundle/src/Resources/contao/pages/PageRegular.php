@@ -29,7 +29,7 @@ class PageRegular extends Frontend
 	/**
 	 * @var ResponseContext
 	 */
-	private $responseContext;
+	protected $responseContext;
 
 	/**
 	 * Generate a regular page
