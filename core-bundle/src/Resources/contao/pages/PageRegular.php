@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -218,7 +220,15 @@ class PageRegular extends Frontend
 		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
 		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
 		{
-			$this->Template->robots = 'noindex,nofollow';
+			/** @var JsonLdManager $jsonLdManager */
+			$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+			if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
+			{
+				/** @var ContaoPageSchema $schema */
+				$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+				$schema->setNoSearch(true);
+			}
 		}
 
 		// Fall back to the default title tag
