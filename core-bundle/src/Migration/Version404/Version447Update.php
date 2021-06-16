@@ -124,7 +124,7 @@ class Version447Update extends AbstractMigration
                         id = :id
                 ');
 
-                $delete->execute(['id' => $subscription['id']]);
+                $delete->executeStatement(['id' => $subscription['id']]);
             }
 
             $messages[] = $duplicate['email'];

@@ -89,7 +89,7 @@ class RoutingMigration extends AbstractMigration
 
         $this->connection
             ->prepare("UPDATE tl_page SET urlPrefix=$prefix, urlSuffix=:suffix WHERE type='root'")
-            ->execute(['suffix' => $this->urlSuffix])
+            ->executeStatement(['suffix' => $this->urlSuffix])
         ;
 
         $this->framework->initialize();

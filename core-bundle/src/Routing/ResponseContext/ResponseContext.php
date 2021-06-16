@@ -40,7 +40,7 @@ final class ResponseContext
         return $this;
     }
 
-    public function addLazy(string $classname, \Closure $factory)
+    public function addLazy(string $classname, \Closure $factory): self
     {
         $this->registerService($classname, $factory);
 

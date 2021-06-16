@@ -18,21 +18,20 @@ use Contao\Model\Collection;
  * The class reads from and writes to the style sheet table. It does not create
  * .css files on the hard disk. This is done by the StyleSheet class.
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $name
- * @property boolean $disablePie
- * @property integer $embedImages
- * @property string  $cc
- * @property string  $media
- * @property string  $mediaQuery
- * @property string  $vars
- * @property string  $type
- * @property boolean $hasFontFace
- * @property string  $singleSRC
- * @property integer $tstamp2
- * @property integer $tstamp3
+ * @property string|integer $id
+ * @property string|integer $pid
+ * @property string|integer $tstamp
+ * @property string|null    $name
+ * @property string|integer $embedImages
+ * @property string         $cc
+ * @property string|array   $media
+ * @property string|null    $mediaQuery
+ * @property string|null    $vars
+ *
+ * @property string         $type
+ * @property string|boolean $hasFontFace
+ * @property integer        $tstamp2
+ * @property integer        $tstamp3
  *
  * @method static StyleSheetModel|null findById($id, array $opt=array())
  * @method static StyleSheetModel|null findByPk($id, array $opt=array())
@@ -41,7 +40,6 @@ use Contao\Model\Collection;
  * @method static StyleSheetModel|null findByName($val, array $opt=array())
  * @method static StyleSheetModel|null findOneByPid($val, array $opt=array())
  * @method static StyleSheetModel|null findOneByTstamp($val, array $opt=array())
- * @method static StyleSheetModel|null findOneByDisablePie($val, array $opt=array())
  * @method static StyleSheetModel|null findOneByEmbedImages($val, array $opt=array())
  * @method static StyleSheetModel|null findOneByCc($val, array $opt=array())
  * @method static StyleSheetModel|null findOneByMedia($val, array $opt=array())
@@ -50,7 +48,6 @@ use Contao\Model\Collection;
  *
  * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByPid($val, array $opt=array())
  * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByDisablePie($val, array $opt=array())
  * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByEmbedImages($val, array $opt=array())
  * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByCc($val, array $opt=array())
  * @method static Collection|StyleSheetModel[]|StyleSheetModel|null findByMedia($val, array $opt=array())
@@ -64,7 +61,6 @@ use Contao\Model\Collection;
  * @method static integer countByPid($val, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByName($val, array $opt=array())
- * @method static integer countByDisablePie($val, array $opt=array())
  * @method static integer countByEmbedImages($val, array $opt=array())
  * @method static integer countByCc($val, array $opt=array())
  * @method static integer countByMedia($val, array $opt=array())

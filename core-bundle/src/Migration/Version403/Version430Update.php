@@ -92,7 +92,7 @@ class Version430Update extends AbstractMigration
                         id = :id
                 ');
 
-                $stmt->execute([':sections' => serialize(array_values($set)), ':id' => $layout['id']]);
+                $stmt->executeStatement([':sections' => serialize(array_values($set)), ':id' => $layout['id']]);
             }
         }
 

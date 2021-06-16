@@ -15,18 +15,19 @@ use Contao\Model\Collection;
 /**
  * Reads and writes calendar feeds
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property string  $language
- * @property string  $calendars
- * @property string  $format
- * @property string  $source
- * @property integer $maxItems
- * @property string  $feedBase
- * @property string  $description
- * @property string  $feedName
+ * @property string|integer    $id
+ * @property string|integer    $tstamp
+ * @property string            $title
+ * @property string            $alias
+ * @property string            $language
+ * @property string|array|null $calendars
+ * @property string            $format
+ * @property string            $source
+ * @property string|integer    $maxItems
+ * @property string            $feedBase
+ * @property string|null       $description
+ *
+ * @property string $feedName
  *
  * @method static CalendarFeedModel|null findById($id, array $opt=array())
  * @method static CalendarFeedModel|null findByPk($id, array $opt=array())

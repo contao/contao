@@ -126,9 +126,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $this->getData('legacy_routing');
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function getAdditionalData(): array
     {
         $data = $this->data;

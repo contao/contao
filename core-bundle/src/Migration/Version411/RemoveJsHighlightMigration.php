@@ -87,7 +87,7 @@ class RemoveJsHighlightMigration extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
+                    $stmt->executeStatement([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
                 }
             }
         }

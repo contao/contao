@@ -46,9 +46,6 @@ class ManagerConfig
         $this->filesystem = $filesystem ?: new Filesystem();
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function all(): array
     {
         if (null === $this->config) {
@@ -58,9 +55,6 @@ class ManagerConfig
         return $this->config;
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function read(): array
     {
         $this->config = [];

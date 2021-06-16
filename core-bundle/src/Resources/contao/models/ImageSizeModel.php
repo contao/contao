@@ -15,20 +15,20 @@ use Contao\Model\Collection;
 /**
  * Reads and writes image sizes
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $name
- * @property string  $cssClass
- * @property string  $sizes
- * @property string  $densities
- * @property integer $width
- * @property integer $height
- * @property string  $resizeMode
- * @property integer $zoom
- * @property string  $formats
- * @property boolean $skipIfDimensionsMatch
- * @property boolean $lazyLoading
+ * @property string|integer      $id
+ * @property string|integer      $pid
+ * @property string|integer      $tstamp
+ * @property string|null         $name
+ * @property string              $cssClass
+ * @property string              $densities
+ * @property string              $sizes
+ * @property string|integer|null $width
+ * @property string|integer|null $height
+ * @property string              $resizeMode
+ * @property string|integer|null $zoom
+ * @property string              $formats
+ * @property string|boolean      $skipIfDimensionsMatch
+ * @property string|boolean      $lazyLoading
  *
  * @method static ImageSizeModel|null findById($id, array $opt=array())
  * @method static ImageSizeModel|null findByPk($id, array $opt=array())
@@ -38,8 +38,8 @@ use Contao\Model\Collection;
  * @method static ImageSizeModel|null findOneByTstamp($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByName($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByCssClass($val, array $opt=array())
- * @method static ImageSizeModel|null findOneBySizes($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByDensities($val, array $opt=array())
+ * @method static ImageSizeModel|null findOneBySizes($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByWidth($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByHeight($val, array $opt=array())
  * @method static ImageSizeModel|null findOneByResizeMode($val, array $opt=array())
@@ -52,8 +52,8 @@ use Contao\Model\Collection;
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByName($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByCssClass($val, array $opt=array())
- * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBySizes($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByDensities($val, array $opt=array())
+ * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findBySizes($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByWidth($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByHeight($val, array $opt=array())
  * @method static Collection|ImageSizeModel[]|ImageSizeModel|null findByResizeMode($val, array $opt=array())
@@ -70,8 +70,8 @@ use Contao\Model\Collection;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByName($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
- * @method static integer countBySizes($val, array $opt=array())
  * @method static integer countByDensities($val, array $opt=array())
+ * @method static integer countBySizes($val, array $opt=array())
  * @method static integer countByWidth($val, array $opt=array())
  * @method static integer countByHeight($val, array $opt=array())
  * @method static integer countByResizeMode($val, array $opt=array())

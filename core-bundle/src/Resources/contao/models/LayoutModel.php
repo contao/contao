@@ -15,43 +15,43 @@ use Contao\Model\Collection;
 /**
  * Reads and writes page layouts
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $name
- * @property string  $rows
- * @property string  $headerHeight
- * @property string  $footerHeight
- * @property string  $cols
- * @property string  $widthLeft
- * @property string  $widthRight
- * @property string  $sections
- * @property string  $framework
- * @property string  $stylesheet
- * @property string  $external
- * @property string  $loadingOrder
- * @property boolean $combineScripts
- * @property string  $modules
- * @property string  $template
- * @property string  $minifyMarkup
- * @property string  $lightboxSize
- * @property string  $defaultImageDensities
- * @property string  $viewport
- * @property string  $titleTag
- * @property string  $cssClass
- * @property string  $onload
- * @property string  $head
- * @property boolean $addJQuery
- * @property string  $jquery
- * @property boolean $addMooTools
- * @property string  $mootools
- * @property string  $analytics
- * @property string  $externalJs
- * @property string  $script
- * @property string  $scripts
- * @property boolean $static
- * @property string  $width
- * @property string  $align
+ * @property string|integer    $id
+ * @property string|integer    $pid
+ * @property string|integer    $tstamp
+ * @property string            $name
+ * @property string            $rows
+ * @property string|array      $headerHeight
+ * @property string|array      $footerHeight
+ * @property string            $cols
+ * @property string|array      $widthLeft
+ * @property string|array      $widthRight
+ * @property string|array|null $sections
+ * @property string|array      $framework
+ * @property string|array|null $stylesheet
+ * @property string|array|null $external
+ * @property string            $loadingOrder
+ * @property string|boolean    $combineScripts
+ * @property string|array|null $modules
+ * @property string            $template
+ * @property string|boolean    $minifyMarkup
+ * @property string|integer    $lightboxSize
+ * @property string            $defaultImageDensities
+ * @property string            $viewport
+ * @property string            $titleTag
+ * @property string            $cssClass
+ * @property string            $onload
+ * @property string|null       $head
+ * @property string|boolean    $addJQuery
+ * @property string|array|null $jquery
+ * @property string|boolean    $addMooTools
+ * @property string|array|null $mootools
+ * @property string|array|null $analytics
+ * @property string|array|null $externalJs
+ * @property string|array|null $scripts
+ * @property string|null       $script
+ * @property string|boolean    $static
+ * @property string|array      $width
+ * @property string|array      $align
  *
  * @method static LayoutModel|null findById($id, array $opt=array())
  * @method static LayoutModel|null findByPk($id, array $opt=array())
@@ -88,8 +88,8 @@ use Contao\Model\Collection;
  * @method static LayoutModel|null findOneByMootools($val, array $opt=array())
  * @method static LayoutModel|null findOneByAnalytics($val, array $opt=array())
  * @method static LayoutModel|null findOneByExternalJs($val, array $opt=array())
- * @method static LayoutModel|null findOneByScript($val, array $opt=array())
  * @method static LayoutModel|null findOneByScripts($val, array $opt=array())
+ * @method static LayoutModel|null findOneByScript($val, array $opt=array())
  * @method static LayoutModel|null findOneByStatic($val, array $opt=array())
  * @method static LayoutModel|null findOneByWidth($val, array $opt=array())
  * @method static LayoutModel|null findOneByAlign($val, array $opt=array())
@@ -125,8 +125,8 @@ use Contao\Model\Collection;
  * @method static Collection|LayoutModel[]|LayoutModel|null findByMootools($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByAnalytics($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByExternalJs($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByScript($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByScripts($val, array $opt=array())
+ * @method static Collection|LayoutModel[]|LayoutModel|null findByScript($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByStatic($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByWidth($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByAlign($val, array $opt=array())
@@ -166,8 +166,8 @@ use Contao\Model\Collection;
  * @method static integer countByMootools($val, array $opt=array())
  * @method static integer countByAnalytics($val, array $opt=array())
  * @method static integer countByExternalJs($val, array $opt=array())
- * @method static integer countByScript($val, array $opt=array())
  * @method static integer countByScripts($val, array $opt=array())
+ * @method static integer countByScript($val, array $opt=array())
  * @method static integer countByStatic($val, array $opt=array())
  * @method static integer countByWidth($val, array $opt=array())
  * @method static integer countByAlign($val, array $opt=array())

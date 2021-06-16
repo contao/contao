@@ -190,7 +190,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if ('file' !== $filesModel->type) {
-            $this->lastException = new InvalidResourceException("DBAFS item '{$filesModel->path}' is not a file.");
+            $this->lastException = new InvalidResourceException("DBAFS item '$filesModel->path' is not a file.");
 
             return $this;
         }
@@ -199,7 +199,7 @@ class FigureBuilder
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
         }
 
         return $this;
@@ -266,7 +266,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
         }
 
         return $this;
