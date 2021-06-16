@@ -128,8 +128,6 @@ services:
             - { name: kernel.event_listener, priority: -768 }
 
     Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener:
-        arguments:
-            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
         tags:
             - { name: kernel.event_listener }
 
