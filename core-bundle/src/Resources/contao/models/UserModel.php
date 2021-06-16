@@ -50,7 +50,7 @@ use Contao\Model\Collection;
  * @property string|integer    $stop
  * @property string|array|null $session
  * @property string|integer    $dateAdded
- * @property string            $secret
+ * @property string|null       $secret
  * @property string|boolean    $useTwoFactor
  * @property string|integer    $lastLogin
  * @property string|integer    $currentLogin
