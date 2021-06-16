@@ -90,10 +90,86 @@ class ContaoPageSchema extends BaseType
         return $data;
     }
 
-    public function updateFromHtmlHeadBag(HtmlHeadBag $bag): self
+    public function getTitle(): string
     {
-        $this->title = $bag->getTitle();
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
 
         return $this;
+    }
+
+    public function getPageId(): int
+    {
+        return $this->pageId;
+    }
+
+    public function setPageId(int $pageId): self
+    {
+        $this->pageId = $pageId;
+
+        return $this;
+    }
+
+    public function isNoSearch(): bool
+    {
+        return $this->noSearch;
+    }
+
+    public function setNoSearch(bool $noSearch): self
+    {
+        $this->noSearch = $noSearch;
+
+        return $this;
+    }
+
+    public function isProtected(): bool
+    {
+        return $this->protected;
+    }
+
+    public function setProtected(bool $protected): self
+    {
+        $this->protected = $protected;
+
+        return $this;
+    }
+
+    /**
+     * @return array<int>
+     */
+    public function getGroups(): array
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @param array<int> $groups
+     */
+    public function setGroups(array $groups): self
+    {
+        $this->groups = $groups;
+
+        return $this;
+    }
+
+    public function isFePreview(): bool
+    {
+        return $this->fePreview;
+    }
+
+    public function setFePreview(bool $fePreview): self
+    {
+        $this->fePreview = $fePreview;
+
+        return $this;
+    }
+
+    public function updateFromHtmlHeadBag(HtmlHeadBag $bag): self
+    {
+        return $this->setTitle($bag->getTitle());
     }
 }

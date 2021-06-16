@@ -12,6 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
@@ -307,9 +310,15 @@ class PageModel extends Model
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
 
+			/** @var ResponseContext|null $responseContext */
 			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+			if (!$responseContext)
+			{
+				return parent::__set($strKey, $varValue);
+			}
+
+			if (\in_array($strKey, array('pageTitle', 'description', 'robots')) && $responseContext->has(HtmlHeadBag::class))
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
@@ -327,10 +336,19 @@ class PageModel extends Model
 					case 'robots':
 						$htmlHeadBag->setMetaRobots($varValue);
 						break;
+				}
 
-					case 'noSearch':
-						$htmlHeadBag->setMetaRobots($varValue ? 'noindex,nofollow' : 'index,nofollow');
-						break;
+				if ('noSearch' === $strKey && $responseContext->has(JsonLdManager::class))
+				{
+					/** @var JsonLdManager $jsonLdManager */
+					$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+					if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
+					{
+						/** @var ContaoPageSchema $schema */
+						$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+						$schema->setNoSearch($varValue);
+					}
 				}
 			}
 		}
