@@ -348,7 +348,7 @@ class PageModel extends Model
 				{
 					/** @var ContaoPageSchema $schema */
 					$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-					$schema->setNoSearch($varValue);
+					$schema->setNoSearch((bool) $varValue);
 				}
 			}
 		}
