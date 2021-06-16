@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
@@ -404,6 +405,8 @@ abstract class Template extends Controller
 	public function jsonLd(array $jsonLd, string $schema = JsonLdManager::SCHEMA_ORG): void
 	{
 		$container = System::getContainer();
+
+		/** @var ResponseContext $responseContext */
 		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
@@ -429,9 +432,11 @@ abstract class Template extends Controller
 	public function finalizeJsonLd(): string
 	{
 		$container = System::getContainer();
+
+		/** @var ResponseContext $responseContext */
 		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
+		if (!$responseContext || !$responseContext->has(JsonLdManager::class) || !$responseContext->isInitialized(JsonLdManager::class))
 		{
 			return '';
 		}

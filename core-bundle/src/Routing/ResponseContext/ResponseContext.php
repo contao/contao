@@ -52,6 +52,11 @@ final class ResponseContext
         return isset($this->current[$serviceId]);
     }
 
+    public function isInitialized(string $serviceId): bool
+    {
+        return !$this->services[$serviceId] instanceof \Closure;
+    }
+
     /**
      * @template T
      * @psalm-param class-string<T> $serviceId
@@ -70,7 +75,7 @@ final class ResponseContext
         $serviceId = $this->current[$serviceId];
 
         // Lazy load the ones with factories
-        if ($this->services[$serviceId] instanceof \Closure) {
+        if (!$this->isInitialized($serviceId)) {
             $service = $this->services[$serviceId]();
             $this->services[$serviceId] = $service;
         }
