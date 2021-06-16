@@ -12,23 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Symfony\Contracts\EventDispatcher\Event;
-
-class JsonLdEvent extends Event
+class JsonLdEvent extends AbstractResponseContextEvent
 {
-    /**
-     * @var JsonLdManager
-     */
-    private $jsonLdManager;
-
-    public function __construct(JsonLdManager $jsonLdManager)
-    {
-        $this->jsonLdManager = $jsonLdManager;
-    }
-
-    public function getJsonLdManager(): JsonLdManager
-    {
-        return $this->jsonLdManager;
-    }
 }

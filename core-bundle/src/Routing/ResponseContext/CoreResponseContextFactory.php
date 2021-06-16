@@ -55,16 +55,11 @@ class CoreResponseContextFactory
 
     public function createWebpageResponseContext(): ResponseContext
     {
-        $eventDispatcher = $this->eventDispatcher;
         $context = $this->createResponseContext();
 
-        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
-        $context->addLazy(
-            JsonLdManager::class,
-            static function () use ($eventDispatcher) {
-                return new JsonLdManager($eventDispatcher);
-            }
-        );
+        $context->add($this->eventDispatcher);
+        $context->addLazy(HtmlHeadBag::class);
+        $context->addLazy(JsonLdManager::class);
 
         return $context;
     }

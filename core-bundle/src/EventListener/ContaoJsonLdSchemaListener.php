@@ -16,7 +16,6 @@ use Contao\CoreBundle\Event\JsonLdEvent;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 
 /**
  * Updates the schema.contao.org schema before rendering it
@@ -24,25 +23,17 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
  */
 class ContaoJsonLdSchemaListener
 {
-    /**
-     * @var ResponseContextAccessor
-     */
-    private $responseContextAccessor;
-
-    public function __construct(ResponseContextAccessor $responseContextAccessor)
-    {
-        $this->responseContextAccessor = $responseContextAccessor;
-    }
-
     public function __invoke(JsonLdEvent $event): void
     {
-        $responseContext = $this->responseContextAccessor->getResponseContext();
+        $responseContext = $event->getResponseContext();
 
-        if (!$responseContext->has(HtmlHeadBag::class)) {
+        if (!$responseContext->has(HtmlHeadBag::class) || !$responseContext->has(JsonLdManager::class)) {
             return;
         }
+        /** @var JsonLdManager $jsonLdManager */
+        $jsonLdManager = $responseContext->get(JsonLdManager::class);
 
-        if (!$event->getJsonLdManager()->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class)) {
+        if (!$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class)) {
             return;
         }
 
@@ -50,7 +41,7 @@ class ContaoJsonLdSchemaListener
         $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
         /** @var ContaoPageSchema $schema */
-        $schema = $event->getJsonLdManager()->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+        $schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
         $schema->updateFromHtmlHeadBag($htmlHeadBag);
     }

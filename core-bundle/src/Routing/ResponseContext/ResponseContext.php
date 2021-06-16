@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Event\AbstractResponseContextEvent;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ResponseContext
 {
@@ -33,6 +35,19 @@ final class ResponseContext
      */
     private $headerBag;
 
+    public function dispatchEvent(AbstractResponseContextEvent $event): void
+    {
+        if (!$this->has(EventDispatcherInterface::class)) {
+            return;
+        }
+
+        $event->setResponseContext($this);
+
+        /** @var EventDispatcherInterface $eventDispatcher */
+        $eventDispatcher = $this->get(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch($event);
+    }
+
     public function add(object $service): self
     {
         $this->registerService(\get_class($service), $service);
@@ -40,8 +55,14 @@ final class ResponseContext
         return $this;
     }
 
-    public function addLazy(string $classname, \Closure $factory)
+    public function addLazy(string $classname, \Closure $factory = null)
     {
+        if (null === $factory) {
+            $factory = function () use ($classname) {
+                return new $classname($this);
+            };
+        }
+
         $this->registerService($classname, $factory);
 
         return $this;

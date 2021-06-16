@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext\JsonLd;
 
 use Contao\CoreBundle\Event\JsonLdEvent;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Spatie\SchemaOrg\Graph;
 use Spatie\SchemaOrg\Type;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class JsonLdManager
 {
@@ -23,18 +23,18 @@ class JsonLdManager
     public const SCHEMA_CONTAO = 'https://schema.contao.org';
 
     /**
-     * @var EventDispatcherInterface
+     * @var ResponseContext
      */
-    private $eventDispatcher;
+    private $responseContext;
 
     /**
      * @var array<Graph>
      */
     private $graphs = [];
 
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(ResponseContext $responseContext)
     {
-        $this->eventDispatcher = $eventDispatcher;
+        $this->responseContext = $responseContext;
     }
 
     public function getGraphForSchema(string $schema): Graph
@@ -57,7 +57,7 @@ class JsonLdManager
     {
         $data = [];
 
-        $this->eventDispatcher->dispatch(new JsonLdEvent($this));
+        $this->responseContext->dispatchEvent(new JsonLdEvent());
 
         foreach ($this->getGraphs() as $graph) {
             $data[] = $graph->toArray();
