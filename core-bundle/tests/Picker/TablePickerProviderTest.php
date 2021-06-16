@@ -308,7 +308,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1])
+            $this->mockConnectionForQuery('tl_article', ['pid' => 1])
         );
 
         $provider->getUrl($config);
@@ -332,7 +332,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1])
+            $this->mockConnectionForQuery('tl_article', ['pid' => 1])
         );
 
         $provider->getUrl($config);
@@ -364,7 +364,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => 'tl_news'], true)
+            $this->mockConnectionForQuery('tl_content', ['pid' => 7, 'ptable' => 'tl_news'], true)
         );
 
         $provider->getUrl($config);
@@ -389,7 +389,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => ''], true)
+            $this->mockConnectionForQuery('tl_content', ['pid' => 7, 'ptable' => ''], true)
         );
 
         $provider->getUrl($config);
@@ -411,7 +411,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, false)
+            $this->mockConnectionForQuery('tl_article', false)
         );
 
         $provider->getUrl($config);
@@ -614,13 +614,13 @@ class TablePickerProviderTest extends ContaoTestCase
     /**
      * @return Connection&MockObject
      */
-    private function mockConnectionForQuery(string $table, int $id, $data, bool $dynamicPtable = false): Connection
+    private function mockConnectionForQuery(string $table, $data, bool $dynamicPtable = false): Connection
     {
         $expr = $this->createMock(ExpressionBuilder::class);
         $expr
             ->expects($this->once())
             ->method('eq')
-            ->with('id', $id)
+            ->with('id', 15)
             ->willReturnSelf()
         ;
 

@@ -95,14 +95,14 @@ class UserListCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    private function getCommand(bool $noResult = false): UserListCommand
+    private function getCommand(): UserListCommand
     {
         $collection = new Collection([$this->mockAdminUser(), $this->mockContaoUser()], 'tl_user');
 
         $userModelAdapter = $this->mockAdapter(['findBy', 'findAll']);
         $userModelAdapter
             ->method('findAll')
-            ->willReturn($noResult ? null : $collection, null)
+            ->willReturn($collection, null)
         ;
 
         $collection = new Collection([$this->mockAdminUser()], 'tl_user');
@@ -110,7 +110,7 @@ class UserListCommandTest extends TestCase
         $userModelAdapter
             ->method('findBy')
             ->with('admin', '1')
-            ->willReturn($noResult ? null : $collection, null)
+            ->willReturn($collection, null)
         ;
 
         $command = new UserListCommand($this->mockContaoFramework([UserModel::class => $userModelAdapter]));

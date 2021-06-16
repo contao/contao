@@ -170,17 +170,17 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return TokenChecker&MockObject
      */
-    private function mockTokenChecker(?string $frontendUsername = null, bool $previewMode = true): TokenChecker
+    private function mockTokenChecker(): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->method('getFrontendUsername')
-            ->willReturn($frontendUsername)
+            ->willReturn(null)
         ;
 
         $tokenChecker
             ->method('isPreviewMode')
-            ->willReturn($previewMode)
+            ->willReturn(true)
         ;
 
         return $tokenChecker;
@@ -205,12 +205,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return Environment&MockObject
      */
-    private function getTwigMock(string $render = 'CONTAO'): Environment
+    private function getTwigMock(): Environment
     {
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn($render)
+            ->willReturn('CONTAO')
         ;
 
         return $twig;

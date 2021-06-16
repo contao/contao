@@ -814,7 +814,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteAfterArticleIfProviderDoesNotSupportContentComposition(): void
     {
-        $page = $this->expectPageFindByPk(17, $this->pageRecord);
+        $page = $this->expectPageFindByPk($this->pageRecord);
 
         $this->expectSupportsContentComposition(false, $page);
 
@@ -839,7 +839,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCannotPasteAfterArticleIfPageLayoutDoesNotHaveArticles(): void
     {
-        $page = $this->expectPageFindByPk(17, $this->pageRecord, 17);
+        $page = $this->expectPageFindByPk($this->pageRecord, 17);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -864,7 +864,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleOnCutCurrentRecord(): void
     {
-        $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+        $page = $this->expectPageFindByPk($this->pageRecord, 0);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -891,7 +891,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleOnCutAllCurrentRecord(): void
     {
-        $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+        $page = $this->expectPageFindByPk($this->pageRecord, 0);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -918,7 +918,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleOnCircularReference(): void
     {
-        $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+        $page = $this->expectPageFindByPk($this->pageRecord, 0);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -945,7 +945,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDisablesPasteAfterArticleIfUserDoesNotHavePermission(): void
     {
-        $page = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+        $page = $this->expectPageFindByPk($this->pageRecord, 0);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -974,7 +974,7 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testCanPasteAfterArticle(): void
     {
-        $pageModel = $this->expectPageFindByPk(17, $this->pageRecord, 0);
+        $pageModel = $this->expectPageFindByPk($this->pageRecord, 0);
 
         $this->expectSupportsContentComposition(true, $pageModel);
 
@@ -1114,7 +1114,7 @@ class ContentCompositionListenerTest extends TestCase
      *
      * @return PageModel&MockObject
      */
-    private function expectPageFindByPk(int $id, array $row, $moduleId = false): PageModel
+    private function expectPageFindByPk(array $row, $moduleId = false): PageModel
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class, $row);
@@ -1144,7 +1144,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->pageModelAdapter
             ->expects($this->once())
             ->method('findByPk')
-            ->with($id)
+            ->with(17)
             ->willReturn($page)
         ;
 

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\Config;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -692,7 +691,7 @@ class RouteProviderTest extends TestCase
     /**
      * @return Request&MockObject
      */
-    private function mockRequestWithPath(string $path, array $languages = ['en'], string $host = 'example.com'): Request
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
     {
         $request = $this->createMock(Request::class);
         $request
@@ -707,7 +706,7 @@ class RouteProviderTest extends TestCase
 
         $request
             ->method('getHttpHost')
-            ->willReturn($host)
+            ->willReturn('example.com')
         ;
 
         return $request;
@@ -716,9 +715,9 @@ class RouteProviderTest extends TestCase
     /**
      * @return ContaoFramework&MockObject
      */
-    private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFramework
+    private function mockFramework(Adapter $pageAdapter = null): ContaoFramework
     {
-        return $this->mockContaoFramework([PageModel::class => $pageAdapter, Config::class => $configAdapter]);
+        return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
     }
 
     /**
@@ -748,7 +747,7 @@ class RouteProviderTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function createRootPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
+    private function createRootPage(string $language, string $alias, bool $fallback = true): PageModel
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
@@ -756,12 +755,12 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->type = 'root';
         $page->alias = $alias;
-        $page->domain = $domain;
+        $page->domain = '';
         $page->urlPrefix = '';
         $page->urlSuffix = '.html';
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
-        $page->rootUseSSL = 'https' === $scheme;
+        $page->rootUseSSL = false;
         $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
 
         return $page;
