@@ -73,6 +73,9 @@ class JsonLdManager
         return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n".'</script>';
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     */
     public function createTypeFromArray(array $jsonLd): Type
     {
         if (!isset($jsonLd['@type'])) {
@@ -80,6 +83,11 @@ class JsonLdManager
         }
 
         $schemaClass = '\Spatie\SchemaOrg\\'.$jsonLd['@type'];
+
+        if (!class_exists($schemaClass)) {
+            throw new \InvalidArgumentException(sprintf('Unknown schema.org type "%s" provided!', $jsonLd['@type']));
+        }
+
         $schema = new $schemaClass();
         unset($jsonLd['@type']);
 
