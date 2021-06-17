@@ -462,4 +462,36 @@ class PaletteManipulatorTest extends TestCase
             $pm->applyToString('{contact_legend},firstname,lastname')
         );
     }
+
+    public function testExplodesAPalette(): void
+    {
+        $pm = PaletteManipulator::create();
+
+        $this->assertSame(
+            [
+                'contact_legend' => [
+                    'fields' => [
+                        0 => 'title',
+                        1 => 'lastname'
+                    ],
+                    'hide' => false
+                ],
+                'foo_legend' => [
+                    'fields' => [
+                        0 => 'field1',
+                        1 => 'field2'
+                    ],
+                    'hide' => true
+                ],
+                0 => [
+                    'fields' => [
+                        0 => 'field3',
+                        1 => 'field4'
+                    ],
+                    'hide' => false
+                ]
+            ],
+            $pm->explode('{contact_legend},title,lastname;{foo_legend:hide},field1,field2;field3,field4')
+        );
+    }
 }

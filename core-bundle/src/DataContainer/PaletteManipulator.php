@@ -179,7 +179,7 @@ class PaletteManipulator
      *
      * @return array<int|string, array<mixed>>
      */
-    private function explode(string $palette): array
+    public function explode(string $palette): array
     {
         if ('' === $palette) {
             return [];
