@@ -44,11 +44,9 @@ class ContaoJsonLdSchemaListenerTest extends TestCase
         /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
 
-        $this->assertSame(
-            'Title different',
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
-                ->get(ContaoPageSchema::class)
-                ->getTitle()
-        );
+        /** @var ContaoPageSchema $schema */
+        $schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+
+        $this->assertSame('Title different', $schema->getTitle());
     }
 }
