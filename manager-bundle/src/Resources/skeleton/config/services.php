@@ -89,6 +89,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
             ) {
                 $container->removeDefinition($id);
                 --$serviceCount;
+                break;
             }
         }
     }
