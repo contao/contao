@@ -75,6 +75,10 @@ final class ResponseContext
 
     public function isInitialized(string $serviceId): bool
     {
+        if (!$this->has($serviceId)) {
+            return false;
+        }
+
         return !$this->services[$serviceId] instanceof \Closure;
     }
 
