@@ -95,7 +95,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string|boolean    $assignDir
  * @property string            $homeDir
  *
- * @property string $loginPage
  * @property object $objImport
  * @property object $objAuth
  * @property object $objLogin
