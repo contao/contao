@@ -472,24 +472,24 @@ class PaletteManipulatorTest extends TestCase
                 'contact_legend' => [
                     'fields' => [
                         0 => 'title',
-                        1 => 'lastname'
+                        1 => 'lastname',
                     ],
-                    'hide' => false
+                    'hide' => false,
                 ],
                 'foo_legend' => [
                     'fields' => [
                         0 => 'field1',
-                        1 => 'field2'
+                        1 => 'field2',
                     ],
-                    'hide' => true
+                    'hide' => true,
                 ],
                 0 => [
                     'fields' => [
                         0 => 'field3',
-                        1 => 'field4'
+                        1 => 'field4',
                     ],
-                    'hide' => false
-                ]
+                    'hide' => false,
+                ],
             ],
             $pm->explode('{contact_legend},title,lastname;{foo_legend:hide},field1,field2;field3,field4')
         );
