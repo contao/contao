@@ -16,41 +16,43 @@ use Contao\Model\Collection;
 /**
  * Reads and writes news
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $headline
- * @property string  $alias
- * @property integer $author
- * @property integer $date
- * @property integer $time
- * @property string  $pageTitle
- * @property string  $robots
- * @property string  $description
- * @property string  $subheadline
- * @property string  $teaser
- * @property boolean $addImage
- * @property string  $singleSRC
- * @property string  $alt
- * @property string  $size
- * @property string  $imagemargin
- * @property string  $imageUrl
- * @property boolean $fullsize
- * @property string  $caption
- * @property string  $floating
- * @property boolean $addEnclosure
- * @property string  $enclosure
- * @property string  $source
- * @property integer $jumpTo
- * @property integer $articleId
- * @property string  $url
- * @property boolean $target
- * @property string  $cssClass
- * @property boolean $noComments
- * @property boolean $featured
- * @property boolean $published
- * @property string  $start
- * @property string  $stop
+ * @property string|integer $id
+ * @property string|integer $pid
+ * @property string|integer $tstamp
+ * @property string         $headline
+ * @property string         $alias
+ * @property string|integer $author
+ * @property string|integer $date
+ * @property string|integer $time
+ * @property string         $pageTitle
+ * @property string         $robots
+ * @property string|null    $description
+ * @property string         $subheadline
+ * @property string|null    $teaser
+ * @property string|boolean $addImage
+ * @property string|boolean $overwriteMeta
+ * @property string|null    $singleSRC
+ * @property string         $alt
+ * @property string         $imageTitle
+ * @property string|integer $size
+ * @property string|array   $imagemargin
+ * @property string         $imageUrl
+ * @property string|boolean $fullsize
+ * @property string         $caption
+ * @property string         $floating
+ * @property string|boolean $addEnclosure
+ * @property string|null    $enclosure
+ * @property string         $source
+ * @property string|integer $jumpTo
+ * @property string|integer $articleId
+ * @property string         $url
+ * @property string|boolean $target
+ * @property string         $cssClass
+ * @property string|boolean $noComments
+ * @property string|boolean $featured
+ * @property string|boolean $published
+ * @property string|integer $start
+ * @property string|integer $stop
  *
  * @method static NewsModel|null findById($id, array $opt=array())
  * @method static NewsModel|null findByPk($id, array $opt=array())
@@ -69,8 +71,10 @@ use Contao\Model\Collection;
  * @method static NewsModel|null findOneBySubheadline($val, array $opt=array())
  * @method static NewsModel|null findOneByTeaser($val, array $opt=array())
  * @method static NewsModel|null findOneByAddImage($val, array $opt=array())
+ * @method static NewsModel|null findOneByOverwriteMeta($val, array $opt=array())
  * @method static NewsModel|null findOneBySingleSRC($val, array $opt=array())
  * @method static NewsModel|null findOneByAlt($val, array $opt=array())
+ * @method static NewsModel|null findOneByImageTitle($val, array $opt=array())
  * @method static NewsModel|null findOneBySize($val, array $opt=array())
  * @method static NewsModel|null findOneByImagemargin($val, array $opt=array())
  * @method static NewsModel|null findOneByImageUrl($val, array $opt=array())
@@ -104,8 +108,10 @@ use Contao\Model\Collection;
  * @method static Collection|NewsModel[]|NewsModel|null findBySubheadline($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByTeaser($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByAddImage($val, array $opt=array())
+ * @method static Collection|NewsModel[]|NewsModel|null findByOverwriteMeta($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findBySingleSRC($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByAlt($val, array $opt=array())
+ * @method static Collection|NewsModel[]|NewsModel|null findByImageTitle($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findBySize($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByImagemargin($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByImageUrl($val, array $opt=array())
@@ -143,8 +149,10 @@ use Contao\Model\Collection;
  * @method static integer countBySubheadline($val, array $opt=array())
  * @method static integer countByTeaser($val, array $opt=array())
  * @method static integer countByAddImage($val, array $opt=array())
+ * @method static integer countByOverwriteMeta($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
  * @method static integer countByAlt($val, array $opt=array())
+ * @method static integer countByImageTitle($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
  * @method static integer countByImagemargin($val, array $opt=array())
  * @method static integer countByImageUrl($val, array $opt=array())

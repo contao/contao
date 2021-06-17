@@ -135,7 +135,7 @@ class OrderFieldMigration extends AbstractMigration
                         $fieldQuoted = :field
                         AND $orderFieldQuoted = :orderField
                 ")
-                ->execute([
+                ->executeStatement([
                     ':items' => serialize($items),
                     ':field' => $row[$field],
                     ':orderField' => $row[$orderField],

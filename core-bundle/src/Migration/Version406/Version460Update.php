@@ -111,7 +111,7 @@ class Version460Update extends AbstractMigration
                 activation != '' AND dateAdded < :dateAdded
         ");
 
-        $stmt->execute([':dateAdded' => strtotime('-1 day')]);
+        $stmt->executeStatement([':dateAdded' => strtotime('-1 day')]);
 
         // Update the video element settings (see contao/core-bundle#1348)
         $this->connection->executeStatement('
@@ -149,7 +149,7 @@ class Version460Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':options' => serialize(['player_autoplay']), ':id' => $element['id']]);
+                    $stmt->executeStatement([':options' => serialize(['player_autoplay']), ':id' => $element['id']]);
                     break;
 
                 case 'youtube':
@@ -165,7 +165,7 @@ class Version460Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':options' => serialize($options), ':id' => $element['id']]);
+                    $stmt->executeStatement([':options' => serialize($options), ':id' => $element['id']]);
                     break;
 
                 case 'vimeo':
@@ -178,7 +178,7 @@ class Version460Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':options' => serialize(['vimeo_autoplay']), ':id' => $element['id']]);
+                    $stmt->executeStatement([':options' => serialize(['vimeo_autoplay']), ':id' => $element['id']]);
                     break;
             }
         }

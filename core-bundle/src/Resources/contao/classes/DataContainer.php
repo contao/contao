@@ -22,14 +22,14 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 /**
  * Provide methods to handle data container arrays.
  *
- * @property integer     $id
- * @property string      $table
- * @property mixed       $value
- * @property string      $field
- * @property string      $inputName
- * @property string      $palette
- * @property object|null $activeRecord
- * @property array       $rootIds
+ * @property string|integer $id
+ * @property string         $table
+ * @property mixed          $value
+ * @property string         $field
+ * @property string         $inputName
+ * @property string         $palette
+ * @property object|null    $activeRecord
+ * @property array          $rootIds
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

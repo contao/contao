@@ -67,13 +67,13 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Sorts route higher if it is fallback and no languages match' => [
             new Route('', ['pageModel' => $this->mockPageModel('en', true)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de', false)]),
+            new Route('', ['pageModel' => $this->mockPageModel('de')]),
             null,
             -1,
         ];
 
         yield 'Sorts route lower if it is not fallback and no languages match' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en', false)]),
+            new Route('', ['pageModel' => $this->mockPageModel('en')]),
             new Route('', ['pageModel' => $this->mockPageModel('de', true)]),
             null,
             1,
@@ -192,7 +192,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorts route lower if it is a root page' => [
-            new Route('', ['pageModel' => $this->mockPageModel('en', false, false)]),
+            new Route('', ['pageModel' => $this->mockPageModel('en')]),
             new Route('', ['pageModel' => $this->mockPageModel('de', false, true)]),
             null,
             -1,
@@ -200,7 +200,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Sorts route higher if it is not a root page' => [
             new Route('', ['pageModel' => $this->mockPageModel('en', false, true)]),
-            new Route('', ['pageModel' => $this->mockPageModel('de', false, false)]),
+            new Route('', ['pageModel' => $this->mockPageModel('de')]),
             null,
             1,
         ];

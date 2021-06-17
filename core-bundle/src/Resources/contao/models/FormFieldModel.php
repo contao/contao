@@ -15,40 +15,44 @@ use Contao\Model\Collection;
 /**
  * Reads and writes form fields
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $sorting
- * @property integer $tstamp
- * @property boolean $invisible
- * @property string  $type
- * @property string  $name
- * @property string  $label
- * @property string  $text
- * @property string  $html
- * @property string  $options
- * @property boolean $mandatory
- * @property string  $rgxp
- * @property string  $placeholder
- * @property integer $minlength
- * @property integer $maxlength
- * @property string  $size
- * @property boolean $multiple
- * @property integer $mSize
- * @property string  $extensions
- * @property boolean $storeFile
- * @property string  $uploadFolder
- * @property boolean $useHomeDir
- * @property boolean $doNotOverwrite
- * @property string  $fsType
- * @property string  $class
- * @property string  $value
- * @property boolean $accesskey
- * @property integer $tabindex
- * @property integer $fSize
- * @property string  $customTpl
- * @property string  $slabel
- * @property boolean $imageSubmit
- * @property string  $singleSRC
+ * @property string|integer    $id
+ * @property string|integer    $pid
+ * @property string|integer    $sorting
+ * @property string|integer    $tstamp
+ * @property string            $type
+ * @property string            $label
+ * @property string            $name
+ * @property string|null       $text
+ * @property string|null       $html
+ * @property string|array|null $options
+ * @property string|boolean    $mandatory
+ * @property string            $rgxp
+ * @property string            $placeholder
+ * @property string            $customRgxp
+ * @property string            $errorMsg
+ * @property string|integer    $minlength
+ * @property string|integer    $maxlength
+ * @property string|integer    $minval
+ * @property string|integer    $maxval
+ * @property string|integer    $step
+ * @property string|array      $size
+ * @property string|boolean    $multiple
+ * @property string|integer    $mSize
+ * @property string            $extensions
+ * @property string|boolean    $storeFile
+ * @property string|null       $uploadFolder
+ * @property string|boolean    $useHomeDir
+ * @property string|boolean    $doNotOverwrite
+ * @property string            $class
+ * @property string            $value
+ * @property string|boolean    $accesskey
+ * @property string|integer    $tabindex
+ * @property string|integer    $fSize
+ * @property string            $customTpl
+ * @property string            $slabel
+ * @property string|boolean    $imageSubmit
+ * @property string|null       $singleSRC
+ * @property string|boolean    $invisible
  *
  * @method static FormFieldModel|null findById($id, array $opt=array())
  * @method static FormFieldModel|null findByPk($id, array $opt=array())
@@ -57,18 +61,22 @@ use Contao\Model\Collection;
  * @method static FormFieldModel|null findOneByPid($val, array $opt=array())
  * @method static FormFieldModel|null findOneBySorting($val, array $opt=array())
  * @method static FormFieldModel|null findOneByTstamp($val, array $opt=array())
- * @method static FormFieldModel|null findOneByInvisible($val, array $opt=array())
  * @method static FormFieldModel|null findOneByType($val, array $opt=array())
- * @method static FormFieldModel|null findOneByName($val, array $opt=array())
  * @method static FormFieldModel|null findOneByLabel($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByName($val, array $opt=array())
  * @method static FormFieldModel|null findOneByText($val, array $opt=array())
  * @method static FormFieldModel|null findOneByHtml($val, array $opt=array())
  * @method static FormFieldModel|null findOneByOptions($val, array $opt=array())
  * @method static FormFieldModel|null findOneByMandatory($val, array $opt=array())
  * @method static FormFieldModel|null findOneByRgxp($val, array $opt=array())
  * @method static FormFieldModel|null findOneByPlaceholder($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByCustomRgxp($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByErrorMsg($val, array $opt=array())
  * @method static FormFieldModel|null findOneByMinlength($val, array $opt=array())
  * @method static FormFieldModel|null findOneByMaxlength($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByMinval($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByMaxval($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByStep($val, array $opt=array())
  * @method static FormFieldModel|null findOneBySize($val, array $opt=array())
  * @method static FormFieldModel|null findOneByMultiple($val, array $opt=array())
  * @method static FormFieldModel|null findOneByMSize($val, array $opt=array())
@@ -77,7 +85,6 @@ use Contao\Model\Collection;
  * @method static FormFieldModel|null findOneByUploadFolder($val, array $opt=array())
  * @method static FormFieldModel|null findOneByUseHomeDir($val, array $opt=array())
  * @method static FormFieldModel|null findOneByDoNotOverwrite($val, array $opt=array())
- * @method static FormFieldModel|null findOneByFsType($val, array $opt=array())
  * @method static FormFieldModel|null findOneByClass($val, array $opt=array())
  * @method static FormFieldModel|null findOneByValue($val, array $opt=array())
  * @method static FormFieldModel|null findOneByAccesskey($val, array $opt=array())
@@ -88,22 +95,27 @@ use Contao\Model\Collection;
  * @method static FormFieldModel|null findOneBySlabel($val, array $opt=array())
  * @method static FormFieldModel|null findOneByImageSubmit($val, array $opt=array())
  * @method static FormFieldModel|null findOneBySingleSRC($val, array $opt=array())
+ * @method static FormFieldModel|null findOneByInvisible($val, array $opt=array())
  *
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByPid($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySorting($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|FormFieldModel[]|FormFieldModel|null findByInvisible($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByType($val, array $opt=array())
- * @method static Collection|FormFieldModel[]|FormFieldModel|null findByName($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByLabel($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByName($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByText($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByHtml($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByOptions($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMandatory($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByRgxp($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByPlaceholder($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByCustomRgxp($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByErrorMsg($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMinlength($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMaxlength($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMinval($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMaxval($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByStep($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySize($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMultiple($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByMSize($val, array $opt=array())
@@ -112,7 +124,6 @@ use Contao\Model\Collection;
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByUploadFolder($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByUseHomeDir($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByDoNotOverwrite($val, array $opt=array())
- * @method static Collection|FormFieldModel[]|FormFieldModel|null findByFsType($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByClass($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByValue($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAccesskey($val, array $opt=array())
@@ -124,6 +135,7 @@ use Contao\Model\Collection;
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByImageSubmit($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findBySingleSRC($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection|FormFieldModel[]|FormFieldModel|null findByInvisible($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findAll(array $opt=array())
  *
@@ -131,18 +143,22 @@ use Contao\Model\Collection;
  * @method static integer countByPid($val, array $opt=array())
  * @method static integer countBySorting($val, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
- * @method static integer countByInvisible($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
- * @method static integer countByName($val, array $opt=array())
  * @method static integer countByLabel($val, array $opt=array())
+ * @method static integer countByName($val, array $opt=array())
  * @method static integer countByText($val, array $opt=array())
  * @method static integer countByHtml($val, array $opt=array())
  * @method static integer countByOptions($val, array $opt=array())
  * @method static integer countByMandatory($val, array $opt=array())
  * @method static integer countByRgxp($val, array $opt=array())
  * @method static integer countByPlaceholder($val, array $opt=array())
+ * @method static integer countByCustomRgxp($val, array $opt=array())
+ * @method static integer countByErrorMsg($val, array $opt=array())
  * @method static integer countByMinlength($val, array $opt=array())
  * @method static integer countByMaxlength($val, array $opt=array())
+ * @method static integer countByMinval($val, array $opt=array())
+ * @method static integer countByMaxval($val, array $opt=array())
+ * @method static integer countByStep($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
  * @method static integer countByMultiple($val, array $opt=array())
  * @method static integer countByMSize($val, array $opt=array())
@@ -151,7 +167,6 @@ use Contao\Model\Collection;
  * @method static integer countByUploadFolder($val, array $opt=array())
  * @method static integer countByUseHomeDir($val, array $opt=array())
  * @method static integer countByDoNotOverwrite($val, array $opt=array())
- * @method static integer countByFsType($val, array $opt=array())
  * @method static integer countByClass($val, array $opt=array())
  * @method static integer countByValue($val, array $opt=array())
  * @method static integer countByAccesskey($val, array $opt=array())
@@ -162,6 +177,7 @@ use Contao\Model\Collection;
  * @method static integer countBySlabel($val, array $opt=array())
  * @method static integer countByImageSubmit($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
+ * @method static integer countByInvisible($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

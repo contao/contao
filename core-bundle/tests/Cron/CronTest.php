@@ -78,7 +78,18 @@ class CronTest extends TestCase
 
     public function testUpdatesCronEntities(): void
     {
-        $entity = $this->mockEntity('UpdateEntitiesCron::onHourly', (new \DateTime())->modify('-1 hours'));
+        /** @var CronJobEntity&MockObject $entity */
+        $entity = $this->createMock(CronJobEntity::class);
+        $entity
+            ->method('getName')
+            ->willReturn('UpdateEntitiesCron::onHourly')
+        ;
+
+        $entity
+            ->method('getLastRun')
+            ->willReturn((new \DateTime())->modify('-1 hours'))
+        ;
+
         $entity
             ->expects($this->once())
             ->method('setLastRun')
@@ -144,24 +155,5 @@ class CronTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $cron->run('invalid_scope');
-    }
-
-    /**
-     * @return CronJobEntity&MockObject
-     */
-    private function mockEntity(string $name, \DateTime $lastRun = null): CronJobEntity
-    {
-        $entity = $this->createMock(CronJobEntity::class);
-        $entity
-            ->method('getName')
-            ->willReturn($name)
-        ;
-
-        $entity
-            ->method('getLastRun')
-            ->willReturn($lastRun ?? new \DateTime())
-        ;
-
-        return $entity;
     }
 }

@@ -182,7 +182,7 @@ class WidgetTest extends TestCase
         }
     }
 
-    public function getAttributesFromDca()
+    public function getAttributesFromDca(): \Generator
     {
         yield [
             [[], 'foo'],

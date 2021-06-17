@@ -62,7 +62,7 @@ class MergeWebfontsMigration extends AbstractMigration
         foreach ($rows as $row) {
             $this->connection
                 ->prepare('UPDATE tl_layout SET head = :head WHERE id = :id')
-                ->execute([
+                ->executeStatement([
                     ':id' => $row['id'],
                     ':head' => $row['head']."\n".'<link rel="stylesheet" href="https://fonts.googleapis.com/css?family='.str_replace('|', '%7C', $row['webfonts']).'">',
                 ])

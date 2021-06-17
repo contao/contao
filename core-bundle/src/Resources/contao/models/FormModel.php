@@ -15,24 +15,25 @@ use Contao\Model\Collection;
 /**
  * Reads and writes forms
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property integer $jumpTo
- * @property boolean $sendViaEmail
- * @property string  $recipient
- * @property string  $subject
- * @property string  $format
- * @property boolean $skipEmpty
- * @property boolean $storeValues
- * @property string  $targetTable
- * @property string  $method
- * @property boolean $novalidate
- * @property string  $attributes
- * @property string  $formID
- * @property boolean $allowTags
- * @property string  $mailerTransport
+ * @property string|integer $id
+ * @property string|integer $tstamp
+ * @property string         $title
+ * @property string         $alias
+ * @property string|integer $jumpTo
+ * @property string|boolean $sendViaEmail
+ * @property string         $mailerTransport
+ * @property string         $recipient
+ * @property string         $subject
+ * @property string         $format
+ * @property string|boolean $skipEmpty
+ * @property string|boolean $storeValues
+ * @property string         $targetTable
+ * @property string         $customTpl
+ * @property string         $method
+ * @property string|boolean $novalidate
+ * @property string         $attributes
+ * @property string         $formID
+ * @property string|boolean $allowTags
  *
  * @method static FormModel|null findById($id, array $opt=array())
  * @method static FormModel|null findByPk($id, array $opt=array())
@@ -43,38 +44,40 @@ use Contao\Model\Collection;
  * @method static FormModel|null findOneByAlias($val, array $opt=array())
  * @method static FormModel|null findOneByJumpTo($val, array $opt=array())
  * @method static FormModel|null findOneBySendViaEmail($val, array $opt=array())
+ * @method static FormModel|null findOneByMailerTransport($val, array $opt=array())
  * @method static FormModel|null findOneByRecipient($val, array $opt=array())
  * @method static FormModel|null findOneBySubject($val, array $opt=array())
  * @method static FormModel|null findOneByFormat($val, array $opt=array())
  * @method static FormModel|null findOneBySkipEmpty($val, array $opt=array())
  * @method static FormModel|null findOneByStoreValues($val, array $opt=array())
  * @method static FormModel|null findOneByTargetTable($val, array $opt=array())
+ * @method static FormModel|null findOneByCustomTpl($val, array $opt=array())
  * @method static FormModel|null findOneByMethod($val, array $opt=array())
  * @method static FormModel|null findOneByNovalidate($val, array $opt=array())
  * @method static FormModel|null findOneByAttributes($val, array $opt=array())
  * @method static FormModel|null findOneByFormID($val, array $opt=array())
  * @method static FormModel|null findOneByTableless($val, array $opt=array())
  * @method static FormModel|null findOneByAllowTags($val, array $opt=array())
- * @method static FormModel|null findOneByMailerTransport($val, array $opt=array())
  *
  * @method static Collection|FormModel[]|FormModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByTitle($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByAlias($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByJumpTo($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findBySendViaEmail($val, array $opt=array())
+ * @method static Collection|FormModel[]|FormModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByRecipient($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findBySubject($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByFormat($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findBySkipEmpty($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByStoreValues($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByTargetTable($val, array $opt=array())
+ * @method static Collection|FormModel[]|FormModel|null findByCustomTpl($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByMethod($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByNovalidate($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByAttributes($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByFormID($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByTableless($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findByAllowTags($val, array $opt=array())
- * @method static Collection|FormModel[]|FormModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|FormModel[]|FormModel|null findAll(array $opt=array())
@@ -85,19 +88,20 @@ use Contao\Model\Collection;
  * @method static integer countByAlias($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
  * @method static integer countBySendViaEmail($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countByRecipient($val, array $opt=array())
  * @method static integer countBySubject($val, array $opt=array())
  * @method static integer countByFormat($val, array $opt=array())
  * @method static integer countBySkipEmpty($val, array $opt=array())
  * @method static integer countByStoreValues($val, array $opt=array())
  * @method static integer countByTargetTable($val, array $opt=array())
+ * @method static integer countByCustomTpl($val, array $opt=array())
  * @method static integer countByMethod($val, array $opt=array())
  * @method static integer countByNovalidate($val, array $opt=array())
  * @method static integer countByAttributes($val, array $opt=array())
  * @method static integer countByFormID($val, array $opt=array())
  * @method static integer countByTableless($val, array $opt=array())
  * @method static integer countByAllowTags($val, array $opt=array())
- * @method static integer countByMailerTransport($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

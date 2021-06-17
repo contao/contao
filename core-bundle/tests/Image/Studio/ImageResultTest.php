@@ -54,12 +54,12 @@ class ImageResultTest extends TestCase
     /**
      * @dataProvider providePictureFactories
      */
-    public function testGetPictureWithResizeMode(string $pictureFactory, bool $supportsResizeOptions): void
+    public function testGetPictureWithResizeMode(string $class, bool $supportsResizeOptions): void
     {
         $resizeOptions = new ResizeOptions();
 
         /** @var PictureFactoryInterface&MockObject $pictureFactory */
-        $pictureFactory = $this->createMock($pictureFactory);
+        $pictureFactory = $this->createMock($class);
         $pictureFactory
             ->expects($this->once())
             ->method('create')

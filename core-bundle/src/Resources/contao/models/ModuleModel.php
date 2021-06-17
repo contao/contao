@@ -15,69 +15,69 @@ use Contao\Model\Collection;
 /**
  * Reads and writes front end modules
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $name
- * @property string  $headline
- * @property string  $type
- * @property integer $levelOffset
- * @property integer $showLevel
- * @property boolean $hardLimit
- * @property boolean $showProtected
- * @property boolean $defineRoot
- * @property integer $rootPage
- * @property string  $navigationTpl
- * @property string  $customTpl
- * @property string  $pages
- * @property boolean $showHidden
- * @property string  $customLabel
- * @property boolean $autologin
- * @property integer $jumpTo
- * @property boolean $redirectBack
- * @property string  $cols
- * @property string  $editable
- * @property string  $memberTpl
- * @property integer $form
- * @property string  $queryType
- * @property boolean $fuzzy
- * @property string  $contextLength
- * @property integer $minKeywordLength
- * @property integer $perPage
- * @property string  $searchType
- * @property string  $searchTpl
- * @property string  $inColumn
- * @property integer $skipFirst
- * @property boolean $loadFirst
- * @property string  $singleSRC
- * @property string  $url
- * @property string  $imgSize
- * @property boolean $useCaption
- * @property boolean $fullsize
- * @property string  $multiSRC
- * @property string  $orderSRC
- * @property string  $html
- * @property integer $rss_cache
- * @property string  $rss_feed
- * @property string  $rss_template
- * @property integer $numberOfItems
- * @property boolean $disableCaptcha
- * @property string  $reg_groups
- * @property boolean $reg_allowLogin
- * @property boolean $reg_skipName
- * @property string  $reg_close
- * @property boolean $reg_assignDir
- * @property string  $reg_homeDir
- * @property boolean $reg_activate
- * @property integer $reg_jumpTo
- * @property string  $reg_text
- * @property string  $reg_password
- * @property boolean $protected
- * @property string  $groups
- * @property boolean $guests
- * @property string  $cssID
- * @property string  $typePrefix
- * @property string  $classes
+ * @property string|integer    $id
+ * @property string|integer    $pid
+ * @property string|integer    $tstamp
+ * @property string            $name
+ * @property string            $headline
+ * @property string            $type
+ * @property string|integer    $levelOffset
+ * @property string|integer    $showLevel
+ * @property string|boolean    $hardLimit
+ * @property string|boolean    $showProtected
+ * @property string|boolean    $defineRoot
+ * @property string|integer    $rootPage
+ * @property string            $navigationTpl
+ * @property string            $customTpl
+ * @property string|array|null $pages
+ * @property string|boolean    $showHidden
+ * @property string            $customLabel
+ * @property string|boolean    $autologin
+ * @property string|integer    $jumpTo
+ * @property string|boolean    $redirectBack
+ * @property string|array|null $editable
+ * @property string            $memberTpl
+ * @property string|integer    $form
+ * @property string            $queryType
+ * @property string|boolean    $fuzzy
+ * @property string|array      $contextLength
+ * @property string|integer    $minKeywordLength
+ * @property string|integer    $perPage
+ * @property string            $searchType
+ * @property string            $searchTpl
+ * @property string            $inColumn
+ * @property string|integer    $skipFirst
+ * @property string|boolean    $loadFirst
+ * @property string|null       $singleSRC
+ * @property string            $url
+ * @property string|integer    $imgSize
+ * @property string|boolean    $useCaption
+ * @property string|boolean    $fullsize
+ * @property string|array|null $multiSRC
+ * @property string|array|null $orderSRC
+ * @property string|null       $html
+ * @property string|integer    $rss_cache
+ * @property string|null       $rss_feed
+ * @property string            $rss_template
+ * @property string|integer    $numberOfItems
+ * @property string|boolean    $disableCaptcha
+ * @property string|array|null $reg_groups
+ * @property string|boolean    $reg_allowLogin
+ * @property string|boolean    $reg_skipName
+ * @property string            $reg_close
+ * @property string|boolean    $reg_assignDir
+ * @property string|null       $reg_homeDir
+ * @property string|boolean    $reg_activate
+ * @property string|integer    $reg_jumpTo
+ * @property string|null       $reg_text
+ * @property string|null       $reg_password
+ * @property string|boolean    $protected
+ * @property string|array|null $groups
+ * @property string|boolean    $guests
+ * @property string|array      $cssID
+ *
+ * @property string $typePrefix
+ * @property array  $classes
  *
  * @method static ModuleModel|null findById($id, array $opt=array())
  * @method static ModuleModel|null findByPk($id, array $opt=array())
@@ -102,7 +102,6 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByAutologin($val, array $opt=array())
  * @method static ModuleModel|null findOneByJumpTo($val, array $opt=array())
  * @method static ModuleModel|null findOneByRedirectBack($val, array $opt=array())
- * @method static ModuleModel|null findOneByCols($val, array $opt=array())
  * @method static ModuleModel|null findOneByEditable($val, array $opt=array())
  * @method static ModuleModel|null findOneByMemberTpl($val, array $opt=array())
  * @method static ModuleModel|null findOneByTableless($val, array $opt=array())
@@ -165,7 +164,6 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByAutologin($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByJumpTo($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRedirectBack($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByCols($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByEditable($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByMemberTpl($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByTableless($val, array $opt=array())
@@ -232,7 +230,6 @@ use Contao\Model\Collection;
  * @method static integer countByAutologin($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
  * @method static integer countByRedirectBack($val, array $opt=array())
- * @method static integer countByCols($val, array $opt=array())
  * @method static integer countByEditable($val, array $opt=array())
  * @method static integer countByMemberTpl($val, array $opt=array())
  * @method static integer countByTableless($val, array $opt=array())

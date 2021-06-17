@@ -15,24 +15,23 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletters
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $subject
- * @property string  $alias
- * @property string  $content
- * @property string  $text
- * @property boolean $addFile
- * @property string  $files
- * @property string  $template
- * @property boolean $sendText
- * @property boolean $externalImages
- * @property string  $sender
- * @property string  $senderName
- * @property string  $mailerTransport
- * @property boolean $sent
- * @property string  $date
- * @property integer $channel
+ * @property string|integer $id
+ * @property string|integer $pid
+ * @property string|integer $tstamp
+ * @property string         $subject
+ * @property string         $alias
+ * @property string|null    $content
+ * @property string|null    $text
+ * @property string|boolean $addFile
+ * @property string|null    $files
+ * @property string         $template
+ * @property string|boolean $sendText
+ * @property string|boolean $externalImages
+ * @property string         $mailerTransport
+ * @property string         $sender
+ * @property string         $senderName
+ * @property string|boolean $sent
+ * @property string|integer $date
  *
  * @method static NewsletterModel|null findById($id, array $opt=array())
  * @method static NewsletterModel|null findByPk($id, array $opt=array())
@@ -49,9 +48,9 @@ use Contao\Model\Collection;
  * @method static NewsletterModel|null findOneByTemplate($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySendText($val, array $opt=array())
  * @method static NewsletterModel|null findOneByExternalImages($val, array $opt=array())
+ * @method static NewsletterModel|null findOneByMailerTransport($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySender($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySenderName($val, array $opt=array())
- * @method static NewsletterModel|null findOneByMailerTransport($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySent($val, array $opt=array())
  * @method static NewsletterModel|null findOneByDate($val, array $opt=array())
  *
@@ -66,9 +65,9 @@ use Contao\Model\Collection;
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findByTemplate($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySendText($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findByExternalImages($val, array $opt=array())
+ * @method static Collection|NewsletterModel[]|NewsletterModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySender($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySenderName($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySent($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findByDate($val, array $opt=array())
  * @method static Collection|NewsletterModel[]|NewsletterModel|null findMultipleByIds($val, array $opt=array())
@@ -87,9 +86,9 @@ use Contao\Model\Collection;
  * @method static integer countByTemplate($val, array $opt=array())
  * @method static integer countBySendText($val, array $opt=array())
  * @method static integer countByExternalImages($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countBySender($val, array $opt=array())
  * @method static integer countBySenderName($val, array $opt=array())
- * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countBySent($val, array $opt=array())
  * @method static integer countByDate($val, array $opt=array())
  *

@@ -18,8 +18,6 @@ use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
 class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
-    private $failed = false;
-
     protected function deprecationProvider(): array
     {
         if (!class_exists(LegacyLogoutHandlerListener::class)) {

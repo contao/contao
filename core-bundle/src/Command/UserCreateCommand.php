@@ -134,7 +134,7 @@ class UserCreateCommand extends Command
             }
 
             if ($value === $username) {
-                throw new \RuntimeException(sprintf('Username and password must not be equal.'));
+                throw new \RuntimeException('Username and password must not be the same.');
             }
 
             return $value;
