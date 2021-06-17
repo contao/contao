@@ -43,16 +43,16 @@ class Metadata
      *
      * @var array<string, array>
      */
-    private $jsonLd;
+    private $schemaOrgJsonLd;
 
     /**
      * @param array<string, mixed>      $values
-     * @param array<string, array>|null $jsonLd
+     * @param array<string, array>|null $schemaOrgJsonLd
      */
-    public function __construct(array $values, array $jsonLd = null)
+    public function __construct(array $values, array $schemaOrgJsonLd = null)
     {
         $this->values = $values;
-        $this->jsonLd = $jsonLd;
+        $this->schemaOrgJsonLd = $schemaOrgJsonLd;
     }
 
     /**
@@ -135,38 +135,38 @@ class Metadata
         return empty($this->values);
     }
 
-    public function getJsonLd(string $type = null): array
+    public function getSchemaOrgData(string $type = null): array
     {
         // Lazy initialize
-        if (null === $this->jsonLd) {
-            $this->extractBasicJsonLd();
+        if (null === $this->schemaOrgJsonLd) {
+            $this->extractBasicSchemaOrgData();
         }
 
         if (null === $type) {
-            return $this->jsonLd;
+            return $this->schemaOrgJsonLd;
         }
 
-        return $this->jsonLd[$type] ?? [];
+        return $this->schemaOrgJsonLd[$type] ?? [];
     }
 
-    private function extractBasicJsonLd(): void
+    private function extractBasicSchemaOrgData(): void
     {
         if ($this->has(self::VALUE_TITLE)) {
-            $this->jsonLd['AudioObject']['name'] = $this->getTitle();
-            $this->jsonLd['ImageObject']['name'] = $this->getTitle();
-            $this->jsonLd['MediaObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['AudioObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['ImageObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['MediaObject']['name'] = $this->getTitle();
         }
 
         if ($this->has(self::VALUE_CAPTION)) {
-            $this->jsonLd['AudioObject']['caption'] = $this->getCaption();
-            $this->jsonLd['ImageObject']['caption'] = $this->getCaption();
-            $this->jsonLd['MediaObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['AudioObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['ImageObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['MediaObject']['caption'] = $this->getCaption();
         }
 
         if ($this->has(self::VALUE_LICENSE)) {
-            $this->jsonLd['AudioObject']['license'] = $this->getLicense();
-            $this->jsonLd['ImageObject']['license'] = $this->getLicense();
-            $this->jsonLd['MediaObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['AudioObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['ImageObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['MediaObject']['license'] = $this->getLicense();
         }
     }
 }

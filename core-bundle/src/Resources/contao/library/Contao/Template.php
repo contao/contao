@@ -400,9 +400,9 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Adds JSON-LD data to the current page.
+	 * Adds schema.org JSON-LD data to the current response context.
 	 */
-	public function jsonLd(array $jsonLd, string $schema = JsonLdManager::SCHEMA_ORG): void
+	public function addSchemaOrg(array $jsonLd): void
 	{
 		$container = System::getContainer();
 
@@ -417,11 +417,11 @@ abstract class Template extends Controller
 		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
 
-		$type = $jsonLdManager->createTypeFromArray($jsonLd);
+		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
 		$id = $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT;
 
 		$jsonLdManager
-			->getGraphForSchema($schema)
+			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
 			->set($type, $id);
 	}
 

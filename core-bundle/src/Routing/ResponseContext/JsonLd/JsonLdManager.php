@@ -76,7 +76,7 @@ class JsonLdManager
     /**
      * @throws \InvalidArgumentException
      */
-    public function createTypeFromArray(array $jsonLd): Type
+    public function createSchemaOrgTypeFromArray(array $jsonLd): Type
     {
         if (!isset($jsonLd['@type'])) {
             throw new \InvalidArgumentException('Must provide the @type property!');
@@ -93,7 +93,7 @@ class JsonLdManager
 
         foreach ($jsonLd as $k => $v) {
             if (\is_array($v) && isset($v['@type'])) {
-                $v = $this->createTypeFromArray($v);
+                $v = $this->createSchemaOrgTypeFromArray($v);
             }
 
             $schema->setProperty($k, $v);

@@ -124,7 +124,7 @@ final class Figure
         return $this->metadata;
     }
 
-    public function getJsonLd(): array
+    public function getSchemaOrgData(): array
     {
         $imageIdentifier = $this->getImage()->getImageSrc();
 
@@ -139,10 +139,15 @@ final class Figure
         ];
 
         if (!$this->hasMetadata()) {
+            ksort($jsonLd);
+
             return $jsonLd;
         }
 
-        return array_merge($this->getMetadata()->getJsonLd('ImageObject'), $jsonLd);
+        $jsonLd = array_merge($this->getMetadata()->getSchemaOrgData('ImageObject'), $jsonLd);
+        ksort($jsonLd);
+
+        return $jsonLd;
     }
 
     /**

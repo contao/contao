@@ -85,7 +85,7 @@ class CoreResponseContextFactory
             $htmlHeadBag->setMetaRobots($pageModel->robots);
         }
 
-        $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->add(new ContaoPageSchema(
+        $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->set(new ContaoPageSchema(
             $title ?: '',
             (int) $pageModel->id,
             (bool) $pageModel->noSearch,

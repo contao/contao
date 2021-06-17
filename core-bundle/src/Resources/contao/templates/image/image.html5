@@ -18,5 +18,5 @@
 <?php
 
 if ($this->figure) {
-    $this->jsonLd($this->figure->getJsonLd());
+    $this->addSchemaOrg($this->figure->getSchemaOrgData());
 }
