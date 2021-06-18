@@ -29,6 +29,12 @@ services:
             - '@request_stack'
         public: true
 
+    Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener:
+        arguments:
+            - '@database_connection'
+            - '@translator'
+        public: true
+
     Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
         arguments:
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'

@@ -502,7 +502,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
-			'options_callback'        => array('tl_page', 'getGroups'),
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
@@ -1337,24 +1336,6 @@ class tl_page extends Backend
 		}
 
 		return $return;
-	}
-
-	/**
-	 * Return all member groups by name
-	 *
-	 * @return array
-	 */
-	public function getGroups()
-	{
-		$objGroups = $this->Database->execute("SELECT id, name FROM tl_member_group WHERE tstamp>0 ORDER BY name");
-		$options = array(-1 => $GLOBALS['TL_LANG']['MSC']['anonymous']);
-
-		while ($objGroups->next())
-		{
-			$options[$objGroups->id] = $objGroups->name;
-		}
-
-		return $options;
 	}
 
 	/**
