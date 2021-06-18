@@ -15,14 +15,14 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletter channels
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $title
- * @property integer $jumpTo
- * @property string  $template
- * @property string  $sender
- * @property string  $senderName
- * @property string  $mailerTransport
+ * @property string|integer $id
+ * @property string|integer $tstamp
+ * @property string         $title
+ * @property string|integer $jumpTo
+ * @property string         $template
+ * @property string         $mailerTransport
+ * @property string         $sender
+ * @property string         $senderName
  *
  * @method static NewsletterChannelModel|null findById($id, array $opt=array())
  * @method static NewsletterChannelModel|null findByPk($id, array $opt=array())
@@ -32,17 +32,17 @@ use Contao\Model\Collection;
  * @method static NewsletterChannelModel|null findOneByTitle($val, array $opt=array())
  * @method static NewsletterChannelModel|null findOneByJumpTo($val, array $opt=array())
  * @method static NewsletterChannelModel|null findOneByTemplate($val, array $opt=array())
+ * @method static NewsletterChannelModel|null findOneByMailerTransport($val, array $opt=array())
  * @method static NewsletterChannelModel|null findOneBySender($val, array $opt=array())
  * @method static NewsletterChannelModel|null findOneBySenderName($val, array $opt=array())
- * @method static NewsletterChannelModel|null findOneByMailerTransport($val, array $opt=array())
  *
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTitle($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByJumpTo($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTemplate($val, array $opt=array())
+ * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBySender($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBySenderName($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByMailerTransport($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findAll(array $opt=array())
@@ -52,9 +52,9 @@ use Contao\Model\Collection;
  * @method static integer countByTitle($val, array $opt=array())
  * @method static integer countByJumpTo($val, array $opt=array())
  * @method static integer countByTemplate($val, array $opt=array())
+ * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countBySender($val, array $opt=array())
  * @method static integer countBySenderName($val, array $opt=array())
- * @method static integer countByMailerTransport($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

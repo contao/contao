@@ -235,7 +235,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        $pid = null;
         $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
         $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
 

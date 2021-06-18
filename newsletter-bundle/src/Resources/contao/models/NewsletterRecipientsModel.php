@@ -15,13 +15,12 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletter recipients
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $email
- * @property boolean $active
- * @property string  $source
- * @property string  $addedOn
+ * @property string|integer $id
+ * @property string|integer $pid
+ * @property string|integer $tstamp
+ * @property string         $email
+ * @property string|boolean $active
+ * @property string|integer $addedOn
  *
  * @method static NewsletterRecipientsModel|null findById($id, array $opt=array())
  * @method static NewsletterRecipientsModel|null findByPk($id, array $opt=array())
@@ -31,14 +30,12 @@ use Contao\Model\Collection;
  * @method static NewsletterRecipientsModel|null findOneByTstamp($val, array $opt=array())
  * @method static NewsletterRecipientsModel|null findOneByEmail($val, array $opt=array())
  * @method static NewsletterRecipientsModel|null findOneByActive($val, array $opt=array())
- * @method static NewsletterRecipientsModel|null findOneBySource($val, array $opt=array())
  * @method static NewsletterRecipientsModel|null findOneByAddedOn($val, array $opt=array())
  *
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByPid($val, array $opt=array())
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByEmail($val, array $opt=array())
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByActive($val, array $opt=array())
- * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findBySource($val, array $opt=array())
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findByAddedOn($val, array $opt=array())
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|NewsletterRecipientsModel[]|NewsletterRecipientsModel|null findBy($col, $val, array $opt=array())
@@ -49,7 +46,6 @@ use Contao\Model\Collection;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByActive($val, array $opt=array())
- * @method static integer countBySource($val, array $opt=array())
  * @method static integer countByAddedOn($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>

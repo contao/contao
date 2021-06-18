@@ -77,9 +77,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         $this->tokens = $tokens;
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function getUsedTokens(): array
     {
         if (null === $this->tokens) {

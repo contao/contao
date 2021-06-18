@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
@@ -143,7 +142,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $this->assertFileExists($this->getTempDir().'/public/index.php');
     }
 
-    private function getApplication(ManagerConfig $config = null): Application
+    private function getApplication(): Application
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->getTempDir());
@@ -154,14 +153,6 @@ class InstallWebDirCommandTest extends ContaoTestCase
             ->method('getContainer')
             ->willReturn($container)
         ;
-
-        if (null !== $config) {
-            $kernel
-                ->expects($this->atLeastOnce())
-                ->method('getManagerConfig')
-                ->willReturn($config)
-            ;
-        }
 
         $container->set('kernel', $kernel);
 

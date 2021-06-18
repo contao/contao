@@ -21,22 +21,21 @@ use Webmozart\PathUtil\Path;
  * The files themselves reside in the files directory. This class only handles
  * the corresponding database entries (database aided file system).
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $uuid
- * @property string  $type
- * @property string  $path
- * @property string  $extension
- * @property string  $hash
- * @property boolean $found
- * @property string  $name
- * @property boolean $protected
- * @property float   $importantPartX
- * @property float   $importantPartY
- * @property float   $importantPartWidth
- * @property float   $importantPartHeight
- * @property string  $meta
+ * @property string|integer      $id
+ * @property string|integer|null $pid
+ * @property string|integer      $tstamp
+ * @property string|null         $uuid
+ * @property string              $type
+ * @property string              $path
+ * @property string              $extension
+ * @property string              $hash
+ * @property string|boolean      $found
+ * @property string              $name
+ * @property string|float        $importantPartX
+ * @property string|float        $importantPartY
+ * @property string|float        $importantPartWidth
+ * @property string|float        $importantPartHeight
+ * @property string|array|null   $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, array $opt=array())
  * @method static FilesModel|null findOneBy($col, $val, array $opt=array())
@@ -47,7 +46,6 @@ use Webmozart\PathUtil\Path;
  * @method static FilesModel|null findOneByHash($val, array $opt=array())
  * @method static FilesModel|null findOneByFound($val, array $opt=array())
  * @method static FilesModel|null findOneByName($val, array $opt=array())
- * @method static FilesModel|null findOneByProtected($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartX($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartY($val, array $opt=array())
  * @method static FilesModel|null findOneByImportantPartWidth($val, array $opt=array())
@@ -60,7 +58,6 @@ use Webmozart\PathUtil\Path;
  * @method static Collection|FilesModel[]|FilesModel|null findByHash($val, array $opt=array())
  * @method static Collection|FilesModel[]|FilesModel|null findByFound($val, array $opt=array())
  * @method static Collection|FilesModel[]|FilesModel|null findByName($val, array $opt=array())
- * @method static Collection|FilesModel[]|FilesModel|null findByProtected($val, array $opt=array())
  * @method static Collection|FilesModel[]|FilesModel|null findByImportantPartX($val, array $opt=array())
  * @method static Collection|FilesModel[]|FilesModel|null findByImportantPartY($val, array $opt=array())
  * @method static Collection|FilesModel[]|FilesModel|null findByImportantPartWidth($val, array $opt=array())
@@ -79,7 +76,6 @@ use Webmozart\PathUtil\Path;
  * @method static integer countByHash($val, array $opt=array())
  * @method static integer countByFound($val, array $opt=array())
  * @method static integer countByName($val, array $opt=array())
- * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByImportantPartX($val, array $opt=array())
  * @method static integer countByImportantPartY($val, array $opt=array())
  * @method static integer countByImportantPartWidth($val, array $opt=array())

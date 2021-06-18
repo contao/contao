@@ -38,7 +38,7 @@ class ResponseContextAccessor
             return null;
         }
 
-        return $request->attributes->get(ResponseContext::REQUEST_ATTRIBUTE_NAME, null);
+        return $request->attributes->get(ResponseContext::REQUEST_ATTRIBUTE_NAME);
     }
 
     public function setResponseContext(?ResponseContext $responseContext): self

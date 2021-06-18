@@ -110,7 +110,7 @@ class Version410Update extends AbstractMigration
                 imageSizes = :options
         ');
 
-        $stmt->execute([':options' => serialize($options)]);
+        $stmt->executeStatement([':options' => serialize($options)]);
 
         return $this->createResult(true);
     }

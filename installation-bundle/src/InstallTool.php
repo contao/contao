@@ -384,7 +384,7 @@ class InstallTool
             '=' => '&#61;',
         ];
 
-        $statement->execute([
+        $statement->executeStatement([
             ':time' => time(),
             ':name' => strtr($name, $replace),
             ':email' => $email,

@@ -1007,10 +1007,7 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
-    /**
-     * @return BackendUser&MockObject
-     */
-    private function expectUser(): BackendUser
+    private function expectUser(): void
     {
         /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
@@ -1020,14 +1017,9 @@ class ContentCompositionListenerTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
-
-        return $user;
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function expectRequest(bool $hasSession, array $newRecords = null): Request
+    private function expectRequest(bool $hasSession, array $newRecords = null): void
     {
         $request = $this->createMock(Request::class);
         $request
@@ -1066,8 +1058,6 @@ class ContentCompositionListenerTest extends TestCase
             ->method('getCurrentRequest')
             ->willReturn($request)
         ;
-
-        return $request;
     }
 
     /**

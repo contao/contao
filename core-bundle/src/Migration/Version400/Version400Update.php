@@ -92,7 +92,7 @@ class Version400Update extends AbstractMigration
                                 id = :id
                         ');
 
-                        $stmt->execute([':jquery' => serialize(array_values($jquery)), ':id' => $layout['id']]);
+                        $stmt->executeStatement([':jquery' => serialize(array_values($jquery)), ':id' => $layout['id']]);
                     }
                 }
             }
@@ -117,7 +117,7 @@ class Version400Update extends AbstractMigration
                                 id = :id
                         ');
 
-                        $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
+                        $stmt->executeStatement([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
                     }
                 }
             }
@@ -133,7 +133,7 @@ class Version400Update extends AbstractMigration
                         id = :id
                 ');
 
-                $stmt->execute([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
+                $stmt->executeStatement([':scripts' => serialize(array_values($scripts)), ':id' => $layout['id']]);
             }
         }
 
@@ -166,7 +166,7 @@ class Version400Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
+                    $stmt->executeStatement([':mootools' => serialize(array_values($mootools)), ':id' => $layout['id']]);
                 }
             }
         }
@@ -199,7 +199,7 @@ class Version400Update extends AbstractMigration
                             id = :id
                     ');
 
-                    $stmt->execute([':framework' => serialize(array_values($framework)), ':id' => $layout['id']]);
+                    $stmt->executeStatement([':framework' => serialize(array_values($framework)), ':id' => $layout['id']]);
                 }
             }
         }

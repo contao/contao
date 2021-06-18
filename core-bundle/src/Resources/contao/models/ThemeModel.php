@@ -15,14 +15,14 @@ use Contao\Model\Collection;
 /**
  * Reads and writes themes
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $name
- * @property string  $author
- * @property string  $folders
- * @property string  $screenshot
- * @property string  $templates
- * @property string  $vars
+ * @property string|integer    $id
+ * @property string|integer    $tstamp
+ * @property string            $name
+ * @property string            $author
+ * @property string|array|null $folders
+ * @property string|null       $screenshot
+ * @property string            $templates
+ * @property string|array|null $vars
  *
  * @method static ThemeModel|null findById($id, array $opt=array())
  * @method static ThemeModel|null findByPk($id, array $opt=array())
