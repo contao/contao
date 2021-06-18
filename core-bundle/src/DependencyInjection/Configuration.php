@@ -17,6 +17,7 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Webmozart\PathUtil\Path;
@@ -103,7 +104,7 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(
                             static function (string $v): int {
-                                return preg_match('@^(app|assets|bin|config|contao|plugins|share|system|templates|var|vendor|web)(/|$)@', $v);
+                                return preg_match('@^(app|assets|bin|config|contao|plugins|public|share|system|templates|var|vendor|web)(/|$)@', $v);
                             }
                         )
                         ->thenInvalid('%s')
@@ -117,9 +118,9 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('.html')
                 ->end()
                 ->scalarNode('web_dir')
-                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/web.')
+                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'web'))
+                    ->defaultValue($this->getDefaultWebDir())
                     ->validate()
                         ->always(
                             static function (string $value): string {
@@ -520,6 +521,17 @@ class Configuration implements ConfigurationInterface
         }
 
         return array_values(array_unique($languages));
+    }
+
+    private function getDefaultWebDir(): string
+    {
+        $webDir = Path::join($this->projectDir, 'web');
+
+        if ((new Filesystem())->exists($webDir)) {
+            return $webDir;
+        }
+
+        return Path::join($this->projectDir, 'public');
     }
 
     /**

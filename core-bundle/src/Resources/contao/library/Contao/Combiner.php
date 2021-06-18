@@ -130,7 +130,7 @@ class Combiner extends System
 		// Check the source file
 		if (!file_exists($this->strRootDir . '/' . $strFile))
 		{
-			// Handle public bundle resources in web/
+			// Handle public bundle resources in the contao.web_dir folder
 			if (file_exists($this->strRootDir . '/' . $this->strWebDir . '/' . $strFile))
 			{
 				$strFile = $this->strWebDir . '/' . $strFile;
@@ -229,7 +229,7 @@ class Combiner extends System
 			{
 				$name = $arrFile['name'];
 
-				// Strip the web/ prefix (see #328)
+				// Strip the contao.web_dir directory prefix (see #328)
 				if (strncmp($name, $this->strWebDir . '/', \strlen($this->strWebDir) + 1) === 0)
 				{
 					$name = substr($name, \strlen($this->strWebDir) + 1);
@@ -447,7 +447,7 @@ class Combiner extends System
 	{
 		$strName = $arrFile['name'];
 
-		// Strip the web/ prefix
+		// Strip the contao.web_dir directory prefix
 		if (strpos($strName, $this->strWebDir . '/') === 0)
 		{
 			$strName = substr($strName, \strlen($this->strWebDir) + 1);

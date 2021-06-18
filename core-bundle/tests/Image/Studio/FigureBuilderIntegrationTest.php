@@ -1620,7 +1620,7 @@ class FigureBuilderIntegrationTest extends TestCase
     private function configureContainer(ContainerBuilder $container, ?Adapter $filesAdapter): void
     {
         $container->setParameter('contao.image.target_dir', Path::join(self::$testRoot, 'assets/images'));
-        $container->setParameter('contao.web_dir', Path::join(self::$testRoot, 'web'));
+        $container->setParameter('contao.web_dir', Path::join(self::$testRoot, 'public'));
         $container->setParameter('contao.resources_paths', [Path::join(self::$testRoot, 'contao')]);
 
         $framework = $this->mockContaoFramework([

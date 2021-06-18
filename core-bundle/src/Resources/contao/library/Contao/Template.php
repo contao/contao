@@ -590,7 +590,7 @@ abstract class Template extends Controller
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
-				// Handle public bundle resources in web/
+				// Handle public bundle resources in the contao.web_dir folder
 				if (file_exists($projectDir . '/' . $webDir . '/' . $href))
 				{
 					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $href);
@@ -646,7 +646,7 @@ abstract class Template extends Controller
 			{
 				$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
-				// Handle public bundle resources in web/
+				// Handle public bundle resources in the contao.web_dir folder
 				if (file_exists($projectDir . '/' . $webDir . '/' . $src))
 				{
 					$mtime = filemtime($projectDir . '/' . $webDir . '/' . $src);

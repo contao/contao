@@ -71,7 +71,7 @@ class InstallCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
             ->setDescription('Installs the required Contao directories')
         ;
     }
@@ -80,6 +80,14 @@ class InstallCommand extends Command
     {
         $this->fs = new Filesystem();
         $this->webDir = $input->getArgument('target');
+
+        if (null === $this->webDir) {
+            if ($this->fs->exists($this->projectDir.'/web')) {
+                $this->webDir = 'web'; // backwards compatibility
+            } else {
+                $this->webDir = 'public';
+            }
+        }
 
         $this->addEmptyDirs();
 

@@ -24,7 +24,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 {
     public function testIsHidden(): void
     {
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/web');
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/public');
 
         $this->assertTrue($command->isHidden());
     }
@@ -56,14 +56,14 @@ class ContaoSetupCommandTest extends ContaoTestCase
             array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'web', '--symlink', '--relative', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'web', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'web', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
         ];
 
         $createProcessHandler = $this->getCreateProcessHandler($processes, $commandArguments, $invocationCount);
 
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/web', $createProcessHandler);
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', $createProcessHandler);
 
         (new CommandTester($command))->execute([], $options);
 
@@ -113,7 +113,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $command = new ContaoSetupCommand(
             'project/dir',
-            'project/dir/web',
+            'project/dir/public',
             $this->getCreateProcessHandler($this->getProcessMocks(false))
         );
 
@@ -129,7 +129,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $command = new ContaoSetupCommand(
             'project/dir',
-            'project/dir/web',
+            'project/dir/public',
             $this->getCreateProcessHandler($this->getProcessMocks())
         );
 

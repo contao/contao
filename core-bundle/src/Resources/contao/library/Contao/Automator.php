@@ -362,7 +362,7 @@ class Automator extends System
 	}
 
 	/**
-	 * Generate the symlinks in the web/ folder
+	 * Generate the symlinks in the public folder
 	 */
 	public function generateSymlinks()
 	{

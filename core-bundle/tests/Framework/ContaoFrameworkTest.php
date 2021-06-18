@@ -183,9 +183,9 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializesTheFrameworkWithAnInsecurePath(): void
     {
-        $request = Request::create('/contao4/web/index.php/index.html');
-        $request->server->set('SCRIPT_FILENAME', '/var/www/contao4/web/index.php');
-        $request->server->set('SCRIPT_NAME', '/contao4/web/index.php');
+        $request = Request::create('/contao4/public/index.php/index.html');
+        $request->server->set('SCRIPT_FILENAME', '/var/www/contao4/public/index.php');
+        $request->server->set('SCRIPT_NAME', '/contao4/public/index.php');
 
         $framework = $this->mockFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -213,7 +213,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame('index.php/index.html', TL_SCRIPT);
         $this->assertFalse(BE_USER_LOGGED_IN);
         $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertSame('/contao4/web', TL_PATH);
+        $this->assertSame('/contao4/public', TL_PATH);
     }
 
     /**

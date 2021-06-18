@@ -373,7 +373,7 @@ class Image
 		$path = $this->resizedPath;
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
-		// Strip the web/ prefix (see #337)
+		// Strip the contao.web_dir directory prefix (see #337)
 		if (strncmp($path, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
 			$path = substr($path, \strlen($webDir) + 1);
@@ -708,7 +708,7 @@ class Image
 
 		$objFile = new File($src);
 
-		// Strip the web/ prefix (see #337)
+		// Strip the contao.web_dir directory prefix (see #337)
 		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
 			$src = substr($src, \strlen($webDir) + 1);
