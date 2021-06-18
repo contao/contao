@@ -17,6 +17,9 @@ use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * @Callback(table="tl_article", target="fields.groups.options")
+ * @Callback(table="tl_content", target="fields.groups.options")
+ * @Callback(table="tl_module", target="fields.groups.options")
  * @Callback(table="tl_page", target="fields.groups.options")
  */
 class MemberGroupsListener
@@ -39,7 +42,7 @@ class MemberGroupsListener
 
     public function __invoke(): array
     {
-        $options = [-1 => $this->translator->trans('MSC.anonymous', [], 'contao_default')];
+        $options = [-1 => $this->translator->trans('MSC.guests', [], 'contao_default')];
         $groups = $this->connection->fetchAllAssociative('SELECT id, name FROM tl_member_group WHERE tstamp>0 ORDER BY name');
 
         foreach ($groups as $group) {

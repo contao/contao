@@ -33,7 +33,7 @@ class MemberGroupsListenerTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with('MSC.anonymous', [], 'contao_default')
+            ->with('MSC.guests', [], 'contao_default')
             ->willReturn('Guests')
         ;
 

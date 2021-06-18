@@ -93,7 +93,6 @@ use Contao\Model\Collection;
  * @property integer $module
  * @property boolean $protected
  * @property string  $groups
- * @property boolean $guests
  * @property string  $cssID
  * @property boolean $invisible
  * @property string  $start
@@ -189,7 +188,6 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByModule($val, array $opt=array())
  * @method static ContentModel|null findOneByProtected($val, array $opt=array())
  * @method static ContentModel|null findOneByGroups($val, array $opt=array())
- * @method static ContentModel|null findOneByGuests($val, array $opt=array())
  * @method static ContentModel|null findOneByCssID($val, array $opt=array())
  * @method static ContentModel|null findOneBySpace($val, array $opt=array())
  * @method static ContentModel|null findOneByInvisible($val, array $opt=array())
@@ -279,7 +277,6 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByModule($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByProtected($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByGroups($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByGuests($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByCssID($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySpace($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByInvisible($val, array $opt=array())
@@ -373,7 +370,6 @@ use Contao\Model\Collection;
  * @method static integer countByModule($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
  * @method static integer countByInvisible($val, array $opt=array())

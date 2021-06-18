@@ -75,7 +75,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $reg_password
  * @property boolean $protected
  * @property string  $groups
- * @property boolean $guests
  * @property string  $cssID
  * @property string  $hl
  *

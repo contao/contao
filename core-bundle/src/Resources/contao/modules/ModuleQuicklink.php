@@ -72,7 +72,7 @@ class ModuleQuicklink extends Module
 		global $objPage;
 
 		// Get all active pages
-		$objPages = PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
+		$objPages = PageModel::findPublishedRegularByIds($this->pages);
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -80,11 +80,33 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
+		$user = null;
+
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$user = FrontendUser::getInstance();
+		}
+
 		$items = array();
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
+			if ($objSubpage->protected)
+			{
+				if ($user)
+				{
+					continue;
+				}
+
+				$groups = StringUtil::deserialize($objSubpage->groups, true);
+
+				if (!\in_array(-1, $groups))
+				{
+					continue;
+				}
+			}
+
 			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
 

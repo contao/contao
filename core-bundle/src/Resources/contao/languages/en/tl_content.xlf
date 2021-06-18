@@ -458,12 +458,6 @@
       <trans-unit id="tl_content.groups.1">
         <source>These groups will be able to see the content element.</source>
       </trans-unit>
-      <trans-unit id="tl_content.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_content.guests.1">
-        <source>Hide the content element if a member is logged in.</source>
-      </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
       </trans-unit>
