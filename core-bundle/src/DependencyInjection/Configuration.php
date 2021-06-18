@@ -17,6 +17,7 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Webmozart\PathUtil\Path;
@@ -526,7 +527,7 @@ class Configuration implements ConfigurationInterface
     {
         $webDir = Path::join($this->projectDir, 'web');
 
-        if (file_exists($webDir)) {
+        if ((new Filesystem())->exists($webDir)) {
             return $webDir;
         }
 
