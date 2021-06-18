@@ -119,7 +119,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'public'))
+                    ->defaultValue($this->getDefaultWebDir())
                     ->validate()
                         ->always(
                             static function (string $value): string {
@@ -520,6 +520,17 @@ class Configuration implements ConfigurationInterface
         }
 
         return array_values(array_unique($languages));
+    }
+
+    private function getDefaultWebDir(): string
+    {
+        $webDir = Path::join($this->projectDir, 'web');
+
+        if (file_exists($webDir)) {
+            return $webDir;
+        }
+
+        return Path::join($this->projectDir, 'public');
     }
 
     /**
