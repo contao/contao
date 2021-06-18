@@ -53,8 +53,8 @@ class InstallWebDirCommand extends Command
     {
         $this
             ->setName('contao:install-web-dir')
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'public')
-            ->setDescription('Installs the files in the "web" directory')
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
+            ->setDescription('Installs the files in the public directory')
         ;
     }
 
@@ -63,11 +63,21 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = Path::join($this->projectDir, $input->getArgument('target'));
+        $webDir = $input->getArgument('target');
 
-        $this->addHtaccess($webDir);
-        $this->addFiles($webDir);
-        $this->purgeOldFiles($webDir);
+        if (null === $webDir) {
+            if ($this->fs->exists($this->projectDir.'/web')) {
+                $webDir = 'web'; // backwards compatibility
+            } else {
+                $webDir = 'public';
+            }
+        }
+
+        $path = Path::join($this->projectDir, $webDir);
+
+        $this->addHtaccess($path);
+        $this->addFiles($path);
+        $this->purgeOldFiles($path);
 
         return 0;
     }
