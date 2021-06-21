@@ -146,7 +146,7 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel($this->trans('MSC.user').' '.$user->username)
+            ->setLabel($this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username)
             ->setAttribute('class', 'submenu')
             ->setLabelAttribute('class', 'h2')
             ->setExtra('translation_domain', false)
@@ -193,11 +193,6 @@ class BackendMenuListener
         ;
 
         $tree->addChild($buger);
-    }
-
-    private function trans(string $id): string
-    {
-        return $this->translator->trans($id, [], 'contao_default');
     }
 
     private function getAlertsLabel(string $systemMessages): string

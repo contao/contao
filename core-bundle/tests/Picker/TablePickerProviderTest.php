@@ -327,12 +327,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'id' => '1',
         ];
 
-        $config = $this->mockPickerConfig('tl_article', '15');
+        $config = $this->mockPickerConfig('tl_article', '42');
 
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1])
+            $this->mockConnectionForQuery('tl_article', 42, ['pid' => 1])
         );
 
         $provider->getUrl($config);
@@ -359,12 +359,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'id' => 7,
         ];
 
-        $config = $this->mockPickerConfig('tl_content', '15');
+        $config = $this->mockPickerConfig('tl_content', '2');
 
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => 'tl_news'], true)
+            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true)
         );
 
         $provider->getUrl($config);
@@ -406,12 +406,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'picker' => 'foobar',
         ];
 
-        $config = $this->mockPickerConfig('tl_article', '15');
+        $config = $this->mockPickerConfig('tl_article', '42');
 
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, false)
+            $this->mockConnectionForQuery('tl_article', 42, false)
         );
 
         $provider->getUrl($config);

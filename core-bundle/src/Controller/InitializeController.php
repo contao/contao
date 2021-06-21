@@ -130,7 +130,7 @@ class InitializeController
                     throw $e;
                 }
 
-                $this->handleException($e, $realRequest, HttpKernelInterface::MASTER_REQUEST);
+                $this->handleException($e, $realRequest);
             }
         );
 
@@ -153,7 +153,7 @@ class InitializeController
         register_shutdown_function(
             static function () use ($self, $realRequest, $response): void {
                 @ob_end_clean();
-                $self->handleResponse($realRequest, $response, KernelInterface::MASTER_REQUEST);
+                $self->handleResponse($realRequest, $response);
             }
         );
 
@@ -163,13 +163,11 @@ class InitializeController
     /**
      * Handles an exception by trying to convert it to a Response object.
      *
-     * @param int $type HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST
-     *
      * @see HttpKernel::handleException()
      */
-    private function handleException(\Throwable $e, Request $request, int $type): void
+    private function handleException(\Throwable $e, Request $request): void
     {
-        $event = new ExceptionEvent($this->httpKernel, $request, $type, $e);
+        $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $e);
         $this->eventDispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
         // A listener might have replaced the exception
@@ -197,12 +195,12 @@ class InitializeController
         }
 
         try {
-            $event = new ResponseEvent($this->httpKernel, $request, $type, $response);
+            $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
             $response = $event->getResponse();
 
             $this->eventDispatcher->dispatch(
-                new FinishRequestEvent($this->httpKernel, $request, $type),
+                new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST),
                 KernelEvents::FINISH_REQUEST
             );
 
@@ -223,9 +221,9 @@ class InitializeController
     /**
      * Execute kernel.response and kernel.finish_request events.
      */
-    private function handleResponse(Request $request, Response $response, int $type): void
+    private function handleResponse(Request $request, Response $response): void
     {
-        $event = new ResponseEvent($this->httpKernel, $request, $type, $response);
+        $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
 
         try {
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
@@ -234,7 +232,7 @@ class InitializeController
         }
 
         $this->eventDispatcher->dispatch(
-            new FinishRequestEvent($this->httpKernel, $request, $type),
+            new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST),
             KernelEvents::FINISH_REQUEST
         );
 

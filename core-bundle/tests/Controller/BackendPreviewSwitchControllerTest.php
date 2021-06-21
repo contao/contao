@@ -205,12 +205,12 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return Environment&MockObject
      */
-    private function getTwigMock(string $render = 'CONTAO'): Environment
+    private function getTwigMock(): Environment
     {
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn($render)
+            ->willReturn('CONTAO')
         ;
 
         return $twig;
