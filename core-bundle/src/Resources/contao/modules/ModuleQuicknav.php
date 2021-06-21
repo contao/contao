@@ -124,13 +124,14 @@ class ModuleQuicknav extends Module
 
 		foreach ($objSubpages as $objSubpage)
 		{
+			$objSubpage->loadDetails();
+
 			// Override the domain (see #3765)
 			if ($host !== null)
 			{
 				$objSubpage->domain = $host;
 			}
 
-			$objSubpage->loadDetails();
 			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
 			// Do not show protected pages unless a front end user is logged in
