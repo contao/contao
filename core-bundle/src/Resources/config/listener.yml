@@ -36,7 +36,8 @@ services:
         public: true
 
     Contao\CoreBundle\EventListener\DataContainer\PageLanguageListener:
-        public: true
+        arguments:
+            - '%contao.legacy_routing%'
 
     Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
         arguments:
