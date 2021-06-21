@@ -135,10 +135,8 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
             $fallbackA = LocaleUtil::getFallbacks($pageA->rootLanguage);
             $fallbackB = LocaleUtil::getFallbacks($pageB->rootLanguage);
-            $langsA = array_intersect(array_diff($fallbackA, $fallbackB), array_keys($languages));
-            $langsB = array_intersect(array_diff($fallbackB, $fallbackA), array_keys($languages));
-            $langA = $languages[end($langsA)] ?? null;
-            $langB = $languages[end($langsB)] ?? null;
+            $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
+            $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
 
             if ($langA === $langB) {
                 // If both pages have the same language without region and neither region has a priority,
@@ -216,5 +214,16 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         }
 
         return array_flip($result);
+    }
+
+    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): ?int
+    {
+        foreach (array_reverse($locales) as $locale) {
+            if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {
+                return $languagePriority[$locale];
+            }
+        }
+
+        return null;
     }
 }
