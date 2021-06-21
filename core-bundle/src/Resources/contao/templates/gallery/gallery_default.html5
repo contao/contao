@@ -1,5 +1,5 @@
 
-<ul class="cols_<?= $this->perRow ?>" itemscope itemtype="http://schema.org/ImageGallery">
+<ul class="cols_<?= $this->perRow ?>" itemscope itemtype="https://schema.org/ImageGallery">
   <?php foreach ($this->body as $class => $row): ?>
     <?php foreach ($row as $col): ?>
       <?php if ($col->addImage): ?>

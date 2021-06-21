@@ -51,7 +51,7 @@
 
     {%- set base_attributes = {
         'itemscope': '',
-        'itemtype': 'http://schema.org/ImageObject'
+        'itemtype': 'https://schema.org/ImageObject'
     } %}
     <figure{{ _self.html_attributes(base_attributes|merge(figure_attributes)) }}>
         {% if figure.linkHref -%}
