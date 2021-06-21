@@ -170,17 +170,17 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return TokenChecker&MockObject
      */
-    private function mockTokenChecker(): TokenChecker
+    private function mockTokenChecker(?string $frontendUsername = null, bool $previewMode = true): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->method('getFrontendUsername')
-            ->willReturn(null)
+            ->willReturn($frontendUsername)
         ;
 
         $tokenChecker
             ->method('isPreviewMode')
-            ->willReturn(true)
+            ->willReturn($previewMode)
         ;
 
         return $tokenChecker;
