@@ -130,6 +130,7 @@ class ModuleQuicknav extends Module
 				$objSubpage->domain = $host;
 			}
 
+			$objSubpage->loadDetails();
 			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
 			// Do not show protected pages unless a front end user is logged in

@@ -92,60 +92,51 @@ class ModuleQuicklink extends Module
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
-			if ($objSubpage->protected)
+			$objSubpage->loadDetails();
+			$groups = StringUtil::deserialize($objSubpage->groups, true);
+
+			if (!$objSubpage->protected || (!$user && \in_array(-1, $groups)))
 			{
-				if ($user)
+				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
+				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
+
+				// Get href
+				switch ($objSubpage->type)
 				{
-					continue;
-				}
-
-				$groups = StringUtil::deserialize($objSubpage->groups, true);
-
-				if (!\in_array(-1, $groups))
-				{
-					continue;
-				}
-			}
-
-			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
-			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
-
-			// Get href
-			switch ($objSubpage->type)
-			{
-				case 'redirect':
-					$href = $objSubpage->url;
-					break;
-
-				case 'forward':
-					if ($objSubpage->jumpTo)
-					{
-						$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-					}
-					else
-					{
-						$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-					}
-
-					if ($objNext instanceof PageModel)
-					{
-						$href = $objNext->getFrontendUrl();
+					case 'redirect':
+						$href = $objSubpage->url;
 						break;
-					}
-					// no break
 
-				default:
-					$href = $objSubpage->getFrontendUrl();
-					break;
+					case 'forward':
+						if ($objSubpage->jumpTo)
+						{
+							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+						}
+						else
+						{
+							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+						}
+
+						if ($objNext instanceof PageModel)
+						{
+							$href = $objNext->getFrontendUrl();
+							break;
+						}
+						// no break
+
+					default:
+						$href = $objSubpage->getFrontendUrl();
+						break;
+				}
+
+				$items[] = array
+				(
+					'href' => $href,
+					'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
+					'link' => $objSubpage->title,
+					'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
+				);
 			}
-
-			$items[] = array
-			(
-				'href' => $href,
-				'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
-				'link' => $objSubpage->title,
-				'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
-			);
 		}
 
 		$this->Template->items = $items;

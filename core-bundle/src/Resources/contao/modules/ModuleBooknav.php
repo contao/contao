@@ -193,12 +193,20 @@ class ModuleBooknav extends Module
 			return;
 		}
 
+		$user = null;
+
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$user = FrontendUser::getInstance();
+		}
+
+		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
-			$_groups = StringUtil::deserialize($objPage->groups);
+			$objPage->loadDetails();
+			$groups = StringUtil::deserialize($objPage->groups, true);
 
-			// Do not show protected pages unless a front end user is logged in
-			if (!$objPage->protected || $this->showProtected || (\is_array($groups) && \is_array($_groups) && \count(array_intersect($groups, $_groups))))
+			if (!$objPage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 

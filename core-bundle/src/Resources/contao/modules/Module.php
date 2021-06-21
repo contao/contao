@@ -304,7 +304,7 @@ abstract class Module extends Frontend
 				continue;
 			}
 
-			$subitems = '';
+			$objSubpage->loadDetails();
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -312,9 +312,9 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
+			$subitems = '';
 			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			// Do not show protected pages unless a front end user is logged in
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				// Check whether there will be subpages
@@ -551,9 +551,9 @@ abstract class Module extends Frontend
 		return array_filter(array_map(
 			static function (array $row) use ($blnFeUserLoggedIn): ?array
 			{
-				$page = PageModel::findWithDetails($row['id']);
+				$page = PageModel::findByPk($row['id']);
 
-				if ($blnFeUserLoggedIn && $page->protected && \in_array(-1, StringUtil::deserialize($page->groups)))
+				if (!$blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($page->groups)))
 				{
 					return null;
 				}
