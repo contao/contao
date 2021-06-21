@@ -553,7 +553,7 @@ abstract class Module extends Frontend
 			{
 				$page = PageModel::findByPk($row['id']);
 
-				if (!$blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($page->groups)))
+				if ($blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($page->groups)))
 				{
 					return null;
 				}
