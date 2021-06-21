@@ -733,11 +733,6 @@ class PageModel extends Model
 			$arrColumns[] = "$t.type!='root'";
 		}
 
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$arrColumns[] = "$t.guests=''"; # FIXME
-		}
-
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
@@ -749,7 +744,27 @@ class PageModel extends Model
 			$arrOptions['order'] = Database::getInstance()->findInSet("$t.id", $arrIds);
 		}
 
-		return static::findBy($arrColumns, null, $arrOptions);
+		$collection = static::findBy($arrColumns, null, $arrOptions);
+
+		// Filter the guests only pages if there is a front end user
+		if ($collection && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$arrModels = array();
+
+			foreach ($collection as $model)
+			{
+				if ($model->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($model->groups, true)))
+				{
+					continue;
+				}
+
+				$arrModels[] = $model;
+			}
+
+			$collection = new Collection($arrModels, static::$strTable);
+		}
+
+		return $collection;
 	}
 
 	/**
@@ -797,11 +812,6 @@ class PageModel extends Model
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
 
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$arrColumns[] = "$t.guests=''"; # FIXME
-		}
-
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
@@ -813,7 +823,27 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		$collection = static::findBy($arrColumns, $intPid, $arrOptions);
+
+		// Filter the guests only pages if there is a front end user
+		if ($collection && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$arrModels = array();
+
+			foreach ($collection as $model)
+			{
+				if ($model->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($model->groups, true)))
+				{
+					continue;
+				}
+
+				$arrModels[] = $model;
+			}
+
+			$collection = new Collection($arrModels, static::$strTable);
+		}
+
+		return $collection;
 	}
 
 	/**
