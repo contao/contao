@@ -267,16 +267,10 @@
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -361,6 +355,9 @@
       </trans-unit>
       <trans-unit id="tl_page.chmod_legend">
         <source>Access rights</source>
+      </trans-unit>
+      <trans-unit id="tl_page.navigation_legend">
+        <source>Navigation menu</source>
       </trans-unit>
       <trans-unit id="tl_page.expert_legend">
         <source>Expert settings</source>

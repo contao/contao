@@ -76,7 +76,7 @@ class ModuleCustomnav extends Module
 		}
 
 		// Get all active pages and also include root pages if the language is added to the URL (see #72)
-		$objPages = PageModel::findPublishedRegularWithoutGuestsByIds($this->pages, array('includeRoot'=>true));
+		$objPages = PageModel::findPublishedRegularByIds($this->pages, array('includeRoot'=>true));
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -93,11 +93,10 @@ class ModuleCustomnav extends Module
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
 		{
-			// Inherit settings from the parent pages
 			$objModel->loadDetails();
+			$groups = StringUtil::deserialize($objModel->groups, true);
 
-			// Do not show protected pages unless a front end user is logged in
-			if (!$objModel->protected || $this->showProtected || ($user && $user->isMemberOf(StringUtil::deserialize($objModel->groups))))
+			if (!$objModel->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				// Get href
 				switch ($objModel->type)

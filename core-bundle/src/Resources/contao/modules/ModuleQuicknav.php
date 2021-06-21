@@ -104,18 +104,16 @@ class ModuleQuicknav extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$groups = array();
+		$user = null;
 		$arrPages = array();
 
-		// Get all groups of the current front end user
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-			$groups = $this->User->groups;
+			$user = FrontendUser::getInstance();
 		}
 
 		// Get all active subpages
-		$objSubpages = PageModel::findPublishedRegularWithoutGuestsByPid($pid);
+		$objSubpages = PageModel::findPublishedRegularByPid($pid);
 
 		if ($objSubpages === null)
 		{
@@ -126,7 +124,7 @@ class ModuleQuicknav extends Module
 
 		foreach ($objSubpages as $objSubpage)
 		{
-			$_groups = StringUtil::deserialize($objSubpage->groups);
+			$objSubpage->loadDetails();
 
 			// Override the domain (see #3765)
 			if ($host !== null)
@@ -134,8 +132,10 @@ class ModuleQuicknav extends Module
 				$objSubpage->domain = $host;
 			}
 
+			$groups = StringUtil::deserialize($objSubpage->groups, true);
+
 			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || $this->showProtected || (\is_array($_groups) && \is_array($groups) && array_intersect($_groups, $groups)))
+			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				// Do not skip the current page here! (see #4523)
 

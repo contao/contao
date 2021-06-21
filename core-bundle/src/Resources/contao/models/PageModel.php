@@ -72,7 +72,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string            $cssClass
  * @property string            $sitemap
  * @property string|boolean    $hide
- * @property string|boolean    $guests
  * @property string|integer    $tabindex
  * @property string            $accesskey
  * @property string|boolean    $published
@@ -160,7 +159,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByCssClass($val, array $opt=array())
  * @method static PageModel|null findOneBySitemap($val, array $opt=array())
  * @method static PageModel|null findOneByHide($val, array $opt=array())
- * @method static PageModel|null findOneByGuests($val, array $opt=array())
  * @method static PageModel|null findOneByTabindex($val, array $opt=array())
  * @method static PageModel|null findOneByAccesskey($val, array $opt=array())
  * @method static PageModel|null findOneByPublished($val, array $opt=array())
@@ -216,7 +214,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByCssClass($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySitemap($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByHide($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByGuests($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTabindex($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAccesskey($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPublished($val, array $opt=array())
@@ -276,7 +273,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countBySitemap($val, array $opt=array())
  * @method static integer countByHide($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByTabindex($val, array $opt=array())
  * @method static integer countByAccesskey($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())
@@ -649,7 +645,8 @@ class PageModel extends Model
 	 *
 	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0. Use Module::getPublishedSubpagesWithoutGuestsByPid() instead.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0;
+	 *             use Module::getPublishedSubpagesWithoutGuestsByPid() instead.
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
@@ -660,7 +657,7 @@ class PageModel extends Model
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
 		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
 
-		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND (p2.protected='' OR p2.groups NOT LIKE '%\"-1\"%')" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND (p1.protected='' OR p1.groups NOT LIKE '%\"-1\"%')" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 											  ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -672,14 +669,14 @@ class PageModel extends Model
 	}
 
 	/**
-	 * Find all published regular pages by their IDs and exclude pages only visible for guests
+	 * Find all published regular pages by their IDs
 	 *
 	 * @param array $arrIds     An array of page IDs
 	 * @param array $arrOptions An optional options array
 	 *
 	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
-	public static function findPublishedRegularWithoutGuestsByIds($arrIds, array $arrOptions=array())
+	public static function findPublishedRegularByIds($arrIds, array $arrOptions=array())
 	{
 		if (empty($arrIds) || !\is_array($arrIds))
 		{
@@ -692,11 +689,6 @@ class PageModel extends Model
 		if (empty($arrOptions['includeRoot']))
 		{
 			$arrColumns[] = "$t.type!='root'";
-		}
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$arrColumns[] = "$t.guests=''";
 		}
 
 		if (!static::isPreviewMode($arrOptions))
@@ -714,22 +706,79 @@ class PageModel extends Model
 	}
 
 	/**
-	 * Find all published regular pages by their parent IDs and exclude pages only visible for guests
+	 * Find all published regular pages by their IDs and exclude pages only visible for guests
+	 *
+	 * @param array $arrIds     An array of page IDs
+	 * @param array $arrOptions An optional options array
+	 *
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
+	 *             use PageModel::findPublishedRegularByIds() instead.
+	 */
+	public static function findPublishedRegularWithoutGuestsByIds($arrIds, array $arrOptions=array())
+	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using PageModel::findPublishedRegularWithoutGuestsByIds() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findPublishedRegularByIds() instead.');
+
+		if (empty($arrIds) || !\is_array($arrIds))
+		{
+			return null;
+		}
+
+		$t = static::$strTable;
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+
+		if (empty($arrOptions['includeRoot']))
+		{
+			$arrColumns[] = "$t.type!='root'";
+		}
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = Database::getInstance()->findInSet("$t.id", $arrIds);
+		}
+
+		$collection = static::findBy($arrColumns, null, $arrOptions);
+
+		// Filter the guests only pages if there is a front end user
+		if ($collection && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$arrModels = array();
+
+			foreach ($collection as $model)
+			{
+				if ($model->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($model->groups, true)))
+				{
+					continue;
+				}
+
+				$arrModels[] = $model;
+			}
+
+			$collection = new Collection($arrModels, static::$strTable);
+		}
+
+		return $collection;
+	}
+
+	/**
+	 * Find all published regular pages by their parent IDs
 	 *
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
 	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
 	 */
-	public static function findPublishedRegularWithoutGuestsByPid($intPid, array $arrOptions=array())
+	public static function findPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$arrColumns[] = "$t.guests=''";
-		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -743,6 +792,58 @@ class PageModel extends Model
 		}
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
+	}
+
+	/**
+	 * Find all published regular pages by their parent IDs and exclude pages only visible for guests
+	 *
+	 * @param integer $intPid     The parent page's ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
+	 *             use PageModel::findPublishedRegularByPid() instead.
+	 */
+	public static function findPublishedRegularWithoutGuestsByPid($intPid, array $arrOptions=array())
+	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using PageModel::findPublishedRegularWithoutGuestsByPid() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findPublishedRegularByPid() instead.');
+
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		$collection = static::findBy($arrColumns, $intPid, $arrOptions);
+
+		// Filter the guests only pages if there is a front end user
+		if ($collection && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$arrModels = array();
+
+			foreach ($collection as $model)
+			{
+				if ($model->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($model->groups, true)))
+				{
+					continue;
+				}
+
+				$arrModels[] = $model;
+			}
+
+			$collection = new Collection($arrModels, static::$strTable);
+		}
+
+		return $collection;
 	}
 
 	/**

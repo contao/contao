@@ -72,7 +72,7 @@ class ModuleQuicklink extends Module
 		global $objPage;
 
 		// Get all active pages
-		$objPages = PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
+		$objPages = PageModel::findPublishedRegularByIds($this->pages);
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -80,50 +80,63 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
+		$user = null;
+
+		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$user = FrontendUser::getInstance();
+		}
+
 		$items = array();
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
-			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
-			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
+			$objSubpage->loadDetails();
+			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			// Get href
-			switch ($objSubpage->type)
+			if (!$objSubpage->protected || (!$user && \in_array(-1, $groups)))
 			{
-				case 'redirect':
-					$href = $objSubpage->url;
-					break;
+				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
+				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
 
-				case 'forward':
-					if ($objSubpage->jumpTo)
-					{
-						$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-					}
-					else
-					{
-						$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-					}
-
-					if ($objNext instanceof PageModel)
-					{
-						$href = $objNext->getFrontendUrl();
+				// Get href
+				switch ($objSubpage->type)
+				{
+					case 'redirect':
+						$href = $objSubpage->url;
 						break;
-					}
-					// no break
 
-				default:
-					$href = $objSubpage->getFrontendUrl();
-					break;
+					case 'forward':
+						if ($objSubpage->jumpTo)
+						{
+							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+						}
+						else
+						{
+							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+						}
+
+						if ($objNext instanceof PageModel)
+						{
+							$href = $objNext->getFrontendUrl();
+							break;
+						}
+						// no break
+
+					default:
+						$href = $objSubpage->getFrontendUrl();
+						break;
+				}
+
+				$items[] = array
+				(
+					'href' => $href,
+					'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
+					'link' => $objSubpage->title,
+					'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
+				);
 			}
-
-			$items[] = array
-			(
-				'href' => $href,
-				'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
-				'link' => $objSubpage->title,
-				'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
-			);
 		}
 
 		$this->Template->items = $items;
