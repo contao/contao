@@ -255,15 +255,12 @@ class RegisterPagesPassTest extends TestCase
 
     public function testAddsContainerCallIfClassExtendsSymfonyAbstractController(): void
     {
-        $registry = $this->createMock(Definition::class);
-
         $definition = $this
             ->getMockBuilder(Definition::class)
             ->setConstructorArgs([TestPageController::class])
             ->onlyMethods(['addMethodCall'])
             ->getMock()
         ;
-        $definition->addTag('contao.page');
 
         $definition
             ->expects($this->once())
@@ -284,8 +281,10 @@ class RegisterPagesPassTest extends TestCase
             )
         ;
 
+        $definition->addTag('contao.page');
+
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition(PageRegistry::class, $this->createMock(Definition::class));
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();

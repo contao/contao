@@ -156,6 +156,7 @@ class RegisterFragmentsPassTest extends TestCase
         /** @var ChildDefinition $definition */
         $definition = $container->findDefinition('contao.fragment._contao.frontend_module.two_factor');
         $calls = $definition->getMethodCalls();
+
         $this->assertCount(2, $calls);
         $this->assertSame('setContainer', $calls[1][0]);
         $this->assertInstanceOf(Reference::class, $calls[1][1][0]);
