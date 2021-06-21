@@ -332,8 +332,6 @@ class AbstractPageRouteProviderTest extends TestCase
             ['it-CH', 'de-CH', 'fr-CH'],
         ];
 
-
-
         yield [
             ['zh_Hant_TW', 'zh_Hans_CN', 'de'],
             ['de', 'zh'],

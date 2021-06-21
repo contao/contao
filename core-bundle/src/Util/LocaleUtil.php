@@ -47,6 +47,7 @@ class LocaleUtil
      * Example: 'zh_Hant_TW' returns [zh, zh_TW, zh_Hant, zh_Hant_TW]
      *
      * @see https://unicode-org.github.io/icu/userguide/locale/resources.html#find-the-best-available-data
+     *
      * @return array<string>
      */
     public static function getFallbacks(string $locale): array
@@ -59,7 +60,7 @@ class LocaleUtil
         $result = [$data[\Locale::LANG_TAG]];
 
         if (isset($data[\Locale::REGION_TAG])) {
-            $result[] =  $data[\Locale::LANG_TAG].'_'.$data[\Locale::REGION_TAG];
+            $result[] = $data[\Locale::LANG_TAG].'_'.$data[\Locale::REGION_TAG];
         }
 
         if (isset($data[\Locale::SCRIPT_TAG])) {
