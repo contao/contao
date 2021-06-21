@@ -79,3 +79,7 @@ services:
     Contao\CoreBundle\Migration\Version411\TwoFactorBackupCodesMigration:
         arguments:
             - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version412\MergeGuestsOnlyMigration:
+        arguments:
+            - '@database_connection'
