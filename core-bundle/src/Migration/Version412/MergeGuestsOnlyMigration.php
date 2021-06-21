@@ -77,7 +77,7 @@ class MergeGuestsOnlyMigration extends AbstractMigration
     {
         $rows = $this->connection->fetchAllAssociative("
             SELECT
-                id, `groups`
+                id, IF(protected = '1', `groups`, NULL) AS `groups`
             FROM
                 $table
             WHERE
