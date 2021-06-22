@@ -475,7 +475,13 @@ class PluginTest extends ContaoTestCase
         error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 
         $container = $this->getContainer();
-        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        $plugin = new Plugin();
+
+        try {
+            $extensionConfig = $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
+        } catch (\mysqli_sql_exception $e) {
+            $this->markTestSkipped('The MySQLi extension is not enabled.');
+        }
 
         error_reporting($er);
 
