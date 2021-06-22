@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration;
 
-use Contao\CoreBundle\Entity\Migration as MigrationEntity;;
+use Contao\CoreBundle\Entity\Migration as MigrationEntity;
 use Contao\CoreBundle\Repository\MigrationRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,18 +23,23 @@ abstract class AbstractRecordedMigration extends AbstractMigration implements Se
 {
     use ServiceSubscriberTrait;
 
+    public function shouldRun(): bool
+    {
+        return false === $this->hasRun();
+    }
+
     protected function hasRun(): ?bool
     {
         if (!$this->connection()->getSchemaManager()->tablesExist(['tl_migration'])) {
             return null;
         }
 
-        return null !== $this->migrationRepository()->findOneByName($this->getName());
+        return null !== $this->entityManager()->getRepository(MigrationEntity::class)->findOneBy(['name' => $this->getName()]);
     }
 
     protected function createResult(bool $successful, string $message = null): MigrationResult
     {
-        if ($successful && false === $this->hasRun()) {
+        if (false === $this->hasRun()) {
             $migrationEntity = new MigrationEntity($this->getName());
             $this->entityManager()->persist($migrationEntity);
             $this->entityManager()->flush();
@@ -44,11 +49,6 @@ abstract class AbstractRecordedMigration extends AbstractMigration implements Se
     }
 
     protected function connection(): Connection
-    {
-        return $this->container->get(__METHOD__);
-    }
-
-    private function migrationRepository(): MigrationRepository
     {
         return $this->container->get(__METHOD__);
     }
