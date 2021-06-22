@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Util\LocaleUtil;
+
 /**
  * Provide methods to handle file meta information.
  *
@@ -111,11 +113,13 @@ class MetaWizard extends Widget
 		$this->import(BackendUser::class, 'User');
 
 		// Only show the root page languages (see #7112, #7667)
-		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
+		$objRootLangs = $this->Database->query("SELECT language FROM tl_page WHERE type='root'");
 		$existing = $objRootLangs->fetchEach('language');
 
 		foreach ($existing as $lang)
 		{
+			$lang = LocaleUtil::formatAsLocale($lang);
+
 			if (!isset($this->varValue[$lang]))
 			{
 				$this->varValue[$lang] = array();
