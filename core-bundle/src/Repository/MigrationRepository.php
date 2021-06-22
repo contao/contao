@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
  * @internal
- * 
+ *
  * @method object|null findOneByName(string $name)
  */
 class MigrationRepository extends ServiceEntityRepository
