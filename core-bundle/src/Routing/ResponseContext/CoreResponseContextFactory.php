@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Spatie\SchemaOrg\WebPage;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
@@ -58,7 +59,10 @@ class CoreResponseContextFactory
         $context = $this->createResponseContext();
         $context->add($this->eventDispatcher);
         $context->addLazy(HtmlHeadBag::class);
-        $context->addLazy(JsonLdManager::class);
+
+        $jsonLdManager = new JsonLdManager($context);
+        $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(new WebPage());
+        $context->add($jsonLdManager);
 
         return $context;
     }
