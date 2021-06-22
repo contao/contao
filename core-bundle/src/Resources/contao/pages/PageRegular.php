@@ -13,6 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,6 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PageRegular extends Frontend
 {
+	/**
+	 * @var ResponseContext
+	 */
+	protected $responseContext;
+
 	/**
 	 * Generate a regular page
 	 *
@@ -74,7 +82,7 @@ class PageRegular extends Frontend
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
 
-		$responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
+		$this->responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
 
@@ -206,14 +214,28 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($responseContext->get(HtmlHeadBag::class)->getTitle());
+		$this->Template->pageTitle = htmlspecialchars($this->responseContext->get(HtmlHeadBag::class)->getTitle());
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $responseContext->get(HtmlHeadBag::class)->getMetaRobots();
+		$this->Template->robots = $this->responseContext->get(HtmlHeadBag::class)->getMetaRobots();
+
+		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
+		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+		{
+			/** @var JsonLdManager $jsonLdManager */
+			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
+
+			if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
+			{
+				/** @var ContaoPageSchema $schema */
+				$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+				$schema->setNoSearch(true);
+			}
+		}
 
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
@@ -223,7 +245,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($responseContext->get(HtmlHeadBag::class)->getMetaDescription());
+		$this->Template->description = htmlspecialchars($this->responseContext->get(HtmlHeadBag::class)->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
@@ -692,32 +714,6 @@ class PageRegular extends Frontend
 			}
 		}
 
-		// Add search index metadata
-		if ($objPage !== null)
-		{
-			$noSearch = (bool) $objPage->noSearch;
-
-			// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
-			if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
-			{
-				$noSearch = true;
-			}
-
-			$meta = array
-			(
-				'@context' => array('contao' => 'https://schema.contao.org/'),
-				'@type' => 'contao:Page',
-				'contao:title' => $objPage->pageTitle ?: $objPage->title,
-				'contao:pageId' => (int) $objPage->id,
-				'contao:noSearch' => $noSearch,
-				'contao:protected' => (bool) $objPage->protected,
-				'contao:groups' => array_map('intval', array_filter((array) $objPage->groups)),
-				'contao:fePreview' => System::getContainer()->get('contao.security.token_checker')->isPreviewMode()
-			);
-
-			$strScripts .= '<script type="application/ld+json">' . json_encode($meta) . '</script>';
-		}
-
 		// Add the custom JavaScript
 		if ($objLayout->script)
 		{
@@ -725,6 +721,19 @@ class PageRegular extends Frontend
 		}
 
 		$this->Template->mootools = $strScripts;
+
+		$this->Template->jsonLdScripts = function ()
+		{
+			if (!$this->responseContext->isInitialized(JsonLdManager::class))
+			{
+				return '';
+			}
+
+			/** @var JsonLdManager $jsonLdManager */
+			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
+
+			return $jsonLdManager->collectFinalScriptFromGraphs();
+		};
 	}
 }
 

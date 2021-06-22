@@ -12,10 +12,14 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -393,6 +397,29 @@ abstract class Template extends Controller
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+	}
+
+	/**
+	 * Adds schema.org JSON-LD data to the current response context
+	 */
+	public function addSchemaOrg(array $jsonLd): void
+	{
+		/** @var ResponseContext $responseContext */
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
+		{
+			return;
+		}
+
+		/** @var JsonLdManager $jsonLdManager */
+		$jsonLdManager = $responseContext->get(JsonLdManager::class);
+		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
+
+		$jsonLdManager
+			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+			->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
+		;
 	}
 
 	/**

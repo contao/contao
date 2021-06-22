@@ -14,3 +14,9 @@
     <figcaption class="caption"><?= $this->caption ?></figcaption>
   <?php endif; ?>
 </figure>
+
+<?php
+
+if ($this->figure) {
+    $this->addSchemaOrg($this->figure->getSchemaOrgData());
+}

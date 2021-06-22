@@ -133,6 +133,10 @@ services:
             # The priority must be higher than the one of the Symfony save session listener (defaults to -1000)
             - { name: kernel.event_listener, priority: -768 }
 
+    Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener:
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:

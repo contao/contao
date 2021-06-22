@@ -124,6 +124,32 @@ final class Figure
         return $this->metadata;
     }
 
+    public function getSchemaOrgData(): array
+    {
+        $imageIdentifier = $this->getImage()->getImageSrc();
+
+        if ($this->hasMetadata() && $this->getMetadata()->has(Metadata::VALUE_UUID)) {
+            $imageIdentifier = '#/schema/image/'.$this->getMetadata()->getUuid();
+        }
+
+        $jsonLd = [
+            '@type' => 'ImageObject',
+            'identifier' => $imageIdentifier,
+            'contentUrl' => $this->getImage()->getImageSrc(),
+        ];
+
+        if (!$this->hasMetadata()) {
+            ksort($jsonLd);
+
+            return $jsonLd;
+        }
+
+        $jsonLd = array_merge($this->getMetadata()->getSchemaOrgData('ImageObject'), $jsonLd);
+        ksort($jsonLd);
+
+        return $jsonLd;
+    }
+
     /**
      * Returns a key-value list of all link attributes. This excludes "href" by
      * default.
