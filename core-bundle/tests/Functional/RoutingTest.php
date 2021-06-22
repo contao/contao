@@ -1081,7 +1081,7 @@ class RoutingTest extends FunctionalTestCase
         self::$container
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
