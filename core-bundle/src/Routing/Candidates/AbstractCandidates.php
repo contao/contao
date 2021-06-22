@@ -120,6 +120,10 @@ class AbstractCandidates implements CandidatesInterface
                     $withoutSuffix = substr($withoutPrefix, 0, -\strlen($suffix));
                 }
 
+                if ('index' === $withoutSuffix) {
+                    continue;
+                }
+
                 $this->addCandidatesFor($withoutSuffix, $candidates);
             }
         }
