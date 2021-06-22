@@ -59,10 +59,15 @@ class CoreResponseContextFactory
         $context = $this->createResponseContext();
         $context->add($this->eventDispatcher);
         $context->addLazy(HtmlHeadBag::class);
+        $context->addLazy(
+            JsonLdManager::class,
+            static function () use ($context) {
+                $manager = new JsonLdManager($context);
+                $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(new WebPage());
 
-        $jsonLdManager = new JsonLdManager($context);
-        $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->add(new WebPage());
-        $context->add($jsonLdManager);
+                return $manager;
+            }
+        );
 
         return $context;
     }
