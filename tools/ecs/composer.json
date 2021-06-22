@@ -1,5 +1,8 @@
 {
     "require": {
         "contao/easy-coding-standard": "^3.0"
+    },
+    "conflict": {
+        "symplify/easy-coding-standard": "9.3.* >9.3.15"
     }
 }
