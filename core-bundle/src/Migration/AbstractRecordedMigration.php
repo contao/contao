@@ -54,7 +54,7 @@ abstract class AbstractRecordedMigration extends AbstractMigration implements Se
 
     private function createMigrationTable(): void
     {
-        $entityManager = clone $this->entityManager();
+        $entityManager = $this->entityManager();
         $schemaTool = new SchemaTool($entityManager);
 
         // Get the SQL queries related only to tl_migration as Contao's DoctrineSchemaListener adds additional ones
