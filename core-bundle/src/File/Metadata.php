@@ -38,8 +38,7 @@ class Metadata
     private $values;
 
     /**
-     * JSON-LD data where the key matches the schema.org
-     * type.
+     * JSON-LD data where the key matches the schema.org type.
      *
      * @var array<string, array>
      */

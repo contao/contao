@@ -93,7 +93,6 @@
   <?php $this->endblock(); ?>
 
   <?= $this->mootools ?>
-
   <?= $this->jsonLdScripts ?>
 </body>
 </html>

@@ -30,6 +30,7 @@ class ContaoJsonLdSchemaListener
         if (!$responseContext->has(HtmlHeadBag::class) || !$responseContext->has(JsonLdManager::class)) {
             return;
         }
+
         /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
 
@@ -42,7 +43,6 @@ class ContaoJsonLdSchemaListener
 
         /** @var ContaoPageSchema $schema */
         $schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-
         $schema->updateFromHtmlHeadBag($htmlHeadBag);
     }
 }

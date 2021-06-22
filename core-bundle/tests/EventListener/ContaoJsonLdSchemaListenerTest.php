@@ -24,15 +24,17 @@ class ContaoJsonLdSchemaListenerTest extends TestCase
 {
     public function testUpdatesTheTitleFromHtmlHeadBag(): void
     {
-        $context = new ResponseContext();
-
         $headTagBag = new HtmlHeadBag();
         $headTagBag->setTitle('Title different');
+
+        $context = new ResponseContext();
         $context->add($headTagBag);
 
         $schema = new ContaoPageSchema('Original title', 42, false, false, [], false);
+
         $jsonLdManager = new JsonLdManager($context);
         $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->set($schema);
+
         $context->add($jsonLdManager);
 
         $event = new JsonLdEvent();

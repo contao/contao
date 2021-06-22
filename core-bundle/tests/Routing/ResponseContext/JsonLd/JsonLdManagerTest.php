@@ -53,40 +53,44 @@ class JsonLdManagerTest extends TestCase
         $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
         $graph->add((new ImageObject())->name('Name')->caption('Caption'));
 
-        $this->assertSame(<<<'JSONLD'
-            <script type="application/ld+json">
-            [
-                {
-                    "@context": "https:\/\/schema.org",
-                    "@graph": [
-                        {
-                            "@type": "ImageObject",
-                            "name": "Name",
-                            "caption": "Caption"
-                        }
-                    ]
-                }
-            ]
-            </script>
-            JSONLD
-, $schemaManager->collectFinalScriptFromGraphs());
+        $this->assertSame(
+            <<<'JSONLD'
+                <script type="application/ld+json">
+                [
+                    {
+                        "@context": "https:\/\/schema.org",
+                        "@graph": [
+                            {
+                                "@type": "ImageObject",
+                                "name": "Name",
+                                "caption": "Caption"
+                            }
+                        ]
+                    }
+                ]
+                </script>
+                JSONLD,
+            $schemaManager->collectFinalScriptFromGraphs()
+        );
     }
 
     public function testCreateSchemaOrgTypeFromArrayWithoutType(): void
     {
+        $schemaManager = new JsonLdManager(new ResponseContext());
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Must provide the @type property!');
-        $schemaManager = new JsonLdManager(new ResponseContext());
-        $schemaManager->createSchemaOrgTypeFromArray([
-            'name' => 'Name',
-        ]);
+
+        $schemaManager->createSchemaOrgTypeFromArray(['name' => 'Name']);
     }
 
     public function testCreateSchemaOrgTypeFromArrayWithInvalidType(): void
     {
+        $schemaManager = new JsonLdManager(new ResponseContext());
+
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown schema.org type "Foobar" provided!');
-        $schemaManager = new JsonLdManager(new ResponseContext());
+
         $schemaManager->createSchemaOrgTypeFromArray([
             '@type' => 'Foobar',
             'name' => 'Name',
@@ -96,6 +100,7 @@ class JsonLdManagerTest extends TestCase
     public function testCreateSchemaOrgTypeFromArrayWithValidType(): void
     {
         $schemaManager = new JsonLdManager(new ResponseContext());
+
         $type = $schemaManager->createSchemaOrgTypeFromArray([
             '@type' => 'ImageObject',
             'name' => 'Name',

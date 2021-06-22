@@ -40,6 +40,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
         );
+
         $responseContext = $factory->createResponseContext();
 
         $this->assertInstanceOf(ResponseHeaderBag::class, $responseContext->getHeaderBag());
@@ -58,6 +59,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
         );
+
         $responseContext = $factory->createWebpageResponseContext();
 
         $this->assertInstanceOf(HtmlHeadBag::class, $responseContext->get(HtmlHeadBag::class));
@@ -69,6 +71,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', new RequestStack());
+
         System::setContainer($container);
 
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -88,6 +91,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
         );
+
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
 
         $this->assertInstanceOf(HtmlHeadBag::class, $responseContext->get(HtmlHeadBag::class));
@@ -114,9 +118,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
                 'contao:groups' => [],
                 'contao:fePreview' => false,
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
-                ->get(ContaoPageSchema::class)
-                ->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
         );
     }
 
@@ -124,6 +126,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', new RequestStack());
+
         System::setContainer($container);
 
         /** @var PageModel $pageModel */
@@ -136,6 +139,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
         );
+
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
 
         $this->assertSame('We went from Alpha > Omega', $responseContext->get(HtmlHeadBag::class)->getTitle());
@@ -157,9 +161,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
                 'contao:groups' => [],
                 'contao:fePreview' => false,
             ],
-            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
-                ->get(ContaoPageSchema::class)
-                ->toArray()
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
         );
     }
 }

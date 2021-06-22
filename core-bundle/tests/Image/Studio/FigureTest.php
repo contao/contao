@@ -606,23 +606,32 @@ class FigureTest extends TestCase
     {
         $figure = new Figure($this->getImageMock());
 
-        $this->assertSame([
-            '@type' => 'ImageObject',
-            'contentUrl' => 'https://assets.url/files/public/foo.jpg',
-            'identifier' => 'https://assets.url/files/public/foo.jpg',
-        ], $figure->getSchemaOrgData());
+        $this->assertSame(
+            [
+                '@type' => 'ImageObject',
+                'contentUrl' => 'https://assets.url/files/public/foo.jpg',
+                'identifier' => 'https://assets.url/files/public/foo.jpg',
+            ],
+            $figure->getSchemaOrgData()
+        );
 
-        $figure = new Figure($this->getImageMock(), new Metadata([
-            Metadata::VALUE_UUID => 'uuid',
-            Metadata::VALUE_CAPTION => 'caption',
-        ]));
+        $figure = new Figure(
+            $this->getImageMock(),
+            new Metadata([
+                Metadata::VALUE_UUID => 'uuid',
+                Metadata::VALUE_CAPTION => 'caption',
+            ])
+        );
 
-        $this->assertSame([
-            '@type' => 'ImageObject',
-            'caption' => 'caption',
-            'contentUrl' => 'https://assets.url/files/public/foo.jpg',
-            'identifier' => '#/schema/image/uuid',
-        ], $figure->getSchemaOrgData());
+        $this->assertSame(
+            [
+                '@type' => 'ImageObject',
+                'caption' => 'caption',
+                'contentUrl' => 'https://assets.url/files/public/foo.jpg',
+                'identifier' => '#/schema/image/uuid',
+            ],
+            $figure->getSchemaOrgData()
+        );
     }
 
     /**

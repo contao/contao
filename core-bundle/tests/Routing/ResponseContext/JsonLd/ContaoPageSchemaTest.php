@@ -51,8 +51,8 @@ class ContaoPageSchemaTest extends TestCase
     public function testUpdateFromHtmlHeadBag(): void
     {
         $schema = new ContaoPageSchema('title', 42, false, false, [], false);
-
         $schema->updateFromHtmlHeadBag((new HtmlHeadBag())->setTitle('Foobar'));
+
         $this->assertSame('Foobar', $schema->getTitle());
     }
 }

@@ -154,7 +154,6 @@ class ResponseContextTest extends TestCase
         ;
 
         $context->add($eventDispatcher);
-
         $context->dispatchEvent(new JsonLdEvent());
     }
 }

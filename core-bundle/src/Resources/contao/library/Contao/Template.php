@@ -400,14 +400,12 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Adds schema.org JSON-LD data to the current response context.
+	 * Adds schema.org JSON-LD data to the current response context
 	 */
 	public function addSchemaOrg(array $jsonLd): void
 	{
-		$container = System::getContainer();
-
 		/** @var ResponseContext $responseContext */
-		$responseContext = $container->get(ResponseContextAccessor::class)->getResponseContext();
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
 		{
@@ -416,13 +414,12 @@ abstract class Template extends Controller
 
 		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
-
 		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
-		$id = $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT;
 
 		$jsonLdManager
 			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
-			->set($type, $id);
+			->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
+		;
 	}
 
 	/**

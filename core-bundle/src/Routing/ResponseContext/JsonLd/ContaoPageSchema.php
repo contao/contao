@@ -82,10 +82,7 @@ class ContaoPageSchema extends BaseType
         $this->setProperty('contao:fePreview', $this->fePreview);
 
         $data = parent::toArray();
-
-        $data['@context'] = [
-            'contao' => $data['@context'],
-        ];
+        $data['@context'] = ['contao' => $data['@context']];
 
         return $data;
     }

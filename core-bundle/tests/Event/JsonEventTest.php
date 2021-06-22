@@ -20,29 +20,34 @@ class JsonEventTest extends TestCase
 {
     public function testCanSetAndGetResponseContext(): void
     {
-        $event = new JsonLdEvent();
         $context = new ResponseContext();
+
+        $event = new JsonLdEvent();
         $event->setResponseContext($context);
+
         $this->assertSame($context, $event->getResponseContext());
     }
 
     public function testThrowsExceptionWhenTryingToSetTheContextTwice(): void
     {
+        $context = new ResponseContext();
+
+        $event = new JsonLdEvent();
+        $event->setResponseContext($context);
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('ResponseContext is already set!');
 
-        $event = new JsonLdEvent();
-        $context = new ResponseContext();
-        $event->setResponseContext($context);
         $event->setResponseContext($context);
     }
 
     public function testThrowsExceptionWhenTryingToAccessEmptyContext(): void
     {
+        $event = new JsonLdEvent();
+
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('ResponseContext must be set!');
 
-        $event = new JsonLdEvent();
         $event->getResponseContext();
     }
 }

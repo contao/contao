@@ -56,7 +56,6 @@ class CoreResponseContextFactory
     public function createWebpageResponseContext(): ResponseContext
     {
         $context = $this->createResponseContext();
-
         $context->add($this->eventDispatcher);
         $context->addLazy(HtmlHeadBag::class);
         $context->addLazy(JsonLdManager::class);
@@ -85,14 +84,19 @@ class CoreResponseContextFactory
             $htmlHeadBag->setMetaRobots($pageModel->robots);
         }
 
-        $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->set(new ContaoPageSchema(
-            $title ?: '',
-            (int) $pageModel->id,
-            (bool) $pageModel->noSearch,
-            (bool) $pageModel->protected,
-            array_map('intval', array_filter((array) $pageModel->groups)),
-            $this->tokenChecker->isPreviewMode()
-        ));
+        $jsonLdManager
+            ->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)
+            ->set(
+                new ContaoPageSchema(
+                    $title ?: '',
+                    (int) $pageModel->id,
+                    (bool) $pageModel->noSearch,
+                    (bool) $pageModel->protected,
+                    array_map('intval', array_filter((array) $pageModel->groups)),
+                    $this->tokenChecker->isPreviewMode()
+                )
+            )
+        ;
 
         return $context;
     }
