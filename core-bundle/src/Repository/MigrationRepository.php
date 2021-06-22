@@ -24,15 +24,8 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
  */
 class MigrationRepository extends ServiceEntityRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Migration::class);
-
-        $this->connection = $registry->getConnection();
     }
 }

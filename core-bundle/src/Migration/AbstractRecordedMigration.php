@@ -16,9 +16,10 @@ use Contao\CoreBundle\Entity\Migration as MigrationEntity;;
 use Contao\CoreBundle\Repository\MigrationRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
-abstract class AbstractRecordedMigration extends AbstractMigration
+abstract class AbstractRecordedMigration extends AbstractMigration implements ServiceSubscriberInterface
 {
     use ServiceSubscriberTrait;
 
