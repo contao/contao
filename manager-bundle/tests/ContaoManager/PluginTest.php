@@ -470,10 +470,6 @@ class PluginTest extends ContaoTestCase
             ]]
         );
 
-        // Adjust the error reporting to suppress mysqli warnings
-        $er = error_reporting();
-        error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
-
         $container = $this->getContainer();
         $plugin = new Plugin();
 
@@ -482,8 +478,6 @@ class PluginTest extends ContaoTestCase
         } catch (\mysqli_sql_exception $e) {
             $this->markTestSkipped('The MySQLi extension is not enabled.');
         }
-
-        error_reporting($er);
 
         $this->assertSame($expect, $extensionConfig);
     }
