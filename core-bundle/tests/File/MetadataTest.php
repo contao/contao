@@ -216,4 +216,72 @@ class MetadataTest extends TestCase
 
         $this->assertSame($metadata, $newMetadata, 'Should be the same instance.');
     }
+
+    public function testGettingSchemaOrgData(): void
+    {
+        $metadata = new Metadata([
+            Metadata::VALUE_ALT => 'alt',
+            Metadata::VALUE_CAPTION => 'caption',
+            Metadata::VALUE_TITLE => 'title',
+            Metadata::VALUE_URL => 'url',
+            Metadata::VALUE_UUID => '1234-5678',
+            Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
+            'foo' => 'bar',
+        ]);
+
+        $this->assertSame(
+            [
+                'AudioObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+                'ImageObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+                'MediaObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+            ],
+            $metadata->getSchemaOrgData()
+        );
+
+        $this->assertSame(
+            [
+                'name' => 'title',
+                'caption' => 'caption',
+                'license' => 'https://creativecommons.org/licenses/by/4.0/',
+            ],
+            $metadata->getSchemaOrgData('ImageObject')
+        );
+
+        $this->assertSame([], $metadata->getSchemaOrgData('WhateverNonsense'));
+    }
+
+    public function testCanCustomizeSchemaOrgData(): void
+    {
+        $metadata = new Metadata(
+            [
+                Metadata::VALUE_ALT => 'alt',
+            ],
+            [
+                'ImageObject' => [
+                    'name' => 'title',
+                    'foobar' => 'baz',
+                ],
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'name' => 'title',
+                'foobar' => 'baz',
+            ],
+            $metadata->getSchemaOrgData('ImageObject')
+        );
+    }
 }

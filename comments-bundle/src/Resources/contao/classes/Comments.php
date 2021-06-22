@@ -293,12 +293,6 @@ class Comments extends Frontend
 
 			if ($flashBag->has('comment_added'))
 			{
-				/** @var PageModel $objPage */
-				global $objPage;
-
-				$objPage->noSearch = 1;
-				$objPage->cache = 0;
-
 				$objTemplate->confirm = $flashBag->get('comment_added')[0];
 			}
 		}

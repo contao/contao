@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\CoreBundle\Event\JsonLdEvent;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\ServerBag;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ResponseContextTest extends TestCase
 {
@@ -86,6 +88,18 @@ class ResponseContextTest extends TestCase
         $context->get(HtmlHeadBag::class);
     }
 
+    public function testCheckIfIsInitalizedWorksCorrectly(): void
+    {
+        $context = new ResponseContext();
+        $this->assertFalse($context->isInitialized(HtmlHeadBag::class));
+
+        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
+        $this->assertFalse($context->isInitialized(HtmlHeadBag::class));
+
+        $context->get(HtmlHeadBag::class);
+        $this->assertTrue($context->isInitialized(HtmlHeadBag::class));
+    }
+
     public function testInterfacesAndParentsAreAutomaticallyAddedAsAliases(): void
     {
         $context = new ResponseContext();
@@ -120,5 +134,26 @@ class ResponseContextTest extends TestCase
         $context = new ResponseContext();
 
         $this->assertCount(0, $context->getHeaderBag()->all());
+    }
+
+    public function testDispatchEvent(): void
+    {
+        $context = new ResponseContext();
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(
+                function (JsonLdEvent $event) use ($context) {
+                    $this->assertSame($context, $event->getResponseContext());
+
+                    return true;
+                }
+            ))
+        ;
+
+        $context->add($eventDispatcher);
+        $context->dispatchEvent(new JsonLdEvent());
     }
 }

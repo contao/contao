@@ -38,11 +38,20 @@ class Metadata
     private $values;
 
     /**
-     * @param array<string, mixed> $values
+     * JSON-LD data where the key matches the schema.org type.
+     *
+     * @var array<string, array>
      */
-    public function __construct(array $values)
+    private $schemaOrgJsonLd;
+
+    /**
+     * @param array<string, mixed>      $values
+     * @param array<string, array>|null $schemaOrgJsonLd
+     */
+    public function __construct(array $values, array $schemaOrgJsonLd = null)
     {
         $this->values = $values;
+        $this->schemaOrgJsonLd = $schemaOrgJsonLd;
     }
 
     /**
@@ -123,5 +132,40 @@ class Metadata
     public function empty(): bool
     {
         return empty($this->values);
+    }
+
+    public function getSchemaOrgData(string $type = null): array
+    {
+        // Lazy initialize
+        if (null === $this->schemaOrgJsonLd) {
+            $this->extractBasicSchemaOrgData();
+        }
+
+        if (null === $type) {
+            return $this->schemaOrgJsonLd;
+        }
+
+        return $this->schemaOrgJsonLd[$type] ?? [];
+    }
+
+    private function extractBasicSchemaOrgData(): void
+    {
+        if ($this->has(self::VALUE_TITLE)) {
+            $this->schemaOrgJsonLd['AudioObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['ImageObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['MediaObject']['name'] = $this->getTitle();
+        }
+
+        if ($this->has(self::VALUE_CAPTION)) {
+            $this->schemaOrgJsonLd['AudioObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['ImageObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['MediaObject']['caption'] = $this->getCaption();
+        }
+
+        if ($this->has(self::VALUE_LICENSE)) {
+            $this->schemaOrgJsonLd['AudioObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['ImageObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['MediaObject']['license'] = $this->getLicense();
+        }
     }
 }

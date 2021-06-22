@@ -14,12 +14,16 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactoryTest extends ContaoTestCase
 {
@@ -31,7 +35,12 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             ->method('setResponseContext')
         ;
 
-        $factory = new CoreResponseContextFactory($responseAccessor);
+        $factory = new CoreResponseContextFactory(
+            $responseAccessor,
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(TokenChecker::class),
+        );
+
         $responseContext = $factory->createResponseContext();
 
         $this->assertInstanceOf(ResponseHeaderBag::class, $responseContext->getHeaderBag());
@@ -45,16 +54,24 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             ->method('setResponseContext')
         ;
 
-        $factory = new CoreResponseContextFactory($responseAccessor);
+        $factory = new CoreResponseContextFactory(
+            $responseAccessor,
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(TokenChecker::class),
+        );
+
         $responseContext = $factory->createWebpageResponseContext();
 
         $this->assertInstanceOf(HtmlHeadBag::class, $responseContext->get(HtmlHeadBag::class));
+        $this->assertTrue($responseContext->has(JsonLdManager::class));
+        $this->assertFalse($responseContext->isInitialized(JsonLdManager::class));
     }
 
     public function testContaoWebpageResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', new RequestStack());
+
         System::setContainer($container);
 
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -69,30 +86,82 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
 
-        $factory = new CoreResponseContextFactory($responseAccessor);
+        $factory = new CoreResponseContextFactory(
+            $responseAccessor,
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(TokenChecker::class),
+        );
+
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
 
         $this->assertInstanceOf(HtmlHeadBag::class, $responseContext->get(HtmlHeadBag::class));
         $this->assertSame('My title', $responseContext->get(HtmlHeadBag::class)->getTitle());
         $this->assertSame('My description', $responseContext->get(HtmlHeadBag::class)->getMetaDescription());
         $this->assertSame('noindex,nofollow', $responseContext->get(HtmlHeadBag::class)->getMetaRobots());
+
+        $this->assertTrue($responseContext->has(JsonLdManager::class));
+        $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
+
+        /** @var JsonLdManager $jsonLdManager */
+        $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertSame(
+            [
+                '@context' => [
+                    'contao' => 'https://schema.contao.org/',
+                ],
+                '@type' => 'contao:Page',
+                'contao:title' => 'My title',
+                'contao:pageId' => 0,
+                'contao:noSearch' => false,
+                'contao:protected' => false,
+                'contao:groups' => [],
+                'contao:fePreview' => false,
+            ],
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
+        );
     }
 
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('request_stack', new RequestStack());
+
         System::setContainer($container);
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel->title = 'We went from Alpha &#62; Omega ';
+        $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
 
-        $factory = new CoreResponseContextFactory($this->createMock(ResponseContextAccessor::class));
+        $factory = new CoreResponseContextFactory(
+            $this->createMock(ResponseContextAccessor::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(TokenChecker::class),
+        );
+
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
 
-        $this->assertSame('We went from Alpha > Omega ', $responseContext->get(HtmlHeadBag::class)->getTitle());
+        $this->assertSame('We went from Alpha > Omega', $responseContext->get(HtmlHeadBag::class)->getTitle());
         $this->assertSame('My description contains HTML.', $responseContext->get(HtmlHeadBag::class)->getMetaDescription());
+
+        /** @var JsonLdManager $jsonLdManager */
+        $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertSame(
+            [
+                '@context' => [
+                    'contao' => 'https://schema.contao.org/',
+                ],
+                '@type' => 'contao:Page',
+                'contao:title' => 'We went from Alpha > Omega',
+                'contao:pageId' => 0,
+                'contao:noSearch' => false,
+                'contao:protected' => false,
+                'contao:groups' => [],
+                'contao:fePreview' => false,
+            ],
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
+        );
     }
 }
