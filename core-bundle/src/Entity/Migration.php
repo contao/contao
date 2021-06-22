@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
  *         @ORM\Index(name="name", columns={"name"})
  *     }
  * )
- * @ORM\Entity(repositoryClass="Contao\CoreBundle\Repository\MigrationRepository")
+ * @ORM\Entity(repositoryClass="Doctrine\ORM\EntityRepository")
  */
 class Migration
 {

@@ -511,10 +511,6 @@ services:
         arguments:
             - '@doctrine'
 
-    Contao\CoreBundle\Repository\MigrationRepository:
-        arguments:
-            - '@doctrine'
-
     contao.repository.remember_me:
         class: Contao\CoreBundle\Repository\RememberMeRepository
         arguments:
