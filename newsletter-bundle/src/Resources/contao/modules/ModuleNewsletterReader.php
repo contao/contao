@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
@@ -56,30 +57,17 @@ class ModuleNewsletterReader extends Module
 			Input::setGet('items', Input::get('auto_item'));
 		}
 
-		// Do not index or cache the page if no news item has been specified
+		// Return an empty string if "items" is not set (to combine list and reader on same page)
 		if (!Input::get('items'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
 		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
-		// Do not index or cache the page if there are no channels
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
-			return '';
+			throw new InternalServerErrorException('The newsletter reader ID ' . $this->id . ' has no channels specified.');
 		}
 
 		return parent::generate();

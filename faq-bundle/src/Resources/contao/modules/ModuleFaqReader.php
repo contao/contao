@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
 use Patchwork\Utf8;
@@ -60,30 +61,17 @@ class ModuleFaqReader extends Module
 			Input::setGet('items', Input::get('auto_item'));
 		}
 
-		// Do not index or cache the page if no FAQ has been specified
+		// Return an empty string if "items" is not set (to combine list and reader on same page)
 		if (!Input::get('items'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
 		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
-		// Do not index or cache the page if there are no categories
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
-			return '';
+			throw new InternalServerErrorException('The FAQ reader ID ' . $this->id . ' has no categories specified.');
 		}
 
 		return parent::generate();

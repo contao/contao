@@ -71,7 +71,7 @@ class ModuleNewsReader extends ModuleNews
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
-			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.', $this->id);
+			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.');
 		}
 
 		return parent::generate();
