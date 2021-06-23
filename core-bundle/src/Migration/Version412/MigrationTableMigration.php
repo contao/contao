@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Migration\Version412;
 use Contao\CoreBundle\Entity\Migration as MigrationEntity;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
-use Contao\CoreBundle\ServiceAnnotation\Migration;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -63,6 +62,7 @@ class MigrationTableMigration extends AbstractMigration
     private function getUpdateSchema(): array
     {
         $schemaTool = new SchemaTool($this->entityManager);
+
         return array_filter($schemaTool->getUpdateSchemaSql([$this->entityManager->getClassMetadata(MigrationEntity::class)]), static function(string $sql) {
             return false !== strpos($sql, ' tl_migration ');
         });
