@@ -22,7 +22,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 /**
  * This migration creates or updates the tl_migration table and is tagged with a high priority.
- * 
+ *
  * @internal
  */
 class MigrationTableMigration extends AbstractMigration
@@ -63,10 +63,8 @@ class MigrationTableMigration extends AbstractMigration
     private function getUpdateSchema(): array
     {
         $schemaTool = new SchemaTool($this->entityManager);
-        $updateSchemaSql = array_filter($schemaTool->getUpdateSchemaSql([$this->entityManager->getClassMetadata(MigrationEntity::class)]), function(string $sql) {
+        return array_filter($schemaTool->getUpdateSchemaSql([$this->entityManager->getClassMetadata(MigrationEntity::class)]), static function(string $sql) {
             return false !== strpos($sql, ' tl_migration ');
         });
-
-        return $updateSchemaSql;
     }
 }
