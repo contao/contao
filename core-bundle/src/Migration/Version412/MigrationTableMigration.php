@@ -25,7 +25,7 @@ use Doctrine\ORM\Tools\SchemaTool;
  * 
  * @internal
  */
-class CreateMigrationTableMigration extends AbstractMigration
+class MigrationTableMigration extends AbstractMigration
 {
     /**
      * @var EntityManagerInterface
@@ -47,7 +47,7 @@ class CreateMigrationTableMigration extends AbstractMigration
     {
         $updateSchemaSql = $this->getUpdateSchema();
 
-        // We need to update tl_migration in shouldRun, because AbstractRecordedMigration relies on it
+        // We need to update tl_migration in shouldRun, because AbstractRecordedMigration::shouldRun relies on it
         foreach ($updateSchemaSql as $sql) {
             $this->connection->executeQuery($sql);
         }

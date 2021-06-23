@@ -84,7 +84,7 @@ services:
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version412\CreateMigrationTableMigration:
+    Contao\CoreBundle\Migration\Version412\MigrationTableMigration:
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@database_connection'
