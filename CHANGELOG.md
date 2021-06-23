@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.16] (2021-06-23)
+
 ## [4.9.15] (2021-06-07)
 
 **New features:**
@@ -610,6 +612,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.16]: https://github.com/contao/contao/releases/tag/4.9.16
 [4.9.15]: https://github.com/contao/contao/releases/tag/4.9.15
 [4.9.14]: https://github.com/contao/contao/releases/tag/4.9.14
 [4.9.13]: https://github.com/contao/contao/releases/tag/4.9.13
