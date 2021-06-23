@@ -298,21 +298,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
-		$undoPeriod = (int) Config::get('undoPeriod');
-		$logPeriod = (int) Config::get('logPeriod');
-
-		// Clean up old tl_undo and tl_log entries
-		if ($this->strTable == 'tl_undo' && $undoPeriod > 0)
-		{
-			$this->Database->prepare("DELETE FROM tl_undo WHERE tstamp<?")
-						   ->execute(time() - $undoPeriod);
-		}
-		elseif ($this->strTable == 'tl_log' && $logPeriod > 0)
-		{
-			$this->Database->prepare("DELETE FROM tl_log WHERE tstamp<?")
-						   ->execute(time() - $logPeriod);
-		}
-
 		$this->reviseTable();
 
 		// Add to clipboard
@@ -5975,7 +5960,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . $option_label . '</option>'] = Utf8::toAscii($option_label);
+					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>'] = Utf8::toAscii($option_label);
 				}
 
 				// Sort by option values

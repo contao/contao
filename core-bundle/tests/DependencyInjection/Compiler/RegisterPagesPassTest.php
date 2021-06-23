@@ -19,6 +19,7 @@ use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendIndex;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -250,6 +251,44 @@ class RegisterPagesPassTest extends TestCase
         $pass->process($container);
 
         $this->assertTrue($definition->isPublic());
+    }
+
+    public function testAddsContainerCallIfClassExtendsSymfonyAbstractController(): void
+    {
+        $definition = $this
+            ->getMockBuilder(Definition::class)
+            ->setConstructorArgs([TestPageController::class])
+            ->onlyMethods(['addMethodCall'])
+            ->getMock()
+        ;
+
+        $definition
+            ->expects($this->once())
+            ->method('addMethodCall')
+            ->with(
+                $this->callback(
+                    static function ($method) {
+                        return 'setContainer' === $method;
+                    }
+                ),
+                $this->callback(
+                    static function (array $arguments) {
+                        return 1 === \count($arguments)
+                            && $arguments[0] instanceof Reference
+                            && ContainerInterface::class === (string) $arguments[0];
+                    }
+                )
+            )
+        ;
+
+        $definition->addTag('contao.page');
+
+        $container = new ContainerBuilder();
+        $container->setDefinition(PageRegistry::class, $this->createMock(Definition::class));
+        $container->setDefinition('test.controller', $definition);
+
+        $pass = new RegisterPagesPass();
+        $pass->process($container);
     }
 
     public function testUsesFrontendIndexControllerIfClassIsNotCallable(): void
