@@ -4,7 +4,11 @@ This project adheres to [Semantic Versioning].
 
 ## [4.9.16] (2021-06-23)
 
-## [4.9.15] (2021-06-07)
+**Fixed issues:**
+
+- [#3112] Use "anon." as username if authentication fails ([leofeyer])
+
+## [4.9.15] (2021-06-08)
 
 **New features:**
 
@@ -217,7 +221,6 @@ This project adheres to [Semantic Versioning].
 - [#2264] Do not try to index a page if the search indexer is disabled ([aschempp])
 - [#2260] Do not use floorToMinute() in the PageModel::loadDetails() method ([leofeyer])
 - [#2257] Only use floorToMinute() in DB queries ([leofeyer])
-- [#2249] Return early in the Search::indexPage() method if nothing has changed ([leofeyer])
 - [#2248] Fix a type error in the back end menu listener ([leofeyer])
 - [#2244] Do not log 503 exceptions ([fritzmg])
 - [#2221] Use a temporary status code to redirect to the language root ([leofeyer])
@@ -657,6 +660,7 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#3112]: https://github.com/contao/contao/pull/3112
 [#3046]: https://github.com/contao/contao/pull/3046
 [#2960]: https://github.com/contao/contao/pull/2960
 [#3058]: https://github.com/contao/contao/pull/3058
@@ -815,7 +819,6 @@ This project adheres to [Semantic Versioning].
 [#2264]: https://github.com/contao/contao/pull/2264
 [#2260]: https://github.com/contao/contao/pull/2260
 [#2257]: https://github.com/contao/contao/pull/2257
-[#2249]: https://github.com/contao/contao/pull/2249
 [#2248]: https://github.com/contao/contao/pull/2248
 [#2244]: https://github.com/contao/contao/pull/2244
 [#2221]: https://github.com/contao/contao/pull/2221
