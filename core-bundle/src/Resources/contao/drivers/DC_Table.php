@@ -5975,7 +5975,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . $option_label . '</option>'] = Utf8::toAscii($option_label);
+					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>'] = Utf8::toAscii($option_label);
 				}
 
 				// Sort by option values
