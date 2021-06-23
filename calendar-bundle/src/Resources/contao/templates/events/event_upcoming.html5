@@ -1,5 +1,5 @@
 
-<div class="event layout_upcoming<?= $this->classUpcoming ?>" itemscope itemtype="http://schema.org/Event">
+<div class="event layout_upcoming<?= $this->classUpcoming ?>" itemscope itemtype="https://schema.org/Event">
 
   <time datetime="<?= $this->datetime ?>" class="date" itemprop="startDate"><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?></time>
   <a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?> <?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a>
