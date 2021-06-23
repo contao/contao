@@ -65,6 +65,23 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $this->assertInstanceOf(HtmlHeadBag::class, $responseContext->get(HtmlHeadBag::class));
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertFalse($responseContext->isInitialized(JsonLdManager::class));
+
+        /** @var JsonLdManager $jsonLdManager */
+        $jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+        $this->assertSame(
+            [
+                '@context' => 'https://schema.org',
+                '@graph' => [
+                    [
+                        '@type' => 'WebPage',
+                    ],
+                ],
+            ],
+            $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray()
+        );
+
+        $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
     }
 
     public function testContaoWebpageResponseContext(): void
