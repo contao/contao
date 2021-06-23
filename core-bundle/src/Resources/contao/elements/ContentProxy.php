@@ -68,7 +68,7 @@ class ContentProxy extends ContentElement
 
 	public function __get($strKey)
 	{
-		return $this->reference->attributes['templateProperties'][$strKey];
+		return $this->reference->attributes['templateProperties'][$strKey] ?? null;
 	}
 
 	public function __isset($strKey)

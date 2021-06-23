@@ -16,6 +16,8 @@ use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -124,6 +126,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
                     $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
+                }
+
+                if (is_a($definition->getClass(), AbstractController::class, true) && !$childDefinition->hasMethodCall('setContainer')) {
+                    $childDefinition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);

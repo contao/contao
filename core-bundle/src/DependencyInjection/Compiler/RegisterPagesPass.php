@@ -18,6 +18,8 @@ use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\FrontendIndex;
+use Psr\Container\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PriorityTaggedServiceTrait;
 use Symfony\Component\DependencyInjection\Container;
@@ -57,6 +59,10 @@ class RegisterPagesPass implements CompilerPassInterface
             $tags = $definition->getTag(self::TAG_NAME);
 
             $definition->clearTag(self::TAG_NAME);
+
+            if (is_a($definition->getClass(), AbstractController::class, true) && !$definition->hasMethodCall('setContainer')) {
+                $definition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
+            }
 
             foreach ($tags as $attributes) {
                 $routeEnhancer = null;

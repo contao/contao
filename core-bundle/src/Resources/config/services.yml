@@ -233,6 +233,11 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Cron\PurgeExpiredDataCron:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
     contao.csrf.token_manager:
         class: Symfony\Component\Security\Csrf\CsrfTokenManager
         arguments:
