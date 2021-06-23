@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Entity\Migration as MigrationEntity;
-use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberTrait;
 
