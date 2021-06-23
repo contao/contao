@@ -63,7 +63,7 @@ class MigrationTableMigration extends AbstractMigration
     {
         $schemaTool = new SchemaTool($this->entityManager);
 
-        return array_filter($schemaTool->getUpdateSchemaSql([$this->entityManager->getClassMetadata(MigrationEntity::class)]), static function(string $sql) {
+        return array_filter($schemaTool->getUpdateSchemaSql([$this->entityManager->getClassMetadata(MigrationEntity::class)]), static function (string $sql): bool {
             return false !== strpos($sql, ' tl_migration ');
         });
     }
