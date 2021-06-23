@@ -1,0 +1,392 @@
+[
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Since symfony/security-bundle 5.1: The \"success_handler\" at path \"security.firewalls.contao_backend.logout\" is deprecated, register a listener on the \"Symfony\\Component\\Security\\Http\\Event\\LogoutEvent\" event instead.",
+    "count": 2
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Since symfony/security-bundle 5.1: The \"success_handler\" at path \"security.firewalls.contao_frontend.logout\" is deprecated, register a listener on the \"Symfony\\Component\\Security\\Http\\Event\\LogoutEvent\" event instead.",
+    "count": 2
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler::open($savePath, $sessionName) should be compatible with SessionHandlerInterface::open(string $path, string $name): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler::read($sessionId) should be compatible with SessionHandlerInterface::read(string $id): string|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler::write($sessionId, $data) should be compatible with SessionHandlerInterface::write(string $id, string $data): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler::destroy($sessionId) should be compatible with SessionHandlerInterface::destroy(string $id): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler::validateId($sessionId) should be compatible with SessionUpdateTimestampHandlerInterface::validateId(string $id): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\StrictSessionHandler::close() should be compatible with SessionHandlerInterface::close(): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\StrictSessionHandler::gc($maxlifetime) should be compatible with SessionHandlerInterface::gc(int $max_lifetime): int|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\StrictSessionHandler::updateTimestamp($sessionId, $data) should be compatible with SessionUpdateTimestampHandlerInterface::updateTimestamp(string $id, string $data): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::open($savePath, $sessionName) should be compatible with SessionHandlerInterface::open(string $path, string $name): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::close() should be compatible with SessionHandlerInterface::close(): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::read($sessionId) should be compatible with SessionHandlerInterface::read(string $id): string|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::write($sessionId, $data) should be compatible with SessionHandlerInterface::write(string $id, string $data): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::destroy($sessionId) should be compatible with SessionHandlerInterface::destroy(string $id): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::gc($maxlifetime) should be compatible with SessionHandlerInterface::gc(int $max_lifetime): int|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::validateId($sessionId) should be compatible with SessionUpdateTimestampHandlerInterface::validateId(string $id): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Proxy\\SessionHandlerProxy::updateTimestamp($sessionId, $data) should be compatible with SessionUpdateTimestampHandlerInterface::updateTimestamp(string $id, string $data): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::open($savePath, $name) should be compatible with SessionHandlerInterface::open(string $path, string $name): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::close() should be compatible with SessionHandlerInterface::close(): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::read($sessionId) should be compatible with SessionHandlerInterface::read(string $id): string|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::write($sessionId, $data) should be compatible with SessionHandlerInterface::write(string $id, string $data): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::destroy($sessionId) should be compatible with SessionHandlerInterface::destroy(string $id): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::gc($maxlifetime) should be compatible with SessionHandlerInterface::gc(int $max_lifetime): int|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::validateId($sessionId) should be compatible with SessionUpdateTimestampHandlerInterface::validateId(string $id): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MarshallingSessionHandler::updateTimestamp($sessionId, $data) should be compatible with SessionUpdateTimestampHandlerInterface::updateTimestamp(string $id, string $data): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "The Serializable interface is deprecated. Implement __serialize() and __unserialize() instead (or in addition, if support for old PHP versions is necessary)",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "The \"Scheb\\TwoFactorBundle\\Security\\Authentication\\RememberMe\\RememberMeServicesDecorator\" class implements \"Symfony\\Component\\Security\\Http\\Logout\\LogoutHandlerInterface\" that is deprecated since Symfony 5.1.",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 6
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\MethodReflection::getDeclaringClass() should be compatible with ReflectionMethod::getDeclaringClass(): ReflectionClass",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\MethodReflection::getPrototype($format = self::PROTOTYPE_AS_ARRAY) should be compatible with ReflectionMethod::getPrototype(): ReflectionMethod",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\MethodReflection::getParameters() should be compatible with ReflectionFunctionAbstract::getParameters(): array",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\MethodReflection::getStartLine($includeDocComment = false) should be compatible with ReflectionFunctionAbstract::getStartLine(): int|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getStartLine($includeDocComment = false) should be compatible with ReflectionClass::getStartLine(): int|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getMethod($name) should be compatible with ReflectionClass::getMethod(string $name): ReflectionMethod",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getMethods($filter = -1) should be compatible with ReflectionClass::getMethods(?int $filter = null): array",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getProperty($name) should be compatible with ReflectionClass::getProperty(string $name): ReflectionProperty",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getProperties($filter = -1) should be compatible with ReflectionClass::getProperties(?int $filter = null): array",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getInterfaces() should be compatible with ReflectionClass::getInterfaces(): array",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getTraits() should be compatible with ReflectionClass::getTraits(): array",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ClassReflection::getParentClass() should be compatible with ReflectionClass::getParentClass(): ReflectionClass|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ParameterReflection::getDeclaringFunction() should be compatible with ReflectionParameter::getDeclaringFunction(): ReflectionFunctionAbstract",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ParameterReflection::getDeclaringClass() should be compatible with ReflectionParameter::getDeclaringClass(): ?ReflectionClass",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Laminas\\Code\\Reflection\\ParameterReflection::getClass() should be compatible with ReflectionParameter::getClass(): ?ReflectionClass",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOConnection::exec($sql) should be compatible with PDO::exec(string $statement): int|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOConnection::lastInsertId($name = null) should be compatible with PDO::lastInsertId(?string $name = null): string|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOConnection::prepare($sql, $driverOptions = []) should be compatible with PDO::prepare(string $query, array $options = []): PDOStatement|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOConnection::quote($value, $type = Doctrine\\DBAL\\ParameterType::STRING) should be compatible with PDO::quote(string $string, int $type = PDO::PARAM_STR): string|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOQueryImplementation::query(?string $query = null, ?int $fetchMode = null, mixed ...$fetchModeArgs) should be compatible with PDO::query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatement::bindParam($param, &$variable, $type = Doctrine\\DBAL\\ParameterType::STRING, $length = null, $driverOptions = null) should be compatible with PDOStatement::bindParam(string|int $param, mixed &$var, int $type = PDO::PARAM_STR, int $maxLength = 0, mixed $driverOptions = null): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatement::bindValue($param, $value, $type = Doctrine\\DBAL\\ParameterType::STRING) should be compatible with PDOStatement::bindValue(string|int $param, mixed $value, int $type = PDO::PARAM_STR): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatement::closeCursor() should be compatible with PDOStatement::closeCursor(): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatement::execute($params = null) should be compatible with PDOStatement::execute(?array $params = null): bool",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatement::fetch($fetchMode = null, $cursorOrientation = PDO::FETCH_ORI_NEXT, $cursorOffset = 0) should be compatible with PDOStatement::fetch(int $mode = PDO::FETCH_DEFAULT, int $cursorOrientation = PDO::FETCH_ORI_NEXT, int $cursorOffset = 0): mixed",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatement::fetchColumn($columnIndex = 0) should be compatible with PDOStatement::fetchColumn(int $column = 0): mixed",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\DBAL\\Driver\\PDOStatementImplementations::fetchAll($mode = null, ...$args) should be compatible with PDOStatement::fetchAll(int $mode = PDO::FETCH_DEFAULT, mixed ...$args): array",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\Persistence\\Reflection\\RuntimePublicReflectionProperty::getValue($object = null) should be compatible with ReflectionProperty::getValue(?object $object = null): mixed",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\Migration\\RoutingMigrationTest::testShouldRun",
+    "message": "Declaration of Doctrine\\Persistence\\Reflection\\RuntimePublicReflectionProperty::setValue($object, $value = null) should be compatible with ReflectionProperty::setValue(mixed $objectOrValue, mixed $value = <default>): void",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "Since symfony/event-dispatcher 5.1: Symfony\\Component\\EventDispatcher\\LegacyEventDispatcherProxy is deprecated, use the event dispatcher without the proxy.",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "The Serializable interface is deprecated. Implement __serialize() and __unserialize() instead (or in addition, if support for old PHP versions is necessary)",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "Declaration of Spatie\\SchemaOrg\\Graph::jsonSerialize() should be compatible with JsonSerializable::jsonSerialize(): mixed",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "Declaration of Spatie\\SchemaOrg\\BaseType::jsonSerialize() should be compatible with JsonSerializable::jsonSerialize(): mixed",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 24
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+    "count": 2
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+    "count": 4
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliases",
+    "message": "explode(): Passing null to parameter #2 ($string) of type string is deprecated",
+    "count": 4
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithLocale",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 23
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithLocale",
+    "message": "preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+    "count": 4
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithLocale",
+    "message": "explode(): Passing null to parameter #2 ($string) of type string is deprecated",
+    "count": 4
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithLocale",
+    "message": "strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+    "count": 1
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithoutUrlSuffix",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 16
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithoutUrlSuffix",
+    "message": "strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+    "count": 2
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithoutUrlSuffix",
+    "message": "preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+    "count": 5
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesAliasesWithoutUrlSuffix",
+    "message": "explode(): Passing null to parameter #2 ($string) of type string is deprecated",
+    "count": 5
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesTheRootPage",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 4
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesTheRootPage",
+    "message": "strpos(): Passing null to parameter #1 ($haystack) of type string is deprecated",
+    "count": 3
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testResolvesTheRootPageWithLocale",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 4
+  },
+  {
+    "location": "Contao\\CoreBundle\\Tests\\Functional\\RoutingTest::testOrdersThePageModelsByCandidates",
+    "message": "trim(): Passing null to parameter #1 ($string) of type string is deprecated",
+    "count": 1
+  }
+]
