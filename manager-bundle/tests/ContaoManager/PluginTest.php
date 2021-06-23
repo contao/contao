@@ -471,13 +471,7 @@ class PluginTest extends ContaoTestCase
         );
 
         $container = $this->getContainer();
-        $plugin = new Plugin();
-
-        try {
-            $extensionConfig = $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
-        } catch (\mysqli_sql_exception $e) {
-            $this->markTestSkipped('The MySQLi extension is not enabled.');
-        }
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($expect, $extensionConfig);
     }
