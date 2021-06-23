@@ -83,3 +83,10 @@ services:
     Contao\CoreBundle\Migration\Version412\MergeGuestsOnlyMigration:
         arguments:
             - '@database_connection'
+
+    Contao\CoreBundle\Migration\Version412\CreateMigrationTableMigration:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@database_connection'
+        tags:
+            - { name: contao.migration, priority: 1024 }

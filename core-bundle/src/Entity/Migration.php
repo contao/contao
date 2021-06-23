@@ -47,12 +47,12 @@ class Migration
      *
      * @ORM\Column(type="datetime", nullable=false)
      */
-    protected $dateRun;
+    protected $executedAt;
 
-    public function __construct(string $name, \DateTimeInterface $dateRun = null)
+    public function __construct(string $name, \DateTimeInterface $executedAt = null)
     {
         $this->name = $name;
-        $this->dateRun = $dateRun ?? new \DateTime();
+        $this->executedAt = $executedAt ?? new \DateTime();
     }
 
     public function getName(): string
@@ -60,8 +60,8 @@ class Migration
         return $this->name;
     }
 
-    public function getDateRun(): \DateTimeInterface
+    public function getExecutedAt(): \DateTimeInterface
     {
-        return $this->dateRun;
+        return $this->executedAt;
     }
 }

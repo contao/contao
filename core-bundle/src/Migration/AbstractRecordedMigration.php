@@ -28,48 +28,20 @@ abstract class AbstractRecordedMigration extends AbstractMigration implements Se
         return !$this->hasRun();
     }
 
-    protected function hasRun(): ?bool
+    protected function hasRun(): bool
     {
-        if (!$this->connection()->getSchemaManager()->tablesExist(['tl_migration'])) {
-            return false;
-        }
-
         return null !== $this->entityManager()->getRepository(MigrationEntity::class)->findOneBy(['name' => $this->getName()]);
     }
 
     protected function createResult(bool $successful, string $message = null): MigrationResult
     {
         if (!$this->hasRun()) {
-            if (!$this->connection()->getSchemaManager()->tablesExist(['tl_migration'])) {
-                $this->createMigrationTable();
-            }
-
             $migrationEntity = new MigrationEntity($this->getName());
             $this->entityManager()->persist($migrationEntity);
             $this->entityManager()->flush();
         }
 
         return parent::createResult($successful, $message);
-    }
-
-    private function createMigrationTable(): void
-    {
-        $entityManager = $this->entityManager();
-        $schemaTool = new SchemaTool($entityManager);
-
-        // Get the SQL queries related only to tl_migration as Contao's DoctrineSchemaListener adds additional ones
-        $createSchemaSql = array_filter($schemaTool->getCreateSchemaSql([$entityManager->getClassMetadata(MigrationEntity::class)]), function($sql): bool {
-            return false !== strpos($sql, ' tl_migration ');
-        });
-
-        foreach ($createSchemaSql as $sql) {
-            $this->connection()->executeQuery($sql);
-        }
-    }
-
-    protected function connection(): Connection
-    {
-        return $this->container->get(__METHOD__);
     }
 
     private function entityManager(): EntityManagerInterface
