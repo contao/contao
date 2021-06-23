@@ -150,6 +150,22 @@ abstract class Template extends Controller
 	 */
 	public function __get($strKey)
 	{
+		if ('stringUtil' === $strKey)
+		{
+			return new class()
+			{
+				public function __call(string $key, array $params)
+				{
+					if (!method_exists(StringUtil::class, $key))
+					{
+						throw new \InvalidArgumentException("$key is not a valid StringUtil method.");
+					}
+
+					return StringUtil::$key(...$params);
+				}
+			};
+		}
+
 		if (isset($this->arrData[$strKey]))
 		{
 			if (\is_object($this->arrData[$strKey]) && \is_callable($this->arrData[$strKey]))
@@ -397,34 +413,6 @@ abstract class Template extends Controller
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
-	}
-
-	/**
-	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
-	 * It replaces (or optionally removes) Contao insert tags and removes all HTML.
-	 *
-	 * Be careful when using this. It must NOT be used within regular HTML when $value
-	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
-	 * or JSON-LD arrays.
-	 */
-	public function rawPlainText(string $value, bool $removeInsertTags = false): string
-	{
-		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
-	}
-
-	/**
-	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
-	 *
-	 * Compared to $this->rawPlainText() it adds new lines before and after block level HTML elements
-	 * and only then removes the rest of the HTML tags.
-	 *
-	 * Be careful when using this. It must NOT be used within regular HTML when $value
-	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
-	 * or JSON-LD arrays.
-	 */
-	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
-	{
-		return StringUtil::htmlToPlainText($value, $removeInsertTags);
 	}
 
 	/**
