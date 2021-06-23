@@ -400,6 +400,34 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
+	 * It replaces (or optionally removes) Contao insert tags and removes all HTML.
+	 *
+	 * Be careful when using this. It must NOT be used within regular HTML when $value
+	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
+	 * or JSON-LD arrays.
+	 */
+	public function rawPlainText(string $value, bool $removeInsertTags = false): string
+	{
+		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
+	}
+
+	/**
+	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
+	 *
+	 * Compared to $this->rawPlainText() it adds new lines before and after block level HTML elements
+	 * and only then removes the rest of the HTML tags.
+	 *
+	 * Be careful when using this. It must NOT be used within regular HTML when $value
+	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
+	 * or JSON-LD arrays.
+	 */
+	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
+	{
+		return StringUtil::htmlToPlainText($value, $removeInsertTags);
+	}
+
+	/**
 	 * Adds schema.org JSON-LD data to the current response context
 	 */
 	public function addSchemaOrg(array $jsonLd): void

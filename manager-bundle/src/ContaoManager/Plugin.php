@@ -317,7 +317,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $connection->connect();
             $connection->executeQuery('SHOW TABLES');
             $connection->close();
-        } catch (DriverException $e) {
+        } catch (DriverException | \mysqli_sql_exception $e) {
             $extensionConfigs[] = [
                 'dbal' => [
                     'connections' => [

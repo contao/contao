@@ -55,7 +55,7 @@ final class ResponseContext
         return $this;
     }
 
-    public function addLazy(string $classname, \Closure $factory = null)
+    public function addLazy(string $classname, \Closure $factory = null): self
     {
         if (null === $factory) {
             $factory = function () use ($classname) {

@@ -468,7 +468,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'urlSuffix' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['urlSuffix'],
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"

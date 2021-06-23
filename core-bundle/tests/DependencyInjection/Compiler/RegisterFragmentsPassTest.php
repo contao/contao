@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\ContentProxy;
+use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
@@ -20,11 +21,13 @@ use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ResolveClassPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class RegisterFragmentsPassTest extends TestCase
@@ -135,6 +138,29 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertInstanceOf(ChildDefinition::class, $definition);
         $this->assertSame('app.fragments.content_controller', $definition->getParent());
         $this->assertTrue($definition->isPublic());
+    }
+
+    public function testAddsContainerCallIfClassExtendsSymfonyAbstractController(): void
+    {
+        $definition = new Definition(TwoFactorController::class);
+        $definition->addTag('contao.frontend_module');
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.two_factor', $definition);
+
+        (new ResolveClassPass())->process($container);
+
+        $pass = new RegisterFragmentsPass(FrontendModuleReference::TAG_NAME);
+        $pass->process($container);
+
+        /** @var ChildDefinition $definition */
+        $definition = $container->findDefinition('contao.fragment._contao.frontend_module.two_factor');
+        $calls = $definition->getMethodCalls();
+
+        $this->assertCount(2, $calls);
+        $this->assertSame('setContainer', $calls[1][0]);
+        $this->assertInstanceOf(Reference::class, $calls[1][1][0]);
+        $this->assertSame(ContainerInterface::class, (string) $calls[1][1][0]);
     }
 
     public function testCopiesTagsToChildDefinition(): void

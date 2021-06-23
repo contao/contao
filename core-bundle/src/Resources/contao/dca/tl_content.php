@@ -1244,7 +1244,7 @@ class tl_content extends Backend
 	public function addCteType($arrRow)
 	{
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
-		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?: '&nbsp;';
+		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
 		$class = 'limit_height';
 
 		// Remove the class if it is a wrapper element
