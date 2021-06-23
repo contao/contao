@@ -104,6 +104,7 @@ use Contao\CoreBundle\Menu\BackendMenuBuilder;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Migration\Version410\RoutingMigration;
+use Contao\CoreBundle\Migration\Version412\MigrationTableMigration;
 use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Monolog\ContaoTableProcessor;
 use Contao\CoreBundle\OptIn\OptIn;
@@ -4337,6 +4338,36 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('translator'),
             ],
             $definition->getArguments()
+        );
+    }
+
+    public function testRegistersTheMigrationTableMigration(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has(MigrationTableMigration::class));
+
+        $definition = $container->getDefinition(MigrationTableMigration::class);
+
+        $this->assertNull($definition->getClass());
+
+        $this->assertEquals(
+            [
+                new Reference('doctrine.orm.entity_manager'),
+                new Reference('database_connection'),
+            ],
+            $definition->getArguments()
+        );
+
+        $this->assertSame(
+            [
+                'contao.migration' => [
+                    [
+                        'priority' => 1024,
+                    ],
+                ],
+            ],
+            $definition->getTags()
         );
     }
 
