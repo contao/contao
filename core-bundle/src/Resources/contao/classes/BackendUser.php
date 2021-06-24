@@ -598,8 +598,6 @@ class BackendUser extends User
 	 */
 	public function serialize()
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the "serialize" method has been deprecated and will no longer work in Contao 5.0. Use the "__serialize()" method instead.');
-
 		$data = $this->__serialize();
 		$data['parent'] = serialize($data['parent']);
 
@@ -616,8 +614,6 @@ class BackendUser extends User
 	 */
 	public function unserialize($serialized)
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the "serialize" method has been deprecated and will no longer work in Contao 5.0. Use the "__serialize()" method instead.');
-
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
 		if (!isset($data['parent']))

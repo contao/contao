@@ -549,8 +549,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function serialize()
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the "serialize" method has been deprecated and will no longer work in Contao 5.0. Use the "__serialize()" method instead.');
-
 		return serialize($this->__serialize());
 	}
 
@@ -572,8 +570,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function unserialize($serialized)
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the "serialize" method has been deprecated and will no longer work in Contao 5.0. Use the "__serialize()" method instead.');
-
 		$this->__unserialize(unserialize($serialized, array('allowed_classes'=>false)));
 	}
 
