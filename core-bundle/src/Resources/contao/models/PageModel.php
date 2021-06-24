@@ -1318,7 +1318,7 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		return $this->applyLegacyLogic($strUrl, $strParams ?? '');
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1335,7 +1335,7 @@ class PageModel extends Model
 		$objRouter = System::getContainer()->get('router');
 		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
 
-		return $this->applyLegacyLogic($strUrl, $strParams ?? '');
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1367,7 +1367,7 @@ class PageModel extends Model
 
 		$context->setBaseUrl($baseUrl);
 
-		return $this->applyLegacyLogic($strUrl, $strParams ?? '');
+		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
 
 	/**
@@ -1390,15 +1390,15 @@ class PageModel extends Model
 	/**
 	 * Modifies a URL from the URL generator.
 	 *
-	 * @param string $strUrl
-	 * @param string $strParams
+	 * @param string      $strUrl
+	 * @param string|null $strParams
 	 *
 	 * @return string
 	 */
 	private function applyLegacyLogic($strUrl, $strParams)
 	{
 		// Decode sprintf placeholders
-		if (strpos($strParams, '%') !== false)
+		if (null !== $strParams && strpos($strParams, '%') !== false)
 		{
 			trigger_deprecation('contao/core-bundle', '4.2', 'Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.');
 
@@ -1418,7 +1418,7 @@ class PageModel extends Model
 
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
-				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
+				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams ?? '', $strUrl);
 			}
 
 			return $strUrl;
