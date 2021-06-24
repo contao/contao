@@ -44,6 +44,19 @@ class ArrayUtil
 		array_splice($arrCurrent, $intIndex, 0, $arrNew);
 	}
 
+	public static function recursiveKeySort(array &$array): void
+	{
+		foreach ($array as &$value)
+		{
+			if (\is_array($value))
+			{
+				self::recursiveKeySort($value);
+			}
+		}
+
+		ksort($array);
+	}
+
 	/**
 	 * Return true if an array is associative
 	 *

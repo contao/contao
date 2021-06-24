@@ -62,8 +62,8 @@ class JsonLdManagerTest extends TestCase
                         "@graph": [
                             {
                                 "@type": "ImageObject",
-                                "name": "Name",
-                                "caption": "Caption"
+                                "caption": "Caption",
+                                "name": "Name"
                             }
                         ]
                     }
