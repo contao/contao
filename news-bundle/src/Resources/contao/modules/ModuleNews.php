@@ -305,7 +305,8 @@ abstract class ModuleNews extends Module
 					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span itemprop="author">' . $objAuthor->name . '</span>';
+						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span class="author">' . $objAuthor->name . '</span>';
+						$return['authorModel'] = $objAuthor;
 					}
 					break;
 
@@ -367,11 +368,11 @@ abstract class ModuleNews extends Module
 		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
 
 		return sprintf(
-			'<a href="%s" title="%s"%s itemprop="url">%s%s</a>',
+			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
-			($blnIsReadMore ? $strLink : '<span itemprop="headline">' . $strLink . '</span>'),
+			($blnIsReadMore ? $strLink : '<span class="headline">' . $strLink . '</span>'),
 			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
 	}
