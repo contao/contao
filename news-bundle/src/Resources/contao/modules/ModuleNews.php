@@ -305,7 +305,7 @@ abstract class ModuleNews extends Module
 					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span class="author">' . $objAuthor->name . '</span>';
+						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 						$return['authorModel'] = $objAuthor;
 					}
 					break;
