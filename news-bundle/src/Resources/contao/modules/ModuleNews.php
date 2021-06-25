@@ -372,7 +372,7 @@ abstract class ModuleNews extends Module
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
-			($blnIsReadMore ? $strLink : '<span class="headline">' . $strLink . '</span>'),
+			$strLink,
 			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
 	}
