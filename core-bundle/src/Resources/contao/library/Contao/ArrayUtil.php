@@ -44,6 +44,9 @@ class ArrayUtil
 		array_splice($arrCurrent, $intIndex, 0, $arrNew);
 	}
 
+	/**
+	 * Recursively sort an array by key
+	 */
 	public static function recursiveKeySort(array &$array): void
 	{
 		foreach ($array as &$value)
