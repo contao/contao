@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\Adapter;
@@ -1678,18 +1679,8 @@ class FigureBuilderIntegrationTest extends TestCase
         // Do not compare Figure reference
         unset($templateData['figure']);
 
-        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
-            foreach ($array as &$value) {
-                if (\is_array($value)) {
-                    $sortByKeyRecursive($value);
-                }
-            }
-
-            ksort($array);
-        };
-
-        $sortByKeyRecursive($expected);
-        $sortByKeyRecursive($templateData);
+        ArrayUtil::recursiveKeySort($expected);
+        ArrayUtil::recursiveKeySort($templateData);
 
         // Ignore generated asset paths
         array_walk_recursive(

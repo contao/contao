@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\JsonLd;
 
+use Contao\ArrayUtil;
 use Contao\CoreBundle\Event\JsonLdEvent;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Spatie\SchemaOrg\Graph;
@@ -69,6 +70,8 @@ class JsonLdManager
         if (0 === \count($data)) {
             return '';
         }
+
+        ArrayUtil::recursiveKeySort($data);
 
         return '<script type="application/ld+json">'."\n".json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."\n".'</script>';
     }
