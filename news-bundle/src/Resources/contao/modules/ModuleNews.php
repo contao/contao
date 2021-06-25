@@ -100,6 +100,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->text = '';
 		$objTemplate->hasText = false;
 		$objTemplate->hasTeaser = false;
+		$objTemplate->hasReader = true;
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -114,6 +115,7 @@ abstract class ModuleNews extends Module
 		{
 			$objTemplate->text = true;
 			$objTemplate->hasText = true;
+			$objTemplate->hasReader = false;
 		}
 
 		// Compile the news text
