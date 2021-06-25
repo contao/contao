@@ -17,33 +17,11 @@
 
 </div>
 
-
 <?php
 
-// Only add schema.org data if there's no reader page with more details
-if (!$this->hasReader) {
-    $jsonLd = [
-        '@type' => 'NewsArticle',
-        'identifier' => '#/schema/news/'.$this->id,
-        'url' => $this->link,
-        'headline' => $this->rawPlainText($this->headline),
-        'datePublished' => $this->datetime,
-    ];
-
-    if ($this->hasTeaser) {
-        $jsonLd['description'] = $this->rawHtmlToPlainText($this->teaser);
-    }
-
-    if ($this->addImage && $this->figure) {
-        $jsonLd['image'] = $this->figure->getSchemaOrgData();
-    }
-
-    if ($this->authorModel) {
-        $jsonLd['author'] = [
-            '@type' => 'Person',
-            'name' => $this->authorModel->name,
-        ];
-    }
-
-    $this->addSchemaOrg($jsonLd);
+// This template is used as a news list template by default
+// Ensure that there's no JSON-LD for this news article if there is a reader as that one will
+// list all the details.
+if ($this->hasReader) {
+    $this->removeSchemaOrg('NewsArticle', $this->schemaOrgId);
 }

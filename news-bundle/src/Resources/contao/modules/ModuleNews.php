@@ -11,7 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Model\Collection;
+use Spatie\SchemaOrg\NewsArticle;
+use Spatie\SchemaOrg\Person;
 
 /**
  * Parent class for news modules.
@@ -230,6 +234,42 @@ abstract class ModuleNews extends Module
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
 		}
+
+		// schema.org information
+		$schemaOrgId = '#/schema/news/' . $objArticle->id;
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if ($responseContext && $responseContext->has(JsonLdManager::class))
+		{
+			/** @var JsonLdManager $jsonLdManager */
+			$jsonLdManager = $responseContext->get(JsonLdManager::class);
+
+			$article = new NewsArticle();
+			$article->headline(StringUtil::inputEncodedToPlainText($objTemplate->headline));
+			$article->url($objTemplate->link);
+			$article->datePublished(new \DateTime('@' . $objArticle->date));
+
+			if ($objTemplate->hasTeaser)
+			{
+				$article->description(StringUtil::htmlToPlainText($objTemplate->teaser));
+			}
+
+			if ($objTemplate->addImage && $objTemplate->figure)
+			{
+				$article->image($jsonLdManager->createSchemaOrgTypeFromArray($objTemplate->figure->getSchemaOrgData()));
+			}
+
+			if ($objTemplate->authorModel)
+			{
+				$article->author((new Person())->name($objTemplate->authorModel->name));
+			}
+
+			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->set($article, $schemaOrgId);
+
+			dump($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG));
+		}
+
+		$objTemplate->schemaOrgId = $schemaOrgId;
 
 		return $objTemplate->parse();
 	}

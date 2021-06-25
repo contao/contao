@@ -43,31 +43,11 @@
 
 <?php
 
-$jsonLd = [
-    '@type' => 'NewsArticle',
-    'identifier' => $this->link,
-    'url' => $this->link,
-    'headline' => $this->rawPlainText($this->headline),
-    'datePublished' => $this->datetime,
-];
-
-if ($this->hasTeaser) {
-    $jsonLd['description'] = $this->rawHtmlToPlainText($this->teaser);
-}
-
+// Extend the existing JSON-LD data with the text on the reader page.
 if ($this->hasText()) {
-    $jsonLd['text'] = $this->rawHtmlToPlainText($this->text);
+    $this->addSchemaOrg([
+        '@type' => 'NewsArticle',
+        'identifier' => $this->schemaOrgId,
+        'text' => $this->rawHtmlToPlainText($this->text),
+    ], true);
 }
-
-if ($this->addImage && $this->figure) {
-    $jsonLd['image'] = $this->figure->getSchemaOrgData();
-}
-
-if ($this->authorModel) {
-    $jsonLd['author'] = [
-        '@type' => 'Person',
-        'name' => $this->authorModel->name,
-    ];
-}
-
-$this->addSchemaOrg($jsonLd);
