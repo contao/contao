@@ -11,11 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Model\Collection;
-use Spatie\SchemaOrg\NewsArticle;
-use Spatie\SchemaOrg\Person;
 
 /**
  * Parent class for news modules.
@@ -236,40 +232,36 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$schemaOrgId = '#/schema/news/' . $objArticle->id;
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
-
-		if ($responseContext && $responseContext->has(JsonLdManager::class))
+		$objTemplate->getBasicSchemaOrgData = static function () use ($objTemplate, $objArticle): array
 		{
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $responseContext->get(JsonLdManager::class);
-
-			$article = new NewsArticle();
-			$article->headline(StringUtil::inputEncodedToPlainText($objTemplate->headline));
-			$article->url($objTemplate->link);
-			$article->datePublished(new \DateTime('@' . $objArticle->date));
+			$jsonLd = array(
+				'@type' => 'NewsArticle',
+				'identifier' => '#/schema/news/' . $objArticle->id,
+				'url' => $objTemplate->link,
+				'headline' => StringUtil::inputEncodedToPlainText($objTemplate->headline),
+				'datePublished' => $objTemplate->datetime,
+			);
 
 			if ($objTemplate->hasTeaser)
 			{
-				$article->description(StringUtil::htmlToPlainText($objTemplate->teaser));
+				$jsonLd['description'] = StringUtil::htmlToPlainText($objTemplate->teaser);
 			}
 
 			if ($objTemplate->addImage && $objTemplate->figure)
 			{
-				$article->image($jsonLdManager->createSchemaOrgTypeFromArray($objTemplate->figure->getSchemaOrgData()));
+				$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
 			}
 
 			if ($objTemplate->authorModel)
 			{
-				$article->author((new Person())->name($objTemplate->authorModel->name));
+				$jsonLd['author'] = array(
+					'@type' => 'Person',
+					'name' => $objTemplate->authorModel->name,
+				);
 			}
 
-			$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->set($article, $schemaOrgId);
-
-			dump($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG));
-		}
-
-		$objTemplate->schemaOrgId = $schemaOrgId;
+			return $jsonLd;
+		};
 
 		return $objTemplate->parse();
 	}

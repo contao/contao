@@ -429,10 +429,8 @@ abstract class Template extends Controller
 
 	/**
 	 * Adds schema.org JSON-LD data to the current response context
-	 *
-	 * @param bool $extendExisting allows to extend an existing entry if it exists already
 	 */
-	public function addSchemaOrg(array $jsonLd, bool $extendExisting = false): void
+	public function addSchemaOrg(array $jsonLd): void
 	{
 		/** @var ResponseContext $responseContext */
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
@@ -445,44 +443,11 @@ abstract class Template extends Controller
 		/** @var JsonLdManager $jsonLdManager */
 		$jsonLdManager = $responseContext->get(JsonLdManager::class);
 		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
-		$graph = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
-		$identifier = $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT;
 
-		if (!$extendExisting || !$graph->has(\get_class($type), $identifier))
-		{
-			$graph->set($type, $identifier);
-		}
-		else
-		{
-			$existing = $graph->get(\get_class($type), $identifier);
-			$new = array_replace_recursive($existing->toArray(), $type->toArray());
-			$type = $jsonLdManager->createSchemaOrgTypeFromArray($new);
-			$graph->set($type, $identifier);
-		}
-	}
-
-	public function removeSchemaOrg(string $type, string $identifier = null): void
-	{
-		/** @var ResponseContext $responseContext */
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
-
-		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
-		{
-			return;
-		}
-
-		/** @var JsonLdManager $jsonLdManager */
-		$jsonLdManager = $responseContext->get(JsonLdManager::class);
-		$type = $jsonLdManager->createSchemaOrgTypeFromArray(array('@type' => $type));
-		$graph = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
-		$identifier = $identifier ?? Graph::IDENTIFIER_DEFAULT;
-
-		if (!$graph->has(\get_class($type), $identifier))
-		{
-			return;
-		}
-
-		$graph->hide(\get_class($type), $identifier);
+		$jsonLdManager
+			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+			->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
+		;
 	}
 
 	/**

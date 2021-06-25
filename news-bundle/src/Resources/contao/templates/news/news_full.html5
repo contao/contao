@@ -43,11 +43,9 @@
 
 <?php
 
-// Extend the existing JSON-LD data with the text on the reader page.
+$schmemaOrg = $this->getBasicSchemaOrgData();
+
 if ($this->hasText()) {
-    $this->addSchemaOrg([
-        '@type' => 'NewsArticle',
-        'identifier' => $this->schemaOrgId,
-        'text' => $this->rawHtmlToPlainText($this->text),
-    ], true);
+    $schmemaOrg['text'] = $this->rawHtmlToPlainText($this->text);
 }
+$this->addSchemaOrg($schmemaOrg);
