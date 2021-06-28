@@ -176,7 +176,6 @@ class Picker extends Widget
 		}
 		else
 		{
-
 			$return .= '
     <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
 
