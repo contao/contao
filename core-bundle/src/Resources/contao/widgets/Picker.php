@@ -153,7 +153,8 @@ class Picker extends Widget
 </thead>
 <tbody id="sort_' . $this->strId . '">';
 
-			foreach ($arrValues as $k => $row) {
+			foreach ($arrValues as $k => $row)
+			{
 				$return .= '
   <tr data-id="' . $k . '">';
 
