@@ -1349,8 +1349,7 @@ var Backend =
 			});
 		};
 		hideTips();
-		// hide delayed tips
-		setTimeout(hideTips, (new Tips.Contao).options.showDelay);
+		setTimeout(hideTips, (new Tips.Contao).options.showDelay); // hide delayed tips
 	},
 
 	/**
