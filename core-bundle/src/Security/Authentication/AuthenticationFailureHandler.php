@@ -53,10 +53,10 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
     private function logException(Request $request, AuthenticationException $exception): void
     {
+        $username = 'anon.';
+
         if ($exception instanceof AccountStatusException && ($user = $exception->getUser()) instanceof UserInterface) {
             $username = $user->getUsername();
-        } else {
-            $username = $request->request->get('username');
         }
 
         $this->logger->info(
