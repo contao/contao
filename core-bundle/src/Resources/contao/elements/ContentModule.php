@@ -98,7 +98,7 @@ class ContentModule extends ContentElement
 
 		$strBuffer = $objModule->generate();
 
-		if ($objStopwatch)
+		if (isset($objStopwatch))
 		{
 			$objStopwatch->stop('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')');
 		}
