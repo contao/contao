@@ -100,6 +100,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->text = '';
 		$objTemplate->hasText = false;
 		$objTemplate->hasTeaser = false;
+		$objTemplate->hasReader = true;
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -114,6 +115,7 @@ abstract class ModuleNews extends Module
 		{
 			$objTemplate->text = true;
 			$objTemplate->hasText = true;
+			$objTemplate->hasReader = false;
 		}
 
 		// Compile the news text
@@ -229,6 +231,38 @@ abstract class ModuleNews extends Module
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
 		}
 
+		// schema.org information
+		$objTemplate->getBasicSchemaOrgData = static function () use ($objTemplate, $objArticle): array
+		{
+			$jsonLd = array(
+				'@type' => 'NewsArticle',
+				'identifier' => '#/schema/news/' . $objArticle->id,
+				'url' => $objTemplate->link,
+				'headline' => StringUtil::inputEncodedToPlainText($objTemplate->headline),
+				'datePublished' => $objTemplate->datetime,
+			);
+
+			if ($objTemplate->hasTeaser)
+			{
+				$jsonLd['description'] = StringUtil::htmlToPlainText($objTemplate->teaser);
+			}
+
+			if ($objTemplate->addImage && $objTemplate->figure)
+			{
+				$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
+			}
+
+			if ($objTemplate->authorModel)
+			{
+				$jsonLd['author'] = array(
+					'@type' => 'Person',
+					'name' => $objTemplate->authorModel->name,
+				);
+			}
+
+			return $jsonLd;
+		};
+
 		return $objTemplate->parse();
 	}
 
@@ -305,7 +339,8 @@ abstract class ModuleNews extends Module
 					/** @var UserModel $objAuthor */
 					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' <span itemprop="author">' . $objAuthor->name . '</span>';
+						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+						$return['authorModel'] = $objAuthor;
 					}
 					break;
 
@@ -367,11 +402,11 @@ abstract class ModuleNews extends Module
 		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
 
 		return sprintf(
-			'<a href="%s" title="%s"%s itemprop="url">%s%s</a>',
+			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
-			($blnIsReadMore ? $strLink : '<span itemprop="headline">' . $strLink . '</span>'),
+			$strLink,
 			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
 	}
