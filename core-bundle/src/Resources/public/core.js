@@ -1455,7 +1455,7 @@ var Backend =
 			opacity: 0.6
 		}).addEvent('complete', function() {
 			var els = [],
-				lis = $(id).getChildren('li'),
+				lis = $(id).getChildren('[data-id]'),
 				i;
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
