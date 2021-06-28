@@ -43,9 +43,10 @@
 
 <?php
 
-$schmemaOrg = $this->getBasicSchemaOrgData();
+$schemaOrg = $this->getBasicSchemaOrgData();
 
 if ($this->hasText()) {
-    $schmemaOrg['text'] = $this->rawHtmlToPlainText($this->text);
+    $schemaOrg['text'] = $this->rawHtmlToPlainText($this->text);
 }
-$this->addSchemaOrg($schmemaOrg);
+
+$this->addSchemaOrg($schemaOrg);

@@ -19,8 +19,8 @@
 
 <?php
 
-// This template is used as a news list template by default.
-// We thus only add JSON-LD data in case this is a news article without a reader.
+// This template is used as a news list template by default, so we only add
+// JSON-LD data in case this is a news article without a reader
 if (!$this->hasReader) {
     $this->addSchemaOrg($this->getBasicSchemaOrgData());
 }
