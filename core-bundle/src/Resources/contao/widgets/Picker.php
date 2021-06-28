@@ -133,7 +133,7 @@ class Picker extends Widget
 			$showFields = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'];
 
 			$return .= '
-<table class="tl_listing showColumns">
+<table class="tl_listing showColumns' . ($blnHasOrder ? ' sortable' : '') . '">
 <thead>
   <tr>';
 
