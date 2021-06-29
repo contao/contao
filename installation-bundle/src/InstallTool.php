@@ -19,6 +19,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -311,6 +312,7 @@ class InstallTool
             ))
         ) {
             $context['errorCode'] = 7;
+            $context['driver'] = $this->connection->getDriver() instanceof MysqliDriver ? 'mysqli' : 'pdo';
 
             return true;
         }
