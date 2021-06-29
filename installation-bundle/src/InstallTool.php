@@ -242,43 +242,39 @@ class InstallTool
             $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'");
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false === $row || '' === $row['Value']) {
-                return false;
-            }
+            if (false !== $row && '' !== $row['Value']) {
+                // As there is no reliable way to get the vendor (see #84), we are
+                // guessing based on the version number. The check will not be run
+                // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+                $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
 
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. The check will not be run
-            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
-            $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
+                // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
+                if (version_compare($version, $vok, '<')) {
+                    // The innodb_large_prefix option is disabled
+                    if (!\in_array(strtolower((string)$row['Value']), ['1', 'on'], true)) {
+                        $context['errorCode'] = 5;
 
-            // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
-            if (version_compare($version, $vok, '>=')) {
-                return false;
-            }
+                        return true;
+                    }
 
-            // The innodb_large_prefix option is disabled
-            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
-                $context['errorCode'] = 5;
+                    $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
 
-                return true;
-            }
+                    // The innodb_file_per_table option is disabled
+                    if (!\in_array(strtolower((string)$row['Value']), ['1', 'on'], true)) {
+                        $context['errorCode'] = 6;
 
-            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
+                        return true;
+                    }
 
-            // The innodb_file_per_table option is disabled
-            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
-                $context['errorCode'] = 6;
+                    $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
 
-                return true;
-            }
+                    // The InnoDB file format is not Barracuda
+                    if ('' !== $row['Value'] && 'barracuda' !== strtolower((string)$row['Value'])) {
+                        $context['errorCode'] = 6;
 
-            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
-
-            // The InnoDB file format is not Barracuda
-            if ('' !== $row['Value'] && 'barracuda' !== strtolower((string) $row['Value'])) {
-                $context['errorCode'] = 6;
-
-                return true;
+                        return true;
+                    }
+                }
             }
         }
 
