@@ -302,6 +302,23 @@ class InstallTool
             }
         }
 
+        // Ensure the database is running in strict mode
+        $mode = $this->connection
+            ->executeQuery('SELECT @@sql_mode')
+            ->fetchOne() ?: '';
+
+        if (
+            empty(array_intersect(
+                explode(',', strtoupper($mode)),
+            // See https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html
+            ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES']
+            ))
+        ) {
+            $context['errorCode'] = 7;
+
+            return true;
+        }
+
         return false;
     }
 
