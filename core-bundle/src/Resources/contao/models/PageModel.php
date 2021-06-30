@@ -809,7 +809,8 @@ class PageModel extends Model
 
 			foreach ($collection as $model)
 			{
-				if ($model->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($model->groups, true)))
+				// PageModel->groups is an array after calling loadDetails()
+				if ($model->loadDetails()->protected && \in_array(-1, $model->groups))
 				{
 					continue;
 				}
@@ -888,7 +889,8 @@ class PageModel extends Model
 
 			foreach ($collection as $model)
 			{
-				if ($model->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($model->groups, true)))
+				// PageModel->groups is an array after calling loadDetails()
+				if ($model->loadDetails()->protected && \in_array(-1, $model->groups))
 				{
 					continue;
 				}
@@ -1097,7 +1099,7 @@ class PageModel extends Model
 
 		// Set some default values
 		$this->protected = (bool) $this->protected;
-		$this->groups = $this->protected ? StringUtil::deserialize($this->groups) : false;
+		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
 		$this->layout = $this->includeLayout ? $this->layout : false;
 		$this->cache = $this->includeCache ? $this->cache : false;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
@@ -1174,7 +1176,7 @@ class PageModel extends Model
 					if ($objParentPage->protected && $this->protected === false)
 					{
 						$this->protected = true;
-						$this->groups = StringUtil::deserialize($objParentPage->groups);
+						$this->groups = StringUtil::deserialize($objParentPage->groups, true);
 					}
 				}
 			}

@@ -432,10 +432,10 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		$groups = StringUtil::deserialize($this->groups);
+		$groups = StringUtil::deserialize($this->groups, true);
 
 		// No groups assigned
-		if (empty($groups) || !\is_array($groups))
+		if (empty($groups))
 		{
 			return false;
 		}

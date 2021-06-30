@@ -93,9 +93,9 @@ class ModuleQuicklink extends Module
 		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->loadDetails();
-			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $objSubpage->groups)) || ($user && $user->isMemberOf($objSubpage->groups)))
 			{
 				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);

@@ -720,11 +720,17 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE' && $objElement->protected)
 		{
-			$blnReturn = false;
-			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-			$groups = StringUtil::deserialize($objElement->groups);
+			$user = null;
 
-			if ((!$blnFeUserLoggedIn && \in_array(-1, $groups)) || ($blnFeUserLoggedIn && FrontendUser::getInstance()->isMemberOf($groups)))
+			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+			{
+				$user = FrontendUser::getInstance();
+			}
+
+			$blnReturn = false;
+			$groups = StringUtil::deserialize($objElement->groups, true);
+
+			if ((!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				$blnReturn = true;
 			}

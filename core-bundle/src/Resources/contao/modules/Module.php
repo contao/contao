@@ -313,9 +313,9 @@ abstract class Module extends Frontend
 			}
 
 			$subitems = '';
-			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \in_array(-1, $objSubpage->groups)) || ($user && $user->isMemberOf($objSubpage->groups)))
 			{
 				// Check whether there will be subpages
 				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
@@ -553,7 +553,8 @@ abstract class Module extends Frontend
 			{
 				$page = PageModel::findByPk($row['id']);
 
-				if ($blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($page->groups)))
+				// PageModel->groups is an array after calling loadDetails()
+				if ($blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, $page->groups))
 				{
 					return null;
 				}
