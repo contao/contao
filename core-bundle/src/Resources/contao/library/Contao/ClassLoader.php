@@ -152,7 +152,14 @@ class ClassLoader
 			return;
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		try
+		{
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		}
+		catch (\LogicException $e)
+		{
+			return; // Cannot retrieve the container from a non-booted kernel
+		}
 
 		// The class file is set in the mapper
 		if (isset(self::$classes[$class]))
