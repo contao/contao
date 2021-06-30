@@ -95,7 +95,7 @@ class ModuleQuicklink extends Module
 			$objSubpage->loadDetails();
 			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			if (!$objSubpage->protected || (!$user && \in_array(-1, $groups)))
+			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
 			{
 				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
