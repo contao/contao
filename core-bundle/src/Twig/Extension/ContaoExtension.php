@@ -17,7 +17,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
-use Contao\Template;
+use Contao\FrontendTemplate;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\EscaperExtension;
@@ -103,7 +103,7 @@ class ContaoExtension extends AbstractExtension
     {
         $template = Path::getFilenameWithoutExtension($name);
 
-        $partialTemplate = new class($template) extends Template {
+        $partialTemplate = new class($template) extends FrontendTemplate {
             protected $blnEnableTwigSurrogateRendering = false;
 
             public function setBlocks(array $blocks): void
