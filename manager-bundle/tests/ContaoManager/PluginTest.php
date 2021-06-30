@@ -19,6 +19,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -54,6 +55,14 @@ class PluginTest extends ContaoTestCase
         parent::setUp();
 
         unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
+    }
+
+    public function testDependsOnCoreBundlePlugin()
+    {
+        $plugin = new Plugin();
+
+        $this->assertInstanceOf(DependentPluginInterface::class, $plugin);
+        $this->assertSame(['contao/core-bundle'], $plugin->getPackageDependencies());
     }
 
     public function testReturnsTheBundles(): void
@@ -397,6 +406,32 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
+    public function testSetsTheDatabaseDriverUrl(): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('database_user', 'root');
+        $container->setParameter('database_password', 'foobar');
+        $container->setParameter('database_name', 'contao_test');
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame('mysqli://root:foobar@localhost:3306/contao_test', $bag['env(DATABASE_URL)']);
+    }
+
     public function testAddsTheDefaultServerVersionAndPdoOptions(): void
     {
         $extensionConfigs = [
@@ -452,6 +487,47 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'mysqli',
                             'host' => 'localhost',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ]]
+        );
+
+        // Adjust the error reporting to suppress mysqli warnings
+        $er = error_reporting();
+        error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        error_reporting($er);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfUrlIsMysqli(): void
+    {
+        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysqli://root:%%40foobar@localhost:3306/database';
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'url' => '%env(DATABASE_URL)%',
                         ],
                     ],
                 ],
