@@ -22,6 +22,7 @@ use Contao\MemberModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
+use Symfony\Component\Intl\Countries;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -222,7 +223,15 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getCountries();
+				System::loadLanguageFile('countries');
+
+				// Backwards compatibility
+				if (!empty($GLOBALS['TL_HOOKS']['getCountries']) || isset($GLOBALS['TL_LANG']['CNT']))
+				{
+					return System::getCountries();
+				}
+
+				return Countries::getNames($GLOBALS['TL_LANGUAGE'] ?? 'en');
 			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
