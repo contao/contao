@@ -371,6 +371,9 @@
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
       </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+      </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
       </trans-unit>
