@@ -30,7 +30,7 @@ class PhpTemplateProxyNode extends Node
          * echo $this->extensions["Contao\\…\\ContaoExtension"]->renderLegacyTemplate(
          *     $this->getTemplateName(),
          *     array_map(
-         *         static function(callable $block) use ($context): string {
+         *         function(callable $block) use ($context): string {
          *             if ($this->env->isDebug()) { ob_start(); } else { ob_start(function () { return ''; }); }
          *             try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
          *         }, $blocks
@@ -46,7 +46,7 @@ class PhpTemplateProxyNode extends Node
             ->write('$this->getTemplateName(),'."\n")
             ->write('array_map('."\n")
             ->indent()
-            ->write('static function(callable $block) use ($context): string {'."\n")
+            ->write('function(callable $block) use ($context): string {'."\n")
             ->indent()
             ->write('if ($this->env->isDebug()) { ob_start(); } else { ob_start(function () { return \'\'; }); }'."\n")
             ->write('try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }'."\n")
