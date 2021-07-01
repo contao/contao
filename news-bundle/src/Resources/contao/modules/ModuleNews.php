@@ -51,7 +51,7 @@ abstract class ModuleNews extends Module
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objArchive->groups))))
+				if ($objArchive->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objArchive->groups, true))))
 				{
 					continue;
 				}

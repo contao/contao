@@ -204,9 +204,9 @@ class ModuleBooknav extends Module
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
 			$objPage->loadDetails();
-			$groups = StringUtil::deserialize($objPage->groups, true);
 
-			if (!$objPage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objPage->protected || $this->showProtected || (!$user && \in_array(-1, $objPage->groups)) || ($user && $user->isMemberOf($objPage->groups)))
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 

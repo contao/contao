@@ -132,10 +132,8 @@ class ModuleQuicknav extends Module
 				$objSubpage->domain = $host;
 			}
 
-			$groups = StringUtil::deserialize($objSubpage->groups, true);
-
-			// Do not show protected pages unless a front end user is logged in
-			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $objSubpage->groups)) || ($user && $user->isMemberOf($objSubpage->groups)))
 			{
 				// Do not skip the current page here! (see #4523)
 

@@ -77,7 +77,7 @@ abstract class Events extends Module
 
 			while ($objCalendar->next())
 			{
-				if ($objCalendar->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objCalendar->groups))))
+				if ($objCalendar->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objCalendar->groups, true))))
 				{
 					continue;
 				}
