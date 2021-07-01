@@ -237,7 +237,7 @@
         <source>A form field can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.tabindex.0">
-        <source>Tabindex</source>
+        <source>Tab index</source>
       </trans-unit>
       <trans-unit id="tl_form_field.tabindex.1">
         <source>The position of the form field in the tabbing order.</source>
