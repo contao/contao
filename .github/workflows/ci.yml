@@ -185,7 +185,7 @@ jobs:
               run: vendor/bin/phpunit --colors=always
 
             - name: Run the functional tests
-              run: vendor/bin/phpunit --testsuite=functional --colors=always
+              run: SYMFONY_DEPRECATION_HELPER='max[self]=0&amp;baselineFile=./.github/deprecations.json' vendor/bin/phpunit --testsuite=functional --colors=always
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
