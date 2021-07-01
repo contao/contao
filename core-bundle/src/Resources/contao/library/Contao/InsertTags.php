@@ -455,9 +455,14 @@ class InsertTags extends Controller
 						}
 
 						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target || \in_array('blank', $flags, true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
+					}
+
+					if ($elements[2] ?? '' === 'blank' && !$strTarget)
+					{
+						$strTarget = ' target="_blank" rel="noreferrer noopener"';
 					}
 
 					// Replace the tag
@@ -535,7 +540,7 @@ class InsertTags extends Controller
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 					$strUrl = \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
-					$strTarget = \in_array('blank', $flags, true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+					$strTarget = $elements[2] ?? null === 'blank' ? ' target="_blank" rel="noreferrer noopener"' : '';
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -1151,7 +1156,6 @@ class InsertTags extends Controller
 						case 'absolute':
 						case 'refresh':
 						case 'uncached':
-						case 'blank':
 							// ignore
 							break;
 
