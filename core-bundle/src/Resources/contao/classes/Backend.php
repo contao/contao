@@ -683,8 +683,11 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
+			$objPage->loadDetails();
+
+			// PageModel->groups is an array after calling loadDetails()
+			$indexProtected = (!$user && \in_array(-1, $objPage->groups)) || ($user && $user->isMemberOf($objPage->groups));
 			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
-			$indexProtected = $user && $user->isMemberOf(StringUtil::deserialize($objPage->groups));
 
 			// Searchable and not protected
 			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || $indexProtected))

@@ -94,9 +94,9 @@ class ModuleCustomnav extends Module
 		foreach ($objPages as $objModel)
 		{
 			$objModel->loadDetails();
-			$groups = StringUtil::deserialize($objModel->groups, true);
 
-			if (!$objModel->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objModel->protected || $this->showProtected || (!$user && \in_array(-1, $objModel->groups)) || ($user && $user->isMemberOf($objModel->groups)))
 			{
 				// Get href
 				switch ($objModel->type)

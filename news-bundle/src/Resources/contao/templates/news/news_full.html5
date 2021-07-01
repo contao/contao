@@ -1,14 +1,14 @@
 
-<div class="layout_full block<?= $this->class ?>" itemscope itemtype="https://schema.org/Article">
+<div class="layout_full block<?= $this->class ?>">
 
-  <h1 itemprop="name"><?= $this->newsHeadline ?></h1>
+  <h1><?= $this->newsHeadline ?></h1>
 
   <?php if ($this->hasMetaFields): ?>
-    <p class="info"><time datetime="<?= $this->datetime ?>" itemprop="datePublished"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
+    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
   <?php endif; ?>
 
   <?php if ($this->hasSubHeadline): ?>
-    <h2 itemprop="headline"><?= $this->subHeadline ?></h2>
+    <h2><?= $this->subHeadline ?></h2>
   <?php endif; ?>
 
   <?php if ($this->hasText): ?>
@@ -40,3 +40,13 @@
   <?php endif; ?>
 
 </div>
+
+<?php
+
+$schemaOrg = $this->getBasicSchemaOrgData();
+
+if ($this->hasText()) {
+    $schemaOrg['text'] = $this->rawHtmlToPlainText($this->text);
+}
+
+$this->addSchemaOrg($schemaOrg);
