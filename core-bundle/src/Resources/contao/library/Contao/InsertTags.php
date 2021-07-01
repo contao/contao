@@ -460,7 +460,7 @@ class InsertTags extends Controller
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
 
-					if ($elements[2] ?? '' === 'blank' && !$strTarget)
+					if (!$strTarget && \in_array('blank', \array_slice($elements, 2), true))
 					{
 						$strTarget = ' target="_blank" rel="noreferrer noopener"';
 					}
@@ -540,7 +540,7 @@ class InsertTags extends Controller
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 					$strUrl = \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
-					$strTarget = $elements[2] ?? null === 'blank' ? ' target="_blank" rel="noreferrer noopener"' : '';
+					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
