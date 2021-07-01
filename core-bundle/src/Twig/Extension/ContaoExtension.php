@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Extension;
 
+use Contao\CoreBundle\Twig\Inheritance\DynamicEmbedTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
@@ -87,9 +89,12 @@ class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Registers a parser for the 'extends' tag which will overwrite
-            // the one of Twig's CoreExtension
+            // Register parsers for the 'extends', 'include' and 'embed' tags
+            // which will overwrite the ones of Twig's CoreExtension and
+            // additionally support the Contao template hierarchy.
             new DynamicExtendsTokenParser($this->hierarchy),
+            new DynamicIncludeTokenParser($this->hierarchy),
+            new DynamicEmbedTokenParser($this->hierarchy),
         ];
     }
 
