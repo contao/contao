@@ -732,6 +732,8 @@ services:
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
 
+    Contao\CoreBundle\Security\Voter\MemberGroupVoter: ~
+
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:

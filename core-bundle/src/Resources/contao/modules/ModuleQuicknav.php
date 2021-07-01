@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -104,13 +105,7 @@ class ModuleQuicknav extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$user = null;
 		$arrPages = array();
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
 
 		// Get all active subpages
 		$objSubpages = PageModel::findPublishedRegularByPid($pid);
@@ -120,6 +115,7 @@ class ModuleQuicknav extends Module
 			return array();
 		}
 
+		$security = System::getContainer()->get('security.helper');
 		++$level;
 
 		foreach ($objSubpages as $objSubpage)
@@ -133,7 +129,7 @@ class ModuleQuicknav extends Module
 			}
 
 			// PageModel->groups is an array after calling loadDetails()
-			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $objSubpage->groups)) || ($user && $user->isMemberOf($objSubpage->groups)))
+			if (!$objSubpage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Do not skip the current page here! (see #4523)
 

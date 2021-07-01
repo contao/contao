@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -163,27 +164,10 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (Config::get('indexProtected'))
 			{
-				$user = null;
-
-				if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+				$objResult->applyFilter(static function ($v)
 				{
-					$user = FrontendUser::getInstance();
-				}
-
-				if ($user)
-				{
-					$objResult->applyFilter(static function ($v) use ($user)
-					{
-						return empty($v['protected']) || $user->isMemberOf(StringUtil::deserialize($v['groups'] ?? null));
-					});
-				}
-				else
-				{
-					$objResult->applyFilter(static function ($v)
-					{
-						return empty($v['protected']);
-					});
-				}
+					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
+				});
 			}
 
 			$count = $objResult->getCount();

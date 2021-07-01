@@ -19,6 +19,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -720,20 +721,8 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE' && $objElement->protected)
 		{
-			$user = null;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$user = FrontendUser::getInstance();
-			}
-
-			$blnReturn = false;
 			$groups = StringUtil::deserialize($objElement->groups, true);
-
-			if ((!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
-			{
-				$blnReturn = true;
-			}
+			$blnReturn = System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
 		}
 
 		// HOOK: add custom logic
@@ -1600,7 +1589,7 @@ abstract class Controller extends System
 			// Adjust image size configuration if it exceeds the max width
 			if ($size[0] > 0 && $size[1] > 0)
 			{
-				list($width, $height) = $size;
+				[$width, $height] = $size;
 			}
 			else
 			{
@@ -1656,7 +1645,7 @@ abstract class Controller extends System
 		}
 
 		// Set size and lightbox configuration
-		list($size, $margin) = $getSizeAndMargin();
+		[$size, $margin] = $getSizeAndMargin();
 
 		$lightboxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
 
