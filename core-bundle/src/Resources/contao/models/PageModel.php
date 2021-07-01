@@ -1398,7 +1398,7 @@ class PageModel extends Model
 	private function applyLegacyLogic($strUrl, $strParams)
 	{
 		// Decode sprintf placeholders
-		if (null !== $strParams && strpos($strParams, '%') !== false)
+		if ($strParams !== null && strpos($strParams, '%') !== false)
 		{
 			trigger_deprecation('contao/core-bundle', '4.2', 'Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.');
 
