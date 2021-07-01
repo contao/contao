@@ -273,7 +273,7 @@
         <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
+        <source>Tabindex</source>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.1">
         <source>The position of the navigation item in the tabbing order.</source>
