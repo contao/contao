@@ -450,6 +450,51 @@ class PaletteManipulatorTest extends TestCase
         );
     }
 
+    public function testConvertsConfigToPaletteString(): void
+    {
+        $this->assertSame(
+            '{foo_legend:hide},field1,field2',
+            PaletteManipulator::convertConfigToPaletteString([
+                'foo_legend' => [
+                    'fields' => [
+                        0 => 'field1',
+                        1 => 'field2',
+                    ],
+                    'hide' => true,
+                ],
+            ])
+        );
+    }
+
+    public function testFindsLegendForField(): void
+    {
+        $pm = PaletteManipulator::create();
+
+        $this->assertSame(
+            'foo_legend',
+            $pm->findLegendForField([
+                'foo_legend' => [
+                    'fields' => [
+                        0 => 'field1',
+                        1 => 'field2',
+                    ],
+                    'hide' => true,
+                ],
+            ], 'field1')
+        );
+    }
+
+    public function testIsFieldInPalette(): void
+    {
+        $this->assertTrue(
+            PaletteManipulator::isFieldInPalette('field1', '{contact_legend},title,lastname;{foo_legend:hide},field1,field2;field3,field4')
+        );
+
+        $this->assertFalse(
+            PaletteManipulator::isFieldInPalette('field6', '{contact_legend},title,lastname;{foo_legend:hide},field1,field2;field3,field4')
+        );
+    }
+
     public function testRemovesFieldsBeforeAddingFields(): void
     {
         $pm = PaletteManipulator::create()
@@ -460,38 +505,6 @@ class PaletteManipulatorTest extends TestCase
         $this->assertSame(
             '{contact_legend},title,lastname',
             $pm->applyToString('{contact_legend},firstname,lastname')
-        );
-    }
-
-    public function testExplodesAPalette(): void
-    {
-        $pm = PaletteManipulator::create();
-
-        $this->assertSame(
-            [
-                'contact_legend' => [
-                    'fields' => [
-                        0 => 'title',
-                        1 => 'lastname',
-                    ],
-                    'hide' => false,
-                ],
-                'foo_legend' => [
-                    'fields' => [
-                        0 => 'field1',
-                        1 => 'field2',
-                    ],
-                    'hide' => true,
-                ],
-                0 => [
-                    'fields' => [
-                        0 => 'field3',
-                        1 => 'field4',
-                    ],
-                    'hide' => false,
-                ],
-            ],
-            $pm->explode('{contact_legend},title,lastname;{foo_legend:hide},field1,field2;field3,field4')
         );
     }
 }

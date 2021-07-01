@@ -158,6 +158,38 @@ class PaletteManipulator
     }
 
     /**
+     * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
+     *
+     * @return string|false
+     */
+    public function findLegendForField(array $config, string $field)
+    {
+        foreach ($config as $legend => $group) {
+            if (\in_array($field, $group['fields'], true)) {
+                return $legend;
+            }
+        }
+
+        return false;
+    }
+
+    public static function convertConfigToPaletteString(array $config): string
+    {
+        return (new self())->implode($config);
+    }
+
+    public static function isFieldInPalette(string $field, string $palette): bool
+    {
+        foreach ((new self())->explode($palette) as $data) {
+            if (\in_array($field, $data['fields'], true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @throws PalettePositionException
      */
     private function validatePosition(string $position): void
@@ -179,7 +211,7 @@ class PaletteManipulator
      *
      * @return array<int|string, array<mixed>>
      */
-    public function explode(string $palette): array
+    private function explode(string $palette): array
     {
         if ('' === $palette) {
             return [];
@@ -369,22 +401,6 @@ class PaletteManipulator
                 $config[$legend]['fields'] = array_diff($group['fields'], $remove['fields']);
             }
         }
-    }
-
-    /**
-     * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
-     *
-     * @return string|false
-     */
-    private function findLegendForField(array $config, string $field)
-    {
-        foreach ($config as $legend => $group) {
-            if (\in_array($field, $group['fields'], true)) {
-                return $legend;
-            }
-        }
-
-        return false;
     }
 
     private function canApplyToParent(array &$config, array $action, string $key, string $position): bool
