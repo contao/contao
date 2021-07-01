@@ -152,15 +152,6 @@ class ClassLoader
 			return;
 		}
 
-		try
-		{
-			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		}
-		catch (\LogicException $e)
-		{
-			return; // Cannot retrieve the container from a non-booted kernel
-		}
-
 		// The class file is set in the mapper
 		if (isset(self::$classes[$class]))
 		{
@@ -169,7 +160,7 @@ class ClassLoader
 				$GLOBALS['TL_DEBUG']['classes_set'][$class] = $class;
 			}
 
-			include $projectDir . '/' . self::$classes[$class];
+			include System::getContainer()->getParameter('kernel.project_dir') . '/' . self::$classes[$class];
 		}
 
 		// Find the class in the registered namespaces
@@ -182,7 +173,7 @@ class ClassLoader
 					$GLOBALS['TL_DEBUG']['classes_aliased'][$class] = $namespaced;
 				}
 
-				include $projectDir . '/' . self::$classes[$namespaced];
+				include System::getContainer()->getParameter('kernel.project_dir') . '/' . self::$classes[$namespaced];
 			}
 
 			class_alias($namespaced, $class);
