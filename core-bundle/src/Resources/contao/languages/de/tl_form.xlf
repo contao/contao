@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_form.targetTable.1">
         <source>The target table must contain a column for every form field.</source>
-        <target>Die selbst anzulegende SQL-Zieltabelle muss für jedes Formularfeld eine gleichnamige Spalte enthalten. Sonderzeichen wie Bindestriche im Feldnamen können zu Problemen führen. Beispiel-SQL-Code: CREATE TABLE `##DATENBANKNAME##`.`formular_beispiel` ( `ID` INT NOT NULL AUTO_INCREMENT , `Feld1` TEXT NOT NULL , `Feld2` TEXT NOT NULL , `Feld3` TEXT NOT NULL , INDEX (`ID`)) ENGINE = InnoDB;</target>
+        <target>Die selbst anzulegende SQL-Zieltabelle muss für jedes Formularfeld eine gleichnamige Spalte enthalten. Siehe Dokumentation.</target>
       </trans-unit>
       <trans-unit id="tl_form.method.0">
         <source>Submission method</source>
