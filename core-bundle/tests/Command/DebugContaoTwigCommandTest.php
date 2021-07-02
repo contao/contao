@@ -16,7 +16,6 @@ use Contao\CoreBundle\Command\DebugContaoTwigCommand;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class DebugContaoTwigCommandTest extends ContaoTestCase
@@ -51,7 +50,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $tester = new CommandTester($command);
         $tester->execute([]);
 
-        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertSame(0, $tester->getStatusCode());
     }
 
     /**
@@ -73,7 +72,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $tester = new CommandTester($command);
         $tester->execute([$refreshOption => null]);
 
-        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertSame(0, $tester->getStatusCode());
     }
 
     public function provideRefreshOptions(): \Generator
@@ -116,7 +115,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $tester->getDisplay(true));
 
         $this->assertSame($expectedOutput, $normalizedOutput);
-        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertSame(0, $tester->getStatusCode());
     }
 
     public function provideFilterOptions(): \Generator
