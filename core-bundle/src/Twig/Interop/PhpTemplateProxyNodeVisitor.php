@@ -20,7 +20,12 @@ use Twig\Node\TextNode;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 use Webmozart\PathUtil\Path;
 
-class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
+/**
+ * @experimental
+ *
+ * @internal
+ */
+final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 {
     /**
      * @var string

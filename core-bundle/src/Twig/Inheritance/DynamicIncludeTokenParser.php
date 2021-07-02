@@ -20,8 +20,10 @@ use Twig\TokenParser\IncludeTokenParser;
 /**
  * This parser is a drop in replacement for @\Twig\TokenParser\IncludeTokenParser.
  * that adds support for the Contao template hierarchy.
+ *
+ * @experimental
  */
-class DynamicIncludeTokenParser extends IncludeTokenParser
+final class DynamicIncludeTokenParser extends IncludeTokenParser
 {
     /**
      * @var TemplateHierarchyInterface

@@ -21,8 +21,10 @@ use Twig\TokenStream;
 /**
  * This parser is a drop in replacement for @\Twig\TokenParser\ExtendsTokenParser.
  * that adds support for the Contao template hierarchy.
+ *
+ * @experimental
  */
-class DynamicExtendsTokenParser extends AbstractTokenParser
+final class DynamicExtendsTokenParser extends AbstractTokenParser
 {
     /**
      * @var TemplateHierarchyInterface

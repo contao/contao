@@ -25,7 +25,10 @@ use Twig\Extension\EscaperExtension;
 use Twig\TwigFunction;
 use Webmozart\PathUtil\Path;
 
-class ContaoExtension extends AbstractExtension
+/**
+ * @experimental
+ */
+final class ContaoExtension extends AbstractExtension
 {
     /**
      * @var TemplateHierarchyInterface

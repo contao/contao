@@ -15,7 +15,12 @@ namespace Contao\CoreBundle\Twig\Interop;
 use Twig\Compiler;
 use Twig\Node\Node;
 
-class PhpTemplateProxyNode extends Node
+/**
+ * @experimental
+ *
+ * @internal
+ */
+final class PhpTemplateProxyNode extends Node
 {
     public function __construct(string $extensionName)
     {

@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inheritance;
 
+/**
+ * @experimental
+ */
 interface TemplateHierarchyInterface
 {
     /**

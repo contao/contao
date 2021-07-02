@@ -15,7 +15,12 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 
-class TokenParserHelper
+/**
+ * @experimental
+ *
+ * @internal
+ */
+final class TokenParserHelper
 {
     public static function traverseConstantExpressions(Node $node, \Closure $onEnter): void
     {

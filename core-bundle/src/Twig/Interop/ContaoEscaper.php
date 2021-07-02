@@ -22,9 +22,11 @@ use Twig\Error\RuntimeError;
  *
  * This strategy will get dropped once we move to output encoding.
  *
+ * @experimental
+ *
  * @internal
  */
-class ContaoEscaper
+final class ContaoEscaper
 {
     /**
      * This implementation is a clone of Twig's html escape strategy but calls

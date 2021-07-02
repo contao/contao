@@ -23,8 +23,12 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  * This NodeVisitor alters all "escape('html')" filter expressions into
  * "escape('contao_html')" filter expressions if the template they belong
  * to is amongst the configured affected templates.
+ *
+ * @experimental
+ *
+ * @internal
  */
-class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
+final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
     /**
      * We evaluate affected templates on the fly so that rules can be adjusted

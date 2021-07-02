@@ -16,6 +16,9 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Webmozart\PathUtil\Path;
 
+/**
+ * @experimental
+ */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
     /**

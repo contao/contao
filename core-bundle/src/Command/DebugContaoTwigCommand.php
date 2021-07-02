@@ -21,6 +21,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * @experimental
+ */
 class DebugContaoTwigCommand extends Command
 {
     protected static $defaultName = 'debug:contao-twig';

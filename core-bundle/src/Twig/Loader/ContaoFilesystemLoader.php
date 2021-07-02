@@ -37,6 +37,8 @@ use Webmozart\PathUtil\Path;
  *     support inheritance chains by dynamically rewriting 'extends'. Similar
  *     to the directory paths, the hierarchy is also cacheable and gets
  *     automatically restored at construct time.
+ *
+ * @experimental
  */
 class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarchyInterface, ResetInterface
 {

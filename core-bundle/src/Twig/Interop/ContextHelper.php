@@ -14,7 +14,10 @@ namespace Contao\CoreBundle\Twig\Interop;
 
 use Contao\Template;
 
-class ContextHelper
+/**
+ * @experimental
+ */
+final class ContextHelper
 {
     /**
      * Adjust Contao template data to seamlessly work as a Twig context.

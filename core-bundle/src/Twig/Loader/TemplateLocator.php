@@ -16,6 +16,9 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
 
+/**
+ * @experimental
+ */
 class TemplateLocator
 {
     /**
