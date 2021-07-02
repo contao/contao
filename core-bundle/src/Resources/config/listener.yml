@@ -35,10 +35,6 @@ services:
             - '@translator'
         public: true
 
-    Contao\CoreBundle\EventListener\DataContainer\PageLanguageListener:
-        arguments:
-            - '%contao.legacy_routing%'
-
     Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
         arguments:
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
