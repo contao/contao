@@ -83,6 +83,8 @@ abstract class ContaoTestCase extends TestCase
         $container->setParameter('kernel.project_dir', $projectDir);
         $container->setParameter('kernel.root_dir', $projectDir.'/app');
 
+        $container->setDefinition('request_stack', new Definition(RequestStack::class));
+
         // Load the default configuration
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
