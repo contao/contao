@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -338,6 +339,11 @@ trait TemplateInheritance
 
 	private function renderTwigSurrogateIfExists(): ?string
 	{
+		if (!$this instanceof Template)
+		{
+			return null;
+		}
+
 		$container = System::getContainer();
 
 		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
@@ -349,7 +355,7 @@ trait TemplateInheritance
 
 		if ($twig->getLoader()->exists($templateCandidate))
 		{
-			return $twig->render($templateCandidate, $this->arrData);
+			return $twig->render($templateCandidate, ContextHelper::fromContaoTemplate($this));
 		}
 
 		return null;
