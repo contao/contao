@@ -731,7 +731,7 @@ abstract class Controller extends System
 			elseif ($objElement->guests)
 			{
 				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				$blnReturn = $security->getUser() instanceof FrontendUser; // backwards compatibility
+				$blnReturn = !$security->isGranted('ROLE_MEMBER'); // backwards compatibility
 			}
 		}
 

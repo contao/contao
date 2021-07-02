@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 /**
  * Main front end controller.
@@ -269,7 +268,7 @@ class FrontendIndex extends Frontend
 
 			if (!$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
 			{
-				if ($security->getToken() instanceof AnonymousToken)
+				if (($token = $security->getToken()) === null || System::getContainer()->get('security.authentication.trust_resolver')->isAnonymous($token))
 				{
 					throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
 				}
