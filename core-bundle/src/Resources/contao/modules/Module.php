@@ -541,7 +541,7 @@ abstract class Module extends Frontend
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
 		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
 
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 
@@ -553,24 +553,16 @@ abstract class Module extends Frontend
 		// Load models into the registry with a single query
 		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
 
-		return array_filter(array_map(
-			static function (array $row) use ($blnFeUserLoggedIn): ?array
+		return array_map(
+			static function (array $row): array
 			{
-				$page = PageModel::findByPk($row['id']);
-
-				// PageModel->groups is an array after calling loadDetails()
-				if ($blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, $page->groups))
-				{
-					return null;
-				}
-
 				return array(
-					'page' => $page,
+					'page' => PageModel::findByPk($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],
 				);
 			},
 			$arrPages
-		));
+		);
 	}
 
 	/**
