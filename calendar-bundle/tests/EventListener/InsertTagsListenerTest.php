@@ -89,6 +89,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            'http://domain.tld/events/the-foobar-event.html',
+            $listener('event_url::2::absolute', false, null, [])
+        );
+
+        $this->assertSame(
             'The &quot;foobar&quot; event',
             $listener('event_title::2', false, null, [])
         );
