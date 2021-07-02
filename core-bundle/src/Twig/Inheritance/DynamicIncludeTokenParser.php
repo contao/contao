@@ -59,7 +59,7 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
             return $hierarchy->getFirst($shortNameOrIdentifier);
         } catch (\LogicException $e) {
             // Enrich exception: theme directories are not supported
-            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?');
+            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
     }
 
