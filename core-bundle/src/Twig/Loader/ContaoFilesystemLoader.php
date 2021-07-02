@@ -275,7 +275,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         foreach (array_keys($chain) as $path) {
             try {
-                if (filemtime($path) < $time) {
+                if (filemtime($path) > $time) {
                     return false;
                 }
             } catch (\Exception $e) {
