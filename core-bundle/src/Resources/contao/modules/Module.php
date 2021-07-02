@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
@@ -278,12 +279,7 @@ abstract class Module extends Frontend
 		}
 
 		$items = array();
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
+		$security = System::getContainer()->get('security.helper');
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
@@ -320,7 +316,7 @@ abstract class Module extends Frontend
 			$subitems = '';
 
 			// PageModel->groups is an array after calling loadDetails()
-			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \in_array(-1, $objSubpage->groups)) || ($user && $user->isMemberOf($objSubpage->groups)))
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Check whether there will be subpages
 				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))

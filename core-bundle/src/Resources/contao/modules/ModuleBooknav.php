@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -193,12 +194,7 @@ class ModuleBooknav extends Module
 			return;
 		}
 
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
+		$security = System::getContainer()->get('security.helper');
 
 		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
@@ -206,7 +202,7 @@ class ModuleBooknav extends Module
 			$objPage->loadDetails();
 
 			// PageModel->groups is an array after calling loadDetails()
-			if (!$objPage->protected || $this->showProtected || (!$user && \in_array(-1, $objPage->groups)) || ($user && $user->isMemberOf($objPage->groups)))
+			if (!$objPage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 

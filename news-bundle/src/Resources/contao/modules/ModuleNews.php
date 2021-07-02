@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 
 /**
@@ -42,16 +43,11 @@ abstract class ModuleNews extends Module
 
 		if ($objArchive !== null)
 		{
-			$user = null;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$user = FrontendUser::getInstance();
-			}
+			$security = System::getContainer()->get('security.helper');
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objArchive->groups, true))))
+				if ($objArchive->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objArchive->groups, true)))
 				{
 					continue;
 				}

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -68,12 +69,6 @@ class ModuleCustomnav extends Module
 		global $objPage;
 
 		$items = array();
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
 
 		// Get all active pages and also include root pages if the language is added to the URL (see #72)
 		$objPages = PageModel::findPublishedRegularByIds($this->pages, array('includeRoot'=>true));
@@ -90,13 +85,15 @@ class ModuleCustomnav extends Module
 		$objTemplate->level = 'level_1';
 		$objTemplate->module = $this; // see #155
 
+		$security = System::getContainer()->get('security.helper');
+
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
 		{
 			$objModel->loadDetails();
 
 			// PageModel->groups is an array after calling loadDetails()
-			if (!$objModel->protected || $this->showProtected || (!$user && \in_array(-1, $objModel->groups)) || ($user && $user->isMemberOf($objModel->groups)))
+			if (!$objModel->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objModel->groups))
 			{
 				// Get href
 				switch ($objModel->type)

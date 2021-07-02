@@ -19,6 +19,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -720,22 +721,17 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE')
 		{
-			$user = null;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$user = FrontendUser::getInstance();
-			}
+			$security = System::getContainer()->get('security.helper');
 
 			if ($objElement->protected)
 			{
 				$groups = StringUtil::deserialize($objElement->groups, true);
-				$blnReturn = (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups));
+				$blnReturn = $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
 			}
 			elseif ($objElement->guests)
 			{
 				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				$blnReturn = !$user; // backwards compatibility
+				$blnReturn = !$security->isGranted('ROLE_MEMBER'); // backwards compatibility
 			}
 		}
 
