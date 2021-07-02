@@ -718,7 +718,7 @@ abstract class Controller extends System
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && $objElement->protected)
+		if (TL_MODE == 'FE')
 		{
 			$user = null;
 
@@ -727,12 +727,15 @@ abstract class Controller extends System
 				$user = FrontendUser::getInstance();
 			}
 
-			$blnReturn = false;
-			$groups = StringUtil::deserialize($objElement->groups, true);
-
-			if ((!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			if ($objElement->protected)
 			{
-				$blnReturn = true;
+				$groups = StringUtil::deserialize($objElement->groups, true);
+				$blnReturn = (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups));
+			}
+			elseif ($objElement->guests)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				$blnReturn = !$user; // backwards compatibility
 			}
 		}
 
