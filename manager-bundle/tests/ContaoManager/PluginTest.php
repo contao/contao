@@ -471,14 +471,8 @@ class PluginTest extends ContaoTestCase
             ]]
         );
 
-        // Adjust the error reporting to suppress mysqli warnings
-        $er = error_reporting();
-        error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
-
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
-
-        error_reporting($er);
 
         $this->assertSame($expect, $extensionConfig);
     }

@@ -50,3 +50,7 @@ scheb_two_factor:
         enabled: true
     backup_codes:
         enabled: true
+
+services:
+    doctrine.orm.default_entity_manager.validator_loader:
+        synthetic: true

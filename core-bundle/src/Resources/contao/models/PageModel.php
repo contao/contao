@@ -1218,15 +1218,15 @@ class PageModel extends Model
 	/**
 	 * Modifies a URL from the URL generator.
 	 *
-	 * @param string $strUrl
-	 * @param string $strParams
+	 * @param string      $strUrl
+	 * @param string|null $strParams
 	 *
 	 * @return string
 	 */
 	private function applyLegacyLogic($strUrl, $strParams)
 	{
 		// Decode sprintf placeholders
-		if (strpos($strParams, '%') !== false)
+		if ($strParams !== null && strpos($strParams, '%') !== false)
 		{
 			@trigger_error('Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
@@ -1246,7 +1246,7 @@ class PageModel extends Model
 
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
-				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
+				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams ?? '', $strUrl);
 			}
 
 			return $strUrl;
