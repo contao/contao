@@ -112,6 +112,7 @@ final class ContaoExtension extends AbstractExtension
                     $args = \func_get_args();
                     $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $args[2], $this->hierarchy);
 
+                    /** @psalm-suppress UndefinedFunction */
                     return twig_include(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]

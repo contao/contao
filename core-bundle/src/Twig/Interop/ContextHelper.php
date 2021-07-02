@@ -73,6 +73,11 @@ final class ContextHelper
                 try {
                     return (string) $this();
                 } catch (\Throwable $e) {
+                    // A __toString function may not throw an exception in PHP<7.4
+                    if (\PHP_VERSION_ID < 70400) {
+                        return '';
+                    }
+
                     // Enhance exception message
                     throw new \RuntimeException("Error evaluating '{$this->name}': {$e->getMessage()}", 0, $e);
                 }
