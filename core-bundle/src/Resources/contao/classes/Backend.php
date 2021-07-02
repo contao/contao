@@ -686,6 +686,7 @@ abstract class Backend extends Controller
 			$objPage->loadDetails();
 
 			// PageModel->groups is an array after calling loadDetails()
+			// Cannot use security voters across firewall context (backend to frontend)
 			$indexProtected = (!$user && \in_array(-1, $objPage->groups)) || ($user && $user->isMemberOf($objPage->groups));
 			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
 

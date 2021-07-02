@@ -828,6 +828,8 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Security\Voter\MemberGroupVoter: ~
+
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:

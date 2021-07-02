@@ -38,7 +38,6 @@ use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
 class FigureBuilderIntegrationTest extends TestCase
@@ -1476,7 +1475,6 @@ class FigureBuilderIntegrationTest extends TestCase
 
         // Evaluate preconditions and setup container
         $container = $this->getContainerWithContaoConfiguration(self::$testRoot);
-        $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.security.token_checker', $tokenChecker);
 
         System::setContainer($container);
@@ -1664,7 +1662,6 @@ class FigureBuilderIntegrationTest extends TestCase
         $container->set('contao.image.resizer', $resizer);
         $container->set('contao.image.image_factory', $imageFactory);
         $container->set('contao.image.picture_factory', $pictureFactory);
-        $container->set('request_stack', new RequestStack());
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());
         $container->set('event_dispatcher', new EventDispatcher());

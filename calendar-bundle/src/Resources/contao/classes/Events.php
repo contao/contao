@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+
 /**
  * Provide methods to get all events of a certain period from the database.
  *
@@ -68,16 +70,11 @@ abstract class Events extends Module
 
 		if ($objCalendar !== null)
 		{
-			$user = null;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$user = FrontendUser::getInstance();
-			}
+			$security = System::getContainer()->get('security.helper');
 
 			while ($objCalendar->next())
 			{
-				if ($objCalendar->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objCalendar->groups, true))))
+				if ($objCalendar->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objCalendar->groups, true)))
 				{
 					continue;
 				}
