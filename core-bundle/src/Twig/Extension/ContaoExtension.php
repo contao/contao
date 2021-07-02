@@ -114,6 +114,8 @@ class ContaoExtension extends AbstractExtension
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
             ),
         ];
+
+        // todo: add replacements for contao_section(s) functions
     }
 
     /**
