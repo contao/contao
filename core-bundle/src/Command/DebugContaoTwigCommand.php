@@ -48,6 +48,7 @@ class DebugContaoTwigCommand extends Command
         $this
             ->setDescription('Displays the template hierarchy.')
             ->addOption('refresh', 'r', InputOption::VALUE_NONE, 'Refresh the cache.')
+            ->addOption('filter', 'f', InputOption::VALUE_OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
     }
 
@@ -63,7 +64,19 @@ class DebugContaoTwigCommand extends Command
 
         $rows = [];
 
-        foreach ($this->hierarchy->getInheritanceChains() as $identifier => $chain) {
+        $chains = $this->hierarchy->getInheritanceChains();
+
+        if (null !== ($prefix = $input->getOption('filter'))) {
+            $chains = array_filter(
+                $chains,
+                static function (string $identifier) use ($prefix) {
+                    return 0 === strpos($identifier, $prefix);
+                },
+                ARRAY_FILTER_USE_KEY
+            );
+        }
+
+        foreach ($chains as $identifier => $chain) {
             $i = 0;
 
             foreach ($chain as $path => $name) {
