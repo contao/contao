@@ -20,8 +20,6 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
@@ -79,18 +77,18 @@ class ContaoExtensionTest extends TestCase
             ->expects($this->once())
             ->method('resolveTemplate')
             ->with('@Contao_Bar/foo.html.twig')
-            ->willThrowException($methodCalledException);
+            ->willThrowException($methodCalledException)
+        ;
 
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy
             ->method('getFirst')
             ->with('foo')
-            ->willReturn([
-                '/path/to/foo.html.twig' => '@Contao_Bar/foo.html.twig',
-            ]);
+            ->willReturn('@Contao_Bar/foo.html.twig')
+        ;
 
         // Make sure the `twig_include` function is loaded
-        require_once((new \ReflectionClass(CoreExtension::class))->getFileName());
+        require_once (new \ReflectionClass(CoreExtension::class))->getFileName();
 
         $includeFunction = $this->getContaoExtension($hierarchy)->getFunctions()[0];
         $args = [$environment, [], '@Contao/foo'];
@@ -169,7 +167,8 @@ class ContaoExtensionTest extends TestCase
         $environment
             ->method('getExtension')
             ->with(EscaperExtension::class)
-            ->willReturn(new EscaperExtension());
+            ->willReturn(new EscaperExtension())
+        ;
 
         return new ContaoExtension(
             $environment,
