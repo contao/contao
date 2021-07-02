@@ -719,10 +719,20 @@ abstract class Controller extends System
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && $objElement->protected)
+		if (TL_MODE == 'FE')
 		{
-			$groups = StringUtil::deserialize($objElement->groups, true);
-			$blnReturn = System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
+			$security = System::getContainer()->get('security.helper');
+
+			if ($objElement->protected)
+			{
+				$groups = StringUtil::deserialize($objElement->groups, true);
+				$blnReturn = $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
+			}
+			elseif ($objElement->guests)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				$blnReturn = $security->getUser() instanceof FrontendUser; // backwards compatibility
+			}
 		}
 
 		// HOOK: add custom logic
@@ -1589,7 +1599,7 @@ abstract class Controller extends System
 			// Adjust image size configuration if it exceeds the max width
 			if ($size[0] > 0 && $size[1] > 0)
 			{
-				[$width, $height] = $size;
+				list($width, $height) = $size;
 			}
 			else
 			{
@@ -1645,7 +1655,7 @@ abstract class Controller extends System
 		}
 
 		// Set size and lightbox configuration
-		[$size, $margin] = $getSizeAndMargin();
+		list($size, $margin) = $getSizeAndMargin();
 
 		$lightboxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
 
