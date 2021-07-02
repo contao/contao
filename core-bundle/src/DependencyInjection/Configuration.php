@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -514,10 +515,16 @@ class Configuration implements ConfigurationInterface
         $languages = [$this->defaultLocale];
 
         /** @var array<SplFileInfo> $finder */
-        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2}(_[A-Z]{2})?$/')->in($dirs);
+        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2,}/')->in($dirs);
 
         foreach ($finder as $file) {
-            $languages[] = $file->getFilename();
+            $locale = $file->getFilename();
+
+            if (LocaleUtil::canonicalize($locale) !== $locale) {
+                continue;
+            }
+
+            $languages[] = $locale;
         }
 
         return array_values(array_unique($languages));
