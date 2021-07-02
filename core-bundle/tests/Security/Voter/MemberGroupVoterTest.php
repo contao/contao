@@ -84,7 +84,7 @@ class MemberGroupVoterTest extends TestCase
 
     public function testGrantsAccessIfTheUserIsInGroups(): void
     {
-        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => [1,2,3]]);
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => [1, 2, 3]]);
         $user
             ->expects($this->never())
             ->method('isMemberOf')
