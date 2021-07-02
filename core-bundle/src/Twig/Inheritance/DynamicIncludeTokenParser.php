@@ -49,12 +49,12 @@ class DynamicIncludeTokenParser extends IncludeTokenParser
      */
     public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
     {
-        if (null === ($shortName = TokenParserHelper::getContaoTemplate($name))) {
+        if (null === ($shortNameOrIdentifier = TokenParserHelper::getContaoTemplate($name))) {
             return $name;
         }
 
         try {
-            return $hierarchy->getFirst($shortName);
+            return $hierarchy->getFirst($shortNameOrIdentifier);
         } catch (\LogicException $e) {
             // Enrich exception: theme directories are not supported
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?');

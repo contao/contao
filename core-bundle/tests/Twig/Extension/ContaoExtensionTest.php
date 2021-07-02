@@ -15,10 +15,15 @@ namespace Contao\CoreBundle\Tests\Twig\Extension;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\System;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -27,6 +32,8 @@ use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Source;
+use Twig\TwigFunction;
+use Webmozart\PathUtil\Path;
 
 class ContaoExtensionTest extends TestCase
 {
@@ -40,12 +47,57 @@ class ContaoExtensionTest extends TestCase
         $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
     }
 
-    public function testAddsTheDynamicExtendsTokenParser(): void
+    public function testAddsTheTokenParsers(): void
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(1, $tokenParsers);
+        $this->assertCount(2, $tokenParsers);
+
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
+        $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
+    }
+
+    public function testAddsTheFunctions(): void
+    {
+        $functions = $this->getContaoExtension()->getFunctions();
+
+        $this->assertCount(1, $functions);
+
+        $this->assertInstanceOf(TwigFunction::class, $functions[0]);
+        $this->assertSame('include', $functions[0]->getName());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testIncludeFunctionDelegatesToTwigInclude(): void
+    {
+        $methodCalledException = new \Exception();
+
+        $environment = $this->createMock(Environment::class);
+        $environment
+            ->expects($this->once())
+            ->method('resolveTemplate')
+            ->with('@Contao_Bar/foo.html.twig')
+            ->willThrowException($methodCalledException);
+
+        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $hierarchy
+            ->method('getFirst')
+            ->with('foo')
+            ->willReturn([
+                '/path/to/foo.html.twig' => '@Contao_Bar/foo.html.twig',
+            ]);
+
+        // Make sure the `twig_include` function is loaded
+        require_once((new \ReflectionClass(CoreExtension::class))->getFileName());
+
+        $includeFunction = $this->getContaoExtension($hierarchy)->getFunctions()[0];
+        $args = [$environment, [], '@Contao/foo'];
+
+        $this->expectExceptionObject($methodCalledException);
+
+        ($includeFunction->getCallable())(...$args);
     }
 
     public function testAllowsOnTheFlyRegisteringTemplatesForInputEncoding(): void
@@ -94,18 +146,34 @@ class ContaoExtensionTest extends TestCase
         $this->assertStringContainsString("'contao_html'", $iteration2);
     }
 
-    private function getContaoExtension(): ContaoExtension
+    public function testRenderLegacyTemplate(): void
+    {
+        $extension = $this->getContaoExtension();
+
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+        ));
+
+        $output = $extension->renderLegacyTemplate(
+            'foo.html5',
+            ['B' => ['overwritten B block']],
+            ['foo' => 'bar']
+        );
+
+        $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
+    }
+
+    private function getContaoExtension(TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
         $environment = $this->createMock(Environment::class);
         $environment
             ->method('getExtension')
             ->with(EscaperExtension::class)
-            ->willReturn(new EscaperExtension())
-        ;
+            ->willReturn(new EscaperExtension());
 
         return new ContaoExtension(
             $environment,
-            $this->createMock(ContaoFilesystemLoader::class)
+            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class)
         );
     }
 }
