@@ -312,6 +312,11 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
+			if ($objSubpage->tabindex > 0)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
+			}
+
 			$subitems = '';
 
 			// PageModel->groups is an array after calling loadDetails()
