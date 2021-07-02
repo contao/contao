@@ -276,12 +276,10 @@ class FrontendIndex extends Frontend
 
 				$user = $security->getUser();
 
-				if (!$user instanceof FrontendUser)
+				if ($user instanceof FrontendUser)
 				{
-					throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
+					$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, TL_ERROR);
 				}
-
-				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, TL_ERROR);
 
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}

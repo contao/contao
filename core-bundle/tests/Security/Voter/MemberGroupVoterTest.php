@@ -52,7 +52,6 @@ class MemberGroupVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, '1', [ContaoCorePermissions::MEMBER_IN_GROUPS]));
     }
 
-
     public function testGrantsAccessIfIsNotAFrontendUserAndGuestsAreAllowed(): void
     {
         $token = $this->createMock(TokenInterface::class);

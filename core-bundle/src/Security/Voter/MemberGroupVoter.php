@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
-use Contao\PageModel;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
