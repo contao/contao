@@ -19,7 +19,6 @@ use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\VarDumper\VarDumper;
 use Webmozart\PathUtil\Path;
 
@@ -261,7 +260,6 @@ class TemplateTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
         $container->set(FigureRenderer::class, $figureRenderer);
-        $container->set('request_stack', $this->createMock(RequestStack::class));
 
         System::setContainer($container);
 
@@ -280,7 +278,6 @@ class TemplateTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
         $container->set(FigureRenderer::class, $figureRenderer);
-        $container->set('request_stack', $this->createMock(RequestStack::class));
 
         System::setContainer($container);
 

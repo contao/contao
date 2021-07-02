@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class InsertTagsTest extends TestCase
 {
@@ -169,7 +168,6 @@ class InsertTagsTest extends TestCase
     private function setContainerWithContaoConfiguration(array $configuration = []): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
         foreach ($configuration as $name => $value) {

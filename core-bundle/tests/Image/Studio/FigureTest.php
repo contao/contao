@@ -27,7 +27,6 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
 class FigureTest extends TestCase
@@ -561,7 +560,6 @@ class FigureTest extends TestCase
     public function testApplyLegacyTemplate(): void
     {
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('request_stack', new RequestStack());
 
         System::setContainer($container);
 

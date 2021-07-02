@@ -290,16 +290,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "v9.3.26",
+            "version": "9.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "d8e2c58563fe4f1bcc6f41146657be254800e711"
+                "reference": "f5642d83cb52a9a103c3e2c1e547a23b010c5011"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/d8e2c58563fe4f1bcc6f41146657be254800e711",
-                "reference": "d8e2c58563fe4f1bcc6f41146657be254800e711",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/f5642d83cb52a9a103c3e2c1e547a23b010c5011",
+                "reference": "f5642d83cb52a9a103c3e2c1e547a23b010c5011",
                 "shasum": ""
             },
             "require": {
@@ -324,7 +324,7 @@
             ],
             "description": "Prefixed scoped version of ECS package",
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/v9.3.26"
+                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.1"
             },
             "funding": [
                 {
@@ -336,7 +336,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-12T13:27:38+00:00"
+            "time": "2021-06-29T12:49:47+00:00"
         }
     ],
     "packages-dev": [],
