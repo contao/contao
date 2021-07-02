@@ -206,7 +206,7 @@ class ModuleBooknav extends Module
 			$objPage->loadDetails();
 
 			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objPage->guests && !$objPage->protected && !$user)
+			if ($objPage->guests && !$objPage->protected && $user)
 			{
 				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
 				continue;
