@@ -45,6 +45,22 @@ class ArrayUtil
 	}
 
 	/**
+	 * Recursively sort an array by key
+	 */
+	public static function recursiveKeySort(array &$array): void
+	{
+		foreach ($array as &$value)
+		{
+			if (\is_array($value))
+			{
+				self::recursiveKeySort($value);
+			}
+		}
+
+		ksort($array);
+	}
+
+	/**
 	 * Return true if an array is associative
 	 *
 	 * @param mixed $arrArray

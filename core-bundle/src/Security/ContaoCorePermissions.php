@@ -149,4 +149,11 @@ final class ContaoCorePermissions
      * Access is granted if the current user can delete forms.
      */
     public const USER_CAN_DELETE_FORMS = 'contao_user.formp.delete';
+
+    /**
+     * Access is granted if the front end member is in at least one of the groups, or no
+     * member is logged in and subject contains a group "-1".
+     * Subject must be a corresponding group ID or an array of group IDs.
+     */
+    public const MEMBER_IN_GROUPS = 'contao_member.groups';
 }

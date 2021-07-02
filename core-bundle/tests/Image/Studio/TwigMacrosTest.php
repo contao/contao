@@ -407,7 +407,7 @@ class TwigMacrosTest extends TestCase
             null,
             [],
             null,
-            '<figure itemscope itemtype="http://schema.org/ImageObject"><picture></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject"><picture></figure>',
         ];
 
         yield 'with link' => [
@@ -417,7 +417,7 @@ class TwigMacrosTest extends TestCase
                 'data-link' => 'bar',
             ],
             null,
-            '<figure itemscope itemtype="http://schema.org/ImageObject"><a href="foo.html" data-link="bar"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
 
         /** @var LightboxResult&MockObject $lightbox */
@@ -436,21 +436,21 @@ class TwigMacrosTest extends TestCase
             null,
             [],
             $lightbox,
-            '<figure itemscope itemtype="http://schema.org/ImageObject"><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with lightbox link and title' => [
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
             $lightbox,
-            '<figure itemscope itemtype="http://schema.org/ImageObject"><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with caption' => [
             new Metadata([Metadata::VALUE_CAPTION => 'foo caption']),
             [],
             null,
-            '<figure itemscope itemtype="http://schema.org/ImageObject"><picture><figcaption></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject"><picture><figcaption></figure>',
         ];
     }
 
@@ -499,7 +499,7 @@ class TwigMacrosTest extends TestCase
         yield 'no options' => [
             '{}',
             [],
-            '<figure itemscope itemtype="http://schema.org/ImageObject"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'figure options' => [
@@ -508,13 +508,13 @@ class TwigMacrosTest extends TestCase
                 'attr' => ['data-foo' => 'foo'],
                 'link_attr' => ['data-bar' => 'bar'],
             ],
-            '<figure itemscope itemtype="http://schema.org/ImageObject" data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject" data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
         ];
 
         yield 'template options' => [
             "{ 'attr': {'data-foo': 'foo'}, 'link_attr': {'data-bar': 'bar'} }",
             [],
-            '<figure itemscope itemtype="http://schema.org/ImageObject" data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject" data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
         ];
 
         yield 'template options overwriting figure options' => [
@@ -523,7 +523,7 @@ class TwigMacrosTest extends TestCase
                 'attr' => ['data-foo' => 'foo'],
                 'link_attr' => ['data-bar' => 'bar'],
             ],
-            '<figure itemscope itemtype="http://schema.org/ImageObject" data-foo="other foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="other bar"><picture></a></figure>',
+            '<figure itemscope itemtype="https://schema.org/ImageObject" data-foo="other foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="other bar"><picture></a></figure>',
         ];
     }
 

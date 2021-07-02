@@ -12,10 +12,14 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
 use MatthiasMullie\Minify\JS;
+use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -393,6 +397,57 @@ abstract class Template extends Controller
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
+	}
+
+	/**
+	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
+	 * It replaces (or optionally removes) Contao insert tags and removes all HTML.
+	 *
+	 * Be careful when using this. It must NOT be used within regular HTML when $value
+	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
+	 * or JSON-LD arrays.
+	 */
+	public function rawPlainText(string $value, bool $removeInsertTags = false): string
+	{
+		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
+	}
+
+	/**
+	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
+	 *
+	 * Compared to $this->rawPlainText() it adds new lines before and after block level HTML elements
+	 * and only then removes the rest of the HTML tags.
+	 *
+	 * Be careful when using this. It must NOT be used within regular HTML when $value
+	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
+	 * or JSON-LD arrays.
+	 */
+	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
+	{
+		return StringUtil::htmlToPlainText($value, $removeInsertTags);
+	}
+
+	/**
+	 * Adds schema.org JSON-LD data to the current response context
+	 */
+	public function addSchemaOrg(array $jsonLd): void
+	{
+		/** @var ResponseContext $responseContext */
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+
+		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
+		{
+			return;
+		}
+
+		/** @var JsonLdManager $jsonLdManager */
+		$jsonLdManager = $responseContext->get(JsonLdManager::class);
+		$type = $jsonLdManager->createSchemaOrgTypeFromArray($jsonLd);
+
+		$jsonLdManager
+			->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+			->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
+		;
 	}
 
 	/**

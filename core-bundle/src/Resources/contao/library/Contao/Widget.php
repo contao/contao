@@ -295,6 +295,7 @@ abstract class Widget extends Controller
 			case 'tabindex':
 				if ($varValue > 0)
 				{
+					trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
 					$this->arrAttributes['tabindex'] = $varValue;
 				}
 				break;

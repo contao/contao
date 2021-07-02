@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -80,22 +81,16 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
-
+		$security = System::getContainer()->get('security.helper');
 		$items = array();
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->loadDetails();
-			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			if (!$objSubpage->protected || (!$user && \in_array(-1, $groups)))
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);

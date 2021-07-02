@@ -209,7 +209,7 @@ into the following templates:
 </div>
 
 <!-- NEW -->
-<div class="event" itemscope itemtype="http://schema.org/Event">
+<div class="event" itemscope itemtype="https://schema.org/Event">
   <a href="<?= $event['href'] ?>" itemprop="url"><span itemprop="name"><?= $event['link'] ?></span></a>
 </div>
 ```
@@ -223,7 +223,7 @@ into the following templates:
 </li>
 
 <!-- NEW -->
-<li itemscope itemtype="http://schema.org/ListItem" itemprop="itemListElement">
+<li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement">
   <a href="<?= $item['href'] ?>" itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></a>
 </li>
 ```

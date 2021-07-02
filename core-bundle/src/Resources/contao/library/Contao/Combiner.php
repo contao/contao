@@ -32,25 +32,21 @@ class Combiner extends System
 {
 	/**
 	 * The .css file extension
-	 * @var string
 	 */
 	const CSS = '.css';
 
 	/**
 	 * The .js file extension
-	 * @var string
 	 */
 	const JS = '.js';
 
 	/**
 	 * The .scss file extension
-	 * @var string
 	 */
 	const SCSS = '.scss';
 
 	/**
 	 * The .less file extension
-	 * @var string
 	 */
 	const LESS = '.less';
 

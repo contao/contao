@@ -35,43 +35,36 @@ class BackendUser extends User
 {
 	/**
 	 * Edit page flag
-	 * @var string
 	 */
 	const CAN_EDIT_PAGE = 1;
 
 	/**
 	 * Edit page hierarchy flag
-	 * @var string
 	 */
 	const CAN_EDIT_PAGE_HIERARCHY = 2;
 
 	/**
 	 * Delete page flag
-	 * @var string
 	 */
 	const CAN_DELETE_PAGE = 3;
 
 	/**
 	 * Edit articles flag
-	 * @var string
 	 */
 	const CAN_EDIT_ARTICLES = 4;
 
 	/**
 	 * Edit article hierarchy flag
-	 * @var string
 	 */
 	const CAN_EDIT_ARTICLE_HIERARCHY = 5;
 
 	/**
 	 * Delete articles flag
-	 * @var string
 	 */
 	const CAN_DELETE_ARTICLES = 6;
 
 	/**
 	 * Symfony Security session key
-	 * @var string
 	 * @deprecated Deprecated since Contao 4.8, to be removed in Contao 5.0
 	 */
 	const SECURITY_SESSION_KEY = '_security_contao_backend';
@@ -601,20 +594,40 @@ class BackendUser extends User
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
 	public function serialize()
 	{
-		return serialize(array('admin' => $this->admin, 'amg' => $this->amg, 'parent' => parent::serialize()));
+		$data = $this->__serialize();
+		$data['parent'] = serialize($data['parent']);
+
+		return serialize($data);
+	}
+
+	public function __serialize(): array
+	{
+		return array('admin' => $this->admin, 'amg' => $this->amg, 'parent' => parent::__serialize());
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
 	public function unserialize($serialized)
 	{
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
+		if (!isset($data['parent']))
+		{
+			return;
+		}
+
+		$data['parent'] = unserialize($data['parent'], array('allowed_classes'=>false));
+
+		$this->__unserialize($data);
+	}
+
+	public function __unserialize(array $data): void
+	{
 		if (array_keys($data) != array('admin', 'amg', 'parent'))
 		{
 			return;
@@ -622,7 +635,7 @@ class BackendUser extends User
 
 		list($this->admin, $this->amg, $parent) = array_values($data);
 
-		parent::unserialize($parent);
+		parent::__unserialize($parent);
 	}
 
 	/**

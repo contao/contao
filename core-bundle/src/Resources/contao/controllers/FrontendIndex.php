@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -263,23 +264,21 @@ class FrontendIndex extends Frontend
 		// Authenticate the user if the page is protected
 		if ($objPage->protected)
 		{
-			$container = System::getContainer();
-			$token = $container->get('security.token_storage')->getToken();
+			$security = System::getContainer()->get('security.helper');
 
-			if ($container->get('security.authentication.trust_resolver')->isAnonymous($token))
+			if (!$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
 			{
-				throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
-			}
+				if (($token = $security->getToken()) === null || System::getContainer()->get('security.authentication.trust_resolver')->isAnonymous($token))
+				{
+					throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
+				}
 
-			if (!$container->get('security.authorization_checker')->isGranted('ROLE_MEMBER'))
-			{
-				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
-			}
+				$user = $security->getUser();
 
-			// Check the user groups
-			if (!$this->User->isMemberOf($objPage->groups))
-			{
-				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+				if ($user instanceof FrontendUser)
+				{
+					$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, TL_ERROR);
+				}
 
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}

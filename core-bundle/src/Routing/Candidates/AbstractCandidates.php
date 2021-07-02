@@ -23,8 +23,6 @@ class AbstractCandidates implements CandidatesInterface
      * This is to prevent abusive requests with a lot of "/". The limit is per
      * batch, that is if a locale matches you could get as many as 2 * $limit
      * candidates if the URL has that many slashes.
-     *
-     * @var int
      */
     private const LIMIT = 20;
 
