@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Twig\Error\SyntaxError;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -58,11 +57,11 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Multiple extends tags are forbidden.', $token->getLine(), $stream->getSourceContext());
         }
 
-        $parent = $this->parser->getExpressionParser()->parseExpression();
+        $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->handleDynamicExtends($parent, $stream);
+        $this->handleDynamicExtends($expr, $stream);
 
-        $this->parser->setParent($parent);
+        $this->parser->setParent($expr);
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
@@ -74,30 +73,30 @@ class DynamicExtendsTokenParser extends AbstractTokenParser
         return 'extends';
     }
 
-    private function handleDynamicExtends(Node $parent, TokenStream $stream): void
+    private function handleDynamicExtends(Node $expr, TokenStream $stream): void
     {
-        if (!$parent instanceof ConstantExpression) {
-            return;
-        }
+        TokenParserHelper::traverseConstantExpressions(
+            $expr,
+            function (Node $node) use ($stream): void {
+                if (null === ($shortName = TokenParserHelper::getContaoTemplate($node->getAttribute('value')))) {
+                    return;
+                }
 
-        if (1 !== preg_match('%^@Contao/(.*)%', $parent->getAttribute('value'), $matches)) {
-            return;
-        }
+                $sourcePath = $stream->getSourceContext()->getPath();
+                $parentName = $this->hierarchy->getDynamicParent($shortName, $sourcePath);
 
-        $shortName = $matches[1];
-        $sourcePath = $stream->getSourceContext()->getPath();
-        $parentName = $this->hierarchy->getDynamicParent($matches[1], $sourcePath);
+                // Detect loops
+                if (\in_array($parentName, $this->inheritanceChains[$shortName] ?? [], true)) {
+                    $chain = implode(' -> ', $this->inheritanceChains[$shortName]);
 
-        // Detect loops
-        if (\in_array($parentName, $this->inheritanceChains[$shortName] ?? [], true)) {
-            $chain = implode(' -> ', $this->inheritanceChains[$shortName]);
+                    throw new \LogicException("Loop detected when extending '$parentName': $chain -> &0");
+                }
 
-            throw new \LogicException("Loop detected when extending '$parentName': $chain -> &0");
-        }
+                $this->inheritanceChains[$shortName][] = $parentName;
 
-        $this->inheritanceChains[$shortName][] = $parentName;
-
-        // Adjust parent template according to the template hierarchy
-        $parent->setAttribute('value', $parentName);
+                // Adjust parent template according to the template hierarchy
+                $node->setAttribute('value', $parentName);
+            }
+        );
     }
 }

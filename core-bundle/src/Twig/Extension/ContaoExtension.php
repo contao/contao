@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Extension;
 
-use Contao\CoreBundle\Twig\Inheritance\DynamicEmbedTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -23,6 +22,7 @@ use Contao\FrontendTemplate;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\TwigFunction;
 use Webmozart\PathUtil\Path;
 
 class ContaoExtension extends AbstractExtension
@@ -89,12 +89,30 @@ class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Register parsers for the 'extends', 'include' and 'embed' tags
-            // which will overwrite the ones of Twig's CoreExtension and
-            // additionally support the Contao template hierarchy.
+            // Register parsers for the 'extends' and 'include' tags which
+            // will overwrite the ones of Twig's CoreExtension and additionally
+            // support the Contao template hierarchy.
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
-            new DynamicEmbedTokenParser($this->hierarchy),
+        ];
+    }
+
+    public function getFunctions(): array
+    {
+        return [
+            // Register a function that will overwrite the 'include' function
+            // of Twig's CoreExtension and additionally supports the Contao
+            // template hierarchy.
+            new TwigFunction(
+                'include',
+                function () {
+                    $args = \func_get_args();
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $args[2], $this->hierarchy);
+
+                    return twig_include(...$args);
+                },
+                ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+            ),
         ];
     }
 

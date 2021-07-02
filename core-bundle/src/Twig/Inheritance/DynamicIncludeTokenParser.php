@@ -12,15 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inheritance;
 
-use Twig\Error\SyntaxError;
-use Twig\Node\Expression\AbstractExpression;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Token;
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
-use Twig\TokenStream;
 
 /**
  * This parser is a drop in replacement for @\Twig\TokenParser\IncludeTokenParser.
@@ -32,13 +27,6 @@ class DynamicIncludeTokenParser extends IncludeTokenParser
      * @var TemplateHierarchyInterface
      */
     private $hierarchy;
-
-    /**
-     * Track use of inherited templates to prevent endless loops.
-     *
-     * @var array<string,array<string>>
-     */
-    private $inheritanceChains = [];
 
     public function __construct(TemplateHierarchyInterface $hierarchy)
     {
@@ -55,9 +43,36 @@ class DynamicIncludeTokenParser extends IncludeTokenParser
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
-    private function handleDynamicIncludes(AbstractExpression $expr): void
+    /**
+     * Return the adjusted logical name or the unchanged input if it does not
+     * match the Contao Twig namespace.
+     */
+    public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
     {
-        throw new \LogicException('not implemented');
+        if (null === ($shortName = TokenParserHelper::getContaoTemplate($name))) {
+            return $name;
+        }
 
+        try {
+            return $hierarchy->getFirst($shortName);
+        } catch (\LogicException $e) {
+            // Enrich exception: theme directories are not supported
+            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?');
+        }
+    }
+
+    private function handleDynamicIncludes(Node $expr): void
+    {
+        TokenParserHelper::traverseConstantExpressions(
+            $expr,
+            function (Node $node): void {
+                $name = (string) $node->getAttribute('value');
+                $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
+
+                if ($name !== $adjustedName) {
+                    $node->setAttribute('value', $adjustedName);
+                }
+            }
+        );
     }
 }

@@ -303,7 +303,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $identifier = $this->getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
-            throw new \LogicException("The Contao extend target '$identifier' could not be found in the template hierarchy.");
+            throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
         }
 
         // Find the next element in the hierarchy or use the first if it cannot be found
@@ -315,6 +315,19 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         }
 
         return $next;
+    }
+
+    public function getFirst(string $shortNameOrIdentifier): string
+    {
+        $identifier = $this->getIdentifier($shortNameOrIdentifier);
+
+        $hierarchy = $this->getInheritanceChains();
+
+        if (null === ($chain = $hierarchy[$identifier] ?? null)) {
+            throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
+        }
+
+        return $chain[array_key_first($chain)];
     }
 
     public function getInheritanceChains(): array

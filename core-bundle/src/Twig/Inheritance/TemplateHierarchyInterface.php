@@ -36,4 +36,9 @@ interface TemplateHierarchyInterface
      * Finds the next template in the hierarchy and returns the logical name.
      */
     public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string;
+
+    /**
+     * Finds the first template in the hierarchy and returns the logical name.
+     */
+    public function getFirst(string $shortNameOrIdentifier): string;
 }
