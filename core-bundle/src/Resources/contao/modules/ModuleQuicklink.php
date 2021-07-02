@@ -94,6 +94,13 @@ class ModuleQuicklink extends Module
 		{
 			$objSubpage->loadDetails();
 
+			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
+			if ($objSubpage->guests && !$objSubpage->protected && !$user)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				continue;
+			}
+
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objSubpage->protected || $this->showProtected || (!$user && \in_array(-1, $objSubpage->groups)) || ($user && $user->isMemberOf($objSubpage->groups)))
 			{
