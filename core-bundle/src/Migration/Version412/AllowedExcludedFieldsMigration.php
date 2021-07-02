@@ -49,7 +49,7 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
                 alexf NOT LIKE '%tl_files::%'
         ");
 
-        if (0 === count($groups)) {
+        if (0 === \count($groups)) {
             return false;
         }
 
@@ -90,7 +90,7 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
                     'tl_files::importantPartY',
                     'tl_files::importantPartWidth',
                     'tl_files::importantPartHeight',
-                    'tl_files::meta'
+                    'tl_files::meta',
                 ]
             );
 
