@@ -74,7 +74,7 @@ final class ContextHelper
                     return (string) $this();
                 } catch (\Throwable $e) {
                     // Enhance exception message
-                    throw new \RuntimeException("There was an error evaluating '{$this->name}': {$e->getMessage()}");
+                    throw new \RuntimeException("Error evaluating '{$this->name}': {$e->getMessage()}", 0, $e);
                 }
             }
 
