@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
+use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -31,13 +32,26 @@ class MemberGroupVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
-        $groups = array_map('intval', (array) $subject);
+        // Filter non-numeric values
+        $subject = array_filter(array_map('intval', (array) $subject));
 
-        if (!$user instanceof FrontendUser) {
-            return \in_array(-1, $groups, true);
+        if (empty($subject)) {
+            return false;
         }
 
-        return $user->isMemberOf($subject);
+        $user = $token->getUser();
+
+        if (!$user instanceof FrontendUser) {
+            return \in_array(-1, $subject, true);
+        }
+
+        $groups = StringUtil::deserialize($user->groups, true);
+
+        // No groups assigned
+        if (empty($groups)) {
+            return false;
+        }
+
+        return \count(array_intersect($subject, $groups)) > 0;
     }
 }
