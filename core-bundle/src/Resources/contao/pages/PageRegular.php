@@ -621,7 +621,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add the user <head> tags
-		if ($strHead = trim($objLayout->head))
+		if ($strHead = trim($objLayout->head ?? ''))
 		{
 			$strHeadTags .= $strHead . "\n";
 		}

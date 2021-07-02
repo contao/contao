@@ -127,7 +127,7 @@ class ModuleArticle extends Module
 		$this->Template->date = Date::parse($objPage->datimFormat, $this->tstamp);
 
 		// Clean the RTE output
-		$this->teaser = StringUtil::toHtml5($this->teaser);
+		$this->teaser = StringUtil::toHtml5($this->teaser ?? '');
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
@@ -160,7 +160,7 @@ class ModuleArticle extends Module
 		}
 
 		// Get section and article alias
-		$chunks = explode(':', Input::get('articles'));
+		$chunks = explode(':', Input::get('articles') ?? '');
 		$strSection = $chunks[0] ?? null;
 		$strArticle = $chunks[1] ?? $strSection;
 
