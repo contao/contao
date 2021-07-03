@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Twig\Environment;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
@@ -155,7 +156,10 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
     }
 
-    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    /**
+     * @param Environment&MockObject $environment
+     */
+    private function getContaoExtension($environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
         if (null === $environment) {
             $environment = $this->createMock(Environment::class);

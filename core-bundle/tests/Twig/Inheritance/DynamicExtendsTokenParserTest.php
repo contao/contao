@@ -33,13 +33,13 @@ class DynamicExtendsTokenParserTest extends TestCase
     /**
      * @dataProvider provideSources
      */
-    public function testSetsParent(string $code, string $expectedParent): void
+    public function testHandlesContaoExtends(string $code, string $expectedParent): void
     {
         $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $templateHierarchy
             ->method('getDynamicParent')
             ->with('foo.html.twig', '/path/to/the/template.html.twig')
-            ->willReturn('<dynamic parent>')
+            ->willReturn('<parent>')
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
@@ -66,9 +66,9 @@ class DynamicExtendsTokenParserTest extends TestCase
             '@Foo/bar.html.twig',
         ];
 
-        yield 'Contao dynamic extend' => [
+        yield 'Contao extend' => [
             "{% extends '@Contao/foo.html.twig' %}",
-            '<dynamic parent>',
+            '<parent>',
         ];
     }
 }

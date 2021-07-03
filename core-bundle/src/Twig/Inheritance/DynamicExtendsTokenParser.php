@@ -61,7 +61,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
 
         $expr = $this->parser->getExpressionParser()->parseExpression();
 
-        $this->handleDynamicExtends($expr, $stream);
+        $this->handleContaoExtends($expr, $stream);
 
         $this->parser->setParent($expr);
 
@@ -75,7 +75,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
         return 'extends';
     }
 
-    private function handleDynamicExtends(Node $expr, TokenStream $stream): void
+    private function handleContaoExtends(Node $expr, TokenStream $stream): void
     {
         TokenParserHelper::traverseConstantExpressions(
             $expr,

@@ -15,12 +15,20 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
+    public function testPriority(): void
+    {
+        $visitor = new ContaoEscaperNodeVisitor(static function () { return []; });
+
+        $this->assertSame(1, $visitor->getPriority());
+    }
+
     public function testEscapesEntities(): void
     {
         $templateContent = '<h1>{{ headline }}</h1><p>{{ content|raw }}</p>';

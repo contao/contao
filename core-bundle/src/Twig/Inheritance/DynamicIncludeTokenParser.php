@@ -40,7 +40,7 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         $expr = $this->parser->getExpressionParser()->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
-        $this->handleDynamicIncludes($expr);
+        $this->handleContaoIncludes($expr);
 
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
@@ -63,7 +63,7 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         }
     }
 
-    private function handleDynamicIncludes(Node $expr): void
+    private function handleContaoIncludes(Node $expr): void
     {
         TokenParserHelper::traverseConstantExpressions(
             $expr,
