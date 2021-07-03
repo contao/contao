@@ -109,7 +109,7 @@ final class ContaoExtension extends AbstractExtension
             // template hierarchy.
             new TwigFunction(
                 'include',
-                function () {
+                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) {
                     $args = \func_get_args();
                     $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
 
