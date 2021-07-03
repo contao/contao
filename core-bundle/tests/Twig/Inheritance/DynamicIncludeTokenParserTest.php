@@ -47,11 +47,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
 
-        $source = new Source(
-            $code,
-            'template.html.twig',
-            '/path/to/the/template.html.twig'
-        );
+        $source = new Source($code, 'template.html.twig');
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $serializedTree = (new Parser($environment))->parse($tokenStream)->__toString();
@@ -82,5 +78,30 @@ class DynamicIncludeTokenParserTest extends TestCase
             "{% include x == 1 ? '@Contao/foo.html.twig' : '@Contao/bar.html.twig' %}",
             '<foo-template>', '<bar-template>',
         ];
+    }
+
+    public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
+    {
+        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $templateHierarchy
+            ->method('getFirst')
+            ->with('foo')
+            ->willThrowException(
+                new \LogicException('<original message>')
+            )
+        ;
+
+        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
+
+        $source = new Source("{% include '@Contao/foo' %}", 'template.html.twig');
+
+        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $parser = new Parser($environment);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('<original message> Did you try to include a non-existent template or a template from a theme directory?');
+
+        $parser->parse($tokenStream);
     }
 }

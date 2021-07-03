@@ -33,6 +33,13 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
     }
 
+    public function testIgnoresThemeDirectoriesIfPathDoesNotExist(): void
+    {
+        $locator = new TemplateLocator('/invalid/path', [], []);
+
+        $this->assertEmpty($locator->findThemeDirectories());
+    }
+
     public function testFindsResourcesPaths(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
@@ -56,6 +63,8 @@ class TemplateLocatorTest extends TestCase
                 Path::join($projectDir, 'contao/templates'),
                 Path::join($projectDir, 'contao/templates/some'),
                 Path::join($projectDir, 'contao/templates/some/random'),
+                Path::join($projectDir, 'src/Resources/contao/templates'),
+                Path::join($projectDir, 'app/Resources/contao/templates'),
             ],
             'CoreBundle' => [
                 Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
@@ -87,5 +96,12 @@ class TemplateLocatorTest extends TestCase
         ];
 
         $this->assertSame($expectedTemplates, $locator->findTemplates($path));
+    }
+
+    public function testFindsNoTemplatesIfPathDoesNotExist(): void
+    {
+        $locator = new TemplateLocator('/project/dir', [], []);
+
+        $this->assertEmpty($locator->findTemplates('/invalid/path'));
     }
 }
