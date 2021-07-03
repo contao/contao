@@ -21,7 +21,6 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
 use Twig\Environment;
-use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -86,9 +85,6 @@ class ContaoExtensionTest extends TestCase
             ->with('foo')
             ->willReturn('@Contao_Bar/foo.html.twig')
         ;
-
-        // Make sure the `twig_include` function is loaded
-        require_once (new \ReflectionClass(CoreExtension::class))->getFileName();
 
         $includeFunction = $this->getContaoExtension($hierarchy)->getFunctions()[0];
         $args = [$environment, [], '@Contao/foo'];

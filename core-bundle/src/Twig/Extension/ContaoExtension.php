@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\FrontendTemplate;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\TwigFunction;
 use Webmozart\PathUtil\Path;
@@ -110,9 +111,11 @@ final class ContaoExtension extends AbstractExtension
                 'include',
                 function () {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $args[2], $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
 
-                    /** @psalm-suppress UndefinedFunction */
+                    // Make sure the `twig_include` function is loaded
+                    class_exists(CoreExtension::class, true);
+
                     return twig_include(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]

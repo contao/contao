@@ -36,11 +36,6 @@ parameters:
         - '#Call to an undefined method .*::transChoice\(\)\.#'
         - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
 
-        # Ignore dynamically loaded function in Contao\CoreBundle\Twig\Extension\ContaoExtension
-        -
-            message: '#Function twig_include not found\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Twig/Extension/ContaoExtension.php
-
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
