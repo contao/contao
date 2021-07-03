@@ -249,6 +249,8 @@ class ContaoFilesystemLoaderTest extends TestCase
                 $fooPath = Path::join($projectDir, '/vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
                 $corePath = Path::join($projectDir, '/vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
             ],
+            'bar' => [Path::join($projectDir, '/src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
+            'baz' => [Path::join($projectDir, '/app/Resources/contao/templates/baz.html.twig') => '@Contao_App/baz.html.twig'],
         ];
 
         // Full hierarchy
