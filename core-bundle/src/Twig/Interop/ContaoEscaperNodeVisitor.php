@@ -94,20 +94,12 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
     private function isEscaperFilterExpressionWithHtmlStrategy(Node $node): bool
     {
-        if (!$node instanceof FilterExpression) {
-            return false;
-        }
-
-        $getConstantValue = static function (Node $node): ?string {
-            if (!$node instanceof ConstantExpression) {
-                return null;
-            }
-
-            return $node->getAttribute('value');
-        };
-
-        return 'escape' === $getConstantValue($node->getNode('filter')) &&
-            'html' === $getConstantValue($node->getNode('arguments')->getNode(0));
+        return $node instanceof FilterExpression
+            && 'escape' === $node->getNode('filter')->getAttribute('value')
+            && $node->getNode('arguments')->hasNode(0)
+            && ($argument = $node->getNode('arguments')->getNode(0)) instanceof ConstantExpression
+            && 'html' === $argument->getAttribute('value')
+        ;
     }
 
     private function setContaoEscaperArguments(FilterExpression $node): void
