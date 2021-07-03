@@ -31,13 +31,6 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
      */
     private $hierarchy;
 
-    /**
-     * Track use of inherited templates to prevent endless loops.
-     *
-     * @var array<string,array<string>>
-     */
-    private $inheritanceChains = [];
-
     public function __construct(TemplateHierarchyInterface $hierarchy)
     {
         $this->hierarchy = $hierarchy;
@@ -48,11 +41,11 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
         $stream = $this->parser->getStream();
 
         if ($this->parser->peekBlockStack()) {
-            throw new SyntaxError('Cannot use "extend" in a block.', $token->getLine(), $stream->getSourceContext());
+            throw new SyntaxError('Cannot use "extends" in a block.', $token->getLine(), $stream->getSourceContext());
         }
 
         if (!$this->parser->isMainScope()) {
-            throw new SyntaxError('Cannot use "extend" in a macro.', $token->getLine(), $stream->getSourceContext());
+            throw new SyntaxError('Cannot use "extends" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
         if (null !== $this->parser->getParent()) {
@@ -86,15 +79,6 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
 
                 $sourcePath = $stream->getSourceContext()->getPath();
                 $parentName = $this->hierarchy->getDynamicParent($shortName, $sourcePath);
-
-                // Detect loops
-                if (\in_array($parentName, $this->inheritanceChains[$shortName] ?? [], true)) {
-                    $chain = implode(' -> ', $this->inheritanceChains[$shortName]);
-
-                    throw new \LogicException("Loop detected when extending '$parentName': $chain -> &0");
-                }
-
-                $this->inheritanceChains[$shortName][] = $parentName;
 
                 // Adjust parent template according to the template hierarchy
                 $node->setAttribute('value', $parentName);

@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Twig\Environment;
+use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Node\Expression\ConstantExpression;
@@ -93,6 +94,29 @@ class ContaoExtensionTest extends TestCase
         ($includeFunction->getCallable())(...$args);
     }
 
+    public function testThrowsIfCoreIncludeFunctionIsNotFound(): void
+    {
+        $environment = $this->createMock(Environment::class);
+        $environment
+            ->method('getExtension')
+            ->willReturnMap([
+                [EscaperExtension::class, new EscaperExtension()],
+                [CoreExtension::class, new class() extends AbstractExtension {
+                }],
+            ])
+        ;
+
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class)
+        );
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
+
+        $extension->getFunctions();
+    }
+
     public function testAllowsOnTheFlyRegisteringTemplatesForInputEncoding(): void
     {
         $contaoExtension = $this->getContaoExtension();
@@ -131,6 +155,10 @@ class ContaoExtensionTest extends TestCase
 
         // Add rule that allows the template and traverse tree a second time (change expected)
         $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
+
+        // Adding the same rule should be ignored
+        $contaoExtension->addContaoEscaperRule('/foo\.html\.twig/');
+
         $traverser->traverse($node);
         $iteration2 = $node->__toString();
 

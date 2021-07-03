@@ -168,6 +168,6 @@ final class ContaoExtension extends AbstractExtension
             }
         }
 
-        throw new \RuntimeException(sprintf('The %s class was expected to register the "include" Twig function but did\'nt.', CoreExtension::class));
+        throw new \RuntimeException(sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
     }
 }
