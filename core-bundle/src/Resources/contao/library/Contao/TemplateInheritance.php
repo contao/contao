@@ -339,14 +339,7 @@ trait TemplateInheritance
 
 	private function renderTwigSurrogateIfExists(): ?string
 	{
-		if (!$this instanceof Template)
-		{
-			return null;
-		}
-
-		$container = System::getContainer();
-
-		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
 		{
 			return null;
 		}
