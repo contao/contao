@@ -32,6 +32,11 @@ use Webmozart\PathUtil\Path;
 final class ContaoExtension extends AbstractExtension
 {
     /**
+     * @var Environment
+     */
+    private $environment;
+
+    /**
      * @var TemplateHierarchyInterface
      */
     private $hierarchy;
@@ -43,6 +48,8 @@ final class ContaoExtension extends AbstractExtension
 
     public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
+        $this->environment = $environment;
+
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
 
@@ -93,9 +100,8 @@ final class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Register parsers for the 'extends' and 'include' tags which
-            // will overwrite the ones of Twig's CoreExtension and additionally
-            // support the Contao template hierarchy.
+            // Overwrite the parsers for the 'extends' and 'include' tags to
+            // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
         ];
@@ -103,20 +109,18 @@ final class ContaoExtension extends AbstractExtension
 
     public function getFunctions(): array
     {
+        $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
+
         return [
-            // Register a function that will overwrite the 'include' function
-            // of Twig's CoreExtension and additionally supports the Contao
-            // template hierarchy.
+            // Overwrite the 'include' function to additionally support the
+            // Contao template hierarchy
             new TwigFunction(
                 'include',
-                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) {
+                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
                     $args = \func_get_args();
                     $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
 
-                    // Make sure the `twig_include` function is loaded
-                    class_exists(CoreExtension::class, true);
-
-                    return twig_include(...$args);
+                    return $includeFunctionCallable(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
             ),
@@ -154,5 +158,16 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate->setBlocks($blocks);
 
         return $partialTemplate->parse();
+    }
+
+    private function getTwigIncludeFunction(): TwigFunction
+    {
+        foreach ($this->environment->getExtension(CoreExtension::class)->getFunctions() as $function) {
+            if ('include' === $function->getName()) {
+                return $function;
+            }
+        }
+
+        throw new \RuntimeException(sprintf('The %s class was expected to register the "include" Twig function but did\'nt.', CoreExtension::class));
     }
 }

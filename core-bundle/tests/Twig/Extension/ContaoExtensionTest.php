@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
 use Twig\Environment;
+use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -64,9 +65,6 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame('include', $functions[0]->getName());
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testIncludeFunctionDelegatesToTwigInclude(): void
     {
         $methodCalledException = new \Exception();
@@ -86,7 +84,7 @@ class ContaoExtensionTest extends TestCase
             ->willReturn('@Contao_Bar/foo.html.twig')
         ;
 
-        $includeFunction = $this->getContaoExtension($hierarchy)->getFunctions()[0];
+        $includeFunction = $this->getContaoExtension($environment, $hierarchy)->getFunctions()[0];
         $args = [$environment, [], '@Contao/foo'];
 
         $this->expectExceptionObject($methodCalledException);
@@ -157,13 +155,18 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
     }
 
-    private function getContaoExtension(TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
-        $environment = $this->createMock(Environment::class);
+        if (null === $environment) {
+            $environment = $this->createMock(Environment::class);
+        }
+
         $environment
             ->method('getExtension')
-            ->with(EscaperExtension::class)
-            ->willReturn(new EscaperExtension())
+            ->willReturnMap([
+                [EscaperExtension::class, new EscaperExtension()],
+                [CoreExtension::class, new CoreExtension()],
+            ])
         ;
 
         return new ContaoExtension(
