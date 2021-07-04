@@ -302,6 +302,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     /**
      * @dataProvider provideTemplateFilemtimeSamples
+     * @preserveGlobalState disabled
      * @runInSeparateProcess because filemtime gets mocked
      */
     public function testIsFresh(array $mtimeMappings, bool $isFresh): void
@@ -355,6 +356,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     }
 
     /**
+     * @preserveGlobalState disabled
      * @runInSeparateProcess because filemtime gets mocked
      */
     public function testIsFreshDelegatesToThemeTemplate(): void
