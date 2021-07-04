@@ -269,13 +269,9 @@
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server does not run in strict mode.</source>
       </trans-unit>
-      <trans-unit id="90" resname="strict_sql_mode_explain1">
-        <source>Running without strict mode enabled is bad practice and can lead to unnoticed loss of data. If you cannot change your SQL mode globally, you can add the following command to your connection &lt;code&gt;options&lt;/code&gt; that will enable it on each connection:</source>
+      <trans-unit id="90" resname="strict_sql_mode_explain">
+        <source>Running without strict mode enabled is not supported! Please change your SQL mode globally or add the following command to your connection &lt;code&gt;options&lt;/code&gt; that will enable it on each connection:</source>
       </trans-unit>
-      <trans-unit id="91" resname="strict_sql_mode_explain2">
-        <source>If you want to suppress this error you can do [todo]…</source>
-      </trans-unit>
-
     </body>
   </file>
 </xliff>
