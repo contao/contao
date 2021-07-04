@@ -252,7 +252,7 @@ class InstallTool
                 // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
                 if (version_compare($version, $vok, '<')) {
                     // The innodb_large_prefix option is disabled
-                    if (!\in_array(strtolower((string)$row['Value']), ['1', 'on'], true)) {
+                    if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
                         $context['errorCode'] = 5;
 
                         return true;
@@ -261,7 +261,7 @@ class InstallTool
                     $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
 
                     // The innodb_file_per_table option is disabled
-                    if (!\in_array(strtolower((string)$row['Value']), ['1', 'on'], true)) {
+                    if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
                         $context['errorCode'] = 6;
 
                         return true;
@@ -270,7 +270,7 @@ class InstallTool
                     $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
 
                     // The InnoDB file format is not Barracuda
-                    if ('' !== $row['Value'] && 'barracuda' !== strtolower((string)$row['Value'])) {
+                    if ('' !== $row['Value'] && 'barracuda' !== strtolower((string) $row['Value'])) {
                         $context['errorCode'] = 6;
 
                         return true;
@@ -280,9 +280,7 @@ class InstallTool
         }
 
         // Ensure the database is running in strict mode
-        $mode = $this->connection
-            ->executeQuery('SELECT @@sql_mode')
-            ->fetchOne() ?: '';
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
 
         if (
             empty(array_intersect(
