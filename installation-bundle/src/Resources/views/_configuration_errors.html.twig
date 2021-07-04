@@ -67,12 +67,12 @@ innodb_file_per_table = 1</pre>
     connections:
       default:
         options:
-          {% if driver == 'mysqli' -%}
-              # Define a MYSQLI_INIT_COMMAND
-              3: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
-          {%- else -%}
-              # Define a PDO::MYSQL_ATTR_INIT_COMMAND
-              1002: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
-          {%- endif %}</pre>
+        {%- if driver == 'mysqli' %}
+          # Define a MYSQLI_INIT_COMMAND
+          3: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
+        {%- else %}
+          # Define a PDO::MYSQL_ATTR_INIT_COMMAND
+          1002: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"
+        {%- endif %}</pre>
     </div>
 {% endif %}
