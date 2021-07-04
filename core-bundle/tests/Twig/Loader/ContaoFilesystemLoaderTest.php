@@ -268,6 +268,119 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame("A\nB", $source->getCode());
     }
 
+    public function testExists(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
+
+        $loader->addPath(
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates')
+        );
+
+        $this->assertTrue($loader->exists('@Contao/text.html.twig'));
+        $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
+    }
+
+    public function testExistsDelegatesToThemeTemplate(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
+
+        $loader->addPath(
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates/my/theme'),
+            'Contao_Theme_my_theme'
+        );
+
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my/theme';
+
+        $GLOBALS['objPage'] = $page;
+
+        $this->assertTrue($loader->exists('@Contao/text.html.twig'));
+        $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
+
+        unset($GLOBALS['objPage']);
+    }
+
+    /**
+     * @dataProvider provideTemplateFilemtimeSamples
+     * @runInSeparateProcess because filemtime gets mocked
+     */
+    public function testIsFresh(array $mtimeMappings, bool $isFresh): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+        $cacheTime = 1623924000;
+
+        $locator = new TemplateLocator($projectDir, [], []);
+        $loader = $this->getContaoFilesystemLoader(null, $locator);
+        (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
+
+        $this->mockFilemtime($mtimeMappings);
+
+        $this->assertSame($isFresh, $loader->isFresh('@Contao/text.html.twig', $cacheTime));
+    }
+
+    public function provideTemplateFilemtimeSamples(): \Generator
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+        $cacheTime = 1623924000;
+
+        $fresh = $cacheTime;
+        $expired = $cacheTime + 100;
+
+        $textPath1 = Path::join($projectDir, '/templates/text.html.twig');
+        $textPath2 = Path::join($projectDir, '/contao/templates/some/random/text.html.twig');
+
+        yield 'all fresh in chain' => [
+            [
+                $textPath1 => $fresh,
+                $textPath2 => $fresh,
+            ],
+            true,
+        ];
+
+        yield 'at least one expired  in chain' => [
+            [
+                $textPath1 => $fresh,
+                $textPath2 => $expired,
+            ],
+            false,
+        ];
+
+        yield 'filemtime fails' => [
+            [
+                $textPath1 => $fresh,
+                // do not register $textPath2
+            ],
+            false,
+        ];
+    }
+
+    /**
+     * @runInSeparateProcess because filemtime gets mocked
+     */
+    public function testIsFreshDelegatesToThemeTemplate(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+        $cacheTime = 1623924000;
+        $expired = $cacheTime + 100;
+
+        $locator = new TemplateLocator($projectDir, [], []);
+        $loader = $this->getContaoFilesystemLoader(null, $locator);
+        (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
+
+        $this->mockFilemtime([
+            Path::join($projectDir, '/templates/my/theme/text.html.twig') => $expired,
+        ]);
+
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my/theme';
+
+        $GLOBALS['objPage'] = $page;
+
+        $this->assertFalse($loader->isFresh('@Contao/text.html.twig', $cacheTime));
+
+        unset($GLOBALS['objPage']);
+    }
+
     public function testGetsHierarchy(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
@@ -404,6 +517,34 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->expectExceptionMessage("The template 'foo' could not be found in the template hierarchy.");
 
         $loader->getFirst('foo.html.twig');
+    }
+
+    /**
+     * @param array<string, int> $pathToMtime
+     */
+    private function mockFilemtime(array $pathToMtime): void
+    {
+        $namespaces = ['Contao\CoreBundle\Twig\Loader', 'Twig\Loader'];
+
+        foreach ($namespaces as $namespace) {
+            $mock = sprintf(
+                <<<'EOPHP'
+                    namespace %s;
+
+                    function filemtime(string $filename) {
+                        if (null !== ($mtime = unserialize('%s')[$filename] ?? null)) {
+                            return $mtime;
+                        }
+
+                        throw new \Exception("Invalid path '$filename'.");
+                    }
+                    EOPHP,
+                $namespace,
+                serialize($pathToMtime)
+            );
+
+            eval($mock);
+        }
     }
 
     private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null, TemplateLocator $templateLocator = null): ContaoFilesystemLoader
