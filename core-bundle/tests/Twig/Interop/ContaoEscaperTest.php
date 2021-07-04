@@ -15,42 +15,71 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 class ContaoEscaperTest extends TestCase
 {
     /**
      * @dataProvider provideInput
      */
-    public function testEscapesStrings($input, string $charset, string $expectedOutput): void
+    public function testEscapesStrings($input, string $expectedOutput): void
     {
-        $output = (new ContaoEscaper())(
-            $this->createMock(Environment::class),
-            $input,
-            $charset
+        $this->assertSame(
+            $expectedOutput,
+            $this->invokeContaoEscaper($input, null),
+            'no charset specified'
         );
 
-        $this->assertSame($expectedOutput, $output);
+        $this->assertSame(
+            $expectedOutput,
+            $this->invokeContaoEscaper($input, 'UTF-8'),
+            'UTF-8'
+        );
+
+        $this->assertSame(
+            $expectedOutput,
+            $this->invokeContaoEscaper($input, 'utf-8'),
+            'utf-8'
+        );
     }
 
     public function provideInput(): \Generator
     {
         yield 'simple string' => [
             'foo',
-            'UTF-8',
             'foo',
         ];
 
         yield 'integer' => [
-            123, 'UTF-8', '123',
+            123,
+            '123',
         ];
 
         yield 'string with entities' => [
             'A & B &rarr; &#9829;',
-            'UTF-8',
             'A &amp; B &rarr; &#9829;',
         ];
 
-        // fixme: I'd be glad if someone with a good understanding of encoding
-        //        could provide some useful examples here. :-)
+        yield 'string with uppercase entities' => [
+            '&AMP; &QUOT; &LT; &GT;',
+            '&amp; &quot; &lt; &gt;',
+        ];
+    }
+
+    public function testThrowsErrorIfCharsetIsNotUtf8(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "contao_html" escape filter does not support the ISO-8859-1 charset, use UTF-8 instead.');
+
+        $this->invokeContaoEscaper('foo', 'ISO-8859-1');
+    }
+
+    private function invokeContaoEscaper($input, ?string $charset): string
+    {
+        return (new ContaoEscaper())(
+            $this->createMock(Environment::class),
+            $input,
+            $charset
+        );
     }
 }

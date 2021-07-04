@@ -45,46 +45,10 @@ final class ContaoEscaper
             $string
         );
 
-        // see https://secure.php.net/htmlspecialchars
-
-        // Using a static variable to avoid initializing the array
-        // each time the function is called. Moving the declaration on the
-        // top of the function slow downs other escaping strategies.
-        static $htmlspecialcharsCharsets = [
-            'ISO-8859-1' => true, 'ISO8859-1' => true,
-            'ISO-8859-15' => true, 'ISO8859-15' => true,
-            'utf-8' => true, 'UTF-8' => true,
-            'CP866' => true, 'IBM866' => true, '866' => true,
-            'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
-            '1251' => true,
-            'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
-            'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
-            'BIG5' => true, '950' => true,
-            'GB2312' => true, '936' => true,
-            'BIG5-HKSCS' => true,
-            'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
-            'EUC-JP' => true, 'EUCJP' => true,
-            'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
-        ];
-
-        if (isset($htmlspecialcharsCharsets[$charset])) {
-            return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset, false);
+        if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
+            throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
         }
 
-        if (isset($htmlspecialcharsCharsets[strtoupper($charset)])) {
-            // cache the lowercase variant for future iterations
-            $htmlspecialcharsCharsets[$charset] = true;
-
-            return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset, false);
-        }
-
-        if (!\function_exists('iconv')) {
-            throw new RuntimeError('Unable to convert encoding: required function iconv() does not exist. You should install ext-iconv or symfony/polyfill-iconv.');
-        }
-
-        $string = iconv($charset, 'UTF-8', $string);
-        $string = htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
-
-        return iconv('UTF-8', $charset, $string);
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false);
     }
 }

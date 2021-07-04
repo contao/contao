@@ -50,4 +50,26 @@ class RewireTwigPathsPassTest extends TestCase
 
         $this->assertSame($expectedLoaderCalls, $loader->getMethodCalls());
     }
+
+    public function testDoesNothingIfNoPathsAreRegistered(): void
+    {
+        $container = new ContainerBuilder();
+
+        $baseLoader = (new Definition(FilesystemLoader::class))
+            ->addMethodCall('foo')
+        ;
+
+        $loader = new Definition(FailTolerantFilesystemLoader::class);
+
+        $container->addDefinitions([
+            'twig.loader.native_filesystem' => $baseLoader,
+            FailTolerantFilesystemLoader::class => $loader,
+        ]);
+
+        (new RewireTwigPathsPass())->process($container);
+
+        $this->assertTrue($baseLoader->hasMethodCall('foo'));
+
+        $this->assertEmpty($loader->getMethodCalls());
+    }
 }

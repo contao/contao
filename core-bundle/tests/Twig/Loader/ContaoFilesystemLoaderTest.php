@@ -25,7 +25,7 @@ use Webmozart\PathUtil\Path;
 
 class ContaoFilesystemLoaderTest extends TestCase
 {
-    public function testAddPath(): void
+    public function testAddsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();
 
@@ -42,7 +42,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertFalse($loader->exists('@Contao_foo-Bar_Baz2/2.html.twig'));
     }
 
-    public function testPrependPath(): void
+    public function testPrependsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();
 
@@ -89,7 +89,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertEmpty($loader->getPaths());
     }
 
-    public function testClearPaths(): void
+    public function testClearsPaths(): void
     {
         $loader = $this->getContaoFilesystemLoader();
 
@@ -128,7 +128,42 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame([$path2], $loader2->getPaths('Contao_Foo'));
     }
 
-    public function testGetCacheKey(): void
+    public function testPersistsAndRecallsHierarchy(): void
+    {
+        $locator = $this->createMock(TemplateLocator::class);
+        $locator
+            ->method('findTemplates')
+            ->willReturn([
+                'foo.html.twig' => '/path/to/templates/foo.html.twig',
+            ])
+        ;
+
+        $cacheAdapter = new ArrayAdapter();
+
+        $loader1 = $this->getContaoFilesystemLoader($cacheAdapter, $locator);
+        $loader1->addPath(
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'),
+            'Contao_App',
+            true
+        );
+
+        $chains = $loader1->getInheritanceChains();
+        $this->assertNotEmpty($chains);
+
+        // Persist
+        $this->assertEmpty(array_filter($cacheAdapter->getValues()));
+
+        $loader1->persist();
+
+        $this->assertNotEmpty(array_filter($cacheAdapter->getValues()));
+
+        // Recall
+        $loader2 = $this->getContaoFilesystemLoader($cacheAdapter);
+
+        $this->assertSame($chains, $loader2->getInheritanceChains());
+    }
+
+    public function testGetsCacheKey(): void
     {
         $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
 
@@ -172,7 +207,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function testGetSourceContext(): void
+    public function testGetsSourceContext(): void
     {
         $loader = $this->getContaoFilesystemLoader();
 
@@ -216,7 +251,24 @@ class ContaoFilesystemLoaderTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
-    public function testGetDynamicParentAndHistory(): void
+    public function testGetsSourceContextFromHtml5File(): void
+    {
+        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
+
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy/templates');
+
+        $loader->addPath($path);
+
+        $source = $loader->getSourceContext('@Contao/foo.html5');
+
+        $this->assertSame('@Contao/foo.html5', $source->getName());
+        $this->assertSame(Path::join($path, 'foo.html5'), Path::normalize($source->getPath()));
+
+        // Block names should end up as tokens separated by \n
+        $this->assertSame("A\nB", $source->getCode());
+    }
+
+    public function testGetsHierarchy(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -254,43 +306,104 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
 
         // Full hierarchy
-        $this->assertSame($expectedChains, $loader->getInheritanceChains());
+        $this->assertSame(
+            $expectedChains,
+            $loader->getInheritanceChains(),
+            'get all chains'
+        );
+
+        // Get first
+        $this->assertSame(
+            '@Contao_Global/text.html.twig',
+            $loader->getFirst('text'),
+            'get first template in chain'
+        );
 
         // Next element by path
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getDynamicParent('text.html.twig', 'other/template.html.twig'),
+            'chain: root -> global (using short name)'
         );
 
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getDynamicParent('text', 'other/template.html.twig'),
+            'chain: root -> global (using identifier)'
         );
 
         $this->assertSame(
             '@Contao_App/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $globalPath),
+            'chain: global -> app'
         );
 
         $this->assertSame(
             '@Contao_BarBundle/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $appPath),
+            'chain: app -> bar bundle'
         );
 
         $this->assertSame(
             '@Contao_FooBundle/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $barPath),
+            'chain: bar bundle -> foo bundle'
         );
 
         $this->assertSame(
             '@Contao_CoreBundle/text.html.twig',
             $loader->getDynamicParent('text.html.twig', $fooPath),
+            'chain: foo bundle -> core bundle'
         );
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage("The template '$corePath' does not have a parent 'text' it can extend from.");
 
         $loader->getDynamicParent('text.html.twig', $corePath);
+    }
+
+    /**
+     * @dataProvider provideInvalidDynamicParentQueries
+     */
+    public function testGetDynamicParentThrowsIfTemplateCannotBeFound(string $identifier, string $sourcePath, string $expectedException): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $locator = new TemplateLocator($projectDir, [], []);
+        $loader = $this->getContaoFilesystemLoader(null, $locator);
+        (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage($expectedException);
+
+        $loader->getDynamicParent($identifier, $sourcePath);
+    }
+
+    public function provideInvalidDynamicParentQueries(): \Generator
+    {
+        yield 'invalid chain' => [
+            'random',
+            '/path/to/template/x.html.twig',
+            "The template 'random' could not be found in the template hierarchy.",
+        ];
+
+        $templatePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/contao/templates/some/random/text.html.twig');
+
+        yield 'last in chain' => [
+            'text',
+            $templatePath,
+            "The template '$templatePath' does not have a parent 'text' it can extend from.",
+        ];
+    }
+
+    public function testGetFirstThrowsIfChainDoesNotExist(): void
+    {
+        $loader = $this->getContaoFilesystemLoader();
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage("The template 'foo' could not be found in the template hierarchy.");
+
+        $loader->getFirst('foo.html.twig');
     }
 
     private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null, TemplateLocator $templateLocator = null): ContaoFilesystemLoader
