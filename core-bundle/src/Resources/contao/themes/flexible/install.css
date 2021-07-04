@@ -36,6 +36,11 @@ body {
 	margin-bottom:18px;
 }
 
+/* Warning */
+#warning {
+	padding-top:10px;
+}
+
 /* Container */
 #container {
 	max-width:760px;
@@ -136,6 +141,7 @@ p {
 }
 .tl_info {
 	color:#006494;
+	background:url("icons/show.svg") no-repeat 1px 3px;
 	background:url("icons/show.svg") no-repeat 1px 3px;
 }
 .tl_formbody .tl_error {

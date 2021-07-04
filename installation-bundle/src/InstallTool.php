@@ -300,9 +300,7 @@ class InstallTool
         }
 
         // Ensure the database is running in strict mode
-        $mode = $this->connection
-            ->executeQuery('SELECT @@sql_mode')
-            ->fetchOne() ?: '';
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
 
         if (
             empty(array_intersect(
@@ -314,7 +312,7 @@ class InstallTool
             $context['errorCode'] = 7;
             $context['driver'] = $this->connection->getDriver() instanceof MysqliDriver ? 'mysqli' : 'pdo';
 
-            return true;
+            // do not return true here, we only want to display a warning
         }
 
         return false;
