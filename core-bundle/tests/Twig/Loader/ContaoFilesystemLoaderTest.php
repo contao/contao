@@ -327,8 +327,8 @@ class ContaoFilesystemLoaderTest extends TestCase
         $fresh = $cacheTime;
         $expired = $cacheTime + 100;
 
-        $textPath1 = Path::join($projectDir, '/templates/text.html.twig');
-        $textPath2 = Path::join($projectDir, '/contao/templates/some/random/text.html.twig');
+        $textPath1 = Path::join($projectDir, 'templates/text.html.twig');
+        $textPath2 = Path::join($projectDir, 'contao/templates/some/random/text.html.twig');
 
         yield 'all fresh in chain' => [
             [
@@ -370,7 +370,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
 
         $this->mockFilemtime([
-            Path::join($projectDir, '/templates/my/theme/text.html.twig') => $expired,
+            Path::join($projectDir, 'templates/my/theme/text.html.twig') => $expired,
         ]);
 
         $page = new \stdClass();
@@ -534,7 +534,7 @@ class ContaoFilesystemLoaderTest extends TestCase
                     namespace %s;
 
                     function filemtime(string $filename) {
-                        if (null !== ($mtime = unserialize('%s')[$filename] ?? null)) {
+                        if (null !== ($mtime = unserialize('%s')[\Webmozart\PathUtil\Path::canonicalize($filename)] ?? null)) {
                             return $mtime;
                         }
 
