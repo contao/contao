@@ -115,8 +115,9 @@ class ModuleQuicknav extends Module
 			return array();
 		}
 
-		$security = System::getContainer()->get('security.helper');
 		++$level;
+		$security = System::getContainer()->get('security.helper');
+		$user = $security->getUser();
 
 		foreach ($objSubpages as $objSubpage)
 		{
