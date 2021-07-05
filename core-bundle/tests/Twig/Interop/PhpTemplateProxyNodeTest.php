@@ -31,7 +31,7 @@ class PhpTemplateProxyNodeTest extends TestCase
                 $this->getTemplateName(),
                 array_map(
                     function(callable $block) use ($context): string {
-                        if ($this->env->isDebug()) { ob_start(); } else { ob_start(function () { return ''; }); }
+                        if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
                         try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
                     }, $blocks
                 ), $context
