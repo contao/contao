@@ -40,6 +40,18 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
             return false;
         }
 
+        $columns = $schemaManager->listTableColumns('tl_user_group');
+
+        if (!isset($columns['modules'], $columns['filemounts'], $columns['fop'], $columns['alexf'])) {
+            return false;
+        }
+
+        $count = $this->connection->fetchOne("SELECT COUNT(*) FROM tl_user_group WHERE alexf LIKE '%tl_files::%'");
+
+        if ($count > 0) {
+            return false;
+        }
+
         $groups = $this->connection->fetchAllAssociative("
             SELECT
                 id, modules, filemounts, fop
