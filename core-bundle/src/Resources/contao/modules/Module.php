@@ -280,6 +280,7 @@ abstract class Module extends Frontend
 
 		$items = array();
 		$security = System::getContainer()->get('security.helper');
+		$user = $security->getUser();
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;

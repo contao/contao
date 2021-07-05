@@ -195,6 +195,7 @@ class ModuleBooknav extends Module
 		}
 
 		$security = System::getContainer()->get('security.helper');
+		$user = $security->getUser();
 
 		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))

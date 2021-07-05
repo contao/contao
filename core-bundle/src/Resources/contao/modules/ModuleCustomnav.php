@@ -86,6 +86,7 @@ class ModuleCustomnav extends Module
 		$objTemplate->module = $this; // see #155
 
 		$security = System::getContainer()->get('security.helper');
+		$user = $security->getUser();
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)

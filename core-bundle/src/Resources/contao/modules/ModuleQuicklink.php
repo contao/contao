@@ -81,8 +81,9 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
-		$security = System::getContainer()->get('security.helper');
 		$items = array();
+		$security = System::getContainer()->get('security.helper');
+		$user = $security->getUser();
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
