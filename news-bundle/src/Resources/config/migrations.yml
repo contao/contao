@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\NewsBundle\Migration\Version412\UnifyNewsSourceMigration:
+        arguments:
+            - '@database_connection'

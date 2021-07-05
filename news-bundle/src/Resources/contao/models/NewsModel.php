@@ -43,8 +43,6 @@ use Contao\Model\Collection;
  * @property string|boolean $addEnclosure
  * @property string|null    $enclosure
  * @property string         $source
- * @property string|integer $jumpTo
- * @property string|integer $articleId
  * @property string         $url
  * @property string|boolean $target
  * @property string         $cssClass
@@ -84,8 +82,6 @@ use Contao\Model\Collection;
  * @method static NewsModel|null findOneByAddEnclosure($val, array $opt=array())
  * @method static NewsModel|null findOneByEnclosure($val, array $opt=array())
  * @method static NewsModel|null findOneBySource($val, array $opt=array())
- * @method static NewsModel|null findOneByJumpTo($val, array $opt=array())
- * @method static NewsModel|null findOneByArticleId($val, array $opt=array())
  * @method static NewsModel|null findOneByUrl($val, array $opt=array())
  * @method static NewsModel|null findOneByTarget($val, array $opt=array())
  * @method static NewsModel|null findOneByCssClass($val, array $opt=array())
@@ -121,8 +117,6 @@ use Contao\Model\Collection;
  * @method static Collection|NewsModel[]|NewsModel|null findByAddEnclosure($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByEnclosure($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findBySource($val, array $opt=array())
- * @method static Collection|NewsModel[]|NewsModel|null findByJumpTo($val, array $opt=array())
- * @method static Collection|NewsModel[]|NewsModel|null findByArticleId($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByUrl($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByTarget($val, array $opt=array())
  * @method static Collection|NewsModel[]|NewsModel|null findByCssClass($val, array $opt=array())
@@ -162,8 +156,6 @@ use Contao\Model\Collection;
  * @method static integer countByAddEnclosure($val, array $opt=array())
  * @method static integer countByEnclosure($val, array $opt=array())
  * @method static integer countBySource($val, array $opt=array())
- * @method static integer countByJumpTo($val, array $opt=array())
- * @method static integer countByArticleId($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())

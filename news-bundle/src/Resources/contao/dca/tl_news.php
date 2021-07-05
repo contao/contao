@@ -147,8 +147,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	(
 		'__selector__'                => array('source', 'addImage', 'addEnclosure', 'overwriteMeta'),
 		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'internal'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,jumpTo;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'article'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,articleId;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
 		'external'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,url,target;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
 	),
 
@@ -411,24 +409,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news'],
 			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
 			'sql'                     => "varchar(12) NOT NULL default 'default'"
-		),
-		'jumpTo' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'pageTree',
-			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('mandatory'=>true, 'fieldType'=>'radio'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
-		),
-		'articleId' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options_callback'        => array('tl_news', 'getArticleAlias'),
-			'eval'                    => array('chosen'=>true, 'mandatory'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('table'=>'tl_article', 'type'=>'hasOne', 'load'=>'lazy'),
 		),
 		'url' => array
 		(
@@ -767,57 +747,6 @@ class tl_news extends Backend
 	}
 
 	/**
-	 * Get all articles and return them as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getArticleAlias(DataContainer $dc)
-	{
-		$arrPids = array();
-		$arrAlias = array();
-
-		if (!$this->User->isAdmin)
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
-		}
-		else
-		{
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
-		}
-
-		if ($objAlias->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objAlias->next())
-			{
-				$arrAlias[$objAlias->parent][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
-			}
-		}
-
-		return $arrAlias;
-	}
-
-	/**
 	 * Add the source options depending on the allowed fields (see #5498)
 	 *
 	 * @param DataContainer $dc
@@ -828,25 +757,13 @@ class tl_news extends Backend
 	{
 		if ($this->User->isAdmin)
 		{
-			return array('default', 'internal', 'article', 'external');
+			return array('default', 'external');
 		}
 
 		$arrOptions = array('default');
 
 		// Add the "internal" option
-		if ($this->User->hasAccess('tl_news::jumpTo', 'alexf'))
-		{
-			$arrOptions[] = 'internal';
-		}
-
-		// Add the "article" option
-		if ($this->User->hasAccess('tl_news::articleId', 'alexf'))
-		{
-			$arrOptions[] = 'article';
-		}
-
-		// Add the "external" option
-		if ($this->User->hasAccess('tl_news::url', 'alexf'))
+		if ($this->User->hasAccess('tl_news::external', 'alexf'))
 		{
 			$arrOptions[] = 'external';
 		}
