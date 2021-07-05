@@ -251,11 +251,14 @@ class FrontendUser extends User
 	}
 
 	/**
-	 * @param array|int|string $ids
-	 * @return bool
+	 * Return true if the user is member of a particular group
 	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
+	 * @param mixed $ids A single group ID or an array of group IDs
+	 *
+	 * @return boolean True if the user is a member of the group
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
+	 *             use Symfony security instead
 	 */
 	public function isMemberOf($ids)
 	{
