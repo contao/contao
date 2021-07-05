@@ -26,18 +26,19 @@ class MemberGroupVoter extends Voter
             return false;
         }
 
-        return is_numeric($subject)
-            || (\is_array($subject) && \count($subject) === \count(array_filter($subject, 'is_numeric')));
+        if (!\is_array($subject)) {
+            return (string) (int) $subject === (string) $subject;
+        }
+
+        $filtered = array_filter($subject, static function ($val) { return (string) (int) $val === (string) $val; });
+
+        return \count($subject) === \count($filtered);
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
-        if (!\is_array($subject)) {
-            $subject = [$subject];
-        }
-
         // Filter non-numeric values
-        $subject = array_filter($subject, static function ($val) { return (string)(int) $val === (string) $val; });
+        $subject = array_filter((array) $subject, static function ($val) { return (string) (int) $val === (string) $val; });
 
         if (empty($subject)) {
             return false;
