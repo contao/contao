@@ -254,7 +254,7 @@ class FrontendUser extends User
 	 * @param array|int|string $ids
 	 * @return bool
 	 *
-  	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 *             Use Symfony security instead.
 	 */
 	public function isMemberOf($ids)
