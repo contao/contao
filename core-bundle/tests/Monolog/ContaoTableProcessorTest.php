@@ -46,7 +46,8 @@ class ContaoTableProcessorTest extends TestCase
             'datetime' => new \DateTimeImmutable(),
             'message' => '',
         ];
-        $this->assertSame($record, $record);
+
+        $this->assertSame($record, $processor($record));
     }
 
     /**
