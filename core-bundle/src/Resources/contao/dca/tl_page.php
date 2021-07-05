@@ -260,11 +260,11 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'decodeEntities'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''",
-			'save_callback' =>        array
+			'save_callback'           => array
 			(
 				static function ($value)
 				{
-					// Make sure it's at least a basic language
+					// Make sure there is at least a basic language
 					if (!preg_match('/^[a-z]{2,}/i', $value)) {
 						throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['language']);
 					}

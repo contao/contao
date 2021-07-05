@@ -46,14 +46,28 @@ class PageLanguageMigration extends AbstractMigration
             return false;
         }
 
-        $count = $this->connection->fetchOne("SELECT COUNT(*) FROM tl_page WHERE type='root' AND SUBSTRING(language, 3, 1) = '-'");
+        $count = $this->connection->fetchOne("
+            SELECT
+                COUNT(*)
+            FROM
+                tl_page
+            WHERE
+                type='root' AND SUBSTRING(language, 3, 1) = '-'
+        ");
 
         return $count > 0;
     }
 
     public function run(): MigrationResult
     {
-        $pages = $this->connection->fetchAllAssociative("SELECT id, language FROM tl_page WHERE type='root' AND SUBSTRING(language, 3, 1) = '-'");
+        $pages = $this->connection->fetchAllAssociative("
+            SELECT
+                id, language
+            FROM
+                tl_page
+            WHERE
+                type='root' AND SUBSTRING(language, 3, 1) = '-'
+        ");
 
         foreach ($pages as $page) {
             $this->connection->update(

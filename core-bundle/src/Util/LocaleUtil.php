@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Util;
 
 /**
- * The LocaleUtil helps in handling ICU Locale IDs and IETF Language Tags (BCP 47).
+ * The LocaleUtil class helps in handling ICU Locale IDs and IETF Language Tags (BCP 47).
  * Both are almost identical, Locale ID uses underline (_) and Language Tag uses dash (-).
  *
  * For any method, we are safely assuming the input can be any format, therefore we try
@@ -39,8 +39,8 @@ class LocaleUtil
     }
 
     /**
-     * Generates an ordered list of locales according to ICU rules,
-     * the last array item is the most specific locale.
+     * Generates an ordered list of locales according to ICU rules, the last
+     * array item is the most specific locale.
      *
      * This can also be used to load languages files that override each other.
      * A script tag (e.g. chinese traditional) always overrides a region.
@@ -75,7 +75,8 @@ class LocaleUtil
     }
 
     /**
-     * Converts an Locale ID (_) to a Language Tag (-) and strips keywords after the @ sign.
+     * Converts an Locale ID (_) to a Language Tag (-) and strips keywords
+     * after the @ sign.
      *
      * Language Tag is used in two cases in Contao:
      *  1. The XML/HTML lang attribute.
@@ -88,10 +89,11 @@ class LocaleUtil
     }
 
     /**
-     * Converts a Language Tag (-) to a Locale ID (_) and strips keywords after the @ sign.
+     * Converts a Language Tag (-) to a Locale ID (_) and strips keywords
+     * after the @ sign.
      *
-     * For historical reasons, the page language can be a Language Tag, so we need to safely-convert
-     * the value before looking up language files etc.
+     * For historical reasons, the page language can be a Language Tag, so we
+     * need to safely-convert the value before looking up language files etc.
      */
     public static function formatAsLocale(string $languageTag): string
     {

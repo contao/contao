@@ -616,7 +616,7 @@ class InsertTags extends Controller
 						// Check if there are wildcards (see #8313)
 						foreach ($langs as $k=>$v)
 						{
-							if (substr($v, -1) === '*')
+							if (substr($v, -1) == '*')
 							{
 								$langs[$k] = LocaleUtil::formatAsLocale(substr($v, 0, -1));
 
@@ -635,7 +635,7 @@ class InsertTags extends Controller
 						{
 							for (; $_rit<$_cnt; $_rit+=2)
 							{
-								if ($tags[$_rit+1] === 'iflng' || (strncmp($tags[$_rit+1], 'iflng::', 7) && LocaleUtil::formatAsLocale(substr($tags[$_rit+1], 7)) === $pageLanguage))
+								if ($tags[$_rit+1] == 'iflng' || (strncmp($tags[$_rit+1], 'iflng::', 7) && LocaleUtil::formatAsLocale(substr($tags[$_rit+1], 7)) == $pageLanguage))
 								{
 									break;
 								}
