@@ -86,7 +86,7 @@ class ModuleCustomnav extends Module
 		$objTemplate->module = $this; // see #155
 
 		$security = System::getContainer()->get('security.helper');
-		$user = $security->getUser();
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objModel)
@@ -94,7 +94,7 @@ class ModuleCustomnav extends Module
 			$objModel->loadDetails();
 
 			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objModel->guests && !$objModel->protected && $user)
+			if ($objModel->guests && !$objModel->protected && $isMember)
 			{
 				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
 				continue;
