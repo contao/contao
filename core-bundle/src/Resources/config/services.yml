@@ -936,6 +936,10 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
 
     contao.twig.template_extension:

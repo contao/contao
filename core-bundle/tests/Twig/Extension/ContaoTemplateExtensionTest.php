@@ -16,10 +16,11 @@ use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
+use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Twig\TwigFunction;
+use Twig\Node\Node;
 
 class ContaoTemplateExtensionTest extends TestCase
 {
@@ -55,18 +56,26 @@ class ContaoTemplateExtensionTest extends TestCase
         $this->assertSame('c', $template->c);
     }
 
-    public function testAddsTheRenderContaoBackEndTemplateFunction(): void
+    public function testAddsTheContaoTemplateFunctions(): void
     {
         $functions = $this->getExtension()->getFunctions();
 
-        $renderBaseTemplateFunction = array_filter(
-            $functions,
-            static function (TwigFunction $function): bool {
-                return 'render_contao_backend_template' === $function->getName();
-            }
-        );
+        $this->assertCount(3, $functions);
 
-        $this->assertCount(1, $renderBaseTemplateFunction);
+        [$renderBaseTemplateFn, $layoutSectionsFn, $layoutSectionFn] = $functions;
+
+        $node = $this->createMock(Node::class);
+
+        $this->assertSame('render_contao_backend_template', $renderBaseTemplateFn->getName());
+        $this->assertSame([], $renderBaseTemplateFn->getSafe($node));
+
+        $this->assertSame('contao_sections', $layoutSectionsFn->getName());
+        $this->assertSame([LegacyTemplateFunctionsRuntime::class, 'renderLayoutSections'], $layoutSectionsFn->getCallable());
+        $this->assertSame(['html'], $layoutSectionsFn->getSafe($node));
+
+        $this->assertSame('contao_section', $layoutSectionFn->getName());
+        $this->assertSame([LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'], $layoutSectionFn->getCallable());
+        $this->assertSame(['html'], $layoutSectionFn->getSafe($node));
     }
 
     public function testDoesNotRenderTheBackEndTemplateIfNotInBackEndScope(): void

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
@@ -51,6 +52,22 @@ class ContaoTemplateExtension extends AbstractExtension
     {
         return [
             new TwigFunction('render_contao_backend_template', [$this, 'renderContaoBackendTemplate']),
+            new TwigFunction(
+                'contao_sections',
+                [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSections'],
+                [
+                    'needs_context' => true,
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFunction(
+                'contao_section',
+                [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
+                [
+                    'needs_context' => true,
+                    'is_safe' => ['html'],
+                ]
+            ),
             new TwigFunction('add_schema_org', [SchemaOrgRuntime::class, 'add']),
         ];
     }

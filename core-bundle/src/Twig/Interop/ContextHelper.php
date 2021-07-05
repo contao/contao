@@ -35,6 +35,10 @@ final class ContextHelper
             }
         );
 
+        if (!isset($context['Template'])) {
+            $context['Template'] = $template;
+        }
+
         return $context;
     }
 
