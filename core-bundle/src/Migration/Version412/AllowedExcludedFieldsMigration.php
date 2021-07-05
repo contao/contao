@@ -53,15 +53,13 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
             return false;
         }
 
-        $shouldRun = false;
-
         foreach ($groups as $group) {
             if ($this->grantsEditPermission($group)) {
-                $shouldRun = true;
+                return true;
             }
         }
 
-        return $shouldRun;
+        return false;
     }
 
     public function run(): MigrationResult
