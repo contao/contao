@@ -425,7 +425,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		// Filter non-numeric values
-		$ids = array_values(array_filter($ids, static function ($val) { return is_numeric($val); }));
+		$ids = array_filter($ids, static function ($val) { return (string)(int) $val === (string) $val; });
 
 		if (empty($ids))
 		{

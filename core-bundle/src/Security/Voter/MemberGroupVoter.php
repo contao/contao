@@ -32,8 +32,12 @@ class MemberGroupVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
+        if (!\is_array($subject)) {
+            $subject = [$subject];
+        }
+
         // Filter non-numeric values
-        $subject = array_filter(array_map('intval', (array) $subject));
+        $subject = array_filter($subject, static function ($val) { return (string)(int) $val === (string) $val; });
 
         if (empty($subject)) {
             return false;
@@ -42,7 +46,7 @@ class MemberGroupVoter extends Voter
         $user = $token->getUser();
 
         if (!$user instanceof FrontendUser) {
-            return \in_array(-1, $subject, true);
+            return \in_array(-1, array_map('intval', $subject), true);
         }
 
         $groups = StringUtil::deserialize($user->groups, true);
