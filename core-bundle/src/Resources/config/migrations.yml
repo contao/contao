@@ -83,7 +83,3 @@ services:
     Contao\CoreBundle\Migration\Version412\PageLanguageMigration:
         arguments:
             - '@database_connection'
-
-    Contao\CoreBundle\Migration\Version412\PageLanguageMigration:
-        arguments:
-            - '@database_connection'

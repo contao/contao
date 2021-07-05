@@ -36,7 +36,7 @@ class PageLanguageMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->getSchemaManager();
 
-        if (!$schemaManager || !$schemaManager->tablesExist(['tl_page'])) {
+        if (null === $schemaManager || !$schemaManager->tablesExist(['tl_page'])) {
             return false;
         }
 
