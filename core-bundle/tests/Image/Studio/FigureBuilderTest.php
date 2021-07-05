@@ -33,7 +33,6 @@ use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
 class FigureBuilderTest extends TestCase
@@ -574,10 +573,7 @@ class FigureBuilderTest extends TestCase
      */
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
     {
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('request_stack', $this->createMock(RequestStack::class));
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
@@ -759,10 +755,7 @@ class FigureBuilderTest extends TestCase
      */
     public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
     {
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('request_stack', $this->createMock(RequestStack::class));
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];
 

@@ -92,6 +92,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'legacy'], $_SERVER);
@@ -380,6 +381,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
@@ -718,6 +720,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);

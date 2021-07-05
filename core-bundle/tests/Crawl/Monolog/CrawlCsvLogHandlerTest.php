@@ -23,7 +23,7 @@ class CrawlCsvLogHandlerTest extends TestCase
     /**
      * @dataProvider writesCsvStreamProvider
      */
-    public function testWritesCsvStream(\DateTime $dt, array $context, string $expectedContent, string $existingCsvContent = '', $message = 'foobar'): void
+    public function testWritesCsvStream(\DateTimeImmutable $dt, array $context, string $expectedContent, string $existingCsvContent = '', string $message = 'foobar'): void
     {
         $stream = fopen('php://memory', 'r+');
 
@@ -32,7 +32,7 @@ class CrawlCsvLogHandlerTest extends TestCase
         }
 
         $handler = new CrawlCsvLogHandler($stream);
-        $handler->handle(['level' => Logger::DEBUG, 'message' => $message, 'extra' => [], 'context' => $context, 'datetime' => $dt]);
+        $handler->handle(['level' => Logger::DEBUG, 'level_name' => 'DEBUG', 'channel' => 'test', 'message' => $message, 'extra' => [], 'context' => $context, 'datetime' => $dt]);
 
         rewind($stream);
         $content = stream_get_contents($stream);
@@ -42,12 +42,14 @@ class CrawlCsvLogHandlerTest extends TestCase
 
     public function testSourceFilter(): void
     {
-        $dt = new \DateTime();
+        $dt = new \DateTimeImmutable();
         $formattedDt = '"'.$dt->format(CrawlCsvLogHandler::DATETIME_FORMAT).'"';
 
         $record = [
             'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
             'message' => 'foobar',
+            'channel' => 'test',
             'extra' => [],
             'datetime' => $dt,
             'context' => [
@@ -77,7 +79,7 @@ class CrawlCsvLogHandlerTest extends TestCase
 
     public function writesCsvStreamProvider(): \Generator
     {
-        $dt = new \DateTime();
+        $dt = new \DateTimeImmutable();
         $formattedDt = '"'.$dt->format(CrawlCsvLogHandler::DATETIME_FORMAT).'"';
 
         yield 'Should not write anything if the source is missing' => [

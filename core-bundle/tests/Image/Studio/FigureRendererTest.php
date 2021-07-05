@@ -22,7 +22,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
 use Webmozart\PathUtil\Path;
@@ -127,7 +126,6 @@ class FigureRendererTest extends TestCase
 
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
 

@@ -80,6 +80,6 @@ services:
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version412\MergeGuestsOnlyMigration:
+    Contao\CoreBundle\Migration\Version412\AllowedExcludedFieldsMigration:
         arguments:
             - '@database_connection'
