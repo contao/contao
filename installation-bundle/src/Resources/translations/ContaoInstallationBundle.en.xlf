@@ -270,7 +270,7 @@
         <source>Your database server does not run in strict mode.</source>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
-        <source>Running without strict mode enabled is bad practice and can lead to unnoticed loss of data. It won't be supported anymore in Contao versions 4.12 and later. Please change your SQL mode globally or add the following command to your connection &lt;code&gt;options&lt;/code&gt; that will enable it on each connection:</source>
+        <source>Running without strict mode enabled is bad practice and can lead to unnoticed loss of data. It won't be supported anymore in later Contao versions. Please change your SQL mode globally or add the following command to your connection &lt;code&gt;options&lt;/code&gt; that will enable it on each connection:</source>
       </trans-unit>
       <trans-unit id="91" resname="warning">
         <source>Warning</source>
