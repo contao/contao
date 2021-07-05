@@ -42,9 +42,11 @@ class ContaoTableHandlerTest extends TestCase
     {
         $record = [
             'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
+            'channel' => 'test',
             'extra' => ['contao' => new ContaoContext('foobar')],
             'context' => [],
-            'datetime' => new \DateTime(),
+            'datetime' => new \DateTimeImmutable(),
             'message' => 'foobar',
         ];
 
@@ -84,15 +86,27 @@ class ContaoTableHandlerTest extends TestCase
         $handler = new ContaoTableHandler();
         $handler->setLevel(Logger::INFO);
 
-        $this->assertFalse($handler->handle(['level' => Logger::DEBUG]));
+        $this->assertFalse($handler->handle([
+            'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
+            'channel' => 'test',
+            'extra' => [],
+            'context' => [],
+            'datetime' => new \DateTimeImmutable(),
+            'message' => 'foobar',
+        ]));
     }
 
     public function testDoesNotHandleARecordWithoutContaoContext(): void
     {
         $record = [
             'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
+            'channel' => 'test',
             'extra' => ['contao' => null],
             'context' => [],
+            'datetime' => new \DateTimeImmutable(),
+            'message' => 'foobar',
         ];
 
         $handler = new ContaoTableHandler();
@@ -104,9 +118,11 @@ class ContaoTableHandlerTest extends TestCase
     {
         $record = [
             'level' => Logger::DEBUG,
+            'level_name' => 'DEBUG',
+            'channel' => 'test',
             'extra' => ['contao' => new ContaoContext('foobar')],
             'context' => [],
-            'datetime' => new \DateTime(),
+            'datetime' => new \DateTimeImmutable(),
             'message' => 'foobar',
         ];
 
