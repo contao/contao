@@ -22,17 +22,7 @@ class MemberGroupVoter extends Voter
 {
     protected function supports($attribute, $subject): bool
     {
-        if (ContaoCorePermissions::MEMBER_IN_GROUPS !== $attribute) {
-            return false;
-        }
-
-        if (!\is_array($subject)) {
-            return (string) (int) $subject === (string) $subject;
-        }
-
-        $filtered = array_filter($subject, static function ($val) { return (string) (int) $val === (string) $val; });
-
-        return \count($subject) === \count($filtered);
+        return ContaoCorePermissions::MEMBER_IN_GROUPS === $attribute;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
