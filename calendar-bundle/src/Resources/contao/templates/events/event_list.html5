@@ -26,7 +26,7 @@
   <?php if ($this->details): ?>
     <?= $this->details ?>
   <?php else: ?>
-    <div class="ce_text block" class="description">
+    <div class="ce_text description block">
       <?= $this->teaser ?>
     </div>
   <?php endif; ?>
