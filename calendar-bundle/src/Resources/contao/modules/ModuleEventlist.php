@@ -318,10 +318,12 @@ class ModuleEventlist extends Events
 			}
 
 			// Show the teaser text of redirect events (see #6315)
-			if (\is_bool($event['details']) && $event['source'] == 'default')
+			if (\is_bool($event['details']) && $event['source'] === 'default')
 			{
 				$objTemplate->hasDetails = false;
 			}
+
+			$objTemplate->hasReader = $event['source'] === 'default';
 
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
@@ -395,6 +397,12 @@ class ModuleEventlist extends Events
 			{
 				$this->addEnclosuresToTemplate($objTemplate, $event);
 			}
+
+			// schema.org information
+			$objTemplate->getBasicSchemaOrgData = static function () use ($event): array
+			{
+				return Events::getBasicSchemaOrgData($event);
+			};
 
 			$strEvents .= $objTemplate->parse();
 
