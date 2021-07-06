@@ -231,7 +231,7 @@ class ModuleBreadcrumb extends Module
 			{
 				$jsonLd['itemListElement'][] = array(
 					'@type' => 'ListItem',
-					'position' => ++$position,
+					'position' => $position + 1,
 					'item' => array(
 						'@id' => $item['href'] ?: './',
 						'name' => StringUtil::inputEncodedToPlainText($item['link'])
