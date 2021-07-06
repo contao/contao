@@ -7,8 +7,8 @@
 
 <div class="event layout_list<?= $this->classList ?>">
 
-  <h2><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
-  <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?></time></p>
+  <h2><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> class="url"><?= $this->link ?></a></h2>
+  <p class="time"><time datetime="<?= $this->datetime ?>"><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?></time></p>
 
   <?php if ($this->location): ?>
     <p class="location" class="location">
@@ -26,7 +26,7 @@
   <?php if ($this->details): ?>
     <?= $this->details ?>
   <?php else: ?>
-    <div class="ce_text block" itemprop="description">
+    <div class="ce_text block" class="description">
       <?= $this->teaser ?>
     </div>
   <?php endif; ?>
