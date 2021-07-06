@@ -220,6 +220,30 @@ class ModuleBreadcrumb extends Module
 			}
 		}
 
+		$this->Template->getBasicSchemaOrgData = static function() use ($items): array
+		{
+			$jsonLd = array(
+				'@type' => 'BreadcrumbList',
+				'itemListElement' => array()
+			);
+
+			$position = 0;
+
+			foreach ($items as $item)
+			{
+				$jsonLd['itemListElement'][] = array(
+					'@type' => 'ListItem',
+					'position' => ++$position,
+					'item' => array(
+						'@id' => $item['href'] ?: './',
+						'name' => StringUtil::inputEncodedToPlainText($item['link'])
+					)
+				);
+			}
+
+			return $jsonLd;
+		};
+
 		$this->Template->items = $items;
 	}
 
