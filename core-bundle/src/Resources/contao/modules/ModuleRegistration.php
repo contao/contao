@@ -69,8 +69,6 @@ class ModuleRegistration extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
-
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
