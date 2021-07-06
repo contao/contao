@@ -110,7 +110,10 @@ class Version447Update extends AbstractMigration
                     active = '1' DESC, addedOn != '' DESC, id
             ");
 
-            $subscriptions = $stmt->executeQuery(['pid' => $duplicate['pid'], 'email' => $duplicate['email']]);
+            $subscriptions = $stmt
+                ->executeQuery(['pid' => $duplicate['pid'], 'email' => $duplicate['email']])
+                ->fetchAllAssociative()
+            ;
 
             foreach ($subscriptions as $subscription) {
                 if (0 === $count++) {
