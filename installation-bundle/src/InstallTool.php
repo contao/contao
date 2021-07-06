@@ -18,7 +18,7 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -131,7 +131,7 @@ class InstallTool
 
         try {
             $this->connection->executeStatement('USE '.$quotedName);
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             $this->logException($e);
 
             return false;
@@ -343,7 +343,7 @@ class InstallTool
             if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = '1'") > 0) {
                 return true;
             }
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             // ignore
         }
 

@@ -128,7 +128,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
                 }
 
-                if (is_a($definition->getClass(), AbstractController::class, true) && !$childDefinition->hasMethodCall('setContainer')) {
+                if (!$childDefinition->hasMethodCall('setContainer') && is_a($definition->getClass(), AbstractController::class, true)) {
                     $childDefinition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
                 }
 
