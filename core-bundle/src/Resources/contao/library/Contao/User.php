@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\ImportUserEvent;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -483,10 +485,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 			$password = $request->request->get('password');
 
-			if (self::triggerImportUserHook($username, $password, $user->strTable) === false)
-			{
-				return null;
-			}
+			self::triggerImportUserHook($username, $password, $user->strTable);
+			System::getContainer()->get('event_dispatcher')->dispatch(new ImportUserEvent($username, $password, $user->strTable), ContaoCoreEvents::IMPORT_USER);
 
 			if ($user->findBy('username', Input::post('username')) === false)
 			{
@@ -646,7 +646,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0. Use the "contao.import_user" event instead.');
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0. Use the "contao.import_user" event instead.');
 
 		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 		{

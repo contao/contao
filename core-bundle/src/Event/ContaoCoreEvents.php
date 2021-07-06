@@ -76,4 +76,11 @@ final class ContaoCoreEvents
      * @see SlugValidCharactersEvent
      */
     public const SLUG_VALID_CHARACTERS = 'contao.slug_valid_characters';
+
+    /**
+     * The contao.import_user event is triggered when a username cannot be found in the database.
+     *
+     * @see ImportUserEvent
+     */
+    public const IMPORT_USER = 'contao.import_user';
 }
