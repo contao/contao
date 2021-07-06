@@ -88,9 +88,12 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
     private function getAffectedRowsForTable(string $table): array
     {
         return $this->connection->fetchAllAssociative("
-            SELECT id, backupCodes
-            FROM $table
-            WHERE backupCodes IS NOT NULL AND backupCodes REGEXP '[a-f0-9]{6}-[a-f0-9]{6}'
+            SELECT
+                id, backupCodes
+            FROM
+                $table
+            WHERE
+                backupCodes IS NOT NULL AND backupCodes REGEXP '[a-f0-9]{6}-[a-f0-9]{6}'
         ");
     }
 }
