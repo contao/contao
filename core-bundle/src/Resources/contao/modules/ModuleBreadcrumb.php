@@ -227,11 +227,13 @@ class ModuleBreadcrumb extends Module
 				'itemListElement' => array()
 			);
 
-			foreach ($items as $position => $item)
+			$position = 0;
+
+			foreach ($items as $item)
 			{
 				$jsonLd['itemListElement'][] = array(
 					'@type' => 'ListItem',
-					'position' => $position + 1,
+					'position' => ++$position,
 					'item' => array(
 						'@id' => $item['href'] ?: './',
 						'name' => StringUtil::inputEncodedToPlainText($item['link'])
