@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -247,8 +248,8 @@ class FrontendIndex extends Frontend
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		// Check wether the language matches the root page language
-		if (isset($_GET['language']) && $objPage->urlPrefix && Input::get('language') != $objPage->rootLanguage)
+		// Check whether the language matches the root page language
+		if (isset($_GET['language']) && $objPage->urlPrefix && Input::get('language') != LocaleUtil::formatAsLanguageTag($objPage->rootLanguage))
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}

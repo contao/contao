@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Matcher;
 
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\NestedMatcher\RouteFilterInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,7 +48,7 @@ class LanguageFilter implements RouteFilterInterface
 
             if (
                 $pageModel->rootIsFallback
-                || preg_grep('/^'.substr($pageModel->rootLanguage, 0, 2).'/', $languages)
+                || preg_grep('/^'.LocaleUtil::getPrimaryLanguage($pageModel->rootLanguage).'/', $languages)
             ) {
                 continue;
             }

@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Idna;
 use Contao\Image;
@@ -257,8 +258,20 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'language', 'maxlength'=>5, 'nospace'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(5) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'decodeEntities'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) NOT NULL default ''",
+			'save_callback'           => array
+			(
+				static function ($value)
+				{
+					// Make sure there is at least a basic language
+					if (!preg_match('/^[a-z]{2,}/i', $value)) {
+						throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['language']);
+					}
+
+					return LocaleUtil::canonicalize($value);
+				}
+			)
 		),
 		'robots' => array
 		(

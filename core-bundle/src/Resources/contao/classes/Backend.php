@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -90,14 +91,13 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyMceLanguage()
 	{
-		$lang = $GLOBALS['TL_LANGUAGE'];
+		$lang = LocaleUtil::formatAsLocale((string) $GLOBALS['TL_LANGUAGE']);
 
 		if (!$lang)
 		{
 			return 'en';
 		}
 
-		$lang = str_replace('-', '_', $lang);
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
@@ -778,7 +778,7 @@ abstract class Backend extends Controller
 		$objPage->loadDetails();
 
 		// Convert the language to a locale (see #5678)
-		$strLanguage = str_replace('-', '_', $objPage->rootLanguage);
+		$strLanguage = LocaleUtil::formatAsLocale($objPage->rootLanguage);
 
 		if (isset($arrMeta[$strLanguage]))
 		{

@@ -74,6 +74,8 @@ class Route404ProviderTest extends TestCase
                 'urlPrefix' => '',
                 'urlSuffix' => '.html',
                 'rootId' => 1,
+                'language' => 'en',
+                'rootLanguage' => 'en',
             ]
         );
 
@@ -87,6 +89,8 @@ class Route404ProviderTest extends TestCase
                 'urlPrefix' => 'en',
                 'urlSuffix' => '.html',
                 'rootId' => 1,
+                'language' => 'en',
+                'rootLanguage' => 'en',
             ]
         );
 

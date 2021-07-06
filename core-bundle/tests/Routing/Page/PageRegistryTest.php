@@ -33,6 +33,8 @@ class PageRegistryTest extends TestCase
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
             'requireItem' => '',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -52,6 +54,8 @@ class PageRegistryTest extends TestCase
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
             'requireItem' => '1',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -73,6 +77,8 @@ class PageRegistryTest extends TestCase
             'alias' => $alias,
             'urlPrefix' => $urlPrefix,
             'urlSuffix' => $urlSuffix,
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -153,7 +159,11 @@ class PageRegistryTest extends TestCase
     public function testConfiguresTheRoute(): void
     {
         /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
@@ -283,7 +293,11 @@ class PageRegistryTest extends TestCase
     public function testOverwritesExistingTypes(): void
     {
         /** @var PageModel&MockObject $pageModel */
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'language' => 'en',
+            'rootLanguage' => 'en',
+        ]);
 
         $config1 = new RouteConfig();
         $config2 = new RouteConfig();
@@ -333,6 +347,8 @@ class PageRegistryTest extends TestCase
                 'alias' => 'baz',
                 'urlPrefix' => 'bar',
                 'urlSuffix' => '.html',
+                'language' => 'en',
+                'rootLanguage' => 'en',
             ]
         );
 

@@ -117,29 +117,6 @@ class LocaleSubscriberTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
-    public function testFailsIfTheLocaleIsInvalid(): void
-    {
-        $request = Request::create('/');
-        $request->attributes->set('_locale', 'invalid');
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $event = new RequestEvent(
-            $this->createMock(KernelInterface::class),
-            $request,
-            HttpKernelInterface::MASTER_REQUEST
-        );
-
-        $listener = new LocaleSubscriber(
-            $this->createMock(LocaleAwareInterface::class),
-            $this->mockScopeMatcher(),
-            ['en']
-        );
-
-        $this->expectException('InvalidArgumentException');
-
-        $listener->onKernelRequest($event);
-    }
-
     public function testSetsTheTranslatorLocale(): void
     {
         $request = Request::create('/');

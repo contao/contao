@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -1197,7 +1198,7 @@ class PageModel extends Model
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
+				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
 				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 			}
 		}
@@ -1269,6 +1270,8 @@ class PageModel extends Model
 		if ($strForceLang !== null)
 		{
 			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\PageModel::getFrontendUrl()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
+
+			$strForceLang = LocaleUtil::formatAsLanguageTag($strForceLang);
 
 			$page = $page->cloneOriginal();
 			$page->preventSaving(false);

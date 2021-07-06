@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -83,7 +84,7 @@ class LegacyRoutingListener
      */
     public function overrideUrlPrefix($value, DataContainer $dc): ?string
     {
-        return $this->prependLocale ? $dc->activeRecord->language : '';
+        return $this->prependLocale ? LocaleUtil::formatAsLanguageTag($dc->activeRecord->language) : '';
     }
 
     /**

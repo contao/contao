@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
@@ -132,23 +133,12 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $langB = null;
 
         if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
-            $langA = $languages[$pageA->rootLanguage] ?? null;
-            $langB = $languages[$pageB->rootLanguage] ?? null;
+            $fallbackA = LocaleUtil::getFallbacks($pageA->rootLanguage);
+            $fallbackB = LocaleUtil::getFallbacks($pageB->rootLanguage);
+            $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
+            $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
 
-            $primaryA = substr($pageA->rootLanguage, 0, 2);
-            $primaryB = substr($pageB->rootLanguage, 0, 2);
-
-            if ($primaryA !== $primaryB) {
-                // We must not compare by language (without region) if they are the same, otherwise
-                // two pages with same language but different regions might not be sorted by region priority.
-                if (null === $langA) {
-                    $langA = $languages[$primaryA] ?? null;
-                }
-
-                if (null === $langB) {
-                    $langB = $languages[$primaryB] ?? null;
-                }
-            } elseif (null === $langA && null === $langB) {
+            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === \Locale::getPrimaryLanguage($pageB->rootLanguage)) {
                 // If both pages have the same language without region and neither region has a priority,
                 // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
                 $langA = $pageA->rootSorting;
@@ -212,20 +202,28 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $result = [];
 
         foreach ($languages as $language) {
-            $language = str_replace('_', '-', $language);
+            $locales = LocaleUtil::getFallbacks($language);
+            $language = array_pop($locales);
             $result[] = $language;
 
-            if (5 === \strlen($language)) {
-                $lng = substr($language, 0, 2);
-
-                // For [de-DE, fr, de] this will add "de" as second item in this loop,
-                // but the only last item will be kept by array_flip.
-                if (!\in_array($lng, $result, true)) {
-                    $result[] = $lng;
+            foreach (array_reverse($locales) as $locale) {
+                if (!\in_array($locale, $result, true)) {
+                    $result[] = $locale;
                 }
             }
         }
 
         return array_flip($result);
+    }
+
+    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): ?int
+    {
+        foreach (array_reverse($locales) as $locale) {
+            if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {
+                return $languagePriority[$locale];
+            }
+        }
+
+        return null;
     }
 }

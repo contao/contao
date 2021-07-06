@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -102,11 +103,11 @@ class PageError404 extends Frontend
 				{
 					if ($strRequest == Environment::get('request'))
 					{
-						$strRequest = $objRootPage->language . '/' . $strRequest;
+						$strRequest = LocaleUtil::formatAsLanguageTag($objRootPage->language) . '/' . $strRequest;
 					}
 					else
 					{
-						$strRequest = Environment::get('script') . '/' . $objRootPage->language . '/' . $strRequest;
+						$strRequest = Environment::get('script') . '/' . LocaleUtil::formatAsLanguageTag($objRootPage->language) . '/' . $strRequest;
 					}
 
 					$this->redirect($strRequest);

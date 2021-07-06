@@ -1505,6 +1505,8 @@ class FigureBuilderIntegrationTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->language = 'en';
+        $page->rootLanguage = 'en';
+        $page->rootFallbackLanguage = 'en';
 
         $GLOBALS['objPage'] = $page;
 
