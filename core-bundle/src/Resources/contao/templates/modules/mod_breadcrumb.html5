@@ -7,7 +7,7 @@
       <?php if ($item['isActive']): ?>
         <li class="active<?php if ($item['class']): ?> <?= $item['class'] ?><?php endif; ?> last"><?= $item['link'] ?></li>
       <?php else: ?>
-        <li<?php if ($item['class']): ?> class="<?= $item['class'] ?>"<?php endif; ?>><a href="<?= $item['href'] ?: './' ?>" title="<?= $item['title'] ?>"><span class="name"><?= $item['link'] ?></span></a></li>
+        <li<?php if ($item['class']): ?> class="<?= $item['class'] ?>"<?php endif; ?>><a href="<?= $item['href'] ?: './' ?>" title="<?= $item['title'] ?>"><?= $item['link'] ?></a></li>
       <?php endif; ?>
     <?php endforeach; ?>
   </ul>
