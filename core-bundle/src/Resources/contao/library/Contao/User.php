@@ -485,8 +485,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 			$password = $request->request->get('password');
 
-			self::triggerImportUserHook($username, $password, $user->strTable);
-			System::getContainer()->get('event_dispatcher')->dispatch(new ImportUserEvent($username, $password, $user->strTable), ContaoCoreEvents::IMPORT_USER);
+			$event = new ImportUserEvent($username, $password, $user->strTable);
+
+            System::getContainer()->get('event_dispatcher')->dispatch($event, ContaoCoreEvents::IMPORT_USER);
+
+            if (!$event->isLoaded() && self::triggerImportUserHook($username, $password, $user->strTable) === false)
+            {
+                return null;
+            }
 
 			if ($user->findBy('username', Input::post('username')) === false)
 			{

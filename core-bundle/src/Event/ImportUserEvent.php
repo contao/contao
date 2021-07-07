@@ -31,6 +31,11 @@ class ImportUserEvent extends Event
      */
     private $table;
 
+    /**
+     * @var bool
+     */
+    private $isLoaded = false;
+
     public function __construct(string $username, string $password, string $table)
     {
         $this->username = $username;
@@ -51,5 +56,17 @@ class ImportUserEvent extends Event
     public function getTable(): string
     {
         return $this->table;
+    }
+
+    public function isLoaded(): bool
+    {
+        return $this->isLoaded;
+    }
+
+    public function setIsLoaded(bool $isLoaded): self
+    {
+        $this->isLoaded = $isLoaded;
+
+        return $this;
     }
 }
