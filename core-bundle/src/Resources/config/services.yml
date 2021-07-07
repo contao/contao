@@ -182,6 +182,8 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\SitemapController:
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
         tags:
             - controller.service_arguments
             - container.service_subscriber

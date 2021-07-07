@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Contao\System;
@@ -30,6 +31,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SitemapController extends AbstractController
 {
+    /**
+     * @var PageRegistry
+     */
+    private $pageRegistry;
+
+    public function __construct(PageRegistry $pageRegistry)
+    {
+        $this->pageRegistry = $pageRegistry;
+    }
+
     /**
      * @Route("/sitemap.xml")
      */
@@ -141,7 +152,7 @@ class SitemapController extends AbstractController
             $isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
 
             // Searchable and not protected
-            if ($isPublished && 'regular' === $objPage->type && !$objPage->requireItem) {
+            if ($isPublished && $this->pageRegistry->supportsContentComposition($objPage) && !$objPage->requireItem) {
                 $arrPages[] = $objPage->getAbsoluteUrl();
 
                 // Get articles with teaser
