@@ -1,7 +1,7 @@
 
 <div class="event layout_full block<?= $this->class ?>">
 
-  <h1 itemprop="name"><?= $this->title ?></h1>
+  <h1><?= $this->title ?></h1>
 
   <?php if ($this->recurring): ?>
     <p class="info recurring"><?= $this->recurring ?></p>
