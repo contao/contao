@@ -123,54 +123,53 @@ class SitemapController extends AbstractController
         return $pages;
     }
 
-    private function getPageAndArticleUrls(int $pid): array
+    private function getPageAndArticleUrls(int $parentPageId): array
     {
         /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
 
-        /** @var ArticleModel $articleModelAdapter */
-        $articleModelAdapter = $this->get('contao.framework')->getAdapter(ArticleModel::class);
-
         // Since the publication status of a page is not inherited by its child
         // pages, we have to use findByPid() instead of findPublishedByPid() and
         // filter out unpublished pages in the foreach loop (see #2217)
-        $objPages = $pageModelAdapter->findByPid($pid, ['order' => 'sorting']);
+        $pageModels = $pageModelAdapter->findByPid($parentPageId, ['order' => 'sorting']);
 
-        if (null === $objPages) {
+        if (null === $pageModels) {
             return [];
         }
 
-        $arrPages = [];
+        /** @var ArticleModel $articleModelAdapter */
+        $articleModelAdapter = $this->get('contao.framework')->getAdapter(ArticleModel::class);
+
+        $result = [];
 
         // Recursively walk through all subpages
-        foreach ($objPages as $objPage) {
+        foreach ($pageModels as $pageModel) {
             if (
-                $objPage->protected
-                && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups)
+                $pageModel->protected
+                && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)
             ) {
                 continue;
             }
 
-            $isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
+            $isPublished = ($pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time()));
 
             // Searchable and not protected
-            if ($isPublished && $this->pageRegistry->supportsContentComposition($objPage) && !$objPage->requireItem) {
-                $arrPages[] = $objPage->getAbsoluteUrl();
+            if ($isPublished && !$pageModel->requireItem && $this->pageRegistry->supportsContentComposition($pageModel)) {
+                $urls = [$pageModel->getAbsoluteUrl()];
 
                 // Get articles with teaser
-                if (($objArticles = $articleModelAdapter->findPublishedWithTeaserByPid($objPage->id, ['ignoreFePreview' => true])) !== null) {
-                    foreach ($objArticles as $objArticle) {
-                        $arrPages[] = $objPage->getAbsoluteUrl('/articles/'.($objArticle->alias ?: $objArticle->id));
+                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                    foreach ($articleModels as $articleModel) {
+                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
                     }
                 }
+
+                $result[] = $urls;
             }
 
-            // Get subpages
-            if ($arrSubpages = $this->getPageAndArticleUrls((int) $objPage->id)) {
-                $arrPages = array_merge($arrPages, $arrSubpages);
-            }
+            $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
         }
 
-        return $arrPages;
+        return array_merge(...$result);
     }
 }
