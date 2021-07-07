@@ -43,7 +43,7 @@
 
 <?php
 
-$schemaOrg = $this->getBasicSchemaOrgData();
+$schemaOrg = $this->getSchemaOrgData();
 
 if ($this->hasText()) {
     $schemaOrg['text'] = $this->rawHtmlToPlainText($this->text);

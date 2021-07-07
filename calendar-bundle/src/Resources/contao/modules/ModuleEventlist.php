@@ -399,9 +399,16 @@ class ModuleEventlist extends Events
 			}
 
 			// schema.org information
-			$objTemplate->getBasicSchemaOrgData = static function () use ($event): array
+			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array
 			{
-				return Events::getBasicSchemaOrgData($event);
+				$jsonLd = Events::getSchemaOrgData($event);
+
+				if ($objTemplate->addImage && $objTemplate->figure)
+				{
+					$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
+				}
+
+				return $jsonLd;
 			};
 
 			$strEvents .= $objTemplate->parse();

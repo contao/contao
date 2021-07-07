@@ -16,4 +16,4 @@
 
 <?php
 
-$this->addSchemaOrg($this->getBasicSchemaOrgData());
+$this->addSchemaOrg($this->getSchemaOrgData());
