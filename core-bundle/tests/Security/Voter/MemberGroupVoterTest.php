@@ -33,7 +33,7 @@ class MemberGroupVoterTest extends TestCase
         $this->voter = new MemberGroupVoter();
     }
 
-    public function testAbstainsIfTheAttributeIsNotContaoGroup(): void
+    public function testAbstainsIfTheAttributeIsNotContaoMemberGroup(): void
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -64,13 +64,12 @@ class MemberGroupVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, ['-1', '1'], [ContaoCorePermissions::MEMBER_IN_GROUPS]));
     }
 
-    public function testDeniesAccessIfTheUserObjectDeniesAccess(): void
+    public function testDeniesAccessIfTheUserIsNotInGroups(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => '2']);
         $user
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isMemberOf')
-            ->willReturn(false)
         ;
 
         $token = $this->createMock(TokenInterface::class);
@@ -83,13 +82,12 @@ class MemberGroupVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, '1', [ContaoCorePermissions::MEMBER_IN_GROUPS]));
     }
 
-    public function testGrantsAccessIfTheUserObjectGrantsAccess(): void
+    public function testGrantsAccessIfTheUserIsInGroups(): void
     {
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => [1, 2, 3]]);
         $user
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isMemberOf')
-            ->willReturn(true)
         ;
 
         $token = $this->createMock(TokenInterface::class);
@@ -106,12 +104,10 @@ class MemberGroupVoterTest extends TestCase
     {
         $ids = [1, 2, 3, 4];
 
-        $user = $this->createMock(FrontendUser::class);
+        $user = $this->mockClassWithProperties(FrontendUser::class, ['groups' => $ids]);
         $user
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isMemberOf')
-            ->with($ids)
-            ->willReturn(true)
         ;
 
         $token = $this->createMock(TokenInterface::class);
