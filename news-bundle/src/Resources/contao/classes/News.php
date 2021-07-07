@@ -452,6 +452,40 @@ class News extends Frontend
 	}
 
 	/**
+	 * Return the schema.org data from a news article
+	 *
+	 * @param NewsModel $objArticle
+	 *
+	 * @return array
+	 */
+	public static function getSchemaOrgData(NewsModel $objArticle): array
+	{
+		$jsonLd = array(
+			'@type' => 'NewsArticle',
+			'identifier' => '#/schema/news/' . $objArticle->id,
+			'url' => self::generateNewsUrl($objArticle),
+			'headline' => StringUtil::inputEncodedToPlainText($objArticle->headline),
+			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
+		);
+
+		if ($objArticle->teaser)
+		{
+			$jsonLd['description'] = StringUtil::htmlToPlainText($objArticle->teaser);
+		}
+
+		/** @var UserModel $objAuthor */
+		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
+		{
+			$jsonLd['author'] = array(
+				'@type' => 'Person',
+				'name' => $objAuthor->name,
+			);
+		}
+
+		return $jsonLd;
+	}
+
+	/**
 	 * Return the link of a news article
 	 *
 	 * @param NewsModel $objItem
