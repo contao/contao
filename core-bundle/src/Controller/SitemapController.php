@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\ArticleModel;
-use Contao\Config;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -66,7 +65,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $pages = array_merge($pages, $this->findSearchablePages($rootPage->id, '', true));
+            $pages = array_merge($pages, $this->getPageAndArticleUrls($rootPage->id, '', true));
             $pages = $this->callLegacyHook($rootPage, $pages);
 
             $rootPageIds[] = $rootPage->id;
@@ -121,7 +120,7 @@ class SitemapController extends AbstractController
         return $pages;
     }
 
-    private function findSearchablePages($pid = 0, $domain = '', $blnIsXmlSitemap = false): array
+    private function getPageAndArticleUrls($pid = 0, $domain = '', $blnIsXmlSitemap = false): array
     {
         /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
@@ -158,7 +157,7 @@ class SitemapController extends AbstractController
             }
 
             // Get subpages
-            if ((!$objPage->protected || $indexProtected) && ($arrSubpages = $this->findSearchablePages($objPage->id, $domain, $blnIsXmlSitemap))) {
+            if ((!$objPage->protected || $indexProtected) && ($arrSubpages = $this->getPageAndArticleUrls($objPage->id, $domain, $blnIsXmlSitemap))) {
                 $arrPages = array_merge($arrPages, $arrSubpages);
             }
         }
