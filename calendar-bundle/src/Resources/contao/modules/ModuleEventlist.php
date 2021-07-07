@@ -323,6 +323,8 @@ class ModuleEventlist extends Events
 				$objTemplate->hasDetails = false;
 			}
 
+			$objTemplate->hasReader = $event['source'] == 'default';
+
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
@@ -395,6 +397,12 @@ class ModuleEventlist extends Events
 			{
 				$this->addEnclosuresToTemplate($objTemplate, $event);
 			}
+
+			// schema.org information
+			$objTemplate->getBasicSchemaOrgData = static function () use ($event): array
+			{
+				return Events::getBasicSchemaOrgData($event);
+			};
 
 			$strEvents .= $objTemplate->parse();
 

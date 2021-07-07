@@ -5,26 +5,21 @@
   </div>
 <?php endif; ?>
 
-<div class="event layout_teaser<?= $this->classList ?>" itemscope itemtype="https://schema.org/Event">
+<div class="event layout_teaser<?= $this->classList ?>">
 
   <?php if ($this->hasDetails): ?>
-    <h2 itemprop="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> itemprop="url"><?= $this->link ?></a></h2>
+    <h2><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?>><?= $this->link ?></a></h2>
   <?php else: ?>
-    <h2 itemprop="name"><?= $this->title ?></h2>
+    <h2><?= $this->title ?></h2>
   <?php endif; ?>
 
-  <p class="time"><time datetime="<?= $this->datetime ?>" itemprop="startDate"><?= $this->date ?><?php if ($this->time):?> <?= $this->time ?><?php endif; ?></time></p>
+  <p class="time"><time datetime="<?= $this->datetime ?>"><?= $this->date ?><?php if ($this->time):?> <?= $this->time ?><?php endif; ?></time></p>
 
   <?php if ($this->location): ?>
-    <p class="location" itemprop="location" itemscope itemtype="https://schema.org/Place">
-      <span itemprop="name"><?= $this->location ?></span>
-      <?php if ($this->address): ?>
-        (<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"><?= $this->address ?></span>)
-      <?php endif; ?>
-    </p>
+    <p class="location"><?= $this->location ?><?php if ($this->address): ?> (<?= $this->address ?>)<?php endif; ?></p>
   <?php endif; ?>
 
-  <div class="ce_text block" itemprop="description">
+  <div class="ce_text block">
     <?php if (!$this->addBefore): ?>
       <?= $this->teaser ?>
     <?php endif; ?>
@@ -39,7 +34,15 @@
   </div>
 
   <?php if ($this->hasDetails): ?>
-    <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"<?= $this->target ?> itemprop="url"><?= $this->more ?><span class="invisible"> <?= $this->link ?></span></a></p>
+    <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"<?= $this->target ?>><?= $this->more ?><span class="invisible"> <?= $this->link ?></span></a></p>
   <?php endif; ?>
 
 </div>
+
+<?php
+
+// This template is used as an event list template by default, so we only add
+// JSON-LD data in case this is an event without a reader
+if (!$this->hasReader) {
+  $this->addSchemaOrg($this->getBasicSchemaOrgData());
+}

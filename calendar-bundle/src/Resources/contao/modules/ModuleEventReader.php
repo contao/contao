@@ -251,6 +251,7 @@ class ModuleEventReader extends Events
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
+		$objTemplate->hasReader = true;
 
 		// Clean the RTE output
 		if ($objEvent->teaser)
@@ -264,6 +265,7 @@ class ModuleEventReader extends Events
 		if ($objEvent->source != 'default')
 		{
 			$objTemplate->hasDetails = true;
+			$objTemplate->hasReader = false;
 		}
 
 		// Compile the event text
@@ -409,6 +411,12 @@ class ModuleEventReader extends Events
 			}
 
 			return $dates;
+		};
+
+		// schema.org information
+		$objTemplate->getBasicSchemaOrgData = static function () use ($objEvent): array
+		{
+			return Events::getBasicSchemaOrgData($objEvent);
 		};
 
 		$this->Template->event = $objTemplate->parse();

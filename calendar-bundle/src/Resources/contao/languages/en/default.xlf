@@ -30,7 +30,7 @@
         <source>Currently there are no events.</source>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
-        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime="%s" itemprop="startDate"&gt;%s&lt;/time&gt;.</source>
+        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime="%s"&gt;%s&lt;/time&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>
