@@ -19,7 +19,6 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Contao\System;
-use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -92,16 +91,12 @@ class SitemapController extends AbstractController
 
         // Cache the response for a month in the shared cache and tag it for invalidation purposes
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+
+        // We don't need to check for logged in users, because the
+        // MakeResponsePrivateListener will take care of unsetting this.
         $response->setSharedMaxAge(2592000);
 
         $this->tagResponse($tags);
-
-        // Do not cache the response if a user is logged in.
-        if ($this->getUser() instanceof User) {
-            $response->headers->removeCacheControlDirective('s-maxage');
-            $response->headers->addCacheControlDirective('no-store');
-            $response->setPrivate();
-        }
 
         return $response;
     }
