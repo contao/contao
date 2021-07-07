@@ -195,53 +195,6 @@ template as follows:
 <?php $this->endblock(); ?>
 ```
 
-### Template changes
-
-Adding the schema.org tags required to insert an additional `<span>` element
-into the following templates:
-
-`cal_default.html5`
-
-```php
-<!-- OLD -->
-<div class="event">
-  <a href="<?= $event['href'] ?>"><?= $event['link'] ?></a>
-</div>
-
-<!-- NEW -->
-<div class="event" itemscope itemtype="https://schema.org/Event">
-  <a href="<?= $event['href'] ?>" itemprop="url"><span itemprop="name"><?= $event['link'] ?></span></a>
-</div>
-```
-
-`mod_breadcrumb.html5`
-
-```php
-<!-- OLD -->
-<li>
-  <a href="<?= $item['href'] ?>"><?= $item['link'] ?></a>
-</li>
-
-<!-- NEW -->
-<li itemscope itemtype="https://schema.org/ListItem" itemprop="itemListElement">
-  <a href="<?= $item['href'] ?>" itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></a>
-</li>
-```
-
-`nav_default.html5`
-
-```php
-<!-- OLD -->
-<li>
-  <a href="<?= $item['href'] ?>"><?= $item['link'] ?></a>
-</li>
-
-<!-- NEW -->
-<li>
-  <a href="<?= $item['href'] ?>" itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></a>
-</li>
-```
-
 ### Template name changes
 
 The following templates have been renamed to match the content element or
