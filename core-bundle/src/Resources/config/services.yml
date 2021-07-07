@@ -182,8 +182,6 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\SitemapController:
-        arguments:
-            - '%contao.search.index_protected%'
         tags:
             - controller.service_arguments
             - container.service_subscriber

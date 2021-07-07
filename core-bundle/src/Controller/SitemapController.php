@@ -31,16 +31,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class SitemapController extends AbstractController
 {
     /**
-     * @var bool
-     */
-    private $indexProtected;
-
-    public function __construct(bool $indexProtected)
-    {
-        $this->indexProtected = $indexProtected;
-    }
-
-    /**
      * @Route("/sitemap.xml")
      */
     public function __invoke(Request $request): Response
@@ -65,7 +55,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $pages = array_merge($pages, $this->getPageAndArticleUrls($rootPage->id, '', true));
+            $pages = array_merge($pages, $this->getPageAndArticleUrls($rootPage->id));
             $pages = $this->callLegacyHook($rootPage, $pages);
 
             $rootPageIds[] = $rootPage->id;
@@ -120,7 +110,7 @@ class SitemapController extends AbstractController
         return $pages;
     }
 
-    private function getPageAndArticleUrls($pid = 0, $domain = '', $blnIsXmlSitemap = false): array
+    private function getPageAndArticleUrls($pid = 0): array
     {
         /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
@@ -141,11 +131,17 @@ class SitemapController extends AbstractController
 
         // Recursively walk through all subpages
         foreach ($objPages as $objPage) {
+            if (
+                $objPage->protected
+                && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups)
+            ) {
+                continue;
+            }
+
             $isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
-            $indexProtected = $this->indexProtected && $this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups);
 
             // Searchable and not protected
-            if ($isPublished && 'regular' === $objPage->type && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || 'noindex,nofollow' !== $objPage->robots) && (!$objPage->protected || $indexProtected)) {
+            if ($isPublished && 'regular' === $objPage->type && !$objPage->requireItem) {
                 $arrPages[] = $objPage->getAbsoluteUrl();
 
                 // Get articles with teaser
@@ -157,7 +153,7 @@ class SitemapController extends AbstractController
             }
 
             // Get subpages
-            if ((!$objPage->protected || $indexProtected) && ($arrSubpages = $this->getPageAndArticleUrls($objPage->id, $domain, $blnIsXmlSitemap))) {
+            if ($arrSubpages = $this->getPageAndArticleUrls($objPage->id)) {
                 $arrPages = array_merge($arrPages, $arrSubpages);
             }
         }
