@@ -20,7 +20,7 @@
           <div class="header"><?= $day['label'] ?></div>
           <?php foreach ($day['events'] as $event): ?>
             <div class="event cal_<?= $event['parent'] ?><?= $event['class'] ?>">
-              <a href="<?= $event['href'] ?>" title="<?= $event['title'] ?> (<?php if ($event['day']): ?><?= $event['day'] ?>, <?php endif; ?><?= $event['date'] ?><?php if ($event['time']): ?> <?= $event['time']?><?php endif; ?>)"<?= $event['target'] ?> class="url"><span class="name"><?= $event['link'] ?></span></a>
+              <a href="<?= $event['href'] ?>" title="<?= $event['title'] ?> (<?php if ($event['day']): ?><?= $event['day'] ?>, <?php endif; ?><?= $event['date'] ?><?php if ($event['time']): ?> <?= $event['time']?><?php endif; ?>)"<?= $event['target'] ?>><?= $event['link'] ?></a>
             </div>
           <?php endforeach; ?>
         </td>

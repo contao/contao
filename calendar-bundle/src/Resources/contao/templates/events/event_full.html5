@@ -10,12 +10,7 @@
   <?php endif; ?>
 
   <?php if ($this->location): ?>
-    <p class="location">
-      <span class="name"><?= $this->location ?></span>
-      <?php if ($this->address): ?>
-        (<span class="address"><?= $this->address ?></span>)
-      <?php endif; ?>
-    </p>
+    <p class="location"><?= $this->location ?><?php if ($this->address): ?> (<?= $this->address ?>)<?php endif; ?></p>
   <?php endif; ?>
 
   <?php if ($this->details): ?>

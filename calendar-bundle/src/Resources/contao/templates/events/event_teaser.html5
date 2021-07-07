@@ -8,23 +8,18 @@
 <div class="event layout_teaser<?= $this->classList ?>">
 
   <?php if ($this->hasDetails): ?>
-    <h2 class="name"><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?> class="url"><?= $this->link ?></a></h2>
+    <h2><a href="<?= $this->href ?>" title="<?= $this->title ?> (<?php if ($this->day): ?><?= $this->day ?>, <?php endif; ?><?= $this->date ?><?php if ($this->time): ?> <?= $this->time ?><?php endif; ?>)"<?= $this->target ?>><?= $this->link ?></a></h2>
   <?php else: ?>
-    <h2 class="name"><?= $this->title ?></h2>
+    <h2><?= $this->title ?></h2>
   <?php endif; ?>
 
   <p class="time"><time datetime="<?= $this->datetime ?>"><?= $this->date ?><?php if ($this->time):?> <?= $this->time ?><?php endif; ?></time></p>
 
   <?php if ($this->location): ?>
-    <p class="location" class="location">
-      <span class="name"><?= $this->location ?></span>
-      <?php if ($this->address): ?>
-        (<span class="address"><?= $this->address ?></span>)
-      <?php endif; ?>
-    </p>
+    <p class="location"><?= $this->location ?><?php if ($this->address): ?> (<?= $this->address ?>)<?php endif; ?></p>
   <?php endif; ?>
 
-  <div class="ce_text description block">
+  <div class="ce_text block">
     <?php if (!$this->addBefore): ?>
       <?= $this->teaser ?>
     <?php endif; ?>
@@ -39,7 +34,7 @@
   </div>
 
   <?php if ($this->hasDetails): ?>
-    <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"<?= $this->target ?> class="url"><?= $this->more ?><span class="invisible"> <?= $this->link ?></span></a></p>
+    <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"<?= $this->target ?>><?= $this->more ?><span class="invisible"> <?= $this->link ?></span></a></p>
   <?php endif; ?>
 
 </div>
