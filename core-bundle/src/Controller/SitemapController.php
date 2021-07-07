@@ -61,23 +61,25 @@ class SitemapController extends AbstractController
             }
         }
 
-        $pages = [];
+        $urls = [];
         $rootPageIds = [];
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $pages = array_merge($pages, $this->getPageAndArticleUrls($rootPage->id));
-            $pages = $this->callLegacyHook($rootPage, $pages);
+            $pages = $this->getPageAndArticleUrls((int) $rootPage->id);
+            $urls[] = $this->callLegacyHook($rootPage, $pages);
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
         }
 
+        $urls = array_unique(array_merge(...$urls));
+
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->formatOutput = true;
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
-        foreach ($pages as $url) {
+        foreach ($urls as $url) {
             $loc = $sitemap->createElement('loc', $url);
             $urlEl = $sitemap->createElement('url');
             $urlEl->appendChild($loc);
@@ -121,7 +123,7 @@ class SitemapController extends AbstractController
         return $pages;
     }
 
-    private function getPageAndArticleUrls($pid = 0): array
+    private function getPageAndArticleUrls(int $pid): array
     {
         /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
@@ -164,7 +166,7 @@ class SitemapController extends AbstractController
             }
 
             // Get subpages
-            if ($arrSubpages = $this->getPageAndArticleUrls($objPage->id)) {
+            if ($arrSubpages = $this->getPageAndArticleUrls((int) $objPage->id)) {
                 $arrPages = array_merge($arrPages, $arrSubpages);
             }
         }
