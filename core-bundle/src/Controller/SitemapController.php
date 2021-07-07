@@ -32,6 +32,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class SitemapController extends AbstractController
 {
     /**
+     * @var bool
+     */
+    private $indexProtected;
+
+    public function __construct(bool $indexProtected)
+    {
+        $this->indexProtected = $indexProtected;
+    }
+
+    /**
      * @Route("/sitemap.xml")
      */
     public function __invoke(Request $request): Response
@@ -119,9 +129,6 @@ class SitemapController extends AbstractController
         /** @var ArticleModel $articleModelAdapter */
         $articleModelAdapter = $this->get('contao.framework')->getAdapter(ArticleModel::class);
 
-        /** @var Config $configAdapter */
-        $configAdapter = $this->get('contao.framework')->getAdapter(Config::class);
-
         // Since the publication status of a page is not inherited by its child
         // pages, we have to use findByPid() instead of findPublishedByPid() and
         // filter out unpublished pages in the foreach loop (see #2217)
@@ -136,7 +143,7 @@ class SitemapController extends AbstractController
         // Recursively walk through all subpages
         foreach ($objPages as $objPage) {
             $isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
-            $indexProtected = $configAdapter->get('indexProtected') && $this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups);
+            $indexProtected = $this->indexProtected && $this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups);
 
             // Searchable and not protected
             if ($isPublished && 'regular' === $objPage->type && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || 'noindex,nofollow' !== $objPage->robots) && (!$objPage->protected || $indexProtected)) {
