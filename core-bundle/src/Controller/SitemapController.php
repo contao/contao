@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\Backend;
+use Contao\ArticleModel;
+use Contao\Config;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Contao\System;
 use Contao\User;
@@ -54,9 +56,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            /** @var Backend $backend */
-            $backend = $this->get('contao.framework')->getAdapter(Backend::class);
-            $pages = array_merge($pages, $backend->findSearchablePages($rootPage->id, '', true));
+            $pages = array_merge($pages, $this->findSearchablePages($rootPage->id, '', true));
             $pages = $this->callLegacyHook($rootPage, $pages);
 
             $rootPageIds[] = $rootPage->id;
@@ -109,5 +109,53 @@ class SitemapController extends AbstractController
         }
 
         return $pages;
+    }
+
+    private function findSearchablePages($pid = 0, $domain = '', $blnIsXmlSitemap = false): array
+    {
+        /** @var PageModel $pageModelAdapter */
+        $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+
+        /** @var ArticleModel $articleModelAdapter */
+        $articleModelAdapter = $this->get('contao.framework')->getAdapter(ArticleModel::class);
+
+        /** @var Config $configAdapter */
+        $configAdapter = $this->get('contao.framework')->getAdapter(Config::class);
+
+        // Since the publication status of a page is not inherited by its child
+        // pages, we have to use findByPid() instead of findPublishedByPid() and
+        // filter out unpublished pages in the foreach loop (see #2217)
+        $objPages = $pageModelAdapter->findByPid($pid, ['order' => 'sorting']);
+
+        if (null === $objPages) {
+            return [];
+        }
+
+        $arrPages = [];
+
+        // Recursively walk through all subpages
+        foreach ($objPages as $objPage) {
+            $isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
+            $indexProtected = $configAdapter->get('indexProtected') && $this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups);
+
+            // Searchable and not protected
+            if ($isPublished && 'regular' === $objPage->type && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || 'noindex,nofollow' !== $objPage->robots) && (!$objPage->protected || $indexProtected)) {
+                $arrPages[] = $objPage->getAbsoluteUrl();
+
+                // Get articles with teaser
+                if (($objArticles = $articleModelAdapter->findPublishedWithTeaserByPid($objPage->id, ['ignoreFePreview' => true])) !== null) {
+                    foreach ($objArticles as $objArticle) {
+                        $arrPages[] = $objPage->getAbsoluteUrl('/articles/'.($objArticle->alias ?: $objArticle->id));
+                    }
+                }
+            }
+
+            // Get subpages
+            if ((!$objPage->protected || $indexProtected) && ($arrSubpages = $this->findSearchablePages($objPage->id, $domain, $blnIsXmlSitemap))) {
+                $arrPages = array_merge($arrPages, $arrSubpages);
+            }
+        }
+
+        return $arrPages;
     }
 }
