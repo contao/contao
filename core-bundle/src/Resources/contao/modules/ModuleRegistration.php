@@ -65,9 +65,6 @@ class ModuleRegistration extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
@@ -130,7 +127,6 @@ class ModuleRegistration extends Module
 				'required' => true
 			);
 
-			/** @var FormCaptcha $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
 
 			// Fallback to default if the class is not defined
@@ -185,7 +181,6 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
 
 			// Continue if the class is not defined

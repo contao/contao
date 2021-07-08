@@ -71,9 +71,6 @@ class ModulePersonalData extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$this->import(FrontendUser::class, 'User');
 
 		System::loadLanguageFile('tl_member');
@@ -144,7 +141,6 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
 
 			// Continue if the class does not exist

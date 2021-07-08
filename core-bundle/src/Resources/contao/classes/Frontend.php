@@ -319,8 +319,6 @@ abstract class Frontend extends Controller
 			throw new NoRootPageFoundException('No root page found');
 		}
 
-		$host = Environment::get('host');
-		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
 		$blnAddLanguageToUrl = System::getContainer()->getParameter('contao.prepend_locale');
 

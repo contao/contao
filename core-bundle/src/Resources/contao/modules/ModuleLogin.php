@@ -72,7 +72,7 @@ class ModuleLogin extends Module
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
-		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
+		elseif ($this->redirectBack && $request->query->has('redirect'))
 		{
 			/** @var UriSigner $uriSigner */
 			$uriSigner = $container->get('uri_signer');

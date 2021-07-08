@@ -409,9 +409,6 @@ class PageRegular extends Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-		$container = System::getContainer();
-		$projectDir = $container->getParameter('kernel.project_dir');
-
 		// jQuery scripts
 		if ($objLayout->addJQuery)
 		{

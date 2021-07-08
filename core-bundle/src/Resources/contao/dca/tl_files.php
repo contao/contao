@@ -598,7 +598,7 @@ class tl_files extends Backend
 	 * @param string                  $varValue
 	 * @param DataContainer|DC_Folder $dc
 	 *
-	 * @return mixed
+	 * @return string
 	 *
 	 * @throws Exception
 	 */
@@ -803,7 +803,7 @@ class tl_files extends Backend
 		/** @var DC_Folder $dc */
 		$dc = (@func_get_arg(12) ?: null);
 
-		if (!in_array($objFile->extension, $dc ? $dc->editableFileTypes : StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
+		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}

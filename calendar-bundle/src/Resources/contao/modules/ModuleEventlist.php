@@ -188,7 +188,7 @@ class ModuleEventlist extends Events
 		$arrEvents = array();
 
 		// Remove events outside the scope
-		foreach ($arrAllEvents as $key=>$days)
+		foreach ($arrAllEvents as $days)
 		{
 			foreach ($days as $day=>$events)
 			{

@@ -332,8 +332,6 @@ abstract class Module extends Frontend
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
 
-				$href = null;
-
 				// Get href
 				switch ($objSubpage->type)
 				{

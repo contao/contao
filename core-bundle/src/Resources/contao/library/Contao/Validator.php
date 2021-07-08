@@ -254,7 +254,7 @@ class Validator
 	/**
 	 * Valid binary UUID (version 1)
 	 *
-	 * @param mixed $varValue The value to be validated
+	 * @param string $varValue The value to be validated
 	 *
 	 * @return boolean True if the value is a binary UUID
 	 *

@@ -247,7 +247,6 @@ class Comments extends Frontend
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
