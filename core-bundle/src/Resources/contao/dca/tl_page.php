@@ -1177,7 +1177,7 @@ class tl_page extends Backend
 
 		System::getContainer()
 			->get(PageUrlListener::class)
-			->purgeSearchIndex($dc->id)
+			->purgeSearchIndex((int) $dc->id)
 		;
 	}
 
