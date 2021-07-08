@@ -126,7 +126,7 @@ class ModuleFaq extends Frontend
 	 *
 	 * @return array
 	 */
-	public static function getSchemaOrgData(Collection $arrFaqs): array
+	public static function getSchemaOrgData(iterable $arrFaqs): array
 	{
 		$jsonLd = array(
 			'@type' => 'FAQPage',
