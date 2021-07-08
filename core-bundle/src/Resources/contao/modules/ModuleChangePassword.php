@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\LocaleUtil;
 use Patchwork\Utf8;
 
 /**
