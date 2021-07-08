@@ -1038,6 +1038,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('router'),
                 new Reference('contao.csrf.token_manager'),
                 new Reference('%contao.csrf_token_name%'),
+                new Reference('%contao.backend%'),
             ],
             $definition->getArguments()
         );

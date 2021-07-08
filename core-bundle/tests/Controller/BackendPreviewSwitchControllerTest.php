@@ -41,7 +41,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
+            'csrf',
+            []
         );
 
         $request = $this->createMock(Request::class);
@@ -65,7 +66,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
+            'csrf',
+            []
         );
 
         $request = $this->createMock(Request::class);
@@ -96,7 +98,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
+            'csrf',
+            []
         );
 
         $request = $this->createMock(Request::class);
@@ -128,7 +131,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
+            'csrf',
+            []
         );
 
         $request = $this->createMock(Request::class);

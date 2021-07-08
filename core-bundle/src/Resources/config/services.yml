@@ -95,6 +95,7 @@ services:
             - '@router'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
+            - '%contao.backend%'
         tags:
             - controller.service_arguments
 

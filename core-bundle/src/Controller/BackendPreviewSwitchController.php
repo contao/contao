@@ -79,7 +79,12 @@ class BackendPreviewSwitchController
      */
     private $router;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    /**
+     * @var array
+     */
+    private $backendConfig;
+
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName, array $backendConfig)
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -89,6 +94,7 @@ class BackendPreviewSwitchController
         $this->router = $router;
         $this->tokenManager = $tokenManager;
         $this->csrfTokenName = $csrfTokenName;
+        $this->backendConfig = $backendConfig;
     }
 
     /**
@@ -127,6 +133,16 @@ class BackendPreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
 
+        $attributes = '';
+
+        if (!empty($this->backendConfig['attributes']) && \is_array($this->backendConfig['attributes'])) {
+            $attributes = ' '.implode(' ', array_map(
+                static function ($v, $k) { return sprintf('data-%s="%s"', $k, $v); },
+                $this->backendConfig['attributes'],
+                array_keys($this->backendConfig['attributes'])
+            ));
+        }
+
         try {
             return $this->twig->render(
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
@@ -136,6 +152,8 @@ class BackendPreviewSwitchController
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
+                    'attributes' => $attributes,
+                    'badgeTitle' => $this->backendConfig['badge_title'] ?? '',
                 ]
             );
         } catch (TwigError $e) {
