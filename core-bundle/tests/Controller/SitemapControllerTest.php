@@ -553,8 +553,8 @@ class SitemapControllerTest extends TestCase
     }
 
     /**
-     * @param array<int, array<PageModel>|null>    $pages
-     * @param array<int, array<ArticleModel>|null> $articles
+     * @param array<int, array<PageModel|MockObject>|null>    $pages
+     * @param array<int, array<ArticleModel|MockObject>|null> $articles
      *
      * @return ContaoFramework&MockObject
      */
