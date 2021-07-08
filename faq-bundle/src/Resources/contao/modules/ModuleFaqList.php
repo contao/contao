@@ -141,26 +141,9 @@ class ModuleFaqList extends Module
 
 		$this->Template->faq = $arrFaq;
 
-		$this->Template->getSchemaOrgData = function() use ($arrFaq) {
-			$jsonLd = array(
-				'@type' => 'FAQPage',
-				'mainEntity' =>  [],
-			);
-
-			foreach ($arrFaq as $faqCategory) {
-				foreach ($faqCategory['items'] as $faq) {
-					$jsonLd['mainEntity'][] = [
-						'@type' => 'Question',
-						'name' => StringUtil::inputEncodedToPlainText($faq['question']),
-						'acceptedAnswer' => [
-							'@type' => 'Answer',
-							'text' =>  StringUtil::htmlToPlainText($faq['answer']),
-						]
-					];
-				}
-			}
-
-			return $jsonLd;
+		$this->Template->getSchemaOrgData = static function() use ($arrFaq)
+		{
+			return ModuleFaq::getSchemaOrgData($arrFaq);
 		};
 	}
 

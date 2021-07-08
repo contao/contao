@@ -116,6 +116,38 @@ class ModuleFaq extends Frontend
 
 		return $arrPages;
 	}
+
+	/**
+	 * Return the schema.org data from a set of FAQs
+	 *
+	 * @param array $arrFaqs
+	 *
+	 * @return array
+	 */
+	public static function getSchemaOrgData(array $arrFaqs): array
+	{
+		$jsonLd = array(
+			'@type' => 'FAQPage',
+			'mainEntity' => array(),
+		);
+
+		foreach ($arrFaqs as $arrFaq)
+		{
+			foreach ($arrFaq['items'] as $faq)
+			{
+				$jsonLd['mainEntity'][] = array(
+					'@type' => 'Question',
+					'name' => StringUtil::inputEncodedToPlainText($faq['question']),
+					'acceptedAnswer' => array(
+						'@type' => 'Answer',
+						'text' =>  StringUtil::htmlToPlainText($faq['answer'])
+					)
+				);
+			}
+		}
+
+		return $jsonLd;
+	}
 }
 
 class_alias(ModuleFaq::class, 'ModuleFaq');

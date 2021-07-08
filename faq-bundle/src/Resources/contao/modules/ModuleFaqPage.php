@@ -170,26 +170,9 @@ class ModuleFaqPage extends Module
 		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
-		$this->Template->getSchemaOrgData = function() use ($arrFaqs) {
-			$jsonLd = array(
-				'@type' => 'FAQPage',
-				'mainEntity' =>  [],
-			);
-
-			foreach ($arrFaqs as $faqCategory) {
-				foreach ($faqCategory['items'] as $faq) {
-					$jsonLd['mainEntity'][] = [
-						'@type' => 'Question',
-						'name' => StringUtil::inputEncodedToPlainText($faq->question),
-						'acceptedAnswer' => [
-							'@type' => 'Answer',
-							'text' =>  StringUtil::htmlToPlainText($faq->answer),
-						]
-					];
-				}
-			}
-
-			return $jsonLd;
+		$this->Template->getSchemaOrgData = static function() use ($arrFaqs)
+		{
+			return ModuleFaq::getSchemaOrgData($arrFaqs);
 		};
 	}
 }
