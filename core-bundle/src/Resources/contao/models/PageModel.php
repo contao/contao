@@ -1166,7 +1166,6 @@ class PageModel extends Model
 			// Store the fallback language (see #6874)
 			if (!$objParentPage->fallback)
 			{
-				$this->rootIsFallback = false;
 				$this->rootFallbackLanguage = null;
 
 				$objFallback = static::findPublishedFallbackByHostname($objParentPage->dns);
