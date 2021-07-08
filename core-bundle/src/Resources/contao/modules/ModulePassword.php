@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Session;

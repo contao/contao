@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Patchwork\Utf8;
 
 /**

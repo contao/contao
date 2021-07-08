@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Patchwork\Utf8;
 
