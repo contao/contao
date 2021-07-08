@@ -140,11 +140,6 @@ class ModuleFaqList extends Module
 		}
 
 		$this->Template->faq = $arrFaq;
-
-		$this->Template->getSchemaOrgData = static function() use ($objFaq)
-		{
-			return ModuleFaq::getSchemaOrgData($objFaq);
-		};
 	}
 
 	/**

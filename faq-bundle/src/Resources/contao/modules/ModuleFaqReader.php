@@ -182,6 +182,12 @@ class ModuleFaqReader extends Module
 			$responseTagger->addTags(array('contao.db.tl_faq.' . $objFaq->id));
 		}
 
+		// schema.org information
+		$this->Template->getSchemaOrgData = static function() use ($objFaq)
+		{
+			return ModuleFaq::getSchemaOrgData([$objFaq]);
+		};
+
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
 		// HOOK: comments extension required
