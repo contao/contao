@@ -553,9 +553,6 @@ class SitemapControllerTest extends TestCase
     }
 
     /**
-     * @param array<int, array<int, PageModel|MockObject>|null>    $pages
-     * @param array<int, array<int, ArticleModel|MockObject>|null> $articles
-     *
      * @return ContaoFramework&MockObject
      */
     private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
