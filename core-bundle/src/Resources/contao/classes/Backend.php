@@ -659,9 +659,13 @@ abstract class Backend extends Controller
 	 * @param boolean $blnIsXmlSitemap
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Backend::findSearchablePages()" has been deprecated and will no longer work in Contao 5.0.');
+
 		// Since the publication status of a page is not inherited by its child
 		// pages, we have to use findByPid() instead of findPublishedByPid() and
 		// filter out unpublished pages in the foreach loop (see #2217)
