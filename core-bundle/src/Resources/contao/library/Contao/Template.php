@@ -150,6 +150,8 @@ abstract class Template extends Controller
 	 */
 	public function __get($strKey)
 	{
+		list($strKey, ...$flags) = explode('|', $strKey);
+
 		if (isset($this->arrData[$strKey]))
 		{
 			if (\is_object($this->arrData[$strKey]) && \is_callable($this->arrData[$strKey]))
@@ -157,7 +159,113 @@ abstract class Template extends Controller
 				return $this->arrData[$strKey]();
 			}
 
-			return $this->arrData[$strKey];
+			$varValue = $this->arrData[$strKey];
+
+			// Handle the flags
+			if (!empty($flags))
+			{
+				foreach ($flags as $flag)
+				{
+					switch ($flag)
+					{
+						case 'addslashes':
+						case 'strtolower':
+						case 'utf8_strtolower':
+						case 'strtoupper':
+						case 'utf8_strtoupper':
+						case 'ucfirst':
+						case 'lcfirst':
+						case 'ucwords':
+						case 'trim':
+						case 'rtrim':
+						case 'ltrim':
+						case 'utf8_romanize':
+						case 'urlencode':
+						case 'rawurlencode':
+							$varValue = $flag($varValue);
+							break;
+
+						case 'nl2br':
+							$varValue = preg_replace('/\r?\n/', '<br>', $varValue);
+							break;
+
+						case 'decodeEntities':
+						case 'restoreBasicEntities':
+						case 'encodeEmail':
+						case 'extractEmail':
+						case 'sanitizeFileName':
+						case 'specialchars':
+						case 'stripInsertTags':
+						case 'standardize':
+						case 'stripRootDir':
+						case 'ampersand':
+						case 'revertInputEncoding':
+						case 'inputEncodedToPlainText':
+						case 'htmlToPlainText':
+							$varValue = StringUtil::$flag($varValue);
+							break;
+
+						case 'number_format':
+							$varValue = System::getFormattedNumber($varValue, 0);
+							break;
+
+						case 'currency_format':
+							$varValue = System::getFormattedNumber($varValue);
+							break;
+
+						case 'readable_size':
+							$varValue = System::getReadableSize($varValue);
+							break;
+
+						case 'flatten':
+							if (!\is_array($varValue))
+							{
+								break;
+							}
+
+							$it = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($varValue));
+							$result = array();
+
+							foreach ($it as $leafValue)
+							{
+								$keys = array();
+
+								foreach (range(0, $it->getDepth()) as $depth)
+								{
+									$keys[] = $it->getSubIterator($depth)->key();
+								}
+
+								$result[] = implode('.', $keys) . ': ' . $leafValue;
+							}
+
+							$varValue = implode(', ', $result);
+							break;
+
+						// HOOK: pass unknown flags to callback functions
+						default:
+							if (isset($GLOBALS['TL_HOOKS']['templateFlags']) && \is_array($GLOBALS['TL_HOOKS']['templateFlags']))
+							{
+								foreach ($GLOBALS['TL_HOOKS']['templateFlags'] as $callback)
+								{
+									$this->import($callback[0]);
+									$varValue = $this->{$callback[0]}->{$callback[1]}($flag, $strKey, $varValue, $this);
+
+									// Replace the tag and stop the loop
+									if ($varValue !== false)
+									{
+										$varValue = $varValue;
+										break 2;
+									}
+								}
+							}
+
+							$this->log('Unknown template flag "' . $flag . '" in "' . $this->strTemplate . '" on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
+							break;
+					}
+				}
+			}
+
+			return $varValue;
 		}
 
 		return parent::__get($strKey);
@@ -397,34 +505,6 @@ abstract class Template extends Controller
 	public function trans($strId, array $arrParams=array(), $strDomain='contao_default')
 	{
 		return System::getContainer()->get('translator')->trans($strId, $arrParams, $strDomain);
-	}
-
-	/**
-	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
-	 * It replaces (or optionally removes) Contao insert tags and removes all HTML.
-	 *
-	 * Be careful when using this. It must NOT be used within regular HTML when $value
-	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
-	 * or JSON-LD arrays.
-	 */
-	public function rawPlainText(string $value, bool $removeInsertTags = false): string
-	{
-		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
-	}
-
-	/**
-	 * Helper method to allow quick access in the Contao templates for safe raw (unencoded) output.
-	 *
-	 * Compared to $this->rawPlainText() it adds new lines before and after block level HTML elements
-	 * and only then removes the rest of the HTML tags.
-	 *
-	 * Be careful when using this. It must NOT be used within regular HTML when $value
-	 * is uncontrolled user input. It's useful to ensure raw values within e.g. <code> examples
-	 * or JSON-LD arrays.
-	 */
-	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
-	{
-		return StringUtil::htmlToPlainText($value, $removeInsertTags);
 	}
 
 	/**
