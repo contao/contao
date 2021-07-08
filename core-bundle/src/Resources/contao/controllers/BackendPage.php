@@ -88,7 +88,7 @@ class BackendPage extends Backend
 
 			if (class_exists($strModel))
 			{
-				/** @var Model $objModel */
+				/** @var Model|null $objModel */
 				$objModel = $strModel::findByPk(Input::get('id'));
 
 				if ($objModel !== null)
