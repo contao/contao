@@ -91,10 +91,7 @@ class SitemapController extends AbstractController
 
         // Cache the response for a month in the shared cache and tag it for invalidation purposes
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
-
-        // We don't need to check for logged in users, because the
-        // MakeResponsePrivateListener will take care of unsetting this.
-        $response->setSharedMaxAge(2592000);
+        $response->setSharedMaxAge(2592000); // will be unset by the MakeResponsePrivateListener if a user is logged in
 
         $this->tagResponse($tags);
 
@@ -139,16 +136,12 @@ class SitemapController extends AbstractController
 
         // Recursively walk through all subpages
         foreach ($pageModels as $pageModel) {
-            if (
-                $pageModel->protected
-                && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)
-            ) {
+            if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
                 continue;
             }
 
-            $isPublished = ($pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time()));
+            $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time());
 
-            // Searchable and not protected
             if ($isPublished && !$pageModel->requireItem && $this->pageRegistry->supportsContentComposition($pageModel)) {
                 $urls = [$pageModel->getAbsoluteUrl()];
 

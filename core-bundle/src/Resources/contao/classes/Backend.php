@@ -660,7 +660,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{

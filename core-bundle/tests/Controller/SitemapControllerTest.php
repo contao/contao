@@ -62,10 +62,9 @@ class SitemapControllerTest extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
@@ -79,6 +78,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page1
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -88,11 +88,9 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -108,6 +106,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page1
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -121,6 +120,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page2
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -137,11 +137,9 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -163,6 +161,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '',
         ]);
+
         $page1
             ->expects($this->never())
             ->method('getAbsoluteUrl')
@@ -175,6 +174,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page2
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -194,15 +194,12 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
-
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
@@ -216,6 +213,7 @@ class SitemapControllerTest extends TestCase
             'published' => '1',
             'requireItem' => '1',
         ]);
+
         $page1
             ->expects($this->never())
             ->method('getAbsoluteUrl')
@@ -228,6 +226,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page2
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -247,15 +246,12 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
-
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
@@ -270,6 +266,7 @@ class SitemapControllerTest extends TestCase
             'published' => '1',
             'requireItem' => '1',
         ]);
+
         $page1
             ->expects($this->never())
             ->method('getAbsoluteUrl')
@@ -282,6 +279,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page2
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -301,15 +299,12 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
-
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
@@ -323,6 +318,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page1
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -337,6 +333,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page2
             ->expects($this->never())
             ->method('getAbsoluteUrl')
@@ -351,11 +348,9 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
         $container = $this->mockContainer($framework, [44 => false]);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -377,6 +372,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page1
             ->expects($this->exactly(2))
             ->method('getAbsoluteUrl')
@@ -393,11 +389,9 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -414,6 +408,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page1
             ->expects($this->exactly(2))
             ->method('getAbsoluteUrl')
@@ -430,11 +425,9 @@ class SitemapControllerTest extends TestCase
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
-
-        $response = $controller($request);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
@@ -454,6 +447,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page1
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -468,6 +462,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
         ]);
+
         $page2
             ->expects($this->once())
             ->method('getAbsoluteUrl')
@@ -503,15 +498,13 @@ class SitemapControllerTest extends TestCase
             [43 => null, 22 => null],
             ['FooClass' => $hook1, 'BarClass' => $hook2]
         );
-        $container = $this->mockContainer($framework);
 
-        $request = Request::create('https://www.foobar.com/sitemap.xml');
         $controller = new SitemapController($this->mockPageRegistry());
-        $controller->setContainer($container);
+        $controller->setContainer($this->mockContainer($framework));
 
         $this->expectDeprecation('Since contao/core-bundle 4.11: Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
 
-        $controller($request);
+        $controller(Request::create('https://www.foobar.com/sitemap.xml'));
     }
 
     private function getExpectedSitemapContent(array $urls): string
@@ -539,7 +532,6 @@ class SitemapControllerTest extends TestCase
     private function mockPageRegistry(): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
             ->method('supportsContentComposition')
             ->willReturnCallback(
@@ -574,7 +566,6 @@ class SitemapControllerTest extends TestCase
         $rootPage2->fallback = '';
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
-
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedRootPages')
