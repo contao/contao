@@ -47,7 +47,7 @@
 
     If a link is defined the picture will be wrapped in an <a> tag.
 #}
-{%- macro figure(figure, options = {}) -%}
+{%- macro figure(figure, options = {}, addSchemaOrg = true) -%}
     {%- set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
     {%- set link_attributes = figure.options.link_attr|default({})|merge(options.link_attr|default({})) ~%}
     <figure{{ _self.html_attributes(figure_attributes) }}>
@@ -64,6 +64,9 @@
         {% endif %}
         {{ _self.caption(figure, options) }}
     </figure>
+    {% if addSchemaOrg %}
+        {%- do addSchemaOrg(figure.schemaOrgData) -%}
+    {% endif %}
 {%- endmacro -%}
 
 {#
