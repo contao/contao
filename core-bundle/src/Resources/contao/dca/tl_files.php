@@ -568,7 +568,7 @@ class tl_files extends Contao\Backend
 	 * @param string                                $varValue
 	 * @param Contao\DataContainer|Contao\DC_Folder $dc
 	 *
-	 * @return mixed
+	 * @return string
 	 *
 	 * @throws Exception
 	 */

@@ -746,9 +746,9 @@ class Input
 	/**
 	 * Encode the opening and closing delimiters of insert tags
 	 *
-	 * @param string $varValue The input string
+	 * @param string|array $varValue The input string
 	 *
-	 * @return string The encoded input string
+	 * @return string|array The encoded input string
 	 */
 	public static function encodeInsertTags($varValue)
 	{
