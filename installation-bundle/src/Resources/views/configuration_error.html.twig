@@ -63,6 +63,17 @@
 innodb_file_format = Barracuda
 innodb_file_per_table = 1</pre>
       </div>
+    {% elseif errorCode == 7 %}
+        <p class="tl_error">{{ 'strict_sql_mode'|trans }}</p>
+        <p>{{ 'strict_sql_mode_explain'|trans|raw }}</p>
+        <div id="sql_wrapper">
+        <pre>doctrine:
+  dbal:
+    connections:
+      default:
+        options:
+          {{ optionKey }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
+        </div>
     {% endif %}
   </fieldset>
 {% endblock %}
