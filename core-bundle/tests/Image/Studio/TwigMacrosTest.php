@@ -596,12 +596,10 @@ class TwigMacrosTest extends TestCase
     {
         $templates = [
             '_macros.html.twig' => self::$macros,
-            'test.html.twig' => '{% import "_macros.html.twig" as studio %}'.
-                "{{ studio.$call }}",
+            'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-
         $environment->setExtensions([
             new ContaoTemplateExtension(
                 new RequestStack(),

@@ -39,13 +39,16 @@ class SchemaOrgRuntimeTest extends TestCase
 
         $graph = $manager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray();
 
-        $this->assertSame([
-            '@context' => 'https://schema.org',
-            '@graph' => [[
-                '@type' => 'ImageObject',
-                '@id' => 'https://assets.url/files/public/foo.jpg',
-            ]],
-        ], $graph);
+        $this->assertSame(
+            [
+                '@context' => 'https://schema.org',
+                '@graph' => [[
+                    '@type' => 'ImageObject',
+                    '@id' => 'https://assets.url/files/public/foo.jpg',
+                ]],
+            ],
+            $graph
+        );
     }
 
     public function testToleratesMissingResponseContext(): void
