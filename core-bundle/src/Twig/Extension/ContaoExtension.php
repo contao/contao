@@ -18,6 +18,11 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
+use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
+use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\FrontendTemplate;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -123,6 +128,39 @@ final class ContaoExtension extends AbstractExtension
                     return $includeFunctionCallable(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+            ),
+            new TwigFunction(
+                'contao_figure',
+                [FigureRendererRuntime::class, 'render'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'picture_config',
+                [PictureConfigurationRuntime::class, 'fromArray']
+            ),
+            new TwigFunction(
+                'insert_tag',
+                [InsertTagRuntime::class, 'replace'],
+                ['is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'add_schema_org',
+                [SchemaOrgRuntime::class, 'add']
+            ),
+            new TwigFunction(
+                'contao_sections',
+                [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSections'],
+                ['needs_context' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'contao_section',
+                [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
+                ['needs_context' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'render_contao_backend_template',
+                [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
+                ['is_safe' => ['html']]
             ),
         ];
     }

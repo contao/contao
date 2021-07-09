@@ -886,15 +886,11 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    Contao\CoreBundle\Twig\Extension\ImageExtension: ~
-
     Contao\CoreBundle\Twig\Extension\ContaoExtension:
         arguments:
             - '@twig'
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
         public: true
-
-    Contao\CoreBundle\Twig\Extension\TextExtension: ~
 
     Contao\CoreBundle\Twig\Loader\TemplateLocator:
         arguments:
@@ -938,16 +934,11 @@ services:
 
     Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:
-            - '@contao.framework'
-
-    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
-
-    contao.twig.template_extension:
-        class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
-        arguments:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+
+    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
 
     Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:

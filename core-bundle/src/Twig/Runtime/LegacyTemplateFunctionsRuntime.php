@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
+use Contao\BackendCustom;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendTemplate;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Error\RuntimeError;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -25,13 +28,28 @@ use Twig\Extension\RuntimeExtensionInterface;
 final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 {
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
      * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(ContaoFramework $framework)
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
+     * @internal
+     */
+    public function __construct(RequestStack $requestStack, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
     {
+        $this->requestStack = $requestStack;
         $this->framework = $framework;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -68,6 +86,30 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
                 $frontendTemplate->section($key, $template);
             }
         );
+    }
+
+    /**
+     * Renders a Contao back end template with the given blocks.
+     */
+    public function renderContaoBackendTemplate(array $blocks = []): string
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request || !$this->scopeMatcher->isBackendRequest($request)) {
+            return '';
+        }
+
+        /** @var BackendCustom $controller */
+        $controller = $this->framework->createInstance(BackendCustom::class);
+        $template = $controller->getTemplateObject();
+
+        foreach ($blocks as $key => $content) {
+            $template->{$key} = $content;
+        }
+
+        $response = $controller->run();
+
+        return $response->getContent();
     }
 
     private function captureOutput(callable $callable): string

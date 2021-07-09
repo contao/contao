@@ -61,10 +61,28 @@ class ContaoExtensionTest extends TestCase
     {
         $functions = $this->getContaoExtension()->getFunctions();
 
-        $this->assertCount(1, $functions);
+        $this->assertCount(8, $functions);
 
-        $this->assertInstanceOf(TwigFunction::class, $functions[0]);
-        $this->assertSame('include', $functions[0]->getName());
+        $expectedFunctions = [
+            'include' => ['all'],
+            'contao_figure' => ['html'],
+            'picture_config' => [],
+            'insert_tag' => ['html'],
+            'add_schema_org' => [],
+            'contao_sections' => ['html'],
+            'contao_section' => ['html'],
+            'render_contao_backend_template' => ['html'],
+        ];
+
+        $node = $this->createMock(Node::class);
+
+        foreach ($functions as $function) {
+            $this->assertInstanceOf(TwigFunction::class, $function);
+
+            $name = $function->getName();
+            $this->assertArrayHasKey($name, $expectedFunctions);
+            $this->assertSame($expectedFunctions[$name], $function->getSafe($node), $name);
+        }
     }
 
     public function testIncludeFunctionDelegatesToTwigInclude(): void
