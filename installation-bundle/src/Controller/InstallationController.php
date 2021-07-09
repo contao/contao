@@ -99,6 +99,8 @@ class InstallationController implements ContainerAwareInterface
 
         $this->runDatabaseUpdates();
 
+        $installTool->checkStrictMode($this->context);
+
         if (null !== ($response = $this->adjustDatabaseTables())) {
             return $response;
         }
