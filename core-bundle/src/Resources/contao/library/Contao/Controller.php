@@ -1664,10 +1664,10 @@ abstract class Controller extends System
 		}
 
 		// Image dimensions
-		if ($objFile && ($imgSize = $objFile->imageSize) !== false)
+		if ($objFile && isset($objFile->imageSize[0], $objFile->imageSize[1]))
 		{
-			$objTemplate->arrSize = $imgSize;
-			$objTemplate->imgSize = ' width="' . $imgSize[0] . '" height="' . $imgSize[1] . '"';
+			$objTemplate->arrSize = $objFile->imageSize;
+			$objTemplate->imgSize = ' width="' . $objFile->imageSize[0] . '" height="' . $objFile->imageSize[1] . '"';
 		}
 
 		$arrMeta = array();
