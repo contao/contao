@@ -29,11 +29,9 @@ class InstallToolTest extends TestCase
     public function testRaisesErrorIfNonRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, string $expectedDriver): void
     {
         $installTool = $this->getInstallTool($sqlMode, $driver);
-
         $context = [];
 
         $this->assertTrue($installTool->hasConfigurationError($context));
-
         $this->assertSame(7, $context['errorCode']);
         $this->assertSame($expectedDriver, $context['driver']);
     }
@@ -66,11 +64,9 @@ class InstallToolTest extends TestCase
     public function testRunsInStrictMode(string $sqlMode): void
     {
         $installTool = $this->getInstallTool($sqlMode);
-
         $context = [];
 
         $this->assertFalse($installTool->hasConfigurationError($context));
-
         $this->assertEmpty($context);
     }
 
@@ -116,11 +112,6 @@ class InstallToolTest extends TestCase
             ->willReturn($driver ?? new PdoDriver())
         ;
 
-        return new InstallTool(
-            $connection,
-            '/project/dir',
-            new NullLogger(),
-            $this->createMock(MigrationCollection::class)
-        );
+        return new InstallTool($connection, '/project/dir', new NullLogger(), $this->createMock(MigrationCollection::class));
     }
 }

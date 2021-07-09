@@ -231,6 +231,16 @@ class InstallTool
             }
         }
 
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
+
+        // Check if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html)
+        if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
+            $context['errorCode'] = 7;
+            $context['driver'] = $this->connection->getDriver() instanceof MysqliDriver ? 'mysqli' : 'pdo';
+
+            return true;
+        }
+
         // Check if utf8mb4 can be used if the user has configured it
         if (isset($options['engine'], $options['collate']) && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
             if ('innodb' !== strtolower($options['engine'])) {
@@ -243,56 +253,44 @@ class InstallTool
             $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'");
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false !== $row && '' !== $row['Value']) {
-                // As there is no reliable way to get the vendor (see #84), we are
-                // guessing based on the version number. The check will not be run
-                // as of MySQL 8 and MariaDB 10.3, so this should be safe.
-                $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
-
-                // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
-                if (version_compare($version, $vok, '<')) {
-                    // The innodb_large_prefix option is disabled
-                    if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
-                        $context['errorCode'] = 5;
-
-                        return true;
-                    }
-
-                    $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
-
-                    // The innodb_file_per_table option is disabled
-                    if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
-                        $context['errorCode'] = 6;
-
-                        return true;
-                    }
-
-                    $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
-
-                    // The InnoDB file format is not Barracuda
-                    if ('' !== $row['Value'] && 'barracuda' !== strtolower((string) $row['Value'])) {
-                        $context['errorCode'] = 6;
-
-                        return true;
-                    }
-                }
+            if (false === $row || '' === $row['Value']) {
+                return false;
             }
-        }
 
-        // Ensure the database is running in strict mode
-        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
+            // As there is no reliable way to get the vendor (see #84), we are
+            // guessing based on the version number. The check will not be run
+            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+            $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
 
-        if (
-            empty(array_intersect(
-                explode(',', strtoupper($mode)),
-            // See https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html
-            ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES']
-            ))
-        ) {
-            $context['errorCode'] = 7;
-            $context['driver'] = $this->connection->getDriver() instanceof MysqliDriver ? 'mysqli' : 'pdo';
+            // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
+            if (version_compare($version, $vok, '>=')) {
+                return false;
+            }
 
-            return true;
+            // The innodb_large_prefix option is disabled
+            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
+                $context['errorCode'] = 5;
+
+                return true;
+            }
+
+            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
+
+            // The innodb_file_per_table option is disabled
+            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
+                $context['errorCode'] = 6;
+
+                return true;
+            }
+
+            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
+
+            // The InnoDB file format is not Barracuda
+            if ('' !== $row['Value'] && 'barracuda' !== strtolower((string) $row['Value'])) {
+                $context['errorCode'] = 6;
+
+                return true;
+            }
         }
 
         return false;
