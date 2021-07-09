@@ -65,7 +65,7 @@
         {{ _self.caption(figure, options) }}
     </figure>
     {% if addSchemaOrg %}
-        {%- do addSchemaOrg(figure.schemaOrgData) -%}
+        {%- do add_schema_org(figure.schemaOrgData) -%}
     {% endif %}
 {%- endmacro -%}
 

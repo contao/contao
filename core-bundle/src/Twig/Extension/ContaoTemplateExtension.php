@@ -51,7 +51,7 @@ class ContaoTemplateExtension extends AbstractExtension
     {
         return [
             new TwigFunction('render_contao_backend_template', [$this, 'renderContaoBackendTemplate']),
-            new TwigFunction('addSchemaOrg', [SchemaOrgRuntime::class, 'add']),
+            new TwigFunction('add_schema_org', [SchemaOrgRuntime::class, 'add']),
         ];
     }
 
