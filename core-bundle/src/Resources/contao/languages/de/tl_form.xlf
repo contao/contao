@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_form.targetTable.1">
         <source>The target table must contain a column for every form field.</source>
-        <target>Die Zieltabelle muss für jedes Formularfeld eine Spalte enthalten.</target>
+        <target>Die selbst anzulegende SQL-Zieltabelle muss für jedes Formularfeld eine gleichnamige Spalte enthalten. Siehe Dokumentation.</target>
       </trans-unit>
       <trans-unit id="tl_form.method.0">
         <source>Submission method</source>
