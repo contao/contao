@@ -307,8 +307,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.crawl.escargot_factory');
 
-        $this->assertEquals(['https://example.com'], $definition->getArgument(2));
-        $this->assertEquals(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+        $this->assertSame(['https://example.com'], $definition->getArgument(2));
+        $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void
@@ -335,7 +335,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->getDefinition('contao.search.indexer.default');
 
-        $this->assertEquals(true, $definition->getArgument(2));
+        $this->assertTrue($definition->getArgument(2));
     }
 
     public function testDoesNotRegisterTheDefaultSearchIndexerIfItIsDisabled(): void
@@ -382,7 +382,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.listener.search_index');
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
-        $this->assertEquals(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
+        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
     }
 
     public function testRemovesTheSearchIndexListenerIfItIsDisabled(): void
