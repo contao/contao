@@ -82,9 +82,6 @@ class CountriesTest extends TestCase
         $this->assertLessThan($positionTr, $positionDe);
     }
 
-    /**
-     * @return Countries&MockObject
-     */
     private function getCountriesService(TranslatorInterface $translator = null, RequestStack $requestStack = null, ContaoFramework $contaoFramework = null, array $countriesList = []): Countries
     {
         if (null === $translator) {
