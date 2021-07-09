@@ -122,7 +122,6 @@ class ModulePassword extends Module
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined
@@ -238,8 +237,6 @@ class ModulePassword extends Module
 
 		// Define the form field
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
-
-		/** @var Widget $strClass */
 		$strClass = $GLOBALS['TL_FFL']['password'];
 
 		// Fallback to default if the class is not defined

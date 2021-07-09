@@ -84,11 +84,11 @@ class BackendFile extends Backend
 		// Set the active record
 		if ($this->Database->tableExists($strTable))
 		{
-			/** @var Model $strModel */
 			$strModel = Model::getClassFromTable($strTable);
 
 			if (class_exists($strModel))
 			{
+				/** @var Model|null $objModel */
 				$objModel = $strModel::findByPk(Input::get('id'));
 
 				if ($objModel !== null)
