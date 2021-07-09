@@ -287,7 +287,7 @@ class InstallTool
     }
 
     /**
-     * Check if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html)
+     * Checks if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html).
      */
     public function checkStrictMode(array &$context): void
     {
