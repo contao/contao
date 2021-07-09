@@ -1389,6 +1389,11 @@ abstract class DataContainer extends Backend
 		}
 	}
 
+	/**
+	 * Return the form field suffix
+	 *
+	 * @return integer|string
+	 */
 	protected function getFormFieldSuffix()
 	{
 		return $this->intId;
