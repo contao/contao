@@ -13,19 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -601,10 +599,9 @@ class TwigMacrosTest extends TestCase
 
         $environment = new Environment(new ArrayLoader($templates));
         $environment->setExtensions([
-            new ContaoTemplateExtension(
-                new RequestStack(),
-                $this->createMock(ContaoFramework::class),
-                $this->createMock(ScopeMatcher::class)
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
             ),
         ]);
 
