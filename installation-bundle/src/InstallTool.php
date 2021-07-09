@@ -231,16 +231,6 @@ class InstallTool
             }
         }
 
-        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
-
-        // Check if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html)
-        if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
-            $context['errorCode'] = 7;
-            $context['optionKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
-
-            return true;
-        }
-
         // Check if utf8mb4 can be used if the user has configured it
         if (isset($options['engine'], $options['collate']) && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
             if ('innodb' !== strtolower($options['engine'])) {
@@ -294,6 +284,18 @@ class InstallTool
         }
 
         return false;
+    }
+
+    /**
+     * Checks if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html).
+     */
+    public function checkStrictMode(array &$context): void
+    {
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
+
+        if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
+            $context['optionKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
+        }
     }
 
     public function handleRunOnce(): void
