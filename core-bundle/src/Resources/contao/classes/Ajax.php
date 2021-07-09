@@ -288,7 +288,6 @@ class Ajax extends Backend
 					throw new BadRequestHttpException('Bad request');
 				}
 
-				$objRow = null;
 				$varValue = null;
 
 				// Load the value

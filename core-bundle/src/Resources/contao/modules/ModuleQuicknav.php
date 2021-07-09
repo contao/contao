@@ -62,7 +62,6 @@ class ModuleQuicknav extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$lang = null;
 		$host = null;
 
 		// Start from the website root if there is no reference page
