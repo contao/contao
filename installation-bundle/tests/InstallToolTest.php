@@ -26,14 +26,14 @@ class InstallToolTest extends TestCase
     /**
      * @dataProvider provideInvalidSqlModes
      */
-    public function testRaisesErrorIfNonRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, string $expectedDriver): void
+    public function testRaisesErrorIfNonRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
         $installTool = $this->getInstallTool($sqlMode, $driver);
         $context = [];
 
         $this->assertTrue($installTool->hasConfigurationError($context));
         $this->assertSame(7, $context['errorCode']);
-        $this->assertSame($expectedDriver, $context['driver']);
+        $this->assertSame($expectedOptionKey, $context['optionKey']);
     }
 
     public function provideInvalidSqlModes(): \Generator
@@ -42,19 +42,19 @@ class InstallToolTest extends TestCase
         $mysqliDriver = new MysqliDriver();
 
         yield 'empty sql_mode, pdo driver' => [
-            '', $pdoDriver, 'pdo',
+            '', $pdoDriver, 1002,
         ];
 
         yield 'empty sql_mode, mysqli driver' => [
-            '', $mysqliDriver, 'mysqli',
+            '', $mysqliDriver, 3,
         ];
 
         yield 'unrelated values, pdo driver' => [
-            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', $pdoDriver, 'pdo',
+            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', $pdoDriver, 1002,
         ];
 
         yield 'unrelated values, mysqli driver' => [
-            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', $mysqliDriver, 'mysqli',
+            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', $mysqliDriver, 3,
         ];
     }
 

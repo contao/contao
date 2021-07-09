@@ -72,7 +72,7 @@ innodb_file_per_table = 1</pre>
     connections:
       default:
         options:
-          {{ optionsKey }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
+          {{ optionKey }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
         </div>
     {% endif %}
   </fieldset>
