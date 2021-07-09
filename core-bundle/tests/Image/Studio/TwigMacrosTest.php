@@ -13,13 +13,22 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension;
+use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Webmozart\PathUtil\Path;
 
 class TwigMacrosTest extends TestCase
@@ -87,25 +96,25 @@ class TwigMacrosTest extends TestCase
         yield 'no options' => [
             '{}',
             [],
-            '<figcaption itemprop="caption">my <b>caption</b></figcaption>',
+            '<figcaption>my <b>caption</b></figcaption>',
         ];
 
         yield 'figure options' => [
             '{}',
             ['caption_attr' => ['data-foo' => 'bar', 'data-foobar' => 'baz']],
-            '<figcaption itemprop="caption" data-foo="bar" data-foobar="baz">my <b>caption</b></figcaption>',
+            '<figcaption data-foo="bar" data-foobar="baz">my <b>caption</b></figcaption>',
         ];
 
         yield 'template options' => [
             "{ 'caption_attr': {'data-foo': 'bar', 'data-foobar': 'baz' }}",
             [],
-            '<figcaption itemprop="caption" data-foo="bar" data-foobar="baz">my <b>caption</b></figcaption>',
+            '<figcaption data-foo="bar" data-foobar="baz">my <b>caption</b></figcaption>',
         ];
 
         yield 'template options overwriting figure options' => [
             "{ 'caption_attr': {'data-foobar': 'other' }}",
             ['caption_attr' => ['data-foo' => 'bar', 'data-foobar' => 'baz']],
-            '<figcaption itemprop="caption" data-foo="bar" data-foobar="other">my <b>caption</b></figcaption>',
+            '<figcaption data-foo="bar" data-foobar="other">my <b>caption</b></figcaption>',
         ];
     }
 
@@ -131,13 +140,13 @@ class TwigMacrosTest extends TestCase
         yield 'minimal' => [
             ['src' => 'foo.png'],
             null,
-            '<img src="foo.png" alt itemprop="image">',
+            '<img src="foo.png" alt>',
         ];
 
         yield 'minimal with empty metadata' => [
             ['src' => 'foo.png'],
             new Metadata([]),
-            '<img src="foo.png" alt itemprop="image">',
+            '<img src="foo.png" alt>',
         ];
 
         yield 'with metadata' => [
@@ -146,7 +155,7 @@ class TwigMacrosTest extends TestCase
                 Metadata::VALUE_ALT => 'my alt',
                 Metadata::VALUE_TITLE => 'my title',
             ]),
-            '<img src="foo.png" alt="my alt" title="my title" itemprop="image">',
+            '<img src="foo.png" alt="my alt" title="my title">',
         ];
 
         yield 'incomplete proportions' => [
@@ -155,7 +164,7 @@ class TwigMacrosTest extends TestCase
                 'width' => 400,
             ],
             null,
-            '<img src="foo.png" alt itemprop="image">',
+            '<img src="foo.png" alt>',
         ];
 
         yield 'complete proportions' => [
@@ -165,7 +174,7 @@ class TwigMacrosTest extends TestCase
                 'height' => 300,
             ],
             null,
-            '<img src="foo.png" alt width="400" height="300" itemprop="image">',
+            '<img src="foo.png" alt width="400" height="300">',
         ];
 
         yield 'full set' => [
@@ -182,7 +191,7 @@ class TwigMacrosTest extends TestCase
                 Metadata::VALUE_ALT => 'my alt',
                 Metadata::VALUE_TITLE => 'my title',
             ]),
-            '<img src="foo.png" alt="my alt" title="my title" srcset="foo-1.png 300w, foo-2png 500w" sizes="(max-width: 500px) 100vw, 50vw" width="400" height="300" loading="lazy" class="my-class" itemprop="image">',
+            '<img src="foo.png" alt="my alt" title="my title" srcset="foo-1.png 300w, foo-2png 500w" sizes="(max-width: 500px) 100vw, 50vw" width="400" height="300" loading="lazy" class="my-class">',
         ];
     }
 
@@ -219,25 +228,25 @@ class TwigMacrosTest extends TestCase
         yield 'no options' => [
             '{}',
             [],
-            '<img src="foo.png" alt="my alt" class="my-class" itemprop="image">',
+            '<img src="foo.png" alt="my alt" class="my-class">',
         ];
 
         yield 'figure options (overwriting attributes)' => [
             '{}',
             ['img_attr' => ['data-foo' => 'bar', 'alt' => 'other alt']],
-            '<img src="foo.png" alt="other alt" class="my-class" itemprop="image" data-foo="bar">',
+            '<img src="foo.png" alt="other alt" class="my-class" data-foo="bar">',
         ];
 
         yield 'template options (overwriting attributes)' => [
             "{ 'img_attr': {'data-foo': 'bar', 'alt': 'other alt' }}",
             [],
-            '<img src="foo.png" alt="other alt" class="my-class" itemprop="image" data-foo="bar">',
+            '<img src="foo.png" alt="other alt" class="my-class" data-foo="bar">',
         ];
 
         yield 'template options overwriting figure options' => [
             "{ 'img_attr': {'data-foobar': 'other' }}",
             ['img_attr' => ['class' => 'other-class', 'data-foobar' => 'baz']],
-            '<img src="foo.png" alt="my alt" class="other-class" itemprop="image" data-foobar="other">',
+            '<img src="foo.png" alt="my alt" class="other-class" data-foobar="other">',
         ];
     }
 
@@ -392,7 +401,7 @@ class TwigMacrosTest extends TestCase
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
 
         // Do not care about the img/picture or figcaption tag internals
-        $html = preg_replace('#<img.*>#', '<picture>', $html);
+        $html = preg_replace('#<img[^<]*>#', '<picture>', $html);
         $html = preg_replace('#<figcaption.*</figcaption>#', '<figcaption>', $html);
 
         // Trim whitespaces in between tags for easier comparison
@@ -407,7 +416,7 @@ class TwigMacrosTest extends TestCase
             null,
             [],
             null,
-            '<figure itemscope itemtype="https://schema.org/ImageObject"><picture></figure>',
+            '<figure><picture></figure>',
         ];
 
         yield 'with link' => [
@@ -417,7 +426,7 @@ class TwigMacrosTest extends TestCase
                 'data-link' => 'bar',
             ],
             null,
-            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="foo.html" data-link="bar"><picture></a></figure>',
+            '<figure><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
 
         /** @var LightboxResult&MockObject $lightbox */
@@ -436,21 +445,21 @@ class TwigMacrosTest extends TestCase
             null,
             [],
             $lightbox,
-            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
+            '<figure><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with lightbox link and title' => [
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
             $lightbox,
-            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
+            '<figure><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with caption' => [
             new Metadata([Metadata::VALUE_CAPTION => 'foo caption']),
             [],
             null,
-            '<figure itemscope itemtype="https://schema.org/ImageObject"><picture><figcaption></figure>',
+            '<figure><picture><figcaption></figure>',
         ];
     }
 
@@ -499,7 +508,7 @@ class TwigMacrosTest extends TestCase
         yield 'no options' => [
             '{}',
             [],
-            '<figure itemscope itemtype="https://schema.org/ImageObject"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1"><picture></a></figure>',
+            '<figure><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'figure options' => [
@@ -508,13 +517,13 @@ class TwigMacrosTest extends TestCase
                 'attr' => ['data-foo' => 'foo'],
                 'link_attr' => ['data-bar' => 'bar'],
             ],
-            '<figure itemscope itemtype="https://schema.org/ImageObject" data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
+            '<figure data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
         ];
 
         yield 'template options' => [
             "{ 'attr': {'data-foo': 'foo'}, 'link_attr': {'data-bar': 'bar'} }",
             [],
-            '<figure itemscope itemtype="https://schema.org/ImageObject" data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
+            '<figure data-foo="foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="bar"><picture></a></figure>',
         ];
 
         yield 'template options overwriting figure options' => [
@@ -523,19 +532,93 @@ class TwigMacrosTest extends TestCase
                 'attr' => ['data-foo' => 'foo'],
                 'link_attr' => ['data-bar' => 'bar'],
             ],
-            '<figure itemscope itemtype="https://schema.org/ImageObject" data-foo="other foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="other bar"><picture></a></figure>',
+            '<figure data-foo="other foo"><a href="foo.html" title="foo title" data-link="bar" data-lightbox="gal1" data-bar="other bar"><picture></a></figure>',
         ];
     }
 
-    private function renderMacro(string $call, array $context = []): string
+    /**
+     * @dataProvider provideAddSchemaOrgOptions
+     */
+    public function testDoesAddsSchemaOrgDataIfEnabled(string $call, array $schemaData): void
+    {
+        $figure = new Figure(
+            $this->createMock(ImageResult::class),
+            new Metadata([
+                Metadata::VALUE_TITLE => 'foo title',
+                Metadata::VALUE_UUID => '<uuid>',
+            ])
+        );
+
+        $responseContext = new ResponseContext();
+        $jsonLdManager = new JsonLdManager($responseContext);
+        $responseContext->add($jsonLdManager);
+
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->method('getResponseContext')
+            ->willReturn($responseContext)
+        ;
+
+        $this->renderMacro($call, ['figure' => $figure], $responseContextAccessor);
+
+        $graph = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG)->toArray();
+
+        $this->assertSame($graph['@graph'], $schemaData);
+    }
+
+    public function provideAddSchemaOrgOptions(): \Generator
+    {
+        yield 'default (enabled)' => [
+            'figure(figure)',
+            [[
+                '@type' => 'ImageObject',
+                'name' => 'foo title',
+                '@id' => '#/schema/image/<uuid>',
+            ]],
+        ];
+
+        yield 'explicitly enabled' => [
+            'figure(figure, {}, true)',
+            [[
+                '@type' => 'ImageObject',
+                'name' => 'foo title',
+                '@id' => '#/schema/image/<uuid>',
+            ]],
+        ];
+
+        yield 'disabled' => [
+            'figure(figure, {}, false)',
+            [],
+        ];
+    }
+
+    private function renderMacro(string $call, array $context = [], ResponseContextAccessor $responseContextAccessor = null): string
     {
         $templates = [
             '_macros.html.twig' => self::$macros,
-            'test.html.twig' => '{% import "_macros.html.twig" as studio %}'.
-                "{{ studio.$call }}",
+            'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
+        $environment->setExtensions([
+            new ContaoTemplateExtension(
+                new RequestStack(),
+                $this->createMock(ContaoFramework::class),
+                $this->createMock(ScopeMatcher::class)
+            ),
+        ]);
+
+        if (null === $responseContextAccessor) {
+            $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        }
+
+        $environment->addRuntimeLoader(
+            new FactoryRuntimeLoader([
+                SchemaOrgRuntime::class => static function () use ($responseContextAccessor) {
+                    return new SchemaOrgRuntime($responseContextAccessor);
+                },
+            ])
+        );
 
         return $environment->render('test.html.twig', $context);
     }
