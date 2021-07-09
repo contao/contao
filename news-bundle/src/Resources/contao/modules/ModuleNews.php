@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 
 /**
@@ -42,16 +43,11 @@ abstract class ModuleNews extends Module
 
 		if ($objArchive !== null)
 		{
-			$user = null;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$user = FrontendUser::getInstance();
-			}
+			$security = System::getContainer()->get('security.helper');
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objArchive->groups))))
+				if ($objArchive->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objArchive->groups, true)))
 				{
 					continue;
 				}
@@ -232,32 +228,13 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getBasicSchemaOrgData = static function () use ($objTemplate, $objArticle): array
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array
 		{
-			$jsonLd = array(
-				'@type' => 'NewsArticle',
-				'identifier' => '#/schema/news/' . $objArticle->id,
-				'url' => $objTemplate->link,
-				'headline' => StringUtil::inputEncodedToPlainText($objTemplate->headline),
-				'datePublished' => $objTemplate->datetime,
-			);
-
-			if ($objTemplate->hasTeaser)
-			{
-				$jsonLd['description'] = StringUtil::htmlToPlainText($objTemplate->teaser);
-			}
+			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
 			{
 				$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
-			}
-
-			if ($objTemplate->authorModel)
-			{
-				$jsonLd['author'] = array(
-					'@type' => 'Person',
-					'name' => $objTemplate->authorModel->name,
-				);
 			}
 
 			return $jsonLd;

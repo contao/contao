@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
@@ -397,12 +398,12 @@ class Configuration implements ConfigurationInterface
                     ->info('The default search indexer, which indexes pages in the database.')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('enable')
+                        ->booleanNode('enable')
                             ->defaultTrue()
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('index_protected')
+                ->booleanNode('index_protected')
                     ->info('Enables indexing of protected pages.')
                     ->defaultFalse()
                 ->end()
@@ -410,11 +411,11 @@ class Configuration implements ConfigurationInterface
                     ->info('The search index listener can index valid and delete invalid responses upon every request. You may limit it to one of the features or disable it completely.')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('index')
+                        ->booleanNode('index')
                             ->info('Enables indexing successful responses.')
                             ->defaultTrue()
                         ->end()
-                        ->scalarNode('delete')
+                        ->booleanNode('delete')
                             ->info('Enables deleting unsuccessful responses from the index.')
                             ->defaultTrue()
                         ->end()
@@ -545,10 +546,16 @@ class Configuration implements ConfigurationInterface
         $languages = [$this->defaultLocale];
 
         /** @var array<SplFileInfo> $finder */
-        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2}(_[A-Z]{2})?$/')->in($dirs);
+        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2,}/')->in($dirs);
 
         foreach ($finder as $file) {
-            $languages[] = $file->getFilename();
+            $locale = $file->getFilename();
+
+            if (LocaleUtil::canonicalize($locale) !== $locale) {
+                continue;
+            }
+
+            $languages[] = $locale;
         }
 
         return array_values(array_unique($languages));

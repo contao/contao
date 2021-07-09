@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -80,22 +81,24 @@ class ModuleQuicklink extends Module
 			return;
 		}
 
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
-
 		$items = array();
+		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->loadDetails();
-			$groups = StringUtil::deserialize($objSubpage->groups, true);
 
-			if (!$objSubpage->protected || (!$user && \in_array(-1, $groups)))
+			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
+			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				continue;
+			}
+
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);

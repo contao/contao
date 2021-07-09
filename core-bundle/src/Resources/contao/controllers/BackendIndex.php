@@ -111,7 +111,6 @@ class BackendIndex extends Backend
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
-		$objTemplate->curLanguage = Input::post('language') ?: str_replace('-', '_', $GLOBALS['TL_LANGUAGE']);
 		$objTemplate->curUsername = Input::post('username') ?: '';
 		$objTemplate->loginButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->username = $GLOBALS['TL_LANG']['tl_user']['username'][0];

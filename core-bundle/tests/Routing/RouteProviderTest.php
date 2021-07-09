@@ -44,6 +44,8 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
         $page->urlPrefix = '';
+        $page->language = 'en';
+        $page->rootLanguage = 'en';
 
         $route = new PageRoute($page);
 
@@ -103,6 +105,8 @@ class RouteProviderTest extends TestCase
         $page1->rootId = 1;
         $page1->urlPrefix = '';
         $page1->urlSuffix = '';
+        $page1->language = 'en';
+        $page1->rootLanguage = 'en';
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
@@ -110,6 +114,8 @@ class RouteProviderTest extends TestCase
         $page2->rootId = 1;
         $page2->urlPrefix = '';
         $page2->urlSuffix = '';
+        $page2->language = 'en';
+        $page2->rootLanguage = 'en';
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -141,6 +147,8 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->domain = 'example.org';
         $page->urlPrefix = '';
+        $page->language = 'en';
+        $page->rootLanguage = 'en';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -173,6 +181,8 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->domain = 'example.org:8080';
         $page->urlPrefix = '';
+        $page->language = 'en';
+        $page->rootLanguage = 'en';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter

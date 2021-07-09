@@ -60,7 +60,7 @@ class RegisterPagesPass implements CompilerPassInterface
 
             $definition->clearTag(self::TAG_NAME);
 
-            if (is_a($definition->getClass(), AbstractController::class, true) && !$definition->hasMethodCall('setContainer')) {
+            if (!$definition->hasMethodCall('setContainer') && is_a($definition->getClass(), AbstractController::class, true)) {
                 $definition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
             }
 

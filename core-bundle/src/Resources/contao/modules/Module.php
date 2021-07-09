@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
@@ -278,12 +279,8 @@ abstract class Module extends Frontend
 		}
 
 		$items = array();
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
+		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
@@ -312,18 +309,28 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			$subitems = '';
-			$groups = StringUtil::deserialize($objSubpage->groups, true);
+			if ($objSubpage->tabindex > 0)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
+			}
 
-			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
+			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				continue;
+			}
+
+			$subitems = '';
+
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Check whether there will be subpages
 				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
-
-				$href = null;
 
 				// Get href
 				switch ($objSubpage->type)
@@ -536,7 +543,7 @@ abstract class Module extends Frontend
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
 		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
 
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 
@@ -548,23 +555,16 @@ abstract class Module extends Frontend
 		// Load models into the registry with a single query
 		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
 
-		return array_filter(array_map(
-			static function (array $row) use ($blnFeUserLoggedIn): ?array
+		return array_map(
+			static function (array $row): array
 			{
-				$page = PageModel::findByPk($row['id']);
-
-				if ($blnFeUserLoggedIn && $page->loadDetails()->protected && \in_array(-1, StringUtil::deserialize($page->groups)))
-				{
-					return null;
-				}
-
 				return array(
-					'page' => $page,
+					'page' => PageModel::findByPk($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],
 				);
 			},
 			$arrPages
-		));
+		);
 	}
 
 	/**

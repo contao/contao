@@ -188,7 +188,7 @@ class ModuleEventlist extends Events
 		$arrEvents = array();
 
 		// Remove events outside the scope
-		foreach ($arrAllEvents as $key=>$days)
+		foreach ($arrAllEvents as $days)
 		{
 			foreach ($days as $day=>$events)
 			{
@@ -323,6 +323,8 @@ class ModuleEventlist extends Events
 				$objTemplate->hasDetails = false;
 			}
 
+			$objTemplate->hasReader = $event['source'] == 'default';
+
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
@@ -395,6 +397,19 @@ class ModuleEventlist extends Events
 			{
 				$this->addEnclosuresToTemplate($objTemplate, $event);
 			}
+
+			// schema.org information
+			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array
+			{
+				$jsonLd = Events::getSchemaOrgData($event);
+
+				if ($objTemplate->addImage && $objTemplate->figure)
+				{
+					$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
+				}
+
+				return $jsonLd;
+			};
 
 			$strEvents .= $objTemplate->parse();
 

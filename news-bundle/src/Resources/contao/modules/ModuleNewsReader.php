@@ -84,9 +84,6 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$this->Template->articles = '';
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];

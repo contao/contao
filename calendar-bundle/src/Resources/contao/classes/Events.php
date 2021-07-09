@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+
 /**
  * Provide methods to get all events of a certain period from the database.
  *
@@ -68,16 +70,11 @@ abstract class Events extends Module
 
 		if ($objCalendar !== null)
 		{
-			$user = null;
-
-			if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-			{
-				$user = FrontendUser::getInstance();
-			}
+			$security = System::getContainer()->get('security.helper');
 
 			while ($objCalendar->next())
 			{
-				if ($objCalendar->protected && (!$user || !$user->isMemberOf(StringUtil::deserialize($objCalendar->groups))))
+				if ($objCalendar->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objCalendar->groups, true)))
 				{
 					continue;
 				}
@@ -482,6 +479,47 @@ abstract class Events extends Module
 		}
 
 		return self::$arrUrlCache[$strCacheKey];
+	}
+
+	/**
+	 * Return the schema.org data from an event
+	 *
+	 * @param CalendarEventsModel $objEvent
+	 *
+	 * @return array
+	 */
+	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
+	{
+		$jsonLd = array(
+			'@type' => 'Event',
+			'identifier' => '#/schema/events/' . $objEvent->id,
+			'name' => StringUtil::inputEncodedToPlainText($objEvent->title),
+			'url' => self::generateEventUrl($objEvent),
+			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
+		);
+
+		if ($objEvent->teaser)
+		{
+			$jsonLd['description'] = $objEvent->teaser;
+		}
+
+		if ($objEvent->location)
+		{
+			$jsonLd['location'] = array(
+				'@type' => 'Place',
+				'name' => StringUtil::inputEncodedToPlainText($objEvent->location)
+			);
+
+			if ($objEvent->address)
+			{
+				$jsonLd['location']['address'] = array(
+					'@type' => 'PostalAddress',
+					'description' => StringUtil::inputEncodedToPlainText($objEvent->address)
+				);
+			}
+		}
+
+		return $jsonLd;
 	}
 
 	/**

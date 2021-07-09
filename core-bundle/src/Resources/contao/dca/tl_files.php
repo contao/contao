@@ -196,6 +196,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'name' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'versionize'=>false, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -210,40 +211,47 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'protected' => array
 		(
+			'exclude'                 => true,
 			'input_field_callback'    => array('tl_files', 'protectFolder'),
 			'eval'                    => array('tl_class'=>'w50 clr')
 		),
 		'syncExclude' => array
 		(
+			'exclude'                 => true,
 			'input_field_callback'    => array('tl_files', 'excludeFolder'),
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'importantPartX' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'importantPartY' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'importantPartWidth' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'importantPartHeight' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
 		'meta' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'metaWizard',
 			'eval'                    => array
 			(
@@ -590,7 +598,7 @@ class tl_files extends Backend
 	 * @param string                  $varValue
 	 * @param DataContainer|DC_Folder $dc
 	 *
-	 * @return mixed
+	 * @return string
 	 *
 	 * @throws Exception
 	 */
@@ -795,7 +803,7 @@ class tl_files extends Backend
 		/** @var DC_Folder $dc */
 		$dc = (@func_get_arg(12) ?: null);
 
-		if (!in_array($objFile->extension, $dc ? $dc->editableFileTypes : StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
+		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}

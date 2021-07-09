@@ -21,7 +21,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -86,10 +85,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testContaoWebpageResponseContext(): void
     {
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('request_stack', new RequestStack());
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
@@ -141,10 +137,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('request_stack', new RequestStack());
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);

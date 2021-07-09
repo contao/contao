@@ -18,7 +18,8 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
+use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -131,7 +132,7 @@ class InstallTool
 
         try {
             $this->connection->executeStatement('USE '.$quotedName);
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             $this->logException($e);
 
             return false;
@@ -285,6 +286,18 @@ class InstallTool
         return false;
     }
 
+    /**
+     * Checks if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html).
+     */
+    public function checkStrictMode(array &$context): void
+    {
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
+
+        if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
+            $context['optionKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
+        }
+    }
+
     public function handleRunOnce(): void
     {
         // Wait for the tables to be created (see #5061)
@@ -343,7 +356,7 @@ class InstallTool
             if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = '1'") > 0) {
                 return true;
             }
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             // ignore
         }
 

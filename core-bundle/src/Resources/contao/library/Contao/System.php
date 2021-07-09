@@ -14,6 +14,7 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
 use League\Uri\Components\Query;
@@ -438,7 +439,7 @@ abstract class System
 	{
 		if ($strLanguage === null)
 		{
-			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE'] ?? 'en');
+			$strLanguage = LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE'] ?? 'en');
 		}
 
 		// Fall back to English

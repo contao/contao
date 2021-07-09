@@ -1,3 +1,5 @@
+{# @var \Contao\CoreBundle\Image\Studio\Figure figure #}
+
 {#
     Studio Macros
     -------------
@@ -45,29 +47,26 @@
 
     If a link is defined the picture will be wrapped in an <a> tag.
 #}
-{%- macro figure(figure, options = {}) -%}
+{%- macro figure(figure, options = {}, addSchemaOrg = true) -%}
     {%- set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
     {%- set link_attributes = figure.options.link_attr|default({})|merge(options.link_attr|default({})) ~%}
-
-    {%- set base_attributes = {
-        'itemscope': '',
-        'itemtype': 'https://schema.org/ImageObject'
-    } %}
-    <figure{{ _self.html_attributes(base_attributes|merge(figure_attributes)) }}>
+    <figure{{ _self.html_attributes(figure_attributes) }}>
         {% if figure.linkHref -%}
             {%- set base_attributes = {
                 'href': figure.linkHref,
                 'title': figure.hasLightbox and figure.hasMetadata ? figure.metadata.title : null,
             }|merge(figure.linkAttributes) -%}
             <a{{ _self.html_attributes(base_attributes|merge(link_attributes)) }}>
-               {{~ _self.picture(figure, options) }}
+                {{~ _self.picture(figure, options) }}
             </a>
         {%- else %}
             {{- _self.picture(figure, options) -}}
         {% endif %}
-
         {{ _self.caption(figure, options) }}
     </figure>
+    {% if addSchemaOrg %}
+        {%- do add_schema_org(figure.schemaOrgData) -%}
+    {% endif %}
 {%- endmacro -%}
 
 {#
@@ -79,7 +78,7 @@
     {%- set picture_attributes = figure.options.picture_attr|default({})|merge(options.picture_attr|default({})) %}
     {%- set source_attributes = figure.options.source_attr|default({})|merge(options.source_attr|default({})) %}
 
-    {%- if figure.image.sources %}
+    {%- if figure.image.sources -%}
         <picture{{ _self.html_attributes(picture_attributes) }}>
             {% for source in figure.image.sources %}
                 {%- set defineProportions = source.width|default(false) and source.height|default(false) -%}
@@ -121,7 +120,6 @@
             'height': defineProportions ? img.height : null,
             'loading': img.loading|default(null),
             'class': img.class|default(null),
-            'itemprop': 'image',
         } %}
         <img{{ _self.html_attributes(base_attributes|merge(img_attributes)) }}>
     {% endapply %}
@@ -136,8 +134,7 @@
     {% apply spaceless %}
         {% if figure.hasMetadata and figure.metadata.caption %}
             {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
-            {% set base_attributes = { 'itemprop': 'caption' } %}
-            <figcaption{{ _self.html_attributes(base_attributes|merge(caption_attributes)) }}>
+            <figcaption{{ _self.html_attributes(caption_attributes) }}>
                 {{- figure.metadata.caption|raw -}}
             </figcaption>
         {% endif %}

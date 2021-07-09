@@ -182,6 +182,8 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\SitemapController:
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
         tags:
             - controller.service_arguments
             - container.service_subscriber
@@ -834,6 +836,8 @@ services:
         class: Contao\CoreBundle\Security\User\UserChecker
         arguments:
             - '@contao.framework'
+
+    Contao\CoreBundle\Security\Voter\MemberGroupVoter: ~
 
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -193,20 +194,23 @@ class ModuleBooknav extends Module
 			return;
 		}
 
-		$user = null;
-
-		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
+		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
 			$objPage->loadDetails();
-			$groups = StringUtil::deserialize($objPage->groups, true);
 
-			if (!$objPage->protected || $this->showProtected || (!$user && \in_array(-1, $groups)) || ($user && $user->isMemberOf($groups)))
+			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
+			if ($objPage->guests && !$objPage->protected && $isMember)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				continue;
+			}
+
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objPage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
 			{
 				$this->arrPages[$objPage->id] = $objPage;
 

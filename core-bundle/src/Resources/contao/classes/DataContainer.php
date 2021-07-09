@@ -274,7 +274,6 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		/** @var Widget $strClass */
 		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
 
 		// Return if the widget class does not exists

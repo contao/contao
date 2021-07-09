@@ -18,7 +18,7 @@ use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Contao\Validator;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -98,6 +98,8 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $this->runDatabaseUpdates();
+
+        $installTool->checkStrictMode($this->context);
 
         if (null !== ($response = $this->adjustDatabaseTables())) {
             return $response;
@@ -428,7 +430,7 @@ class InstallationController implements ContainerAwareInterface
 
         try {
             $installTool->importTemplate($template, '1' === $request->request->get('preserve'));
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);
 

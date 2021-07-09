@@ -291,33 +291,81 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield [
+            ['de_CH', 'fr_CH', 'it_CH'],
+            ['it-IT', 'de'],
+            ['it_CH', 'de_CH', 'fr_CH'],
+        ];
+
+        yield [
+            ['en_US', 'de_DE', 'en_GB'],
+            ['en', 'de'],
+            ['en_US', 'en_GB', 'de_DE'],
+        ];
+
+        yield [
+            ['en', 'de_DE', 'en_GB'],
+            ['en', 'de'],
+            ['en', 'en_GB', 'de_DE'],
+        ];
+
+        yield [
+            ['en_US', 'de_DE', 'fr_FR'],
+            ['fr', 'de-CH'],
+            ['fr_FR', 'de_DE', 'en_US'],
+        ];
+
+        yield [
+            ['de_CH', 'fr_CH', 'it_CH'],
+            ['de-DE', 'it-CH', 'fr-FR', 'de'],
+            ['it_CH', 'fr_CH', 'de_CH'],
+        ];
+
+        yield [
+            ['de_CH', 'fr_CH', 'de'],
+            ['de', 'fr'],
+            ['de_CH', 'de', 'fr_CH'],
+        ];
+
+        yield 'Correctly handles language tag for a page as well' => [
             ['de-CH', 'fr-CH', 'it-CH'],
             ['it-IT', 'de'],
             ['it-CH', 'de-CH', 'fr-CH'],
         ];
 
         yield [
-            ['en-US', 'de-DE', 'en-GB'],
-            ['en', 'de'],
-            ['en-US', 'en-GB', 'de-DE'],
+            ['zh_Hant_TW', 'zh_Hans_CN', 'de'],
+            ['de', 'zh'],
+            ['de', 'zh_Hant_TW', 'zh_Hans_CN'],
         ];
 
         yield [
-            ['en', 'de-DE', 'en-GB'],
-            ['en', 'de'],
-            ['en', 'en-GB', 'de-DE'],
+            ['zh_Hant_TW', 'zh_Hans_CN', 'de'],
+            ['de', 'zh_Hans_CN'],
+            ['de', 'zh_Hans_CN', 'zh_Hant_TW'],
+        ];
+
+        yield 'test' => [
+            ['zh_Hant_TW', 'zh_Hans_CN', 'de'],
+            ['de', 'zh_Hans'],
+            ['de', 'zh_Hans_CN', 'zh_Hant_TW'],
         ];
 
         yield [
-            ['en-US', 'de-DE', 'fr-FR'],
-            ['fr', 'de-CH'],
-            ['fr-FR', 'de-DE', 'en-US'],
+            ['zh_Hant_TW', 'zh_Hans_CN', 'de'],
+            ['de', 'zh_CN', 'zh_Hant'],
+            ['de', 'zh_Hans_CN', 'zh_Hant_TW'],
         ];
 
         yield [
-            ['de-CH', 'fr-CH', 'it-CH'],
-            ['de-DE', 'it-CH', 'fr-FR', 'de'],
-            ['it-CH', 'fr-CH', 'de-CH'],
+            ['zh_Hant_TW', 'zh_Hant', 'de'],
+            ['de', 'zh_TW'],
+            ['de', 'zh_Hant_TW', 'zh_Hant'],
+        ];
+
+        yield [
+            ['zh_Hant_TW', 'zh_Hans', 'de'],
+            ['de', 'zh_Hans_TW'],
+            ['de', 'zh_Hans', 'zh_Hant_TW'],
         ];
     }
 
@@ -346,22 +394,27 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Does not change the sorting' => [
             ['de-DE', 'de-CH', 'fr', 'de', 'en-US', 'en'],
-            array_flip(['de-DE', 'de', 'de-CH', 'fr', 'de', 'en-US', 'en', 'en']),
+            array_flip(['de_DE', 'de', 'de_CH', 'fr', 'de', 'en_US', 'en', 'en']),
         ];
 
         yield 'Adds primary language if it does not exist' => [
-            ['de_DE'],
-            array_flip(['de-DE', 'de']),
+            ['de-DE'],
+            array_flip(['de_DE', 'de']),
         ];
 
         yield 'Adds primary languages after first region' => [
             ['de_DE', 'de_CH', 'en', 'en_US', 'fr_FR'],
-            array_flip(['de-DE', 'de', 'de-CH', 'en', 'en-US', 'fr-FR', 'fr']),
+            array_flip(['de_DE', 'de', 'de_CH', 'en', 'en_US', 'fr_FR', 'fr']),
         ];
 
         yield 'Strips array keys' => [
             ['foo' => 'de', 'bar' => 'en'],
             array_flip(['de', 'en']),
+        ];
+
+        yield 'Compiles all fallback locales' => [
+            ['zh-Hant-TW', 'zh-Hans-CN'],
+            array_flip(['zh_Hant_TW', 'zh_Hant', 'zh_TW', 'zh', 'zh_Hans_CN', 'zh_Hans', 'zh_CN']),
         ];
     }
 

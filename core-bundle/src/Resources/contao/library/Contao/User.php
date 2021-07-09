@@ -419,23 +419,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function isMemberOf($ids)
 	{
-		if (!\is_array($ids))
-		{
-			$ids = array($ids);
-		}
-
 		// Filter non-numeric values
-		$ids = array_values(array_filter($ids, static function ($val) { return is_numeric($val); }));
+		$ids = array_filter((array) $ids, static function ($val) { return (string)(int) $val === (string) $val; });
 
 		if (empty($ids))
 		{
 			return false;
 		}
 
-		$groups = StringUtil::deserialize($this->groups);
+		$groups = StringUtil::deserialize($this->groups, true);
 
 		// No groups assigned
-		if (empty($groups) || !\is_array($groups))
+		if (empty($groups))
 		{
 			return false;
 		}
@@ -545,11 +540,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
 	public function serialize()
 	{
-		$data = array
+		return serialize($this->__serialize());
+	}
+
+	public function __serialize(): array
+	{
+		return array
 		(
 			'id' => $this->id,
 			'username' => $this->username,
@@ -558,17 +558,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'start' => $this->start,
 			'stop' => $this->stop
 		);
-
-		return serialize($data);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
-	public function unserialize($serialized)
+	public function unserialize($data)
 	{
-		$data = unserialize($serialized, array('allowed_classes'=>false));
+		$this->__unserialize(unserialize($data, array('allowed_classes'=>false)));
+	}
 
+	public function __unserialize(array $data): void
+	{
 		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
 		{
 			return;

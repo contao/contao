@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -74,9 +75,9 @@ class PageRegular extends Frontend
 	protected function prepare($objPage)
 	{
 		$GLOBALS['TL_KEYWORDS'] = '';
-		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
+		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
-		$locale = str_replace('-', '_', $objPage->language);
+		$locale = LocaleUtil::formatAsLocale($objPage->language);
 
 		$container = System::getContainer();
 		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
@@ -408,9 +409,6 @@ class PageRegular extends Frontend
 			$GLOBALS['TL_JAVASCRIPT'] = array();
 		}
 
-		$container = System::getContainer();
-		$projectDir = $container->getParameter('kernel.project_dir');
-
 		// jQuery scripts
 		if ($objLayout->addJQuery)
 		{
@@ -621,7 +619,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add the user <head> tags
-		if ($strHead = trim($objLayout->head))
+		if ($strHead = trim($objLayout->head ?? ''))
 		{
 			$strHeadTags .= $strHead . "\n";
 		}

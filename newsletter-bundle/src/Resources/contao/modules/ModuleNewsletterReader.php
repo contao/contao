@@ -80,9 +80,6 @@ class ModuleNewsletterReader extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$this->Template->content = '';
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];

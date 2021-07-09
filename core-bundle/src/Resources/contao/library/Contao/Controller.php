@@ -19,6 +19,8 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -718,15 +720,19 @@ abstract class Controller extends System
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && $objElement->protected)
+		if (TL_MODE == 'FE')
 		{
-			$blnReturn = false;
-			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-			$groups = StringUtil::deserialize($objElement->groups);
+			$security = System::getContainer()->get('security.helper');
 
-			if ((!$blnFeUserLoggedIn && \in_array(-1, $groups)) || ($blnFeUserLoggedIn && FrontendUser::getInstance()->isMemberOf($groups)))
+			if ($objElement->protected)
 			{
-				$blnReturn = true;
+				$groups = StringUtil::deserialize($objElement->groups, true);
+				$blnReturn = $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
+			}
+			elseif ($objElement->guests)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				$blnReturn = !$security->isGranted('ROLE_MEMBER'); // backwards compatibility
 			}
 		}
 
@@ -1158,6 +1164,8 @@ abstract class Controller extends System
 		// Set the language
 		if ($strForceLang !== null)
 		{
+			$strForceLang = LocaleUtil::formatAsLocale($strForceLang);
+
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
 

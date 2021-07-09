@@ -92,6 +92,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient(['environment' => 'legacy'], $_SERVER);
@@ -380,6 +381,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
@@ -718,6 +720,7 @@ class RoutingTest extends FunctionalTestCase
 
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
@@ -1078,7 +1081,7 @@ class RoutingTest extends FunctionalTestCase
         self::$container
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
