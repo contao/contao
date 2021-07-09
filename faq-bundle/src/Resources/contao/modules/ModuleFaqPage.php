@@ -169,6 +169,11 @@ class ModuleFaqPage extends Module
 		$this->Template->faq = $arrFaqs;
 		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
+
+		$this->Template->getSchemaOrgData = static function() use ($objFaqs)
+		{
+			return ModuleFaq::getSchemaOrgData($objFaqs);
+		};
 	}
 }
 
