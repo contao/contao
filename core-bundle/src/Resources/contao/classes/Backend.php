@@ -1195,7 +1195,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== 'false')
+		if (strpos($host, 'xn--') !== false)
 		{
 			$host = Idna::decode($host);
 		}

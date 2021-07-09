@@ -47,7 +47,6 @@ class FrontendIndex extends Frontend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendIndex::run()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
 
 		$pageId = $this->getPageIdFromUrl();
-		$objRootPage = null;
 
 		// Load a website root page object if there is no page ID
 		if ($pageId === null)
@@ -99,7 +98,6 @@ class FrontendIndex extends Frontend
 		{
 			trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\FrontendIndex::renderPage()" with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.');
 
-			$objNewPage = null;
 			$arrPages = array();
 
 			// Order by domain and language

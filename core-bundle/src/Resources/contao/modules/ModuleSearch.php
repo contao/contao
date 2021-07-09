@@ -105,7 +105,6 @@ class ModuleSearch extends Module
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
-				$varRootId = implode('-', $this->pages);
 				$arrPages = array();
 
 				foreach ($this->pages as $intPageId)
@@ -127,7 +126,6 @@ class ModuleSearch extends Module
 				/** @var PageModel $objPage */
 				global $objPage;
 
-				$varRootId = $objPage->rootId;
 				$arrPages = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
 			}
 

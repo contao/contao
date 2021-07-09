@@ -228,7 +228,7 @@ class Calendar extends Frontend
 					}
 
 					// Override the global page object (#2946)
-					$GLOBALS['objPage'] = $objParent = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
+					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
 					$objItem = new FeedItem();
 

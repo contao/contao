@@ -563,9 +563,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
-	public function unserialize($serialized)
+	public function unserialize($data)
 	{
-		$this->__unserialize(unserialize($serialized, array('allowed_classes'=>false)));
+		$this->__unserialize(unserialize($data, array('allowed_classes'=>false)));
 	}
 
 	public function __unserialize(array $data): void

@@ -1177,7 +1177,7 @@ class tl_page extends Backend
 
 		System::getContainer()
 			->get(PageUrlListener::class)
-			->purgeSearchIndex($dc)
+			->purgeSearchIndex((int) $dc->id)
 		;
 	}
 
@@ -1236,9 +1236,9 @@ class tl_page extends Backend
 	/**
 	 * Load the DNS settings
 	 *
-	 * @param mixed $varValue
+	 * @param string $varValue
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function loadDns($varValue)
 	{
@@ -1248,9 +1248,9 @@ class tl_page extends Backend
 	/**
 	 * Check the DNS settings
 	 *
-	 * @param mixed $varValue
+	 * @param string $varValue
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function checkDns($varValue)
 	{
