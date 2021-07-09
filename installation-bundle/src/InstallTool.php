@@ -294,7 +294,7 @@ class InstallTool
         $mode = $this->connection->fetchOne('SELECT @@sql_mode');
 
         if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
-            $context['option_key'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
+            $context['optionKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
         }
     }
 

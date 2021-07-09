@@ -28,11 +28,11 @@ class InstallToolTest extends TestCase
      */
     public function testRaisesErrorIfNonRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
-        $installTool = $this->getInstallTool($sqlMode, $driver);
         $context = [];
 
-        $this->assertTrue($installTool->hasConfigurationError($context));
-        $this->assertSame(7, $context['errorCode']);
+        $installTool = $this->getInstallTool($sqlMode, $driver);
+        $installTool->checkStrictMode($context);
+
         $this->assertSame($expectedOptionKey, $context['optionKey']);
     }
 
@@ -63,10 +63,11 @@ class InstallToolTest extends TestCase
      */
     public function testRunsInStrictMode(string $sqlMode): void
     {
-        $installTool = $this->getInstallTool($sqlMode);
         $context = [];
 
-        $this->assertFalse($installTool->hasConfigurationError($context));
+        $installTool = $this->getInstallTool($sqlMode);
+        $installTool->checkStrictMode($context);
+
         $this->assertEmpty($context);
     }
 

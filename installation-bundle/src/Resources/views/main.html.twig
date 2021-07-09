@@ -2,7 +2,7 @@
 {% trans_default_domain 'ContaoInstallationBundle' %}
 
 {% block main %}
-  {% if option_key is defined %}
+  {% if optionKey is defined %}
     <fieldset class="tl_tbox nolegend">
         <p class="tl_error">{{ 'strict_sql_mode'|trans }}</p>
         <p>{{ 'strict_sql_mode_explain'|trans|raw }}</p>
@@ -12,7 +12,7 @@
     connections:
       default:
         options:
-          {{ option_key }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
+          {{ optionKey }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
         </div>
     </fieldset>
   {% endif %}
