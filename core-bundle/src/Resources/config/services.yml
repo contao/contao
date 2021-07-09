@@ -405,6 +405,13 @@ services:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
 
+    Contao\CoreBundle\Intl\Countries:
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - '@contao.framework'
+            - '%contao.intl.countries%'
+
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:
             - '@?translator'

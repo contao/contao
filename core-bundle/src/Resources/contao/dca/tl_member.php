@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Intl\Countries;
 use Contao\DataContainer;
 use Contao\FrontendUser;
 use Contao\Image;
@@ -22,7 +23,6 @@ use Contao\MemberModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\Intl\Countries;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -223,15 +223,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				System::loadLanguageFile('countries');
-
-				// Backwards compatibility
-				if (!empty($GLOBALS['TL_HOOKS']['getCountries']) || isset($GLOBALS['TL_LANG']['CNT']))
-				{
-					return System::getCountries();
-				}
-
-				return Countries::getNames($GLOBALS['TL_LANGUAGE'] ?? 'en');
+				return System::getContainer()->get(Countries::class)->getCountries();
 			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),

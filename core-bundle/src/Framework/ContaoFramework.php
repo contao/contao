@@ -177,6 +177,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $reflection->newInstanceArgs($args);
     }
 
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T&Adapter
+     */
     public function getAdapter($class): Adapter
     {
         if (!isset($this->adapterCache[$class])) {

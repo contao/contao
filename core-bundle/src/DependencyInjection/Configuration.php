@@ -64,6 +64,7 @@ class Configuration implements ConfigurationInterface
                     ->max(32767)
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
+                ->append($this->addIntlNode())
                 ->booleanNode('legacy_routing')
                     ->defaultTrue()
                     ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
@@ -333,6 +334,36 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addIntlNode(): NodeDefinition
+    {
+        return (new TreeBuilder('intl'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('countries')
+                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->example(['+DE', '-AT', 'CH'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $countries): bool {
+                                foreach ($countries as $country) {
+                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9]$/', $country)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
+                    ->end()
                 ->end()
             ->end()
         ;

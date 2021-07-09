@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
@@ -22,7 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Intl\Countries;
 
 /**
  * Abstract library base class
@@ -581,38 +581,11 @@ abstract class System
 	 */
 	public static function getCountries()
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s::getNames method instead', __METHOD__, Countries::class);
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Countries::class);
 
-		$request = self::getContainer()->get('request_stack')->getCurrentRequest();
-		$locale = $request ? $request->getLocale() : 'en';
-		$return = Countries::getNames($locale);
+		$arrCountries = self::getContainer()->get(Countries::class)->getCountries();
 
-		static::loadLanguageFile('countries');
-
-		foreach ($return as $strKey=>$strName)
-		{
-			if (isset($GLOBALS['TL_LANG']['CNT'][$strKey]))
-			{
-				$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey];
-			}
-		}
-
-		(new \Collator($locale ?? 'en'))->asort($return);
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getCountries']) && \is_array($GLOBALS['TL_HOOKS']['getCountries']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getCountries" hook has been deprecated and will no longer work in Contao 5.0.');
-
-			$countries = Countries::getNames('en');
-
-			foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback)
-			{
-				static::importStatic($callback[0])->{$callback[1]}($return, $countries);
-			}
-		}
-
-		return $return;
+		return array_combine(array_map('strtolower', array_keys($arrCountries)), $arrCountries);
 	}
 
 	/**
