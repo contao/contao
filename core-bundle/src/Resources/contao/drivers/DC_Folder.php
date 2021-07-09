@@ -55,7 +55,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 	/**
 	 * Initial ID of the record
-	 * @var integer
+	 * @var string
 	 */
 	protected $initialId;
 

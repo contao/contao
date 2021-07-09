@@ -37,7 +37,7 @@ abstract class DataContainer extends Backend
 {
 	/**
 	 * Current ID
-	 * @var integer
+	 * @var integer|string
 	 */
 	protected $intId;
 
