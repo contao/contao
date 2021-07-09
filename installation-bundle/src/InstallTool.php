@@ -236,7 +236,7 @@ class InstallTool
         // Check if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html)
         if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
             $context['errorCode'] = 7;
-            $context['driver'] = $this->connection->getDriver() instanceof MysqliDriver ? 'mysqli' : 'pdo';
+            $context['optionsKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
 
             return true;
         }
