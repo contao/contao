@@ -2,6 +2,35 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.16] (2021-06-23)
+
+**Fixed issues:**
+
+- [#3112] Use "anon." as username if authentication fails ([leofeyer])
+
+## [4.9.15] (2021-06-08)
+
+**New features:**
+
+- [#3046] Add the "findCalendarBoundaries" hook ([leofeyer])
+- [#2960] Protect users against Google FLoC ([aschempp])
+
+**Fixed issues:**
+
+- [#3058] Do not cast the picker values to integers ([leofeyer])
+- [#3054] Fix a language typo ([Toflar])
+- [#3043] Rename the close button at the bottom of the modal window ([leofeyer])
+- [#3042] Handle non-string arguments in the `FilesModel::findByPath()` method ([leofeyer])
+- [#3041] Use a better label for the password confirmation field ([leofeyer])
+- [#2994] Hide unsaved content elements in the front end ([leofeyer])
+- [#3028] Do not require ocramius/proxy-manager ([leofeyer])
+- [#3007] Allow saving the value `0` in the KeyValueWizard ([doishub])
+- [#3029] Do not modify the select name at runtime ([aschempp])
+- [#2952] Set a label for the Contao Manager back end menu entry ([cliffparnitzky])
+- [#2970] Load protected status from parent pages in customnav ([patrickjDE])
+- [#3000] Simplify the latest DC_Table change ([leofeyer])
+- [#2999] Remove two left-over autocomplete attributes ([leofeyer])
+
 ## [4.9.14] (2021-05-11)
 
 **Fixed issues:**
@@ -192,7 +221,6 @@ This project adheres to [Semantic Versioning].
 - [#2264] Do not try to index a page if the search indexer is disabled ([aschempp])
 - [#2260] Do not use floorToMinute() in the PageModel::loadDetails() method ([leofeyer])
 - [#2257] Only use floorToMinute() in DB queries ([leofeyer])
-- [#2249] Return early in the Search::indexPage() method if nothing has changed ([leofeyer])
 - [#2248] Fix a type error in the back end menu listener ([leofeyer])
 - [#2244] Do not log 503 exceptions ([fritzmg])
 - [#2221] Use a temporary status code to redirect to the language root ([leofeyer])
@@ -587,6 +615,8 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.16]: https://github.com/contao/contao/releases/tag/4.9.16
+[4.9.15]: https://github.com/contao/contao/releases/tag/4.9.15
 [4.9.14]: https://github.com/contao/contao/releases/tag/4.9.14
 [4.9.13]: https://github.com/contao/contao/releases/tag/4.9.13
 [4.9.12]: https://github.com/contao/contao/releases/tag/4.9.12
@@ -617,6 +647,7 @@ This project adheres to [Semantic Versioning].
 [cliffparnitzky]: https://github.com/cliffparnitzky
 [denniserdmann]: https://github.com/denniserdmann
 [dmolineus]: https://github.com/dmolineus
+[doishub]: https://github.com/doishub
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
@@ -629,6 +660,22 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#3112]: https://github.com/contao/contao/pull/3112
+[#3046]: https://github.com/contao/contao/pull/3046
+[#2960]: https://github.com/contao/contao/pull/2960
+[#3058]: https://github.com/contao/contao/pull/3058
+[#3054]: https://github.com/contao/contao/pull/3054
+[#3043]: https://github.com/contao/contao/pull/3043
+[#3042]: https://github.com/contao/contao/pull/3042
+[#3041]: https://github.com/contao/contao/pull/3041
+[#2994]: https://github.com/contao/contao/pull/2994
+[#3028]: https://github.com/contao/contao/pull/3028
+[#3007]: https://github.com/contao/contao/pull/3007
+[#3029]: https://github.com/contao/contao/pull/3029
+[#2952]: https://github.com/contao/contao/pull/2952
+[#2970]: https://github.com/contao/contao/pull/2970
+[#3000]: https://github.com/contao/contao/pull/3000
+[#2999]: https://github.com/contao/contao/pull/2999
 [#2996]: https://github.com/contao/contao/pull/2996
 [#2930]: https://github.com/contao/contao/pull/2930
 [#2971]: https://github.com/contao/contao/pull/2971
@@ -772,7 +819,6 @@ This project adheres to [Semantic Versioning].
 [#2264]: https://github.com/contao/contao/pull/2264
 [#2260]: https://github.com/contao/contao/pull/2260
 [#2257]: https://github.com/contao/contao/pull/2257
-[#2249]: https://github.com/contao/contao/pull/2249
 [#2248]: https://github.com/contao/contao/pull/2248
 [#2244]: https://github.com/contao/contao/pull/2244
 [#2221]: https://github.com/contao/contao/pull/2221

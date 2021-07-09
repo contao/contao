@@ -63,19 +63,16 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
-
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request->isMethod('POST'))
+		if ($request && $request->isMethod('POST'))
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
 		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
 		{
 			/** @var UriSigner $uriSigner */
-			$uriSigner = $container->get('uri_signer');
+			$uriSigner = System::getContainer()->get('uri_signer');
 
 			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
 			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))

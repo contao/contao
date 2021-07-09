@@ -1295,6 +1295,12 @@ label.tl_change_selected {
 .selector_container pre {
 	white-space:pre-wrap;
 }
+.selector_container table.showColumns {
+	margin:2px 0 3px;
+}
+.selector_container table.sortable td {
+	cursor:move;
+}
 ul.sgallery {
 	overflow:hidden;
 }

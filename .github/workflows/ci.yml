@@ -20,7 +20,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 7.4
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: pcov
 
@@ -48,7 +48,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.0
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -67,12 +67,13 @@ jobs:
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
-            - name: Analyze the code
+            - name: Analyze the PHP files
               run: tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=3 --no-progress
 
             - name: Analyze the YAML files
               run: |
                   python3 -m pip install --upgrade pip
+                  python3 -m pip install --upgrade setuptools wheel
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
@@ -85,7 +86,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.0
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -126,7 +127,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -159,7 +160,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -191,7 +192,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 7.3
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 
@@ -223,7 +224,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: 7.4
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
 

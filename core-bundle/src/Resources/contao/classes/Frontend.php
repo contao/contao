@@ -292,8 +292,6 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
-		$host = Environment::get('host');
-		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
 
 		// Get the language from the URL if it is not set (see #456)
