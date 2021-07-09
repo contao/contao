@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FrontendTemplate extends Template
 {
+	use FrontendTemplateTrait;
+
 	/**
 	 * Unsued $_GET check
 	 * @var boolean
@@ -156,92 +158,6 @@ class FrontendTemplate extends Template
 		$this->strBuffer = str_replace(array('[{]', '[}]'), array('{{', '}}'), $this->strBuffer);
 
 		parent::compile();
-	}
-
-	/**
-	 * Return a custom layout section
-	 *
-	 * @param string $key      The section name
-	 * @param string $template An optional template name
-	 */
-	public function section($key, $template=null)
-	{
-		if (empty($this->sections[$key]))
-		{
-			return;
-		}
-
-		$this->id = $key;
-		$this->content = $this->sections[$key];
-
-		if ($template === null)
-		{
-			foreach ($this->positions as $position)
-			{
-				if (isset($position[$key]['template']))
-				{
-					$template = $position[$key]['template'];
-				}
-			}
-		}
-
-		if ($template === null)
-		{
-			$template = 'block_section';
-		}
-
-		include $this->getTemplate($template);
-	}
-
-	/**
-	 * Return the custom layout sections
-	 *
-	 * @param string $key      An optional section name
-	 * @param string $template An optional template name
-	 */
-	public function sections($key=null, $template=null)
-	{
-		if (!array_filter($this->sections))
-		{
-			return;
-		}
-
-		// The key does not match
-		if ($key && !isset($this->positions[$key]))
-		{
-			return;
-		}
-
-		$matches = array();
-
-		foreach ($this->positions[$key] as $id=>$section)
-		{
-			if (!empty($this->sections[$id]))
-			{
-				if (!isset($section['template']))
-				{
-					$section['template'] = 'block_section';
-				}
-
-				$section['content'] = $this->sections[$id];
-				$matches[$id] = $section;
-			}
-		}
-
-		// Return if the section is empty (see #1115)
-		if (empty($matches))
-		{
-			return;
-		}
-
-		$this->matches = $matches;
-
-		if ($template === null)
-		{
-			$template = 'block_sections';
-		}
-
-		include $this->getTemplate($template);
 	}
 
 	/**
