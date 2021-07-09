@@ -63,7 +63,6 @@ class ModuleQuicknav extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$lang = null;
 		$host = null;
 
 		// Start from the website root if there is no reference page
@@ -115,8 +114,9 @@ class ModuleQuicknav extends Module
 			return array();
 		}
 
-		$security = System::getContainer()->get('security.helper');
 		++$level;
+		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		foreach ($objSubpages as $objSubpage)
 		{
@@ -126,6 +126,13 @@ class ModuleQuicknav extends Module
 			if ($host !== null)
 			{
 				$objSubpage->domain = $host;
+			}
+
+			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
+			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				continue;
 			}
 
 			// PageModel->groups is an array after calling loadDetails()

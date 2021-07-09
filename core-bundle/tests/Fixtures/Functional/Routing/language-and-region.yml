@@ -5,9 +5,10 @@ tl_page:
       tstamp: 1568196756
       title: Root de-CH
       alias: root-de-ch
+      urlPrefix: de-CH
       urlSuffix: .html
       type: root
-      language: de-CH
+      language: de_CH
       dns: example.com
       fallback: ''
       includeLayout: '1'
@@ -29,9 +30,10 @@ tl_page:
       tstamp: 1568196339
       title: Root FR
       alias: root-fr
+      urlPrefix: fr-CH
       urlSuffix: .html
       type: root
-      language: fr-CH
+      language: fr_CH
       dns: example.com
       fallback: ''
       includeLayout: '1'
@@ -53,9 +55,10 @@ tl_page:
       tstamp: 1568196339
       title: Root IT
       alias: root-it
+      urlPrefix: it-CH
       urlSuffix: .html
       type: root
-      language: it-CH
+      language: it_CH
       dns: example.com
       fallback: ''
       includeLayout: '1'
@@ -77,9 +80,10 @@ tl_page:
       tstamp: 1568196756
       title: Root de-DE
       alias: root-de-de
+      urlPrefix: de-DE
       urlSuffix: .html
       type: root
-      language: de-DE
+      language: de_DE
       dns: example.com
       fallback: '1'
       includeLayout: '1'

@@ -228,32 +228,13 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getBasicSchemaOrgData = static function () use ($objTemplate, $objArticle): array
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array
 		{
-			$jsonLd = array(
-				'@type' => 'NewsArticle',
-				'identifier' => '#/schema/news/' . $objArticle->id,
-				'url' => $objTemplate->link,
-				'headline' => StringUtil::inputEncodedToPlainText($objTemplate->headline),
-				'datePublished' => $objTemplate->datetime,
-			);
-
-			if ($objTemplate->hasTeaser)
-			{
-				$jsonLd['description'] = StringUtil::htmlToPlainText($objTemplate->teaser);
-			}
+			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
 			{
 				$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
-			}
-
-			if ($objTemplate->authorModel)
-			{
-				$jsonLd['author'] = array(
-					'@type' => 'Person',
-					'name' => $objTemplate->authorModel->name,
-				);
 			}
 
 			return $jsonLd;

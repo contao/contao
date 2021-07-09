@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -90,14 +91,13 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyMceLanguage()
 	{
-		$lang = $GLOBALS['TL_LANGUAGE'];
+		$lang = LocaleUtil::formatAsLocale((string) $GLOBALS['TL_LANGUAGE']);
 
 		if (!$lang)
 		{
 			return 'en';
 		}
 
-		$lang = str_replace('-', '_', $lang);
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
@@ -659,9 +659,13 @@ abstract class Backend extends Controller
 	 * @param boolean $blnIsXmlSitemap
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Backend::findSearchablePages()" has been deprecated and will no longer work in Contao 5.0.');
+
 		// Since the publication status of a page is not inherited by its child
 		// pages, we have to use findByPid() instead of findPublishedByPid() and
 		// filter out unpublished pages in the foreach loop (see #2217)
@@ -778,7 +782,7 @@ abstract class Backend extends Controller
 		$objPage->loadDetails();
 
 		// Convert the language to a locale (see #5678)
-		$strLanguage = str_replace('-', '_', $objPage->rootLanguage);
+		$strLanguage = LocaleUtil::formatAsLocale($objPage->rootLanguage);
 
 		if (isset($arrMeta[$strLanguage]))
 		{
@@ -1191,7 +1195,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== 'false')
+		if (strpos($host, 'xn--') !== false)
 		{
 			$host = Idna::decode($host);
 		}

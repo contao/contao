@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Provide methods regarding FAQs.
  *
@@ -115,6 +117,35 @@ class ModuleFaq extends Frontend
 		}
 
 		return $arrPages;
+	}
+
+	/**
+	 * Return the schema.org data from a set of FAQs
+	 *
+	 * @param Collection|FaqModel[] $arrFaqs
+	 *
+	 * @return array
+	 */
+	public static function getSchemaOrgData(iterable $arrFaqs): array
+	{
+		$jsonLd = array(
+			'@type' => 'FAQPage',
+			'mainEntity' => array(),
+		);
+
+		foreach ($arrFaqs as $objFaq)
+		{
+			$jsonLd['mainEntity'][] = array(
+				'@type' => 'Question',
+				'name' => StringUtil::inputEncodedToPlainText($objFaq->question),
+				'acceptedAnswer' => array(
+					'@type' => 'Answer',
+					'text' =>  StringUtil::htmlToPlainText(StringUtil::encodeEmail($objFaq->answer))
+				)
+			);
+		}
+
+		return $jsonLd;
 	}
 }
 

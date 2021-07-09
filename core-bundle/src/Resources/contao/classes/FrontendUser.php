@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+
 /**
  * Provide methods to manage front end users.
  *
@@ -246,6 +248,30 @@ class FrontendUser extends User
 				$this->strLoginPage = $objGroup->jumpTo;
 			}
 		}
+	}
+
+	/**
+	 * Return true if the user is member of a particular group
+	 *
+	 * @param mixed $ids A single group ID or an array of group IDs
+	 *
+	 * @return boolean True if the user is a member of the group
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
+	 *             use Symfony security instead
+	 */
+	public function isMemberOf($ids)
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->getUser() === $this)
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\FrontendUser::isMemberOf()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
+
+			return $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $ids);
+		}
+
+		return parent::isMemberOf($ids);
 	}
 
 	/**

@@ -612,18 +612,18 @@ class BackendUser extends User
 	/**
 	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
-	public function unserialize($serialized)
+	public function unserialize($data)
 	{
-		$data = unserialize($serialized, array('allowed_classes'=>false));
+		$unserialized = unserialize($data, array('allowed_classes'=>false));
 
-		if (!isset($data['parent']))
+		if (!isset($unserialized['parent']))
 		{
 			return;
 		}
 
-		$data['parent'] = unserialize($data['parent'], array('allowed_classes'=>false));
+		$unserialized['parent'] = unserialize($unserialized['parent'], array('allowed_classes'=>false));
 
-		$this->__unserialize($data);
+		$this->__unserialize($unserialized);
 	}
 
 	public function __unserialize(array $data): void

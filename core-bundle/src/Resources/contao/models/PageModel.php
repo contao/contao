@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -24,65 +25,65 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Reads and writes pages
  *
- * @property string|integer    $id
- * @property string|integer    $pid
- * @property string|integer    $sorting
- * @property string|integer    $tstamp
- * @property string            $title
- * @property string            $alias
- * @property string            $type
- * @property string            $pageTitle
- * @property string            $language
- * @property string            $robots
- * @property string|null       $description
- * @property string            $redirect
- * @property string|integer    $jumpTo
- * @property string|boolean    $redirectBack
- * @property string            $url
- * @property string|boolean    $target
- * @property string            $dns
- * @property string            $staticFiles
- * @property string            $staticPlugins
- * @property string|boolean    $fallback
- * @property string|boolean    $disableLanguageRedirect
- * @property string|null       $favicon
- * @property string|null       $robotsTxt
- * @property string            $mailerTransport
- * @property string            $adminEmail
- * @property string            $dateFormat
- * @property string            $timeFormat
- * @property string            $datimFormat
- * @property string            $validAliasCharacters
- * @property string|boolean    $useFolderUrl
- * @property string            $urlPrefix
- * @property string            $urlSuffix
- * @property string|boolean    $useSSL
- * @property string|boolean    $autoforward
- * @property string|boolean    $protected
- * @property string|array|null $groups
- * @property string|boolean    $includeLayout
- * @property string|integer    $layout
- * @property string|boolean    $includeCache
- * @property string|integer    $cache
- * @property string|boolean    $alwaysLoadFromCache
- * @property string|integer    $clientCache
- * @property string|boolean    $includeChmod
- * @property string|integer    $cuser
- * @property string|integer    $cgroup
- * @property string            $chmod
- * @property string|boolean    $noSearch
- * @property string|boolean    $requireItem
- * @property string            $cssClass
- * @property string            $sitemap
- * @property string|boolean    $hide
- * @property string|boolean    $guests
- * @property string|integer    $tabindex
- * @property string            $accesskey
- * @property string|boolean    $published
- * @property string|integer    $start
- * @property string|integer    $stop
- * @property string|boolean    $enforceTwoFactor
- * @property string|integer    $twoFactorJumpTo
+ * @property string|integer         $id
+ * @property string|integer         $pid
+ * @property string|integer         $sorting
+ * @property string|integer         $tstamp
+ * @property string                 $title
+ * @property string                 $alias
+ * @property string                 $type
+ * @property string                 $pageTitle
+ * @property string                 $language
+ * @property string                 $robots
+ * @property string|null            $description
+ * @property string                 $redirect
+ * @property string|integer         $jumpTo
+ * @property string|boolean         $redirectBack
+ * @property string                 $url
+ * @property string|boolean         $target
+ * @property string                 $dns
+ * @property string                 $staticFiles
+ * @property string                 $staticPlugins
+ * @property string|boolean         $fallback
+ * @property string|boolean         $disableLanguageRedirect
+ * @property string|null            $favicon
+ * @property string|null            $robotsTxt
+ * @property string                 $mailerTransport
+ * @property string                 $adminEmail
+ * @property string                 $dateFormat
+ * @property string                 $timeFormat
+ * @property string                 $datimFormat
+ * @property string                 $validAliasCharacters
+ * @property string|boolean         $useFolderUrl
+ * @property string                 $urlPrefix
+ * @property string                 $urlSuffix
+ * @property string|boolean         $useSSL
+ * @property string|boolean         $autoforward
+ * @property string|boolean         $protected
+ * @property string|array|null      $groups
+ * @property string|boolean         $includeLayout
+ * @property string|integer         $layout
+ * @property string|boolean         $includeCache
+ * @property string|integer|boolean $cache
+ * @property string|boolean         $alwaysLoadFromCache
+ * @property string|integer|boolean $clientCache
+ * @property string|boolean         $includeChmod
+ * @property string|integer         $cuser
+ * @property string|integer         $cgroup
+ * @property string                 $chmod
+ * @property string|boolean         $noSearch
+ * @property string|boolean         $requireItem
+ * @property string                 $cssClass
+ * @property string                 $sitemap
+ * @property string|boolean         $hide
+ * @property string|boolean         $guests
+ * @property string|integer         $tabindex
+ * @property string                 $accesskey
+ * @property string|boolean         $published
+ * @property string|integer         $start
+ * @property string|integer         $stop
+ * @property string|boolean         $enforceTwoFactor
+ * @property string|integer         $twoFactorJumpTo
  *
  * @property array          $trail
  * @property string         $mainAlias
@@ -316,7 +317,9 @@ class PageModel extends Model
 
 			if (!$responseContext)
 			{
-				return parent::__set($strKey, $varValue);
+				parent::__set($strKey, $varValue);
+
+				return;
 			}
 
 			if (\in_array($strKey, array('pageTitle', 'description', 'robots')) && $responseContext->has(HtmlHeadBag::class))
@@ -354,41 +357,7 @@ class PageModel extends Model
 			}
 		}
 
-		return parent::__set($strKey, $varValue);
-	}
-
-	public function __get($strKey)
-	{
-		// Lazy-load the fallback language (see contao/core#6874)
-		if ($strKey == 'rootFallbackLanguage' && $this->blnDetailsLoaded && !\array_key_exists('rootFallbackLanguage', $this->arrData))
-		{
-			$this->rootFallbackLanguage = $this->rootIsFallback ? $this->language : null;
-
-			if (!$this->rootIsFallback && ($objFallback = static::findPublishedFallbackByHostname($this->domain)) !== null)
-			{
-				$this->rootFallbackLanguage = $objFallback->language;
-			}
-		}
-
-		return parent::__get($strKey);
-	}
-
-	public function __isset($strKey)
-	{
-		if ($strKey == 'rootFallbackLanguage' && $this->blnDetailsLoaded)
-		{
-			return true;
-		}
-
-		return parent::__isset($strKey);
-	}
-
-	public function row()
-	{
-		// Load lazy properties
-		$this->__get('rootFallbackLanguage');
-
-		return parent::row();
+		parent::__set($strKey, $varValue);
 	}
 
 	/**
@@ -1194,10 +1163,24 @@ class PageModel extends Model
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
 			$this->rootIsFallback = (bool) $objParentPage->fallback;
 			$this->rootUseSSL = $objParentPage->useSSL;
+			$this->rootFallbackLanguage = $objParentPage->language;
+
+			// Store the fallback language (see #6874)
+			if (!$objParentPage->fallback)
+			{
+				$this->rootFallbackLanguage = null;
+
+				$objFallback = static::findPublishedFallbackByHostname($objParentPage->dns);
+
+				if ($objFallback !== null)
+				{
+					$this->rootFallbackLanguage = $objFallback->language;
+				}
+			}
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $objParentPage->language : '';
+				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
 				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 			}
 		}
@@ -1269,6 +1252,8 @@ class PageModel extends Model
 		if ($strForceLang !== null)
 		{
 			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\PageModel::getFrontendUrl()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
+
+			$strForceLang = LocaleUtil::formatAsLanguageTag($strForceLang);
 
 			$page = $page->cloneOriginal();
 			$page->preventSaving(false);

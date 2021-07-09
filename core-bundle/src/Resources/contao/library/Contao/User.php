@@ -419,13 +419,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function isMemberOf($ids)
 	{
-		if (!\is_array($ids))
-		{
-			$ids = array($ids);
-		}
-
 		// Filter non-numeric values
-		$ids = array_values(array_filter($ids, static function ($val) { return is_numeric($val); }));
+		$ids = array_filter((array) $ids, static function ($val) { return (string)(int) $val === (string) $val; });
 
 		if (empty($ids))
 		{
@@ -568,9 +563,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
 	 */
-	public function unserialize($serialized)
+	public function unserialize($data)
 	{
-		$this->__unserialize(unserialize($serialized, array('allowed_classes'=>false)));
+		$this->__unserialize(unserialize($data, array('allowed_classes'=>false)));
 	}
 
 	public function __unserialize(array $data): void

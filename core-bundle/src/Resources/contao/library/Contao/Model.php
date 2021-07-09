@@ -220,7 +220,7 @@ abstract class Model
 	 */
 	public function __set($strKey, $varValue)
 	{
-		if ($this->$strKey === $varValue)
+		if (isset($this->arrData[$strKey]) && $this->arrData[$strKey] === $varValue)
 		{
 			return;
 		}

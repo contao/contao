@@ -61,12 +61,7 @@ class ModuleChangePassword extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$this->import(FrontendUser::class, 'User');
-
-		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
@@ -118,16 +113,12 @@ class ModuleChangePassword extends Module
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
 		$objVersions->initialize();
 
-		/** @var FormTextField $objOldPassword */
-		$objOldPassword = null;
-
 		/** @var FormPassword $objNewPassword */
 		$objNewPassword = null;
 
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
 		{
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined

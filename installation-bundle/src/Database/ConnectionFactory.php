@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\InstallationBundle\Database;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 
 class ConnectionFactory
 {
@@ -34,7 +34,7 @@ class ConnectionFactory
 
         try {
             return DriverManager::getConnection($params);
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             // ignore
         }
 

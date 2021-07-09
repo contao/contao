@@ -54,6 +54,8 @@ class PageUrlGeneratorTest extends TestCase
             'rootUseSSL' => true,
             'urlPrefix' => 'some-language',
             'urlSuffix' => '.html',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $route = new PageRoute($page);
@@ -85,6 +87,8 @@ class PageUrlGeneratorTest extends TestCase
             'rootUseSSL' => true,
             'urlPrefix' => 'en',
             'urlSuffix' => '.html',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $route = new PageRoute($page, '/index{!parameters}', ['parameters' => ''], ['parameters' => '(/.+)?']);
@@ -116,6 +120,8 @@ class PageUrlGeneratorTest extends TestCase
             'rootUseSSL' => true,
             'urlPrefix' => 'en',
             'urlSuffix' => '.html',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $route = new PageRoute($page, '/index{!parameters}', ['parameters' => ''], ['parameters' => '(/.+)?']);
@@ -147,6 +153,8 @@ class PageUrlGeneratorTest extends TestCase
             'rootUseSSL' => true,
             'urlPrefix' => 'en',
             'urlSuffix' => '.html',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $route = new PageRoute($page, '/index{!parameters}', ['parameters' => ''], ['parameters' => '(/.+)?']);
@@ -178,6 +186,8 @@ class PageUrlGeneratorTest extends TestCase
             'rootUseSSL' => true,
             'urlPrefix' => 'en',
             'urlSuffix' => '.html',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $route = new PageRoute($page, '{foo}', ['foo' => 'foo'], ['foo' => '[a-z]+']);
@@ -209,6 +219,8 @@ class PageUrlGeneratorTest extends TestCase
             'rootUseSSL' => true,
             'urlPrefix' => 'en',
             'urlSuffix' => '.html',
+            'language' => 'en',
+            'rootLanguage' => 'en',
         ]);
 
         $route = new PageRoute($page, '{foo}', [], ['foo' => '[a-z]+']);

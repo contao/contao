@@ -99,7 +99,7 @@ class Version447Update extends AbstractMigration
             $count = 0;
 
             // Find the oldest, active subscription preferring real subscriptions over imported ones
-            $subscriptions = $this->connection->prepare("
+            $stmt = $this->connection->prepare("
                 SELECT
                     *
                 FROM
@@ -110,9 +110,12 @@ class Version447Update extends AbstractMigration
                     active = '1' DESC, addedOn != '' DESC, id
             ");
 
-            $subscriptions->execute(['pid' => $duplicate['pid'], ':email' => $duplicate['email']]);
+            $subscriptions = $stmt
+                ->executeQuery(['pid' => $duplicate['pid'], 'email' => $duplicate['email']])
+                ->fetchAllAssociative()
+            ;
 
-            while (false !== ($subscription = $subscriptions->fetchAssociative())) {
+            foreach ($subscriptions as $subscription) {
                 if (0 === $count++) {
                     continue; // keep the first subscription
                 }

@@ -482,6 +482,47 @@ abstract class Events extends Module
 	}
 
 	/**
+	 * Return the schema.org data from an event
+	 *
+	 * @param CalendarEventsModel $objEvent
+	 *
+	 * @return array
+	 */
+	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
+	{
+		$jsonLd = array(
+			'@type' => 'Event',
+			'identifier' => '#/schema/events/' . $objEvent->id,
+			'name' => StringUtil::inputEncodedToPlainText($objEvent->title),
+			'url' => self::generateEventUrl($objEvent),
+			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
+		);
+
+		if ($objEvent->teaser)
+		{
+			$jsonLd['description'] = $objEvent->teaser;
+		}
+
+		if ($objEvent->location)
+		{
+			$jsonLd['location'] = array(
+				'@type' => 'Place',
+				'name' => StringUtil::inputEncodedToPlainText($objEvent->location)
+			);
+
+			if ($objEvent->address)
+			{
+				$jsonLd['location']['address'] = array(
+					'@type' => 'PostalAddress',
+					'description' => StringUtil::inputEncodedToPlainText($objEvent->address)
+				);
+			}
+		}
+
+		return $jsonLd;
+	}
+
+	/**
 	 * Return the begin and end timestamp and an error message as array
 	 *
 	 * @param Date   $objDate

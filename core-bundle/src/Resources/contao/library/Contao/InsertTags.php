@@ -14,6 +14,7 @@ use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -609,6 +610,7 @@ class InsertTags extends Controller
 				case 'iflng':
 					if ($elements[1])
 					{
+						$pageLanguage = LocaleUtil::formatAsLocale($objPage->language);
 						$langs = StringUtil::trimsplit(',', $elements[1]);
 
 						// Check if there are wildcards (see #8313)
@@ -616,20 +618,24 @@ class InsertTags extends Controller
 						{
 							if (substr($v, -1) == '*')
 							{
-								$langs[$k] = substr($v, 0, -1);
+								$langs[$k] = LocaleUtil::formatAsLocale(substr($v, 0, -1));
 
-								if (\strlen($objPage->language) > 2 && 0 === strncmp($objPage->language, $langs[$k], 2))
+								if (\strlen($pageLanguage) > 2 && 0 === strncmp($pageLanguage, $langs[$k], 2))
 								{
-									$langs[] = $objPage->language;
+									$langs[] = $pageLanguage;
 								}
+							}
+							else
+							{
+								$langs[$k] = LocaleUtil::formatAsLocale($v);
 							}
 						}
 
-						if (!\in_array($objPage->language, $langs))
+						if (!\in_array($pageLanguage, $langs))
 						{
 							for (; $_rit<$_cnt; $_rit+=2)
 							{
-								if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
+								if ($tags[$_rit+1] == 'iflng' || (strncmp($tags[$_rit+1], 'iflng::', 7) && LocaleUtil::formatAsLocale(substr($tags[$_rit+1], 7)) == $pageLanguage))
 								{
 									break;
 								}
@@ -643,6 +649,7 @@ class InsertTags extends Controller
 				case 'ifnlng':
 					if ($elements[1])
 					{
+						$pageLanguage = LocaleUtil::formatAsLocale($objPage->language);
 						$langs = StringUtil::trimsplit(',', $elements[1]);
 
 						// Check if there are wildcards (see #8313)
@@ -650,16 +657,20 @@ class InsertTags extends Controller
 						{
 							if (substr($v, -1) == '*')
 							{
-								$langs[$k] = substr($v, 0, -1);
+								$langs[$k] = LocaleUtil::formatAsLocale(substr($v, 0, -1));
 
-								if (\strlen($objPage->language) > 2 && 0 === strncmp($objPage->language, $langs[$k], 2))
+								if (\strlen($pageLanguage) > 2 && 0 === strncmp($pageLanguage, $langs[$k], 2))
 								{
-									$langs[] = $objPage->language;
+									$langs[] = $pageLanguage;
 								}
+							}
+							else
+							{
+								$langs[$k] = LocaleUtil::formatAsLocale($v);
 							}
 						}
 
-						if (\in_array($objPage->language, $langs))
+						if (\in_array($pageLanguage, $langs))
 						{
 							for (; $_rit<$_cnt; $_rit+=2)
 							{
@@ -940,9 +951,9 @@ class InsertTags extends Controller
 							$objFile = new File(rawurldecode($src));
 
 							// Add the image dimensions
-							if (($imgSize = $objFile->imageSize) !== false)
+							if (isset($objFile->imageSize[0], $objFile->imageSize[1]))
 							{
-								$dimensions = ' width="' . StringUtil::specialchars($imgSize[0]) . '" height="' . StringUtil::specialchars($imgSize[1]) . '"';
+								$dimensions = ' width="' . StringUtil::specialchars($objFile->imageSize[0]) . '" height="' . StringUtil::specialchars($objFile->imageSize[1]) . '"';
 							}
 
 							$arrCache[$strTag] = '<img src="' . Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . StringUtil::specialchars($alt) . '"' . ($class ? ' class="' . StringUtil::specialchars($class) . '"' : '') . '>';
