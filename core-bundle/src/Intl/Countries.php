@@ -53,14 +53,14 @@ class Countries
      */
     public function getCountries(string $displayLocale = null): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
         $countries = SymfonyCountries::getNames($displayLocale);
         $needsResort = false;
 
-        if (\count($this->countriesList)) {
+        if ($this->countriesList) {
             $countries = $this->filterCountries($countries, $displayLocale ?? 'en');
             $needsResort = true;
         }
@@ -104,7 +104,7 @@ class Countries
 
         $countryCodes = SymfonyCountries::getCountryCodes();
 
-        if (\count($this->countriesList)) {
+        if ($this->countriesList) {
             $countryCodes = array_keys($this->filterCountries(array_combine($countryCodes, $countryCodes), 'en'));
             sort($countryCodes);
         }

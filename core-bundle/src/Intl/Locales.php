@@ -58,7 +58,7 @@ class Locales
      */
     public function getLocales(string $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
@@ -100,7 +100,7 @@ class Locales
             return $locales;
         }
 
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
@@ -174,7 +174,7 @@ class Locales
 
     private function getDisplayNamesWithoutHook(array $localeIds, string $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
+        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
             $displayLocale = $request->getLocale();
         }
 
