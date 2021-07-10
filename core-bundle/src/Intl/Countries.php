@@ -61,7 +61,7 @@ class Countries
         $needsResort = false;
 
         if (\count($this->countriesList)) {
-            $countries = $this->filterCountries($countries, $displayLocale);
+            $countries = $this->filterCountries($countries, $displayLocale ?? 'en');
             $needsResort = true;
         }
 
@@ -105,14 +105,14 @@ class Countries
         $countryCodes = SymfonyCountries::getCountryCodes();
 
         if (\count($this->countriesList)) {
-            $countryCodes = array_keys($this->filterCountries(array_combine($countryCodes, $countryCodes)));
+            $countryCodes = array_keys($this->filterCountries(array_combine($countryCodes, $countryCodes), 'en'));
             sort($countryCodes);
         }
 
         return $countryCodes;
     }
 
-    private function filterCountries(array $countries, string $displayLocale = null): array
+    private function filterCountries(array $countries, string $displayLocale): array
     {
         $newList = array_filter(
             $this->countriesList,
