@@ -577,8 +577,8 @@ abstract class System
 	 *
 	 * @return array An array of country names
 	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.
-	 *             Use the Symfony\Intl\Countries::getNames method instead.
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\Intl\Countries service instead
 	 */
 	public static function getCountries()
 	{
@@ -600,7 +600,6 @@ abstract class System
 	{
 		$request = self::getContainer()->get('request_stack')->getCurrentRequest();
 		$currentLocale = $request ? $request->getLocale() : 'en';
-
 		$locales = array_values(self::getContainer()->getParameter('contao.locales'));
 
 		if (!$blnInstalledOnly)
