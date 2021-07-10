@@ -90,7 +90,7 @@ class Countries
     }
 
     /**
-     * @return array<string>
+     * @return array<string> Uppercase ISO 3166-1 alpha-2 codes
      */
     public function getCountryCodes(): array
     {
