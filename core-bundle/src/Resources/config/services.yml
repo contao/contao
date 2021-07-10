@@ -62,7 +62,7 @@ services:
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
-            - '%contao.locales%'
+            - '%contao.backend_locales%'
         public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
@@ -421,7 +421,7 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - '%contao.intl.locales%'
-            - '%contao.locales%'
+            - '%contao.backend_locales%'
         public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:

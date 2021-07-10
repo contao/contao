@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get(Locales::class)->getDisplayNames(System::getContainer()->getParameter('contao.locales'), null, true);
+				return System::getContainer()->get(Locales::class)->getDisplayNames(System::getContainer()->getParameter('contao.backend_locales'), null, true);
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),

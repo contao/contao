@@ -73,10 +73,30 @@ class Configuration implements ConfigurationInterface
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
                 ->end()
-                ->arrayNode('locales')
+                ->arrayNode('backend_locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
                     ->prototype('scalar')->end()
                     ->defaultValue($this->getLocales())
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $locales): bool {
+                                foreach ($locales as $locale) {
+                                    if (LocaleUtil::canonicalize($locale) !== $locale) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided locales must be in the canonicalized ICU form.')
+                    ->end()
+                ->end()
+                ->arrayNode('locales')
+                    ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
+                    ->setDeprecated(...$this->getDeprecationArgs('4.12', 'Using contao.locales is deprecated. Please use contao.backend_locales instead.'))
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
                 ->end()
                 ->booleanNode('prepend_locale')
                     ->info('Whether or not to add the page language to the URL.')
