@@ -121,7 +121,7 @@ class ModuleArticle extends Module
 
 		// Add the modification date
 		$this->Template->timestamp = $this->tstamp;
-		$this->Template->date = Date::parse($objPage->datimFormat, $this->tstamp);
+		$this->Template->date = Date::parse($objPage ? $objPage->datimFormat : null, $this->tstamp);
 
 		// Clean the RTE output
 		$this->teaser = StringUtil::toHtml5($this->teaser);
