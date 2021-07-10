@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
@@ -595,66 +596,20 @@ abstract class System
 	 * @param boolean $blnInstalledOnly If true, return only installed languages
 	 *
 	 * @return array An array of languages
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\Intl\Locales service instead
 	 */
 	public static function getLanguages($blnInstalledOnly=false)
 	{
-		$request = self::getContainer()->get('request_stack')->getCurrentRequest();
-		$currentLocale = $request ? $request->getLocale() : 'en';
-		$locales = array_values(self::getContainer()->getParameter('contao.locales'));
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Locales::class);
 
-		if (!$blnInstalledOnly)
+		if ($blnInstalledOnly)
 		{
-			$locales = array_values(array_unique(array_merge($locales, \ResourceBundle::getLocales(''))));
+			return self::getContainer()->get(Locales::class)->getDisplayNames(self::getContainer()->getParameter('contao.locales'), null, true);
 		}
 
-		static::loadLanguageFile('languages');
-
-		$return = array_map(
-			static function ($locale) use ($currentLocale)
-			{
-				$label = $GLOBALS['TL_LANG']['LNG'][$locale] ?? \Locale::getDisplayName($locale, $currentLocale) ?: $locale;
-				$labelNative = \Locale::getDisplayName($locale, $locale);
-
-				if (!$labelNative || $label === $labelNative)
-				{
-					return $label;
-				}
-
-				return $label . ' - ' . $labelNative;
-			},
-			array_combine($locales, $locales)
-		);
-
-		asort($return);
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && \is_array($GLOBALS['TL_HOOKS']['getLanguages']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getLanguages" hook has been deprecated and will no longer work in Contao 5.0. Extend the contao.locales parameter instead.');
-
-			$languages = array_map(
-				static function ($locale)
-				{
-					return \Locale::getDisplayName($locale, 'en') ?: $locale;
-				},
-				array_combine($locales, $locales)
-			);
-
-			$langsNative = array_map(
-				static function ($locale)
-				{
-					return \Locale::getDisplayName($locale, $locale) ?: $locale;
-				},
-				array_combine($locales, $locales)
-			);
-
-			foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback)
-			{
-				static::importStatic($callback[0])->{$callback[1]}($return, $languages, $langsNative, $blnInstalledOnly);
-			}
-		}
-
-		return $return;
+		return self::getContainer()->get(Locales::class)->getLocales(null, true);
 	}
 
 	/**

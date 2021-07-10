@@ -346,6 +346,32 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
+                ->arrayNode('locales')
+                    ->info('Adds, removes or overwrites the list of ICU locale IDs. Defaults to all locale IDs known to the system.')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->example(['+de', '-de_AT', 'gsw_CH'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $locales): bool {
+                                foreach ($locales as $locale) {
+                                    if (!preg_match('/^[+-]?[a-z]{2}/', $locale)) {
+                                        return true;
+                                    }
+
+                                    $locale = ltrim($locale, '+-');
+
+                                    if (LocaleUtil::canonicalize($locale) !== $locale) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
+                    ->end()
+                ->end()
                 ->arrayNode('countries')
                     ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
                     ->prototype('scalar')->end()

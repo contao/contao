@@ -415,6 +415,15 @@ services:
             - '%contao.intl.countries%'
         public: true
 
+    Contao\CoreBundle\Intl\Locales:
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - '@contao.framework'
+            - '%contao.intl.locales%'
+            - '%contao.locales%'
+        public: true
+
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:
             - '@?translator'

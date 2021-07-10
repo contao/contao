@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Util\LocaleUtil;
 
 /**
@@ -132,7 +133,7 @@ class MetaWizard extends Widget
 			return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';
 		}
 
-		$languages = $this->getLanguages(true);
+		$languages = System::getContainer()->get(Locales::class)->getDisplayNames(array_keys($this->varValue));
 
 		// Add the existing entries
 		if (!empty($this->varValue))

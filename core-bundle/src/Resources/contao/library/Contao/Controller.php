@@ -2118,11 +2118,11 @@ abstract class Controller extends System
 	 * @return array An array of available back end languages
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use System::getLanguages(true) instead.
+	 *             Use the Contao\CoreBundle\Intl\Locales service instead.
 	 */
 	protected function getBackendLanguages()
 	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getBackendLanguages()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\System::getLanguages(true)" instead.');
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getBackendLanguages()" has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Intl\Locales service instead.');
 
 		return $this->getLanguages(true);
 	}

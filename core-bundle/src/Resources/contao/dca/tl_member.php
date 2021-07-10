@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\DataContainer;
 use Contao\FrontendUser;
 use Contao\Image;
@@ -275,7 +276,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getLanguages();
+				return System::getContainer()->get(Locales::class)->getLocales(null, true);
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
