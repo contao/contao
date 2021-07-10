@@ -48,7 +48,7 @@
 $schemaOrg = $this->getSchemaOrgData();
 
 if ($this->hasDetails()) {
-  $schemaOrg['description'] = $this->rawHtmlToPlainText($this->details);
+    $schemaOrg['description'] = $this->rawHtmlToPlainText($this->details);
 }
 
 $this->addSchemaOrg($schemaOrg);
