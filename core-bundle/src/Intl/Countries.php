@@ -83,7 +83,7 @@ class Countries
         }
 
         if (!empty($GLOBALS['TL_HOOKS']['getCountries'])) {
-            return $this->applyLegacyHook($countries, $displayLocale);
+            return $this->applyLegacyHook($countries);
         }
 
         return $countries;
@@ -96,7 +96,7 @@ class Countries
     {
         // If the legacy hook is used, it might add or remove countries
         if (!empty($GLOBALS['TL_HOOKS']['getCountries'])) {
-            $countryCodes = array_keys($this->getCountryCodes());
+            $countryCodes = array_keys($this->getCountries());
             sort($countryCodes);
 
             return $countryCodes;
@@ -145,7 +145,7 @@ class Countries
         return $countries;
     }
 
-    private function applyLegacyHook(array $return, string $displayLocale)
+    private function applyLegacyHook(array $return)
     {
         trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getCountries" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', __CLASS__);
 
