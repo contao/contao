@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Intl\Countries;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -34,7 +33,6 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'security.logout_url_generator',
         'security.helper',
         'uri_signer',
-        Countries::class,
     ];
 
     private const ALIASES = [

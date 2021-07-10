@@ -413,6 +413,7 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - '%contao.intl.countries%'
+        public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:
