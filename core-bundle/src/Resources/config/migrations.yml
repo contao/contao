@@ -84,10 +84,6 @@ services:
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version412\MemberCountryMigration:
-        arguments:
-            - '@database_connection'
-
     Contao\CoreBundle\Migration\Version412\PageLanguageMigration:
         arguments:
             - '@database_connection'

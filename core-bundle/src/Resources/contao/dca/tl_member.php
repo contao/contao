@@ -224,7 +224,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get(Countries::class)->getCountries();
+				$countries = System::getContainer()->get(Countries::class)->getCountries();
+
+				// Convert to lower case for backwards compatibility, to be changed in Contao 5.0
+				return array_combine(array_map('strtolower', array_keys($countries)), $countries);
 			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
