@@ -279,7 +279,8 @@ class ControllerTest extends TestCase
         foreach (['fromPath', 'setMetadata', 'setSize', 'setLightboxGroupIdentifier', 'setLightboxSize', 'enableLightbox'] as $method) {
             $figureBuilder
                 ->method($method)
-                ->willReturn($figureBuilder);
+                ->willReturn($figureBuilder)
+            ;
         }
 
         $figureBuilder
