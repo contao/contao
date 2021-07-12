@@ -272,8 +272,6 @@ class ControllerTest extends TestCase
      */
     public function testAddImageToTemplateLogsAndCreatesFallbackDataWhenNoFigureIsBuilt(): void
     {
-        $template = new \stdClass();
-
         $figureBuilder = $this->createMock(FigureBuilder::class);
 
         foreach (['fromPath', 'setMetadata', 'setSize', 'setLightboxGroupIdentifier', 'setLightboxSize', 'enableLightbox'] as $method) {
@@ -309,6 +307,8 @@ class ControllerTest extends TestCase
                 ['contao' => new ContaoContext('Contao\Controller::addImageToTemplate', 'ERROR')]
             )
         ;
+
+        $template = new \stdClass();
 
         // Prepare environment
         $container = $this->getContainerWithContaoConfiguration();
