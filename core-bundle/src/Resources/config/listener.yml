@@ -234,7 +234,7 @@ services:
         arguments:
             - '@translator'
             - '@contao.routing.scope_matcher'
-            - '%contao.backend_locales%'
+            - '%contao.locales%'
         tags:
             - kernel.event_subscriber
 

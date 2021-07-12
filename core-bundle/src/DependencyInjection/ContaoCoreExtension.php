@@ -78,8 +78,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.csrf_token_name', $config['csrf_token_name']);
         $container->setParameter('contao.pretty_error_screens', $config['pretty_error_screens']);
         $container->setParameter('contao.error_level', $config['error_level']);
-        $container->setParameter('contao.locales', $config['locales'] ?: $config['backend_locales']); // Backwards compatibility
-        $container->setParameter('contao.backend_locales', $config['locales'] ?: $config['backend_locales']);
+        $container->setParameter('contao.locales', $config['locales']);
         $container->setParameter('contao.image.bypass_cache', $config['image']['bypass_cache']);
         $container->setParameter('contao.image.target_dir', $config['image']['target_dir']);
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);

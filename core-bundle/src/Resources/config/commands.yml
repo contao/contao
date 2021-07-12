@@ -78,7 +78,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@security.encoder_factory'
-            - '%contao.backend_locales%'
+            - '%contao.locales%'
 
     Contao\CoreBundle\Command\UserListCommand:
         arguments:
