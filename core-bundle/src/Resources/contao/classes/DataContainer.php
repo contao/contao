@@ -797,17 +797,24 @@ abstract class DataContainer extends Backend
 				$attributes = ' class="' . $k . '"' . $attributes;
 			}
 
+			$href = $v['href'] ?? null;
+
+			if (!empty($v['route']))
+			{
+				$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
+			}
+
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $href, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 				continue;
 			}
 
 			if (\is_callable($v['button_callback'] ?? null))
 			{
-				$return .= $v['button_callback']($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+				$return .= $v['button_callback']($arrRow, $href, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
 				continue;
 			}
 
@@ -831,7 +838,7 @@ abstract class DataContainer extends Backend
 				{
 					if (!empty($v['route']))
 					{
-						$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
+						$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'nc' => Input::get('nb') ? '1' : null));
 					}
 					else
 					{
@@ -919,27 +926,30 @@ abstract class DataContainer extends Backend
 				$title = $label;
 			}
 
-			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback'] ?? null))
-			{
-				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
-				continue;
-			}
-
-			if (\is_callable($v['button_callback'] ?? null))
-			{
-				$return .= $v['button_callback']($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
-				continue;
-			}
+			$href = $v['href'] ?? null;
 
 			if (!empty($v['route']))
 			{
 				$href = System::getContainer()->get('router')->generate($v['route']);
 			}
-			else
+
+			// Call a custom function instead of using the default button
+			if (\is_array($v['button_callback'] ?? null))
 			{
-				$href = $this->addToUrl($v['href']);
+				$this->import($v['button_callback'][0]);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($href, $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				continue;
+			}
+
+			if (\is_callable($v['button_callback'] ?? null))
+			{
+				$return .= $v['button_callback']($href, $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				continue;
+			}
+
+			if (empty($v['route']))
+			{
+				$href = $this->addToUrl($href);
 			}
 
 			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
@@ -1042,7 +1052,7 @@ abstract class DataContainer extends Backend
 			{
 				if (!empty($v['route']))
 				{
-					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
+					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'nc' => Input::get('nb') ? '1' : null));
 				}
 				else
 				{
