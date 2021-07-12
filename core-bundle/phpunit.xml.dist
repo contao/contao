@@ -37,6 +37,9 @@
             <directory>./src</directory>
             <exclude>
                 <directory>./src/Resources</directory>
+                <!-- exclude resources that are exempt from testing -->
+                <directory>./src/Entity</directory>
+                <directory>./src/Migration/Version*</directory>
                 <!-- exclude files with symbols and side-effects -->
                 <file>./src/EventListener/UserAwareTrait.php</file>
                 <file>./src/Exception/ServiceUnavailableException.php</file>

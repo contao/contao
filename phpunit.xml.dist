@@ -45,7 +45,8 @@
                 <directory>./faq-bundle/src/Resources</directory>
                 <directory>./manager-bundle/src/Resources</directory>
                 <directory>./news-bundle/src/Resources</directory>
-                <!-- exclude migrations as we do not require to test them -->
+                <!-- exclude resources that are exempt from testing -->
+                <directory>./*-bundle/src/Entity</directory>
                 <directory>./*-bundle/src/Migration/Version*</directory>
                 <!-- exclude files with symbols and side-effects -->
                 <file>./core-bundle/src/EventListener/UserAwareTrait.php</file>
