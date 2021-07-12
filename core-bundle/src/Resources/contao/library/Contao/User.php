@@ -420,7 +420,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	public function isMemberOf($ids)
 	{
 		// Filter non-numeric values
-		$ids = array_filter((array) $ids, static function ($val) { return (string)(int) $val === (string) $val; });
+		$ids = array_filter((array) $ids, static function ($val) { return (string) (int) $val === (string) $val; });
 
 		if (empty($ids))
 		{

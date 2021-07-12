@@ -267,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 					// Make sure there is at least a basic language
 					if (!preg_match('/^[a-z]{2,}/i', $value))
 					{
-						throw new \RuntimeException($GLOBALS['TL_LANG']['ERR']['language']);
+						throw new RuntimeException($GLOBALS['TL_LANG']['ERR']['language']);
 					}
 
 					return LocaleUtil::canonicalize($value);
