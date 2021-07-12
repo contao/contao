@@ -1414,6 +1414,25 @@ abstract class DataContainer extends Backend
 	 * @throws \Exception
 	 */
 	abstract protected function save($varValue);
+
+	/**
+	 * Return the class name of the DataContainer driver for the given table.
+	 *
+	 * @param string $table
+	 *
+	 * @return string
+	 */
+	public static function getDriverForTable(string $table): string
+	{
+		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
+
+		if (false === strpos($dataContainer, '\\'))
+		{
+			$dataContainer = 'DC_' . $dataContainer;
+		}
+
+		return $dataContainer;
+	}
 }
 
 class_alias(DataContainer::class, 'DataContainer');
