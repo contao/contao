@@ -412,7 +412,7 @@ services:
             - '@translator'
             - '@request_stack'
             - '@contao.framework'
-            - ~ # Available countries from IntlInstalledLocalesAndCountriesPass
+            - ~ # Default countries from IntlInstalledLocalesAndCountriesPass
             - '%contao.intl.countries%'
             - '%kernel.default_locale%'
         public: true
@@ -422,8 +422,8 @@ services:
             - '@translator'
             - '@request_stack'
             - '@contao.framework'
-            - ~ # Available locales from IntlInstalledLocalesAndCountriesPass
-            - ~ # Translated locales from IntlInstalledLocalesAndCountriesPass
+            - ~ # Default locales from IntlInstalledLocalesAndCountriesPass
+            - ~ # Default enabled locales from IntlInstalledLocalesAndCountriesPass
             - '%contao.intl.locales%'
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'

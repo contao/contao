@@ -49,13 +49,13 @@ class Locales
      */
     private $defaultLocale;
 
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableLocales, array $translatedLocales, array $locales, array $enabledLocales, string $defaultLocale)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $defaultLocales, array $defaultEnabledLocales, array $configLocales, array $configEnabledLocales, string $defaultLocale)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->contaoFramework = $contaoFramework;
-        $this->locales = $this->filterLocales($availableLocales, $locales);
-        $this->enabledLocales = $this->filterLocales($translatedLocales, $enabledLocales, $defaultLocale);
+        $this->locales = $this->filterLocales($defaultLocales, $configLocales);
+        $this->enabledLocales = $this->filterLocales($defaultEnabledLocales, $configEnabledLocales, $defaultLocale);
         $this->defaultLocale = $defaultLocale;
     }
 

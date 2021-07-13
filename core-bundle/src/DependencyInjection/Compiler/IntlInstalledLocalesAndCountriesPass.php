@@ -30,15 +30,15 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             $definition = $container->findDefinition(Locales::class);
 
             // Backwards compatibility for the deprecated contao.locales parameter
-            $translatedLocales = $container->getParameter('contao.locales') ?: $this->getTranslatedLocales($container);
-            $availableLocales = array_values(array_unique(array_merge($translatedLocales, \ResourceBundle::getLocales(''))));
+            $enabledLocales = $container->getParameter('contao.locales') ?: $this->getEnabledLocales($container);
+            $locales = array_values(array_unique(array_merge($enabledLocales, \ResourceBundle::getLocales(''))));
 
-            $definition->setArgument(3, $availableLocales);
-            $definition->setArgument(4, $translatedLocales);
+            $definition->setArgument(3, $locales);
+            $definition->setArgument(4, $enabledLocales);
 
             if (!$container->getParameter('contao.locales')) {
                 // Backwards compatibility for the deprecated contao.locales parameter
-                $container->setParameter('contao.locales', $translatedLocales);
+                $container->setParameter('contao.locales', $enabledLocales);
             }
         }
 
@@ -50,7 +50,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
     /**
      * @return array<string>
      */
-    private function getTranslatedLocales(ContainerBuilder $container): array
+    private function getEnabledLocales(ContainerBuilder $container): array
     {
         $projectDir = $container->getParameter('kernel.project_dir');
         $defaultLocale = $container->getParameter('kernel.default_locale');

@@ -45,12 +45,12 @@ class Countries
      */
     private $defaultLocale;
 
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableCountries, array $countriesList, string $defaultLocale)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $defaultCountries, array $configCountries, string $defaultLocale)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->contaoFramework = $contaoFramework;
-        $this->countries = $this->filterCountries($availableCountries, $countriesList);
+        $this->countries = $this->filterCountries($defaultCountries, $configCountries);
         $this->defaultLocale = $defaultLocale;
     }
 
