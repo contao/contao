@@ -19,6 +19,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -256,50 +257,62 @@ class InstallTool
             ;
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false === $row || '' === $row->Value) {
-                return false;
+            if (false !== $row && '' !== $row->Value) {
+                // As there is no reliable way to get the vendor (see #84), we are
+                // guessing based on the version number. The check will not be run
+                // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+                $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
+
+                // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
+                if (version_compare($version, $vok, '<')) {
+                    // The innodb_large_prefix option is disabled
+                    if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+                        $context['errorCode'] = 5;
+
+                        return true;
+                    }
+
+                    $row = $this->connection
+                        ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
+                        ->fetch(\PDO::FETCH_OBJ)
+                    ;
+
+                    // The innodb_file_per_table option is disabled
+                    if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
+                        $context['errorCode'] = 6;
+
+                        return true;
+                    }
+
+                    $row = $this->connection
+                        ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
+                        ->fetch(\PDO::FETCH_OBJ)
+                    ;
+
+                    // The InnoDB file format is not Barracuda
+                    if ('' !== $row->Value && 'barracuda' !== strtolower((string) $row->Value)) {
+                        $context['errorCode'] = 6;
+
+                        return true;
+                    }
+                }
             }
+        }
 
-            // As there is no reliable way to get the vendor (see #84), we are
-            // guessing based on the version number. The check will not be run
-            // as of MySQL 8 and MariaDB 10.3, so this should be safe.
-            $vok = version_compare($version, '10', '>=') ? '10.2.2' : '5.7.7';
+        // Ensure the database is running in strict mode
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
 
-            // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
-            if (version_compare($version, $vok, '>=')) {
-                return false;
-            }
+        if (
+            empty(array_intersect(
+                explode(',', strtoupper($mode)),
+            // See https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html
+            ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES']
+            ))
+        ) {
+            $context['errorCode'] = 7;
+            $context['driver'] = $this->connection->getDriver() instanceof MysqliDriver ? 'mysqli' : 'pdo';
 
-            // The innodb_large_prefix option is disabled
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
-                $context['errorCode'] = 5;
-
-                return true;
-            }
-
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_per_table'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The innodb_file_per_table option is disabled
-            if (!\in_array(strtolower((string) $row->Value), ['1', 'on'], true)) {
-                $context['errorCode'] = 6;
-
-                return true;
-            }
-
-            $row = $this->connection
-                ->query("SHOW VARIABLES LIKE 'innodb_file_format'")
-                ->fetch(\PDO::FETCH_OBJ)
-            ;
-
-            // The InnoDB file format is not Barracuda
-            if ('' !== $row->Value && 'barracuda' !== strtolower((string) $row->Value)) {
-                $context['errorCode'] = 6;
-
-                return true;
-            }
+            // do not return true here, we only want to display a warning
         }
 
         return false;

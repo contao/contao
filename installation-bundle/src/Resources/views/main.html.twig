@@ -1,6 +1,17 @@
 {% extends "@ContaoInstallation/layout.html.twig" %}
 {% trans_default_domain 'ContaoInstallationBundle' %}
 
+{% block info %}
+    {% if errorCode is defined %}
+        <aside id="warning">
+            <fieldset class="tl_tbox nolegend">
+                <h3>{{ 'warning'|trans }}</h3>
+                {% include '@ContaoInstallation/_configuration_errors.html.twig' %}
+            </fieldset>
+        </aside>
+    {% endif %}
+{% endblock %}
+
 {% block main %}
   <fieldset class="tl_tbox{% if sql_form is empty and sql_message is empty %} collapsed{% endif %}">
     <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'update_tables'|trans }}</legend>
