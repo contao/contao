@@ -183,9 +183,9 @@ class ModuleFaqReader extends Module
 		}
 
 		// schema.org information
-		$this->Template->getSchemaOrgData = static function() use ($objFaq)
+		$this->Template->getSchemaOrgData = static function () use ($objFaq)
 		{
-			return ModuleFaq::getSchemaOrgData([$objFaq]);
+			return ModuleFaq::getSchemaOrgData(array($objFaq));
 		};
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');

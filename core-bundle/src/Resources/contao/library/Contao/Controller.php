@@ -1625,7 +1625,7 @@ abstract class Controller extends System
 			}
 
 			$size[0] = $maxWidth;
-			$size[1] = floor($maxWidth * ($height / $width));
+			$size[1] = (int) floor($maxWidth * ($height / $width));
 
 			return array($size, $margin);
 		};
