@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Command\UserCreateCommand;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\UserGroupModel;
 use Doctrine\DBAL\Connection;
@@ -177,7 +178,13 @@ class UserCreateCommandTest extends TestCase
             ->willReturn(null, null)
         ;
 
-        $command = new UserCreateCommand($this->mockContaoFramework([UserGroupModel::class => $userGroupModelAdapter]), $connection, $encoderFactory, ['en', 'de', 'ru']);
+        $locales = $this->createMock(Locales::class);
+        $locales
+            ->method('getEnabledLocaleIds')
+            ->willReturn(['en', 'de', 'ru'])
+        ;
+
+        $command = new UserCreateCommand($this->mockContaoFramework([UserGroupModel::class => $userGroupModelAdapter]), $connection, $encoderFactory, $locales);
         $command->setApplication(new Application());
 
         return $command;

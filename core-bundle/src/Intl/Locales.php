@@ -35,22 +35,28 @@ class Locales
     private $contaoFramework;
 
     /**
-     * @var array<string>
+     * @var string
      */
-    private $localesList;
+    private $defaultLocale;
 
     /**
      * @var array<string>
      */
-    private $backendLocales;
+    private $locales;
 
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $localesList, array $backendLocales)
+    /**
+     * @var array<string>
+     */
+    private $enabledLocales;
+
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableLocales, array $translatedLocales, string $defaultLocale, array $locales, array $enabledLocales)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->contaoFramework = $contaoFramework;
-        $this->localesList = $localesList;
-        $this->backendLocales = $backendLocales;
+        $this->defaultLocale = $defaultLocale;
+        $this->locales = $this->filterLocales($availableLocales, $locales);
+        $this->enabledLocales = $this->filterLocales($translatedLocales, $enabledLocales, $defaultLocale);
     }
 
     /**
@@ -58,14 +64,24 @@ class Locales
      */
     public function getLocales(string $displayLocale = null, bool $addNativeSuffix = false): array
     {
-        if (null === $displayLocale && null !== ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
-        }
-
-        $locales = $this->getDisplayNamesWithoutHook($this->getLocaleIdsWithoutHook(), $displayLocale, $addNativeSuffix);
+        $locales = $this->getDisplayNamesWithoutHook($this->locales, $displayLocale, $addNativeSuffix);
 
         if (!empty($GLOBALS['TL_HOOKS']['getLanguages'])) {
             return $this->applyLegacyHook($locales);
+        }
+
+        return $locales;
+    }
+
+    /**
+     * @return array<string,string> Translated enabled locales indexed by their ICU locale IDs
+     */
+    public function getEnabledLocales(string $displayLocale = null, bool $addNativeSuffix = false): array
+    {
+        $locales = $this->getDisplayNamesWithoutHook($this->enabledLocales, $displayLocale, $addNativeSuffix);
+
+        if (!empty($GLOBALS['TL_HOOKS']['getLanguages'])) {
+            return $this->applyLegacyHook($locales, true);
         }
 
         return $locales;
@@ -104,7 +120,7 @@ class Locales
             $displayLocale = $request->getLocale();
         }
 
-        return $this->getDisplayNames($this->getLanguageLocaleIds(), $displayLocale, $addNativeSuffix);
+        return $this->getDisplayNamesWithoutHook($this->getLanguageLocaleIds(), $displayLocale, $addNativeSuffix);
     }
 
     /**
@@ -120,7 +136,23 @@ class Locales
             return $locales;
         }
 
-        return $this->getLocaleIdsWithoutHook();
+        return $this->locales;
+    }
+
+    /**
+     * @return array<string> ICU locale IDs
+     */
+    public function getEnabledLocaleIds(): array
+    {
+        // If the legacy hook is used, it might add or remove locales
+        if (!empty($GLOBALS['TL_HOOKS']['getLanguages'])) {
+            $locales = array_keys($this->getEnabledLocales('en'));
+            sort($locales);
+
+            return $locales;
+        }
+
+        return $this->enabledLocales;
     }
 
     /**
@@ -148,7 +180,7 @@ class Locales
 
                 return \Locale::composeLocale($locale);
             },
-            $this->getLocaleIdsWithoutHook()
+            $this->locales
         );
 
         $localeIds = array_values(array_unique(array_filter($localeIds)));
@@ -166,7 +198,16 @@ class Locales
         $locales = $this->getDisplayNamesWithoutHook($localeIds, $displayLocale, $addNativeSuffix);
 
         if (!empty($GLOBALS['TL_HOOKS']['getLanguages'])) {
-            return $this->applyLegacyHook($locales, true);
+            $locales = $this->applyLegacyHook($locales, true);
+
+            // Remove locale IDs potentially added by the hook
+            $locales = array_filter(
+                $locales,
+                static function ($locale) use ($localeIds) {
+                    return \in_array($locale, $localeIds, true);
+                },
+                ARRAY_FILTER_USE_KEY
+            );
         }
 
         return $locales;
@@ -185,7 +226,7 @@ class Locales
             $label = $this->translator->trans($langKey, [], 'contao_languages', $displayLocale);
 
             if ($label === $langKey || !\is_string($label) || '' === $label) {
-                $label = \Locale::getDisplayName($localeId, $displayLocale ?? 'en');
+                $label = \Locale::getDisplayName($localeId, $displayLocale ?? $this->defaultLocale);
             }
 
             if ($addNativeSuffix) {
@@ -199,17 +240,7 @@ class Locales
             $locales[$localeId] = $label;
         }
 
-        (new \Collator($displayLocale ?? 'en'))->asort($locales);
-
-        return $locales;
-    }
-
-    private function getLocaleIdsWithoutHook(): array
-    {
-        $locales = array_values(array_unique(array_merge($this->backendLocales, \ResourceBundle::getLocales(''))));
-        $locales = $this->filterLocales($locales);
-
-        sort($locales);
+        (new \Collator($displayLocale ?? $this->defaultLocale))->asort($locales);
 
         return $locales;
     }
@@ -217,10 +248,10 @@ class Locales
     /**
      * Add, remove or replace locales as configured in the container configuration.
      */
-    private function filterLocales(array $locales): array
+    private function filterLocales(array $locales, array $filter, string $default = null): array
     {
         $newList = array_filter(
-            $this->localesList,
+            $filter,
             static function ($locale) {
                 return !\in_array($locale[0], ['-', '+'], true);
             }
@@ -230,7 +261,7 @@ class Locales
             $locales = $newList;
         }
 
-        foreach ($this->localesList as $locale) {
+        foreach ($filter as $locale) {
             $prefix = $locale[0];
             $localeId = substr($locale, 1);
 
@@ -241,6 +272,16 @@ class Locales
             }
         }
 
+        sort($locales);
+
+        // The default locale must be the first supported language (see contao/core#6533)
+        if (null !== $default) {
+            if (\in_array($default, $locales, true)) {
+                unset($locales[array_search($default, $locales, true)]);
+            }
+            array_unshift($locales, $default);
+        }
+
         return $locales;
     }
 
@@ -248,20 +289,18 @@ class Locales
     {
         trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getLanguages" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', __CLASS__);
 
-        $locales = $this->getLocaleIdsWithoutHook();
-
         $languages = array_map(
             static function ($locale) {
                 return \Locale::getDisplayName($locale, 'en') ?: $locale;
             },
-            array_combine($locales, $locales)
+            array_combine($this->locales, $this->locales)
         );
 
         $langsNative = array_map(
             static function ($locale) {
                 return \Locale::getDisplayName($locale, $locale) ?: $locale;
             },
-            array_combine($locales, $locales)
+            array_combine($this->locales, $this->locales)
         );
 
         foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback) {

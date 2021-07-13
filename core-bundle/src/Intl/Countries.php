@@ -36,16 +36,22 @@ class Countries
     private $contaoFramework;
 
     /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    /**
      * @var array<string>
      */
-    private $countriesList;
+    private $countries;
 
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $countriesList)
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableCountries, string $defaultLocale, array $countriesList)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->contaoFramework = $contaoFramework;
-        $this->countriesList = $countriesList;
+        $this->defaultLocale = $defaultLocale;
+        $this->countries = $this->filterCountries($availableCountries, $countriesList);
     }
 
     /**
@@ -57,15 +63,9 @@ class Countries
             $displayLocale = $request->getLocale();
         }
 
-        $countries = SymfonyCountries::getNames($displayLocale);
-        $needsResort = false;
+        $countries = [];
 
-        if ($this->countriesList) {
-            $countries = $this->filterCountries($countries, $displayLocale ?? 'en');
-            $needsResort = true;
-        }
-
-        foreach (array_keys($countries) as $countryCode) {
+        foreach ($this->countries as $countryCode) {
             $langKey = 'CNT.'.strtolower($countryCode);
 
             if (
@@ -74,13 +74,12 @@ class Countries
                 && '' !== $label
             ) {
                 $countries[$countryCode] = $label;
-                $needsResort = true;
+            } else {
+                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale ?? $this->defaultLocale);
             }
         }
 
-        if ($needsResort) {
-            (new \Collator($displayLocale ?? 'en'))->asort($countries);
-        }
+        (new \Collator($displayLocale ?? $this->defaultLocale))->asort($countries);
 
         if (!empty($GLOBALS['TL_HOOKS']['getCountries'])) {
             return $this->applyLegacyHook($countries);
@@ -102,45 +101,37 @@ class Countries
             return $countryCodes;
         }
 
-        $countryCodes = SymfonyCountries::getCountryCodes();
-
-        if ($this->countriesList) {
-            $countryCodes = array_keys($this->filterCountries(array_combine($countryCodes, $countryCodes), 'en'));
-            sort($countryCodes);
-        }
-
-        return $countryCodes;
+        return $this->countries;
     }
 
-    private function filterCountries(array $countries, string $displayLocale): array
+    /**
+     * Add, remove or replace countries as configured in the container configuration.
+     */
+    private function filterCountries(array $countries, array $filter): array
     {
         $newList = array_filter(
-            $this->countriesList,
+            $filter,
             static function ($country) {
                 return !\in_array($country[0], ['-', '+'], true);
             }
         );
 
         if ($newList) {
-            $countries = array_intersect_key($countries, array_combine($newList, $newList));
-
-            foreach ($newList as $countryCode) {
-                if (!isset($countries[$countryCode])) {
-                    $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale);
-                }
-            }
+            $countries = $newList;
         }
 
-        foreach ($this->countriesList as $country) {
+        foreach ($filter as $country) {
             $prefix = $country[0];
             $countryCode = substr($country, 1);
 
-            if ('-' === $prefix && isset($countries[$countryCode])) {
-                unset($countries[$countryCode]);
-            } elseif ('+' === $prefix && !isset($countries[$countryCode])) {
-                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale);
+            if ('-' === $prefix && \in_array($countryCode, $countries, true)) {
+                unset($countries[array_search($countryCode, $countries, true)]);
+            } elseif ('+' === $prefix && !\in_array($countryCode, $countries, true)) {
+                $countries[] = $countryCode;
             }
         }
+
+        sort($countries);
 
         return $countries;
     }

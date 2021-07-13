@@ -606,7 +606,7 @@ abstract class System
 
 		if ($blnInstalledOnly)
 		{
-			return self::getContainer()->get(Locales::class)->getDisplayNames(self::getContainer()->getParameter('contao.locales'), null, true);
+			return self::getContainer()->get(Locales::class)->getEnabledLocales(null, true);
 		}
 
 		return self::getContainer()->get(Locales::class)->getLocales(null, true);

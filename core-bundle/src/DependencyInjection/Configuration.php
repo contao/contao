@@ -19,8 +19,6 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
@@ -30,15 +28,9 @@ class Configuration implements ConfigurationInterface
      */
     private $projectDir;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    public function __construct(string $projectDir, string $defaultLocale)
+    public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir;
-        $this->defaultLocale = $defaultLocale;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -75,22 +67,9 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
+                    ->setDeprecated(...$this->getDeprecationArgs('4.12', 'Using contao.locales is deprecated. Please use contao.intl.enabled_locales instead.'))
                     ->prototype('scalar')->end()
-                    ->defaultValue($this->getLocales())
-                    ->validate()
-                        ->ifTrue(
-                            static function (array $locales): bool {
-                                foreach ($locales as $locale) {
-                                    if (LocaleUtil::canonicalize($locale) !== $locale) {
-                                        return true;
-                                    }
-                                }
-
-                                return false;
-                            }
-                        )
-                        ->thenInvalid('All provided locales must be in the canonicalized ICU form.')
-                    ->end()
+                    ->defaultValue([])
                 ->end()
                 ->booleanNode('prepend_locale')
                     ->info('Whether or not to add the page language to the URL.')
@@ -386,6 +365,32 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
                 ->end()
+                ->arrayNode('enabled_locales')
+                    ->info('Adds, removes or overwrites the list of enabled locale IDs that can be used in the Backend for example. Defaults to all languages for which a translation exists.')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->example(['+de', '-de_AT', 'gsw_CH'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $locales): bool {
+                                foreach ($locales as $locale) {
+                                    if (!preg_match('/^[+-]?[a-z]{2}/', $locale)) {
+                                        return true;
+                                    }
+
+                                    $locale = ltrim($locale, '+-');
+
+                                    if (LocaleUtil::canonicalize($locale) !== $locale) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
+                    ->end()
+                ->end()
                 ->arrayNode('countries')
                     ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
                     ->prototype('scalar')->end()
@@ -564,41 +569,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    /**
-     * @return array<string>
-     */
-    private function getLocales(): array
-    {
-        $dirs = [__DIR__.'/../Resources/contao/languages'];
-
-        if (is_dir($path = Path::join($this->projectDir, 'contao/languages'))) {
-            $dirs[] = $path;
-        }
-
-        // Backwards compatibility
-        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
-            $dirs[] = $path;
-        }
-
-        // The default locale must be the first supported language (see contao/core#6533)
-        $languages = [$this->defaultLocale];
-
-        /** @var array<SplFileInfo> $finder */
-        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2,}/')->in($dirs);
-
-        foreach ($finder as $file) {
-            $locale = $file->getFilename();
-
-            if (LocaleUtil::canonicalize($locale) !== $locale) {
-                continue;
-            }
-
-            $languages[] = $locale;
-        }
-
-        return array_values(array_unique($languages));
     }
 
     private function getDefaultWebDir(): string

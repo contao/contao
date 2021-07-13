@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\LocaleSubscriber;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +40,7 @@ class LocaleSubscriberTest extends TestCase
         $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
-            ['en']
+            $this->mockLocales(['en'])
         );
 
         $listener->onKernelRequest($event);
@@ -75,7 +76,7 @@ class LocaleSubscriberTest extends TestCase
         $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
-            $available
+            $this->mockLocales($available)
         );
 
         $listener->onKernelRequest($event);
@@ -111,7 +112,7 @@ class LocaleSubscriberTest extends TestCase
         $listener = new LocaleSubscriber(
             $this->createMock(LocaleAwareInterface::class),
             $this->mockScopeMatcher(),
-            ['en']
+            $this->mockLocales(['en'])
         );
 
         $listener->onKernelRequest($event);
@@ -135,7 +136,18 @@ class LocaleSubscriberTest extends TestCase
             ->with('de')
         ;
 
-        $listener = new LocaleSubscriber($translator, $this->mockScopeMatcher(), ['en', 'de']);
+        $listener = new LocaleSubscriber($translator, $this->mockScopeMatcher(), $this->mockLocales(['en', 'de']));
         $listener->setTranslatorLocale($event);
+    }
+
+    private function mockLocales(array $locales)
+    {
+        $localesService = $this->createMock(Locales::class);
+        $localesService
+            ->method('getEnabledLocaleIds')
+            ->willReturn($locales)
+        ;
+
+        return $localesService;
     }
 }

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Intl;
 
 use Contao\ArrayUtil;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
@@ -99,7 +98,7 @@ class CountriesTest extends TestCase
      */
     public function testGetsCountryCodesConfigured(array $countriesList, array $expected): void
     {
-        $countryCodes = $this->getCountriesService(null, null, null, $countriesList)->getCountryCodes();
+        $countryCodes = $this->getCountriesService(null, $countriesList)->getCountryCodes();
 
         $this->assertSame($expected, $countryCodes);
     }
@@ -109,7 +108,7 @@ class CountriesTest extends TestCase
      */
     public function testGetsCountryNamesConfigured(array $countriesList, array $expected): void
     {
-        $countryNames = $this->getCountriesService(null, null, null, $countriesList)->getCountries('de');
+        $countryNames = $this->getCountriesService(null, $countriesList)->getCountries('de');
 
         $countryCodes = array_keys($countryNames);
         sort($countryCodes);
@@ -194,7 +193,7 @@ class CountriesTest extends TestCase
         $this->assertTrue(ArrayUtil::isAssoc($return));
 
         $this->assertSame('Germany', $countries['de']);
-        $this->assertSame('Deutschland', $return['de']);
+        $this->assertContains($return['de'], ['Deutschland', 'Germany']);
 
         $return = [
             'de' => 'Schland',
@@ -202,7 +201,7 @@ class CountriesTest extends TestCase
         ];
     }
 
-    private function getCountriesService(TranslatorInterface $translator = null, RequestStack $requestStack = null, ContaoFramework $contaoFramework = null, array $countriesList = []): Countries
+    private function getCountriesService(TranslatorInterface $translator = null, array $countries = []): Countries
     {
         if (null === $translator) {
             $translator = $this->createMock(TranslatorInterface::class);
@@ -212,21 +211,17 @@ class CountriesTest extends TestCase
             ;
         }
 
-        if (null === $requestStack) {
-            $requestStack = $this->createMock(RequestStack::class);
-        }
+        $requestStack = $this->createMock(RequestStack::class);
 
-        if (null === $contaoFramework) {
-            $contaoFramework = $this->mockContaoFramework([
-                System::class => new class(System::class) extends Adapter {
-                    public function importStatic($class)
-                    {
-                        return new $class();
-                    }
-                },
-            ]);
-        }
+        $contaoFramework = $this->mockContaoFramework([
+            System::class => new class(System::class) extends Adapter {
+                public function importStatic($class)
+                {
+                    return new $class();
+                }
+            },
+        ]);
 
-        return new Countries($translator, $requestStack, $contaoFramework, $countriesList);
+        return new Countries($translator, $requestStack, $contaoFramework, SymfonyCountries::getCountryCodes(), 'en', $countries);
     }
 }

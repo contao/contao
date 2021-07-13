@@ -62,7 +62,7 @@ services:
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
-            - '%contao.locales%'
+            - '@Contao\CoreBundle\Intl\Locales'
         public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
@@ -412,6 +412,8 @@ services:
             - '@translator'
             - '@request_stack'
             - '@contao.framework'
+            - ~ # Available countries from IntlInstalledLocalesAndCountriesPass
+            - '%kernel.default_locale%'
             - '%contao.intl.countries%'
         public: true
 
@@ -420,8 +422,11 @@ services:
             - '@translator'
             - '@request_stack'
             - '@contao.framework'
+            - ~ # Available locales from IntlInstalledLocalesAndCountriesPass
+            - ~ # Translated locales from IntlInstalledLocalesAndCountriesPass
+            - '%kernel.default_locale%'
             - '%contao.intl.locales%'
-            - '%contao.locales%'
+            - '%contao.intl.enabled_locales%'
         public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:
