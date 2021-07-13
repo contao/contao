@@ -222,6 +222,6 @@ class CountriesTest extends TestCase
             },
         ]);
 
-        return new Countries($translator, $requestStack, $contaoFramework, SymfonyCountries::getCountryCodes(), 'en', $countries);
+        return new Countries($translator, $requestStack, $contaoFramework, SymfonyCountries::getCountryCodes(), $countries, 'en');
     }
 }

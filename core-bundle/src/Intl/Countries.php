@@ -36,22 +36,22 @@ class Countries
     private $contaoFramework;
 
     /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    /**
      * @var array<string>
      */
     private $countries;
 
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableCountries, string $defaultLocale, array $countriesList)
+    /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableCountries, array $countriesList, string $defaultLocale)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->contaoFramework = $contaoFramework;
-        $this->defaultLocale = $defaultLocale;
         $this->countries = $this->filterCountries($availableCountries, $countriesList);
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**

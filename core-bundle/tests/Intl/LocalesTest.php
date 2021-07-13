@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Intl;
 
 use Contao\ArrayUtil;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
@@ -60,7 +59,7 @@ class LocalesTest extends TestCase
         $this->assertSame(['en', 'de'], $this->getLocalesService()->getEnabledLocaleIds());
         $this->assertSame(
             ['gsw', 'de', 'en'],
-            $this->getLocalesService(null, null, null, null, null, 'gsw')->getEnabledLocaleIds()
+            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocaleIds()
         );
     }
 
@@ -115,7 +114,7 @@ class LocalesTest extends TestCase
                 'en' => 'Englisch - English',
                 'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
             ],
-            $this->getLocalesService(null, null, null, null, null, 'gsw')->getEnabledLocales('de', true)
+            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocales('de', true)
         );
     }
 
@@ -199,12 +198,12 @@ class LocalesTest extends TestCase
      */
     public function testGetsLocaleIdsConfigured(array $localesList, array $expected): void
     {
-        $localeIds = $this->getLocalesService(null, null, null, null, null, null, $localesList)->getLocaleIds();
+        $localeIds = $this->getLocalesService(null, null, null, $localesList)->getLocaleIds();
 
         $this->assertSame($expected, $localeIds);
 
         $localeIds = $this
-            ->getLocalesService(null, null, null, null, \ResourceBundle::getLocales(''), $expected[0], [], $localesList)
+            ->getLocalesService(null, null, \ResourceBundle::getLocales(''), [], $localesList, $expected[0])
             ->getEnabledLocaleIds()
         ;
 
@@ -216,7 +215,7 @@ class LocalesTest extends TestCase
      */
     public function testGetsLocalesConfigured(array $localesList, array $expected): void
     {
-        $locales = $this->getLocalesService(null, null, null, null, null, null, $localesList)->getLocales('de');
+        $locales = $this->getLocalesService(null, null, null, $localesList)->getLocales('de');
 
         $localeIds = array_keys($locales);
         sort($localeIds);
@@ -229,7 +228,7 @@ class LocalesTest extends TestCase
         }
 
         $locales = $this
-            ->getLocalesService(null, null, null, null, \ResourceBundle::getLocales(''), $expected[0], [], $localesList)
+            ->getLocalesService(null, null, \ResourceBundle::getLocales(''), [], $localesList, $expected[0])
             ->getEnabledLocales('de')
         ;
 
@@ -249,7 +248,7 @@ class LocalesTest extends TestCase
      */
     public function testGetsLanguagesConfigured(array $localesList, array $expected): void
     {
-        $locales = $this->getLocalesService(null, null, null, null, null, null, $localesList)->getLanguages('de');
+        $locales = $this->getLocalesService(null, null, null, $localesList)->getLanguages('de');
 
         $localeIds = array_keys($locales);
         sort($localeIds);
@@ -317,7 +316,7 @@ class LocalesTest extends TestCase
             ->willReturn($request)
         ;
 
-        $localesService = $this->getLocalesService(null, $requestStack, null, null, null, null, ['de', 'de_AT', 'de_CH', 'en_US']);
+        $localesService = $this->getLocalesService(null, $requestStack, null, ['de', 'de_AT', 'de_CH', 'en_US']);
 
         $this->assertSame([
             'de' => 'Deutsch',
@@ -476,7 +475,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    private function getLocalesService(TranslatorInterface $translator = null, RequestStack $requestStack = null, ContaoFramework $contaoFramework = null, array $availableLocales = null, array $translatedLocales = null, string $defaultLocale = null, array $locales = [], array $enabledLocales = []): Locales
+    private function getLocalesService(TranslatorInterface $translator = null, RequestStack $requestStack = null, array $translatedLocales = null, array $locales = [], array $enabledLocales = [], string $defaultLocale = null): Locales
     {
         if (null === $translator) {
             $translator = $this->createMock(TranslatorInterface::class);
@@ -490,20 +489,16 @@ class LocalesTest extends TestCase
             $requestStack = $this->createMock(RequestStack::class);
         }
 
-        if (null === $contaoFramework) {
-            $contaoFramework = $this->mockContaoFramework([
-                System::class => new class(System::class) extends Adapter {
-                    public function importStatic($class)
-                    {
-                        return new $class();
-                    }
-                },
-            ]);
-        }
+        $contaoFramework = $this->mockContaoFramework([
+            System::class => new class(System::class) extends Adapter {
+                public function importStatic($class)
+                {
+                    return new $class();
+                }
+            },
+        ]);
 
-        if (null === $availableLocales) {
-            $availableLocales = \ResourceBundle::getLocales('');
-        }
+        $availableLocales = \ResourceBundle::getLocales('');
 
         if (null === $translatedLocales) {
             $translatedLocales = ['en', 'de'];
@@ -513,6 +508,6 @@ class LocalesTest extends TestCase
             $defaultLocale = 'en';
         }
 
-        return new Locales($translator, $requestStack, $contaoFramework, $availableLocales, $translatedLocales, $defaultLocale, $locales, $enabledLocales);
+        return new Locales($translator, $requestStack, $contaoFramework, $availableLocales, $translatedLocales, $locales, $enabledLocales, $defaultLocale);
     }
 }

@@ -413,8 +413,8 @@ services:
             - '@request_stack'
             - '@contao.framework'
             - ~ # Available countries from IntlInstalledLocalesAndCountriesPass
-            - '%kernel.default_locale%'
             - '%contao.intl.countries%'
+            - '%kernel.default_locale%'
         public: true
 
     Contao\CoreBundle\Intl\Locales:
@@ -424,9 +424,9 @@ services:
             - '@contao.framework'
             - ~ # Available locales from IntlInstalledLocalesAndCountriesPass
             - ~ # Translated locales from IntlInstalledLocalesAndCountriesPass
-            - '%kernel.default_locale%'
             - '%contao.intl.locales%'
             - '%contao.intl.enabled_locales%'
+            - '%kernel.default_locale%'
         public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:

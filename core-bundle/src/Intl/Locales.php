@@ -35,11 +35,6 @@ class Locales
     private $contaoFramework;
 
     /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    /**
      * @var array<string>
      */
     private $locales;
@@ -49,14 +44,19 @@ class Locales
      */
     private $enabledLocales;
 
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableLocales, array $translatedLocales, string $defaultLocale, array $locales, array $enabledLocales)
+    /**
+     * @var string
+     */
+    private $defaultLocale;
+
+    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $availableLocales, array $translatedLocales, array $locales, array $enabledLocales, string $defaultLocale)
     {
         $this->translator = $translator;
         $this->requestStack = $requestStack;
         $this->contaoFramework = $contaoFramework;
-        $this->defaultLocale = $defaultLocale;
         $this->locales = $this->filterLocales($availableLocales, $locales);
         $this->enabledLocales = $this->filterLocales($translatedLocales, $enabledLocales, $defaultLocale);
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
