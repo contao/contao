@@ -110,7 +110,7 @@ class SearchIndexSubscriberTest extends TestCase
             'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.',
         ];
 
-        yield 'Test skips URIs that were disallowed the robots.txt content' => [
+        yield 'Test skips URIs that were disallowed by the robots.txt content' => [
             (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_DISALLOWED_ROBOTS_TXT),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
