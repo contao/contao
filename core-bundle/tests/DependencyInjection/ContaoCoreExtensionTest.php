@@ -89,13 +89,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($makeResponsePrivatePriority < (int) $csrfCookieListenerPriority);
     }
 
-    /**
-     * @group legacy
-     */
     public function testOnlyRegistersTheRoutingLegacyRouteProviderInLegacyMode(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: The URL suffix is configured per root page %s.');
-
         $container = $this->getContainerBuilder([
             'contao' => [
                 'encryption_key' => 'foobar',
@@ -121,13 +116,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testOnlyRegistersTheRoutingUrlGeneratorInLegacyMode(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: The URL suffix is configured per root page %s.');
-
         $container = $this->getContainerBuilder([
             'contao' => [
                 'encryption_key' => 'foobar',
