@@ -54,7 +54,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         ];
 
         $loader = $this->createMock(ContaoFilesystemLoader::class);
-
         $loader
             ->expects($this->exactly(\count($expectedAddPathCalls)))
             ->method('addPath')
@@ -96,7 +95,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     public function testRefresh(): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
-
         $loader
             ->expects($this->once())
             ->method('clear')
@@ -120,7 +118,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     public function testRefreshOnKernelRequestIfInDevMode(): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
-
         $loader
             ->expects($this->once())
             ->method('clear')
@@ -144,7 +141,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     public function testDoesNotRefreshOnKernelRequestIfNotInDevMode(): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
-
         $loader
             ->expects($this->never())
             ->method('clear')
@@ -171,7 +167,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     private function getTemplateLocatorMock(array $themeDirectories = [], array $resourcesPaths = [])
     {
         $locator = $this->createMock(TemplateLocator::class);
-
         $locator
             ->method('findThemeDirectories')
             ->willReturn($themeDirectories)

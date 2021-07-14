@@ -110,8 +110,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         try {
             parent::addPath($path, $namespace);
         } catch (LoaderError $error) {
-            // Ignore
-
             return;
         }
 
@@ -175,7 +173,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * Gets the cache key to use for the environment's template cache for a
      * given template name.
      *
-     * If we're currently in a theme context and a theme specific variant of
+     * If we are currently in a theme context and a theme specific variant of
      * the template exists, its cache key will be returned instead.
      *
      * @param string $name The name of the template to load
@@ -204,7 +202,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     public function getSourceContext($name): Source
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
-
         $source = parent::getSourceContext($templateName);
 
         // The Contao PHP templates will still be rendered by the Contao
@@ -222,17 +219,13 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             $matches
         );
 
-        return new Source(
-            implode("\n", $matches[1] ?? []),
-            $source->getName(),
-            $source->getPath()
-        );
+        return new Source(implode("\n", $matches[1] ?? []), $source->getName(), $source->getPath());
     }
 
     /**
      * Check if we have the source code of a template, given its name.
      *
-     * If we're currently in a theme context and a theme specific variant of
+     * If we are currently in a theme context and a theme specific variant of
      * the template exists, its availability will be checked as well.
      *
      * @param string $name The name of the template to check if we can load
@@ -256,7 +249,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * Returns true if the template or any variant of it in the hierarchy is
      * still fresh.
      *
-     * If we're currently in a theme context and a theme specific variant of
+     * If we are currently in a theme context and a theme specific variant of
      * the template exists, its state will be checked as well.
      *
      * @param string $name The template name
@@ -285,9 +278,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     }
 
     /**
-     * @internal
-     *
      * Resets the cached theme context
+     *
+     * @internal
      */
     public function reset(): void
     {
@@ -297,7 +290,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string
     {
         $hierarchy = $this->getInheritanceChains();
-
         $identifier = $this->getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
@@ -318,7 +310,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     public function getFirst(string $shortNameOrIdentifier): string
     {
         $identifier = $this->getIdentifier($shortNameOrIdentifier);
-
         $hierarchy = $this->getInheritanceChains();
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
@@ -427,8 +418,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $this->currentThemeSlug = false;
         }
 
-        return $this->currentThemeSlug = TemplateLocator::createDirectorySlug(
-            Path::makeRelative($path, 'templates')
-        );
+        return $this->currentThemeSlug = TemplateLocator::createDirectorySlug(Path::makeRelative($path, 'templates'));
     }
 }

@@ -147,9 +147,7 @@ class TemplateLocator
             ->sortByName()
         ;
 
-        $paths = [
-            $path,
-        ];
+        $paths = [$path];
 
         foreach ($finder as $item) {
             $paths[] = Path::canonicalize($item->getPathname());

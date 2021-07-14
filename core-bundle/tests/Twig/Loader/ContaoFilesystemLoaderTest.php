@@ -92,7 +92,6 @@ class ContaoFilesystemLoaderTest extends TestCase
     public function testClearsPaths(): void
     {
         $loader = $this->getContaoFilesystemLoader();
-
         $loader->addPath(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'));
 
         $this->assertTrue($loader->exists('@Contao/1.html.twig'));
@@ -110,7 +109,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $cacheAdapter = new ArrayAdapter();
 
         $loader1 = $this->getContaoFilesystemLoader($cacheAdapter);
-
         $loader1->addPath($path1);
         $loader1->addPath($path2, 'Contao_Foo');
 
@@ -148,6 +146,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
 
         $chains = $loader1->getInheritanceChains();
+
         $this->assertNotEmpty($chains);
 
         // Persist
@@ -165,10 +164,9 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetsCacheKey(): void
     {
-        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
-
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
 
+        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
         $loader->addPath($path, 'Contao', true);
 
         $this->assertSame(
@@ -182,7 +180,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
         $loader = $this->getContaoFilesystemLoader();
-
         $loader->addPath(Path::join($basePath, 'templates/'));
         $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
 
@@ -209,10 +206,9 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetsSourceContext(): void
     {
-        $loader = $this->getContaoFilesystemLoader();
-
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
 
+        $loader = $this->getContaoFilesystemLoader();
         $loader->addPath($path);
 
         $source = $loader->getSourceContext('@Contao/1.html.twig');
@@ -226,7 +222,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
         $loader = $this->getContaoFilesystemLoader();
-
         $loader->addPath(Path::join($basePath, 'templates/'));
         $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
 
@@ -253,10 +248,9 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     public function testGetsSourceContextFromHtml5File(): void
     {
-        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
-
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy/templates');
 
+        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
         $loader->addPath($path);
 
         $source = $loader->getSourceContext('@Contao/foo.html5');
@@ -271,10 +265,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     public function testExists(): void
     {
         $loader = $this->getContaoFilesystemLoader();
-
-        $loader->addPath(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates')
-        );
+        $loader->addPath(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates'));
 
         $this->assertTrue($loader->exists('@Contao/text.html.twig'));
         $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
@@ -283,7 +274,6 @@ class ContaoFilesystemLoaderTest extends TestCase
     public function testExistsDelegatesToThemeTemplate(): void
     {
         $loader = $this->getContaoFilesystemLoader();
-
         $loader->addPath(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/templates/my/theme'),
             'Contao_Theme_my_theme'
@@ -408,7 +398,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
 
         $locator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
-
         $loader = $this->getContaoFilesystemLoader(null, $locator);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod');

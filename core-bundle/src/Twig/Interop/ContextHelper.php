@@ -78,19 +78,16 @@ final class ContextHelper
                     return (string) $this();
                 } catch (\Throwable $e) {
                     // A __toString function may not throw an exception in PHP<7.4
-                    // @codeCoverageIgnoreStart
                     if (\PHP_VERSION_ID < 70400) {
                         return '';
                     }
-                    // @codeCoverageIgnoreEnd
 
-                    // Enhance exception message
                     throw new \RuntimeException("Error evaluating '{$this->name}': {$e->getMessage()}", 0, $e);
                 }
             }
 
             /**
-             * Called when evaluating `{{ var.invoke(…) }}` in a Twig template.
+             * Called when evaluating '{{ var.invoke(…) }}' in a Twig template.
              * We do not cast to string here, so that other types (like arrays)
              * are supported as well.
              */

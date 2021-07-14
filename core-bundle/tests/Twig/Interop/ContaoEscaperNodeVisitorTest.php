@@ -41,10 +41,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             ]
         );
 
-        $this->assertSame(
-            '<h1>&amp;amp; is the HTML entity for &amp;</h1><p>This is <i>raw HTML</i>.</p>',
-            $output
-        );
+        $this->assertSame('<h1>&amp;amp; is the HTML entity for &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
     }
 
     public function testDoesNotDoubleEncode(): void
@@ -59,10 +56,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             ]
         );
 
-        $this->assertSame(
-            '<h1>&amp; will look like &amp;</h1><p>This is <i>raw HTML</i>.</p>',
-            $output
-        );
+        $this->assertSame('<h1>&amp; will look like &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
     }
 
     public function testHandlesFiltersAndFunctions(): void
@@ -70,7 +64,6 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $templateContent = '{{ heart() }} {{ target|trim }}';
 
         $environment = $this->getEnvironment($templateContent);
-
         $environment->addFunction(
             new TwigFunction(
                 'heart',
@@ -87,10 +80,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             ]
         );
 
-        $this->assertSame(
-            '&#9829; Twig &amp; Contao',
-            $output
-        );
+        $this->assertSame('&#9829; Twig &amp; Contao', $output);
     }
 
     public function testUppercaseEntities(): void
@@ -104,10 +94,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             ]
         );
 
-        $this->assertSame(
-            '&quot;A&quot; &amp; &lt;B&gt;',
-            $output
-        );
+        $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
     }
 
     private function getEnvironment(string $templateContent): Environment

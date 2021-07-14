@@ -25,8 +25,6 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  * to is amongst the configured affected templates.
  *
  * @experimental
- *
- * @internal
  */
 final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
@@ -98,8 +96,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
             && 'escape' === $node->getNode('filter')->getAttribute('value')
             && $node->getNode('arguments')->hasNode(0)
             && ($argument = $node->getNode('arguments')->getNode(0)) instanceof ConstantExpression
-            && 'html' === $argument->getAttribute('value')
-        ;
+            && 'html' === $argument->getAttribute('value');
     }
 
     private function setContaoEscaperArguments(FilterExpression $node): void

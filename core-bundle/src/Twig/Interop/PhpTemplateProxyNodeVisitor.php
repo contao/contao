@@ -22,8 +22,6 @@ use Webmozart\PathUtil\Path;
 
 /**
  * @experimental
- *
- * @internal
  */
 final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 {
@@ -57,7 +55,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * We're replacing the module body with a PhpTemplateProxyNode that will
+     * We are replacing the module body with a PhpTemplateProxyNode that will
      * delegate rendering to the Contao framework on the fly. To support blocks
      * we're also injecting a BlockNode for each block in the original source
      * that will return the default Contao block placeholder when called.
@@ -67,11 +65,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
         $blockNodes = [];
 
         foreach (explode("\n", $node->getSourceContext()->getCode()) as $name) {
-            $blockNodes[$name] = new BlockNode(
-                $name,
-                new TextNode('[[TL_PARENT]]', 0),
-                0
-            );
+            $blockNodes[$name] = new BlockNode($name, new TextNode('[[TL_PARENT]]', 0), 0);
         }
 
         $node->setNode('blocks', new Node($blockNodes));

@@ -17,8 +17,6 @@ use Twig\Node\Node;
 
 /**
  * @experimental
- *
- * @internal
  */
 final class PhpTemplateProxyNode extends Node
 {
@@ -31,18 +29,15 @@ final class PhpTemplateProxyNode extends Node
 
     public function compile(Compiler $compiler): void
     {
-        /*
-         * echo $this->extensions["Contao\\…\\ContaoExtension"]->renderLegacyTemplate(
-         *     $this->getTemplateName(),
-         *     array_map(
-         *         function(callable $block) use ($context): string {
-         *             if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
-         *             try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
-         *         }, $blocks
-         *     ), $context
-         * );
-         */
-
+        // echo $this->extensions["Contao\\…\\ContaoExtension"]->renderLegacyTemplate(
+        //     $this->getTemplateName(),
+        //     array_map(
+        //         function(callable $block) use ($context): string {
+        //             if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
+        //             try { $block($context); return ob_get_contents(); } finally { ob_end_clean(); }
+        //         }, $blocks
+        //     ), $context
+        // );
         $compiler
             ->write('echo $this->extensions[')
             ->repr($this->getAttribute('extension_name'))

@@ -108,7 +108,6 @@ class ContextHelperTest extends TestCase
         ;
 
         $content = '{{ lazy }}';
-
         $environment = (new Environment(new ArrayLoader(['test.html.twig' => $content])));
         $context = ContextHelper::fromContaoTemplate($template);
 

@@ -57,24 +57,19 @@ final class ContaoExtension extends AbstractExtension
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-
-        $escaperExtension->setEscaper(
-            'contao_html',
-            [(new ContaoEscaper()), '__invoke']
-        );
+        $escaperExtension->setEscaper('contao_html', [(new ContaoEscaper()), '__invoke']);
 
         $this->hierarchy = $hierarchy;
 
-        // Use our escaper on all templates in the `@Contao` and `@Contao_*`
-        // namespaces
+        // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
     }
 
     /**
-     * Add a contao escaper rule.
+     * Adds a Contao escaper rule.
      *
-     * If a template name matches any of the defined rules it will be processed
-     * with the `contao_html` escaper strategy. Make sure your rule will only
+     * If a template name matches any of the defined rules, it will be processed
+     * with the 'contao_html' escaper strategy. Make sure your rule will only
      * match templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void

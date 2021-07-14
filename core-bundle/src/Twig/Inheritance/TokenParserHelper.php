@@ -17,8 +17,6 @@ use Twig\Node\Node;
 
 /**
  * @experimental
- *
- * @internal
  */
 final class TokenParserHelper
 {

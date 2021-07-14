@@ -23,8 +23,6 @@ use Twig\Error\RuntimeError;
  * This strategy will get dropped once we move to output encoding.
  *
  * @experimental
- *
- * @internal
  */
 final class ContaoEscaper
 {
@@ -34,7 +32,7 @@ final class ContaoEscaper
      *
      * @see twig_escape_filter
      */
-    public function __invoke(Environment $environment, $string, ?string $charset)
+    public function __invoke(Environment $environment, $string, ?string $charset): string
     {
         $string = (string) $string;
 

@@ -22,8 +22,6 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 /**
  * @experimental
- *
- * @internal
  */
 final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 {

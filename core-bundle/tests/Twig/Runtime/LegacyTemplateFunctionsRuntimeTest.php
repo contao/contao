@@ -47,14 +47,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
 
         $runtime = $this->getRuntime();
 
-        $this->assertSame(
-            'output',
-            $runtime->$methodName(
-                $context,
-                'key',
-                'template'
-            )
-        );
+        $this->assertSame('output', $runtime->$methodName($context, 'key', 'template'));
     }
 
     /**

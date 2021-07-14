@@ -69,7 +69,6 @@ class RewireTwigPathsPassTest extends TestCase
         (new RewireTwigPathsPass())->process($container);
 
         $this->assertTrue($baseLoader->hasMethodCall('foo'));
-
         $this->assertEmpty($loader->getMethodCalls());
     }
 }

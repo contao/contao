@@ -53,8 +53,8 @@ class DynamicExtendsTokenParserTest extends TestCase
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
-        $node = (new Parser($environment))->parse($tokenStream);
 
+        $node = (new Parser($environment))->parse($tokenStream);
         $parent = $node->getNode('parent');
 
         $this->assertSame($expectedParent, $parent->getAttribute('value'));
@@ -79,6 +79,7 @@ class DynamicExtendsTokenParserTest extends TestCase
     public function testValidatesTokenStream(string $code, string $expectedException): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
+
         $environment->addTokenParser(new DynamicExtendsTokenParser(
             $this->createMock(TemplateHierarchyInterface::class)
         ));

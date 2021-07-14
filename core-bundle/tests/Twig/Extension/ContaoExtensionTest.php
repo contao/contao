@@ -138,7 +138,6 @@ class ContaoExtensionTest extends TestCase
     public function testAllowsOnTheFlyRegisteringTemplatesForInputEncoding(): void
     {
         $contaoExtension = $this->getContaoExtension();
-
         $escaperNodeVisitor = $contaoExtension->getNodeVisitors()[0];
 
         $traverser = new NodeTraverser(

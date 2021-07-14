@@ -57,10 +57,7 @@ class DebugContaoTwigCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $rows = [];
-
         $chains = $this->hierarchy->getInheritanceChains();
 
         if (null !== ($prefix = $input->getOption('filter'))) {
@@ -77,12 +74,7 @@ class DebugContaoTwigCommand extends Command
             $i = 0;
 
             foreach ($chain as $path => $name) {
-                $rows[] = [
-                    0 === $i ? $identifier : '',
-                    $name,
-                    $path,
-                ];
-                ++$i;
+                $rows[] = [0 === $i++ ? $identifier : '', $name, $path];
             }
 
             $rows[] = new TableSeparator();
@@ -90,6 +82,7 @@ class DebugContaoTwigCommand extends Command
 
         array_pop($rows);
 
+        $io = new SymfonyStyle($input, $output);
         $io->title('Template hierarchy');
         $io->table(['Identifier', 'Effective logical name', 'Path'], $rows);
 

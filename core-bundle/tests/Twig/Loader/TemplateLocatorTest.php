@@ -22,7 +22,6 @@ class TemplateLocatorTest extends TestCase
     public function testFindsThemeDirectories(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
-
         $locator = new TemplateLocator($projectDir, [], []);
 
         $expectedThemeDirectories = [
@@ -88,7 +87,6 @@ class TemplateLocatorTest extends TestCase
     public function testFindsTemplates(): void
     {
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle/templates');
-
         $locator = new TemplateLocator('/project/dir', [], []);
 
         $expectedTemplates = [

@@ -95,7 +95,6 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
 
         $source = new Source("{% include '@Contao/foo' %}", 'template.html.twig');
-
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
 

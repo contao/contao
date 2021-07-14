@@ -331,6 +331,9 @@ trait TemplateInheritance
 		return Controller::getTemplate($strTemplate);
 	}
 
+	/**
+	 * Render a Twig template if one exists
+	 */
 	protected function renderTwigSurrogateIfExists(): ?string
 	{
 		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))

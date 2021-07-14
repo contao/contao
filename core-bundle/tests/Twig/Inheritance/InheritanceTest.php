@@ -72,9 +72,7 @@ class InheritanceTest extends TestCase
         $this->expectException(OutOfBoundsException::class);
         $this->expectExceptionMessage("There cannot be more than one 'foo' template in '$bundlePath/templates'.");
 
-        $this->getDemoEnvironment([
-            'InvalidBundle' => ['path' => $bundlePath],
-        ]);
+        $this->getDemoEnvironment(['InvalidBundle' => ['path' => $bundlePath]]);
     }
 
     private function getDemoEnvironment(array $bundlesMetadata = null): Environment
@@ -94,7 +92,6 @@ class InheritanceTest extends TestCase
         );
 
         $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
-
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');

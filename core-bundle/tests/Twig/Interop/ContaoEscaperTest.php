@@ -76,10 +76,6 @@ class ContaoEscaperTest extends TestCase
 
     private function invokeContaoEscaper($input, ?string $charset): string
     {
-        return (new ContaoEscaper())(
-            $this->createMock(Environment::class),
-            $input,
-            $charset
-        );
+        return (new ContaoEscaper())($this->createMock(Environment::class), $input, $charset);
     }
 }
