@@ -60,7 +60,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
      * we're also injecting a BlockNode for each block in the original source
      * that will return the default Contao block placeholder when called.
      */
-    private function configurePhpTemplateProxy(ModuleNode $node): ModuleNode
+    private function configurePhpTemplateProxy(ModuleNode $node): void
     {
         $blockNodes = [];
 
@@ -70,7 +70,5 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 
         $node->setNode('blocks', new Node($blockNodes));
         $node->setNode('body', new PhpTemplateProxyNode($this->extensionName));
-
-        return $node;
     }
 }
