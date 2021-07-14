@@ -94,14 +94,6 @@
         <source>Removes the cached versions of the front end pages.</source>
         <target>Odstrani predpomnjene različice predstavitvenih (front end) strani.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search results cache</source>
-        <target>Sprazni predpomnilnik z rezultati iskanja</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.1">
-        <source>Removes the cached versions of the search results.</source>
-        <target>Odstrani rezultate iskanja iz predpomnilnika.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Sprazni začasno mapo</target>
@@ -122,7 +114,7 @@
         <source>Recreate the symlinks</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
-        <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
+        <source>Recreates the symlinks in the public folder (document root).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

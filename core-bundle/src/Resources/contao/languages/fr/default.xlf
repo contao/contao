@@ -157,10 +157,6 @@
         <source>Your username and password must not be the same!</source>
         <target>Votre identifiant et votre mot de passe ne doivent pas être identiques.</target>
       </trans-unit>
-      <trans-unit id="ERR.passwordMatch">
-        <source>The passwords did not match!</source>
-        <target>Les mots de passe sont différents.</target>
-      </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
         <target>Ce compte est bloqué ! Essayez de vous connecter dans %d minutes.</target>
@@ -1293,6 +1289,9 @@
         <source>Caption</source>
         <target>Légende</target>
       </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>Titre</target>
@@ -1483,6 +1482,12 @@
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
         <target>Veuillez confirmer le mot de passe.</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2077,8 +2082,7 @@
         <target>protégé</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>guests only</source>
-        <target>seulement les invités</target>
+        <source>Guests</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>

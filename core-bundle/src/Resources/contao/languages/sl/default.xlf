@@ -157,10 +157,6 @@
         <source>Your username and password must not be the same!</source>
         <target>Uporabniško ime in geslo ne smeta biti enaka!</target>
       </trans-unit>
-      <trans-unit id="ERR.passwordMatch">
-        <source>The passwords did not match!</source>
-        <target>Gesli se ne ujemata!</target>
-      </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
         <target>Račun je bil zaklenjen! Ponovno se lahko vpišete čez %d minut.</target>
@@ -1269,6 +1265,9 @@
         <source>Caption</source>
         <target>Napis</target>
       </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>Naziv</target>
@@ -1459,6 +1458,12 @@
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
         <target>Prosimo ponovno vnesite geslo.</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2052,8 +2057,7 @@
         <target>zaščiteno</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>guests only</source>
-        <target>samo za goste</target>
+        <source>Guests</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>

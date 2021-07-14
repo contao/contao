@@ -38,8 +38,8 @@
         <target>Aktuell sind keine Termine vorhanden.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
-        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</source>
-        <target>Dieser Termin wiederholt sich %s%s und findet das nächste Mal am &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt; statt.</target>
+        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
+        <target>Dieser Termin wiederholt sich %s%s und findet das nächste Mal am &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt; statt.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>

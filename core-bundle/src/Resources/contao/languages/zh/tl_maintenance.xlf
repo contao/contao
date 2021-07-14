@@ -95,14 +95,6 @@
         <source>Removes the cached versions of the front end pages.</source>
         <target>删除前端页面的缓存版本。</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search results cache</source>
-        <target>清除搜索结果缓存</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.1">
-        <source>Removes the cached versions of the search results.</source>
-        <target>删除搜索结果的缓存版本。</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>清除临时文件夹</target>
@@ -124,8 +116,7 @@
         <target>重新创建符号链接</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
-        <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
-        <target>在&lt;code&gt;web/&lt;/code&gt; 文件夹 (文件根目录)重新创建符号链接.</target>
+        <source>Recreates the symlinks in the public folder (document root).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

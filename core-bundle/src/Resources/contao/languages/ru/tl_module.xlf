@@ -501,6 +501,10 @@
         <source>Title and type</source>
         <target>Название и тип</target>
       </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>Метка</target>
+      </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
         <target>Настройки навигации</target>

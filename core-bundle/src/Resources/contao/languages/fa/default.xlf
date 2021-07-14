@@ -157,10 +157,6 @@
         <source>Your username and password must not be the same!</source>
         <target>نام کاربری و گذرواژه‌تان نباید یکسان باشند!</target>
       </trans-unit>
-      <trans-unit id="ERR.passwordMatch">
-        <source>The passwords did not match!</source>
-        <target>گذرواژه و تکرار آن یکسان نیستند!</target>
-      </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
         <target>حساب کاربری شما قفل شده است! لطفا %s دقیقه دیگر مجددا سعی نمایید.</target>
@@ -1277,6 +1273,9 @@
         <source>Caption</source>
         <target>زیرنویس</target>
       </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>عنوان</target>
@@ -1467,6 +1466,12 @@
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
         <target>لطفا گذرواژه را تایید کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2059,8 +2064,7 @@
         <target>حفاظت شده</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>guests only</source>
-        <target>فقط مهمانان</target>
+        <source>Guests</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>

@@ -501,6 +501,10 @@
         <source>Title and type</source>
         <target>Název a typ</target>
       </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>Štítek</target>
+      </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
         <target>Nastavení navigace</target>

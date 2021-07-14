@@ -38,8 +38,7 @@
         <target>زبان</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>لطفا زبان برگه را بر اساس استاندارد ISO-639-1 (برای نمونه &quot;fa&quot; برای فارسی) وارد نمایید.</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -339,12 +338,10 @@
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>پنهان کردن از ناوبری</target>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-        <target>پنهان کردن برگه از منوی ناوبری.</target>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

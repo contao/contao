@@ -38,8 +38,7 @@
         <target>Språk</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Ange vilket språk du använder på denna sida. Ange språket med hjälp av den primära undertaggen (ISO-639 / RFC3066), t.ex. &quot;sv&quot; för svenska.</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -354,12 +353,10 @@
         <target>Här kan du definiera om sidan ska visas i HTML-webbplatskartan.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>Göm sidan i navigeringen</target>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-        <target>Om du väljer detta alternativ kommer sidan inte att visas i navigationsmenyer på hemsidan.</target>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

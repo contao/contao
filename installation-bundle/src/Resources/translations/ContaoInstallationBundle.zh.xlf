@@ -45,16 +45,14 @@
         <source>Password</source>
         <target>密码</target>
       </trans-unit>
-      <trans-unit id="12" resname="confirmation">
-        <source>Confirm password</source>
+      <trans-unit id="12" resname="show_password">
+        <source>Show password</source>
       </trans-unit>
-      <trans-unit id="13" resname="save_password">
+      <trans-unit id="13" resname="hide_password">
+        <source>Hide password</source>
+      </trans-unit>
+      <trans-unit id="14" resname="save_password">
         <source>Save password</source>
-        <target>保存密码</target>
-      </trans-unit>
-      <trans-unit id="14" resname="password_confirmation_mismatch">
-        <source>The password does not match the confirmation!</source>
-        <target>密码不一致!</target>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">
         <source>The password should be at least %d characters long!</source>
@@ -351,6 +349,12 @@
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
         <target>使用 &lt;code&gt;DATABASE_URL&lt;/code&gt; 环境变量中配置的连接URL，无法连接数据库。</target>
+      </trans-unit>
+      <trans-unit id="89" resname="strict_sql_mode">
+        <source>Your database server is not running in strict mode!</source>
+      </trans-unit>
+      <trans-unit id="90" resname="strict_sql_mode_explain">
+        <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
       </trans-unit>
     </body>
   </file>

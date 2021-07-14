@@ -38,8 +38,7 @@
         <target>言語</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>ページの言語をISO-639-1の標準に基づいて(例えば英語では&quot;en&quot;、アメリカ英語には&quot;en-US&quot;)入力してください。</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -354,12 +353,10 @@
         <target>このページをHTMLのサイトマップに表示するかどうか指定できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>ナビゲーションに表示しない</target>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-        <target>ナビゲーションメニューにページをしません。</target>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

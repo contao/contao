@@ -157,10 +157,6 @@
         <source>Your username and password must not be the same!</source>
         <target>您的用户名和密码不应该相同！</target>
       </trans-unit>
-      <trans-unit id="ERR.passwordMatch">
-        <source>The passwords did not match!</source>
-        <target>您两次输入的密码不一致！</target>
-      </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
         <target>当前帐号已经被锁定！请在%d分钟后重新登录。</target>
@@ -1284,6 +1280,9 @@
         <source>Caption</source>
         <target>标题</target>
       </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>标题</target>
@@ -1474,6 +1473,12 @@
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
         <target>请输入确认密码</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2066,8 +2071,7 @@
         <target>被保护的</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>guests only</source>
-        <target>只对浏览者开放</target>
+        <source>Guests</source>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>

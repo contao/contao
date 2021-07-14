@@ -38,8 +38,7 @@
         <target>Језик</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Унесите језик странице у складу са стандардом ISO-639-1  (нпр. &quot;en&quot; за енглески или &quot;en-US&quot; за амерички енглески).</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -354,12 +353,10 @@
         <target>Овде можете дефинисати да ли страница треба да буде приказана у HTML мапи сајта.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>Сакриј из навигације</target>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-        <target>Сакриј страницу из навигационог менија.</target>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>
