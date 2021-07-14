@@ -71,19 +71,13 @@ trait TemplateInheritance
 	protected $intBufferLevel = 0;
 
 	/**
-	 * Allow to delegate rendering to Twig
-	 * @var bool
-	 */
-	protected $blnEnableTwigSurrogateRendering = true;
-
-	/**
 	 * Parse the template file and return it as string
 	 *
 	 * @return string The template markup
 	 */
 	public function inherit()
 	{
-		if ($this->blnEnableTwigSurrogateRendering && null !== ($result = $this->renderTwigSurrogateIfExists()))
+		if (null !== ($result = $this->renderTwigSurrogateIfExists()))
 		{
 			return $result;
 		}
@@ -337,7 +331,7 @@ trait TemplateInheritance
 		return Controller::getTemplate($strTemplate);
 	}
 
-	private function renderTwigSurrogateIfExists(): ?string
+	protected function renderTwigSurrogateIfExists(): ?string
 	{
 		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
 		{

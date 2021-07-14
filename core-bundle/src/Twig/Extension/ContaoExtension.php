@@ -176,8 +176,6 @@ final class ContaoExtension extends AbstractExtension
         $template = Path::getFilenameWithoutExtension($name);
 
         $partialTemplate = new class($template) extends FrontendTemplate {
-            protected $blnEnableTwigSurrogateRendering = false;
-
             public function setBlocks(array $blocks): void
             {
                 $this->arrBlocks = $blocks;
@@ -187,6 +185,11 @@ final class ContaoExtension extends AbstractExtension
             public function parse(): string
             {
                 return $this->inherit();
+            }
+
+            protected function renderTwigSurrogateIfExists(): ?string
+            {
+                return null;
             }
         };
 
