@@ -18,48 +18,18 @@ use Spatie\SchemaOrg\BaseType;
 class ContaoPageSchema extends BaseType
 {
     /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var int
-     */
-    private $pageId;
-
-    /**
-     * @var bool
-     */
-    private $noSearch;
-
-    /**
-     * @var bool
-     */
-    private $protected;
-
-    /**
-     * @var array<int>
-     */
-    private $groups;
-
-    /**
-     * @var bool
-     */
-    private $fePreview;
-
-    /**
      * ContaoPageSchema constructor.
      *
      * @param array<int> $groups
      */
     public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview)
     {
-        $this->title = $title;
-        $this->pageId = $pageId;
-        $this->noSearch = $noSearch;
-        $this->protected = $protected;
-        $this->groups = $groups;
-        $this->fePreview = $fePreview;
+        $this->setTitle($title);
+        $this->setPageId($pageId);
+        $this->setNoSearch($noSearch);
+        $this->setProtected($protected);
+        $this->setGroups($groups);
+        $this->setFePreview($fePreview);
     }
 
     public function getContext(): string
@@ -72,62 +42,50 @@ class ContaoPageSchema extends BaseType
         return 'Page';
     }
 
-    public function toArray(): array
-    {
-        $this->setProperty('title', $this->title);
-        $this->setProperty('pageId', $this->pageId);
-        $this->setProperty('noSearch', $this->noSearch);
-        $this->setProperty('protected', $this->protected);
-        $this->setProperty('groups', $this->groups);
-        $this->setProperty('fePreview', $this->fePreview);
-
-        return parent::toArray();
-    }
-
     public function getTitle(): string
     {
-        return $this->title;
+        return $this->properties['title'];
     }
 
     public function setTitle(string $title): self
     {
-        $this->title = $title;
+        $this->properties['title'] = $title;
 
         return $this;
     }
 
     public function getPageId(): int
     {
-        return $this->pageId;
+        return $this->properties['pageId'];
     }
 
     public function setPageId(int $pageId): self
     {
-        $this->pageId = $pageId;
+        $this->properties['pageId'] = $pageId;
 
         return $this;
     }
 
     public function isNoSearch(): bool
     {
-        return $this->noSearch;
+        return $this->properties['noSearch'];
     }
 
     public function setNoSearch(bool $noSearch): self
     {
-        $this->noSearch = $noSearch;
+        $this->properties['noSearch'] = $noSearch;
 
         return $this;
     }
 
     public function isProtected(): bool
     {
-        return $this->protected;
+        return $this->properties['protected'];
     }
 
     public function setProtected(bool $protected): self
     {
-        $this->protected = $protected;
+        $this->properties['protected'] = $protected;
 
         return $this;
     }
@@ -137,7 +95,7 @@ class ContaoPageSchema extends BaseType
      */
     public function getGroups(): array
     {
-        return $this->groups;
+        return $this->properties['groups'];
     }
 
     /**
@@ -145,19 +103,19 @@ class ContaoPageSchema extends BaseType
      */
     public function setGroups(array $groups): self
     {
-        $this->groups = $groups;
+        $this->properties['groups'] = array_map('intval', $groups);
 
         return $this;
     }
 
     public function isFePreview(): bool
     {
-        return $this->fePreview;
+        return $this->properties['fePreview'];
     }
 
     public function setFePreview(bool $fePreview): self
     {
-        $this->fePreview = $fePreview;
+        $this->properties['fePreview'] = $fePreview;
 
         return $this;
     }
