@@ -69,22 +69,19 @@ class ContaoPageSchema extends BaseType
 
     public function getType(): string
     {
-        return 'contao:Page';
+        return 'Page';
     }
 
     public function toArray(): array
     {
-        $this->setProperty('contao:title', $this->title);
-        $this->setProperty('contao:pageId', $this->pageId);
-        $this->setProperty('contao:noSearch', $this->noSearch);
-        $this->setProperty('contao:protected', $this->protected);
-        $this->setProperty('contao:groups', $this->groups);
-        $this->setProperty('contao:fePreview', $this->fePreview);
+        $this->setProperty('title', $this->title);
+        $this->setProperty('pageId', $this->pageId);
+        $this->setProperty('noSearch', $this->noSearch);
+        $this->setProperty('protected', $this->protected);
+        $this->setProperty('groups', $this->groups);
+        $this->setProperty('fePreview', $this->fePreview);
 
-        $data = parent::toArray();
-        $data['@context'] = ['contao' => $data['@context']];
-
-        return $data;
+        return parent::toArray();
     }
 
     public function getTitle(): string

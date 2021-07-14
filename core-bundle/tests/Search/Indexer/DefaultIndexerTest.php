@@ -102,10 +102,10 @@ class DefaultIndexerTest extends ContaoTestCase
         ];
 
         yield 'Test valid index when not protected' => [
-            new Document(new Uri('https://example.com/valid'), 200, [], '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>'),
+            new Document(new Uri('https://example.com/valid'), 200, [], '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>'),
             [
                 'url' => 'https://example.com/valid',
-                'content' => '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
+                'content' => '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
                 'protected' => '',
                 'groups' => [],
                 'pid' => 2,
@@ -113,7 +113,7 @@ class DefaultIndexerTest extends ContaoTestCase
                 'language' => 'en',
                 'meta' => [
                     [
-                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@context' => 'https://schema.contao.org/',
                         '@type' => 'https://schema.contao.org/Page',
                         'https://schema.contao.org/pageId' => 2,
                         'https://schema.contao.org/noSearch' => false,
