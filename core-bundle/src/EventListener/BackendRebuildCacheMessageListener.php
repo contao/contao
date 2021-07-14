@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -24,6 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendRebuildCacheMessageListener
 {
+    public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
+
     /**
      * @var ScopeMatcher
      */
@@ -54,7 +55,7 @@ class BackendRebuildCacheMessageListener
             return;
         }
 
-        if (!$this->cache->hasItem(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)) {
+        if (!$this->cache->hasItem(self::CACHE_DIRTY_FLAG)) {
             return;
         }
 

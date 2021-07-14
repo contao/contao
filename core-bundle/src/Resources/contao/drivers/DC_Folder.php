@@ -10,11 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
-use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
@@ -2195,7 +2195,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			// be rebuild because the template paths are added at compile time
 			$cacheItemPool = System::getContainer()->get('cache.system');
 
-			$item = $cacheItemPool->getItem(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG);
+			$item = $cacheItemPool->getItem(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG);
 			$item->set(true);
 
 			$cacheItemPool->save($item);

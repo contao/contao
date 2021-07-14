@@ -908,16 +908,43 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    Contao\CoreBundle\Twig\Extension\ImageExtension: ~
-
-    Contao\CoreBundle\Twig\Extension\TextExtension: ~
-
-    Contao\CoreBundle\Twig\FailTolerantFilesystemLoader:
-        decorates: twig.loader.native_filesystem
+    Contao\CoreBundle\Twig\Extension\ContaoExtension:
         arguments:
-            - '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
-            - '@cache.system'
+            - '@twig'
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+        public: true
+
+    Contao\CoreBundle\Twig\Loader\TemplateLocator:
+        arguments:
             - '%kernel.project_dir%'
+            - '%kernel.bundles%'
+            - '%kernel.bundles_metadata%'
+
+    Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
+        arguments:
+            - []
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 1 }
+
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
+        arguments:
+            - '@cache.system'
+            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 2 }
+            - { name: kernel.reset, method: reset }
+
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
+        arguments:
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '%kernel.project_dir%'
+            - '%kernel.environment%'
+        tags:
+            - { name: kernel.cache_warmer }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
@@ -927,14 +954,13 @@ services:
         arguments:
             - '@contao.framework'
 
-    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
-
-    contao.twig.template_extension:
-        class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
+    Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+
+    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
 
     Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:

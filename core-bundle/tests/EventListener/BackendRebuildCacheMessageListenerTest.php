@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -41,7 +40,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
         $cacheItemPool
             ->method('hasItem')
-            ->with(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)
+            ->with(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG)
             ->willReturn($dirty)
         ;
 
@@ -84,7 +83,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $cacheItemPool = $this->createMock(CacheItemPoolInterface::class);
         $cacheItemPool
             ->method('hasItem')
-            ->with(FailTolerantFilesystemLoader::CACHE_DIRTY_FLAG)
+            ->with(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG)
             ->willReturn(true)
         ;
 

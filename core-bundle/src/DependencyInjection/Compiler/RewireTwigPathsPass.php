@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Twig\FailTolerantFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -22,7 +22,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class RewireTwigPathsPass implements CompilerPassInterface
 {
     /**
-     * Rewires the registered "addPath" method calls to our decorated service.
+     * Rewires Symfony's "addPath" method calls to our fail tolerant version
+     * of a filesystem loader which tolerates missing paths. Those will occur
+     * as soon as a user removes registered directories (e.g. from within the
+     * backend) and that would otherwise require the container to be rebuilt.
      */
     public function process(ContainerBuilder $container): void
     {
@@ -39,14 +42,12 @@ class RewireTwigPathsPass implements CompilerPassInterface
             return;
         }
 
-        do {
-            $original->removeMethodCall('addPath');
-        } while ($original->hasMethodCall('addPath'));
+        $original->removeMethodCall('addPath');
 
-        $decorated = $container->getDefinition(FailTolerantFilesystemLoader::class);
+        $replaced = $container->getDefinition(FailTolerantFilesystemLoader::class);
 
         foreach ($calls as $call) {
-            $decorated->addMethodCall(...$call);
+            $replaced->addMethodCall(...$call);
         }
     }
 }

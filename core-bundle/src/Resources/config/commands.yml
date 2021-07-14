@@ -35,6 +35,11 @@ services:
             - '@contao.framework'
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
 
+    Contao\CoreBundle\Command\DebugContaoTwigCommand:
+        arguments:
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
+
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
 
