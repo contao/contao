@@ -276,11 +276,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $chain = $this->getInheritanceChains()[$this->getIdentifier($name)] ?? [];
 
         foreach (array_keys($chain) as $path) {
-            try {
-                if (filemtime($path) > $time) {
-                    return false;
-                }
-            } catch (\Exception $e) {
+            if (filemtime($path) > $time) {
                 return false;
             }
         }
