@@ -29,7 +29,7 @@ final class ContextHelper
         array_walk_recursive(
             $context,
             static function (&$value, $key): void {
-                if (\is_callable($value)) {
+                if ($value instanceof \Closure) {
                     $value = self::getCallableWrapper($value, (string) $key);
                 }
             }

@@ -39,6 +39,12 @@ class ContextHelperTest extends TestCase
             'lazy3' => static function (): array {
                 return [1, 2];
             },
+            'lazy4' => \Closure::fromCallable(
+                static function (): string {
+                    return 'evaluated Closure';
+                }
+            ),
+            'value' => 'strtolower', // do not confuse with callable
         ];
 
         $template = $this->createMock(Template::class);
@@ -56,6 +62,8 @@ class ContextHelperTest extends TestCase
                 lazy1: {{ lazy1 }}
                 lazy2: {{ lazy2 }}, {{ lazy2.invoke(5) }}
                 lazy3: {{ lazy3.invoke()|join('|') }}
+                lazy4: {{ lazy4 }}
+                value: {{ value }}
 
                 TEMPLATE;
 
@@ -68,6 +76,8 @@ class ContextHelperTest extends TestCase
                 lazy1: evaluated
                 lazy2: evaluated: 0, evaluated: 5
                 lazy3: 1|2
+                lazy4: evaluated Closure
+                value: strtolower
 
                 OUTPUT;
 
