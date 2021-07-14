@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Command;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
@@ -58,12 +59,12 @@ class UserCreateCommand extends Command
      */
     private $locales;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory, array $locales)
+    public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory, Locales $locales)
     {
         $this->framework = $framework;
         $this->connection = $connection;
         $this->encoderFactory = $encoderFactory;
-        $this->locales = $locales;
+        $this->locales = $locales->getEnabledLocaleIds();
 
         parent::__construct();
     }

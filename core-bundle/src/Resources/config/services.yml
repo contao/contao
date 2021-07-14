@@ -62,7 +62,7 @@ services:
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
-            - '%contao.locales%'
+            - '@Contao\CoreBundle\Intl\Locales'
         public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
@@ -406,6 +406,28 @@ services:
         tags:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
+
+    Contao\CoreBundle\Intl\Countries:
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - '@contao.framework'
+            - ~ # Default countries from IntlInstalledLocalesAndCountriesPass
+            - '%contao.intl.countries%'
+            - '%kernel.default_locale%'
+        public: true
+
+    Contao\CoreBundle\Intl\Locales:
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - '@contao.framework'
+            - ~ # Default locales from IntlInstalledLocalesAndCountriesPass
+            - ~ # Default enabled locales from IntlInstalledLocalesAndCountriesPass
+            - '%contao.intl.locales%'
+            - '%contao.intl.enabled_locales%'
+            - '%kernel.default_locale%'
+        public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:

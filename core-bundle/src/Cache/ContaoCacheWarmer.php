@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\DcaExtractor;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\FileLocator;
@@ -68,7 +69,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, array $locales)
+    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, Locales $locales)
     {
         $this->filesystem = $filesystem;
         $this->finder = $finder;
@@ -76,7 +77,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->projectDir = $projectDir;
         $this->connection = $connection;
         $this->framework = $framework;
-        $this->locales = $locales;
+        $this->locales = $locales->getEnabledLocaleIds();
     }
 
     public function warmUp($cacheDir): array

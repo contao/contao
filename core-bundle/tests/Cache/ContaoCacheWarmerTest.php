@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Cache;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -147,7 +148,12 @@ class ContaoCacheWarmerTest extends TestCase
         $filesystem = new Filesystem();
         $finder = new ResourceFinder($fixtures);
         $locator = new FileLocator($fixtures);
-        $locales = ['en-US', 'en'];
+
+        $locales = $this->createMock(Locales::class);
+        $locales
+            ->method('getEnabledLocaleIds')
+            ->willReturn(['en-US', 'en'])
+        ;
 
         return new ContaoCacheWarmer($filesystem, $finder, $locator, $fixtures, $connection, $framework, $locales);
     }

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
@@ -107,7 +108,7 @@ class BackendIndex extends Backend
 		$objTemplate->messages = Message::generate();
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-		$objTemplate->languages = System::getLanguages(true); // backwards compatibility
+		$objTemplate->languages = System::getContainer()->get(Locales::class)->getEnabledLocales(null, true); // backwards compatibility
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 		$objTemplate->userLanguage = $GLOBALS['TL_LANG']['tl_user']['language'][0];
