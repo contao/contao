@@ -122,7 +122,7 @@ class CountriesTest extends TestCase
         }
     }
 
-    public function getCountriesConfig()
+    public function getCountriesConfig(): \Generator
     {
         yield [
             ['DE', 'AT'],

@@ -285,7 +285,7 @@ class Locales
         return $locales;
     }
 
-    private function applyLegacyHook(array $return, bool $installedOnly = false)
+    private function applyLegacyHook(array $return, bool $installedOnly = false): array
     {
         trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getLanguages" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', __CLASS__);
 

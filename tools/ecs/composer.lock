@@ -172,16 +172,16 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "7.0.10",
+            "version": "7.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "4607562c9d217a1026c9effde4fc78065571fd19"
+                "reference": "5716052725863953ddc2f8a7e934c09cb64bdf73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/4607562c9d217a1026c9effde4fc78065571fd19",
-                "reference": "4607562c9d217a1026c9effde4fc78065571fd19",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/5716052725863953ddc2f8a7e934c09cb64bdf73",
+                "reference": "5716052725863953ddc2f8a7e934c09cb64bdf73",
                 "shasum": ""
             },
             "require": {
@@ -217,7 +217,7 @@
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/7.0.10"
+                "source": "https://github.com/slevomat/coding-standard/tree/7.0.12"
             },
             "funding": [
                 {
@@ -229,7 +229,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-09T09:07:10+00:00"
+            "time": "2021-07-13T17:47:03+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -289,16 +289,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "9.4.21",
+            "version": "9.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "9f2d69e6ed49555ac12e50e64f500e57d27c1ef7"
+                "reference": "223dabfa7d61e5aa57cc1be967e4f670e86e085a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/9f2d69e6ed49555ac12e50e64f500e57d27c1ef7",
-                "reference": "9f2d69e6ed49555ac12e50e64f500e57d27c1ef7",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/223dabfa7d61e5aa57cc1be967e4f670e86e085a",
+                "reference": "223dabfa7d61e5aa57cc1be967e4f670e86e085a",
                 "shasum": ""
             },
             "require": {
@@ -323,7 +323,7 @@
             ],
             "description": "Prefixed scoped version of ECS package",
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.21"
+                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.22"
             },
             "funding": [
                 {
@@ -335,7 +335,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-11T23:03:39+00:00"
+            "time": "2021-07-12T09:01:33+00:00"
         }
     ],
     "packages-dev": [],
