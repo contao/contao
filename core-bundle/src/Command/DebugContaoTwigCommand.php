@@ -74,7 +74,8 @@ class DebugContaoTwigCommand extends Command
             $i = 0;
 
             foreach ($chain as $path => $name) {
-                $rows[] = [0 === $i++ ? $identifier : '', $name, $path];
+                $rows[] = [0 === $i ? $identifier : '', $name, $path];
+                ++$i;
             }
 
             $rows[] = new TableSeparator();

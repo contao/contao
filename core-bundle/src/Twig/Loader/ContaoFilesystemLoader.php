@@ -278,7 +278,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     }
 
     /**
-     * Resets the cached theme context
+     * Resets the cached theme context.
      *
      * @internal
      */
