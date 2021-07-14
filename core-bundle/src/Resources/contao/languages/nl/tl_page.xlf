@@ -38,8 +38,7 @@
         <target>Taal</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Geef de pagina taal op volgens de ISO-639-1 norm (b.v. &quot;en&quot; voor Engels of &quot;en-US&quot; voor Amerikaans Engels).</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -342,12 +341,10 @@
         <target>Hier kunt u bepalen of de pagina moet worden getoond in de HTML sitemap.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>Verberg pagina in navigatiemenu</target>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-        <target>Indien u deze optie kiest zal de huidige pagina niet getoond worden in de website navigatie.</target>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

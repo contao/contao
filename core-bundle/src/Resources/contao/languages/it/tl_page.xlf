@@ -38,8 +38,7 @@
         <target>Lingua</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Inserisci la lingua che stai usando per il tuo sito (inserisci il codice con riferimento allo standard ISO-639-1, ad esempio &quot;it&quot; per italiano o &quot;it-CH&quot; per l'italiano svizzero).</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -354,12 +353,10 @@
         <target>Puoi definire se visualizzare la pagina nella mappa del sito (sitemap)</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>Nascondi pagina dal menu di navigazione</target>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
-        <target>Non mostra la pagina nel menu di navigazione</target>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

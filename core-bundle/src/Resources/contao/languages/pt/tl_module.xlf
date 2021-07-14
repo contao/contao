@@ -492,6 +492,10 @@
         <source>Title and type</source>
         <target>Título e tipo</target>
       </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>Rótulo</target>
+      </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
         <target>Configurações de navegação</target>

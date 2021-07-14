@@ -97,14 +97,6 @@
         <source>Removes the cached versions of the front end pages.</source>
         <target>Supprime les versions en cache des pages front office.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search results cache</source>
-        <target>Purger le cache des résultats de recherche</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.1">
-        <source>Removes the cached versions of the search results.</source>
-        <target>Supprime les versions en cache des résultats de recherche.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Purger le répertoire temporaire</target>
@@ -126,8 +118,7 @@
         <target>Recréer les liens symboliques </target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
-        <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
-        <target>Recrée les liens symboliques dans le dossier &lt;code&gt;web/&lt;/ code&gt; (document racine).</target>
+        <source>Recreates the symlinks in the public folder (document root).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

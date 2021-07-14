@@ -496,6 +496,10 @@
         <source>Title and type</source>
         <target>عنوان و گونه</target>
       </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>برچسب</target>
+      </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
         <target>تنظیمات ناوبری</target>

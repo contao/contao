@@ -501,6 +501,10 @@
         <source>Title and type</source>
         <target>Titel und Typ</target>
       </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>Bezeichnung</target>
+      </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
         <target>Menü-Konfiguration</target>
