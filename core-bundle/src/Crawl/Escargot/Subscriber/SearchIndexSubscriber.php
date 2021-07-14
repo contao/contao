@@ -28,7 +28,6 @@ use Terminal42\Escargot\EscargotAwareInterface;
 use Terminal42\Escargot\EscargotAwareTrait;
 use Terminal42\Escargot\Subscriber\ExceptionSubscriberInterface;
 use Terminal42\Escargot\Subscriber\HtmlCrawlerSubscriber;
-use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
 use Terminal42\Escargot\Subscriber\Util;
 use Terminal42\Escargot\SubscriberLoggerTrait;
@@ -67,27 +66,12 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
-        // Check the original crawlUri to see if that one contained nofollow information
-        if (
-            null !== $crawlUri->getFoundOn()
-            && ($originalCrawlUri = $this->escargot->getCrawlUri($crawlUri->getFoundOn()))
-            && $originalCrawlUri->hasTag(RobotsSubscriber::TAG_NOFOLLOW)
-        ) {
+        // Respect robots.txt info and rel="nofollow" attributes
+        if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because when the crawl URI was found, the robots information disallowed following this URI.'
-            );
-
-            return SubscriberInterface::DECISION_NEGATIVE;
-        }
-
-        // Skip rel="nofollow" links
-        if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW)) {
-            $this->logWithCrawlUri(
-                $crawlUri,
-                LogLevel::DEBUG,
-                'Do not request because when the crawl URI was found, the "rel" attribute contained "nofollow".'
+                'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
