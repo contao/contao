@@ -54,7 +54,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceNewsInsertTags($key, $elements[1], $flags);
+            return $this->replaceNewsInsertTags($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
         }
 
         return false;
@@ -74,7 +74,7 @@ class InsertTagsListener
         return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
-    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $flags): string
+    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $arguments): string
     {
         $this->framework->initialize();
 
@@ -92,7 +92,7 @@ class InsertTagsListener
             case 'news':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)) ?: './',
+                    $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
                     StringUtil::specialchars($model->headline),
                     $model->headline
                 );
@@ -100,12 +100,12 @@ class InsertTagsListener
             case 'news_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)) ?: './',
+                    $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
                     StringUtil::specialchars($model->headline)
                 );
 
             case 'news_url':
-                return $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)) ?: './';
+                return $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './';
 
             case 'news_title':
                 return StringUtil::specialchars($model->headline);

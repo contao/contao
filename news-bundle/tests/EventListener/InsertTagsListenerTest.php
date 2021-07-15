@@ -89,6 +89,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            'http://domain.tld/news/foo-is-not-bar.html',
+            $listener('news_url::2::absolute', false, null, [])
+        );
+
+        $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
             $listener('news_title::2', false, null, [])
         );

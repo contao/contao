@@ -444,13 +444,13 @@ class InsertTags extends Controller
 
 								if ($objNext instanceof PageModel)
 								{
-									$strUrl = \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
 									break;
 								}
 								// no break
 
 							default:
-								$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+								$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
 								break;
 						}
 
@@ -534,7 +534,7 @@ class InsertTags extends Controller
 
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-					$strUrl = \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -1148,6 +1148,10 @@ class InsertTags extends Controller
 							break;
 
 						case 'absolute':
+							trigger_deprecation('contao/core-bundle', '4.12', 'The insert tag flag "|absolute" has been deprecated and will no longer work in Contao 5.0. use "::absolute" instead.');
+							// ignore
+							break;
+
 						case 'refresh':
 						case 'uncached':
 							// ignore

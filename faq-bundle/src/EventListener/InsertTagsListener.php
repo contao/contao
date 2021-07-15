@@ -62,7 +62,7 @@ class InsertTagsListener
 
         $faq = $adapter->findByIdOrAlias($elements[1]);
 
-        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', $flags, true)))) {
+        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true)))) {
             return '';
         }
 
