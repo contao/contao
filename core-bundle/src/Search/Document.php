@@ -154,7 +154,7 @@ class Document
 
             // Parsed the grouped values under the @graph within the same context
             foreach ($jsonLdItems as $jsonLdItem) {
-                if (isset($jsonLdItem['@graph']) && is_array($jsonLdItem['@graph'])) {
+                if (isset($jsonLdItem['@graph']) && \is_array($jsonLdItem['@graph'])) {
                     foreach ($jsonLdItem['@graph'] as $graph) {
                         $this->jsonLds[] = array_merge(['@context' => $jsonLdItem['@context']], $graph);
                     }
