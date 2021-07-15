@@ -130,7 +130,7 @@ class Document
             return $this->jsonLds;
         }
 
-        $this->jsonLds = $this->getContentCrawler()
+        $jsonLds = $this->getContentCrawler()
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
@@ -146,7 +146,19 @@ class Document
         ;
 
         // Filter invalid (null) values
-        $this->jsonLds = array_filter($this->jsonLds);
+        $jsonLds = array_filter($jsonLds);
+
+        // Go through all data entries and check if any array has numeric keys. If yes, it likely contains multiple data inside it
+        // which should be treated as if coming from separate sources, and thus moved to the root of $jsonLds array.
+        foreach ($jsonLds as $jsonLd) {
+            if (array_keys($jsonLd) === range(0, \count($jsonLd) - 1)) {
+                foreach ($jsonLd as $v) {
+                    $this->jsonLds[] = $v;
+                }
+            } else {
+                $this->jsonLds[] = $jsonLd;
+            }
+        }
 
         return $this->filterJsonLd($this->jsonLds, $context, $type);
     }
