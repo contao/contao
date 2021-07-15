@@ -14,22 +14,56 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
-use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
+    /**
+     * @var string
+     */
+    private static $testRoot;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        // Make resources available in test root
+        self::$testRoot = self::getTempDir();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('request_stack', new RequestStack());
+
+        // Prevent that the dca extractor tries to load language file and dca files
+        // See Contao\DcaExtractor::createExtract()
+        $GLOBALS['TL_LANG']['MSC'] = ['foo' => 'bar'];
+
+        System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($GLOBALS['TL_LANG']);
+
+        $reflection = new ReflectionClass(System::class);
+        $property = $reflection->getProperty('objContainer');
+        $property->setAccessible(true);
+        $property->setValue(null);
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void
@@ -192,9 +226,9 @@ class ContentElementControllerTest extends TestCase
         $model = new ContentModel();
         $model->start = (string) $start;
 
-        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+        $container = $this->mockContainerWithFrameworkNoTemplate('ce_test');
 
-        $controller = new TestSharedMaxAgeController();
+        $controller = new TestController();
         $controller->setContainer($container);
 
         $response = $controller(new Request(), $model, 'main');
@@ -211,9 +245,9 @@ class ContentElementControllerTest extends TestCase
         $model = new ContentModel();
         $model->stop = (string) $stop;
 
-        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test');
 
-        $controller = new TestSharedMaxAgeController();
+        $controller = new TestController();
         $controller->setContainer($container);
 
         $response = $controller(new Request(), $model, 'main');
@@ -223,9 +257,9 @@ class ContentElementControllerTest extends TestCase
 
     public function testDoesNotSetTheSharedMaxAgeIfTheElementHasNeitherAStartNorAStopDate(): void
     {
-        $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test');
 
-        $controller = new TestSharedMaxAgeController();
+        $controller = new TestController();
         $controller->setContainer($container);
 
         $response = $controller(new Request(), new ContentModel(), 'main');
@@ -233,7 +267,107 @@ class ContentElementControllerTest extends TestCase
         $this->assertNull($response->getMaxAge());
     }
 
-    private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
+    public function testDoesNotRenderInvisibleElement(): void
+    {
+        $model = new ContentModel();
+        $model->invisible = '1';
+
+        $container = $this->mockContainerWithFrameworkNoTemplate('ce_test');
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testDoesNotRenderElementWithFutureStartDate(): void
+    {
+        $model = new ContentModel();
+        $model->start = time() + 60;
+
+        $container = $this->mockContainerWithFrameworkNoTemplate('ce_test');
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testDoesNotRenderElementWithPastStopDate(): void
+    {
+        $model = new ContentModel();
+        $model->start = time() - 120;
+        $model->stop = time() - 60;
+
+        $container = $this->mockContainerWithFrameworkNoTemplate('ce_test');
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request(), $model, 'main');
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testDoesRenderElementWithAtDateBetweenStartAndStopDate(): void
+    {
+        $model = new ContentModel();
+        $model->start = time() - 120;
+        $model->stop = time() + 60;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test');
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $controller(new Request(), $model, 'main');
+    }
+
+    public function testDoesRenderInvisibleElementInFrontendPreview(): void
+    {
+        $model = new ContentModel();
+        $model->invisible = '1';
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test', $this->mockTokenChecker(true));
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $controller(new Request(), $model, 'main');
+    }
+
+    public function testDoesRenderElementWithFutureStartDateInPreviewMode(): void
+    {
+        $model = new ContentModel();
+        $model->start = time() + 60;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test', $this->mockTokenChecker(true));
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $controller(new Request(), $model, 'main');
+    }
+
+    public function testDoesRenderElementWithPastStopDateInPreviewMode(): void
+    {
+        $model = new ContentModel();
+        $model->start = time() - 120;
+        $model->stop = time() - 60;
+
+        $container = $this->mockContainerWithFrameworkTemplate('ce_test', $this->mockTokenChecker(true));
+
+        $controller = new TestController();
+        $controller->setContainer($container);
+
+        $controller(new Request(), $model, 'main');
+    }
+
+    private function mockContainerWithFrameworkTemplate(string $templateName, ?TokenChecker $tokenChecker = null): ContainerBuilder
     {
         $framework = $this->mockContaoFramework();
         $framework
@@ -243,9 +377,53 @@ class ContentElementControllerTest extends TestCase
             ->willReturn(new FrontendTemplate($templateName))
         ;
 
+        return $this->mockContainerWithFramework($framework, $tokenChecker);
+    }
+
+    private function mockContainerWithFrameworkNoTemplate(string $templateName, ?TokenChecker $tokenChecker = null): ContainerBuilder
+    {
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->never())
+            ->method('createInstance')
+            ->with(FrontendTemplate::class, [$templateName])
+        ;
+
+        return $this->mockContainerWithFramework($framework, $tokenChecker);
+    }
+
+    private function mockContainerWithFramework(?ContaoFramework $framework = null, ?TokenChecker $tokenChecker = null): ContainerBuilder
+    {
+        if (null === $framework) {
+            $framework = $this->mockContaoFramework();
+        }
+
+        if (null === $tokenChecker) {
+            $tokenChecker = $this->mockTokenChecker();
+        }
+
         $container = new ContainerBuilder();
+        $container->set('request_stack', new RequestStack());
         $container->set('contao.framework', $framework);
+        $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
 
         return $container;
+    }
+
+    private function mockTokenChecker(bool $frontendPreview = false): TokenChecker
+    {
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasBackendUser')
+            ->willReturn($frontendPreview)
+        ;
+
+        $tokenChecker
+            ->method('isPreviewMode')
+            ->willReturn($frontendPreview)
+        ;
+
+        return $tokenChecker;
     }
 }
