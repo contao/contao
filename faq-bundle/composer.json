@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "contao/core-bundle": "self.version",
         "patchwork/utf8": "^1.2",
         "symfony/config": "4.4.* || 5.2.*",
