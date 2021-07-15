@@ -145,18 +145,29 @@ class Document
             )
         ;
 
-        // Filter invalid (null) values
-        $jsonLds = array_filter($jsonLds);
+        // Filter invalid (null) and parse all values
+        foreach (array_filter($jsonLds) as $jsonLd) {
+            $jsonLdItems = [];
 
-        // Go through all data entries and check if any array has numeric keys. If yes, it likely contains multiple data inside it
-        // which should be treated as if coming from separate sources, and thus moved to the root of $jsonLds array.
-        foreach ($jsonLds as $jsonLd) {
+            // Go through all data entries and check if any array has numeric keys. If yes, it likely contains multiple data inside it
+            // which should be treated as if coming from separate sources, and thus moved to the root of $jsonLds array.
             if (array_keys($jsonLd) === range(0, \count($jsonLd) - 1)) {
-                foreach ($jsonLd as $v) {
-                    $this->jsonLds[] = $v;
+                foreach ($jsonLd as $jsonLdItem) {
+                    $jsonLdItems[] = $jsonLdItem;
                 }
             } else {
-                $this->jsonLds[] = $jsonLd;
+                $jsonLdItems[] = $jsonLd;
+            }
+
+            // Parsed the grouped items under the @graph within the same context
+            foreach ($jsonLdItems as $jsonLdItem) {
+                if (isset($jsonLdItem['@graph']) && is_array($jsonLdItem['@graph'])) {
+                    foreach ($jsonLdItem['@graph'] as $graph) {
+                        $this->jsonLds[] = array_merge(['@context' => $jsonLdItem['@context']], $graph);
+                    }
+                } else {
+                    $this->jsonLds[] = $jsonLdItem;
+                }
             }
         }
 
