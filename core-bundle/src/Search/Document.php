@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search;
 
+use Contao\ArrayUtil;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -147,19 +148,11 @@ class Document
 
         // Filter invalid (null) and parse all values
         foreach (array_filter($jsonLds) as $jsonLd) {
-            $jsonLdItems = [];
+            // If array has numeric keys, it likely contains multiple data inside it which should be
+            // treated as if coming from separate sources, and thus moved to the root of an array.
+            $jsonLdItems = ArrayUtil::isAssoc($jsonLd) ? [$jsonLd] : $jsonLd;
 
-            // Go through all data entries and check if any array has numeric keys. If yes, it likely contains multiple data inside it
-            // which should be treated as if coming from separate sources, and thus moved to the root of $jsonLds array.
-            if (array_keys($jsonLd) === range(0, \count($jsonLd) - 1)) {
-                foreach ($jsonLd as $jsonLdItem) {
-                    $jsonLdItems[] = $jsonLdItem;
-                }
-            } else {
-                $jsonLdItems[] = $jsonLd;
-            }
-
-            // Parsed the grouped items under the @graph within the same context
+            // Parsed the grouped values under the @graph within the same context
             foreach ($jsonLdItems as $jsonLdItem) {
                 if (isset($jsonLdItem['@graph']) && is_array($jsonLdItem['@graph'])) {
                     foreach ($jsonLdItem['@graph'] as $graph) {
