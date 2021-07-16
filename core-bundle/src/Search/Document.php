@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search;
 
+use Contao\ArrayUtil;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -130,7 +131,7 @@ class Document
             return $this->jsonLds;
         }
 
-        $this->jsonLds = $this->getContentCrawler()
+        $jsonLds = $this->getContentCrawler()
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
@@ -145,8 +146,23 @@ class Document
             )
         ;
 
-        // Filter invalid (null) values
-        $this->jsonLds = array_filter($this->jsonLds);
+        // Filter invalid (null) and parse all values
+        foreach (array_filter($jsonLds) as $jsonLd) {
+            // If array has numeric keys, it likely contains multiple data inside it which should be
+            // treated as if coming from separate sources, and thus moved to the root of an array.
+            $jsonLdItems = ArrayUtil::isAssoc($jsonLd) ? [$jsonLd] : $jsonLd;
+
+            // Parsed the grouped values under the @graph within the same context
+            foreach ($jsonLdItems as $jsonLdItem) {
+                if (\is_array($graphs = $jsonLdItem['@graph'] ?? null)) {
+                    foreach ($graphs as $graph) {
+                        $this->jsonLds[] = array_merge(array_diff_key($jsonLdItem, ['@graph' => null]), $graph);
+                    }
+                } else {
+                    $this->jsonLds[] = $jsonLdItem;
+                }
+            }
+        }
 
         return $this->filterJsonLd($this->jsonLds, $context, $type);
     }
