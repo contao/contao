@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -120,8 +120,11 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'legacy.html.twig' => $templateContent,
         ]);
 
-        $controller = $this->createMock(Controller::class);
-        $controller
+        $controller = $this->getMockBuilder(Adapter::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['replaceInsertTags'])
+            ->setMockClassName(Controller::class)
+            ->getMock()
             ->method('replaceInsertTags')
             ->willReturnCallback(
                 static function ($string) {
@@ -130,12 +133,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             )
         ;
 
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->method('getAdapter')
-            ->with(Controller::class)
-            ->willReturn($controller)
-        ;
+        $framework = $this->mockContaoFramework([
+            Controller::class => $controller,
+        ]);
 
         $environment = new Environment($loader);
 

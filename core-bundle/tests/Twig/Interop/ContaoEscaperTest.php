@@ -146,7 +146,7 @@ class ContaoEscaperTest extends TestCase
 
     private function invokeEscapeHtmlAttr($input, ?string $charset, $insertTagMapping = []): string
     {
-        $controller = $this->createMock(Controller::class);
+        $controller = $this->mockAdapter(['replaceInsertTags']);
         $controller
             ->method('replaceInsertTags')
             ->willReturnCallback(
@@ -156,12 +156,9 @@ class ContaoEscaperTest extends TestCase
             )
         ;
 
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->method('getAdapter')
-            ->with(Controller::class)
-            ->willReturn($controller)
-        ;
+        $framework = $this->mockContaoFramework([
+            Controller::class => $controller,
+        ]);
 
         return $this->getContaoEscaper($framework)->escapeHtmlAttr(
             $this->createMock(Environment::class),
