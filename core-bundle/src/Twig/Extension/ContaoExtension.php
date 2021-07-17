@@ -173,8 +173,12 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate = new class($template) extends FrontendTemplate {
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = $blocks;
-                $this->arrBlockNames = array_keys($blocks);
+                $this->arrBlocks = array_map(
+                    static function ($block) {
+                        return \is_array($block) ? $block : [$block];
+                    },
+                    $blocks
+                );
             }
 
             public function parse(): string

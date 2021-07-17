@@ -213,6 +213,18 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $source;
         }
 
+        // Look up the blocks of the parent template if present
+        if (
+            1 === preg_match(
+                '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
+                file_get_contents($source->getPath()),
+                $match
+            )
+            && '@Contao/'.$match[1].'.html5' !== $name
+        ) {
+            return new Source($this->getSourceContext('@Contao/'.$match[1].'.html5')->getCode(), $source->getName(), $source->getPath());
+        }
+
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
             file_get_contents($source->getPath()),

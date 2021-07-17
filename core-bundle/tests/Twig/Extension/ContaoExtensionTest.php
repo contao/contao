@@ -201,6 +201,38 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
     }
 
+    public function testRenderLegacyTemplateNested(): void
+    {
+        $extension = $this->getContaoExtension();
+
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+        ));
+
+        $output = $extension->renderLegacyTemplate(
+            'baz.html5',
+            ['B' => "root before B\n[[TL_PARENT]]root after B"],
+            ['foo' => 'bar']
+        );
+
+        $this->assertSame(
+            implode("\n", [
+                'foo: bar',
+                'baz before A',
+                'bar before A',
+                'original A block',
+                'bar after A',
+                'baz after A',
+                'root before B',
+                'baz before B',
+                'original B block',
+                'baz after B',
+                'root after B',
+            ]),
+            $output
+        );
+    }
+
     /**
      * @param Environment&MockObject $environment
      */
