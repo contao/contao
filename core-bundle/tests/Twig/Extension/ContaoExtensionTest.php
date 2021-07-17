@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
@@ -126,7 +127,8 @@ class ContaoExtensionTest extends TestCase
 
         $extension = new ContaoExtension(
             $environment,
-            $this->createMock(TemplateHierarchyInterface::class)
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -220,7 +222,8 @@ class ContaoExtensionTest extends TestCase
 
         return new ContaoExtension(
             $environment,
-            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class)
+            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoFramework::class),
         );
     }
 }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Extension;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -51,15 +52,17 @@ final class ContaoExtension extends AbstractExtension
      */
     private $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
+    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy, ContaoFramework $framework)
     {
         $this->environment = $environment;
+        $this->hierarchy = $hierarchy;
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [(new ContaoEscaper()), '__invoke']);
+        $contaoEscaper = new ContaoEscaper($framework);
 
-        $this->hierarchy = $hierarchy;
+        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
+        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
         // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
