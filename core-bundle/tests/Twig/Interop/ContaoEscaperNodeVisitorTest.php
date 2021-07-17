@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -97,6 +99,20 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
     }
 
+    public function testHtmlAttrFilter(): void
+    {
+        $templateContent = '<span title={{ title|e(\'html_attr\') }}></span>';
+
+        $output = $this->getEnvironment($templateContent)->render(
+            'legacy.html.twig',
+            [
+                'title' => '{{flavor}} _is_ a flavor',
+            ]
+        );
+
+        $this->assertSame('<span title=vanilla&#x20;_is_&#x20;a&#x20;flavor></span>', $output);
+    }
+
     private function getEnvironment(string $templateContent): Environment
     {
         $loader = new ArrayLoader([
@@ -104,9 +120,26 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'legacy.html.twig' => $templateContent,
         ]);
 
+        $controller = $this->createMock(Controller::class);
+        $controller
+            ->method('replaceInsertTags')
+            ->willReturnCallback(
+                static function ($string) {
+                    return str_replace('{{flavor}}', 'vanilla', $string);
+                }
+            )
+        ;
+
+        $framework = $this->createMock(ContaoFramework::class);
+        $framework
+            ->method('getAdapter')
+            ->with(Controller::class)
+            ->willReturn($controller)
+        ;
+
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $framework);
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);
