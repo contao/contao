@@ -78,7 +78,7 @@ final class ContaoEscaper
         $string = (string) $string;
 
         // Replace insert tags before '{' and '}' get encoded
-        $string = $this->framework->getAdapter(Controller::class)->replaceInsertTags($string);
+        $string = $this->framework->getAdapter(Controller::class)->replaceInsertTags($string, false);
 
         $string = StringUtil::decodeEntities($string);
 
