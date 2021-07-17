@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Contracts\Service\ResetInterface;
@@ -103,7 +104,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function addPath($path, $namespace = 'Contao', bool $trackTemplates = false): void
     {
-        if (null === $this->parseContaoName("@$namespace")) {
+        if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
         }
 
@@ -129,7 +130,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function prependPath($path, $namespace = 'Contao'): void
     {
-        if (null === $this->parseContaoName("@$namespace")) {
+        if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
         }
 
@@ -266,7 +267,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return false;
         }
 
-        $chain = $this->getInheritanceChains()[$this->getIdentifier($name)] ?? [];
+        $chain = $this->getInheritanceChains()[ContaoTwigUtil::getIdentifier($name)] ?? [];
 
         foreach (array_keys($chain) as $path) {
             if (filemtime($path) > $time) {
@@ -290,7 +291,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string
     {
         $hierarchy = $this->getInheritanceChains();
-        $identifier = $this->getIdentifier($shortNameOrIdentifier);
+        $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
             throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
@@ -309,7 +310,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
     public function getFirst(string $shortNameOrIdentifier): string
     {
-        $identifier = $this->getIdentifier($shortNameOrIdentifier);
+        $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
         $hierarchy = $this->getInheritanceChains();
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
@@ -340,7 +341,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             $templates = $this->templateLocator->findTemplates($searchPath);
 
             foreach ($templates as $shortName => $templatePath) {
-                $identifier = $this->getIdentifier($shortName);
+                $identifier = ContaoTwigUtil::getIdentifier($shortName);
 
                 if (isset($templatesByNamespace[$namespace][$identifier])) {
                     $basePath = Path::getLongestCommonBasePath($this->paths[$namespace]);
@@ -368,33 +369,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     }
 
     /**
-     * Split a Contao name into [namespace, short name]. The short name part
-     * will be null if $name is only a namespace.
-     *
-     * If parsing fails - i.e. if the given name does not describe a "Contao"
-     * or "Contao_*" namespace - null is returned instead.
-     */
-    private function parseContaoName(string $logicalNameOrNamespace): ?array
-    {
-        if (1 === preg_match('%^@(Contao(?:_[a-zA-Z0-9_-]+)?)(?:/(.*))?$%', $logicalNameOrNamespace, $matches)) {
-            return [$matches[1], $matches[2] ?? null];
-        }
-
-        return null;
-    }
-
-    private function getIdentifier(string $name): string
-    {
-        return preg_replace('%(?:.*/)?(.*)(\.html5|\.html.twig)%', '$1', $name);
-    }
-
-    /**
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
      */
     private function getThemeTemplateName(string $name): ?string
     {
-        if (null === ($parts = $this->parseContaoName($name)) || 'Contao' !== $parts[0]) {
+        if (null === ($parts = ContaoTwigUtil::parseContaoName($name)) || 'Contao' !== $parts[0]) {
             return null;
         }
 

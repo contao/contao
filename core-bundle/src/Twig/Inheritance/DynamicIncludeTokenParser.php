@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inheritance;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -51,12 +52,14 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
      */
     public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
     {
-        if (null === ($shortNameOrIdentifier = TokenParserHelper::getContaoTemplate($name))) {
+        $parts = ContaoTwigUtil::parseContaoName($name);
+
+        if ('Contao' !== ($parts[0] ?? null)) {
             return $name;
         }
 
         try {
-            return $hierarchy->getFirst($shortNameOrIdentifier);
+            return $hierarchy->getFirst($parts[1] ?? '');
         } catch (\LogicException $e) {
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
