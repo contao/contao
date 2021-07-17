@@ -65,6 +65,11 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
         $blockNodes = [];
 
         foreach (explode("\n", $node->getSourceContext()->getCode()) as $name) {
+            // Sanity check for valid block names
+            if (1 !== preg_match('/^[a-z0-9_-]+$/i', $name)) {
+                continue;
+            }
+
             $blockNodes[$name] = new BlockNode($name, new TextNode('[[TL_PARENT]]', 0), 0);
         }
 
