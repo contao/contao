@@ -32,13 +32,4 @@ final class TokenParserHelper
             self::traverseConstantExpressions($child, $onEnter);
         }
     }
-
-    public static function getContaoTemplate(string $name): ?string
-    {
-        if (1 !== preg_match('%^@Contao/(.*)%', $name, $matches)) {
-            return null;
-        }
-
-        return $matches[1];
-    }
 }
