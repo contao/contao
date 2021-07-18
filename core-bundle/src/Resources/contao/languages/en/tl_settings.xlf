@@ -120,7 +120,7 @@
         <source>Default page group</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
+        <source>Here you can select a user group as the default owner of a page.</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>
