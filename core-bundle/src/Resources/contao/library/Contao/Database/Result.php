@@ -101,7 +101,7 @@ class Result
 	 */
 	public function __destruct()
 	{
-		if ($this->resResult)
+		if ($this->resResult && method_exists($this->resResult, 'free'))
 		{
 			$this->resResult->free();
 		}
