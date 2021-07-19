@@ -28,10 +28,15 @@ class FrontendLoaderTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->expectDeprecation('%sUsing the "%sFrontendLoader" class has been deprecated%s');
+    }
+
     public function testSupportsTheContaoFrontEndRoute(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
         $loader = new FrontendLoader(false);
 
         $this->assertTrue($loader->supports('.', 'contao_frontend'));

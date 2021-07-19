@@ -589,8 +589,7 @@ class Configuration implements ConfigurationInterface
      */
     private function getDeprecationArgs(string $version, string $message): array
     {
-        /** @phpstan-ignore-next-line */
-        if (method_exists('root', TreeBuilder::class)) {
+        if (method_exists(TreeBuilder::class, 'root')) {
             return [$message];
         }
 

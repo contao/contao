@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -23,6 +24,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteProviderTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @var FrontendLoader&MockObject
      */
@@ -66,6 +69,9 @@ class LegacyRouteProviderTest extends TestCase
         $this->provider->getRouteByName('foo');
     }
 
+    /**
+     * @group legacy
+     */
     public function testLoadsContaoFrontendRouteFromFrontendLoader(): void
     {
         $route = $this->createMock(Route::class);
@@ -85,9 +91,14 @@ class LegacyRouteProviderTest extends TestCase
             ->willReturn($collection)
         ;
 
+        $this->expectDeprecation('%sThe "contao_frontend" route has been deprecated%s');
+
         $this->assertSame($route, $this->provider->getRouteByName('contao_frontend'));
     }
 
+    /**
+     * @group legacy
+     */
     public function testLoadsContaoIndexRouteFromFrontendLoader(): void
     {
         $route = $this->createMock(Route::class);
@@ -107,15 +118,22 @@ class LegacyRouteProviderTest extends TestCase
             ->willReturn($collection)
         ;
 
+        $this->expectDeprecation('%sThe "contao_index" route has been deprecated%s');
+
         $this->assertSame($route, $this->provider->getRouteByName('contao_index'));
     }
 
+    /**
+     * @group legacy
+     */
     public function testReturnsTheContaoRootRoute(): void
     {
         $this->frontendLoader
             ->expects($this->never())
             ->method($this->anything())
         ;
+
+        $this->expectDeprecation('%sThe "contao_root" route has been deprecated%s');
 
         $route = $this->provider->getRouteByName('contao_root');
 
@@ -130,12 +148,17 @@ class LegacyRouteProviderTest extends TestCase
         );
     }
 
+    /**
+     * @group legacy
+     */
     public function testReturnsTheContaoCatchAllRoute(): void
     {
         $this->frontendLoader
             ->expects($this->never())
             ->method($this->anything())
         ;
+
+        $this->expectDeprecation('%sThe "contao_catch_all" route has been deprecated%s');
 
         $route = $this->provider->getRouteByName('contao_catch_all');
 

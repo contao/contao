@@ -38,7 +38,7 @@ class RoutingTest extends ContaoTestCase
     {
         parent::setUp();
 
-        Config::set('urlSuffix', '.html');
+        $GLOBALS['TL_CONFIG']['urlSuffix'] = '.html';
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
         Config::set('useAutoItem', false);
 
