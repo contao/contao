@@ -736,7 +736,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 ],
                 'TABLE_CREATE_DEFINITIONS' => [
                     'published' => 'KEY `title` (`published`)',
-                ]
+                ],
             ],
         ];
 
