@@ -527,6 +527,34 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
+    public function testFigureTemplateMergesFigureOptionsClass(): void
+    {
+        $figure = new Figure(
+            $this->createMock(ImageResult::class),
+            null,
+            null,
+            null,
+            [
+                'attr' => ['class' => 'foo', 'data-bar' => 'bar'],
+            ]
+        );
+
+        $figureTemplate = file_get_contents(
+            Path::canonicalize(__DIR__.'/../../../src/Resources/views/Image/Studio/figure.html.twig')
+        );
+
+        $templates = [
+            '@ContaoCore/Image/Studio/_macros.html.twig' => self::$macros,
+            'figure.html.twig' => $figureTemplate,
+        ];
+
+        $environment = new Environment(new ArrayLoader($templates));
+
+        $html = $environment->render('figure.html.twig', ['figure' => $figure]);
+
+        $this->assertRegExp('/<figure.* class="image_container foo" data-bar="bar">/', $html);
+    }
+
     private function renderMacro(string $call, array $context = []): string
     {
         $templates = [
