@@ -484,6 +484,11 @@ class ModuleListing extends Module
 			}
 		}
 
+		// Options Callback
+		elseif (isset($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options_callback'])) {
+			$value = '<span class="value">[' . $value . ']</span> ' . $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['options_callback']()[$value];
+		}
+
 		return $value;
 	}
 }
