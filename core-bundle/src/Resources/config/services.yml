@@ -209,8 +209,10 @@ services:
             - '@database_connection'
 
     contao.csrf.token_manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+        class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
         arguments:
+            - '@request_stack'
+            - '%contao.csrf_cookie_prefix%'
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
         public: true
