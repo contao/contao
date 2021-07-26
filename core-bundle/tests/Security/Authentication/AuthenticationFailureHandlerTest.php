@@ -16,6 +16,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -130,12 +131,17 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->willReturn($session)
         ;
 
-        $request->request = $this->createMock(ParameterBag::class);
-        $request->request
-            ->expects($this->never())
-            ->method('get')
-            ->with('username')
-        ;
+        $params = [
+            'username' => new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    AuthenticationFailureHandlerTest::fail('Unexpected call to get("username")');
+                }
+            },
+        ];
+
+        /** @phpstan-ignore-next-line */
+        $request->request = class_exists(InputBag::class) ? new InputBag($params) : new ParameterBag($params);
 
         return $request;
     }

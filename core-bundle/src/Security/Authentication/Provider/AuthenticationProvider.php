@@ -81,6 +81,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      */
     public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack, TrustedDeviceManagerInterface $trustedDeviceManager)
     {
+        /** @phpstan-ignore-next-line TODO: replace EncoderFactoryInterface with Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface */
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 
         $this->userChecker = $userChecker;

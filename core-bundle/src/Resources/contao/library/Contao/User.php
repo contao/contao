@@ -512,6 +512,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
+	public function getUserIdentifier(): string
+	{
+		return $this->username;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPassword()
 	{
 		return $this->password;

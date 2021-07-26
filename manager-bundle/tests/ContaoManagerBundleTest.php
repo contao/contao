@@ -26,8 +26,8 @@ class ContaoManagerBundleTest extends TestCase
         $bundle = new ContaoManagerBundle();
         $bundle->build($container);
 
-        $passes = $container->getCompilerPassConfig()->getBeforeOptimizationPasses();
+        $passes = array_map('get_class', $container->getCompilerPassConfig()->getBeforeOptimizationPasses());
 
-        $this->assertInstanceOf(ContaoManagerPass::class, $passes[3]);
+        $this->assertContains(ContaoManagerPass::class, $passes);
     }
 }
