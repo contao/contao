@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\LogoutException;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * @Route(defaults={"_scope" = "frontend", "_token_check" = true})
@@ -107,7 +107,7 @@ class FrontendController extends AbstractController
     public function requestTokenScriptAction(): Response
     {
         $token = $this
-            ->get('contao.csrf.token_manager')
+            ->get(ContaoCsrfTokenManager::class)
             ->getToken($this->getParameter('contao.csrf_token_name'))
             ->getValue()
         ;
@@ -115,7 +115,7 @@ class FrontendController extends AbstractController
         $token = json_encode($token);
 
         $response = new Response();
-        $response->setContent('document.querySelectorAll("input[name=REQUEST_TOKEN]").forEach(function(i){i.value='.$token.'})');
+        $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$token.'})');
         $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');
@@ -127,7 +127,7 @@ class FrontendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.csrf.token_manager'] = CsrfTokenManagerInterface::class;
+        $services[] = ContaoCsrfTokenManager::class;
 
         return $services;
     }
