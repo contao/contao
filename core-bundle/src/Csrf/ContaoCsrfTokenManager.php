@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Csrf;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -40,21 +41,30 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
 
     public function isTokenValid(CsrfToken $token): bool
     {
-        // Skip the CSRF token validation if the request has no cookies, no
-        // authenticated user and the session has not been started
         if (
             ($request = $this->requestStack->getMasterRequest())
             && 'POST' === $request->getRealMethod()
-            && !$request->getUserInfo()
-            && (
-                0 === $request->cookies->count()
-                || [$this->csrfCookiePrefix.$token->getId()] === $request->cookies->keys()
-            )
-            && !($request->hasSession() && $request->getSession()->isStarted())
+            && $this->canSkipTokenValidation($request, $this->csrfCookiePrefix.$token->getId())
         ) {
             return true;
         }
 
         return parent::isTokenValid($token);
+    }
+
+    /**
+     * Skip the CSRF token validation if the request has no cookies, no
+     * authenticated user and the session has not been started.
+     */
+    public function canSkipTokenValidation(Request $request, string $tokenCookieName): bool
+    {
+        return
+            !$request->getUserInfo()
+            && (
+                0 === $request->cookies->count()
+                || [$tokenCookieName] === $request->cookies->keys()
+            )
+            && !($request->hasSession() && $request->getSession()->isStarted())
+        ;
     }
 }
