@@ -534,9 +534,7 @@ class TwigMacrosTest extends TestCase
             null,
             null,
             null,
-            [
-                'attr' => ['class' => 'foo', 'data-bar' => 'bar'],
-            ]
+            ['attr' => ['class' => 'foo', 'data-bar' => 'bar']]
         );
 
         $figureTemplate = file_get_contents(
@@ -549,7 +547,6 @@ class TwigMacrosTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-
         $html = $environment->render('figure.html.twig', ['figure' => $figure]);
 
         $this->assertRegExp('/<figure.* class="image_container foo" data-bar="bar">/', $html);
@@ -559,8 +556,7 @@ class TwigMacrosTest extends TestCase
     {
         $templates = [
             '_macros.html.twig' => self::$macros,
-            'test.html.twig' => '{% import "_macros.html.twig" as studio %}'.
-                "{{ studio.$call }}",
+            'test.html.twig' => '{% import "_macros.html.twig" as studio %}'."{{ studio.$call }}",
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
