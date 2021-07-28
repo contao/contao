@@ -57,10 +57,10 @@ final class ContaoExtension extends AbstractExtension
         $this->environment = $environment;
         $this->hierarchy = $hierarchy;
 
-        /** @var EscaperExtension $escaperExtension */
-        $escaperExtension = $environment->getExtension(EscaperExtension::class);
         $contaoEscaper = new ContaoEscaper($framework);
 
+        /** @var EscaperExtension $escaperExtension */
+        $escaperExtension = $environment->getExtension(EscaperExtension::class);
         $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
         $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 

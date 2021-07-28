@@ -19,8 +19,8 @@ use Twig\Environment;
 use Twig\Error\RuntimeError;
 
 /**
- * The ContaoEscaper mimics Twig's default escape filters but prevents
- * double encoding. It must therefore ONLY be applied to templates with already
+ * The ContaoEscaper mimics Twig's default escape filters but prevents double
+ * encoding. It must therefore ONLY be applied to templates with already
  * encoded context (input encoding)!
  *
  * This strategy will get dropped once we move to output encoding.
@@ -79,7 +79,6 @@ final class ContaoEscaper
 
         // Replace insert tags before '{' and '}' get encoded
         $string = $this->framework->getAdapter(Controller::class)->replaceInsertTags($string, false);
-
         $string = StringUtil::decodeEntities($string);
 
         // Original logic
@@ -99,25 +98,19 @@ final class ContaoEscaper
                 $chr = $matches[0];
                 $ord = \ord($chr);
 
-                /*
-             * The following replaces characters undefined in HTML with the
-             * hex entity for the Unicode replacement character.
-             */
+                // The following replaces characters undefined in HTML with the
+                // hex entity for the Unicode replacement character.
                 if (($ord <= 0x1f && "\t" !== $chr && "\n" !== $chr && "\r" !== $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
                     return '&#xFFFD;';
                 }
 
-                /*
-             * Check if the current character to escape has a name entity we should
-             * replace it with while grabbing the hex value of the character.
-             */
+                // Check if the current character to escape has a name entity we should
+                // replace it with while grabbing the hex value of the character.
                 if (1 === \strlen($chr)) {
-                    /*
-                 * While HTML supports far more named entities, the lowest common denominator
-                 * has become HTML5's XML Serialisation which is restricted to the those named
-                 * entities that XML supports. Using HTML entities would result in this error:
-                 *     XML Parsing Error: undefined entity
-                 */
+                    // While HTML supports far more named entities, the lowest common denominator
+                    // has become HTML5's XML Serialisation which is restricted to the those named
+                    // entities that XML supports. Using HTML entities would result in this error:
+                    // XML Parsing Error: undefined entity
                     static $entityMap = [
                         34 => '&quot;', /* quotation mark */
                         38 => '&amp;', /* ampersand */
@@ -125,17 +118,11 @@ final class ContaoEscaper
                         62 => '&gt;', /* greater-than sign */
                     ];
 
-                    if (isset($entityMap[$ord])) {
-                        return $entityMap[$ord];
-                    }
-
-                    return sprintf('&#x%02X;', $ord);
+                    return $entityMap[$ord] ?? sprintf('&#x%02X;', $ord);
                 }
 
-                /*
-             * Per OWASP recommendations, we'll use hex entities for any other
-             * characters where a named entity does not exist.
-             */
+                // Per OWASP recommendations, we'll use hex entities for any other
+                // characters where a named entity does not exist.
                 return sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
             },
             $string

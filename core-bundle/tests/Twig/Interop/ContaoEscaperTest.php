@@ -156,9 +156,7 @@ class ContaoEscaperTest extends TestCase
             )
         ;
 
-        $framework = $this->mockContaoFramework([
-            Controller::class => $controller,
-        ]);
+        $framework = $this->mockContaoFramework([Controller::class => $controller]);
 
         return $this->getContaoEscaper($framework)->escapeHtmlAttr(
             $this->createMock(Environment::class),
@@ -169,6 +167,10 @@ class ContaoEscaperTest extends TestCase
 
     private function getContaoEscaper(ContaoFramework $framework = null): ContaoEscaper
     {
-        return new ContaoEscaper($framework ?? $this->createMock(ContaoFramework::class));
+        if (null === $framework) {
+            $framework = $this->createMock(ContaoFramework::class);
+        }
+
+        return new ContaoEscaper($framework);
     }
 }

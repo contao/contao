@@ -21,7 +21,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
  * This NodeVisitor alters all "escape('html')" and "escape('html_attr')"
- * filter expressions into "escape('contao_html')" /
+ * filter expressions into "escape('contao_html')" and
  * "escape('contao_html_attr')" filter expressions if the template they belong
  * to is amongst the configured affected templates.
  *
@@ -100,9 +100,9 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     {
         if (
             !$node instanceof FilterExpression
-            || !\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)
             || !$node->getNode('arguments')->hasNode(0)
             || !($argument = $node->getNode('arguments')->getNode(0)) instanceof ConstantExpression
+            || !\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)
         ) {
             $type = '';
 

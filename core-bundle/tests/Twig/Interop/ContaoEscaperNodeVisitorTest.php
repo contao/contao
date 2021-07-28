@@ -120,7 +120,8 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'legacy.html.twig' => $templateContent,
         ]);
 
-        $controller = $this->getMockBuilder(Adapter::class)
+        $controller = $this
+            ->getMockBuilder(Adapter::class)
             ->disableOriginalConstructor()
             ->addMethods(['replaceInsertTags'])
             ->setMockClassName(Controller::class)
@@ -133,11 +134,8 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             )
         ;
 
-        $framework = $this->mockContaoFramework([
-            Controller::class => $controller,
-        ]);
-
         $environment = new Environment($loader);
+        $framework = $this->mockContaoFramework([Controller::class => $controller]);
 
         $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $framework);
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
