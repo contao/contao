@@ -77,21 +77,10 @@ class ContaoTwigUtilTest extends TestCase
 
     public function provideInvalidNamespaces(): \Generator
     {
-        yield 'not a Contao namespace' => [
-            '@Foobar/foo.html.twig',
-        ];
-
-        yield 'invalid characters' => [
-            '@Contao_:Foo',
-        ];
-
-        yield 'no namespace' => [
-            'foo.html.twig',
-        ];
-
-        yield 'empty input' => [
-            '',
-        ];
+        yield 'not a Contao namespace' => ['@Foobar/foo.html.twig'];
+        yield 'invalid characters' => ['@Contao_:Foo'];
+        yield 'no namespace' => ['foo.html.twig'];
+        yield 'empty input' => [''];
     }
 
     /**

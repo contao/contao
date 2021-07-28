@@ -20,7 +20,7 @@ use Webmozart\PathUtil\Path;
 final class ContaoTwigUtil
 {
     /**
-     * Split a Contao name into [namespace, short name]. The short name part
+     * Splits a Contao name into [namespace, short name]. The short name part
      * will be null if $name is only a namespace.
      *
      * If parsing fails - i.e. if the given name does not describe a "Contao"
@@ -36,7 +36,7 @@ final class ContaoTwigUtil
     }
 
     /**
-     * Get the template identifier (= name without namespace or file extension).
+     * Returns the template name without namespace and file extension.
      */
     public static function getIdentifier(string $name): string
     {
@@ -44,9 +44,8 @@ final class ContaoTwigUtil
     }
 
     /**
-     * Returns true if a given template name is a legacy Contao template
-     * (= from a "Contao" of "Contao_*" namespace and with a ".html5" file
-     * extension).
+     * Returns true if a given template name is a legacy Contao template from a
+     * "Contao" or "Contao_*" namespace and with a ".html5" file extension.
      */
     public static function isLegacyTemplate(string $logicalName): bool
     {
