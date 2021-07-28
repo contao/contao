@@ -131,18 +131,6 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->willReturn($session)
         ;
 
-        $params = [
-            'username' => new class() implements \Stringable {
-                public function __toString(): string
-                {
-                    AuthenticationFailureHandlerTest::fail('Unexpected call to get("username")');
-                }
-            },
-        ];
-
-        /** @phpstan-ignore-next-line */
-        $request->request = class_exists(InputBag::class) ? new InputBag($params) : new ParameterBag($params);
-
         return $request;
     }
 }
