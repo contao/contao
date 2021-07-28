@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
-use Contao\Controller;
-use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\System;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\TwigFunction;
@@ -101,6 +101,13 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
     public function testHtmlAttrFilter(): void
     {
+        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+
+        System::setContainer($container);
+
         $templateContent = '<span title={{ title|e(\'html_attr\') }}></span>';
 
         $output = $this->getEnvironment($templateContent)->render(
@@ -111,6 +118,13 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         );
 
         $this->assertSame('<span title=vanilla&#x20;_is_&#x20;a&#x20;flavor></span>', $output);
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function executeReplaceInsertTagsCallback(string $tag)
+    {
+        return 'flavor' === $tag ? 'vanilla' : false;
     }
 
     private function getEnvironment(string $templateContent): Environment
@@ -120,24 +134,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
             'legacy.html.twig' => $templateContent,
         ]);
 
-        $controller = $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->addMethods(['replaceInsertTags'])
-            ->setMockClassName(Controller::class)
-            ->getMock()
-            ->method('replaceInsertTags')
-            ->willReturnCallback(
-                static function ($string) {
-                    return str_replace('{{flavor}}', 'vanilla', $string);
-                }
-            )
-        ;
-
         $environment = new Environment($loader);
-        $framework = $this->mockContaoFramework([Controller::class => $controller]);
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $framework);
+        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);

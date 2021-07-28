@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
-use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
+use Contao\System;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 
@@ -71,50 +71,68 @@ class ContaoEscaperTest extends TestCase
     /**
      * @dataProvider provideHtmlAttributeInput
      */
-    public function testEscapesHtmlAttributes($input, array $insertTagMapping, string $expectedOutput): void
+    public function testEscapesHtmlAttributes($input, string $expectedOutput): void
     {
+        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+
+        System::setContainer($container);
+
         $this->assertSame(
             $expectedOutput,
-            $this->invokeEscapeHtmlAttr($input, null, $insertTagMapping),
+            $this->invokeEscapeHtmlAttr($input, null),
             'no charset specified'
         );
 
         $this->assertSame(
             $expectedOutput,
-            $this->invokeEscapeHtmlAttr($input, 'UTF-8', $insertTagMapping),
+            $this->invokeEscapeHtmlAttr($input, 'UTF-8'),
             'UTF-8'
         );
 
         $this->assertSame(
             $expectedOutput,
-            $this->invokeEscapeHtmlAttr($input, 'utf-8', $insertTagMapping),
+            $this->invokeEscapeHtmlAttr($input, 'utf-8'),
             'utf-8'
         );
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function executeReplaceInsertTagsCallback(string $tag, bool $cache)
+    {
+        if ('bar' !== $tag) {
+            return false;
+        }
+
+        if ($cache) {
+            $this->fail('Controller::replaceInsertTags must not be called with $blnCache = true.');
+        }
+
+        return 'baz';
     }
 
     public function provideHtmlAttributeInput(): \Generator
     {
         yield 'simple string' => [
             'foo',
-            [],
             'foo',
         ];
 
         yield 'special chars and spaces' => [
             'foo:{bar}=& "baz"',
-            [],
             'foo&#x3A;&#x7B;bar&#x7D;&#x3D;&amp;&#x20;&quot;baz&quot;',
         ];
 
         yield 'prevent double encoding' => [
             'A&amp;B',
-            [],
             'A&amp;B',
         ];
 
         yield 'replacing insert tags beforehand' => [
             'foo{{bar}}',
-            ['{{bar}}' => 'baz'],
             'foobaz',
         ];
     }
@@ -137,40 +155,19 @@ class ContaoEscaperTest extends TestCase
 
     private function invokeEscapeHtml($input, ?string $charset): string
     {
-        return $this->getContaoEscaper()->escapeHtml(
+        return (new ContaoEscaper())->escapeHtml(
             $this->createMock(Environment::class),
             $input,
             $charset
         );
     }
 
-    private function invokeEscapeHtmlAttr($input, ?string $charset, $insertTagMapping = []): string
+    private function invokeEscapeHtmlAttr($input, ?string $charset): string
     {
-        $controller = $this->mockAdapter(['replaceInsertTags']);
-        $controller
-            ->method('replaceInsertTags')
-            ->willReturnCallback(
-                static function ($string) use ($insertTagMapping) {
-                    return str_replace(array_keys($insertTagMapping), array_values($insertTagMapping), $string);
-                }
-            )
-        ;
-
-        $framework = $this->mockContaoFramework([Controller::class => $controller]);
-
-        return $this->getContaoEscaper($framework)->escapeHtmlAttr(
+        return (new ContaoEscaper())->escapeHtmlAttr(
             $this->createMock(Environment::class),
             $input,
             $charset
         );
-    }
-
-    private function getContaoEscaper(ContaoFramework $framework = null): ContaoEscaper
-    {
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFramework::class);
-        }
-
-        return new ContaoEscaper($framework);
     }
 }

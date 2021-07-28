@@ -912,7 +912,6 @@ services:
         arguments:
             - '@twig'
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
-            - '@contao.framework'
         public: true
 
     Contao\CoreBundle\Twig\Loader\TemplateLocator:

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Extension;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -52,12 +51,12 @@ final class ContaoExtension extends AbstractExtension
      */
     private $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy, ContaoFramework $framework)
+    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
         $this->environment = $environment;
         $this->hierarchy = $hierarchy;
 
-        $contaoEscaper = new ContaoEscaper($framework);
+        $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);

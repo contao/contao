@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Interop;
 
 use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -29,16 +28,6 @@ use Twig\Error\RuntimeError;
  */
 final class ContaoEscaper
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    public function __construct(ContaoFramework $framework)
-    {
-        $this->framework = $framework;
-    }
-
     /**
      * This implementation is a clone of Twig's html escape strategy but calls
      * htmlspecialchars with the double_encode parameter set to false.
@@ -78,7 +67,7 @@ final class ContaoEscaper
         $string = (string) $string;
 
         // Replace insert tags before '{' and '}' get encoded
-        $string = $this->framework->getAdapter(Controller::class)->replaceInsertTags($string, false);
+        $string = Controller::replaceInsertTags($string, false);
         $string = StringUtil::decodeEntities($string);
 
         // Original logic
