@@ -31,7 +31,8 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $this->assertNotEmpty($command->getDescription());
 
         $this->assertTrue($command->getDefinition()->hasOption('refresh'));
-        $this->assertTrue($command->getDefinition()->hasOption('filter'));
+        $this->assertTrue($command->getDefinition()->hasOption('theme'));
+        $this->assertTrue($command->getDefinition()->hasArgument('filter'));
     }
 
     public function testDoesNotRefreshLoaderByDefault(): void
@@ -82,9 +83,9 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider provideFilterOptions
+     * @dataProvider provideInput
      */
-    public function testOutputsHierarchy(array $inputOptions, string $expectedOutput): void
+    public function testOutputsHierarchy(array $input, string $expectedOutput): void
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy
@@ -110,7 +111,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         );
 
         $tester = new CommandTester($command);
-        $tester->execute($inputOptions);
+        $tester->execute($input);
 
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $tester->getDisplay(true));
 
@@ -118,7 +119,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideFilterOptions(): \Generator
+    public function provideInput(): \Generator
     {
         yield 'no filter' => [
             [],
@@ -140,8 +141,8 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                 OUTPUT
         ];
 
-        yield 'full word' => [
-            ['--filter' => 'foo'],
+        yield 'filter by full word' => [
+            ['filter' => 'foo'],
             <<<'OUTPUT'
 
                 Template hierarchy
@@ -156,8 +157,8 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                 OUTPUT
         ];
 
-        yield 'prefix' => [
-            ['--filter' => 'ba'],
+        yield 'filter by prefix' => [
+            ['filter' => 'ba'],
             <<<'OUTPUT'
 
                 Template hierarchy
@@ -172,21 +173,52 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
 
                 OUTPUT
         ];
+    }
 
-        yield 'short option name' => [
-            ['-f' => 'foo'],
-            <<<'OUTPUT'
+    /**
+     * @dataProvider provideThemeOptions
+     */
+    public function testIncludesThemeTemplates(array $input, ?string $expectedThemeAlias): void
+    {
+        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getInheritanceChains')
+            ->with($expectedThemeAlias)
+            ->willReturn([])
+        ;
 
-                Template hierarchy
-                ==================
-                 ------------ ------------------------ ----------------------
-                  Identifier   Effective logical name   Path
-                 ------------ ------------------------ ----------------------
-                  foo          @A/foo.html.twig         /path1/foo.html.twig
-                               @B/foo.html5             /path2/foo.html5
-                 ------------ ------------------------ ----------------------
+        $command = new DebugContaoTwigCommand(
+            $hierarchy,
+            $this->createMock(ContaoFilesystemLoaderWarmer::class)
+        );
 
-                OUTPUT
+        $tester = new CommandTester($command);
+        $tester->execute($input);
+
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function provideThemeOptions(): \Generator
+    {
+        yield 'no theme' => [
+            [],
+            null,
+        ];
+
+        yield 'theme alias' => [
+            ['--theme' => 'foo_bar'],
+            'foo_bar',
+        ];
+
+        yield 'theme path' => [
+            ['--theme' => 'path/to/theme'],
+            'path_to_theme',
+        ];
+
+        yield 'theme path (non normalized)' => [
+            ['--theme' => 'path\to\theme'],
+            'path_to_theme',
         ];
     }
 }

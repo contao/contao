@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -52,7 +53,7 @@ class DebugContaoTwigCommand extends Command
         $this
             ->setDescription('Displays the Contao template hierarchy.')
             ->addOption('refresh', 'r', InputOption::VALUE_NONE, 'Refresh the cache.')
-            ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme alias.')
+            ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or alias.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
     }
@@ -60,7 +61,7 @@ class DebugContaoTwigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [];
-        $chains = $this->hierarchy->getInheritanceChains($input->getOption('theme'));
+        $chains = $this->hierarchy->getInheritanceChains($this->getThemeAlias($input));
 
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
@@ -96,5 +97,14 @@ class DebugContaoTwigCommand extends Command
         }
 
         return 0;
+    }
+
+    private function getThemeAlias(InputInterface $input): ?string
+    {
+        if (null === ($theme = $input->getOption('theme'))) {
+            return null;
+        }
+
+        return TemplateLocator::createDirectorySlug($theme);
     }
 }
