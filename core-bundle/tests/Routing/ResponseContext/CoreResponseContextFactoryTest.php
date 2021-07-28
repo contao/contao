@@ -120,16 +120,14 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
         $this->assertSame(
             [
-                '@context' => [
-                    'contao' => 'https://schema.contao.org/',
-                ],
-                '@type' => 'contao:Page',
-                'contao:title' => 'My title',
-                'contao:pageId' => 0,
-                'contao:noSearch' => false,
-                'contao:protected' => false,
-                'contao:groups' => [],
-                'contao:fePreview' => false,
+                '@context' => 'https://schema.contao.org/',
+                '@type' => 'Page',
+                'title' => 'My title',
+                'pageId' => 0,
+                'noSearch' => false,
+                'protected' => false,
+                'groups' => [],
+                'fePreview' => false,
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
         );
@@ -160,16 +158,14 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
         $this->assertSame(
             [
-                '@context' => [
-                    'contao' => 'https://schema.contao.org/',
-                ],
-                '@type' => 'contao:Page',
-                'contao:title' => 'We went from Alpha > Omega',
-                'contao:pageId' => 0,
-                'contao:noSearch' => false,
-                'contao:protected' => false,
-                'contao:groups' => [],
-                'contao:fePreview' => false,
+                '@context' => 'https://schema.contao.org/',
+                '@type' => 'Page',
+                'title' => 'We went from Alpha > Omega',
+                'pageId' => 0,
+                'noSearch' => false,
+                'protected' => false,
+                'groups' => [],
+                'fePreview' => false,
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray()
         );
