@@ -570,33 +570,6 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function testIgnoresRoutesWithoutRootId(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
-        $page->rootId = null;
-
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findBy']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/foo.html');
-
-        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
     private function mockConfigAdapter(array $config): Adapter
     {
         $configAdapter = $this->mockAdapter(['get']);

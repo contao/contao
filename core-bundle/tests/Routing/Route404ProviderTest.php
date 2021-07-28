@@ -324,35 +324,6 @@ class Route404ProviderTest extends TestCase
         ];
     }
 
-    public function testIgnoresRoutesWithoutRootId(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(PageModel::class);
-        $page->id = 17;
-
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findByType']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findByType')
-            ->with('error_404')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-        $request = $this->mockRequestWithPath('/');
-
-        $provider = new Route404Provider($framework, false);
-        $routes = $provider->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
     /**
      * @return Request&MockObject
      */
