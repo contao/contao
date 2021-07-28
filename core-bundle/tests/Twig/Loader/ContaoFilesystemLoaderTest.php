@@ -262,6 +262,22 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertSame("A\nB", $source->getCode());
     }
 
+    public function testGetsSourceContextFromNestedHtml5File(): void
+    {
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy/templates');
+
+        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
+        $loader->addPath($path);
+
+        $source = $loader->getSourceContext('@Contao/bar.html5');
+
+        $this->assertSame('@Contao/bar.html5', $source->getName());
+        $this->assertSame(Path::join($path, 'bar.html5'), Path::normalize($source->getPath()));
+
+        // Block names should be taken from the root template to include all blocks
+        $this->assertSame("A\nB", $source->getCode());
+    }
+
     public function testExists(): void
     {
         $loader = $this->getContaoFilesystemLoader();
