@@ -24,9 +24,12 @@ use Contao\FilesModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testReturnsTheTimeZones(): void
     {
         $timeZones = System::getTimeZones();
@@ -164,6 +167,8 @@ class ControllerTest extends TestCase
         $container->set(Studio::class, $studio);
         System::setContainer($container);
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['caption' => null];
+
+        $this->expectDeprecation('%sUsing %saddImageToTemplate() is deprecated%s');
 
         Controller::addImageToTemplate($template, $rowData, $maxWidth, 'lightbox-123', $filesModel);
 
@@ -315,6 +320,8 @@ class ControllerTest extends TestCase
         $container->set(Studio::class, $studio);
         $container->set('monolog.logger.contao', $logger);
         System::setContainer($container);
+
+        $this->expectDeprecation('%sUsing %saddImageToTemplate() is deprecated%s');
 
         Controller::addImageToTemplate($template, ['singleSRC' => '/path/to/image.jpg']);
 
