@@ -39,8 +39,8 @@ class DynamicIncludeTokenParserTest extends TestCase
         $templateHierarchy
             ->method('getFirst')
             ->willReturnMap([
-                ['foo.html.twig', '<foo-template>'],
-                ['bar.html.twig', '<bar-template>'],
+                ['foo.html.twig', null, '<foo-template>'],
+                ['bar.html.twig', null, '<bar-template>'],
             ])
         ;
 
