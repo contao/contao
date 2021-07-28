@@ -154,6 +154,56 @@ class DocumentTest extends TestCase
             ],
         ];
 
+        yield 'Test with two valid json ld elements combined in one script tag' => [
+            '<html><body><script type="application/ld+json">[{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true},{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":false}]</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => false,
+                ],
+            ],
+        ];
+
+        yield 'Test with two valid json ld elements combined in one script tag with @graph property' => [
+            '<html><body><script type="application/ld+json">[{"@context":"https:\/\/contao.org\/","@graph":[{"@type":"Page","foobar":true}]},{"@context":"https:\/\/contao.org\/","@graph":[{"@type":"Page","foobar":false},{"@type":"Article","foobar":null}]}]</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => false,
+                ],
+                [
+                    '@type' => 'Article',
+                    'foobar' => null,
+                ],
+            ],
+        ];
+
+        yield 'Test with two valid json ld elements combined in one script tag and one extra json ld element in a separate script tag' => [
+            '<html><body><script type="application/ld+json">[{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true},{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":false}]</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":null}</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => false,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => null,
+                ],
+            ],
+        ];
+
         yield 'Test with one valid and one invalid json ld element' => [
             '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/", ...</script></body></html>',
             [
