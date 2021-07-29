@@ -3301,7 +3301,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'];
 
-		if ($ptable === null && $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5)
+		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
 		{
 			$ptable = $this->strTable;
 		}
