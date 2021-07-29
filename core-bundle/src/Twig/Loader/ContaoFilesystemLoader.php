@@ -374,7 +374,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     private function getThemeTemplateName(string $name): ?string
     {
-        if (null === ($parts = ContaoTwigUtil::parseContaoName($name)) || 'Contao' !== $parts[0]) {
+        $parts = ContaoTwigUtil::parseContaoName($name);
+
+        if ('Contao' !== ($parts[0] ?? null)) {
             return null;
         }
 
