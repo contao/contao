@@ -38,10 +38,20 @@ class DynamicIncludeTokenParserTest extends TestCase
         $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $templateHierarchy
             ->method('getFirst')
-            ->willReturnMap([
-                ['foo.html.twig', '<foo-template>'],
-                ['bar.html.twig', '<bar-template>'],
-            ])
+            ->willReturnCallback(
+                static function (string $name) {
+                    $hierarchy = [
+                        'foo.html.twig' => '<foo-template>',
+                        'bar.html.twig' => '<bar-template>',
+                    ];
+
+                    if (null !== ($resolved = $hierarchy[$name] ?? null)) {
+                        return $resolved;
+                    }
+
+                    throw new \LogicException('Template not found in hierarchy.');
+                }
+            )
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
@@ -69,14 +79,25 @@ class DynamicIncludeTokenParserTest extends TestCase
             '<foo-template>',
         ];
 
-        yield 'multiple includes' => [
+        yield 'conditional includes' => [
             "{% include x == 1 ? '@Contao/foo.html.twig' : '@Foo/bar.html.twig' %}",
             '<foo-template>', '@Foo/bar.html.twig',
         ];
 
-        yield 'multiple Contao includes' => [
+        yield 'conditional Contao includes' => [
             "{% include x == 1 ? '@Contao/foo.html.twig' : '@Contao/bar.html.twig' %}",
             '<foo-template>', '<bar-template>',
+        ];
+
+        yield 'optional includes' => [
+            "{% include ['a.html.twig', 'b.html.twig'] %}",
+            'a.html.twig', 'b.html.twig',
+        ];
+
+        yield 'optional Contao includes' => [
+            // Files missing in the hierarchy should be ignored in this case
+            "{% include ['@Contao/missing.html.twig', '@Contao/bar.html.twig'] %}",
+            '@Contao/missing.html.twig', '<bar-template>',
         ];
     }
 
@@ -94,7 +115,9 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
 
-        $source = new Source("{% include '@Contao/foo' %}", 'template.html.twig');
+        // Use a conditional expression here, so that we can test rethrowing
+        // exceptions in case the parent node is not an ArrayExpression
+        $source = new Source("{% include true ? '@Contao/foo' : '' %}", 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
 
