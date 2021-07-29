@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
@@ -599,13 +598,7 @@ class TwigMacrosTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([
-            new ContaoExtension(
-                $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoFramework::class)
-            ),
-        ]);
+        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
 
         if (null === $responseContextAccessor) {
             $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);

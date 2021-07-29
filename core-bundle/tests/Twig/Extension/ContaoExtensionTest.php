@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
@@ -125,11 +124,7 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension(
-            $environment,
-            $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoFramework::class),
-        );
+        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -212,6 +207,10 @@ class ContaoExtensionTest extends TestCase
             $environment = $this->createMock(Environment::class);
         }
 
+        if (null === $hierarchy) {
+            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        }
+
         $environment
             ->method('getExtension')
             ->willReturnMap([
@@ -220,10 +219,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension(
-            $environment,
-            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoFramework::class),
-        );
+        return new ContaoExtension($environment, $hierarchy);
     }
 }
