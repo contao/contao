@@ -512,6 +512,24 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
+	public function getUserIdentifier(): string
+	{
+		if (null === $this->username)
+		{
+			throw new \RuntimeException('Missing username in User object');
+		}
+
+		if (!\is_string($this->username))
+		{
+			throw new \RuntimeException(sprintf('Invalid type "%s" for username', \gettype($this->username)));
+		}
+
+		return $this->username;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getPassword()
 	{
 		return $this->password;
