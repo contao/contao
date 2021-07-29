@@ -121,7 +121,7 @@ class AuthenticationProviderTest extends TestCase
         $provider = $this->createTwoFactorProvider($authProvider, $userChecker);
         $hasException = false;
 
-        ClockMock::withClockMock(1142164800);
+        ClockMock::withClockMock(true);
 
         try {
             $provider->authenticate($token);
