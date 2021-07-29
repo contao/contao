@@ -54,12 +54,14 @@ final class ContaoExtension extends AbstractExtension
     public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
         $this->environment = $environment;
+        $this->hierarchy = $hierarchy;
+
+        $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [(new ContaoEscaper()), '__invoke']);
-
-        $this->hierarchy = $hierarchy;
+        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
+        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
         // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
