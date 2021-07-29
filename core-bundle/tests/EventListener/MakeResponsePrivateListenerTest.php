@@ -125,7 +125,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setMaxAge(600);
 
         $request = new Request();
-        $request->headers->set('Authorization', null); // @phpstan-ignore-line
+        $request->headers->set('Authorization', null);
 
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
