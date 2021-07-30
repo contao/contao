@@ -47,8 +47,10 @@ class AvailableTransports
      *
      * @return array<string, string>
      *
-     * @Callback(table="tl_page", target="fields.mailerTransport.options")
-     * @Callback(table="tl_form", target="fields.mailerTransport.options")
+     * @Callback(table="tl_page",    target="fields.mailerTransport.options")
+     * @Callback(table="tl_form",    target="fields.mailerTransport.options")
+     * @Callback(table="tl_content", target="fields.form_mailerTransport.options")
+     * @Callback(table="tl_module",  target="fields.form_mailerTransport.options")
      */
     public function getTransportOptions(): array
     {

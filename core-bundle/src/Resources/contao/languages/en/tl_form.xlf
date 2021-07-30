@@ -32,6 +32,18 @@
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
       </trans-unit>
+      <trans-unit id="tl_form.from.0">
+        <source>Sender address</source>
+      </trans-unit>
+      <trans-unit id="tl_form.from.1">
+        <source>This address will be used as the FROM address. If empty, the global admin address will be used instead</source>
+      </trans-unit>
+      <trans-unit id="tl_form.fromName.0">
+        <source>Sender name</source>
+      </trans-unit>
+      <trans-unit id="tl_form.fromName.1">
+        <source></source>
+      </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
       </trans-unit>

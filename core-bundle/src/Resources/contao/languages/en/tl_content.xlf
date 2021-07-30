@@ -440,6 +440,12 @@
       <trans-unit id="tl_content.form.1">
         <source>Please select a form.</source>
       </trans-unit>
+      <trans-unit id="tl_content.form_overwriteSettings.0">
+        <source>Overwrite form configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_content.form_overwriteSettings.1">
+        <source>Overwrite some form configuration values</source>
+      </trans-unit>
       <trans-unit id="tl_content.module.0">
         <source>Module</source>
       </trans-unit>
@@ -529,6 +535,9 @@
       </trans-unit>
       <trans-unit id="tl_content.include_legend">
         <source>Include settings</source>
+      </trans-unit>
+      <trans-unit id="tl_content.form_legend">
+        <source>Form settings</source>
       </trans-unit>
       <trans-unit id="tl_content.protected_legend">
         <source>Access protection</source>

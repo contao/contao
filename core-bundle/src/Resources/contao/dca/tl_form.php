@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'exclude'                 => true,
 			'inputType'               => 'pageTree',
 			'foreignKey'              => 'tl_page.title',
-			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
+			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr', 'formOverwritable'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
@@ -175,7 +175,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true, 'formOverwritable'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'recipient' => array
@@ -183,7 +183,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>1022, 'rgxp'=>'emails', 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>1022, 'rgxp'=>'emails', 'tl_class'=>'w50 clr', 'formOverwritable'=>true),
 			'sql'                     => "varchar(1022) NOT NULL default ''"
 		),
 		'subject' => array
@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50', 'formOverwritable'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'format' => array
@@ -267,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('nospace'=>true, 'doNotCopy'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
+			'eval'                    => array('nospace'=>true, 'doNotCopy'=>true, 'maxlength'=>64, 'tl_class'=>'w50', 'formOverwritable'=>true),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'allowTags' => array

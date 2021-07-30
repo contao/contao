@@ -402,3 +402,7 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
+
+    Contao\CoreBundle\EventListener\DataContainer\OverwriteFormSettingsListener:
+        arguments:
+            - '@contao.framework'

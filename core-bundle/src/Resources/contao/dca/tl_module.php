@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'defineRoot', 'protected', 'reg_assignDir', 'reg_activate'),
+		'__selector__'                => array('type', 'defineRoot', 'protected', 'reg_assignDir', 'reg_activate', 'form_overwriteSettings'),
 		'default'                     => '{title_legend},name,type',
 		'navigation'                  => '{title_legend},name,headline,type;{nav_legend},levelOffset,showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'customnav'                   => '{title_legend},name,headline,type;{nav_legend},pages,showProtected;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
@@ -115,8 +115,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'registration'                => '{title_legend},name,headline,type;{config_legend},editable,newsletters,disableCaptcha;{account_legend},reg_groups,reg_allowLogin,reg_assignDir;{redirect_legend},jumpTo;{email_legend},reg_activate;{template_legend:hide},memberTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'changePassword'              => '{title_legend},name,headline,type;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'lostPassword'                => '{title_legend},name,headline,type;{config_legend},reg_skipName,disableCaptcha;{redirect_legend},jumpTo;{email_legend:hide},reg_jumpTo,reg_password;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
-		'closeAccount'                => '{title_legend},name,headline,type;{config_legend},reg_close,reg_deleteDir;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
-		'form'                        => '{title_legend},name,headline,type;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
+		'closeAccount'                => '{title_legend},name,headline,type;{config_legend},reg_close;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'form'                        => '{title_legend},name,headline,type;{include_legend},form;{form_legend},form_overwriteSettings;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'search'                      => '{title_legend},name,headline,type;{config_legend},queryType,fuzzy,contextLength,minKeywordLength,perPage,searchType;{redirect_legend:hide},jumpTo;{reference_legend:hide},pages;{template_legend:hide},searchTpl,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'articlelist'                 => '{title_legend},name,headline,type;{config_legend},skipFirst,inColumn;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
@@ -132,7 +132,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'defineRoot'                  => 'rootPage',
 		'protected'                   => 'groups',
 		'reg_assignDir'               => 'reg_homeDir',
-		'reg_activate'                => 'reg_jumpTo,reg_text'
+		'reg_activate'                => 'reg_jumpTo,reg_text',
+		'form_overwriteSettings'      => '',
 	),
 
 	// Fields
@@ -322,6 +323,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'form_overwriteSettings' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'queryType' => array
 		(

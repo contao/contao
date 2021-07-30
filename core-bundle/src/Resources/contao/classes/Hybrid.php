@@ -157,6 +157,8 @@ abstract class Hybrid extends Frontend
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
 		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
 		$this->strColumn = $strColumn;
+
+		$this->overwriteConfigFromParent();
 	}
 
 	/**
@@ -294,6 +296,27 @@ abstract class Hybrid extends Frontend
 		}
 
 		return true;
+	}
+
+	private function overwriteConfigFromParent(): void
+	{
+		if ($this->objParent->form_overwriteSettings ?? false)
+		{
+			// Overwrite form configuration
+			foreach ($this->objParent->row() as $key => $value)
+			{
+				if (!str_starts_with($key, 'form_'))
+				{
+					continue;
+				}
+
+				if ($value)
+				{
+					$field = str_replace('form_', '', $key);
+					$this->{$field} = $this->objParent->{$key};
+				}
+			}
+		}
 	}
 
 	/**

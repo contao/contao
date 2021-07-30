@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource'),
+		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource', 'form_overwriteSettings'),
 		'default'                     => '{type_legend},type',
 		'headline'                    => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'text'                        => '{type_legend},type,headline;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'article'                     => '{type_legend},type;{include_legend},articleAlias;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
 		'teaser'                      => '{type_legend},type;{include_legend},article;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'form'                        => '{type_legend},type,headline;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'form'                        => '{type_legend},type,headline;{include_legend},form;{form_legend},form_overwriteSettings;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'module'                      => '{type_legend},type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
@@ -159,7 +159,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'protected'                   => 'groups',
 		'splashImage'                 => 'singleSRC,size',
 		'markdownSource_sourceText'   => 'code',
-		'markdownSource_sourceFile'   => 'singleSRC'
+		'markdownSource_sourceFile'   => 'singleSRC',
+		'form_overwriteSettings'      => '',
 	),
 
 	// Fields
@@ -808,6 +809,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				array('tl_content', 'editForm')
 			),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'form_overwriteSettings' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'module' => array
 		(

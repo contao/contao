@@ -27,12 +27,14 @@ class AvailableTransportsTest extends TestCase
         $annotationReader = new AnnotationReader();
         $annotations = $annotationReader->getMethodAnnotations(new \ReflectionMethod($service, 'getTransportOptions'));
 
-        $this->assertCount(2, $annotations);
+        $this->assertCount(4, $annotations);
 
-        [$pageCallback, $formCallback] = $annotations;
+        [$pageCallback, $formCallback, $contentFallback, $moduleFallback] = $annotations;
 
         $this->assertInstanceOf(Callback::class, $pageCallback);
         $this->assertInstanceOf(Callback::class, $formCallback);
+        $this->assertInstanceOf(Callback::class, $contentFallback);
+        $this->assertInstanceOf(Callback::class, $moduleFallback);
 
         $this->assertSame(
             [
@@ -50,6 +52,24 @@ class AvailableTransportsTest extends TestCase
                 'priority' => null,
             ],
             get_object_vars($formCallback)
+        );
+
+        $this->assertSame(
+            [
+                'table' => 'tl_content',
+                'target' => 'fields.form_mailerTransport.options',
+                'priority' => null,
+            ],
+            get_object_vars($contentFallback)
+        );
+
+        $this->assertSame(
+            [
+                'table' => 'tl_module',
+                'target' => 'fields.form_mailerTransport.options',
+                'priority' => null,
+            ],
+            get_object_vars($moduleFallback)
         );
     }
 
