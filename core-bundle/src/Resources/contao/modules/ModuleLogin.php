@@ -94,8 +94,6 @@ class ModuleLogin extends Module
 
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getCurrentRequest();
-
-		/** @var AuthenticationException|null $exception */
 		$exception = null;
 		$lastUsername = '';
 
