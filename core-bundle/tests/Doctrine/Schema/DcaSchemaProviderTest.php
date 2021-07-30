@@ -723,7 +723,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertCount(0, $schema->getTables());
     }
 
-    public function testAppendsSchemaIgnoresExistingMetadataDefinitions(): void
+    public function testAppendToSchemaIgnoresExistingMetadataDefinitions(): void
     {
         $dcaMetadata = [
             'tl_page' => [
@@ -741,6 +741,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
 
         $entityMetadata = new ClassMetadata('Page');
+
         (new ClassMetadataBuilder($entityMetadata))
             ->setTable('tl_page')
             ->addField('id', 'integer')
@@ -753,11 +754,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $manager = $registry->getManager();
         $schema = (new SchemaTool($manager))->getSchemaFromMetadata($manager->getMetadataFactory()->getAllMetadata());
 
-        $provider = new DcaSchemaProvider(
-            $this->mockContaoFrameworkWithInstaller($dcaMetadata),
-            $registry
-        );
-
+        $provider = new DcaSchemaProvider($this->mockContaoFrameworkWithInstaller($dcaMetadata), $registry);
         $provider->appendToSchema($schema);
 
         $columns = $schema->getTable('tl_page')->getColumns();
