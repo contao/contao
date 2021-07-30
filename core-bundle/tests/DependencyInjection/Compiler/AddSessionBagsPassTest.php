@@ -25,7 +25,8 @@ class AddSessionBagsPassTest extends TestCase
     public function testAddsTheSessionBags(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('session', new Definition(Session::class));
+        $container->setDefinition('session.foobar', new Definition(Session::class));
+        $container->setAlias('session', 'session.foobar');
         $container->setDefinition('contao.session.contao_backend', new Definition(ArrayAttributeBag::class));
         $container->setDefinition('contao.session.contao_frontend', new Definition(ArrayAttributeBag::class));
 
@@ -50,6 +51,6 @@ class AddSessionBagsPassTest extends TestCase
         $pass = new AddSessionBagsPass();
         $pass->process($container);
 
-        $this->assertFalse($container->hasDefinition('session'));
+        $this->assertFalse($container->has('session'));
     }
 }
