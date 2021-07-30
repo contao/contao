@@ -146,7 +146,6 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
 
 			// Continue if the class does not exist

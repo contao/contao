@@ -132,7 +132,6 @@ class ModuleRegistration extends Module
 				'required' => true
 			);
 
-			/** @var FormCaptcha $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
 
 			// Fallback to default if the class is not defined
@@ -187,7 +186,6 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
 
 			// Continue if the class is not defined

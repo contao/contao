@@ -601,20 +601,40 @@ class BackendUser extends User
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function serialize()
 	{
-		return serialize(array('admin' => $this->admin, 'amg' => $this->amg, 'parent' => parent::serialize()));
+		$data = $this->__serialize();
+		$data['parent'] = serialize($data['parent']);
+
+		return serialize($data);
+	}
+
+	public function __serialize(): array
+	{
+		return array('admin' => $this->admin, 'amg' => $this->amg, 'parent' => parent::__serialize());
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.9 to be removed in Contao 5.0.
 	 */
 	public function unserialize($serialized)
 	{
 		$data = unserialize($serialized, array('allowed_classes'=>false));
 
+		if (!isset($data['parent']))
+		{
+			return;
+		}
+
+		$data['parent'] = unserialize($data['parent'], array('allowed_classes'=>false));
+
+		$this->__unserialize($data);
+	}
+
+	public function __unserialize(array $data): void
+	{
 		if (array_keys($data) != array('admin', 'amg', 'parent'))
 		{
 			return;
@@ -622,7 +642,7 @@ class BackendUser extends User
 
 		list($this->admin, $this->amg, $parent) = array_values($data);
 
-		parent::unserialize($parent);
+		parent::__unserialize($parent);
 	}
 
 	/**

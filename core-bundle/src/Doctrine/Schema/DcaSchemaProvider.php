@@ -66,7 +66,7 @@ class DcaSchemaProvider
         $config = $this->getSqlDefinitions();
 
         foreach ($config as $tableName => $definitions) {
-            $table = $schema->createTable($tableName);
+            $table = $schema->hasTable($tableName) ? $schema->getTable($tableName) : $schema->createTable($tableName);
 
             // Parse the table options first
             if (isset($definitions['TABLE_OPTIONS'])) {
@@ -86,6 +86,10 @@ class DcaSchemaProvider
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
+                    if ($table->hasColumn($fieldName)) {
+                        continue;
+                    }
+
                     $options = $config;
                     unset($options['name'], $options['type']);
 
@@ -100,12 +104,20 @@ class DcaSchemaProvider
 
             if (isset($definitions['TABLE_FIELDS'])) {
                 foreach ($definitions['TABLE_FIELDS'] as $fieldName => $sql) {
+                    if ($table->hasColumn($fieldName)) {
+                        continue;
+                    }
+
                     $this->parseColumnSql($table, $fieldName, substr($sql, \strlen($fieldName) + 3));
                 }
             }
 
             if (isset($definitions['TABLE_CREATE_DEFINITIONS'])) {
                 foreach ($definitions['TABLE_CREATE_DEFINITIONS'] as $keyName => $sql) {
+                    if ($table->hasIndex($keyName)) {
+                        continue;
+                    }
+
                     $this->parseIndexSql($table, $keyName, strtolower($sql));
                 }
             }

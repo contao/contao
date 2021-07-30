@@ -213,7 +213,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description);
+		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description ?? '');
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
@@ -589,7 +589,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add the user <head> tags
-		if ($strHead = trim($objLayout->head))
+		if ($strHead = trim($objLayout->head ?? ''))
 		{
 			$strHeadTags .= $strHead . "\n";
 		}

@@ -543,11 +543,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function serialize()
 	{
-		$data = array
+		return serialize($this->__serialize());
+	}
+
+	public function __serialize(): array
+	{
+		return array
 		(
 			'id' => $this->id,
 			'username' => $this->username,
@@ -556,17 +561,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'start' => $this->start,
 			'stop' => $this->stop
 		);
-
-		return serialize($data);
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function unserialize($serialized)
 	{
-		$data = unserialize($serialized, array('allowed_classes'=>false));
+		$this->__unserialize(unserialize($serialized, array('allowed_classes'=>false)));
+	}
 
+	public function __unserialize(array $data): void
+	{
 		if (array_keys($data) != array('id', 'username', 'password', 'disable', 'start', 'stop'))
 		{
 			return;
@@ -637,8 +643,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		{
 			return false;
 		}
-
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0. Use the "contao.import_user" event instead.');
 
 		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 		{

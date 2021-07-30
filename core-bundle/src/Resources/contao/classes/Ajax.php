@@ -296,7 +296,6 @@ class Ajax extends Backend
 					throw new BadRequestHttpException('Invalid field name: ' . $strField);
 				}
 
-				$objRow = null;
 				$varValue = null;
 
 				// Load the value

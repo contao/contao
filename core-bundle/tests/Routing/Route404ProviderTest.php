@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Route404Provider;
@@ -384,88 +383,6 @@ class Route404ProviderTest extends TestCase
             ['id' => 17, 'type' => 'error_404', 'rootLanguage' => 'en', 'urlPrefix' => ''],
             ['id' => 42, 'type' => 'error_404', 'rootLanguage' => 'de', 'urlPrefix' => ''],
         ];
-    }
-
-    public function testIgnoresRoutesWithoutRootId(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 17,
-                'type' => 'error_404',
-            ]
-        );
-
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findByType']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findByType')
-            ->with('error_404')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-        $request = $this->mockRequestWithPath('/');
-        $candidates = $this->createMock(Candidates::class);
-
-        $provider = new Route404Provider(
-            $framework,
-            $candidates,
-            $this->createMock(PageRegistry::class)
-        );
-
-        $routes = $provider->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
-    public function testIgnoresPagesWithNoRootPageFoundException(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'id' => 17,
-                'rootId' => 1,
-                'type' => 'error_404',
-            ]
-        );
-
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-            ->willThrowException(new NoRootPageFoundException())
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findByType']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findByType')
-            ->with('error_404')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-        $request = $this->mockRequestWithPath('/');
-        $candidates = $this->createMock(Candidates::class);
-
-        $provider = new Route404Provider(
-            $framework,
-            $candidates,
-            $this->createMock(PageRegistry::class)
-        );
-
-        $routes = $provider->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
     }
 
     /**

@@ -394,6 +394,12 @@ abstract class Controller extends System
 			return '';
 		}
 
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')', 'contao.layout');
+		}
+
 		$objRow->typePrefix = 'mod_';
 
 		/** @var Module $objModule */
@@ -413,6 +419,11 @@ abstract class Controller extends System
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch))
+		{
+			$objStopwatch->stop('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
@@ -493,6 +504,12 @@ abstract class Controller extends System
 			}
 		}
 
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start('contao.article (ID ' . $objRow->id . ')', 'contao.layout');
+		}
+
 		$objArticle = new ModuleArticle($objRow, $strColumn);
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
@@ -500,6 +517,11 @@ abstract class Controller extends System
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch))
+		{
+			$objStopwatch->stop('contao.article (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
@@ -552,6 +574,12 @@ abstract class Controller extends System
 
 		$objRow->typePrefix = 'ce_';
 
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')', 'contao.layout');
+		}
+
 		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
 		$strBuffer = $objElement->generate();
@@ -569,6 +597,11 @@ abstract class Controller extends System
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch))
+		{
+			$objStopwatch->stop('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;

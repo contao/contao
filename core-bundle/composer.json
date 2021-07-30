@@ -101,7 +101,7 @@
         "symfony/twig-bundle": "4.4.* || 5.2.*",
         "symfony/var-dumper": "4.4.* || 5.2.*",
         "symfony/yaml": "4.4.* || 5.2.*",
-        "terminal42/escargot": "^1.0",
+        "terminal42/escargot": "^1.2",
         "terminal42/service-annotation-bundle": "^1.1",
         "true/punycode": "^2.1",
         "twig/twig": "^2.11.3",

@@ -587,7 +587,7 @@ class tl_files extends Backend
 	 * @param string                  $varValue
 	 * @param DataContainer|DC_Folder $dc
 	 *
-	 * @return mixed
+	 * @return string
 	 *
 	 * @throws Exception
 	 */

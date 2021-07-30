@@ -124,7 +124,7 @@ class ModuleArticle extends Module
 		$this->Template->date = Date::parse($objPage->datimFormat, $this->tstamp);
 
 		// Clean the RTE output
-		$this->teaser = StringUtil::toHtml5($this->teaser);
+		$this->teaser = StringUtil::toHtml5($this->teaser ?? '');
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)

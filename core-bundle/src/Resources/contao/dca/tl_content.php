@@ -699,7 +699,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_showinfo', 'youtube_nocookie'),
+			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_nocookie'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"

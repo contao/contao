@@ -48,8 +48,6 @@ class ContaoTableProcessor implements ProcessorInterface
 
     /**
      * Move the Contao context into the "extra" section.
-     *
-     * @return array<string,array<string,mixed>>
      */
     public function __invoke(array $records): array
     {
