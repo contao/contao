@@ -390,39 +390,18 @@ class News extends Frontend
 		// Initialize the cache
 		self::$arrUrlCache[$strCacheKey] = null;
 
-		switch ($objItem->source)
+		if ('external' === $objItem->source)
 		{
-			// Link to an external page
-			case 'external':
-				if (0 === strncmp($objItem->url, 'mailto:', 7))
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objItem->url);
-				}
-				else
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
-				}
-				break;
+			$url = self::replaceInsertTags($objItem->url);
 
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objItem->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-
-					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
-				}
-				break;
+			if (0 === strncmp($objItem->url, 'mailto:', 7))
+			{
+				self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($url);
+			}
+			else
+			{
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
+			}
 		}
 
 		// Link to the default page
@@ -462,36 +441,23 @@ class News extends Frontend
 	 */
 	protected function getLink($objItem, $strUrl, $strBase='')
 	{
-		switch ($objItem->source)
+		$makeAbsolute = static function (string $url) use ($strBase)
 		{
-			// Link to an external page
-			case 'external':
-				return $objItem->url;
+			if ($strBase && !preg_match('#^https?://#', $url))
+			{
+				return $strBase . $url;
+			}
 
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objItem->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					return $objTarget->getAbsoluteUrl();
-				}
-				break;
+			return $url;
+		};
 
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objItem->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					/** @var PageModel $objPid */
-					return StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
-				}
-				break;
+		if ('external' === $objItem->source)
+		{
+			return $makeAbsolute(self::replaceInsertTags($objItem->url));
 		}
 
 		// Backwards compatibility (see #8329)
-		if ($strBase && !preg_match('#^https?://#', $strUrl))
-		{
-			$strUrl = $strBase . $strUrl;
-		}
+		$strUrl = $makeAbsolute($strUrl);
 
 		// Link to the default page
 		return sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));

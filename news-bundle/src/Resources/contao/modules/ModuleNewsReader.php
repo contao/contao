@@ -100,31 +100,14 @@ class ModuleNewsReader extends ModuleNews
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		// Redirect if the news item has a target URL (see #1498)
-		switch ($objArticle->source) {
-			case 'internal':
-				if ($page = PageModel::findPublishedById($objArticle->jumpTo))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl(), 301);
-				}
+		if ('external' === $objArticle->source)
+		{
+			if ($url = News::generateNewsUrl($objArticle, false, true))
+			{
+				throw new RedirectResponseException($url, 301);
+			}
 
-				throw new InternalServerErrorException('Invalid "jumpTo" value or target page not public');
-
-			case 'article':
-				if (($article = ArticleModel::findByPk($objArticle->articleId)) && ($page = PageModel::findPublishedById($article->pid)))
-				{
-					throw new RedirectResponseException($page->getAbsoluteUrl('/articles/' . ($article->alias ?: $article->id)), 301);
-				}
-
-				throw new InternalServerErrorException('Invalid "articleId" value or target page not public');
-
-			case 'external':
-				if ($objArticle->url)
-				{
-					throw new RedirectResponseException($objArticle->url, 301);
-				}
-
-				throw new InternalServerErrorException('Empty target URL');
+			throw new InternalServerErrorException('Empty target URL');
 		}
 
 		// Set the default template
