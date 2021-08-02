@@ -58,7 +58,6 @@ class DynamicIncludeTokenParserTest extends TestCase
         $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
 
         $source = new Source($code, 'template.html.twig');
-
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $serializedTree = (new Parser($environment))->parse($tokenStream)->__toString();
 

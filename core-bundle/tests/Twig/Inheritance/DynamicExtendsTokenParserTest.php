@@ -67,14 +67,10 @@ class DynamicExtendsTokenParserTest extends TestCase
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
-        $serializedParentNode = (new Parser($environment))
-            ->parse($tokenStream)
-            ->getNode('parent')
-            ->__toString()
-        ;
+        $serializedParentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
 
         foreach ($expectedStrings as $expectedString) {
-            $this->assertStringContainsString($expectedString, $serializedParentNode);
+            $this->assertStringContainsString($expectedString, (string) $serializedParentNode);
         }
     }
 
@@ -112,7 +108,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         ];
     }
 
-    public function testThrowsWhenExtendingAnInvalidTemplate(): void
+    public function testFailsWhenExtendingAnInvalidTemplate(): void
     {
         $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $templateHierarchy
