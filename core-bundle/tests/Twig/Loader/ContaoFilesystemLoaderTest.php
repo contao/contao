@@ -421,6 +421,7 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $expectedChains = [
             'text' => [
+                $themePath = Path::join($projectDir, '/templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
                 $globalPath = Path::join($projectDir, '/templates/text.html.twig') => '@Contao_Global/text.html.twig',
                 $appPath = Path::join($projectDir, '/contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
                 $barPath = Path::join($projectDir, '/vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
@@ -434,8 +435,15 @@ class ContaoFilesystemLoaderTest extends TestCase
         // Full hierarchy
         $this->assertSame(
             $expectedChains,
-            $loader->getInheritanceChains(),
+            $loader->getInheritanceChains('my_theme'),
             'get all chains'
+        );
+
+        // Get first with theme
+        $this->assertSame(
+            '@Contao_Theme_my_theme/text.html.twig',
+            $loader->getFirst('text', 'my_theme'),
+            'get first template in chain (theme)'
         );
 
         // Get first
@@ -446,6 +454,12 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
 
         // Next element by path
+        $this->assertSame(
+            '@Contao_Global/text.html.twig',
+            $loader->getDynamicParent('text.html.twig', $themePath, 'my_theme'),
+            'chain: theme -> global'
+        );
+
         $this->assertSame(
             '@Contao_Global/text.html.twig',
             $loader->getDynamicParent('text.html.twig', 'other/template.html.twig'),
@@ -530,6 +544,60 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->expectExceptionMessage("The template 'foo' could not be found in the template hierarchy.");
 
         $loader->getFirst('foo.html.twig');
+    }
+
+    /**
+     * @dataProvider provideThemeAliases
+     */
+    public function testGetInheritanceChains(?string $themeAlias, array $expectedChains): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $locator = new TemplateLocator(
+            $projectDir,
+            ['App' => 'class'],
+            ['App' => ['path' => Path::join($projectDir, 'contao')]],
+        );
+
+        $loader = $this->getContaoFilesystemLoader(null, $locator);
+        $loader->addPath(Path::join($projectDir, 'templates/my/theme'), 'Contao_Theme_my_theme', true);
+        $loader->addPath(Path::join($projectDir, 'templates'), 'Contao_Global', true);
+        $loader->addPath(Path::join($projectDir, 'templates/my'), 'Contao_Theme_my', true);
+        $loader->addPath(Path::join($projectDir, 'src/Resources/contao/templates'), 'Contao_App', true);
+
+        $this->assertSame($expectedChains, $loader->getInheritanceChains($themeAlias));
+    }
+
+    public function provideThemeAliases(): \Generator
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        yield 'no theme alias' => [
+            null,
+            [
+                'text' => [Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig'],
+                'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
+            ],
+        ];
+
+        yield 'non-existing alias or no theme templates' => [
+            'foo-theme',
+            [
+                'text' => [Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig'],
+                'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
+            ],
+        ];
+
+        yield 'existing theme alias and templates' => [
+            'my_theme',
+            [
+                'text' => [
+                    Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
+                    Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                ],
+                'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
+            ],
+        ];
     }
 
     /**

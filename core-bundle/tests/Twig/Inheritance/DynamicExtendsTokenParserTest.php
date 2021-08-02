@@ -34,13 +34,27 @@ class DynamicExtendsTokenParserTest extends TestCase
     /**
      * @dataProvider provideSources
      */
-    public function testHandlesContaoExtends(string $code, string $expectedParent): void
+    public function testHandlesContaoExtends(string $code, string ...$expectedStrings): void
     {
         $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $templateHierarchy
             ->method('getDynamicParent')
-            ->with('foo.html.twig', '/path/to/the/template.html.twig')
-            ->willReturn('<parent>')
+            ->willReturnCallback(
+                function (string $name, string $path) {
+                    $this->assertSame('/path/to/the/template.html.twig', $path);
+
+                    $hierarchy = [
+                        'foo.html.twig' => '<foo-parent>',
+                        'bar.html.twig' => '<bar-parent>',
+                    ];
+
+                    if (null !== ($resolved = $hierarchy[$name] ?? null)) {
+                        return $resolved;
+                    }
+
+                    throw new \LogicException('Template not found in hierarchy.');
+                }
+            )
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
@@ -53,11 +67,11 @@ class DynamicExtendsTokenParserTest extends TestCase
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
+        $serializedParentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
 
-        $node = (new Parser($environment))->parse($tokenStream);
-        $parent = $node->getNode('parent');
-
-        $this->assertSame($expectedParent, $parent->getAttribute('value'));
+        foreach ($expectedStrings as $expectedString) {
+            $this->assertStringContainsString($expectedString, (string) $serializedParentNode);
+        }
     }
 
     public function provideSources(): \Generator
@@ -69,8 +83,55 @@ class DynamicExtendsTokenParserTest extends TestCase
 
         yield 'Contao extend' => [
             "{% extends '@Contao/foo.html.twig' %}",
-            '<parent>',
+            '<foo-parent>',
         ];
+
+        yield 'conditional extend' => [
+            "{% extends x == 1 ? '@Foo/bar.html.twig' : '@Foo/baz.html.twig' %}",
+            '@Foo/bar.html.twig', '@Foo/baz.html.twig',
+        ];
+
+        yield 'conditional Contao extend' => [
+            "{% extends x == 1 ? '@Contao/foo.html.twig' : '@Contao/bar.html.twig' %}",
+            '<foo-parent>', '<bar-parent>',
+        ];
+
+        yield 'optional extend' => [
+            "{% extends ['a.html.twig', 'b.html.twig'] %}",
+            'a.html.twig', 'b.html.twig',
+        ];
+
+        yield 'optional Contao extend' => [
+            // Files missing in the hierarchy should be ignored in this case
+            "{% extends ['@Contao/missing.html.twig', '@Contao/bar.html.twig']  %}",
+            '@Contao/missing.html.twig', '<bar-parent>',
+        ];
+    }
+
+    public function testFailsWhenExtendingAnInvalidTemplate(): void
+    {
+        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $templateHierarchy
+            ->method('getDynamicParent')
+            ->with('foo')
+            ->willThrowException(
+                new \LogicException('Template not found in hierarchy.')
+            )
+        ;
+
+        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment->addTokenParser(new DynamicExtendsTokenParser($templateHierarchy));
+
+        // Use a conditional expression here, so that we can test rethrowing
+        // exceptions in case the parent node is not an ArrayExpression
+        $source = new Source("{% extends true ? '@Contao/foo' : '' %}", 'template.html.twig');
+        $tokenStream = (new Lexer($environment))->tokenize($source);
+        $parser = new Parser($environment);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Template not found in hierarchy.');
+
+        $parser->parse($tokenStream);
     }
 
     /**
