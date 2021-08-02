@@ -52,6 +52,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -93,6 +94,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(FrameworkBundle::class),
             BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class]),
             BundleConfig::create(TwigBundle::class),
+            BundleConfig::create(TwigExtraBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(DoctrineBundle::class),
             BundleConfig::create(LexikMaintenanceBundle::class),
