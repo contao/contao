@@ -278,12 +278,6 @@
       <trans-unit id="tl_module.rss_template.1">
         <source>Here you can select the feed template.</source>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
       </trans-unit>

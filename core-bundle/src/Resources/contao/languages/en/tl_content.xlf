@@ -284,12 +284,6 @@
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
       </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of items</source>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
-      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
       </trans-unit>
