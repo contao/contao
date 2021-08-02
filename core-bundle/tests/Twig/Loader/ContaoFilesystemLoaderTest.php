@@ -560,7 +560,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
 
         $loader = $this->getContaoFilesystemLoader(null, $locator);
-
         $loader->addPath(Path::join($projectDir, 'templates/my/theme'), 'Contao_Theme_my_theme', true);
         $loader->addPath(Path::join($projectDir, 'templates'), 'Contao_Global', true);
         $loader->addPath(Path::join($projectDir, 'templates/my'), 'Contao_Theme_my', true);
