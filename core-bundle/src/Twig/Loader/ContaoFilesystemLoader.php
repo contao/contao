@@ -300,9 +300,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $this->currentThemeSlug = null;
     }
 
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath): string
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeAlias = null): string
     {
-        $hierarchy = $this->getInheritanceChains();
+        $hierarchy = $this->getInheritanceChains($themeAlias);
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
@@ -320,10 +320,10 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $next;
     }
 
-    public function getFirst(string $shortNameOrIdentifier): string
+    public function getFirst(string $shortNameOrIdentifier, string $themeAlias = null): string
     {
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
-        $hierarchy = $this->getInheritanceChains();
+        $hierarchy = $this->getInheritanceChains($themeAlias);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
             throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
@@ -332,13 +332,28 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $chain[array_key_first($chain)];
     }
 
-    public function getInheritanceChains(): array
+    public function getInheritanceChains(string $themeAlias = null): array
     {
         if (null === $this->inheritanceChains) {
             $this->buildInheritanceChains();
         }
 
-        return $this->inheritanceChains;
+        $chains = $this->inheritanceChains;
+
+        foreach ($chains as $identifier => $chain) {
+            foreach ($chain as $path => $name) {
+                // Filter out theme paths that do not match the given alias.
+                if (1 === preg_match('%^@Contao_Theme_([a-zA-Z0-9_-]+)/%', $name, $matches) && $matches[1] !== $themeAlias) {
+                    unset($chains[$identifier][$path]);
+                }
+            }
+
+            if (empty($chains[$identifier])) {
+                unset($chains[$identifier]);
+            }
+        }
+
+        return $chains;
     }
 
     /**
