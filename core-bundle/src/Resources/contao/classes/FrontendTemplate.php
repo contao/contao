@@ -153,7 +153,7 @@ class FrontendTemplate extends Template
 		}
 
 		// Replace literal insert tags (see #670)
-		$this->strBuffer = str_replace(array('[{]', '[}]'), array('{{', '}}'), $this->strBuffer);
+		$this->strBuffer = preg_replace('/\[{](.*)\[}]/', '{{$1}}', $this->strBuffer);
 
 		parent::compile();
 	}
