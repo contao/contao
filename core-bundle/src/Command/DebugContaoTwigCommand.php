@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,16 +53,17 @@ class DebugContaoTwigCommand extends Command
         $this
             ->setDescription('Displays the Contao template hierarchy.')
             ->addOption('refresh', 'r', InputOption::VALUE_NONE, 'Refresh the cache.')
-            ->addOption('filter', 'f', InputOption::VALUE_OPTIONAL, 'Filter the output by an identifier or prefix.')
+            ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or alias.')
+            ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rows = [];
-        $chains = $this->hierarchy->getInheritanceChains();
+        $chains = $this->hierarchy->getInheritanceChains($this->getThemeAlias($input));
 
-        if (null !== ($prefix = $input->getOption('filter'))) {
+        if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
                 $chains,
                 static function (string $identifier) use ($prefix) {
@@ -94,5 +97,14 @@ class DebugContaoTwigCommand extends Command
         }
 
         return 0;
+    }
+
+    private function getThemeAlias(InputInterface $input): ?string
+    {
+        if (null === ($theme = $input->getOption('theme'))) {
+            return null;
+        }
+
+        return TemplateLocator::createDirectorySlug($theme);
     }
 }

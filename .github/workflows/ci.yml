@@ -39,8 +39,8 @@ jobs:
                   file: ./clover.xml
                   fail_ci_if_error: true
 
-    coding-style:
-        name: Coding Style
+    ecs:
+        name: ECS
         runs-on: ubuntu-18.04
         if: github.event_name == 'pull_request'
         steps:
@@ -59,31 +59,14 @@ jobs:
               run: |
                   composer install --no-interaction --no-progress
                   composer bin ecs install --no-interaction --no-progress
-                  composer bin phpstan install --no-interaction --no-progress
-                  composer bin psalm install --no-interaction --no-progress
 
-            - name: Check the coding standard
-              run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
+            - name: Run ECS
+              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
 
-            - name: Analyze the PHP files
-              run: |
-                  tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
-                  tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
-
-            - name: Analyze the YAML files
-              run: |
-                  python3 -m pip install --upgrade pip
-                  python3 -m pip install --upgrade setuptools wheel
-                  python3 -m pip install --upgrade yamllint
-                  /home/runner/.local/bin/yamllint .
-
-    tools:
-        name: Tools
+    ecs-legacy:
+        name: ECS Legacy
         runs-on: ubuntu-18.04
-        if: github.event_name == 'schedule'
+        if: github.event_name == 'pull_request'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -99,24 +82,81 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --no-interaction --no-progress
-                  composer bin ecs update --no-interaction --no-progress
-                  composer bin phpstan update --no-interaction --no-progress
-                  composer bin psalm update --no-interaction --no-progress
+                  composer bin ecs install --no-interaction --no-progress
 
-            - name: Check the coding standard
+            - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
                   tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
 
-            - name: Analyze the code
-              run: |
-                  tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
-                  tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
+    phpstan:
+        name: PHPStan
+        runs-on: ubuntu-18.04
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
 
-            - name: Analyze the YAML files
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin phpstan install --no-interaction --no-progress
+
+            - name: Run PHPStan
+              run: tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
+
+    psalm:
+        name: Psalm
+        runs-on: ubuntu-18.04
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin psalm install --no-interaction --no-progress
+
+            - name: Run Psalm
+              run: tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
+
+    yamllint:
+        name: YAMLlint
+        runs-on: ubuntu-18.04
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Run YAMLlint
               run: |
                   python3 -m pip install --upgrade pip
+                  python3 -m pip install --upgrade setuptools wheel
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
@@ -285,8 +325,8 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
 
-    composer:
-        name: Composer
+    dependencies:
+        name: Dependencies
         runs-on: ubuntu-18.04
         if: github.event_name != 'push'
         steps:

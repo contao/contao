@@ -26,6 +26,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -123,6 +124,8 @@ class AuthenticationProviderTest extends TestCase
         $provider = $this->createTwoFactorProvider($authProvider, $userChecker);
         $hasException = false;
 
+        ClockMock::withClockMock(true);
+
         try {
             $provider->authenticate($token);
         } catch (\Exception $e) {
@@ -145,6 +148,8 @@ class AuthenticationProviderTest extends TestCase
         } else {
             $this->assertSame(0, $user->locked);
         }
+
+        ClockMock::withClockMock(false);
     }
 
     public function invalidTwoFactorCodeProvider(): \Generator

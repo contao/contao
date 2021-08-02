@@ -37,7 +37,7 @@ abstract class DataContainer extends Backend
 {
 	/**
 	 * Current ID
-	 * @var integer
+	 * @var integer|string
 	 */
 	protected $intId;
 
@@ -324,7 +324,7 @@ abstract class DataContainer extends Backend
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$suffix = ($this instanceof DC_Folder ? md5($this->intId) : $this->intId);
+			$suffix = $this->getFormFieldSuffix();
 			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
 
 			// Calculate the current palette
@@ -1392,6 +1392,16 @@ abstract class DataContainer extends Backend
 				$this->addCtableTags($ctable, $objIds->id, $tags);
 			}
 		}
+	}
+
+	/**
+	 * Return the form field suffix
+	 *
+	 * @return integer|string
+	 */
+	protected function getFormFieldSuffix()
+	{
+		return $this->intId;
 	}
 
 	/**

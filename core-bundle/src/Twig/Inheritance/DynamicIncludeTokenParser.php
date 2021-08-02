@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Token;
@@ -41,7 +43,8 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         $expr = $this->parser->getExpressionParser()->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
-        $this->handleContaoIncludes($expr);
+        // Handle Contao includes
+        $this->traverseAndAdjustTemplateNames($expr);
 
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
@@ -65,18 +68,29 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         }
     }
 
-    private function handleContaoIncludes(Node $expr): void
+    private function traverseAndAdjustTemplateNames(Node $node): void
     {
-        TokenParserHelper::traverseConstantExpressions(
-            $expr,
-            function (Node $node): void {
-                $name = (string) $node->getAttribute('value');
-                $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
-
-                if ($name !== $adjustedName) {
-                    $node->setAttribute('value', $adjustedName);
+        if (!$node instanceof ConstantExpression) {
+            foreach ($node as $child) {
+                try {
+                    $this->traverseAndAdjustTemplateNames($child);
+                } catch (\LogicException $e) {
+                    // Allow missing templates if they are listed in an array
+                    // like "{% include ['@Contao/missing', '@Contao/existing'] %}"
+                    if (!$node instanceof ArrayExpression) {
+                        throw $e;
+                    }
                 }
             }
-        );
+
+            return;
+        }
+
+        $name = (string) $node->getAttribute('value');
+        $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
+
+        if ($name !== $adjustedName) {
+            $node->setAttribute('value', $adjustedName);
+        }
     }
 }
