@@ -962,6 +962,10 @@ services:
 
     Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
 
+    Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime:
+        arguments:
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
+
     Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:
             - ~
