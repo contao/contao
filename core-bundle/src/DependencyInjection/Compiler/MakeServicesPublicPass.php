@@ -24,6 +24,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
 {
     private const SERVICES = [
         'assets.packages',
+        'debug.stopwatch',
         'fragment.handler',
         'lexik_maintenance.driver.factory',
         'monolog.logger.contao',
