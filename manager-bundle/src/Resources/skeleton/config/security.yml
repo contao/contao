@@ -11,10 +11,6 @@ security:
             algorithm: auto
 
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
-            security: false
-
         contao_install:
             pattern: ^/contao/install$
             security: false

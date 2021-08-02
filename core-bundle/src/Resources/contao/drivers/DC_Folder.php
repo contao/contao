@@ -65,6 +65,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	protected $strUploadPath;
 
 	/**
+	 * Initial ID of the record
+	 * @var string
+	 */
+	protected $initialId;
+
+	/**
 	 * Current filemounts
 	 * @var array
 	 */
@@ -1676,6 +1682,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			foreach ($ids as $id)
 			{
 				$this->intId = $id;
+				$this->initialId = $id;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
 
 				$objModel = null;
@@ -3150,6 +3157,11 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	protected function isProtectedPath($path)
 	{
 		return !(new Folder($path))->isUnprotected();
+	}
+
+	protected function getFormFieldSuffix()
+	{
+		return md5($this->initialId ?: $this->intId);
 	}
 
 	/**

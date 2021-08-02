@@ -63,7 +63,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
         $username = $request->request->get('username');
         $password = $request->request->get('password');
 
-        if (!\is_string($username) && (!\is_object($username) || !method_exists($username, '__toString'))) {
+        if (!\is_string($username)) {
             throw new BadRequestHttpException(sprintf('The key "username" must be a string, "%s" given.', \gettype($username)));
         }
 

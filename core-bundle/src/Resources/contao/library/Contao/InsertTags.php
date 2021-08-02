@@ -953,7 +953,7 @@ class InsertTags extends Controller
 							// Add the image dimensions
 							if (isset($objFile->imageSize[0], $objFile->imageSize[1]))
 							{
-								$dimensions = ' width="' . StringUtil::specialchars($objFile->imageSize[0]) . '" height="' . StringUtil::specialchars($objFile->imageSize[1]) . '"';
+								$dimensions = ' width="' . $objFile->imageSize[0] . '" height="' . $objFile->imageSize[1] . '"';
 							}
 
 							$arrCache[$strTag] = '<img src="' . Controller::addFilesUrlTo($src) . '" ' . $dimensions . ' alt="' . StringUtil::specialchars($alt) . '"' . ($class ? ' class="' . StringUtil::specialchars($class) . '"' : '') . '>';

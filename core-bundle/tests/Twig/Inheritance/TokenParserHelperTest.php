@@ -22,37 +22,6 @@ use Twig\Node\Node;
 
 class TokenParserHelperTest extends TestCase
 {
-    /**
-     * @dataProvider provideNameInputs
-     */
-    public function testGetContaoTemplate(string $name, ?string $expected): void
-    {
-        $this->assertSame($expected, TokenParserHelper::getContaoTemplate($name));
-    }
-
-    public function provideNameInputs(): \Generator
-    {
-        yield 'extract name from Contao template' => [
-            '@Contao/foo.html.twig',
-            'foo.html.twig',
-        ];
-
-        yield 'extract name from Contao template without extension' => [
-            '@Contao/foo',
-            'foo',
-        ];
-
-        yield 'ignore other namespaces' => [
-            '@Contao_Thing/foo.html.twig',
-            null,
-        ];
-
-        yield 'ignore arbitrary input' => [
-            'foo',
-            null,
-        ];
-    }
-
     public function testTraversesNodeTree(): void
     {
         $tree = new ConditionalExpression(

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inheritance;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Twig\Error\SyntaxError;
 use Twig\Node\Node;
 use Twig\Token;
@@ -73,12 +74,14 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
         TokenParserHelper::traverseConstantExpressions(
             $expr,
             function (Node $node) use ($stream): void {
-                if (null === ($shortName = TokenParserHelper::getContaoTemplate($node->getAttribute('value')))) {
+                $parts = ContaoTwigUtil::parseContaoName($node->getAttribute('value'));
+
+                if ('Contao' !== ($parts[0] ?? null)) {
                     return;
                 }
 
                 $sourcePath = $stream->getSourceContext()->getPath();
-                $parentName = $this->hierarchy->getDynamicParent($shortName, $sourcePath);
+                $parentName = $this->hierarchy->getDynamicParent($parts[1] ?? '', $sourcePath);
 
                 // Adjust parent template according to the template hierarchy
                 $node->setAttribute('value', $parentName);
