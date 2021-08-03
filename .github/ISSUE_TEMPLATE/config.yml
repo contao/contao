@@ -1,0 +1,6 @@
+contact_links:
+    - name: Get support
+      url: https://contao.org/en/support.html
+      about: If you need help using Contao, pick a support option on contao.org
+
+blank_issues_enabled: false
