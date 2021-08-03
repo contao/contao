@@ -30,6 +30,7 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
@@ -535,7 +536,7 @@ class AuthenticationProviderTest extends TestCase
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userChecker = $this->createMock(UserCheckerInterface::class);
         $providerKey = 'contao_frontend';
-        $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
+        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
 
         if (null === $framework) {
             $framework = $this->createMock(ContaoFramework::class);
@@ -567,7 +568,7 @@ class AuthenticationProviderTest extends TestCase
             $userProvider,
             $userChecker,
             $providerKey,
-            $encoderFactory,
+            $passwordHasherFactory,
             $framework,
             $this->createMock(AuthenticationProviderInterface::class),
             $twoFactorHandler,
@@ -581,7 +582,7 @@ class AuthenticationProviderTest extends TestCase
     {
         $userProvider = $this->createMock(UserProviderInterface::class);
         $providerKey = 'contao_frontend';
-        $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
+        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
         $framework = $this->createMock(ContaoFramework::class);
 
         if (null === $twoFactorAuthenticationProvider) {
@@ -610,7 +611,7 @@ class AuthenticationProviderTest extends TestCase
             $userProvider,
             $userChecker,
             $providerKey,
-            $encoderFactory,
+            $passwordHasherFactory,
             $framework,
             $twoFactorAuthenticationProvider,
             $this->createMock(AuthenticationHandlerInterface::class),
