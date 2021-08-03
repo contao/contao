@@ -143,11 +143,11 @@ class FrontendTemplate extends Template
 			throw new \UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
 		}
 
-		/** @var PageModel $objPage */
+		/** @var PageModel|null $objPage */
 		global $objPage;
 
 		// Minify the markup
-		if ($objPage->minifyMarkup)
+		if ($objPage !== null && $objPage->minifyMarkup)
 		{
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
