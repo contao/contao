@@ -281,40 +281,6 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
-	public function __get($strKey)
-	{
-		// Lazy-load the fallback language (see contao/core#6874)
-		if ($strKey == 'rootFallbackLanguage' && $this->blnDetailsLoaded && !\array_key_exists('rootFallbackLanguage', $this->arrData))
-		{
-			$this->rootFallbackLanguage = $this->rootIsFallback ? $this->language : null;
-
-			if (!$this->rootIsFallback && ($objFallback = static::findPublishedFallbackByHostname($this->domain)) !== null)
-			{
-				$this->rootFallbackLanguage = $objFallback->language;
-			}
-		}
-
-		return parent::__get($strKey);
-	}
-
-	public function __isset($strKey)
-	{
-		if ($strKey == 'rootFallbackLanguage' && $this->blnDetailsLoaded)
-		{
-			return true;
-		}
-
-		return parent::__isset($strKey);
-	}
-
-	public function row()
-	{
-		// Load lazy properties
-		$this->__get('rootFallbackLanguage');
-
-		return parent::row();
-	}
-
 	/**
 	 * Find a published page by its ID
 	 *
@@ -1037,6 +1003,20 @@ class PageModel extends Model
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
 			$this->rootIsFallback = (bool) $objParentPage->fallback;
 			$this->rootUseSSL = $objParentPage->useSSL;
+			$this->rootFallbackLanguage = $objParentPage->language;
+
+			// Store the fallback language (see #6874)
+			if (!$objParentPage->fallback)
+			{
+				$this->rootFallbackLanguage = null;
+
+				$objFallback = static::findPublishedFallbackByHostname($objParentPage->dns);
+
+				if ($objFallback !== null)
+				{
+					$this->rootFallbackLanguage = $objFallback->language;
+				}
+			}
 		}
 
 		// No root page found
