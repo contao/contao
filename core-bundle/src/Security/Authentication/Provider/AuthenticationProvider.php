@@ -22,6 +22,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextFactoryInterfa
 use Scheb\TwoFactorBundle\Security\TwoFactor\Handler\AuthenticationHandlerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -50,10 +51,10 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      *
      * @todo Replace EncoderFactoryInterface with Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack, TrustedDeviceManagerInterface $trustedDeviceManager)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, PasswordHasherFactoryInterface $passwordHasherFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack, TrustedDeviceManagerInterface $trustedDeviceManager)
     {
         /** @phpstan-ignore-next-line */
-        parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
+        parent::__construct($userProvider, $userChecker, $providerKey, $passwordHasherFactory, false);
 
         $this->userChecker = $userChecker;
         $this->providerKey = $providerKey;

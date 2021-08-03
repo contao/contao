@@ -215,7 +215,7 @@ class ModuleRegistration extends Module
 				$objWidget->validate();
 
 				$varValue = $objWidget->value;
-				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+				$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 				// Check whether the password matches the username
 				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $encoder->isPasswordValid($varValue, $username, null))
