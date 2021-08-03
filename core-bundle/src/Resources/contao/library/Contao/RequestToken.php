@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 @trigger_error('Using the "Contao\RequestToken" class has been deprecated and will no longer work in Contao 5.0. Use the Symfony CSRF service via the container instead.', E_USER_DEPRECATED);
@@ -53,7 +54,7 @@ class RequestToken
 	{
 		$container = System::getContainer();
 
-		return $container->get('contao.csrf.token_manager')->getToken($container->getParameter('contao.csrf_token_name'))->getValue();
+		return $container->get(ContaoCsrfTokenManager::class)->getToken($container->getParameter('contao.csrf_token_name'))->getValue();
 	}
 
 	/**
@@ -87,7 +88,7 @@ class RequestToken
 
 		$container = System::getContainer();
 
-		return $container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken));
+		return $container->get(ContaoCsrfTokenManager::class)->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), $strToken));
 	}
 }
 

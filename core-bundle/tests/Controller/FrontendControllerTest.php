@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,7 +68,7 @@ class FrontendControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('parameter_bag', $bag);
-        $container->set('contao.csrf.token_manager', $tokenManager);
+        $container->set(ContaoCsrfTokenManager::class, $tokenManager);
 
         $controller = new FrontendController();
         $controller->setContainer($container);
@@ -78,7 +79,7 @@ class FrontendControllerTest extends TestCase
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
         $this->assertTrue($response->headers->hasCacheControlDirective('must-revalidate'));
         $this->assertSame('application/javascript; charset=UTF-8', $response->headers->get('Content-Type'));
-        $this->assertSame('document.querySelectorAll("input[name=REQUEST_TOKEN]").forEach(function(i){i.value="tokenValue"})', $response->getContent());
+        $this->assertSame('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value="tokenValue"})', $response->getContent());
     }
 
     public function testRunsTheCronJobsUponGetRequests(): void
