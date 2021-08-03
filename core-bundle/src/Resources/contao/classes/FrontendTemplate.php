@@ -102,7 +102,7 @@ class FrontendTemplate extends Template
 	protected function compile()
 	{
 		$this->keywords = '';
-		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
+		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS'] ?? '');
 
 		// Add the meta keywords
 		if (isset($arrKeywords[0]))
