@@ -97,8 +97,8 @@ class UserPasswordCommand extends Command
             throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
         }
 
-        $encoder = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class);
-        $hash = $encoder->hash($input->getOption('password'));
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class);
+        $hash = $passwordHasher->hash($input->getOption('password'));
 
         $affected = $this->connection->update(
             'tl_user',
