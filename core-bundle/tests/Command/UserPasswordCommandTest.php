@@ -22,8 +22,8 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class UserPasswordCommandTest extends TestCase
 {
@@ -245,21 +245,21 @@ class UserPasswordCommandTest extends TestCase
             $password = '12345678';
         }
 
-        $encoder = $this->createMock(PasswordEncoderInterface::class);
-        $encoder
-            ->method('encodePassword')
-            ->with($password, null)
+        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher
+            ->method('hash')
+            ->with($password)
             ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
         ;
 
-        $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
-        $encoderFactory
-            ->method('getEncoder')
+        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory
+            ->method('getPasswordHasher')
             ->with(BackendUser::class)
-            ->willReturn($encoder)
+            ->willReturn($passwordHasher)
         ;
 
-        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection, $encoderFactory);
+        $command = new UserPasswordCommand($this->mockContaoFramework(), $connection, $passwordHasherFactory);
         $command->setApplication(new Application());
 
         return $command;
