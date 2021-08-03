@@ -2,11 +2,6 @@
 host = https://www.transifex.com
 type = XLIFF
 
-[core-bundle.v4_12-countries]
-source_file = src/Resources/contao/languages/en/countries.xlf
-source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/countries.xlf
-
 [core-bundle.v4_12-default]
 source_file = src/Resources/contao/languages/en/default.xlf
 source_lang = en
@@ -21,11 +16,6 @@ file_filter = src/Resources/contao/languages/<lang>/exception.xlf
 source_file = src/Resources/contao/languages/en/explain.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/explain.xlf
-
-[core-bundle.v4_12-languages]
-source_file = src/Resources/contao/languages/en/languages.xlf
-source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/languages.xlf
 
 [core-bundle.v4_12-modules]
 source_file = src/Resources/contao/languages/en/modules.xlf
