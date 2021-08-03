@@ -152,7 +152,7 @@ class FrontendTemplate extends Template
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
 
-		// Replace literal insert tags (see #670)
+		// Replace literal insert tags (see #670, #3249)
 		$this->strBuffer = preg_replace_callback(
 			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
 			static function ($matches)
