@@ -853,10 +853,10 @@ abstract class Controller extends System
 			}
 		}
 
-		/** @var PageModel $objPage */
+		/** @var PageModel|null $objPage */
 		global $objPage;
 
-		$objLayout = LayoutModel::findByPk($objPage->layoutId);
+		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
 		$blnCombineScripts = ($objLayout === null) ? false : $objLayout->combineScripts;
 
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
