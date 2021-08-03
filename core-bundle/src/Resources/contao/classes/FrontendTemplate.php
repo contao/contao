@@ -153,7 +153,9 @@ class FrontendTemplate extends Template
 		}
 
 		// Replace literal insert tags (see #670)
-		$this->strBuffer = preg_replace('/\[{](.*)\[}]/', '{{$1}}', $this->strBuffer);
+		$this->strBuffer = preg_replace_callback('/<script[^>]*>.*?<\/script[^>]*>|\[[{}]\]/is', function ($matches) {
+			return $matches[0][0] === '<' ? $matches[0] : $matches[0][1] . $matches[0][1];
+		}, $this->strBuffer);
 
 		parent::compile();
 	}
