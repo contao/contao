@@ -310,8 +310,8 @@
         <target>Gruppe</target>
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
-        <source>Please select a group as the owner of the page.</source>
-        <target>Bitte wählen Sie eine Gruppe als Besitzer der Seite aus.</target>
+        <source>Please select a user group as the owner of the page.</source>
+        <target>Bitte wählen Sie eine Benutzergruppe als Besitzer der Seite aus.</target>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>

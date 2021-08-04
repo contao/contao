@@ -38,8 +38,7 @@
         <target>Nuk ka ngjarje.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
-        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</source>
-        <target>Kjo ngjarje përsëritet %s%s. Ngjarja e radhës është me &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</target>
+        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>

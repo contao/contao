@@ -372,14 +372,6 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Počet záznamů na stránku. Zadejte 0, pokud chcete vypnout zalamování stránky.</target>
       </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Celkový počet obrazků</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Zde můžete obezit celkový počet obrázků. Nastavte na 0 pro zobrazení všech</target>
-      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Řadit dle</target>
@@ -827,10 +819,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Skrýt horní lištu v náhledu</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

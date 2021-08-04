@@ -158,8 +158,7 @@
         <target>Domyślna strona grupy</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
-        <target>Domyślnie strona należy do tej samej grupy co strona nadrzędna. Jednakże, jeśli żadna grupa nie jest przydzielona, właścicielem strony zostanie grupa domyślna. Jeśli nie ma przydzielonej grupy i dodatkowo nie ma ustalonej domyślnej grupy, do strony nie zostaną zastosowane żadne ograniczenia dostępu!</target>
+        <source>Here you can select a user group as the default owner of a page.</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

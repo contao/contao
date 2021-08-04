@@ -1291,6 +1291,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License</source>
+        <target>ライセンス</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1486,9 +1487,11 @@
       </trans-unit>
       <trans-unit id="MSC.showPassword">
         <source>Show password</source>
+        <target>パスワードを表示</target>
       </trans-unit>
       <trans-unit id="MSC.hidePassword">
         <source>Hide password</source>
+        <target>パスワードを非表示</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2084,6 +2087,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests</source>
+        <target>ゲスト</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2660,6 +2664,14 @@
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Google検索の結果のメタデータをプレビューできます。他の検索エンジンでは、さらに長いテキストを表示したり、異なる位置で切り詰めるかもしれません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.0">
+        <source>Number of items</source>
+        <target>項目の数</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.1">
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>項目の総数を制限できます。0にするとすべて表示します。</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>

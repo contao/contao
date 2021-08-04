@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>Вы можете выбрать шаблон канала.</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Общее количество элементов</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>Ограничение общего количества элементов. Установите 0, чтобы показать все.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Защитить модуль</target>
