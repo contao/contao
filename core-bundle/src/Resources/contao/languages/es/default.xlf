@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>¡Los alias numéricos no son compatibles!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -1454,6 +1455,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Confirmar Contraseña</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -2669,6 +2671,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Opción desconocida: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

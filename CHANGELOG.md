@@ -2,6 +2,38 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.17] (2021-08-04)
+
+**New features:**
+
+- [#2940] Show the Contao layout in the Symfony profiler ([aschempp])
+
+**Fixed issues:**
+
+- [#3256] Revert 'Lazy-load the `rootFallbackLanguage` property' ([leofeyer])
+- [#3214] Support request tokens in Symfony forms ([ausi])
+- [#3251] Harden literal insert tag replacement ([m-vo])
+- [#3245] Fix a func_get_arg() value error ([ausi])
+- [#3220] Correctly clean up left-over records in DCA mode 5 ([aschempp])
+- [#3218] Do not start the session in the login module ([ausi])
+- [#3197] Allow defining entities alongside DCA definitions ([m-vo])
+- [#3190] Consider the robots.txt content in the SearchIndexSubscriber ([Toflar])
+- [#3221] Remove the dev firewall ([aschempp])
+- [#3217] Allow robots setting for redirect pages ([fritzmg])
+- [#3210] Ensure the numberOfItems label does refer to items only ([Toflar])
+- [#3216] Add Google Conversion Linker cookie to deny list ([ausi])
+- [#3179] Backport support for namespaced DC drivers ([fritzmg])
+- [#3174] Correctly handle form fields in DC_Folder in "editAll" mode ([leofeyer])
+- [#3047] Update the YouTube options ([leofeyer])
+- [#3158] Undeprecate the "importUser" hook ([bytehead])
+- [#3125] Check if tstamp exists before hiding unsaved elements ([aschempp])
+- [#3077] Correctly render showColumns in the picker widget ([aschempp])
+- [#2958] Fix the tooltips in the JavaScript wizards ([rabauss])
+- [#3085] Do not disable search and cache in FAQ and newsletter readers ([fritzmg])
+- [#3083] Fix the indentation in the news_full template ([fritzmg])
+- [#3078] Purge log and undo tables via cron ([Toflar])
+- [#3067] Lazy-load the `rootFallbackLanguage` property ([aschempp])
+
 ## [4.9.16] (2021-06-23)
 
 **Fixed issues:**
@@ -615,6 +647,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.17]: https://github.com/contao/contao/releases/tag/4.9.17
 [4.9.16]: https://github.com/contao/contao/releases/tag/4.9.16
 [4.9.15]: https://github.com/contao/contao/releases/tag/4.9.15
 [4.9.14]: https://github.com/contao/contao/releases/tag/4.9.14
@@ -660,6 +693,30 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#2940]: https://github.com/contao/contao/pull/2940
+[#3256]: https://github.com/contao/contao/pull/3256
+[#3214]: https://github.com/contao/contao/pull/3214
+[#3251]: https://github.com/contao/contao/pull/3251
+[#3245]: https://github.com/contao/contao/pull/3245
+[#3220]: https://github.com/contao/contao/pull/3220
+[#3218]: https://github.com/contao/contao/pull/3218
+[#3197]: https://github.com/contao/contao/pull/3197
+[#3190]: https://github.com/contao/contao/pull/3190
+[#3221]: https://github.com/contao/contao/pull/3221
+[#3217]: https://github.com/contao/contao/pull/3217
+[#3210]: https://github.com/contao/contao/pull/3210
+[#3216]: https://github.com/contao/contao/pull/3216
+[#3179]: https://github.com/contao/contao/pull/3179
+[#3174]: https://github.com/contao/contao/pull/3174
+[#3047]: https://github.com/contao/contao/pull/3047
+[#3158]: https://github.com/contao/contao/pull/3158
+[#3125]: https://github.com/contao/contao/pull/3125
+[#3077]: https://github.com/contao/contao/pull/3077
+[#2958]: https://github.com/contao/contao/pull/2958
+[#3085]: https://github.com/contao/contao/pull/3085
+[#3083]: https://github.com/contao/contao/pull/3083
+[#3078]: https://github.com/contao/contao/pull/3078
+[#3067]: https://github.com/contao/contao/pull/3067
 [#3112]: https://github.com/contao/contao/pull/3112
 [#3046]: https://github.com/contao/contao/pull/3046
 [#2960]: https://github.com/contao/contao/pull/2960

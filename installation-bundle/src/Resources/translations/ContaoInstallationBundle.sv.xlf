@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="12" resname="confirmation">
         <source>Confirm password</source>
+        <target>Bekräfta lösenord</target>
       </trans-unit>
       <trans-unit id="13" resname="save_password">
         <source>Save password</source>

@@ -362,12 +362,12 @@
         <target>Die Anzahl an Elementen pro Seite. Geben Sie 0 ein, um den automatischen Seitenumbruch zu deaktivieren.</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Gesamtzahl der Bilder</target>
+        <source>Total number of items</source>
+        <target>Gesamtzahl der Beiträge</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Hier können Sie die Gesamtzahl der Bilder begrenzen. Geben Sie 0 ein, um alle anzuzeigen.</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Hier können Sie die Gesamtzahl der Beiträge begrenzen. Geben Sie 0 ein, um alle anzuzeigen.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -820,10 +820,6 @@
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
         <target>Ähnliche Videos auf denselben Kanal beschränken</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Die Linkleiste in der Vorschau ausblenden</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
