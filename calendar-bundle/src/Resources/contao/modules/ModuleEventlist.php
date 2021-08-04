@@ -401,7 +401,7 @@ class ModuleEventlist extends Events
 			// schema.org information
 			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array
 			{
-				$jsonLd = Events::getSchemaOrgData($event);
+				$jsonLd = Events::getSchemaOrgData((new CalendarEventsModel())->setRow($event));
 
 				if ($objTemplate->addImage && $objTemplate->figure)
 				{
