@@ -362,12 +362,12 @@
         <target>1ページの項目の数です。0にすると複数のページに分けません。</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>画像の総数</target>
+        <source>Total number of items</source>
+        <target>項目の総数</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>画像の数の総数を制限できます。0にするとすべて表示します。</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>項目の総数を制限できます。0にするとすべて表示します。</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -821,10 +821,6 @@
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
         <target>関連する動画を同じチャンネルに限定</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>プレビューの最上部のバーを非表示</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

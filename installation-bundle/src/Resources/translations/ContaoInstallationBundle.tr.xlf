@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="12" resname="confirmation">
         <source>Confirm password</source>
+        <target>Parola onayı</target>
       </trans-unit>
       <trans-unit id="13" resname="save_password">
         <source>Save password</source>
@@ -78,7 +79,7 @@
       </trans-unit>
       <trans-unit id="20" resname="invalid_password">
         <source>Invalid password!</source>
-        <target>Geçersiz şifre!</target>
+        <target>Parola geçersiz!</target>
       </trans-unit>
       <trans-unit id="21" resname="database_connection">
         <source>Database connection</source>

@@ -362,12 +362,10 @@
         <target>Wpisz ile wyników wyszukiwania ma się pojawiać jednorazowo na stronie (0 = wyłącza paginacje).</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Maksymalna liczba obrazków</target>
+        <source>Total number of items</source>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Tutaj możesz ograniczyć liczbę obrazków. Ustaw 0, by pokazać wszystkie.</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -779,6 +777,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Auto (wstępnie załaduj całe wideo)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -819,10 +818,6 @@
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
         <target>Pokaż powiązane wideo z tego samego kanału</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Ukryj górny pasek w podglądzie</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
