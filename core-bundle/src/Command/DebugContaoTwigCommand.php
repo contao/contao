@@ -52,7 +52,6 @@ class DebugContaoTwigCommand extends Command
     {
         $this
             ->setDescription('Displays the Contao template hierarchy.')
-            ->addOption('refresh', 'r', InputOption::VALUE_NONE, 'Refresh the cache.')
             ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or alias.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
@@ -60,6 +59,9 @@ class DebugContaoTwigCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        // Make sure the template hierarchy is up-to-date
+        $this->cacheWarmer->refresh();
+
         $rows = [];
         $chains = $this->hierarchy->getInheritanceChains($this->getThemeAlias($input));
 
@@ -89,12 +91,6 @@ class DebugContaoTwigCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Template hierarchy');
         $io->table(['Identifier', 'Effective logical name', 'Path'], $rows);
-
-        if ($input->getOption('refresh')) {
-            $this->cacheWarmer->refresh();
-
-            $io->success('Template loader cache and hierarchy was successfully rebuilt.');
-        }
 
         return 0;
     }
