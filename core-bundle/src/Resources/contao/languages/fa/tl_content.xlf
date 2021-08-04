@@ -359,12 +359,10 @@
         <target>تعداد موارد در هر برگه. 0 را برای از کار انداختن برگه‌بندی انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>تعداد کل تصاویر</target>
+        <source>Total number of items</source>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>اینجا می‌توانید تعدادکل تصاویر را محدود کنید. صفر برای نمایش همه.</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -796,9 +794,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

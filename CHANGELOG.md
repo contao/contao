@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.6] (2021-08-04)
+
+**Fixed issues:**
+
+- [#3253] Fix more invalid array access and missing null checks ([m-vo])
+- [#3208] Always concatenate the 'image_container' class in figure.html.twig ([m-vo])
+- [#3130] Add more null checks for DCA lang references ([m-vo])
+- [#3123] Fix another invalid array access in ModuleProxy ([m-vo])
+- [#3090] Allow empty content element translation key ([leofeyer])
+- [#3098] Automatically inject container for tagged controllers ([aschempp])
+- [#3087] Remove two superfluous labels ([leofeyer])
+- [#3079] Fix another invalid array access ([m-vo])
+- [#2931] Fix filtering for recurring events ([fritzmg])
+
 ## [4.11.5] (2021-06-23)
 
 **Fixed issues:**
@@ -135,6 +149,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.6]: https://github.com/contao/contao/releases/tag/4.11.6
 [4.11.5]: https://github.com/contao/contao/releases/tag/4.11.5
 [4.11.4]: https://github.com/contao/contao/releases/tag/4.11.4
 [4.11.3]: https://github.com/contao/contao/releases/tag/4.11.3
@@ -155,6 +170,15 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#3253]: https://github.com/contao/contao/pull/3253
+[#3208]: https://github.com/contao/contao/pull/3208
+[#3130]: https://github.com/contao/contao/pull/3130
+[#3123]: https://github.com/contao/contao/pull/3123
+[#3090]: https://github.com/contao/contao/pull/3090
+[#3098]: https://github.com/contao/contao/pull/3098
+[#3087]: https://github.com/contao/contao/pull/3087
+[#3079]: https://github.com/contao/contao/pull/3079
+[#2931]: https://github.com/contao/contao/pull/2931
 [#3113]: https://github.com/contao/contao/pull/3113
 [#3048]: https://github.com/contao/contao/pull/3048
 [#2987]: https://github.com/contao/contao/pull/2987

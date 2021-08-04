@@ -187,18 +187,23 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>Číslicové aliasy nejsou podporované</target>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
         <source>The URL prefix &quot;%s&quot; is already used by another root page with the same domain name!</source>
+        <target>Předpona adresy &quot;%s&quot; je již používaná jinou kořenovou stránkou se stejnou doménou.</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL &quot;%s&quot; already exists!</source>
+        <target>Stránka s adresou &quot;%s&quot; již existuje!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Tato adresová přípona povede k duplicitním adresám (např. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlPrefix">
         <source>This URL prefix will lead to duplicate URLs (e.g. %s)!</source>
+        <target>Tato adresová předpona povede k duplicitním adresám (např. %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -330,15 +335,19 @@
       </trans-unit>
       <trans-unit id="ERR.invalidHttpUrl">
         <source>Please enter an absolute URL starting with https:// or http://!</source>
+        <target>Zadejte prosím absolutní adresu začínající https:// nebo http://</target>
       </trans-unit>
       <trans-unit id="ERR.customRgxp">
         <source>Please enter a value that matches %s!</source>
+        <target>Zadejte prosím hodnotu, která koresponduje s %s!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidCustomRgxp">
         <source>Invalid custom regular expression!</source>
+        <target>Neplatná vlastní formulace!</target>
       </trans-unit>
       <trans-unit id="ERR.applicationCache">
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
+        <target>Proveďte prosím příkaz &quot;cache:clear&quot; nebo použijte Manažera Contaa pro přestavení meziúložiště aplikace.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
