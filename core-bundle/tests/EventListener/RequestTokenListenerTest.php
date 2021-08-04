@@ -13,15 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class RequestTokenListenerTest extends TestCase
 {
@@ -92,7 +95,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $csrfTokenManager
             ->expects($this->once())
             ->method('isTokenValid')
@@ -126,7 +129,7 @@ class RequestTokenListenerTest extends TestCase
         $framework = $this->mockContaoFramework([Config::class => $config]);
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
 
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $csrfTokenManager
             ->expects($this->once())
             ->method('isTokenValid')
@@ -167,7 +170,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
         $request = Request::create('/account.html');
         $request->setMethod('GET');
@@ -200,7 +203,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
@@ -234,7 +237,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
@@ -273,7 +276,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
@@ -305,7 +308,7 @@ class RequestTokenListenerTest extends TestCase
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
         $event = $this->createMock(RequestEvent::class);
         $event
@@ -329,11 +332,22 @@ class RequestTokenListenerTest extends TestCase
         $framework = $this->mockContaoFramework([Config::class => $config]);
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
 
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $csrfTokenManager
             ->expects($shouldValidate ? $this->once() : $this->never())
             ->method('isTokenValid')
             ->willReturn(true)
+        ;
+
+        $csrfTokenManager
+            ->method('canSkipTokenValidation')
+            ->willReturnCallback(
+                function () {
+                    $tokenManager = new ContaoCsrfTokenManager($this->createMock(RequestStack::class), 'csrf_', new UriSafeTokenGenerator(), $this->createMock(TokenStorageInterface::class));
+
+                    return $tokenManager->canSkipTokenValidation(...\func_get_args());
+                }
+            )
         ;
 
         $event = $this->createMock(RequestEvent::class);

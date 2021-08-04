@@ -299,7 +299,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
-            - '@contao.csrf.token_manager'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
             - '%contao.csrf_cookie_prefix%'
         tags:

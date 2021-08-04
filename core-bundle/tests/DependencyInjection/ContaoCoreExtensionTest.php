@@ -44,6 +44,7 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\LegacyCron;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
@@ -182,7 +183,6 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Http\Firewall;
 use Webmozart\PathUtil\Path;
@@ -1036,7 +1036,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('security.helper'),
                 new Reference('twig'),
                 new Reference('router'),
-                new Reference('contao.csrf.token_manager'),
+                new Reference(ContaoCsrfTokenManager::class),
                 new Reference('%contao.csrf_token_name%'),
             ],
             $definition->getArguments()
@@ -1089,7 +1089,7 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('contao.framework'),
                 new Reference('contao.routing.scope_matcher'),
-                new Reference('contao.csrf.token_manager'),
+                new Reference(ContaoCsrfTokenManager::class),
                 new Reference('%contao.csrf_token_name%'),
                 new Reference('%contao.csrf_cookie_prefix%'),
             ],
@@ -1509,9 +1509,6 @@ class ContaoCoreExtensionTest extends TestCase
                 'controller.service_arguments' => [
                     [],
                 ],
-                'container.service_subscriber' => [
-                    ['id' => 'contao.csrf.token_manager'],
-                ],
             ],
             $definition->getTags()
         );
@@ -1796,20 +1793,34 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $this->assertTrue($container->has('contao.csrf.token_manager'));
+        $this->assertTrue($container->has(ContaoCsrfTokenManager::class));
 
-        $definition = $container->getDefinition('contao.csrf.token_manager');
+        $definition = $container->getDefinition(ContaoCsrfTokenManager::class);
 
-        $this->assertSame(CsrfTokenManager::class, $definition->getClass());
         $this->assertTrue($definition->isPublic());
 
         $this->assertEquals(
             [
+                new Reference('request_stack'),
+                '%contao.csrf_cookie_prefix%',
                 new Reference('security.csrf.token_generator'),
                 new Reference('contao.csrf.token_storage'),
             ],
             $definition->getArguments()
         );
+    }
+
+    public function testRegistersTheDeprecatedCsrfTokenManager(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->has('contao.csrf.token_manager'));
+
+        $alias = $container->getAlias('contao.csrf.token_manager');
+
+        $this->assertSame(ContaoCsrfTokenManager::class, (string) $alias);
+        $this->assertTrue($alias->isPublic());
+        $this->assertTrue($alias->isDeprecated());
     }
 
     public function testRegistersTheCsrfTokenStorage(): void
