@@ -102,7 +102,7 @@ class FrontendTemplate extends Template
 	protected function compile()
 	{
 		$this->keywords = '';
-		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS']);
+		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS'] ?? '');
 
 		// Add the meta keywords
 		if (isset($arrKeywords[0]))
@@ -143,17 +143,24 @@ class FrontendTemplate extends Template
 			throw new \UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
 		}
 
-		/** @var PageModel $objPage */
+		/** @var PageModel|null $objPage */
 		global $objPage;
 
 		// Minify the markup
-		if ($objPage->minifyMarkup)
+		if ($objPage !== null && $objPage->minifyMarkup)
 		{
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
 
-		// Replace literal insert tags (see #670)
-		$this->strBuffer = str_replace(array('[{]', '[}]'), array('{{', '}}'), $this->strBuffer);
+		// Replace literal insert tags (see #670, #3249)
+		$this->strBuffer = preg_replace_callback(
+			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
+			static function ($matches)
+			{
+				return $matches[0][0] === '<' ? $matches[0] : $matches[0][1] . $matches[0][1];
+			},
+			$this->strBuffer
+		);
 
 		parent::compile();
 	}
