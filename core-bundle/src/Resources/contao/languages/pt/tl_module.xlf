@@ -365,14 +365,6 @@
         <source>Here you can select the feed template.</source>
         <target>Favor escolher um modelo visual. Você pode adicionar modelos de RSS na pasta &lt;em&gt;templates&lt;/em&gt;. Arquivos de modelo de RSS iniciam com &lt;em&gt;rss_&lt;/em&gt; e requer que a extensão do arquivo seja &lt;em&gt;.tpl&lt;/em&gt;</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Número de itens</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>Aqui você pode limitar o número de itens. Defina como 0 para mostrar tudo.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Proteger módulo</target>

@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
+        <target>Sobrescribir metadatos</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the metadata from the file manager.</source>
+        <target>Sobrescriba los metadatos del administrador de archivos.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -289,9 +291,11 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.0">
         <source>Markdown source</source>
+        <target>Fuente markdown</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.1">
         <source>Please choose the Markdown source.</source>
+        <target>Por favor eliga la fuente markdown.</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceText">
         <source>Text</source>
@@ -299,6 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
+        <target>Archivo</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -372,14 +377,6 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Por favor introduce el número de resultados por página (0 = deshabilitar paginación).</target>
       </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Número total de imagenes</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Aquí puedes limitar el numero total de imágenes. Usa 0 para mostrar todas.</target>
-      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Ordenar por</target>
@@ -390,9 +387,11 @@
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
         <source>Ignore files without metadata</source>
+        <target>Ignorar archivos sin metadata</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
         <source>Do not show files without metadata matching the page language.</source>
+        <target>No muestre archivos sin metadatos que coincidan con el idioma de la página.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
@@ -788,6 +787,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Automático (precarga todo el video)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -827,10 +827,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Ocultar la barra superior en la vista previa</target>
+        <target>Limita los videos relacionados al mismo canal</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

@@ -374,14 +374,6 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Le nombre d'éléments par page. Saisir 0 pour désactiver la pagination.</target>
       </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Nombre total d'images</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Limiter le nombre total d'images. Mettre à 0 pour tout afficher.</target>
-      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Trier par</target>
@@ -831,10 +823,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Cacher la bar supérieure lors de la prévisualisation</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

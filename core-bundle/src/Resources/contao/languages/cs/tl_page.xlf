@@ -290,8 +290,7 @@
         <target>Skupina</target>
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
-        <source>Please select a group as the owner of the page.</source>
-        <target>Vyberte skupinu jako vlastníka současné stránky</target>
+        <source>Please select a user group as the owner of the page.</source>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>

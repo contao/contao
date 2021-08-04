@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>Por favor selecciona una plantilla de diseño. Puedes añadir diseños personalizados para RSS en la carpeta &lt;em&gt;templates&lt;/em&gt;. Los archivos de plantillas de RSS empieza por &lt;em&gt;rss_&lt;/em&gt; y requieren la extensión de archivo &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Número de items</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>Aquí puedes limitar el número de items. Usa 0 para mostrar todos.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Proteger módulo</target>

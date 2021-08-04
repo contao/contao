@@ -1291,6 +1291,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License</source>
+        <target>Licens</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1478,6 +1479,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Bekräfta lösenord</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1485,9 +1487,11 @@
       </trans-unit>
       <trans-unit id="MSC.showPassword">
         <source>Show password</source>
+        <target>Visa lösenord</target>
       </trans-unit>
       <trans-unit id="MSC.hidePassword">
         <source>Hide password</source>
+        <target>Dölj lösenord</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2083,6 +2087,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests</source>
+        <target>Gäster</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2660,6 +2665,13 @@
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Här kan du förhandsgranska metadata i Googles sökresultat. Andra sökmotorer kan visa längre texter eller beskära på en annan position.</target>
       </trans-unit>
+      <trans-unit id="MSC.numberOfItems.0">
+        <source>Number of items</source>
+        <target>Antal artiklar</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.1">
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+      </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
         <target>Rensa betrodda enheter</target>
@@ -2698,6 +2710,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Okänt alternativ: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

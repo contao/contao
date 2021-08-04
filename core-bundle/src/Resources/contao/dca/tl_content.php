@@ -558,6 +558,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'numberOfItems' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['numberOfItems'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -1973,7 +1974,7 @@ class tl_content extends Backend
 	{
 		if (Input::get('cid'))
 		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

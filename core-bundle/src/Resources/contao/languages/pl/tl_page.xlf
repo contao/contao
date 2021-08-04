@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
+        <target>Wprowadź kod języka strony, zgodnie ze standardem ISO-639 (np. &quot;en&quot; dla angielskiego lub &quot;en_US&quot; dla angielskiego amerykańskiego).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -309,8 +310,7 @@
         <target>Grupa</target>
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
-        <source>Please select a group as the owner of the page.</source>
-        <target>Wybierz grupę, która będzie właścicielem tej strony.</target>
+        <source>Please select a user group as the owner of the page.</source>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>
@@ -354,9 +354,11 @@
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide in navigation</source>
+        <target>Ukryj w nawigacji</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
+        <target>Ukryj stronę w menu nawigacyjnym.</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

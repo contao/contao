@@ -158,8 +158,8 @@
         <target>ページのグループの初期設定</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
-        <target>ページを所有する初期設定とするグループを選択できます。</target>
+        <source>Here you can select a user group as the default owner of a page.</source>
+        <target>ページを所有する初期設定とするユーザーグループを選択できます。</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

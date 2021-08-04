@@ -93,7 +93,7 @@ services:
             - '@security.helper'
             - '@twig'
             - '@router'
-            - '@contao.csrf.token_manager'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
         tags:
             - controller.service_arguments
@@ -123,7 +123,6 @@ services:
     Contao\CoreBundle\Controller\FrontendController:
         tags:
             - controller.service_arguments
-            - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -240,11 +239,18 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
-    contao.csrf.token_manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
         arguments:
+            - '@request_stack'
+            - '%contao.csrf_cookie_prefix%'
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
+        public: true
+
+    # Backwards compatibility
+    contao.csrf.token_manager:
+        alias: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Csrf\ContaoCsrfTokenManager" instead.
         public: true
 
     contao.csrf.token_storage:
@@ -961,6 +967,10 @@ services:
             - '@contao.routing.scope_matcher'
 
     Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
+
+    Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime:
+        arguments:
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
 
     Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:

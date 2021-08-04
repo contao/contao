@@ -157,8 +157,7 @@
         <target>Grupo padrão da página</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
-        <target>Por padrão a página pertence ao mesmo grupo que sua página superior. No entanto, se nenhum grupo for designado, o grupo padrão será o dono da página. Se não houver nenhum grupo e nem grupo padrão, não haverá qualquer restrição de acesso.</target>
+        <source>Here you can select a user group as the default owner of a page.</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>
