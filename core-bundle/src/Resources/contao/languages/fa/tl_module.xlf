@@ -366,14 +366,6 @@
         <source>Here you can select the feed template.</source>
         <target>اینجا می‌توانید قالب خوراک را انتخاب نمایید</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>تعداد موردها</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>اینجا می‌توانید تعداد موردها را محدود نمایید. 0 را برای نمایش همه انتخاب نمایید.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>حافظت از ماژول</target>

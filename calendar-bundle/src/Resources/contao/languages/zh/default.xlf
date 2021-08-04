@@ -38,8 +38,7 @@
         <target>没有将发生的事件</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
-        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</source>
-        <target>本事件已重复 %s%s. 下一事件将发生于 &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</target>
+        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>

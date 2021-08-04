@@ -2655,6 +2655,13 @@
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Qui potete vedere in anteprima i metadati nei risultati di ricerca di Google. Altri motori di ricerca potrebbero mostrare testi più lunghi o ritagliare in una posizione diversa.</target>
       </trans-unit>
+      <trans-unit id="MSC.numberOfItems.0">
+        <source>Number of items</source>
+        <target>Numero di elementi</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.1">
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+      </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
         <target>Cancella dispositivi attendibili</target>

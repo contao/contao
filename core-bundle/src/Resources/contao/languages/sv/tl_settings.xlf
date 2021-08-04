@@ -158,8 +158,7 @@
         <target>Standard sidgrupp</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
-        <target>Som standard tillhör en sida samma grupp som sin föräldrasida. Men, om sidan inte tilldelas en grupp kommer standardgruppen att bli sidans ägare. &lt;b&gt;Om det inte finns en grupp eller en standardgrupp kommer det inte att finnas några åtkomstrestriktioner på sidan!&lt;/b&gt;!</target>
+        <source>Here you can select a user group as the default owner of a page.</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>Seleziona un modello di layout. È possibile aggiungere un modello RSS personalizzato nella cartella &lt;em&gt;templates&lt;/em&gt;. I files del modello RSS devono iniziare per &lt;em&gt;rss_&lt;/em&gt; e richiedono l'estensione &lt;em&gt;.tpl&lt;/em&gt;.</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Numero di elementi</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>In questo campo è possibile indicare il numero di elementi. Impostare 0 per mostrarli tutti</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Proteggi modulo</target>
