@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -99,19 +98,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
             'csrf'
         );
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(['FORM_SUBMIT' => 'tl_switch']);
-
-        $request
-            ->method('isXmlHttpRequest')
-            ->willReturn(true)
-        ;
-
-        $request
-            ->method('isMethod')
-            ->with('GET')
-            ->willReturn(false)
-        ;
+        $request = new Request(
+            [],
+            ['FORM_SUBMIT' => 'tl_switch'],
+            [],
+            [],
+            [],
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST']
+        );
 
         $response = $controller($request);
 
@@ -131,19 +125,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
             'csrf'
         );
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(['FORM_SUBMIT' => 'datalist_members']);
-
-        $request
-            ->method('isXmlHttpRequest')
-            ->willReturn(true)
-        ;
-
-        $request
-            ->method('isMethod')
-            ->with('GET')
-            ->willReturn(false)
-        ;
+        $request = new Request(
+            [],
+            ['FORM_SUBMIT' => 'datalist_members'],
+            [],
+            [],
+            [],
+            ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest', 'REQUEST_METHOD' => 'POST']
+        );
 
         $response = $controller($request);
 

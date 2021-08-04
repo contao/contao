@@ -1,0 +1,9 @@
+...ignored
+<?php echo $this->extend('foo'); ?>
+...ignored
+<?php $this->block('A'); ?>
+bar before A
+<?php $this->parent() ?>
+bar after A
+<?php $this->endblock(); ?>
+...ignored

@@ -3304,6 +3304,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 
+		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+		{
+			$ptable = $this->strTable;
+		}
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
@@ -3396,6 +3401,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
 				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
+			}
+			elseif ($ptable == $this->strTable)
+			{
+				$objIds = $this->Database->execute('SELECT c.id FROM ' . $this->strTable . ' c LEFT JOIN ' . $ptable . ' p ON c.pid=p.id WHERE p.id IS NULL AND c.pid > 0');
 			}
 			else
 			{

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
@@ -28,6 +29,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['event_dispatcher'] = EventDispatcherInterface::class;
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
+        $services[] = ContaoCsrfTokenManager::class;
 
         return $services;
     }
@@ -44,5 +46,17 @@ abstract class AbstractController extends SymfonyAbstractController
         }
 
         $this->get('fos_http_cache.http.symfony_response_tagger')->addTags($tags);
+    }
+
+    /**
+     * @return array{csrf_field_name: string, csrf_token_manager: ContaoCsrfTokenManager, csrf_token_id: string}
+     */
+    protected function getCsrfFormOptions(): array
+    {
+        return [
+            'csrf_field_name' => 'REQUEST_TOKEN',
+            'csrf_token_manager' => $this->get(ContaoCsrfTokenManager::class),
+            'csrf_token_id' => $this->getParameter('contao.csrf_token_name'),
+        ];
     }
 }

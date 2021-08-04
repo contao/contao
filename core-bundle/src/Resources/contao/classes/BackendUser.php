@@ -594,7 +594,7 @@ class BackendUser extends User
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function serialize()
 	{
@@ -610,7 +610,7 @@ class BackendUser extends User
 	}
 
 	/**
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
+	 * @deprecated Deprecated since Contao 4.9 to be removed in Contao 5.0.
 	 */
 	public function unserialize($data)
 	{

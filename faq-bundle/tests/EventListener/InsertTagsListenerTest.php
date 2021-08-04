@@ -77,6 +77,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            $listener->onReplaceInsertTags('faq_url::2::absolute', false, null, [])
+        );
+
+        $this->assertSame(
             'What does &quot;foobar&quot; mean?',
             $listener->onReplaceInsertTags('faq_title::2', false, null, [])
         );
