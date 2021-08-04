@@ -211,9 +211,11 @@
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
+        <target>Protocolo</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.1">
         <source>Here you can select which protocol to use for the website.</source>
+        <target>Aquí puede seleccionar qué protocolo usar para el sitio web.</target>
       </trans-unit>
       <trans-unit id="tl_page.autoforward.0">
         <source>Forward to another page</source>

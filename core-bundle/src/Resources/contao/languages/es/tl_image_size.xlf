@@ -83,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
+        <target>Tenga en cuenta que en este caso no se aplicarán optimizaciones como la eliminación de metadatos o la compresión JPEG.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>

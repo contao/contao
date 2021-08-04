@@ -360,12 +360,10 @@
         <target>每行缩略图数，设置为0的时候分页不可用</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>图片总数</target>
+        <source>Total number of items</source>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>此处您可以限制图片总数。设置为0以显示所有。</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -811,10 +809,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>预览时隐藏顶部栏目</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

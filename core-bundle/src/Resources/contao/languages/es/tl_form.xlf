@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>Aquí puede anular el transporte de correo utilizado para enviar el formulario por correo electrónico.</target>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
@@ -90,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
+        <target>Archivo CSV (Microsoft Excel) </target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>Los datos del formulario se adjuntarán al correo electrónico como un archivo CSV legible por Microsoft Excel.</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
