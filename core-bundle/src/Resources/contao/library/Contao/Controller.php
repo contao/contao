@@ -439,9 +439,9 @@ abstract class Controller extends System
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')'))
 		{
-			$objStopwatch->stop('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')');
+            $objStopwatch->stop('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
@@ -537,9 +537,9 @@ abstract class Controller extends System
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted('contao.article (ID ' . $objRow->id . ')'))
 		{
-			$objStopwatch->stop('contao.article (ID ' . $objRow->id . ')');
+		    $objStopwatch->stop('contao.article (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
@@ -617,9 +617,9 @@ abstract class Controller extends System
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')'))
 		{
-			$objStopwatch->stop('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')');
+		    $objStopwatch->stop('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')');
 		}
 
 		return $strBuffer;
