@@ -279,7 +279,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get(Locales::class)->getLocales(null, true);
+				return System::getContainer()->get(Locales::class)->getLocales(null, false);
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
