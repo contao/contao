@@ -15,12 +15,13 @@ namespace Contao\CoreBundle\Intl;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Locales
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface&TranslatorBagInterface
      */
     private $translator;
 
@@ -49,6 +50,9 @@ class Locales
      */
     private $defaultLocale;
 
+    /**
+     * @param TranslatorInterface&TranslatorBagInterface $translator
+     */
     public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $defaultLocales, array $defaultEnabledLocales, array $configLocales, array $configEnabledLocales, string $defaultLocale)
     {
         $this->translator = $translator;
@@ -223,9 +227,10 @@ class Locales
 
         foreach ($localeIds as $localeId) {
             $langKey = 'LNG.'.$localeId;
-            $label = $this->translator->trans($langKey, [], 'contao_languages', $displayLocale);
 
-            if ($label === $langKey || !\is_string($label) || '' === $label) {
+            if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_languages')) {
+                $label = $this->translator->trans($langKey, [], 'contao_languages', $displayLocale);
+            } else {
                 $label = \Locale::getDisplayName($localeId, $displayLocale ?? $this->defaultLocale);
             }
 
