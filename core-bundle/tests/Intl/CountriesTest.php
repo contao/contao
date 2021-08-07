@@ -225,11 +225,6 @@ class CountriesTest extends TestCase
         if (null === $translator) {
             $translator = $this->createMock(Translator::class);
             $translator
-                ->method('trans')
-                ->willReturnArgument(0)
-            ;
-
-            $translator
                 ->method('getCatalogue')
                 ->willReturn($this->createMock(MessageCatalogueInterface::class))
             ;
