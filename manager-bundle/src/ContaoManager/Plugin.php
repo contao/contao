@@ -480,7 +480,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * to their config.yml, the merged configuration will lead to an error, since
      * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
-     * Thus the default mailer configuration needs to be added dynamically, if
+     * Thus, the default mailer configuration needs to be added dynamically if
      * not already present.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>

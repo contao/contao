@@ -75,7 +75,7 @@ class LocaleUtil
     }
 
     /**
-     * Converts an Locale ID (_) to a Language Tag (-) and strips keywords
+     * Converts a Locale ID (_) to a Language Tag (-) and strips keywords
      * after the @ sign.
      *
      * Language Tag is used in two cases in Contao:

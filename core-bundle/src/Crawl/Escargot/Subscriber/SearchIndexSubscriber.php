@@ -77,7 +77,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
-        // Skip the links that have the "type" attribute set and it's not text/html
+        // Skip the links that have a "type" attribute which is not text/html
         if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE)) {
             $this->logWithCrawlUri(
                 $crawlUri,

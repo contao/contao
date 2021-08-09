@@ -229,7 +229,7 @@ class UrlGeneratorTest extends TestCase
 
     /**
      * To tests this case, we omit the _ssl parameter and set the scheme to
-     * "https" in the context. If the generator still returns a HTTPS URL, we
+     * "https" in the context. If the generator still returns an HTTPS URL, we
      * know that the context has not been modified.
      */
     public function testDoesNotModifyTheContextIfThereIsAHostname(): void

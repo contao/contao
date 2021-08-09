@@ -30,7 +30,7 @@ class SubscriberResult
     private $warning;
 
     /**
-     * Mixed custom info. Must be serializable so
+     * Mixed custom info. Must be serializable, so
      * it can be transported between requests.
      *
      * @var array

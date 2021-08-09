@@ -133,7 +133,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
     private function replaceTokenOccurrences(Response $response): void
     {
-        // Return if the response is not a HTML document
+        // Return if the response is not an HTML document
         if (false === stripos((string) $response->headers->get('Content-Type'), 'text/html')) {
             return;
         }
