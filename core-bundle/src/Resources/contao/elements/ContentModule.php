@@ -100,7 +100,7 @@ class ContentModule extends ContentElement
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')'))
 		{
-		    $objStopwatch->stop('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')');
+			$objStopwatch->stop('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')');
 		}
 
 		return $strBuffer;
