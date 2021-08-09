@@ -63,10 +63,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $domains = array_keys($domains);
         sort($domains);
 
-        return array_merge(
-            $this->parent->getDomains(),
-            $domains
-        );
+        return array_merge($this->parent->getDomains(), $domains);
     }
 
     public function all($domain = null): array
@@ -165,7 +162,10 @@ final class MessageCatalogue implements MessageCatalogueInterface
     private function loadMessage(string $id, string $domain): ?string
     {
         $this->framework->initialize();
-        $this->framework->getAdapter(System::class)->loadLanguageFile(substr($domain, 7), $this->getLocale());
+
+        /** @var System $system */
+        $system = $this->framework->getAdapter(System::class);
+        $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
 
         return $this->getFromGlobals($id);
     }

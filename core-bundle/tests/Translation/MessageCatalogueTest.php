@@ -204,7 +204,7 @@ class MessageCatalogueTest extends TestCase
         $catalogue->$method(...$paramsContaoDomain);
     }
 
-    public function getForwardedDomainMethods()
+    public function getForwardedDomainMethods(): \Generator
     {
         yield [
             'all',
@@ -251,7 +251,7 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame($return, $catalogue->$method(...$params));
     }
 
-    public function getCompletelyForwardedMethods()
+    public function getCompletelyForwardedMethods(): \Generator
     {
         yield [
             'addCatalogue',
@@ -281,7 +281,7 @@ class MessageCatalogueTest extends TestCase
         ];
     }
 
-    private function createCatalogue(MessageCatalogueInterface $catalogue = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null)
+    private function createCatalogue(MessageCatalogueInterface $catalogue = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): MessageCatalogue
     {
         if (null === $catalogue) {
             $catalogue = $this->createMock(MessageCatalogueInterface::class);

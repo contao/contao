@@ -202,7 +202,6 @@ class TranslatorTest extends TestCase
         $translator = $this->createTranslator($originalTranslator);
 
         $this->assertNotSame($originalCatalogue, $translator->getCatalogue());
-        $this->assertInstanceOf(MessageCatalogue::class, $translator->getCatalogue());
     }
 
     public function testUsesDecoratedCatalogues(): void
@@ -238,7 +237,6 @@ class TranslatorTest extends TestCase
         ;
 
         $translator = $this->createTranslator($originalTranslator);
-
         $catalogues = $translator->getCatalogues();
 
         $this->assertCount(2, $catalogues);
@@ -250,7 +248,7 @@ class TranslatorTest extends TestCase
         $this->assertInstanceOf(MessageCatalogue::class, $catalogues[1]);
     }
 
-    private function createTranslator(TranslatorInterface $translator = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null)
+    private function createTranslator(TranslatorInterface $translator = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): Translator
     {
         if (null === $translator) {
             $translator = $this->createMock(BaseTranslator::class);
