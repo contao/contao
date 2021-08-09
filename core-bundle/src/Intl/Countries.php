@@ -16,12 +16,13 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Countries
 {
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface&TranslatorBagInterface
      */
     private $translator;
 
@@ -45,6 +46,9 @@ class Countries
      */
     private $defaultLocale;
 
+    /**
+     * @param TranslatorInterface&TranslatorBagInterface $translator
+     */
     public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $defaultCountries, array $configCountries, string $defaultLocale)
     {
         $this->translator = $translator;
@@ -68,12 +72,8 @@ class Countries
         foreach ($this->countries as $countryCode) {
             $langKey = 'CNT.'.strtolower($countryCode);
 
-            if (
-                $langKey !== ($label = $this->translator->trans($langKey, [], 'contao_countries', $displayLocale))
-                && \is_string($label)
-                && '' !== $label
-            ) {
-                $countries[$countryCode] = $label;
+            if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_countries')) {
+                $countries[$countryCode] = $this->translator->trans($langKey, [], 'contao_countries', $displayLocale);
             } else {
                 $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale ?? $this->defaultLocale);
             }

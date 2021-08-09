@@ -905,6 +905,7 @@ services:
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.translation.translator.data_collector:
         class: Contao\CoreBundle\Translation\DataCollectorTranslator
