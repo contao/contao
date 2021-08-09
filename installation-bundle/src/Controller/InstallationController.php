@@ -179,7 +179,7 @@ class InstallationController implements ContainerAwareInterface
         $installTool = $this->container->get('contao.install_tool');
         $minlength = $installTool->getConfig('minPasswordLength');
 
-        // The passwords is too short
+        // The password is too short
         if (Utf8::strlen($password) < $minlength) {
             return $this->render('password.html.twig', [
                 'error' => sprintf($this->trans('password_too_short'), $minlength),

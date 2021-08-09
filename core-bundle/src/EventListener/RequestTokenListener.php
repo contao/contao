@@ -83,8 +83,8 @@ class RequestTokenListener
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
-            || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
             || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
+            || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
         ) {
             return;
         }

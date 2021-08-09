@@ -82,7 +82,7 @@ final class ContextHelper
                         return '';
                     }
 
-                    throw new \RuntimeException("Error evaluating '{$this->name}': {$e->getMessage()}", 0, $e);
+                    throw new \RuntimeException("Error evaluating '$this->name': {$e->getMessage()}", 0, $e);
                 }
             }
 
