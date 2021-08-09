@@ -443,7 +443,7 @@ abstract class Controller extends System
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
 		{
-        	$objStopwatch->stop($strStopWatchId);
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
