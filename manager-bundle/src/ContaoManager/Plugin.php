@@ -33,6 +33,7 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception as DoctrineDbalException;
+use Doctrine\DBAL\DBALException as DoctrineDbalDbalException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -314,7 +315,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $connection->connect();
             $connection->query('SHOW TABLES');
             $connection->close();
-        } catch (DoctrineDbalException | \mysqli_sql_exception $e) {
+        } catch (DoctrineDbalException | DoctrineDbalDbalException | \mysqli_sql_exception $e) {
             $extensionConfigs[] = [
                 'dbal' => [
                     'connections' => [
