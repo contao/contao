@@ -91,17 +91,19 @@ class InsertTagsListener
         switch ($insertTag) {
             case 'event':
                 return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
+                    '<a href="%s" title="%s"%s>%s</a>',
                     $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
                     StringUtil::specialchars($model->title),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->title
                 );
 
             case 'event_open':
                 return sprintf(
-                    '<a href="%s" title="%s">',
+                    '<a href="%s" title="%s"%s>',
                     $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->title)
+                    StringUtil::specialchars($model->title),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
             case 'event_url':
