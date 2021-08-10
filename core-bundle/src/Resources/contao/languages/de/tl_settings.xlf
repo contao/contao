@@ -158,8 +158,8 @@
         <target>Standardgruppe</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
-        <target>Bitte wählen Sie eine Gruppe als Standardbesitzer einer Seite aus.</target>
+        <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Hier können Sie eine Benutzergruppe als Standardbesitzer einer Seite auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

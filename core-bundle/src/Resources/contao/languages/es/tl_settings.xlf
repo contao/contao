@@ -158,8 +158,7 @@
         <target>Grupo de página por defecto</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
-        <source>Here you can select a group as the default owner of a page.</source>
-        <target>Por defecto, una página pertenece al mismo grupo que la página madre. Sin embargo, si no hay grupo asignado, el grupo por defecto será el propietario de la página. Si no hay grupo ni grupo por defecto, no habrá ningún tipo de restricciones de acceso!</target>
+        <source>Here you can select a user group as the default owner of a page.</source>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>
@@ -203,6 +202,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.configuredInApp">
         <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+        <target>Esta configuración se ha definido en la configuración de la aplicación y ya no se puede cambiar aquí.</target>
       </trans-unit>
     </body>
   </file>

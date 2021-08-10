@@ -117,7 +117,8 @@ class Picker extends Widget
 	 */
 	public function generate()
 	{
-		$strContext = $this->context ?: 'dc.' . $this->getRelatedTable();
+		$strRelatedTable = $this->getRelatedTable();
+		$strContext = $this->context ?: 'dc.' . $strRelatedTable;
 		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 		$arrValues = $this->generateValues($blnHasOrder);
 		$arrSet = array_keys($arrValues);
@@ -125,15 +126,68 @@ class Picker extends Widget
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '">' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . implode(',', $this->{$this->orderField}) . '">' : '') . '
   <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
-    <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . (($blnHasOrder || $this->isSortable) ? 'sortable' : '') . '">';
+    <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '');
 
-		foreach ($arrValues as $k=>$v)
+		if (($GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['showColumns'] ?? null) && !empty($arrValues))
 		{
-			$return .= '<li data-id="' . $k . '">' . $v . '</li>';
-		}
+			System::loadLanguageFile($strRelatedTable);
 
-		$return .= '</ul>';
+			$showFields = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'];
+
+			$return .= '
+<table class="tl_listing showColumns' . ($blnHasOrder ? ' sortable' : '') . '">
+<thead>
+  <tr>';
+
+			foreach ($showFields as $f)
+			{
+				if (strpos($f, ':') !== false)
+				{
+					list($f) = explode(':', $f, 2);
+				}
+
+				$return .= '
+    <th class="tl_folder_tlist col_' . $f . '">' . (\is_array($GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) ? $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'][0] : $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) . '</th>';
+			}
+
+			$return .= '
+  </tr>
+</thead>
+<tbody id="sort_' . $this->strId . '">';
+
+			foreach ($arrValues as $k => $row)
+			{
+				$return .= '
+  <tr data-id="' . $k . '">';
+
+				foreach ($row as $j=>$arg)
+				{
+					$field = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'][$j];
+
+					$return .= '
+    <td class="tl_file_list col_' . $field . '">' . ($arg ?: '-') . '</td>';
+				}
+
+				$return .= '
+  </tr>';
+			}
+
+			$return .= '
+</tbody>
+</table>';
+		}
+		else
+		{
+			$return .= '
+    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
+
+			foreach ($arrValues as $k=>$v)
+			{
+				$return .= '<li data-id="' . $k . '">' . $v . '</li>';
+			}
+
+			$return .= '</ul>';
+		}
 
 		if (!System::getContainer()->get('contao.picker.builder')->supportsContext($strContext))
 		{
@@ -176,14 +230,7 @@ class Picker extends Widget
 
 	protected function generateValues($blnHasOrder): array
 	{
-		if (substr($this->context ?? '', 0, 3) === 'dc.')
-		{
-			$strRelatedTable = substr($this->context, 3);
-		}
-		else
-		{
-			$strRelatedTable = $this->getRelatedTable();
-		}
+		$strRelatedTable = $this->getRelatedTable();
 
 		if (!$strRelatedTable)
 		{
@@ -211,12 +258,6 @@ class Picker extends Widget
 
 					$arrSet[] = $objRows->id;
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
-
-					// showColumns
-					if (\is_array($arrValues[$objRows->id]))
-					{
-						$arrValues[$objRows->id] = implode(', ', $arrValues[$objRows->id]);
-					}
 				}
 			}
 
@@ -254,9 +295,66 @@ class Picker extends Widget
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
 		$labelValues = array();
 
-		foreach ($labelConfig['fields'] as $field)
+		foreach ($labelConfig['fields'] as $k => $v)
 		{
-			$labelValues[] = $arrRow[$field] ?? '';
+			if (strpos($v, ':') !== false)
+			{
+				list($strKey, $strTable) = explode(':', $v);
+				list($strTable, $strField) = explode('.', $strTable);
+
+				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
+										 ->limit(1)
+										 ->execute($arrRow[$strKey]);
+
+				$labelValues[$k] = $objRef->numRows ? $objRef->$strField : '';
+			}
+			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(5, 6, 7, 8, 9, 10)))
+			{
+				if ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'date')
+				{
+					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('dateFormat'), $arrRow[$v]) : '-';
+				}
+				elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'time')
+				{
+					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('timeFormat'), $arrRow[$v]) : '-';
+				}
+				else
+				{
+					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('datimFormat'), $arrRow[$v]) : '-';
+				}
+			}
+			elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] || ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple']))
+			{
+				$labelValues[$k] = $arrRow[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+			}
+			else
+			{
+				$row_v = StringUtil::deserialize($arrRow[$v]);
+
+				if (\is_array($row_v))
+				{
+					$args_k = array();
+
+					foreach ($row_v as $option)
+					{
+						$args_k[] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$option] ?: $option;
+					}
+
+					$labelValues[$k] = implode(', ', $args_k);
+				}
+				elseif (isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]))
+				{
+					$labelValues[$k] = \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]) ? $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]][0] : $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]];
+				}
+				elseif (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]]))
+				{
+					$labelValues[$k] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]];
+				}
+				else
+				{
+					$labelValues[$k] = $arrRow[$v];
+				}
+			}
 		}
 
 		$label = vsprintf($labelConfig['format'], $labelValues);
@@ -270,7 +368,7 @@ class Picker extends Widget
 				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
 			}
 
-			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $arrRow);
+			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $labelValues);
 		}
 
 		if (\is_callable($labelConfig['label_callback'] ?? null))
@@ -280,7 +378,7 @@ class Picker extends Widget
 				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
 			}
 
-			return $labelConfig['label_callback']($arrRow, $label, $dc, $arrRow);
+			return $labelConfig['label_callback']($arrRow, $label, $dc, $labelValues);
 		}
 
 		return $label ?: $arrRow['id'];
@@ -288,6 +386,11 @@ class Picker extends Widget
 
 	protected function getRelatedTable(): string
 	{
+		if (substr($this->context ?? '', 0, 3) === 'dc.')
+		{
+			return substr($this->context, 3);
+		}
+
 		$arrRelations = DcaExtractor::getInstance($this->strTable)->getRelations();
 
 		return (string) $arrRelations[$this->strField]['table'];

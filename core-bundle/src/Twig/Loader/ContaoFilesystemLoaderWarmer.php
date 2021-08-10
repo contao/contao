@@ -55,7 +55,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $themePaths = $this->templateLocator->findThemeDirectories();
 
         foreach ($themePaths as $slug => $path) {
-            $this->loader->addPath($path, "Contao_Theme_$slug");
+            $this->loader->addPath($path, "Contao_Theme_$slug", true);
         }
 
         // Global templates path

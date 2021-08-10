@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>Sélectionner un modèle de flux RSS.</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Nombre d'éléments</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>Limiter le nombre d'éléments. Mettre à 0 pour tout afficher.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Protéger le module</target>

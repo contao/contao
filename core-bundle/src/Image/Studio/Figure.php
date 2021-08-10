@@ -25,7 +25,7 @@ use Contao\Template;
  *
  * Wherever possible, the actual data is only requested/built on demand.
  *
- * @final
+ * @final This class will be made final in Contao 5.
  */
 class Figure
 {

@@ -38,8 +38,7 @@
         <target>På nuværende tidspunkt, er der ingen begivenheder.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
-        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</source>
-        <target>Denne begivenhed gentages hver %s%s. Den næste begivenhed finder sted &lt;time datetime=&quot;%s&quot; itemprop=&quot;startDate&quot;&gt;%s&lt;/time&gt;.</target>
+        <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>

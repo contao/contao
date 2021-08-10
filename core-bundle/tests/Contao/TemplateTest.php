@@ -283,4 +283,79 @@ class TemplateTest extends TestCase
 
         (new FrontendTemplate())->figure(1, null);
     }
+
+    /**
+     * @dataProvider provideBuffer
+     */
+    public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
+    {
+        $page = new \stdClass();
+        $page->minifyMarkup = false;
+
+        $GLOBALS['objPage'] = $page;
+        $GLOBALS['TL_KEYWORDS'] = '';
+
+        $template = new class($buffer) extends FrontendTemplate {
+            /**
+             * @var string
+             */
+            private $testBuffer;
+
+            public function __construct(string $testBuffer)
+            {
+                $this->testBuffer = $testBuffer;
+
+                parent::__construct();
+            }
+
+            public function parse(): string
+            {
+                return $this->testBuffer;
+            }
+
+            public function testCompile(): string
+            {
+                $this->compile();
+
+                return $this->strBuffer;
+            }
+
+            public static function replaceInsertTags($strBuffer, $blnCache = true)
+            {
+                return $strBuffer; // ignore insert tags
+            }
+
+            public static function replaceDynamicScriptTags($strBuffer)
+            {
+                return $strBuffer; // ignore dynamic script tags
+            }
+        };
+
+        $this->assertSame($expectedOutput, $template->testCompile());
+
+        unset($GLOBALS['objPage'],$GLOBALS['TL_KEYWORDS']);
+    }
+
+    public function provideBuffer(): \Generator
+    {
+        yield 'plain string' => [
+            'foo bar',
+            'foo bar',
+        ];
+
+        yield 'literal insert tags are replaced' => [
+            'foo[{]bar[{]baz[}]',
+            'foo{{bar{{baz}}',
+        ];
+
+        yield 'literal insert tags inside script tag are not replaced' => [
+            '<script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script>',
+            '<script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script>',
+        ];
+
+        yield 'multiple occurrences' => [
+            '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
+            '{{}}<script>[{][}]</script>{{}}<script>[{][}]</script>{{}}',
+        ];
+    }
 }

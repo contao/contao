@@ -370,14 +370,6 @@
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Število elementov na stran. Nastavite 0 za onemogočanje številčenja.</target>
       </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Skupno število slik</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Tu lahko omejite skupno število slik. 0 prikaže vse.</target>
-      </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
         <target>Razvrsti po</target>
@@ -804,9 +796,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

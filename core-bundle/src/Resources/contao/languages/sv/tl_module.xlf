@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>Välj en RSS-mall.&lt;br /&gt;RSS-mallarnas namn startar med &lt;em&gt;rss_&lt;/em&gt;.</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Antal artiklar</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>Här kan du begränsa antalet artiklar. 0 = visa alla.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Skydda modulen</target>

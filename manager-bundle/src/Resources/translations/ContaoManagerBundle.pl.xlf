@@ -5,6 +5,10 @@
         <source>Debug mode</source>
         <target>Tryb debugowania</target>
       </trans-unit>
+      <trans-unit id="2" resname="contao_manager_title">
+        <source>Manage updates and extensions and maintain the application</source>
+        <target>Zarządzaj aktualizacjami i rozszerzeniami oraz utrzymuj aplikację</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
