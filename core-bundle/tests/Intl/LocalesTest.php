@@ -20,7 +20,8 @@ use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Translator;
 
 class LocalesTest extends TestCase
 {
@@ -163,7 +164,25 @@ class LocalesTest extends TestCase
 
     public function testGetsLocalesTranslated(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue
+            ->method('has')
+            ->willReturnCallback(
+                function (string $label, string $domain) {
+                    $this->assertSame('contao_languages', $domain);
+
+                    return 'LNG.de' === $label;
+                }
+            )
+        ;
+
+        $translator = $this->createMock(Translator::class);
+        $translator
+            ->method('getCatalogue')
+            ->with('de')
+            ->willReturn($catalogue)
+        ;
+
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -475,13 +494,13 @@ class LocalesTest extends TestCase
         }
     }
 
-    private function getLocalesService(TranslatorInterface $translator = null, RequestStack $requestStack = null, array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string $defaultLocale = null): Locales
+    private function getLocalesService(Translator $translator = null, RequestStack $requestStack = null, array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string $defaultLocale = null): Locales
     {
         if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
+            $translator = $this->createMock(Translator::class);
             $translator
-                ->method('trans')
-                ->willReturnArgument(0)
+                ->method('getCatalogue')
+                ->willReturn($this->createMock(MessageCatalogueInterface::class))
             ;
         }
 

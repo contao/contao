@@ -324,7 +324,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             return;
         }
 
-        // Set the plugin loader again so it is available at runtime (synthetic service)
+        // Set the plugin loader again, so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables

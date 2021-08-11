@@ -20,7 +20,8 @@ use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\Component\Translation\Translator;
 
 class CountriesTest extends TestCase
 {
@@ -63,7 +64,25 @@ class CountriesTest extends TestCase
 
     public function testGetsCountryNamesTranslated(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
+        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue
+            ->method('has')
+            ->willReturnCallback(
+                function (string $label, string $domain) {
+                    $this->assertSame('contao_countries', $domain);
+
+                    return 'CNT.de' === $label;
+                }
+            )
+        ;
+
+        $translator = $this->createMock(Translator::class);
+        $translator
+            ->method('getCatalogue')
+            ->with('de')
+            ->willReturn($catalogue)
+        ;
+
         $translator
             ->method('trans')
             ->willReturnCallback(
@@ -201,13 +220,13 @@ class CountriesTest extends TestCase
         ];
     }
 
-    private function getCountriesService(TranslatorInterface $translator = null, array $configCountries = []): Countries
+    private function getCountriesService(Translator $translator = null, array $configCountries = []): Countries
     {
         if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
+            $translator = $this->createMock(Translator::class);
             $translator
-                ->method('trans')
-                ->willReturnArgument(0)
+                ->method('getCatalogue')
+                ->willReturn($this->createMock(MessageCatalogueInterface::class))
             ;
         }
 

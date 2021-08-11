@@ -30,34 +30,11 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $this->assertSame('debug:contao-twig', $command->getName());
         $this->assertNotEmpty($command->getDescription());
 
-        $this->assertTrue($command->getDefinition()->hasOption('refresh'));
         $this->assertTrue($command->getDefinition()->hasOption('theme'));
         $this->assertTrue($command->getDefinition()->hasArgument('filter'));
     }
 
-    public function testDoesNotRefreshLoaderByDefault(): void
-    {
-        $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
-        $cacheWarmer
-            ->expects($this->never())
-            ->method('refresh')
-        ;
-
-        $command = new DebugContaoTwigCommand(
-            $this->createMock(TemplateHierarchyInterface::class),
-            $cacheWarmer,
-        );
-
-        $tester = new CommandTester($command);
-        $tester->execute([]);
-
-        $this->assertSame(0, $tester->getStatusCode());
-    }
-
-    /**
-     * @dataProvider provideRefreshOptions
-     */
-    public function testRefreshesLoader(string $refreshOption): void
+    public function testRefreshesLoader(): void
     {
         $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
         $cacheWarmer
@@ -71,15 +48,9 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         );
 
         $tester = new CommandTester($command);
-        $tester->execute([$refreshOption => null]);
+        $tester->execute([]);
 
         $this->assertSame(0, $tester->getStatusCode());
-    }
-
-    public function provideRefreshOptions(): \Generator
-    {
-        yield 'regular' => ['--refresh'];
-        yield 'short' => ['-r'];
     }
 
     /**

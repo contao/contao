@@ -121,7 +121,7 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.search_indexer')
         ;
 
-        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        // Set the two parameters, so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 

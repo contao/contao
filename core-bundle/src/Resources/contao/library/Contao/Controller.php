@@ -1526,11 +1526,8 @@ abstract class Controller extends System
 		{
 			if ($interpretAsContentModel)
 			{
-				/** @var ContentModel $contentModel */
-				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
-
 				// This will be null if "overwriteMeta" is not set
-				return $contentModel->setRow($rowData)->getOverwriteMetadata();
+				return (new ContentModel())->setRow($rowData)->getOverwriteMetadata();
 			}
 
 			// Manually create metadata that always contains certain properties (BC)
