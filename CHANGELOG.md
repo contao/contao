@@ -44,6 +44,10 @@ This project adheres to [Semantic Versioning].
 
 ## [4.9.16] (2021-06-23)
 
+**Security fixes:**
+
+- Prevent XSS in the system log ([CVE-2021-35210])
+
 **Fixed issues:**
 
 - [#3112] Use "anon." as username if authentication fails ([leofeyer])
@@ -244,6 +248,10 @@ This project adheres to [Semantic Versioning].
 - [#2343] Only use $dc->id in the protectFolder() method ([leofeyer])
 
 ## [4.9.6] (2020-09-24)
+
+**Security fixes:**
+
+- Prevent insert tag injection in forms ([CVE-2020-25768])
 
 **New features:**
 
@@ -679,6 +687,8 @@ This project adheres to [Semantic Versioning].
 [CVE-2021-37627]: https://github.com/contao/contao/security/advisories/GHSA-hq5m-mqmx-fw6m
 [CVE-2021-37626]: https://github.com/contao/contao/security/advisories/GHSA-r6mv-ppjc-4hgr
 [CVE-2021-35955]: https://github.com/contao/contao/security/advisories/GHSA-hr3h-x6gq-rqcp
+[CVE-2021-35210]: https://github.com/contao/contao/security/advisories/GHSA-h58v-c6rf-g9f7
+[CVE-2020-25768]: https://github.com/contao/contao/security/advisories/GHSA-f7wm-x4gw-6m23
 [AlexejKossmann]: https://github.com/AlexejKossmann
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
