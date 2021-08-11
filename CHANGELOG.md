@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.18] (2021-08-11)
+
+**Security fixes:**
+
+- Prevent privilege escalation with the form generator ([CVE-2021-37627])
+- Prevent PHP file inclusion via insert tags ([CVE-2021-37626])
+- Prevent XSS via HTML attributes in the back end ([CVE-2021-35955])
+
 ## [4.9.17] (2021-08-04)
 
 **New features:**
@@ -647,6 +655,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.18]: https://github.com/contao/contao/releases/tag/4.9.18
 [4.9.17]: https://github.com/contao/contao/releases/tag/4.9.17
 [4.9.16]: https://github.com/contao/contao/releases/tag/4.9.16
 [4.9.15]: https://github.com/contao/contao/releases/tag/4.9.15
@@ -667,6 +676,9 @@ This project adheres to [Semantic Versioning].
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
+[CVE-2021-37627]: https://github.com/contao/contao/security/advisories/GHSA-hq5m-mqmx-fw6m
+[CVE-2021-37626]: https://github.com/contao/contao/security/advisories/GHSA-r6mv-ppjc-4hgr
+[CVE-2021-35955]: https://github.com/contao/contao/security/advisories/GHSA-hr3h-x6gq-rqcp
 [AlexejKossmann]: https://github.com/AlexejKossmann
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
