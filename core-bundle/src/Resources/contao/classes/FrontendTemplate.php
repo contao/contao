@@ -157,7 +157,7 @@ class FrontendTemplate extends Template
 			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
 			static function ($matches)
 			{
-				return $matches[0][0] === '<' ? $matches[0] : $matches[0][1] . $matches[0][1];
+				return $matches[0][0] === '<' ? $matches[0] : '&#' . \ord($matches[0][1]) . ';&#' . \ord($matches[0][1]) . ';';
 			},
 			$this->strBuffer
 		);

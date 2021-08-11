@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{frontend_legend},folderUrl,doNotRedirectEmpty;{security_legend:hide},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{cron_legend:hide},disableCron;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{global_legend},adminEmail;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{backend_legend:hide},doNotCollapse,resultsPerPage,maxResultsPerPage;{frontend_legend},folderUrl,doNotRedirectEmpty;{security_legend:hide},disableRefererCheck,allowedTags,allowedAttributes;{files_legend:hide},allowedDownload,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{cron_legend:hide},disableCron;{chmod_legend},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -94,6 +94,35 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'inputType'               => 'text',
 			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
+		),
+		'allowedAttributes' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedAttributes'],
+			'inputType'               => 'keyValueWizard',
+			'eval'                    => array('tl_class'=>'clr'),
+			'load_callback' => array
+			(
+				static function ($varValue)
+				{
+					$showWarning = false;
+
+					foreach (Contao\StringUtil::deserialize($varValue, true) as $row)
+					{
+						if (in_array('*', Contao\StringUtil::trimsplit(',', $row['value']), true))
+						{
+							$showWarning = true;
+							break;
+						}
+					}
+
+					if ($showWarning)
+					{
+						$GLOBALS['TL_DCA']['tl_settings']['fields']['allowedAttributes']['label'][1] = '<span style="color: #c33;">' . $GLOBALS['TL_LANG']['tl_settings']['allowedAttributesWarning'] . '</span>';
+					}
+
+					return $varValue;
+				},
+			),
 		),
 		'allowedDownload' => array
 		(
