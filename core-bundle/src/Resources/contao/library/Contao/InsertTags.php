@@ -631,7 +631,8 @@ class InsertTags extends Controller
 						// Skip everything until the next tag
 						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							if (1 === preg_match('/^'.preg_quote($elements[0], '/').'(?:$|:|\|)/i', $tags[$_rit+3] ?? '')) {
+							// Case insensitive match for iflng/ifnlng optionally followed by "::" or "|"
+							if (1 === preg_match('/^'.preg_quote($elements[0], '/').'(?:$|::|\|)/i', $tags[$_rit+3] ?? '')) {
 								$tags[$_rit+2] = '';
 								break;
 							}
