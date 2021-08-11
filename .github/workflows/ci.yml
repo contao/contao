@@ -19,7 +19,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: xdebug
@@ -52,7 +52,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -144,7 +144,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -172,7 +172,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -210,7 +210,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
                   tools: prestissimo, flex
@@ -242,7 +242,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: json, zlib
                   tools: prestissimo
                   coverage: none
@@ -266,7 +266,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 7.3
                   extensions: json, zlib
                   tools: prestissimo
                   coverage: none
