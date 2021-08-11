@@ -2637,6 +2637,9 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Существует как минимум одна группа пользователей, предоставляющая разрешение на импорт тем. Поскольку темы могут содержать произвольные шаблоны, а шаблоны - файлы PHP, пользователи этих групп неявно имеют полный контроль над системой!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Включить</target>

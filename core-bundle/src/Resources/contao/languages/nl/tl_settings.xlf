@@ -80,6 +80,15 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Geef een lijst op van toegestane HTML tags. Alle andere tags zullen verwijderd worden uit de gebruikersinvoer.</target>
       </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.0">
+        <source>Allowed HTML attributes</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.1">
+        <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributesWarning">
+        <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Uitschakelen request tokens</target>
