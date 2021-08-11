@@ -467,6 +467,19 @@ class tl_form extends Backend
 	 */
 	public function getAllTables()
 	{
+		// Return allowlisted tables if defined
+		if (!empty($GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']))
+		{
+			return $GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options'];
+		}
+
+		$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['label'][1] = '<span style="color: #c33;">' . sprintf($GLOBALS['TL_LANG']['tl_form']['targetTableMissingAllowlist'], "\$GLOBALS['TL_DCA']['tl_form']['fields']['targetTable']['options']") . '</span>';
+
+		if (!$this->User->isAdmin)
+		{
+			return array();
+		}
+
 		$arrTables = $this->Database->listTables();
 		$arrViews = System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
 

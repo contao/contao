@@ -17,6 +17,10 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 	(
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
+		'onload_callback' => array
+		(
+			array('tl_user_group', 'addTemplateWarning')
+		),
 		'sql' => array
 		(
 			'keys' => array
@@ -265,6 +269,24 @@ class tl_user_group extends Backend
 	{
 		parent::__construct();
 		$this->import('BackendUser', 'User');
+	}
+
+	/**
+	 * Add a warning if there are users with access to the template editor.
+	 */
+	public function addTemplateWarning()
+	{
+		if (Input::get('act') && Input::get('act') != 'select')
+		{
+			return;
+		}
+
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"themes\"%' AND themes LIKE '%\"modules\"%' AND (alexf LIKE '%\"tl_module::list_table\"%' OR alexf LIKE '%\"tl_module::list_fields\"%' OR alexf LIKE '%\"tl_module::list_where\"%' OR alexf LIKE '%\"tl_module::list_search\"%' OR alexf LIKE '%\"tl_module::list_sort\"%' OR alexf LIKE '%\"tl_module::list_info\"%' OR alexf LIKE '%\"tl_module::list_info_where\"%')) as showListingWarning");
+
+		if ($objResult->showListingWarning > 0)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupListingModule']);
+		}
 	}
 
 	/**
