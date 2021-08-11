@@ -603,6 +603,11 @@ class InsertTagsTest extends TestCase
             '{{iflng::de}}should{{iflngg}}not{{iflng-x}}stop{{iflng:}}the{{ifnlng}}conditional{{iflng}}until here',
             'until here',
         ];
+        yield [
+            '{{iflng::de}}DE{{iflng::de_DE}}DE_DE{{iflng::de*}}DE*{{iflng::de_*}}DE_*{{iflng::deu-DE}}DEU-DE{{iflng::dex-DE}}DEX-DE{{iflng}}',
+            'DE_DEDE*DE_*DEU-DE',
+            'deu-DE',
+        ];
     }
 
     private function setContainerWithContaoConfiguration(array $configuration = []): void
