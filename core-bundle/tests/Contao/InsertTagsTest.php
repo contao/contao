@@ -409,6 +409,15 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $insertTags->replace($source));
         $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
 
+        // Test case insensitivity
+        $source = str_replace('lng', 'LnG', $source);
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
         $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source).'">';
         $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected).'">';
 
