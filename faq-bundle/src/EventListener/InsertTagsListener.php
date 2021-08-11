@@ -119,7 +119,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
                     $url,
-                    StringUtil::specialchars($faq->question),
+                    StringUtil::specialcharsAttribute($faq->question),
                     $faq->question
                 );
 
@@ -127,14 +127,14 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">',
                     $url,
-                    StringUtil::specialchars($faq->question)
+                    StringUtil::specialcharsAttribute($faq->question)
                 );
 
             case 'faq_url':
                 return $url;
 
             case 'faq_title':
-                return StringUtil::specialchars($faq->question);
+                return StringUtil::specialcharsAttribute($faq->question);
         }
 
         return false;

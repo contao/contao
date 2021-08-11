@@ -74,6 +74,11 @@ class MetaWizard extends \Widget
 		{
 			if ($k != 'language')
 			{
+				if (!empty($v['link']))
+				{
+					$v['link'] = StringUtil::specialcharsUrl($v['link']);
+				}
+
 				$varInput[$k] = array_map('trim', $v);
 			}
 			else

@@ -133,7 +133,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
                     $adapter->generateNewsUrl($news),
-                    StringUtil::specialchars($news->headline),
+                    StringUtil::specialcharsAttribute($news->headline),
                     $news->headline
                 );
 
@@ -141,14 +141,14 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">',
                     $adapter->generateNewsUrl($news),
-                    StringUtil::specialchars($news->headline)
+                    StringUtil::specialcharsAttribute($news->headline)
                 );
 
             case 'news_url':
                 return $adapter->generateNewsUrl($news);
 
             case 'news_title':
-                return StringUtil::specialchars($news->headline);
+                return StringUtil::specialcharsAttribute($news->headline);
 
             case 'news_teaser':
                 return StringUtil::toHtml5($news->teaser);

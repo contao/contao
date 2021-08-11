@@ -20,7 +20,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},disableRefererCheck,allowedTags;{files_legend:hide},allowedDownload,editableFiles,templateFiles,maxImageWidth,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
+		'default'                     => '{title_legend},websiteTitle;{date_legend},dateFormat,timeFormat,datimFormat,timeZone;{global_legend:hide},adminEmail,characterSet,minifyMarkup,gzipScripts;{backend_legend:hide},resultsPerPage,maxResultsPerPage,fileSyncExclude,doNotCollapse,staticFiles,staticPlugins;{frontend_legend},useAutoItem,folderUrl,doNotRedirectEmpty,disableCron;{proxy_legend:hide},sslProxyDomain;{privacy_legend:hide},privacyAnonymizeIp,privacyAnonymizeGA;{security_legend},disableRefererCheck,allowedTags,allowedAttributes;{files_legend:hide},allowedDownload,editableFiles,templateFiles,maxImageWidth,gdMaxImgWidth,gdMaxImgHeight;{uploads_legend:hide},uploadTypes,maxFileSize,imageWidth,imageHeight;{search_legend:hide},enableSearch,indexProtected;{timeout_legend:hide},undoPeriod,versionPeriod,logPeriod,sessionTimeout,autologin,lockPeriod;{chmod_legend:hide},defaultUser,defaultGroup,defaultChmod'
 	),
 
 	// Fields
@@ -181,6 +181,35 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedTags'],
 			'inputType'               => 'text',
 			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
+		),
+		'allowedAttributes' => array
+		(
+			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedAttributes'],
+			'inputType'               => 'keyValueWizard',
+			'eval'                    => array('tl_class'=>'clr'),
+			'load_callback' => array
+			(
+				function ($varValue)
+				{
+					$showWarning = false;
+
+					foreach (StringUtil::deserialize($varValue, true) as $row)
+					{
+						if (in_array('*', StringUtil::trimsplit(',', $row['value']), true))
+						{
+							$showWarning = true;
+							break;
+						}
+					}
+
+					if ($showWarning)
+					{
+						$GLOBALS['TL_DCA']['tl_settings']['fields']['allowedAttributes']['label'][1] = '<span style="color: #c33;">' . $GLOBALS['TL_LANG']['tl_settings']['allowedAttributesWarning'] . '</span>';
+					}
+
+					return $varValue;
+				},
+			),
 		),
 		'allowedDownload' => array
 		(

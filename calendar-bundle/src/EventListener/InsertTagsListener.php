@@ -133,7 +133,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
                     $adapter->generateEventUrl($event),
-                    StringUtil::specialchars($event->title),
+                    StringUtil::specialcharsAttribute($event->title),
                     $event->title
                 );
 
@@ -141,14 +141,14 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">',
                     $adapter->generateEventUrl($event),
-                    StringUtil::specialchars($event->title)
+                    StringUtil::specialcharsAttribute($event->title)
                 );
 
             case 'event_url':
                 return $adapter->generateEventUrl($event);
 
             case 'event_title':
-                return StringUtil::specialchars($event->title);
+                return StringUtil::specialcharsAttribute($event->title);
 
             case 'event_teaser':
                 return StringUtil::toHtml5($event->teaser);

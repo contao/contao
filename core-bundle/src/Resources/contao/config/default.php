@@ -27,25 +27,43 @@ $GLOBALS['TL_CONFIG']['timeZone']    = ini_get('date.timezone') ?: 'GMT';
 // Input and security
 $GLOBALS['TL_CONFIG']['allowedTags']
 	= '<a><abbr><acronym><address><area><article><aside><audio>'
-	. '<b><bdi><bdo><big><blockquote><br><base><button>'
-	. '<canvas><caption><cite><code><col><colgroup>'
-	. '<data><datalist><dataset><dd><del><dfn><div><dl><dt>'
+	. '<b><bdi><bdo><big><blockquote><br><button>'
+	. '<caption><cite><code><col><colgroup>'
+	. '<data><datalist><dd><del><dfn><div><dl><dt>'
 	. '<em>'
 	. '<fieldset><figcaption><figure><footer><form>'
 	. '<h1><h2><h3><h4><h5><h6><header><hgroup><hr>'
 	. '<i><img><input><ins>'
-	. '<kbd><keygen>'
-	. '<label><legend><li><link>'
+	. '<kbd>'
+	. '<label><legend><li>'
 	. '<map><mark><menu>'
 	. '<nav>'
-	. '<object><ol><optgroup><option><output>'
-	. '<p><param><picture><pre>'
+	. '<ol><optgroup><option><output>'
+	. '<p><picture><pre>'
 	. '<q>'
 	. '<s><samp><section><select><small><source><span><strong><style><sub><sup>'
 	. '<table><tbody><td><textarea><tfoot><th><thead><time><tr><tt>'
 	. '<u><ul>'
 	. '<var><video>'
 	. '<wbr>';
+$GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
+	array('key' => '*', 'value' => 'data-*,id,class,style,title,dir,lang,aria-*,hidden,translate,itemid,itemprop,itemref,itemscope,itemtype'),
+	array('key' => 'a', 'value' => 'href,hreflang,rel,target,download,referrerpolicy'),
+	array('key' => 'img', 'value' => 'src,crossorigin,srcset,sizes,width,height,alt,loading,decoding,ismap,usemap,referrerpolicy'),
+	array('key' => 'map', 'value' => 'name'),
+	array('key' => 'area', 'value' => 'coords,shape,alt,href,hreflang,rel,target,download'),
+	array('key' => 'video', 'value' => 'src,crossorigin,width,height,autoplay,controls,controlslist,loop,muted,poster,preload,playsinline'),
+	array('key' => 'audio', 'value' => 'src,crossorigin,autoplay,controls,loop,muted,preload'),
+	array('key' => 'source', 'value' => 'src,srcset,media,sizes,type'),
+	array('key' => 'ol', 'value' => 'reversed,start,type'),
+	array('key' => 'table', 'value' => 'border,cellspacing,cellpadding,width,height'),
+	array('key' => 'col', 'value' => 'span'),
+	array('key' => 'colgroup', 'value' => 'span'),
+	array('key' => 'td', 'value' => 'rowspan,colspan,width,height'),
+	array('key' => 'th', 'value' => 'rowspan,colspan,width,height'),
+	array('key' => 'style', 'value' => 'media'),
+	array('key' => 'time', 'value' => 'datetime'),
+));
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 

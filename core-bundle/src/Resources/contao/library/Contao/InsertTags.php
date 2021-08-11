@@ -73,6 +73,8 @@ class InsertTags extends \Controller
 			return \StringUtil::restoreBasicEntities($strBuffer);
 		}
 
+		$strBuffer = self::encodeHtmlAttributes($strBuffer);
+
 		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
 		$tags = preg_split('~{{([a-zA-Z0-9\x80-\xFF][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
 
@@ -90,7 +92,7 @@ class InsertTags extends \Controller
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
 			$strBuffer .= $tags[$_rit];
-			$strTag = $tags[$_rit+1];
+			$strTag = isset($tags[$_rit+1]) ? $tags[$_rit+1] : '';
 
 			// Skip empty tags
 			if ($strTag == '')
@@ -138,6 +140,7 @@ class InsertTags extends \Controller
 			{
 				// Date
 				case 'date':
+					$flags[] = 'attr';
 					$arrCache[$strTag] = \Date::parse($elements[1] ?: \Config::get('dateFormat'));
 					break;
 
@@ -168,7 +171,7 @@ class InsertTags extends \Controller
 						break;
 					}
 
-					$strEmail = \StringUtil::encodeEmail($elements[1]);
+					$strEmail = \StringUtil::specialcharsUrl(\StringUtil::encodeEmail($elements[1]));
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -189,6 +192,7 @@ class InsertTags extends \Controller
 
 				// Label tags
 				case 'label':
+					$flags[] = 'attr';
 					$keys = explode(':', $elements[1]);
 
 					if (\count($keys) < 2)
@@ -263,6 +267,7 @@ class InsertTags extends \Controller
 				case 'user':
 					if (FE_USER_LOGGED_IN)
 					{
+						$flags[] = 'attr';
 						$this->import('FrontendUser', 'User');
 						$value = $this->User->{$elements[1]};
 
@@ -354,9 +359,9 @@ class InsertTags extends \Controller
 					// External links
 					elseif (strncmp($elements[1], 'http://', 7) === 0 || strncmp($elements[1], 'https://', 8) === 0)
 					{
-						$strUrl = $elements[1];
+						$strUrl = StringUtil::specialcharsUrl($elements[1]);
 						$strTitle = $elements[1];
-						$strName = str_replace(array('http://', 'https://'), '', $elements[1]);
+						$strName = str_replace(array('http://', 'https://'), '', $strUrl);
 					}
 
 					// Regular link
@@ -432,11 +437,11 @@ class InsertTags extends \Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, \StringUtil::specialchars($strTitle), $strClass, $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, \StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, \StringUtil::specialchars($strTitle), $strClass, $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, \StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
@@ -444,15 +449,16 @@ class InsertTags extends \Controller
 							break;
 
 						case 'link_title':
-							$arrCache[$strTag] = \StringUtil::specialchars($strTitle);
+							$arrCache[$strTag] = \StringUtil::specialcharsAttribute($strTitle);
 							break;
 
 						case 'link_target':
-							$arrCache[$strTag] = $strTarget;
+							@trigger_error('Using the link_target insert tag has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+							$arrCache[$strTag] = $strTarget ? ' target=_blank rel=noreferrer&#32;noopener' : $strTarget;
 							break;
 
 						case 'link_name':
-							$arrCache[$strTag] = $strName;
+							$arrCache[$strTag] = \StringUtil::specialcharsAttribute($strName);
 							break;
 					}
 					break;
@@ -507,11 +513,11 @@ class InsertTags extends \Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'article':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, \StringUtil::specialchars($objArticle->title), $objArticle->title);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, \StringUtil::specialcharsAttribute($objArticle->title), $objArticle->title);
 							break;
 
 						case 'article_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, \StringUtil::specialchars($objArticle->title));
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, \StringUtil::specialcharsAttribute($objArticle->title));
 							break;
 
 						case 'article_url':
@@ -519,7 +525,7 @@ class InsertTags extends \Controller
 							break;
 
 						case 'article_title':
-							$arrCache[$strTag] = \StringUtil::specialchars($objArticle->title);
+							$arrCache[$strTag] = \StringUtil::specialcharsAttribute($objArticle->title);
 							break;
 					}
 					break;
@@ -536,6 +542,8 @@ class InsertTags extends \Controller
 
 				// Last update
 				case 'last_update':
+					$flags[] = 'attr';
+
 					$strQuery = "SELECT MAX(tstamp) AS tc";
 
 					$bundles = \System::getContainer()->getParameter('kernel.bundles');
@@ -571,6 +579,7 @@ class InsertTags extends \Controller
 
 				// POST data
 				case 'post':
+					$flags[] = 'attr';
 					$arrCache[$strTag] = \Input::post($elements[1]);
 					break;
 
@@ -602,11 +611,11 @@ class InsertTags extends \Controller
 
 				// Conditional tags (if)
 				case 'iflng':
-					if ($elements[1] != '' && $elements[1] != $objPage->language)
+					if (!empty($elements[1]) && $elements[1] != $objPage->language)
 					{
 						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
+							if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng|urlattr' || $tags[$_rit+1] == 'iflng|attr' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
 							{
 								break;
 							}
@@ -617,7 +626,7 @@ class InsertTags extends \Controller
 
 				// Conditional tags (if not)
 				case 'ifnlng':
-					if ($elements[1] != '')
+					if (!empty($elements[1]))
 					{
 						$langs = \StringUtil::trimsplit(',', $elements[1]);
 
@@ -625,7 +634,7 @@ class InsertTags extends \Controller
 						{
 							for (; $_rit<$_cnt; $_rit+=2)
 							{
-								if ($tags[$_rit+1] == 'ifnlng')
+								if ($tags[$_rit+1] == 'ifnlng' || $tags[$_rit+1] == 'ifnlng|urlattr' || $tags[$_rit+1] == 'ifnlng|attr')
 								{
 									break;
 								}
@@ -637,6 +646,8 @@ class InsertTags extends \Controller
 
 				// Environment
 				case 'env':
+					$flags[] = 'urlattr';
+
 					switch ($elements[1])
 					{
 						case 'host':
@@ -685,6 +696,8 @@ class InsertTags extends \Controller
 
 				// Page
 				case 'page':
+					$flags[] = 'attr';
+
 					if ($elements[1] == 'pageTitle' && $objPage->pageTitle == '')
 					{
 						$elements[1] = 'title';
@@ -704,6 +717,7 @@ class InsertTags extends \Controller
 
 				// User agent
 				case 'ua':
+					$flags[] = 'attr';
 					$ua = \Environment::get('agent');
 
 					if ($elements[1] != '')
@@ -757,11 +771,11 @@ class InsertTags extends \Controller
 							switch ($key)
 							{
 								case 'width':
-									$width = $value;
+									$width = (int) $value;
 									break;
 
 								case 'height':
-									$height = $value;
+									$height = (int) $value;
 									break;
 
 								case 'alt':
@@ -851,7 +865,7 @@ class InsertTags extends \Controller
 								$dimensions = ' width="' . \StringUtil::specialchars($imgSize[0]) . '" height="' . \StringUtil::specialchars($imgSize[1]) . '"';
 							}
 
-							$arrCache[$strTag] = '<img src="' . TL_FILES_URL . $src . '" ' . $dimensions . ' alt="' . \StringUtil::specialchars($alt) . '"' . (($class != '') ? ' class="' . \StringUtil::specialchars($class) . '"' : '') . '>';
+							$arrCache[$strTag] = '<img src="' . \StringUtil::specialcharsUrl(TL_FILES_URL . $src) . '" ' . $dimensions . ' alt="' . \StringUtil::specialcharsAttribute($alt) . '"' . (($class != '') ? ' class="' . \StringUtil::specialcharsAttribute($class) . '"' : '') . '>';
 						}
 
 						// Picture
@@ -865,8 +879,8 @@ class InsertTags extends \Controller
 								'sources' => $picture->getSources(TL_ROOT, TL_FILES_URL)
 							);
 
-							$picture['alt'] = $alt;
-							$picture['class'] = $class;
+							$picture['alt'] = \StringUtil::specialcharsAttribute($alt);
+							$picture['class'] = \StringUtil::specialcharsAttribute($class);
 							$pictureTemplate = new \FrontendTemplate($strTemplate);
 							$pictureTemplate->setData($picture);
 							$arrCache[$strTag] = $pictureTemplate->parse();
@@ -877,14 +891,14 @@ class InsertTags extends \Controller
 						{
 							if (strncmp($rel, 'lightbox', 8) !== 0)
 							{
-								$attribute = ' rel="' . \StringUtil::specialchars($rel) . '"';
+								$attribute = ' rel="' . \StringUtil::specialcharsAttribute($rel) . '"';
 							}
 							else
 							{
-								$attribute = ' data-lightbox="' . \StringUtil::specialchars(substr($rel, 8)) . '"';
+								$attribute = ' data-lightbox="' . \StringUtil::specialcharsAttribute(substr($rel, 8)) . '"';
 							}
 
-							$arrCache[$strTag] = '<a href="' . TL_FILES_URL . $strFile . '"' . (($alt != '') ? ' title="' . \StringUtil::specialchars($alt) . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
+							$arrCache[$strTag] = '<a href="' . \StringUtil::specialcharsUrl(TL_FILES_URL . $strFile) . '"' . (($alt != '') ? ' title="' . \StringUtil::specialcharsAttribute($alt) . '"' : '') . $attribute . '>' . $arrCache[$strTag] . '</a>';
 						}
 					}
 					catch (\Exception $e)
@@ -1004,6 +1018,14 @@ class InsertTags extends \Controller
 							$arrCache[$strTag] = $flag($arrCache[$strTag]);
 							break;
 
+						case 'attr':
+							$arrCache[$strTag] = \StringUtil::specialcharsAttribute($arrCache[$strTag]);
+							break;
+
+						case 'urlattr':
+							$arrCache[$strTag] = \StringUtil::specialcharsUrl($arrCache[$strTag]);
+							break;
+
 						case 'encodeEmail':
 							$arrCache[$strTag] = \StringUtil::$flag($arrCache[$strTag]);
 							break;
@@ -1073,9 +1095,169 @@ class InsertTags extends \Controller
 				}
 			}
 
-			$strBuffer .= $arrCache[$strTag];
+			$strBuffer .= isset($arrCache[$strTag]) ? $arrCache[$strTag] : '';
 		}
 
 		return \StringUtil::restoreBasicEntities($strBuffer);
+	}
+
+	/**
+	 * Add the specialchars flag to all insert tags used in HTML attributes
+	 *
+	 * @param string $html
+	 *
+	 * @return string The html with the encoded insert tags
+	 */
+	private function encodeHtmlAttributes($html)
+	{
+		// Regular expression to match tags according to https://html.spec.whatwg.org/#tag-open-state
+		$tagRegEx = '('
+			. '<'                         // Tag start
+			. '/?'                        // Optional slash for closing element
+			. '([a-z][^\s/>]*+)'          // Tag name
+			. '(?:'                       // Attribute
+				. '[\s/]*+'               // Optional white space including slash
+				. '[^>\s/][^>\s/=]*+'     // Attribute name
+				. '[\s]*+'                // Optional white space
+				. '(?:='                  // Assignment
+					. '[\s]*+'            // Optional white space
+					. '(?:'               // Value
+						. '"[^"]*"'       // Double quoted value
+						. '|\'[^\']*\''   // Or single quoted value
+						. '|[^>][^\s>]*+' // Or unquoted value
+					. ')?+'               // Value is optional
+				. ')?+'                   // Assignment is optional
+			. ')*+'                       // Attributes may occur zero or more times
+			. '[\s/]*+'                   // Optional white space including slash
+			. '>?'                        // Tag end (optional if EOF)
+			. '|<!--'                     // Or comment
+			. '|<!'                       // Or bogus ! comment
+			. '|<\?'                      // Or bogus ? comment
+			. '|</(?![a-z])'              // Or bogus / comment
+		. ')i';
+
+		$htmlResult = '';
+		$offset = 0;
+
+		while (preg_match($tagRegEx, $html, $matches, PREG_OFFSET_CAPTURE, $offset))
+		{
+			$htmlResult .= substr($html, $offset, $matches[0][1] - $offset);
+
+			// Skip comments
+			if ($matches[0][0] === '<!--' || $matches[0][0] === '<!' || $matches[0][0] === '</' || $matches[0][0] === '<?')
+			{
+				$commentCloseString = $matches[0][0] === '<!--' ? '-->' : '>';
+				$commentClosePos = strpos($html, $commentCloseString, $offset);
+				$offset = $commentClosePos ? $commentClosePos + \strlen($commentCloseString) : \strlen($html);
+
+				// Encode insert tags in comments
+				$htmlResult .= str_replace(array('{{', '}}'), array('[{]', '[}]'), substr($html, $matches[0][1], $offset - $matches[0][1]));
+				continue;
+			}
+
+			$tag = $matches[0][0];
+
+			// Encode insert tags
+			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
+			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
+			$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
+
+			$offset = $matches[0][1] + \strlen($matches[0][0]);
+			$htmlResult .= $tag;
+
+			// Skip RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
+			if (
+				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'))
+				&& preg_match('(</' . preg_quote($matches[1][0]) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
+			) {
+				$offset = $endTagMatches[0][1] + \strlen($endTagMatches[0][0]);
+				$htmlResult .= substr($html, $matches[0][1] + \strlen($matches[0][0]), $offset - $matches[0][1] - \strlen($matches[0][0]));
+			}
+		}
+
+		$htmlResult .= substr($html, $offset);
+
+		return $htmlResult;
+	}
+
+	/**
+	 * Detect strip and encode unclosed insert tags and add the urlattr flag to
+	 * all insert tags used in URL attributes
+	 *
+	 * @param string $attributes
+	 *
+	 * @return string The attributes html with the encoded insert tags
+	 */
+	private function fixUnclosedTagsAndUrlAttributes($attributes)
+	{
+		$attrRegEx = '('
+			. '[\s/]*+'               // Optional white space including slash
+			. '([^>\s/][^>\s/=]*+)'   // Attribute name
+			. '[\s]*+'                // Optional white space
+			. '(?:='                  // Assignment
+				. '[\s]*+'            // Optional white space
+				. '(?:'               // Value
+					. '"[^"]*"'       // Double quoted value
+					. '|\'[^\']*\''   // Or single quoted value
+					. '|[^>][^\s>]*+' // Or unquoted value
+				. ')?+'               // Value is optional
+			. ')?+'                   // Assignment is optional
+		. ')i';
+
+		$attributesResult = '';
+		$offset = 0;
+
+		while (preg_match($attrRegEx, $attributes, $matches, PREG_OFFSET_CAPTURE, $offset))
+		{
+			$attributesResult .= substr($attributes, $offset, $matches[0][1] - $offset);
+			$offset = $matches[0][1] + \strlen($matches[0][0]);
+
+			// Strip unclosed iflng tags
+			$intLastIflng = strripos($matches[0][0], '{{iflng');
+
+			if (
+				$intLastIflng !== strripos($matches[0][0], '{{iflng}}')
+				&& $intLastIflng !== strripos($matches[0][0], '{{iflng|urlattr}}')
+				&& $intLastIflng !== strripos($matches[0][0], '{{iflng|attr}}')
+			) {
+				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
+			}
+
+			// Strip unclosed ifnlng tags
+			$intLastIfnlng = strripos($matches[0][0], '{{ifnlng');
+
+			if (
+				$intLastIfnlng !== strripos($matches[0][0], '{{ifnlng}}')
+				&& $intLastIfnlng !== strripos($matches[0][0], '{{ifnlng|urlattr}}')
+				&& $intLastIfnlng !== strripos($matches[0][0], '{{ifnlng|attr}}')
+			) {
+				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
+			}
+
+			// Strip unclosed insert tags
+			$intLastOpen = strrpos($matches[0][0], '{{');
+			$intLastClose = strrpos($matches[0][0], '}}');
+
+			if ($intLastOpen !== false && ($intLastClose === false || $intLastClose < $intLastOpen))
+			{
+				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
+				$matches[0][0] = str_replace(array('{{', '}}'), array('[{]', '[}]'), $matches[0][0]);
+			}
+
+			// Add the urlattr insert tags flag in URL attributes
+			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
+			{
+				$attributesResult .= str_replace('|attr}}', '|urlattr}}', $matches[0][0]);
+			}
+			else
+			{
+				$attributesResult .= $matches[0][0];
+			}
+		}
+
+		$attributesResult .= substr($attributes, $offset);
+
+		return $attributesResult;
 	}
 }
