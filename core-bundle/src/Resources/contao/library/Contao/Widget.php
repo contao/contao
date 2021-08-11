@@ -986,6 +986,8 @@ abstract class Widget extends Controller
 					break;
 
 				case 'url':
+					$varInput = StringUtil::specialcharsUrl($varInput);
+
 					if (!Validator::isUrl($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));

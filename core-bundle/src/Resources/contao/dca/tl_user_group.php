@@ -306,7 +306,7 @@ class tl_user_group extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning");
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user_group WHERE themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user_group WHERE modules LIKE '%\"themes\"%' AND themes LIKE '%\"modules\"%' AND (alexf LIKE '%\"tl_module::list_table\"%' OR alexf LIKE '%\"tl_module::list_fields\"%' OR alexf LIKE '%\"tl_module::list_where\"%' OR alexf LIKE '%\"tl_module::list_search\"%' OR alexf LIKE '%\"tl_module::list_sort\"%' OR alexf LIKE '%\"tl_module::list_info\"%' OR alexf LIKE '%\"tl_module::list_info_where\"%')) as showListingWarning");
 
 		if ($objResult->showTemplateWarning > 0)
 		{
@@ -316,6 +316,11 @@ class tl_user_group extends Backend
 		if ($objResult->showThemeWarning > 0)
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupThemeImport']);
+		}
+
+		if ($objResult->showListingWarning > 0)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['groupListingModule']);
 		}
 	}
 
