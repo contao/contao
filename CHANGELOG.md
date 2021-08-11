@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.7] (2021-08-11)
+
+**Security fixes:**
+
+- Prevent privilege escalation with the form generator ([CVE-2021-37627])
+- Prevent PHP file inclusion via insert tags ([CVE-2021-37626])
+- Prevent XSS via HTML attributes in the back end ([CVE-2021-35955])
+
 ## [4.11.6] (2021-08-04)
 
 **Fixed issues:**
@@ -149,6 +157,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.7]: https://github.com/contao/contao/releases/tag/4.11.7
 [4.11.6]: https://github.com/contao/contao/releases/tag/4.11.6
 [4.11.5]: https://github.com/contao/contao/releases/tag/4.11.5
 [4.11.4]: https://github.com/contao/contao/releases/tag/4.11.4
@@ -158,6 +167,9 @@ This project adheres to [Semantic Versioning].
 [4.11.0]: https://github.com/contao/contao/releases/tag/4.11.0
 [4.11.0-RC2]: https://github.com/contao/contao/releases/tag/4.11.0-RC2
 [4.11.0-RC1]: https://github.com/contao/contao/releases/tag/4.11.0-RC1
+[CVE-2021-37627]: https://github.com/contao/contao/security/advisories/GHSA-hq5m-mqmx-fw6m
+[CVE-2021-37626]: https://github.com/contao/contao/security/advisories/GHSA-r6mv-ppjc-4hgr
+[CVE-2021-35955]: https://github.com/contao/contao/security/advisories/GHSA-hr3h-x6gq-rqcp
 [ArndtZiegler]: https://github.com/ArndtZiegler
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
