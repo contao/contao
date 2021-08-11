@@ -45,7 +45,7 @@ class Automator extends System
 
 		if (null === $searchIndexer)
 		{
-		    return;
+			return;
 		}
 
 		// Clear the index
