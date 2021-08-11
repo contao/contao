@@ -624,41 +624,27 @@ class InsertTags extends Controller
 					$arrCache[$strTag] = Input::post($elements[1]);
 					break;
 
-				// Conditional tags (if)
+				// Conditional tags (if, if not)
 				case 'iflng':
-					if (!empty($elements[1]) && !$this->languageMatches($elements[1]))
-					{
-						// Skip everything until the next iflng tag
-						for (; $_rit<$_cnt; $_rit+=2)
-						{
-							if (!empty($tags[$_rit+3]) && \in_array(substr($tags[$_rit+3], 0, 6), array('iflng', 'iflng:', 'iflng|')))
-							{
-								$tags[$_rit+2] = '';
-								break;
-							}
-						}
-					}
-
-					// iflng does not output anything and the cache must not be used
-					unset($arrCache[$strTag]);
-					continue 2;
-
-				// Conditional tags (if not)
 				case 'ifnlng':
-					if (!empty($elements[1]) && $this->languageMatches($elements[1]))
+					if (!empty($elements[1]) && $this->languageMatches($elements[1]) === (strtolower($elements[0]) === 'ifnlng'))
 					{
-						// Skip everything until the next ifnlng tag
+						// Skip everything until the next tag
 						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							if (!empty($tags[$_rit+3]) && \in_array(substr($tags[$_rit+3], 0, 7), array('ifnlng', 'ifnlng:', 'ifnlng|')))
-							{
+							if (
+								\in_array(
+									strtolower(substr($tags[$_rit+3] ?? '', 0, \strlen($elements[0]) + 1)),
+									array(strtolower($elements[0]), strtolower($elements[0]) . ':', strtolower($elements[0]) . '|')
+								)
+							) {
 								$tags[$_rit+2] = '';
 								break;
 							}
 						}
 					}
 
-					// ifnlng does not output anything and the cache must not be used
+					// Does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
 					continue 2;
 
