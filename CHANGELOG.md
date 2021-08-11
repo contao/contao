@@ -1,5 +1,11 @@
 # Change log
 
+## 4.4.56 (2021-08-11)
+
+ * Prevent privilege escalation with the form generator (CVE-2021-37627).
+ * Prevent PHP file inclusion via insert tags (CVE-2021-37626).
+ * Prevent XSS via HTML attributes in the back end (CVE-2021-35955).
+
 ## 4.4.55 (2020-12-04)
 
  * Trigger the onload_callback when featuring news (see #2531).
