@@ -117,7 +117,7 @@ class ModuleTest extends ContaoTestCase
 
             public function execute()
             {
-                return static::getPublishedSubpagesWithoutGuestsByPid(1);
+                return self::getPublishedSubpagesWithoutGuestsByPid(1);
             }
         };
 

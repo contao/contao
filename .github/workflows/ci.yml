@@ -139,7 +139,7 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --ignore-platform-reqs --no-interaction --no-progress
+              run: composer install --ignore-platform-req=php --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always

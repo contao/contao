@@ -92,6 +92,7 @@ class Registry implements \Countable
 	 *
 	 * @return integer The number of models
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return \count($this->arrIdentities);
