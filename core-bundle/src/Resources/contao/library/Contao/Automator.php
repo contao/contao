@@ -43,11 +43,6 @@ class Automator extends System
 
 		$searchIndexer = System::getContainer()->get('contao.search.indexer');
 
-		if (null === $searchIndexer)
-		{
-			return;
-		}
-
 		// Clear the index
 		$searchIndexer->clear();
 
