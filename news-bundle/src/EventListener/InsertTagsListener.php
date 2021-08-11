@@ -93,7 +93,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
                     $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->headline),
+                    StringUtil::specialcharsAttribute($model->headline),
                     $model->headline
                 );
 
@@ -101,14 +101,14 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">',
                     $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->headline)
+                    StringUtil::specialcharsAttribute($model->headline)
                 );
 
             case 'news_url':
                 return $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './';
 
             case 'news_title':
-                return StringUtil::specialchars($model->headline);
+                return StringUtil::specialcharsAttribute($model->headline);
 
             case 'news_teaser':
                 return StringUtil::toHtml5($model->teaser);

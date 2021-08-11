@@ -85,8 +85,7 @@ function specialchars($strString, $blnStripInsertTags=false)
 		$strString = strip_insert_tags($strString);
 	}
 
-	// Use ENT_COMPAT here (see #4889)
-	return htmlspecialchars($strString, ENT_COMPAT, System::getContainer()->getParameter('kernel.charset'), false);
+	return htmlspecialchars($strString, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'), false);
 }
 
 /**
