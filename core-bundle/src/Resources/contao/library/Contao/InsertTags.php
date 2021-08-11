@@ -286,7 +286,14 @@ class InsertTags extends Controller
 							break;
 					}
 
-					System::loadLanguageFile($file);
+					try
+					{
+						System::loadLanguageFile($file);
+					}
+					catch (\InvalidArgumentException $exception)
+					{
+						$this->log('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+					}
 
 					if (\count($keys) == 2)
 					{
