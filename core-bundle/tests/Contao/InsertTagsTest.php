@@ -454,5 +454,9 @@ class InsertTagsTest extends TestCase
             'not EN',
             'de',
         ];
+        yield [
+            '{{iflng::de}}should{{iflngg}}not{{iflng-x}}stop{{iflng:}}the{{ifnlng}}conditional{{iflng}}until here',
+            'until here',
+        ];
     }
 }
