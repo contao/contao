@@ -625,81 +625,41 @@ class InsertTags extends Controller
 
 				// Conditional tags (if)
 				case 'iflng':
-					if (!empty($elements[1]))
+					if (!empty($elements[1]) && !$this->languageMatches($elements[1]))
 					{
-						$pageLanguage = LocaleUtil::formatAsLocale($objPage->language);
-						$langs = StringUtil::trimsplit(',', $elements[1]);
-
-						// Check if there are wildcards (see #8313)
-						foreach ($langs as $k=>$v)
+						// Skip everything until the next iflng tag
+						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							if (substr($v, -1) == '*')
+							if (!empty($tags[$_rit+3]) && \in_array(substr($tags[$_rit+3], 0, 6), array('iflng', 'iflng:', 'iflng|')))
 							{
-								$langs[$k] = LocaleUtil::formatAsLocale(substr($v, 0, -1));
-
-								if (\strlen($pageLanguage) > 2 && 0 === strncmp($pageLanguage, $langs[$k], 2))
-								{
-									$langs[] = $pageLanguage;
-								}
-							}
-							else
-							{
-								$langs[$k] = LocaleUtil::formatAsLocale($v);
-							}
-						}
-
-						if (!\in_array($pageLanguage, $langs))
-						{
-							for (; $_rit<$_cnt; $_rit+=2)
-							{
-								if ($tags[$_rit+1] == 'iflng' || (strncmp($tags[$_rit+1], 'iflng::', 7) && LocaleUtil::formatAsLocale(substr($tags[$_rit+1], 7)) == $pageLanguage))
-								{
-									break;
-								}
+								$tags[$_rit+2] = '';
+								break;
 							}
 						}
 					}
+
+					// iflng does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
-					break;
+					continue 2;
 
 				// Conditional tags (if not)
 				case 'ifnlng':
-					if (!empty($elements[1]))
+					if (!empty($elements[1]) && $this->languageMatches($elements[1]))
 					{
-						$pageLanguage = LocaleUtil::formatAsLocale($objPage->language);
-						$langs = StringUtil::trimsplit(',', $elements[1]);
-
-						// Check if there are wildcards (see #8313)
-						foreach ($langs as $k=>$v)
+						// Skip everything until the next ifnlng tag
+						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							if (substr($v, -1) == '*')
+							if (!empty($tags[$_rit+3]) && \in_array(substr($tags[$_rit+3], 0, 7), array('ifnlng', 'ifnlng:', 'ifnlng|')))
 							{
-								$langs[$k] = LocaleUtil::formatAsLocale(substr($v, 0, -1));
-
-								if (\strlen($pageLanguage) > 2 && 0 === strncmp($pageLanguage, $langs[$k], 2))
-								{
-									$langs[] = $pageLanguage;
-								}
-							}
-							else
-							{
-								$langs[$k] = LocaleUtil::formatAsLocale($v);
-							}
-						}
-
-						if (\in_array($pageLanguage, $langs))
-						{
-							for (; $_rit<$_cnt; $_rit+=2)
-							{
-								if ($tags[$_rit+1] == 'ifnlng' || $tags[$_rit+1] == 'ifnlng|urlattr' || $tags[$_rit+1] == 'ifnlng|attr')
-								{
-									break;
-								}
+								$tags[$_rit+2] = '';
+								break;
 							}
 						}
 					}
+
+					// ifnlng does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
-					break;
+					continue 2;
 
 				// Environment
 				case 'env':
@@ -1404,6 +1364,28 @@ class InsertTags extends Controller
 		$attributesResult .= substr($attributes, $offset);
 
 		return $attributesResult;
+	}
+
+	private function languageMatches(string $language): bool
+	{
+		$pageLanguage = LocaleUtil::formatAsLocale($GLOBALS['objPage']->language);
+
+		foreach (StringUtil::trimsplit(',', $language) as $lang)
+		{
+			if ($pageLanguage === LocaleUtil::formatAsLocale($lang))
+			{
+				return true;
+			}
+
+			if (
+				substr($lang, -1) === '*'
+				&& 0 === strncmp($pageLanguage, $lang, \strlen($lang) - 1)
+			) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 
