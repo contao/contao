@@ -355,6 +355,11 @@ abstract class System
 			$strLanguage = 'en';
 		}
 
+		if (1 !== preg_match('/^[a-z0-9_-]+$/i', $strName))
+		{
+			throw new \InvalidArgumentException(sprintf('Invalid language file name "%s"', $strName));
+		}
+
 		// Return if the language file has been loaded already
 		if (isset(static::$arrLanguageFiles[$strName][$strLanguage]) && !$blnNoCache)
 		{
@@ -466,6 +471,11 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
+			if (!\Validator::isLocale($strLanguage))
+			{
+				return false;
+			}
+
 			if (is_dir(TL_ROOT . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
 			{
 				static::$arrLanguages[$strLanguage] = true;
