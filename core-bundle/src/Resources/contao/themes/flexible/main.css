@@ -1500,6 +1500,12 @@ ul.sgallery li {
 .tl_optionwizard .fw_checkbox,.tl_key_value_wizard .fw_checkbox {
 	margin:0 1px;
 }
+#ctrl_allowedAttributes {
+	max-width: none;
+}
+#ctrl_allowedAttributes td:first-child {
+	width: 100px;
+}
 
 /* Table wizard */
 #tl_tablewizard {

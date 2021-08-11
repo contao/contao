@@ -352,7 +352,7 @@ class TemplateTest extends TestCase
 
         yield 'literal insert tags are replaced' => [
             'foo[{]bar[{]baz[}]',
-            'foo{{bar{{baz}}',
+            'foo&#123;&#123;bar&#123;&#123;baz&#125;&#125;',
         ];
 
         yield 'literal insert tags inside script tag are not replaced' => [
@@ -362,7 +362,7 @@ class TemplateTest extends TestCase
 
         yield 'multiple occurrences' => [
             '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
-            '{{}}<script>[{][}]</script>{{}}<script>[{][}]</script>{{}}',
+            '&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;',
         ];
     }
 }
