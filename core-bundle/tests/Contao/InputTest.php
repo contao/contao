@@ -110,6 +110,31 @@ class InputTest extends TestCase
             '<img src="foo{{bar&#125;{{noop|urlattr}}&#125;baz">',
         ];
 
+        yield 'Do not destroy JSON attributes' => [
+            '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+        ];
+
+        yield 'Do not destroy nested JSON attributes' => [
+            '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+        ];
+
+        yield 'Do not destroy quoted JSON attributes' => [
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+        ];
+
+        yield 'Do not destroy nested quoted JSON attributes' => [
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+        ];
+
+        yield 'Trick insert tag detection with JSON' => [
+            '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;{{bar::&quot;:&quot;baz&quot;|attr}}">',
+        ];
+
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
             '<form><input></form>',
