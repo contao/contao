@@ -43,7 +43,7 @@ class InsertTagsTest extends TestCase
 
     public function replaceInsertTagsHook(string $tag): string
     {
-        return explode('::', $tag, 2)[1];
+        return explode('::', $tag, 2)[1] ?? '';
     }
 
     /**
@@ -381,6 +381,31 @@ class InsertTagsTest extends TestCase
         yield 'Trick comments detection with insert tag' => [
             '<!-- {{plain::--}}> got you! -->',
             '<!-- [{]plain::--[}]> got you! -->',
+        ];
+
+        yield 'Do not destroy JSON attributes' => [
+            '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
+            '<span data-myjson=\'{"foo":{"bar":"baz"&#125;&#125;\'>',
+        ];
+
+        yield 'Do not destroy nested JSON attributes' => [
+            '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+            '<span data-myjson=\'[{"foo":{"bar":"baz"&#125;&#125;,12.3,"string"]\'>',
+        ];
+
+        yield 'Do not destroy quoted JSON attributes' => [
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+        ];
+
+        yield 'Do not destroy nested quoted JSON attributes' => [
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+        ];
+
+        yield 'Trick insert tag detection with JSON' => [
+            '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+            '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
         ];
     }
 

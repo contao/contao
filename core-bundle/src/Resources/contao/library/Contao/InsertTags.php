@@ -1246,10 +1246,10 @@ class InsertTags extends Controller
 			$tag = $matches[0][0];
 
 			// Encode insert tags
-			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
-			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
 			$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
 			$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
+			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
+			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
 
 			$offset = $matches[0][1] + \strlen($matches[0][0]);
 			$htmlResult .= $tag;
@@ -1332,11 +1332,16 @@ class InsertTags extends Controller
 				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
 				$matches[0][0] = str_replace(array('{{', '}}'), array('[{]', '[}]'), $matches[0][0]);
 			}
+			elseif ($intLastOpen === false && $intLastClose !== false)
+			{
+				// Improve compatibility with JSON in attributes
+				$matches[0][0] = str_replace('}}', '&#125;&#125;', $matches[0][0]);
+			}
 
 			// Add the urlattr insert tags flag in URL attributes
 			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
 			{
-				$attributesResult .= str_replace('|attr}}', '|urlattr}}', $matches[0][0]);
+				$attributesResult .= preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
 			}
 			else
 			{
