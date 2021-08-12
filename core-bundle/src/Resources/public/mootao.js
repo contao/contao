@@ -119,7 +119,8 @@ Tips.Contao = new Class(
 		id: 'tip',
 		onShow: function() {
 			var title = this.tip.getElement('div.tip-title');
-			if (title && title.innerHTML) {
+			var text = this.tip.getElement('div.tip-text');
+			if ((title && title.innerHTML) || (text && text.innerHTML)) {
 				this.tip.setStyle('display', 'block');
 			}
 		},
