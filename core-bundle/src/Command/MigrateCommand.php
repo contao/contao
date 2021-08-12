@@ -77,6 +77,7 @@ class MigrateCommand extends Command
             ->addOption('with-deletes', null, InputOption::VALUE_NONE, 'Execute all database migrations including DROP queries. Can be used together with --no-interaction.')
             ->addOption('schema-only', null, InputOption::VALUE_NONE, 'Only update the database schema.')
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
+            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
@@ -84,6 +85,7 @@ class MigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+        $dryRun = (bool) $input->getOption('dry-run');
 
         if ($input->getOption('migrations-only')) {
             if ($input->getOption('schema-only')) {
@@ -94,22 +96,22 @@ class MigrateCommand extends Command
                 throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
             }
 
-            return $this->executeMigrations() ? 0 : 1;
+            return $this->executeMigrations($dryRun) ? 0 : 1;
         }
 
         if ($input->getOption('schema-only')) {
-            return $this->executeSchemaDiff($input->getOption('with-deletes')) ? 0 : 1;
+            return $this->executeSchemaDiff($dryRun, $input->getOption('with-deletes')) ? 0 : 1;
         }
 
-        if (!$this->executeMigrations()) {
+        if (!$this->executeMigrations($dryRun)) {
             return 1;
         }
 
-        if (!$this->executeSchemaDiff($input->getOption('with-deletes'))) {
+        if (!$this->executeSchemaDiff($dryRun, $input->getOption('with-deletes'))) {
             return 1;
         }
 
-        if (!$this->executeMigrations()) {
+        if (!$dryRun && !$this->executeMigrations($dryRun)) {
             return 1;
         }
 
@@ -118,7 +120,7 @@ class MigrateCommand extends Command
         return 0;
     }
 
-    private function executeMigrations(): bool
+    private function executeMigrations(bool $dryRun): bool
     {
         while (true) {
             $first = true;
@@ -147,7 +149,7 @@ class MigrateCommand extends Command
                 $this->io->writeln(' * Runonce file: '.$file);
             }
 
-            if ($first) {
+            if ($first || $dryRun) {
                 break;
             }
 
@@ -208,7 +210,7 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($this->projectDir.'/'.$file);
     }
 
-    private function executeSchemaDiff(bool $withDeletesOption): bool
+    private function executeSchemaDiff(bool $dryRun, bool $withDeletesOption): bool
     {
         if (null === $this->installer) {
             $this->io->error('Service "contao.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
@@ -243,6 +245,10 @@ class MigrateCommand extends Command
             $commandsByHash = $commands;
 
             $this->io->listing($commandsByHash);
+
+            if ($dryRun) {
+                return true;
+            }
 
             $options = $withDeletesOption
                 ? ['yes, with deletes', 'no']

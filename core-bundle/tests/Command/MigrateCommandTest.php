@@ -132,6 +132,63 @@ class MigrateCommandTest extends TestCase
         $this->assertRegExp('/All migrations completed/', $display);
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Using runonce.php files has been deprecated %s.
+     */
+    public function testDoesNotExecuteWithDryRun(): void
+    {
+        $installer = $this->createMock(Installer::class);
+        $installer
+            ->expects($this->once())
+            ->method('compileCommands')
+        ;
+
+        $installer
+            ->expects($this->once())
+            ->method('getCommands')
+            ->with(false)
+            ->willReturn(
+                [
+                    'hash1' => 'First call QUERY 1',
+                    'hash2' => 'First call QUERY 2',
+                ]
+            )
+        ;
+
+        $runOnceFile = Path::join($this->getTempDir(), 'runonceFile.php');
+
+        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
+
+        $command = $this->getCommand(
+            [['Migration 1', 'Migration 2']],
+            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
+            [[$runOnceFile]],
+            $installer
+        );
+
+        $tester = new CommandTester($command);
+
+        $code = $tester->execute(['--dry-run' => true]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertRegExp('/Migration 1/', $display);
+        $this->assertRegExp('/Migration 2/', $display);
+        $this->assertNotRegExp('/Result 1/', $display);
+        $this->assertNotRegExp('/Result 2/', $display);
+
+        $this->assertRegExp('/runonceFile.php/', $display);
+        $this->assertFileExists($runOnceFile, 'File should not be gone in dry-run mode');
+
+        $this->assertRegExp('/First call QUERY 1/', $display);
+        $this->assertRegExp('/First call QUERY 2/', $display);
+        $this->assertNotRegExp('/Executed 2 SQL queries/', $display);
+
+        $this->assertRegExp('/All migrations completed/', $display);
+    }
+
     public function testAbortsIfAnswerIsNo(): void
     {
         $command = $this->getCommand(
