@@ -111,6 +111,26 @@ class InputTest extends TestCase
                 '<img src="foo{{bar}{{noop}}}baz">',
                 '<img src="foo{{bar&#125;{{noop|urlattr}}&#125;baz">',
             ],
+            'Do not destroy JSON attributes' => [
+                '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
+                '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+            ],
+            'Do not destroy nested JSON attributes' => [
+                '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+                '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+            ],
+            'Do not destroy quoted JSON attributes' => [
+                '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+                '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+            ],
+            'Do not destroy nested quoted JSON attributes' => [
+                '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+                '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+            ],
+            'Trick insert tag detection with JSON' => [
+                '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+                '<span data-myjson="{&quot;foo&quot;:{&quot;{{bar::&quot;:&quot;baz&quot;|attr}}">',
+            ],
             [
                 '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
                 '<form><input></form>',
@@ -125,7 +145,7 @@ class InputTest extends TestCase
             ],
             [
                 'javascript:/*--></title></style></textarea></script></xmp><svg/onload=\'+/"/+/onmouseover=1/+/[*/[]/+alert(1)//\'>',
-                'javascript:/*--&#62;&lt;/title&#62;</style></textarea>&lt;/script&#62;&lt;/xmp&#62;&lt;svg/onload&#61;&#39;+/&#34;/+/onmouseover&#61;1/+/[*/[]/+alert(1)//&#39;&#62;'
+                'javascript:/*--&#62;&lt;/title&#62;</style></textarea>&lt;/script&#62;&lt;/xmp&#62;&lt;svg/onload&#61;&#39;+/&#34;/+/onmouseover&#61;1/+/[*/[]/+alert(1)//&#39;&#62;',
             ],
             [
                 '<IMG SRC="javascript:alert(\'XSS\');">',
