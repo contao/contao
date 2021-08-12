@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.8] (2021-08-12)
+
 ## [4.11.7] (2021-08-11)
 
 **Security fixes:**
@@ -165,6 +167,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.8]: https://github.com/contao/contao/releases/tag/4.11.8
 [4.11.7]: https://github.com/contao/contao/releases/tag/4.11.7
 [4.11.6]: https://github.com/contao/contao/releases/tag/4.11.6
 [4.11.5]: https://github.com/contao/contao/releases/tag/4.11.5
