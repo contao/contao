@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.0-RC3] (2021-08-12)
+
+**Security fixes:**
+
+- Prevent privilege escalation with the form generator ([CVE-2021-37627])
+- Prevent PHP file inclusion via insert tags ([CVE-2021-37626])
+- Prevent XSS via HTML attributes in the back end ([CVE-2021-35955])
+
+**Fixed issues:**
+
+- [#3295] Fix the "iflng" and "ifnlng" insert tags ([ausi])
+- [#3276] Check catalogue for country or locale translations ([ausi])
+- [#3268] Fix a type error in the event list module ([leofeyer])
+- [#3270] Always refresh the template hierarchy in the debug:contao-twig command ([m-vo])
+- [#3269] Show native language suffix only in user profile ([ausi])
+
 ## [4.12.0-RC2] (2021-08-04)
 
 **New features:**
@@ -27,6 +43,11 @@ This project adheres to [Semantic Versioning].
 - [#3195] Do not prefix our JSON-LD context ([ausi])
 
 ## [4.12.0-RC1] (2021-07-14)
+
+**Security fixes:**
+
+- Prevent insert tag injection in forms ([CVE-2020-25768])
+- Prevent XSS in the system log ([CVE-2021-35210])
 
 **New features:**
 
@@ -93,8 +114,14 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.0-RC3]: https://github.com/contao/contao/releases/tag/4.12.0-RC3
 [4.12.0-RC2]: https://github.com/contao/contao/releases/tag/4.12.0-RC2
 [4.12.0-RC1]: https://github.com/contao/contao/releases/tag/4.12.0-RC1
+[CVE-2021-37627]: https://github.com/contao/contao/security/advisories/GHSA-hq5m-mqmx-fw6m
+[CVE-2021-37626]: https://github.com/contao/contao/security/advisories/GHSA-r6mv-ppjc-4hgr
+[CVE-2021-35955]: https://github.com/contao/contao/security/advisories/GHSA-hr3h-x6gq-rqcp
+[CVE-2020-25768]: https://github.com/contao/contao/security/advisories/GHSA-f7wm-x4gw-6m23
+[CVE-2021-35210]: https://github.com/contao/contao/security/advisories/GHSA-h58v-c6rf-g9f7
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [fritzmg]: https://github.com/fritzmg
@@ -102,6 +129,11 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
+[#3295]: https://github.com/contao/contao/pull/3295
+[#3276]: https://github.com/contao/contao/pull/3276
+[#3268]: https://github.com/contao/contao/pull/3268
+[#3270]: https://github.com/contao/contao/pull/3270
+[#3269]: https://github.com/contao/contao/pull/3269
 [#3228]: https://github.com/contao/contao/pull/3228
 [#3258]: https://github.com/contao/contao/pull/3258
 [#3146]: https://github.com/contao/contao/pull/3146
