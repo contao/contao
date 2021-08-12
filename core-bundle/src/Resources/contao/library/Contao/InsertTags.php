@@ -620,73 +620,26 @@ class InsertTags extends Controller
 					$arrCache[$strTag] = Input::post($elements[1]);
 					break;
 
-				// Conditional tags (if)
+				// Conditional tags (if, if not)
 				case 'iflng':
-					if (!empty($elements[1]))
-					{
-						$langs = StringUtil::trimsplit(',', $elements[1]);
-
-						// Check if there are wildcards (see #8313)
-						foreach ($langs as $k=>$v)
-						{
-							if (substr($v, -1) == '*')
-							{
-								$langs[$k] = substr($v, 0, -1);
-
-								if (\strlen($objPage->language) > 2 && 0 === strncmp($objPage->language, $langs[$k], 2))
-								{
-									$langs[] = $objPage->language;
-								}
-							}
-						}
-
-						if (!\in_array($objPage->language, $langs))
-						{
-							for (; $_rit<$_cnt; $_rit+=2)
-							{
-								if ($tags[$_rit+1] == 'iflng' || $tags[$_rit+1] == 'iflng|urlattr' || $tags[$_rit+1] == 'iflng|attr' || $tags[$_rit+1] == 'iflng::' . $objPage->language)
-								{
-									break;
-								}
-							}
-						}
-					}
-					unset($arrCache[$strTag]);
-					break;
-
-				// Conditional tags (if not)
 				case 'ifnlng':
-					if (!empty($elements[1]))
+					if (!empty($elements[1]) && $this->languageMatches($elements[1]) === (strtolower($elements[0]) === 'ifnlng'))
 					{
-						$langs = StringUtil::trimsplit(',', $elements[1]);
-
-						// Check if there are wildcards (see #8313)
-						foreach ($langs as $k=>$v)
+						// Skip everything until the next tag
+						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							if (substr($v, -1) == '*')
+							// Case insensitive match for iflng/ifnlng optionally followed by "::" or "|"
+							if (1 === preg_match('/^' . preg_quote($elements[0], '/') . '(?:$|::|\|)/i', $tags[$_rit+3] ?? ''))
 							{
-								$langs[$k] = substr($v, 0, -1);
-
-								if (\strlen($objPage->language) > 2 && 0 === strncmp($objPage->language, $langs[$k], 2))
-								{
-									$langs[] = $objPage->language;
-								}
-							}
-						}
-
-						if (\in_array($objPage->language, $langs))
-						{
-							for (; $_rit<$_cnt; $_rit+=2)
-							{
-								if ($tags[$_rit+1] == 'ifnlng' || $tags[$_rit+1] == 'ifnlng|urlattr' || $tags[$_rit+1] == 'ifnlng|attr')
-								{
-									break;
-								}
+								$tags[$_rit+2] = '';
+								break;
 							}
 						}
 					}
+
+					// Does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
-					break;
+					continue 2;
 
 				// Environment
 				case 'env':
@@ -1269,10 +1222,10 @@ class InsertTags extends Controller
 			$tag = $matches[0][0];
 
 			// Encode insert tags
-			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
-			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
 			$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
 			$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
+			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
+			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
 
 			$offset = $matches[0][1] + \strlen($matches[0][0]);
 			$htmlResult .= $tag;
@@ -1355,11 +1308,16 @@ class InsertTags extends Controller
 				$matches[0][0] = StringUtil::stripInsertTags($matches[0][0]);
 				$matches[0][0] = str_replace(array('{{', '}}'), array('[{]', '[}]'), $matches[0][0]);
 			}
+			elseif ($intLastOpen === false && $intLastClose !== false)
+			{
+				// Improve compatibility with JSON in attributes
+				$matches[0][0] = str_replace('}}', '&#125;&#125;', $matches[0][0]);
+			}
 
 			// Add the urlattr insert tags flag in URL attributes
 			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
 			{
-				$attributesResult .= str_replace('|attr}}', '|urlattr}}', $matches[0][0]);
+				$attributesResult .= preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
 			}
 			else
 			{
@@ -1370,6 +1328,33 @@ class InsertTags extends Controller
 		$attributesResult .= substr($attributes, $offset);
 
 		return $attributesResult;
+	}
+
+	/**
+	 * Check if the language matches
+	 *
+	 * @param string $language
+	 *
+	 * @return boolean
+	 */
+	private function languageMatches($language)
+	{
+		global $objPage;
+
+		foreach (StringUtil::trimsplit(',', $language) as $lang)
+		{
+			if ($objPage->language === $lang)
+			{
+				return true;
+			}
+
+			if (substr($lang, -1) === '*' && 0 === strncmp($objPage->language, $lang, \strlen($lang) - 1))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
 
