@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.19] (2021-08-12)
+
+**Fixed issues:**
+
+- [#3293] Do not show the urlattr flag for rgxp url fields ([ausi])
+- [#3292] Improve compatibility with JSON in attributes ([ausi])
+- [#3291] Fix the "iflng" and "ifnlng" insert tags ([ausi])
+- [#3275] Fix missing tooltips for widget help text ([ausi])
+
 ## [4.9.18] (2021-08-11)
 
 **Security fixes:**
@@ -663,6 +672,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.19]: https://github.com/contao/contao/releases/tag/4.9.19
 [4.9.18]: https://github.com/contao/contao/releases/tag/4.9.18
 [4.9.17]: https://github.com/contao/contao/releases/tag/4.9.17
 [4.9.16]: https://github.com/contao/contao/releases/tag/4.9.16
@@ -715,6 +725,10 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#3293]: https://github.com/contao/contao/pull/3293
+[#3292]: https://github.com/contao/contao/pull/3292
+[#3291]: https://github.com/contao/contao/pull/3291
+[#3275]: https://github.com/contao/contao/pull/3275
 [#2940]: https://github.com/contao/contao/pull/2940
 [#3256]: https://github.com/contao/contao/pull/3256
 [#3214]: https://github.com/contao/contao/pull/3214

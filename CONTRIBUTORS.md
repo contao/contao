@@ -2,8 +2,8 @@
 
  * Leo Feyer ([leofeyer](https://github.com/leofeyer))
  * Andreas Schempp ([aschempp](https://github.com/aschempp))
- * Yanick Witschi ([Toflar](https://github.com/Toflar))
  * Martin Auswöger ([ausi](https://github.com/ausi))
+ * Yanick Witschi ([Toflar](https://github.com/Toflar))
  * Tristan Lins ([tristanlins](https://github.com/tristanlins))
  * Hannes ([xchs](https://github.com/xchs))
  * Fritz Michael Gschwantner ([fritzmg](https://github.com/fritzmg))
