@@ -291,169 +291,206 @@ class InsertTagsTest extends TestCase
             'no insert tag',
             'no insert tag',
         ];
+
         yield [
             '{{iflng::de}}DE{{iflng}}',
             '',
         ];
+
         yield [
             '{{iflng::en}}EN{{iflng}}',
             'EN',
         ];
+
         yield [
             '{{iflng::de}}DE{{iflng}}',
             'DE',
             'de',
         ];
+
         yield [
             '{{iflng::de,en}}DE,EN{{iflng}}',
             'DE,EN',
         ];
+
         yield [
             '{{iflng::en*}}EN*{{iflng}}',
             'EN*',
         ];
+
         yield [
             '{{iflng::en*}}EN*{{iflng}}',
             'EN*',
             'en_US',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
             '',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::en}}EN{{iflng}}',
             'EN',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
             'DE',
             'de',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::de,en}}DE,EN{{iflng}}',
             'DE,EN',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
             'EN*',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
             'EN*',
             'en_US',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
             'RU',
             'ru',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::en}}EN{{iflng}}',
             'RU',
             'ru',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
             'RU',
             'ru',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::de,en}}DE,EN{{iflng}}',
             'RU',
             'ru',
         ];
+
         yield [
             '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
             'RU',
             'ru',
         ];
+
         yield [
             '{{ifnlng::de}}DE{{ifnlng}}',
             'DE',
         ];
+
         yield [
             '{{ifnlng::en}}EN{{ifnlng}}',
             '',
         ];
+
         yield [
             '{{ifnlng::de}}DE{{ifnlng}}',
             '',
             'de',
         ];
+
         yield [
             '{{ifnlng::de,en}}DE,EN{{ifnlng}}',
             '',
         ];
+
         yield [
             '{{ifnlng::en*}}EN*{{ifnlng}}',
             '',
         ];
+
         yield [
             '{{ifnlng::en*}}EN*{{ifnlng}}',
             '',
             'en_US',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
             'RUDE',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::en}}EN{{ifnlng}}',
             'RU',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
             'RU',
             'de',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::de,en}}DE,EN{{ifnlng}}',
             'RU',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
             'RU',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
             'RU',
             'en_US',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
             'DE',
             'ru',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::en}}EN{{ifnlng}}',
             'EN',
             'ru',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
             'DE',
             'ru',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::de,en}}DE,EN{{ifnlng}}',
             'DE,EN',
             'ru',
         ];
+
         yield [
             '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
             'EN*',
             'ru',
         ];
+
         yield [
             '{{ifnlng::de}}not DE{{ifnlng::en}}not EN{{ifnlng}}',
             'not DE',
         ];
+
         yield [
             '{{ifnlng::de}}not DE{{ifnlng::en}}not EN{{ifnlng}}',
             'not EN',
             'de',
         ];
+
         yield [
             '{{iflng::de}}should{{iflngg}}not{{iflng-x}}stop{{iflng:}}the{{ifnlng}}conditional{{iflng}}until here',
             'until here',

@@ -1266,7 +1266,14 @@ class InsertTags extends Controller
 		return $attributesResult;
 	}
 
-	private function languageMatches(string $language): bool
+	/**
+	 * Check if the language matches
+	 *
+	 * @param string $language
+	 *
+	 * @return boolean
+	 */
+	private function languageMatches($language)
 	{
 		global $objPage;
 
@@ -1277,10 +1284,8 @@ class InsertTags extends Controller
 				return true;
 			}
 
-			if (
-				substr($lang, -1) === '*'
-				&& 0 === strncmp($objPage->language, $lang, \strlen($lang) - 1)
-			) {
+			if (substr($lang, -1) === '*' && 0 === strncmp($objPage->language, $lang, \strlen($lang) - 1))
+			{
 				return true;
 			}
 		}
