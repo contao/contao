@@ -849,7 +849,7 @@ class StyleSheets extends Backend
 			$fnColor = StringUtil::deserialize($row['fontcolor'], true);
 
 			// Font color
-			if (isset($fnColor[0]) && $fnColor[0] != '')
+			if (!empty($fnColor[0]))
 			{
 				$return .= $lb . 'color:' . $this->compileColor($fnColor, $blnWriteToFile, $vars) . ';';
 			}
