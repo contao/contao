@@ -429,8 +429,12 @@ class MigrateCommand extends Command
         $this->io->writeln(
             json_encode(
                 array_merge(['type' => $type], $data, ['type' => $type]),
-                JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR
+                JSON_INVALID_UTF8_SUBSTITUTE
             )
         );
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \JsonException(json_last_error_msg());
+        }
     }
 }

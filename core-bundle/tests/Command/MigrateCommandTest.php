@@ -414,7 +414,7 @@ class MigrateCommandTest extends TestCase
     {
         return array_map(
             static function (string $line) {
-                return json_decode($line, true, 512, JSON_THROW_ON_ERROR);
+                return json_decode($line, true);
             },
             explode("\n", trim($ndjson))
         );
