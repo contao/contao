@@ -418,7 +418,7 @@ class DcaExtractor extends Controller
 
 					if (isset($config['foreignKey']))
 					{
-						$table = substr($config['foreignKey'], 0, strrpos($config['foreignKey'], '.'));
+						$table = substr($config['foreignKey'], 0, strpos($config['foreignKey'], '.'));
 					}
 
 					$arrRelations[$field] = array_merge(array('table'=>$table, 'field'=>'id'), $config['relation']);
