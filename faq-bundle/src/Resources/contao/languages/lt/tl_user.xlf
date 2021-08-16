@@ -1,0 +1,26 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="lt">
+    <body>
+      <trans-unit id="tl_user.faqs.0">
+        <source>Allowed FAQ categories</source>
+        <target>Leidžiamos DUK kategorijos</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faqs.1">
+        <source>Here you can grant access to one or more FAQ categories.</source>
+        <target>Čia galite suteikti prieigą prie vienos ar daugiau DUK kategorijų.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faqp.0">
+        <source>FAQ category permissions</source>
+        <target>DUK kategorijos leidimai</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faqp.1">
+        <source>Here you can define the FAQ category permissions.</source>
+        <target>Čia galite apibūdinti DUK kategorijos leidimus.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.faq_legend">
+        <source>FAQ permissions</source>
+        <target>DUK leidimai</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

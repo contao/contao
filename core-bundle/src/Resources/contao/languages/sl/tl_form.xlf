@@ -240,6 +240,9 @@
         <source>Delete form ID %s</source>
         <target>Izbriši obrazec z ID %s</target>
       </trans-unit>
+      <trans-unit id="tl_form.targetTableMissingAllowlist">
+        <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
