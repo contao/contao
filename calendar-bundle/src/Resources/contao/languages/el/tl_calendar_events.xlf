@@ -1,0 +1,377 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_calendar_events.php" source-language="en" target-language="el">
+    <body>
+      <trans-unit id="tl_calendar_events.title.0">
+        <source>Title</source>
+        <target>Τίτλος</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.title.1">
+        <source>Please enter the event title.</source>
+        <target>Συμπληρώστε το τίτλο της εκδήλωσης.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.alias.0">
+        <source>Event alias</source>
+        <target>Alias της εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.alias.1">
+        <source>The event alias is a unique reference to the event which can be called instead of its numeric ID.</source>
+        <target>Το alias της εκδήλωσης είναι μια μοναδική αναφορά της εκδήλωσης που μπορεί να καλεστεί αντί του αριθμητικού του ID.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.author.0">
+        <source>Author</source>
+        <target>Συγγραφέας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.author.1">
+        <source>Here you can change the author of the event.</source>
+        <target>Εδώ μπορείτε να αλλάξετε τον συγγραφέα της εκδήλωσης.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addTime.0">
+        <source>Add time</source>
+        <target>Προσθήκη ώρας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addTime.1">
+        <source>Add a start and end time to the event.</source>
+        <target>Προσθήκη ώρας έναρξης και τέλους της εκδήλωσης.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startTime.0">
+        <source>Start time</source>
+        <target>Ώρα έναρξης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startTime.1">
+        <source>Please enter the start time according to the global time format.</source>
+        <target>Συμπληρώστε την ώρα έναρξης βάση του διεθνούς προτύπου ώρας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endTime.0">
+        <source>End time</source>
+        <target>Ώρα λήξης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endTime.1">
+        <source>Leave blank to create an open-ended event.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startDate.0">
+        <source>Start date</source>
+        <target>Ημερομηνία έναρξης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.startDate.1">
+        <source>Please enter the start date according to the global date format.</source>
+        <target>Συμπληρώστε την ημερομηνία έναρξης βάση του διεθνούς προτύπου ημερομηνίας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endDate.0">
+        <source>End date</source>
+        <target>Ημερομηνία λήξης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.endDate.1">
+        <source>Leave blank to create a single day event.</source>
+        <target>Αφήστε κενό για να δημιουργήσετε μια μονοήμερη εκδήλωση.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.0">
+        <source>Robots tag</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.robots.1">
+        <source>Here you can overwrite how search engines handle the event.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.location.0">
+        <source>Location name</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.location.1">
+        <source>Here you can enter the name of the event location.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.0">
+        <source>Location address</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.address.1">
+        <source>Here you can enter the address of the event location.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.teaser.0">
+        <source>Event teaser</source>
+        <target>Teaser της εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.teaser.1">
+        <source>The event teaser can be shown in an event list instead of the full article. A &quot;read more …&quot; link will be added automatically.</source>
+        <target>Το teaser της εκδήλωσης μπορεί να προβληθεί στην λίστα εκδηλώσεων αντί του πλήρους κειμένου του άρθρου. Θα προστεθεί ο σύνδεσμος &quot;Περισσότερα...&quot; αυτόματα.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details.0">
+        <source>Event text</source>
+        <target>Κείμενο εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details.1">
+        <source>Here you can enter the event text.</source>
+        <target>Συμπληρώστε το πλήρες κείμενο της εκδήλωσης.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addImage.0">
+        <source>Add an image</source>
+        <target>Εισαγωγή εικόνας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addImage.1">
+        <source>Add an image to the event.</source>
+        <target>Προσθήκη εικόνας στην εκδήλωση.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring.0">
+        <source>Repeat event</source>
+        <target>Επανάληψη εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring.1">
+        <source>Create a recurring event.</source>
+        <target>Δημιουργία μια επαναλαμβανόμενη εκδήλωση.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEach.0">
+        <source>Interval</source>
+        <target>Χρονικό διάστημα</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEach.1">
+        <source>Here you can set the recurrence interval.</source>
+        <target>Εδώ μπορείτε να ορίζετε τον χρόνο επανάληψης.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurrences.0">
+        <source>Recurrences</source>
+        <target>Επανεμφάνισεις</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurrences.1">
+        <source>Set to 0 for unlimited recurrences.</source>
+        <target>Εισάγετε 0 για απεριόριστες επανεμφανίσεις.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.repeatEnd">
+        <source>End of recurring event</source>
+        <target>Τελος μιας επαναλαμβανομενης εκδηλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>Προσθήκη συννημένων</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.addEnclosure.1">
+        <source>Add one or more downloadable files to the event.</source>
+        <target>Προσθήκη στην εκδήλωση ενός ή περισσοτέρων αρχείων για κατέβασμα.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure.0">
+        <source>Enclosures</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>Επιλέξτε τα αρχεία που θέλετε να επισυνάψετε</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source.0">
+        <source>Redirect target</source>
+        <target>Ανακατεύθυνση προορισμού</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source.1">
+        <source>Here you can override the default redirect target.</source>
+        <target>Εδώ μπορείτε να παρακάμψετε τον προκαθορισμένο προορισμό.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.default.0">
+        <source>Use default</source>
+        <target>Χρήση προεπιλεγμένου</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.default.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the calendar.</source>
+        <target>Πατώντας το σύνδεσμο &quot;Περισσότερα&quot;, ο επισκέπτης θα μεταφερθεί στην προκαθορισμένη σελίδα ανάγνωσης των εκδηλώσεων.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.internal.0">
+        <source>Page</source>
+        <target>Σελίδα</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.internal.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an internal page.</source>
+        <target>Πατώντας το σύνδεσμο &quot;Περισσότερα...&quot;, ο επισκέπτης θα μεταφερθεί σε κάποια εσωτερική σελίδα.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.article.0">
+        <source>Article</source>
+        <target>Άρθρο</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.article.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
+        <target>Πατώντας το σύνδεσμο &quot;Περισσότερα...&quot;, ο επισκέπτης θα μεταφερθεί σε κάποιο άρθεο.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.external.0">
+        <source>Custom URL</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.external.1">
+        <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to custom URL.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Σελίδα ανακατεύθυνσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking the event.</source>
+        <target>Επιλέξτε την σελίδα στην οποία θα μεταφέρονται οι επισκέπτες όταν θα πατήσουν κάποια εκδήλωση.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.articleId.0">
+        <source>Article</source>
+        <target>Άρθρο</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.articleId.1">
+        <source>Please choose the article to which visitors will be redirected when clicking the event.</source>
+        <target>Επιλέξτε το άρθρο στο οποίο θα μεταφέρονται οι επισκέπτες όταν θα πατήσουν κάποια εκδήλωση.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cssClass.0">
+        <source>CSS class</source>
+        <target>CSS class</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cssClass.1">
+        <source>Here you can enter one or more classes.</source>
+        <target>Εδώ μπορείτε να συμπληρώσετε μια η περισσότερες κλάσεις του CSS</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.0">
+        <source>Disable comments</source>
+        <target>Επενεργοποίηση σχολίων</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.noComments.1">
+        <source>Do not allow comments for this particular event.</source>
+        <target>Να μην επιτρέπετε η χρήση σχολίων για τη συγκεκριμένη εκδήλωση.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.0">
+        <source>Feature event</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.featured.1">
+        <source>Show the event in a featured event list.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.published.0">
+        <source>Publish event</source>
+        <target>Δημοσίευση εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.published.1">
+        <source>Make the event publicly visible on the website.</source>
+        <target>Κάντε την εκδήλωση ορατή για το κοινό του website.</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.start.0">
+        <source>Show from</source>
+        <target>Προβολή από</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.start.1">
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.stop.0">
+        <source>Show until</source>
+        <target>Προβολή μέχρι</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.stop.1">
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tstamp.0">
+        <source>Revision date</source>
+        <target>Ημερομηνία αναθεώρησης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Ημερομηνία και ώρα την τελευταίας αναθεώρησης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.title_legend">
+        <source>Title and author</source>
+        <target>Τίτλος και συγραφέας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.date_legend">
+        <source>Date and time</source>
+        <target>Ημερομηνία και ώρα</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.details_legend">
+        <source>Event details</source>
+        <target>Λεπτομέρειες εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.text_legend">
+        <source>Event text</source>
+        <target>Κείμενο εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.image_legend">
+        <source>Image settings</source>
+        <target>Ρυθμίσεις εικόνας</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.recurring_legend">
+        <source>Recurrence settings</source>
+        <target>Ρυθμίσεις επανάληψης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.enclosure_legend">
+        <source>Enclosures</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.source_legend">
+        <source>Redirect target</source>
+        <target>Ανακατεύθυνση προορισμού</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.meta_legend">
+        <source>Metadata</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.expert_legend">
+        <source>Expert settings</source>
+        <target>Ρυθμίσεις για προχωρημένους</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.publish_legend">
+        <source>Publish settings</source>
+        <target>Ρυθμίσεις δημοσίευσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.days">
+        <source>day(s)</source>
+        <target>ημέρα(ες)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.weeks">
+        <source>week(s)</source>
+        <target>εβδομάδα(ες)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.months">
+        <source>month(s)</source>
+        <target>μήνας(ες)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.years">
+        <source>year(s)</source>
+        <target>έτος(η)</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.new.1">
+        <source>Create a new event</source>
+        <target>Δημιουργία νέας εκδήλωσης</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.show">
+        <source>Show the details of event ID %s</source>
+        <target>Προβολή λεπτομερειών της εκδήλωσης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.edit">
+        <source>Edit event ID %s</source>
+        <target>Επεξεργασία εκδήλωσης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.copy">
+        <source>Duplicate event ID %s</source>
+        <target>Αντιγραφή εκδήλωσης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.cut">
+        <source>Move event ID %s</source>
+        <target>Μετακίνηση εκδήλωσης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.delete">
+        <source>Delete event ID %s</source>
+        <target>Διαγραφή εκδήλωσης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle">
+        <source>Publish/unpublish event ID %s</source>
+        <target>Δημοσίευση/Μη δημοσίευση εκδήλωσης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature">
+        <source>Feature/unfeature event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editheader">
+        <source>Edit the settings of event ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.pasteafter.0">
+        <source>Paste into this calendar</source>
+        <target>Επικόλληση σε αυτό το ημερολογίο</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.editmeta">
+        <source>Edit the event settings</source>
+        <target>Επεξεργασία ρυθμίσεων εκδήλωσης</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,168 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_faq.php" source-language="en" target-language="el">
+    <body>
+      <trans-unit id="tl_faq.question.0">
+        <source>Question</source>
+        <target>Ερωτηση</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.question.1">
+        <source>Please enter the question.</source>
+        <target>Εισαγετε μια ερωτηση.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.0">
+        <source>FAQ alias</source>
+        <target>Συχνές Ερωτήσεις ψευδώνυμο</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.alias.1">
+        <source>The FAQ alias is a unique reference to the FAQ which can be called instead of its numeric ID.</source>
+        <target>Το FAQ είναι γνωστός και ως μια μοναδική αναφορά στο FAQ που μπορούμε να χρησιμοποιήσουμε αντί για το αριθμητικό αναγνωριστικό. </target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.0">
+        <source>Author</source>
+        <target>Συγγραφέας</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.author.1">
+        <source>Here you can change the author of the FAQ.</source>
+        <target>Εδώ μπορείτε να αλλάξετε τον συγγραφέα του άρθρου.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.0">
+        <source>Answer</source>
+        <target>Απαντηση</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer.1">
+        <source>Please enter the answer.</source>
+        <target>Εισαγετε μια απαντηση.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.0">
+        <source>Add an image</source>
+        <target>Εισαγωγή εικόνας</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addImage.1">
+        <source>Add an image to the FAQ.</source>
+        <target>Προσθηκη εικονας στο FAQ.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.0">
+        <source>Meta title</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.pageTitle.1">
+        <source>Here you can add a custom meta title to overwrite the default page title.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.0">
+        <source>Robots tag</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.robots.1">
+        <source>Here you can overwrite how search engines handle the FAQ.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.0">
+        <source>Meta description</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.description.1">
+        <source>Here you can add a custom meta description to overwrite the default page description.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.0">
+        <source>Add enclosures</source>
+        <target>Προσθήκη συννημένων</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.addEnclosure.1">
+        <source>Add one or more downloadable files to the FAQ.</source>
+        <target>Προσθήκη στην εκδήλωση ενός ή περισσοτέρων αρχείων για κατέβασμα.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.0">
+        <source>Enclosures</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure.1">
+        <source>Please choose the files you want to attach.</source>
+        <target>Επιλέξτε τα αρχεία που θέλετε να επισυνάψετε</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.0">
+        <source>Disable comments</source>
+        <target>Επενεργοποίηση σχολίων</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.noComments.1">
+        <source>Do not allow comments for this particular FAQ.</source>
+        <target>Να μην επιτρέπετε η χρήση σχολίων για το FAQ.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.0">
+        <source>Publish the FAQ</source>
+        <target>Δημοσιευση του FAQ</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.published.1">
+        <source>Make the FAQ publicly visible on the website.</source>
+        <target>Κάντε το FAQ ορατο για το κοινό της ιστοσελιδας.</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.title_legend">
+        <source>Title and author</source>
+        <target>Τίτλος και συγραφέας</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.answer_legend">
+        <source>Answer</source>
+        <target>Απαντηση</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.meta_legend">
+        <source>Metadata</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.image_legend">
+        <source>Image settings</source>
+        <target>Ρυθμίσεις εικόνας</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.enclosure_legend">
+        <source>Enclosures</source>
+        <target>Συννημένα</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
+        <target>Ρυθμίσεις για προχωρημένους</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.publish_legend">
+        <source>Publish settings</source>
+        <target>Ρυθμίσεις δημοσίευσης</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.new.1">
+        <source>Create a new question</source>
+        <target>Δημιουργια μιας νεας ερωτησης</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.show">
+        <source>Show the details of question ID %s</source>
+        <target>Προβολή λεπτομερειών της καταχώρησης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.edit">
+        <source>Edit question ID %s</source>
+        <target>Επεξεργασια του ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.copy">
+        <source>Duplicate question ID %s</source>
+        <target>Αντιγραφή ερωτησης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.cut">
+        <source>Move question ID %s</source>
+        <target>Μετακίνηση ερωτησης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.delete">
+        <source>Delete question ID %s</source>
+        <target>Διαγραφή καταχώρησης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle">
+        <source>Publish/unpublish question ID %s</source>
+        <target>Δημοσίευση/Μη δημοσίευση ερωτησης ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Επικολληση παντα μπροστα</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pasteafter.1">
+        <source>Paste after question ID %s</source>
+        <target>Επικόλληση μετά την ερωτηση ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.0">
+        <source>Create a new question at the top</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.pastenew.1">
+        <source>Create a new question after question ID %s</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

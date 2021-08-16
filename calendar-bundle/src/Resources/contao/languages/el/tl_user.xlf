@@ -1,0 +1,39 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="el">
+    <body>
+      <trans-unit id="tl_user.calendars.0">
+        <source>Allowed calendars</source>
+        <target>Επιτρεπόμενα ημερολόγια</target>
+      </trans-unit>
+      <trans-unit id="tl_user.calendars.1">
+        <source>Here you can grant access to one or more calendars.</source>
+        <target>Εδώ μπορείτε να δώσετε πρόσβαση σε ένα ή περισσότερα ημερολόγια.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.calendarp.0">
+        <source>Calendar permissions</source>
+        <target>Δικαιώματα ημερολογίου</target>
+      </trans-unit>
+      <trans-unit id="tl_user.calendarp.1">
+        <source>Here you can define the calendar permissions.</source>
+        <target>Εδώ μπορείτε να ορίζετε τα δικαιώματα των ημερολογίων.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.calendarfeeds.0">
+        <source>Allowed calendar feeds</source>
+      </trans-unit>
+      <trans-unit id="tl_user.calendarfeeds.1">
+        <source>Here you can grant access to one or more calendar feeds.</source>
+        <target>Εδώ μπορείτε να δώσετε πρόσβαση σε ένα ή περισσότερα feeds ημερολογίων.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.calendarfeedp.0">
+        <source>Calendar feed permissions</source>
+      </trans-unit>
+      <trans-unit id="tl_user.calendarfeedp.1">
+        <source>Here you can define the calendar feed permissions.</source>
+        <target>Εδώ μπορείτε να ορίζετε τα δικαιώματα των feed των ημερολογίων.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.calendars_legend">
+        <source>Events permissions</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

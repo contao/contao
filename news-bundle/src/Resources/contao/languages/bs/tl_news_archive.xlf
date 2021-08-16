@@ -1,0 +1,170 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_news_archive.php" source-language="en" target-language="bs">
+    <body>
+      <trans-unit id="tl_news_archive.title.0">
+        <source>Title</source>
+        <target>Naslov</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.title.1">
+        <source>Please enter a news archive title.</source>
+        <target>Upišite naziv arhive novosti.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Stranica preusmjeravanja</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.jumpTo.1">
+        <source>Please choose the news reader page to which visitors will be redirected when clicking a news item.</source>
+        <target>Odaberite stranicu čitača novosti na koju će posjetitelji biti preusmjereni nakon što kliknu na članak novosti.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.allowComments.0">
+        <source>Enable comments</source>
+        <target>Dozvoli komentare</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.allowComments.1">
+        <source>Allow visitors to comment news items.</source>
+        <target>Dozvolite posjetiteljima da komentiraju članke novosti.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify.0">
+        <source>Notify</source>
+        <target>Obavijesti</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify.1">
+        <source>Please choose who to notify when comments are added.</source>
+        <target>Izaberite tko da se obavijesti poslije dodavanja novog komentara.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.sortOrder.0">
+        <source>Sort order</source>
+        <target>Redoslijed sortiranja</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.sortOrder.1">
+        <source>By default, comments are sorted ascending, starting with the oldest one.</source>
+        <target>Obično su komentari sortirani uzlazno, počeći sa najstarijim.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.perPage.0">
+        <source>Comments per page</source>
+        <target>Komentara po stranici</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.perPage.1">
+        <source>Number of comments per page. Set to 0 to disable pagination.</source>
+        <target>Broj komentara po stranici. Upisite 0 da bi deaktivirali brojanje.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.moderate.0">
+        <source>Moderate comments</source>
+        <target>Moderiraj komentare</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.moderate.1">
+        <source>Approve comments before they are published on the website.</source>
+        <target>Odobrite komentare prije njihovog objavljivanja na sajtu.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.bbcode.0">
+        <source>Allow BBCode</source>
+        <target>Dozvoli BBCode</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.bbcode.1">
+        <source>Allow visitors to format their comments with BBCode.</source>
+        <target>Dozvolite posjetiteljima da urede svoje komentare s BBCode.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.requireLogin.0">
+        <source>Require login to comment</source>
+        <target>Potrebno logovanje za dodavanje komentara</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.requireLogin.1">
+        <source>Allow only authenticated members to create comments.</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.disableCaptcha.0">
+        <source>Disable spam protection</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.disableCaptcha.1">
+        <source>Use this option only if you have limited comments to authenticated users.</source>
+        <target>Koristite ovu opciju samo ako ste dopustili kreiranje komentara provjerenim korisnicima.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.protected.0">
+        <source>Protect archive</source>
+        <target>Zaštita arhive</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.protected.1">
+        <source>Show news items to certain member groups only.</source>
+        <target>Prikažite članke novosti samo određenim grupama korisnika.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.groups.0">
+        <source>Allowed member groups</source>
+        <target>Dozvoljene grupe članova</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.groups.1">
+        <source>These groups will be able to see the news items in this archive.</source>
+        <target>Ove grupe korisnika moći će vidjeti članke novosti u ovoj arhivi.</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.tstamp.0">
+        <source>Revision date</source>
+        <target>Datum izmjena</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum i vrijeme posljednje izmjene</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.title_legend">
+        <source>Title and redirect page</source>
+        <target>Naslov i preusmjeravanje</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.comments_legend">
+        <source>Comments</source>
+        <target>Komentari</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.protected_legend">
+        <source>Access protection</source>
+        <target>Zaštita pristupa</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.feed_legend">
+        <source>RSS/Atom feed</source>
+        <target>RSS/Atom feed</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify_admin">
+        <source>System administrator</source>
+        <target>Sistem administrator</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify_author">
+        <source>Author of the news item</source>
+        <target>Autor članka novosti</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.notify_both">
+        <source>Author and system administrator</source>
+        <target>Autor i sistem administrator</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.feeds.0">
+        <source>News feeds</source>
+        <target>Ubačene vijesti (News feeds)</target>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.feeds.1">
+        <source>Manage news feeds</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.new.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.new.1">
+        <source>Create a new news archive</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.show">
+        <source>Show the details of news archive ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.edit">
+        <source>Edit news archive ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.editheader">
+        <source>Edit the settings of news archive ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.editmeta">
+        <source>Edit the news archive settings</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.copy">
+        <source>Duplicate news archive ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.delete">
+        <source>Delete news archive ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.comments">
+        <source>Show comments of news archive ID %s</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
