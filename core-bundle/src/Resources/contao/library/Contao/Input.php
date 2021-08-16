@@ -564,33 +564,23 @@ class Input
 			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
 			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen)
 			{
-				if (0 === strncmp($matches[0], '<!--', 4))
-				{
-					if (substr($matches[0], -3) === '-->')
-					{
-						if ($blnCommentOpen)
-						{
-							$blnCommentOpen = false;
-
-							return static::encodeSpecialChars(substr($matches[0], 0, -3)) . '-->';
-						}
-
-						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4, -3)) . '-->';
-					}
-
-					if (!$blnCommentOpen)
-					{
-						$blnCommentOpen = true;
-
-						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4));
-					}
-				}
-
-				if ($blnCommentOpen && $matches[0] === '-->')
+				if ($blnCommentOpen && substr($matches[0], -3) === '-->')
 				{
 					$blnCommentOpen = false;
 
-					return '-->';
+					return static::encodeSpecialChars(substr($matches[0], 0, -3)) . '-->';
+				}
+
+				if (!$blnCommentOpen && 0 === strncmp($matches[0], '<!--', 4))
+				{
+					if (substr($matches[0], -3) === '-->')
+					{
+						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4, -3)) . '-->';
+					}
+
+					$blnCommentOpen = true;
+
+					return '<!--' . static::encodeSpecialChars(substr($matches[0], 4));
 				}
 
 				$strTagName = strtolower($matches[1] ?? '');
