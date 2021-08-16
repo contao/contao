@@ -145,11 +145,11 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('source', 'addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'internal'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,jumpTo;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'article'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,articleId;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'external'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,url,target;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
+		'__selector__'                => array('source', 'addImage', 'teaserType', 'addEnclosure', 'overwriteMeta'),
+		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaserType;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,jumpTo;{teaser_legend},subheadline,teaserType;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,articleId;{teaser_legend},subheadline,teaserType;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,url,target;{teaser_legend},subheadline,teaserType;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -157,7 +157,10 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	(
 		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
 		'addEnclosure'                => 'enclosure',
-		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
+		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
+		'teaserType_default'          => 'teaser',
+		'teaserType_elements'         => 'teaserElements',
+		'teaserType_substr'           => 'teaserChars'
 	),
 
 	// Fields
@@ -281,6 +284,16 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
+		'teaserType' => array
+		(
+			'exclude'                 => true,
+			'filter'                  => true,
+			'inputType'               => 'radio',
+			'options_callback'        => array('tl_news', 'getTeaserTypeOptions'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_news']['teaserType'],
+			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
+			'sql'                     => "varchar(8) NOT NULL default 'default'"
+		),
 		'teaser' => array
 		(
 			'exclude'                 => true,
@@ -288,6 +301,22 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
+		),
+		'teaserElements' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
+			'sql'                     => "int(10) NOT NULL default 1"
+		),
+		'teaserChars' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
+			'sql'                     => "int(10) NOT NULL default 200"
 		),
 		'addImage' => array
 		(
@@ -815,6 +844,42 @@ class tl_news extends Backend
 		}
 
 		return $arrAlias;
+	}
+
+	/**
+	 * Add the teaser options depending on the allowed fields (see #5498)
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function getTeaserTypeOptions(DataContainer $dc)
+	{
+		if ($this->User->isAdmin)
+		{
+			return array('default', 'elements', 'substr');
+		}
+
+		$arrOptions = array('default');
+
+		if ($this->User->hasAccess('tl_news::teaserElements', 'alexf'))
+		{
+			$arrOptions[] = 'elements';
+		}
+
+		if ($this->User->hasAccess('tl_news::teaserChars', 'alexf'))
+		{
+			$arrOptions[] = 'substr';
+		}
+
+		// Add the option currently set
+		if ($dc->activeRecord && $dc->activeRecord->teaserType)
+		{
+			$arrOptions[] = $dc->activeRecord->teaserType;
+			$arrOptions = array_unique($arrOptions);
+		}
+
+		return $arrOptions;
 	}
 
 	/**

@@ -98,12 +98,45 @@ abstract class ModuleNews extends Module
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 
-		// Clean the RTE output
-		if ($objArticle->teaser)
+		switch ($objArticle->teaserType)
 		{
-			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
-			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
+			case 'elements':
+				$objTemplate->hasTeaser = static function () use ($objArticle)
+				{
+					return News::hasNewsContent($objArticle);
+				};
+
+				$objTemplate->teaser = static function () use ($objArticle)
+				{
+					return News::getNewsContent($objArticle, ['limit' => $objArticle->teaserElements]);
+				};
+				break;
+
+			case 'substr':
+				$objTemplate->hasTeaser = static function () use ($objArticle)
+				{
+					return News::hasNewsContent($objArticle);
+				};
+
+				$objTemplate->teaser = static function () use ($objArticle)
+				{
+					return StringUtil::substrHtml(
+						News::getNewsContent($objArticle),
+						$objArticle->teaserChars
+					);
+				};
+				break;
+
+			case 'default':
+			default:
+				// Clean the RTE output
+				if ($objArticle->teaser)
+				{
+					$objTemplate->hasTeaser = true;
+					$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
+					$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
+				}
+				break;
 		}
 
 		// Display the "read more" button for external/article links
@@ -117,27 +150,14 @@ abstract class ModuleNews extends Module
 		// Compile the news text
 		else
 		{
-			$id = $objArticle->id;
-
-			$objTemplate->text = function () use ($id)
+			$objTemplate->text = static function () use ($objArticle)
 			{
-				$strText = '';
-				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
-
-				if ($objElement !== null)
-				{
-					while ($objElement->next())
-					{
-						$strText .= $this->getContentElement($objElement->current());
-					}
-				}
-
-				return $strText;
+				return News::getNewsContent($objArticle);
 			};
 
 			$objTemplate->hasText = static function () use ($objArticle)
 			{
-				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
+				return News::hasNewsContent($objArticle);
 			};
 		}
 
@@ -386,6 +406,16 @@ abstract class ModuleNews extends Module
 			$strLink,
 			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);
+	}
+
+	private function getNewsContent(array $options = [])
+	{
+
+	}
+
+	private function hasNewsContent()
+	{
+
 	}
 }
 
