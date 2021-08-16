@@ -5061,8 +5061,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 						{
 							$value = (string) $arg !== '' ? $arg : '-';
 						}
+						
+						$colclass = 'col_' . array_shift(explode(":", $field, 2));
 
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $field . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
+						$return .= '<td colspan="' . $colspan . '" class="tl_file_list ' . $colclass . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}
 				}
 				else
