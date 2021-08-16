@@ -29,7 +29,7 @@ class InputTest extends TestCase
 
         include __DIR__.'/../../src/Resources/contao/config/default.php';
 
-        $GLOBALS['TL_CONFIG']['allowedTags'] .= '<use>';
+        $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
         $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
             array_merge(
                 unserialize($GLOBALS['TL_CONFIG']['allowedAttributes']),
