@@ -160,6 +160,21 @@ class InputTest extends TestCase
             '<!-- a &#60;!-- b --> c --&#62; d <!-- a&#62; &#60;!-- b&#62; --> c&#62; --&#62; d&#62;',
         ];
 
+        yield 'Style tag' => [
+            '<style not-allowed="x" media="(min-width: 10px)"> body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}</style>>>',
+            '<style media="(min-width: 10px)"> body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}</style>&#62;&#62;',
+        ];
+
+        yield 'Style tag with comment' => [
+            '<style not-allowed="x" media="(min-width: 10px)"><!-- body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}--></style>>>',
+            '<style media="(min-width: 10px)"><!-- body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}--></style>&#62;&#62;',
+        ];
+
+        yield 'Style nested in comment' => [
+            '<!-- <style> --> content: ""; <span non-allowed="x"> <style> --> content: ""; <span non-allowed="x">',
+            '<!-- <style> --> content: &#34;&#34;; <span> <style> --> content: ""; <span non-allowed="x">',
+        ];
+
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
             '<form><input></form>',
@@ -322,6 +337,24 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', ''));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', null));
+    }
+
+    public function testStripTagsScriptAllowed(): void
+    {
+        $this->assertSame(
+            '<script>alert(foo > bar);</script>foo &#62; bar',
+            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>', '')
+        );
+
+        $this->assertSame(
+            '<script><!-- alert(foo > bar); --></script>foo &#62; bar',
+            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>', '')
+        );
+
+        $this->assertSame(
+            '<script><!-- alert(foo > bar); </script>foo &#62; bar',
+            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>', '')
+        );
     }
 
     /**
