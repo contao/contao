@@ -3961,7 +3961,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (strpos($v, ':') !== false)
 			{
-				list($strKey, $strTable) = explode(':', $v);
+				list($strKey, $strTable) = explode(':', $v, 2);
 				list($strTable, $strField) = explode('.', $strTable, 2);
 
 				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
@@ -4900,7 +4900,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if (strpos($v, ':') !== false)
 					{
-						list($strKey, $strTable) = explode(':', $v);
+						list($strKey, $strTable) = explode(':', $v, 2);
 						list($strTable, $strField) = explode('.', $strTable, 2);
 
 						$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
