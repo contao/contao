@@ -135,6 +135,31 @@ class InputTest extends TestCase
             '<span data-myjson="{&quot;foo&quot;:{&quot;{{bar::&quot;:&quot;baz&quot;|attr}}">',
         ];
 
+        yield 'Allows for comments' => [
+            '<!-- my comment --> <span non-allowed="should be removed">',
+            '<!-- my comment --> <span>',
+        ];
+
+        yield 'Encodes comments contents' => [
+            '<!-- my comment <script>alert(1)</script> --> <span non-allowed="should be removed">',
+            '<!-- my comment &lt;script&#62;alert(1)&lt;/script&#62; --> <span>',
+        ];
+
+        yield 'Does not encode allowed elements in comments' => [
+            '<!-- my comment <span non-allowed="should be removed" title="--&#62;"> --> <span non-allowed="should be removed">',
+            '<!-- my comment <span title="--&#62;"> --> <span>',
+        ];
+
+        yield 'Normalize short comments' => [
+            '<!--> a <!---> b <!----> c <!-----> d',
+            '<!----> a <!----> b <!----> c <!-----> d',
+        ];
+
+        yield 'Nested comments' => [
+            '<!-- a <!-- b --> c --> d <!-- a> <!-- b> --> c> --> d>',
+            '<!-- a &#60;!-- b --> c --&#62; d <!-- a&#62; &#60;!-- b&#62; --> c&#62; --&#62; d&#62;',
+        ];
+
         yield [
             '<form action="javascript:alert(document.domain)"><input type="submit" value="XSS" /></form>',
             '<form><input></form>',

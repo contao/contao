@@ -531,11 +531,11 @@ class Input
 		// Strip the tags
 		$varValue = strip_tags($varValue, $strAllowedTags);
 
-		// Strip attributes
-		$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
-
 		// Restore HTML comments and recheck for encoded null bytes
 		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+
+		// Strip attributes
+		$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
 
 		return $varValue;
 	}
@@ -557,11 +557,42 @@ class Input
 			return $strHtml;
 		}
 
+		$blnCommentOpen = false;
+
 		// Match every single starting and closing tag or special characters outside of tags
 		return preg_replace_callback(
-			'@</?([^\s<>/]*)([^<>]*)>?|[>"\'=]+@',
-			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes)
+			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
+			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen)
 			{
+				if (0 === strncmp($matches[0], '<!--', 4))
+				{
+					if (substr($matches[0], -3) === '-->')
+					{
+						if ($blnCommentOpen)
+						{
+							$blnCommentOpen = false;
+
+							return static::encodeSpecialChars(substr($matches[0], 0, -3)) . '-->';
+						}
+
+						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4, -3)) . '-->';
+					}
+
+					if (!$blnCommentOpen)
+					{
+						$blnCommentOpen = true;
+
+						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4));
+					}
+				}
+
+				if ($blnCommentOpen && $matches[0] === '-->')
+				{
+					$blnCommentOpen = false;
+
+					return '-->';
+				}
+
 				$strTagName = strtolower($matches[1] ?? '');
 
 				// Matched special characters or tag is invalid or not allowed, return everything encoded
