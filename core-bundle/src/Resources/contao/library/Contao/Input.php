@@ -682,7 +682,7 @@ class Input
 	private static function getAttributesFromTag($strAttributes)
 	{
 		// Match every attribute name value pair
-		if (!preg_match_all('@\s+([a-z][a-z0-9-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
+		if (!preg_match_all('@\s+([a-z][a-z0-9:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
 		{
 			return array();
 		}
@@ -711,7 +711,7 @@ class Input
 			}
 
 			// Encode all special characters and insert tags that are not encoded yet
-			if (\in_array($strAttribute, array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
+			if (1 === preg_match('((?:^|:)(?:src|srcset|href|action|formaction|codebase|cite|background|longdesc|profile|usemap|classid|data|icon|manifest|poster|archive)$)', $strAttribute))
 			{
 				$strValue = StringUtil::specialcharsUrl($strValue);
 			}
