@@ -532,7 +532,10 @@ class Input
 		$varValue = strip_tags($varValue, $strAllowedTags);
 
 		// Strip attributes
-		$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
+		if ($strAllowedTags)
+		{
+			$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
+		}
 
 		// Restore HTML comments and recheck for encoded null bytes
 		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);

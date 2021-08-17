@@ -271,6 +271,27 @@ class InputTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider stripTagsNoTagsAllowedProvider
+     */
+    public function testStripTagsNoTagsAllowed(string $source, string $expected): void
+    {
+        $this->assertSame($expected, Input::stripTags($source));
+    }
+
+    public function stripTagsNoTagsAllowedProvider(): \Generator
+    {
+        yield 'Encodes tags' => [
+            'Text <with> tags',
+            'Text &lt;with> tags',
+        ];
+
+        yield 'Does not encode other special characters' => [
+            'xLmpwZw==',
+            'xLmpwZw==',
+        ];
+    }
+
     public function testStripTagsAllAttributesAllowed(): void
     {
         $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV>';
