@@ -28,6 +28,14 @@ class InputTest extends TestCase
         $GLOBALS['TL_CONFIG'] = [];
 
         include __DIR__.'/../../src/Resources/contao/config/default.php';
+
+        $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
+        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
+            array_merge(
+                unserialize($GLOBALS['TL_CONFIG']['allowedAttributes']),
+                [['key' => 'use', 'value' => 'xlink:href']]
+            )
+        );
     }
 
     protected function tearDown(): void
@@ -173,6 +181,16 @@ class InputTest extends TestCase
         yield 'Style nested in comment' => [
             '<!-- <style> --> content: ""; <span non-allowed="x"> <style> --> content: ""; <span non-allowed="x">',
             '<!-- <style> --> content: &#34;&#34;; <span> <style> --> content: ""; <span non-allowed="x">',
+        ];
+
+        yield 'Allows namespaced attributes' => [
+            '<use xlink:href="http://example.com">',
+            '<use xlink:href="http://example.com">',
+        ];
+
+        yield 'Does not allow colon in namespaced URL attributes' => [
+            '<use xlink:href="ja{{noop}}vascript:alert(1)">',
+            '<use xlink:href="ja{{noop|urlattr}}vascript%3Aalert(1)">',
         ];
 
         yield [
