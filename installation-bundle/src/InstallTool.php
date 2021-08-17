@@ -19,6 +19,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\File;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -303,6 +304,18 @@ class InstallTool
         }
 
         return false;
+    }
+
+    /**
+     * Checks if strict mode is enabled (see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html).
+     */
+    public function checkStrictMode(array &$context): void
+    {
+        $mode = $this->connection->fetchOne('SELECT @@sql_mode');
+
+        if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
+            $context['optionKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
+        }
     }
 
     public function handleRunOnce(): void
