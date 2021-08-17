@@ -28,6 +28,14 @@ class InputTest extends TestCase
         $GLOBALS['TL_CONFIG'] = [];
 
         include __DIR__.'/../../src/Resources/contao/config/default.php';
+
+        $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
+        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
+            array_merge(
+                unserialize($GLOBALS['TL_CONFIG']['allowedAttributes']),
+                [['key' => 'use', 'value' => 'xlink:href']]
+            )
+        );
     }
 
     protected function tearDown(): void
@@ -108,6 +116,81 @@ class InputTest extends TestCase
         yield 'Does not get tricked by stripping insert tags' => [
             '<img src="foo{{bar}{{noop}}}baz">',
             '<img src="foo{{bar&#125;{{noop|urlattr}}&#125;baz">',
+        ];
+
+        yield 'Do not destroy JSON attributes' => [
+            '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+        ];
+
+        yield 'Do not destroy nested JSON attributes' => [
+            '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+        ];
+
+        yield 'Do not destroy quoted JSON attributes' => [
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+        ];
+
+        yield 'Do not destroy nested quoted JSON attributes' => [
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+        ];
+
+        yield 'Trick insert tag detection with JSON' => [
+            '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;{{bar::&quot;:&quot;baz&quot;|attr}}">',
+        ];
+
+        yield 'Allows for comments' => [
+            '<!-- my comment --> <span non-allowed="should be removed">',
+            '<!-- my comment --> <span>',
+        ];
+
+        yield 'Encodes comments contents' => [
+            '<!-- my comment <script>alert(1)</script> --> <span non-allowed="should be removed">',
+            '<!-- my comment &lt;script&#62;alert(1)&lt;/script&#62; --> <span>',
+        ];
+
+        yield 'Does not encode allowed elements in comments' => [
+            '<!-- my comment <span non-allowed="should be removed" title="--&#62;"> --> <span non-allowed="should be removed">',
+            '<!-- my comment <span title="--&#62;"> --> <span>',
+        ];
+
+        yield 'Normalize short comments' => [
+            '<!--> a <!---> b <!----> c <!-----> d',
+            '<!----> a <!----> b <!----> c <!-----> d',
+        ];
+
+        yield 'Nested comments' => [
+            '<!-- a <!-- b --> c --> d <!-- a> <!-- b> --> c> --> d>',
+            '<!-- a &#60;!-- b --> c --&#62; d <!-- a&#62; &#60;!-- b&#62; --> c&#62; --&#62; d&#62;',
+        ];
+
+        yield 'Style tag' => [
+            '<style not-allowed="x" media="(min-width: 10px)"> body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}</style>>>',
+            '<style media="(min-width: 10px)"> body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}</style>&#62;&#62;',
+        ];
+
+        yield 'Style tag with comment' => [
+            '<style not-allowed="x" media="(min-width: 10px)"><!-- body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}--></style>>>',
+            '<style media="(min-width: 10px)"><!-- body { background: #fff; color: rgba(1, 2, 3, 0.5) } #header::after { content: "> <!--"; } @media print { #header { display: none; }}--></style>&#62;&#62;',
+        ];
+
+        yield 'Style nested in comment' => [
+            '<!-- <style> --> content: ""; <span non-allowed="x"> <style> --> content: ""; <span non-allowed="x">',
+            '<!-- <style> --> content: &#34;&#34;; <span> <style> --> content: ""; <span non-allowed="x">',
+        ];
+
+        yield 'Allows namespaced attributes' => [
+            '<use xlink:href="http://example.com">',
+            '<use xlink:href="http://example.com">',
+        ];
+
+        yield 'Does not allow colon in namespaced URL attributes' => [
+            '<use xlink:href="ja{{noop}}vascript:alert(1)">',
+            '<use xlink:href="ja{{noop|urlattr}}vascript%3Aalert(1)">',
         ];
 
         yield [
@@ -246,6 +329,27 @@ class InputTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider stripTagsNoTagsAllowedProvider
+     */
+    public function testStripTagsNoTagsAllowed(string $source, string $expected): void
+    {
+        $this->assertSame($expected, Input::stripTags($source));
+    }
+
+    public function stripTagsNoTagsAllowedProvider(): \Generator
+    {
+        yield 'Encodes tags' => [
+            'Text <with> tags',
+            'Text &lt;with> tags',
+        ];
+
+        yield 'Does not encode other special characters' => [
+            'xLmpwZw==',
+            'xLmpwZw==',
+        ];
+    }
+
     public function testStripTagsAllAttributesAllowed(): void
     {
         $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV>';
@@ -271,6 +375,24 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', ''));
+    }
+
+    public function testStripTagsScriptAllowed(): void
+    {
+        $this->assertSame(
+            '<script>alert(foo > bar);</script>foo &#62; bar',
+            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>', '')
+        );
+
+        $this->assertSame(
+            '<script><!-- alert(foo > bar); --></script>foo &#62; bar',
+            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>', '')
+        );
+
+        $this->assertSame(
+            '<script><!-- alert(foo > bar); </script>foo &#62; bar',
+            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>', '')
+        );
     }
 
     /**

@@ -35,13 +35,13 @@ class Automator extends System
 	 */
 	public function purgeSearchTables()
 	{
-		$searchIndexer = System::getContainer()->get('contao.search.indexer');
-
 		// The search indexer is disabled
-		if (null === $searchIndexer)
+		if (!System::getContainer()->has('contao.search.indexer'))
 		{
 			return;
 		}
+
+		$searchIndexer = System::getContainer()->get('contao.search.indexer');
 
 		// Clear the index
 		$searchIndexer->clear();

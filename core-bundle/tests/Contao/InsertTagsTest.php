@@ -16,6 +16,7 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
+use Contao\PageModel;
 use Contao\System;
 
 class InsertTagsTest extends TestCase
@@ -42,7 +43,7 @@ class InsertTagsTest extends TestCase
 
     public function replaceInsertTagsHook(string $tag): string
     {
-        return explode('::', $tag, 2)[1];
+        return explode('::', $tag, 2)[1] ?? '';
     }
 
     /**
@@ -380,6 +381,295 @@ class InsertTagsTest extends TestCase
         yield 'Trick comments detection with insert tag' => [
             '<!-- {{plain::--}}> got you! -->',
             '<!-- [{]plain::--[}]> got you! -->',
+        ];
+
+        yield 'Do not destroy JSON attributes' => [
+            '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
+            '<span data-myjson=\'{"foo":{"bar":"baz"&#125;&#125;\'>',
+        ];
+
+        yield 'Do not destroy nested JSON attributes' => [
+            '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+            '<span data-myjson=\'[{"foo":{"bar":"baz"&#125;&#125;,12.3,"string"]\'>',
+        ];
+
+        yield 'Do not destroy quoted JSON attributes' => [
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+            '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+        ];
+
+        yield 'Do not destroy nested quoted JSON attributes' => [
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+            '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+        ];
+
+        yield 'Trick insert tag detection with JSON' => [
+            '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+            '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
+        ];
+    }
+
+    /**
+     * @dataProvider languageInsertTagsProvider
+     */
+    public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
+    {
+        $page = $this->createMock(PageModel::class);
+        $page
+            ->method('__get')
+            ->with('language')
+            ->willReturn($pageLanguage)
+        ;
+
+        $GLOBALS['objPage'] = $page;
+
+        $reflectionClass = new \ReflectionClass(InsertTags::class);
+
+        /** @var InsertTags $insertTags */
+        $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
+        // Test case insensitivity
+        $source = str_replace('lng', 'LnG', $source);
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
+        $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source).'">';
+        $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected).'">';
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function languageInsertTagsProvider(): \Generator
+    {
+        yield [
+            'no insert tag',
+            'no insert tag',
+        ];
+
+        yield [
+            '{{iflng::de}}DE{{iflng}}',
+            '',
+        ];
+
+        yield [
+            '{{iflng::en}}EN{{iflng}}',
+            'EN',
+        ];
+
+        yield [
+            '{{iflng::de}}DE{{iflng}}',
+            'DE',
+            'de',
+        ];
+
+        yield [
+            '{{iflng::de,en}}DE,EN{{iflng}}',
+            'DE,EN',
+        ];
+
+        yield [
+            '{{iflng::en*}}EN*{{iflng}}',
+            'EN*',
+        ];
+
+        yield [
+            '{{iflng::en*}}EN*{{iflng}}',
+            'EN*',
+            'en_US',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+            '',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::en}}EN{{iflng}}',
+            'EN',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+            'DE',
+            'de',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::de,en}}DE,EN{{iflng}}',
+            'DE,EN',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
+            'EN*',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
+            'EN*',
+            'en_US',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+            'RU',
+            'ru',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::en}}EN{{iflng}}',
+            'RU',
+            'ru',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+            'RU',
+            'ru',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::de,en}}DE,EN{{iflng}}',
+            'RU',
+            'ru',
+        ];
+
+        yield [
+            '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
+            'RU',
+            'ru',
+        ];
+
+        yield [
+            '{{ifnlng::de}}DE{{ifnlng}}',
+            'DE',
+        ];
+
+        yield [
+            '{{ifnlng::en}}EN{{ifnlng}}',
+            '',
+        ];
+
+        yield [
+            '{{ifnlng::de}}DE{{ifnlng}}',
+            '',
+            'de',
+        ];
+
+        yield [
+            '{{ifnlng::de,en}}DE,EN{{ifnlng}}',
+            '',
+        ];
+
+        yield [
+            '{{ifnlng::en*}}EN*{{ifnlng}}',
+            '',
+        ];
+
+        yield [
+            '{{ifnlng::en*}}EN*{{ifnlng}}',
+            '',
+            'en_US',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+            'RUDE',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::en}}EN{{ifnlng}}',
+            'RU',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+            'RU',
+            'de',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::de,en}}DE,EN{{ifnlng}}',
+            'RU',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
+            'RU',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
+            'RU',
+            'en_US',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+            'DE',
+            'ru',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::en}}EN{{ifnlng}}',
+            'EN',
+            'ru',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+            'DE',
+            'ru',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::de,en}}DE,EN{{ifnlng}}',
+            'DE,EN',
+            'ru',
+        ];
+
+        yield [
+            '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
+            'EN*',
+            'ru',
+        ];
+
+        yield [
+            '{{ifnlng::de}}not DE{{ifnlng::en}}not EN{{ifnlng}}',
+            'not DE',
+        ];
+
+        yield [
+            '{{ifnlng::de}}not DE{{ifnlng::en}}not EN{{ifnlng}}',
+            'not EN',
+            'de',
+        ];
+
+        yield [
+            '{{iflng::de}}should{{iflngg}}not{{iflng-x}}stop{{iflng:}}the{{ifnlng}}conditional{{iflng}}until here',
+            'until here',
+        ];
+
+        yield [
+            '{{iflng::de}}DE{{iflng::de_DE}}DE_DE{{iflng::de*}}DE*{{iflng::de_*}}DE_*{{iflng::deu-DE}}DEU-DE{{iflng::dex-DE}}DEX-DE{{iflng}}',
+            'DE_DEDE*DE_*DEU-DE',
+            'deu-DE',
         ];
     }
 

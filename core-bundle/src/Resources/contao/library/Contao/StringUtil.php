@@ -807,6 +807,12 @@ class StringUtil
 	{
 		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
 
+		// Improve compatibility with JSON in attributes if no insert tags are present
+		if ($strString === self::stripInsertTags($strString))
+		{
+			$strString = str_replace('}}', '&#125;&#125;', $strString);
+		}
+
 		// Encode insert tags too
 		$strString = preg_replace('/(?:\|attr)?}}/', '|attr}}', $strString);
 		$strString = str_replace('|urlattr|attr}}', '|urlattr}}', $strString);
