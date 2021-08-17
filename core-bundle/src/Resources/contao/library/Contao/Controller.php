@@ -394,10 +394,12 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
+
 		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')', 'contao.layout');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
 		$objRow->typePrefix = 'mod_';
@@ -421,9 +423,9 @@ abstract class Controller extends System
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
 		{
-			$objStopwatch->stop('contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')');
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -504,10 +506,12 @@ abstract class Controller extends System
 			}
 		}
 
+		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
+
 		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.article (ID ' . $objRow->id . ')', 'contao.layout');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
 		$objArticle = new ModuleArticle($objRow, $strColumn);
@@ -519,9 +523,9 @@ abstract class Controller extends System
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
 		{
-			$objStopwatch->stop('contao.article (ID ' . $objRow->id . ')');
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -573,11 +577,12 @@ abstract class Controller extends System
 		}
 
 		$objRow->typePrefix = 'ce_';
+		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
 		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')', 'contao.layout');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
 		/** @var ContentElement $objElement */
@@ -599,9 +604,9 @@ abstract class Controller extends System
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
 		{
-			$objStopwatch->stop('contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')');
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;

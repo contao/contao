@@ -347,7 +347,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
 
 				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
 										  ->execute($for, $for);
@@ -2963,7 +2963,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
 				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
 				$this->values[] = $searchValue;
 			}
