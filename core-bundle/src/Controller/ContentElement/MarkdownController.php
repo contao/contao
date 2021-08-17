@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\FilesModel;
+use Contao\Input;
 use Contao\Template;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
@@ -47,8 +48,11 @@ class MarkdownController extends AbstractContentElementController
         /** @var Config $config */
         $config = $this->get('contao.framework')->getAdapter(Config::class);
 
+        /** @var Input $input */
+        $input = $this->get('contao.framework')->getAdapter(Input::class);
+
         $html = $this->createConverter($model, $request)->convertToHtml($markdown);
-        $template->content = strip_tags($html, $config->get('allowedTags'));
+        $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
 
         return $template->getResponse();
     }
