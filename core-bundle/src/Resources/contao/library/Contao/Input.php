@@ -531,14 +531,14 @@ class Input
 		// Strip the tags
 		$varValue = strip_tags($varValue, $strAllowedTags);
 
+		// Restore HTML comments and recheck for encoded null bytes
+		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+
 		// Strip attributes
 		if ($strAllowedTags)
 		{
 			$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
 		}
-
-		// Restore HTML comments and recheck for encoded null bytes
-		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
 
 		return $varValue;
 	}
@@ -560,12 +560,46 @@ class Input
 			return $strHtml;
 		}
 
+		$blnCommentOpen = false;
+		$strOpenRawtext = null;
+
 		// Match every single starting and closing tag or special characters outside of tags
 		return preg_replace_callback(
-			'@</?([^\s<>/]*)([^<>]*)>?|[>"\'=]+@',
-			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes)
+			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
+			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext)
 			{
 				$strTagName = strtolower($matches[1] ?? '');
+
+				if ($strOpenRawtext === $strTagName && '/' === $matches[0][1])
+				{
+					$strOpenRawtext = null;
+
+					return '</' . $strTagName . '>';
+				}
+
+				if (null !== $strOpenRawtext)
+				{
+					return $matches[0];
+				}
+
+				if ($blnCommentOpen && substr($matches[0], -3) === '-->')
+				{
+					$blnCommentOpen = false;
+
+					return static::encodeSpecialChars(substr($matches[0], 0, -3)) . '-->';
+				}
+
+				if (!$blnCommentOpen && 0 === strncmp($matches[0], '<!--', 4))
+				{
+					if (substr($matches[0], -3) === '-->')
+					{
+						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4, -3)) . '-->';
+					}
+
+					$blnCommentOpen = true;
+
+					return '<!--' . static::encodeSpecialChars(substr($matches[0], 4));
+				}
 
 				// Matched special characters or tag is invalid or not allowed, return everything encoded
 				if ($strTagName == '' || stripos($strAllowedTags, '<' . $strTagName . '>') === false)
@@ -577,6 +611,12 @@ class Input
 				if ('/' === substr($matches[0], 1, 1))
 				{
 					return '</' . $strTagName . '>';
+				}
+
+				// Special parsing for RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
+				if (!$blnCommentOpen && \in_array($strTagName, array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript')))
+				{
+					$strOpenRawtext = $strTagName;
 				}
 
 				$arrAttributes = self::getAttributesFromTag($matches[2]);
