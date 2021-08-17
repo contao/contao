@@ -535,7 +535,10 @@ class Input
 		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
 
 		// Strip attributes
-		$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
+		if ($strAllowedTags)
+		{
+			$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
+		}
 
 		return $varValue;
 	}
