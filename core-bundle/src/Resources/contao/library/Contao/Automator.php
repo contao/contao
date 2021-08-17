@@ -35,16 +35,11 @@ class Automator extends System
 	 */
 	public function purgeSearchTables()
 	{
-		// The search indexer is disabled
-		if (!System::getContainer()->has('contao.search.indexer'))
-		{
-			return;
-		}
+		$objDatabase = Database::getInstance();
 
-		$searchIndexer = System::getContainer()->get('contao.search.indexer');
-
-		// Clear the index
-		$searchIndexer->clear();
+		// Truncate the tables
+		$objDatabase->execute("TRUNCATE TABLE tl_search");
+		$objDatabase->execute("TRUNCATE TABLE tl_search_index");
 
 		$strCachePath = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
 
