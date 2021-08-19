@@ -139,7 +139,6 @@ class DynamicIncludeTokenParserTest extends TestCase
 
         $tokenStream = (new Lexer($environment))->tokenize(new Source($source, 'foo.html.twig'));
         $parser = new Parser($environment);
-
         $includeNode = $parser->parse($tokenStream)->getNode('body')->getNode('0');
 
         if (null !== $variables) {
@@ -156,10 +155,7 @@ class DynamicIncludeTokenParserTest extends TestCase
     {
         yield 'with data' => [
             "{% include 'bar.html.twig' with {a: 1} %}",
-            new ArrayExpression([
-                new ConstantExpression('a', 0),
-                new ConstantExpression(1, 0),
-            ], 0),
+            new ArrayExpression([new ConstantExpression('a', 0), new ConstantExpression(1, 0)], 0),
             false,
             false,
         ];
