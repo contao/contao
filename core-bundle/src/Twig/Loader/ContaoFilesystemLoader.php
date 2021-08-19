@@ -251,7 +251,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return true;
         }
 
-        if (null !== ($themeTemplate = $this->getThemeTemplateName((string) $name))) {
+        if (\is_string($name) && null !== ($themeTemplate = $this->getThemeTemplateName($name))) {
             return parent::exists($themeTemplate);
         }
 
@@ -275,7 +275,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function isFresh($name, $time): bool
     {
-        if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
+        if ((\is_string($name) && null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
             return false;
         }
 
