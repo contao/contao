@@ -16,7 +16,6 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Contracts\Service\ResetInterface;
-use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
