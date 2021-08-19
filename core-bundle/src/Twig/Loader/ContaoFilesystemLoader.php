@@ -398,6 +398,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     /**
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
+     *
+     * @todo Re-add the string typehint to argument in 4.13 and remove the string check (see #3343)
      */
     private function getThemeTemplateName($name): ?string
     {
