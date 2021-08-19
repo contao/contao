@@ -252,7 +252,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return true;
         }
 
-        if (null !== ($themeTemplate = $this->getThemeTemplateName($name instanceof TemplateReferenceInterface ? $name->getLogicalName() : $name))) {
+        if (null !== ($themeTemplate = $this->getThemeTemplateName((string) $name))) {
             return parent::exists($themeTemplate);
         }
 

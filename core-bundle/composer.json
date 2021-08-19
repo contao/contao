@@ -99,7 +99,6 @@
         "symfony/process": "^4.4 || ^5.2",
         "symfony/routing": "^4.4 || ^5.2",
         "symfony/security-bundle": "^4.4 || ^5.2",
-        "symfony/templating": "^4.4 || ^5.2",
         "symfony/translation": "^4.4 || ^5.2",
         "symfony/twig-bundle": "^4.4 || ^5.2",
         "symfony/var-dumper": "^4.4 || ^5.2",
