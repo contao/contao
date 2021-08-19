@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.0] (2021-08-19)
+
+**Fixed issues:**
+
+- [#3343] Make the ContaoFilesystemLoader compatible with Symfony 4.4 ([bytehead])
+- [#3339] Allow Twig v3 ([m-vo])
+- [#3337] Strip attributes in markdown element ([ausi])
+
 ## [4.12.0-RC3] (2021-08-12)
 
 **Security fixes:**
@@ -114,6 +122,7 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.0]: https://github.com/contao/contao/releases/tag/4.12.0
 [4.12.0-RC3]: https://github.com/contao/contao/releases/tag/4.12.0-RC3
 [4.12.0-RC2]: https://github.com/contao/contao/releases/tag/4.12.0-RC2
 [4.12.0-RC1]: https://github.com/contao/contao/releases/tag/4.12.0-RC1
@@ -124,11 +133,15 @@ This project adheres to [Semantic Versioning].
 [CVE-2021-35210]: https://github.com/contao/contao/security/advisories/GHSA-h58v-c6rf-g9f7
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[bytehead]: https://github.com/bytehead
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
+[#3343]: https://github.com/contao/contao/pull/3343
+[#3339]: https://github.com/contao/contao/pull/3339
+[#3337]: https://github.com/contao/contao/pull/3337
 [#3295]: https://github.com/contao/contao/pull/3295
 [#3276]: https://github.com/contao/contao/pull/3276
 [#3268]: https://github.com/contao/contao/pull/3268
