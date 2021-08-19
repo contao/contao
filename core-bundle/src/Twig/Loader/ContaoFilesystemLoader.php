@@ -185,6 +185,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function getCacheKey($name): string
     {
+        // string cast to be removed with Symfony 5 (see #3343)
         $templateName = $this->getThemeTemplateName((string) $name) ?? $name;
 
         return parent::getCacheKey($templateName);
@@ -202,6 +203,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function getSourceContext($name): Source
     {
+        // string cast to be removed with Symfony 5 (see #3343)
         $templateName = $this->getThemeTemplateName((string) $name) ?? $name;
         $source = parent::getSourceContext($templateName);
 
@@ -251,7 +253,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return true;
         }
 
-        if (\is_string($name) && null !== ($themeTemplate = $this->getThemeTemplateName($name))) {
+        // string cast to be removed with Symfony 5 (see #3343)
+        if (null !== ($themeTemplate = $this->getThemeTemplateName((string) $name))) {
             return parent::exists($themeTemplate);
         }
 
@@ -275,7 +278,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function isFresh($name, $time): bool
     {
-        if ((\is_string($name) && null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
+        // string cast to be removed with Symfony 5 (see #3343)
+        if ((null !== ($themeTemplate = $this->getThemeTemplateName((string) $name))) && !parent::isFresh($themeTemplate, $time)) {
             return false;
         }
 
