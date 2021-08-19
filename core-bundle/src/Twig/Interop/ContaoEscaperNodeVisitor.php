@@ -100,8 +100,8 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     {
         if (
             !$node instanceof FilterExpression
-            || !$node->getNode('arguments')->hasNode(0)
-            || !($argument = $node->getNode('arguments')->getNode(0)) instanceof ConstantExpression
+            || !$node->getNode('arguments')->hasNode('0')
+            || !($argument = $node->getNode('arguments')->getNode('0')) instanceof ConstantExpression
             || !\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)
         ) {
             $type = '';
