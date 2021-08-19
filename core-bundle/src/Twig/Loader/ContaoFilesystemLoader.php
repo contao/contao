@@ -16,6 +16,7 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
@@ -185,7 +186,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function getCacheKey($name): string
     {
-        $templateName = $this->getThemeTemplateName($name) ?? $name;
+        $templateName = $this->getThemeTemplateName((string) $name) ?? $name;
 
         return parent::getCacheKey($templateName);
     }
@@ -202,7 +203,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function getSourceContext($name): Source
     {
-        $templateName = $this->getThemeTemplateName($name) ?? $name;
+        $templateName = $this->getThemeTemplateName((string) $name) ?? $name;
         $source = parent::getSourceContext($templateName);
 
         // The Contao PHP templates will still be rendered by the Contao
