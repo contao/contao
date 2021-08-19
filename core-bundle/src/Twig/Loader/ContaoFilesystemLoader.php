@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Twig\Loader;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\TemplateReference;
+use Symfony\Component\Templating\TemplateReferenceInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
@@ -252,11 +252,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return true;
         }
 
-        if ($name instanceof TemplateReference) {
-            $name = $name->getLogicalName();
-        }
-
-        if (null !== ($themeTemplate = $this->getThemeTemplateName($name))) {
+        if (null !== ($themeTemplate = $this->getThemeTemplateName($name instanceof TemplateReferenceInterface ? $name->getLogicalName() : $name))) {
             return parent::exists($themeTemplate);
         }
 
