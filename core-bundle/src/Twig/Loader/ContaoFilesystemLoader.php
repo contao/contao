@@ -185,8 +185,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function getCacheKey($name): string
     {
-        // string cast to be removed with Symfony 5 (see #3343)
-        $templateName = $this->getThemeTemplateName((string) $name) ?? $name;
+        $templateName = $this->getThemeTemplateName($name) ?? $name;
 
         return parent::getCacheKey($templateName);
     }
@@ -203,8 +202,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function getSourceContext($name): Source
     {
-        // string cast to be removed with Symfony 5 (see #3343)
-        $templateName = $this->getThemeTemplateName((string) $name) ?? $name;
+        $templateName = $this->getThemeTemplateName($name) ?? $name;
         $source = parent::getSourceContext($templateName);
 
         // The Contao PHP templates will still be rendered by the Contao
@@ -253,8 +251,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return true;
         }
 
-        // string cast to be removed with Symfony 5 (see #3343)
-        if (null !== ($themeTemplate = $this->getThemeTemplateName((string) $name))) {
+        if (null !== ($themeTemplate = $this->getThemeTemplateName($name))) {
             return parent::exists($themeTemplate);
         }
 
@@ -278,8 +275,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     public function isFresh($name, $time): bool
     {
-        // string cast to be removed with Symfony 5 (see #3343)
-        if ((null !== ($themeTemplate = $this->getThemeTemplateName((string) $name))) && !parent::isFresh($themeTemplate, $time)) {
+        if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
             return false;
         }
 
@@ -403,8 +399,12 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
      */
-    private function getThemeTemplateName(string $name): ?string
+    private function getThemeTemplateName($name): ?string
     {
+        if (!\is_string($name)) {
+            return null;
+        }
+
         $parts = ContaoTwigUtil::parseContaoName($name);
 
         if ('Contao' !== ($parts[0] ?? null)) {
