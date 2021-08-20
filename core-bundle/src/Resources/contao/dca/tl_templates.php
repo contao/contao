@@ -504,8 +504,6 @@ class tl_templates extends Backend
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
-		$GLOBALS['TL_CONFIG']['debugMode'] = false;
-
 		throw new ResponseException($objTemplate->getResponse());
 	}
 
