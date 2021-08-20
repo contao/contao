@@ -224,10 +224,12 @@ class PrettyErrorScreenListenerTest extends TestCase
         $twig
             ->method('render')
             ->willReturnCallback(
-                static function () use (&$count): void {
+                static function () use (&$count): string {
                     if (0 === $count++) {
                         throw new Error('foo');
                     }
+
+                    return '';
                 }
             )
         ;
