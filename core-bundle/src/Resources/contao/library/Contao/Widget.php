@@ -1412,6 +1412,12 @@ abstract class Widget extends \Controller
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
 		}
 
+		// Convert URL insert tags
+		if ($varValue && isset($arrData['eval']['rgxp']) && 'url' === $arrData['eval']['rgxp'])
+		{
+			$arrAttributes['value'] = str_replace('|urlattr}}', '}}', $varValue);
+		}
+
 		// Add the "rootNodes" array as attribute (see #3563)
 		if (isset($arrData['rootNodes']) && !isset($arrData['eval']['rootNodes']))
 		{
