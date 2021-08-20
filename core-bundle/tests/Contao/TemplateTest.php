@@ -17,6 +17,7 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\VarDumper\VarDumper;
@@ -24,6 +25,8 @@ use Webmozart\PathUtil\Path;
 
 class TemplateTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -246,6 +249,42 @@ class TemplateTest extends TestCase
         $template->dumpTemplateVars();
 
         $this->assertSame(['test' => 1], $dump);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testShowsDebugComments(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->value ?>'
+        );
+
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+
+        $sourceWithComments = "\n<!-- TEMPLATE START: templates/test_template.html5 -->\n"
+            .'test'
+            ."\n<!-- TEMPLATE END: templates/test_template.html5 -->\n";
+
+        $this->assertSame('test', $template->parse());
+        $this->assertSame($sourceWithComments, $template->setDebug(true)->parse());
+
+        $this->assertSame('test', $template->setDebug(false)->parse());
+        $this->assertSame('test', $template->setDebug(null)->parse());
+
+        System::getContainer()->setParameter('kernel.debug', true);
+        $GLOBALS['TL_CONFIG']['debugMode'] = true;
+
+        $this->assertSame($sourceWithComments, $template->parse());
+        $this->assertSame('test', $template->setDebug(false)->parse());
+
+        $GLOBALS['TL_CONFIG']['debugMode'] = false;
+
+        $this->expectDeprecation('%sTL_CONFIG.debugMode%s');
+
+        $this->assertSame('test', $template->setDebug(null)->parse());
     }
 
     public function testFigureFunction(): void

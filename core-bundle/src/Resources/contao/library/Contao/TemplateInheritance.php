@@ -71,6 +71,11 @@ trait TemplateInheritance
 	protected $intBufferLevel = 0;
 
 	/**
+	 * @var bool|null
+	 */
+	protected $blnDebug;
+
+	/**
 	 * Parse the template file and return it as string
 	 *
 	 * @return string The template markup
@@ -140,14 +145,35 @@ trait TemplateInheritance
 		// Reset the internal arrays
 		$this->arrBlocks = array();
 
+		$blnDebug = $this->blnDebug;
+
+		if ($blnDebug === null)
+		{
+			$blnDebug = System::getContainer()->getParameter('kernel.debug');
+
+			// Backwards compatibility
+			if ($blnDebug !== (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false))
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Dynamically setting TL_CONFIG.debugMode has been deprecated. Use %s::setDebug() instead.', __CLASS__);
+				$blnDebug = (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false);
+			}
+		}
+
 		// Add start and end markers in debug mode
-		if (System::getContainer()->getParameter('kernel.debug'))
+		if ($blnDebug)
 		{
 			$strRelPath = StringUtil::stripRootDir($this->getTemplatePath($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
 		}
 
 		return $strBuffer;
+	}
+
+	public function setDebug(bool $debug = null): self
+	{
+		$this->blnDebug = $debug;
+
+		return $this;
 	}
 
 	/**
