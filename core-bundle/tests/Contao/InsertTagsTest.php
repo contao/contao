@@ -213,6 +213,26 @@ class InsertTagsTest extends TestCase
                 '<!-- {{plain::--}}> got you! -->',
                 '<!-- [{]plain::--[}]> got you! -->',
             ],
+            'Do not destroy JSON attributes' => [
+                '<span data-myjson=\'{"foo":{"bar":"baz"}}\'>',
+                '<span data-myjson=\'{"foo":{"bar":"baz"&#125;&#125;\'>',
+            ],
+            'Do not destroy nested JSON attributes' => [
+                '<span data-myjson=\'[{"foo":{"bar":"baz"}},12.3,"string"]\'>',
+                '<span data-myjson=\'[{"foo":{"bar":"baz"&#125;&#125;,12.3,"string"]\'>',
+            ],
+            'Do not destroy quoted JSON attributes' => [
+                '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
+                '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+            ],
+            'Do not destroy nested quoted JSON attributes' => [
+                '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
+                '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+            ],
+            'Trick insert tag detection with JSON' => [
+                '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
+                '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
+            ],
         ];
     }
 }
