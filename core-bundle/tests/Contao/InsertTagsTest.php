@@ -12,6 +12,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
+use Contao\PageModel;
 use Contao\System;
 
 /**
@@ -232,6 +233,229 @@ class InsertTagsTest extends TestCase
             'Trick insert tag detection with JSON' => [
                 '<span data-myjson=\'{"foo":{"{{bar::":"baz"}}\'>',
                 '<span data-myjson=\'{"foo":{"&quot;:&quot;baz&quot;\'>',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider languageInsertTagsProvider
+     */
+    public function testRemovesLanguageInsertTags($source, $expected, $pageLanguage = 'en')
+    {
+        $page = $this->createMock(PageModel::class);
+        $page
+            ->method('__get')
+            ->with('language')
+            ->willReturn($pageLanguage)
+        ;
+
+        $GLOBALS['objPage'] = $page;
+
+        $reflectionClass = new \ReflectionClass(InsertTags::class);
+
+        /** @var InsertTags $insertTags */
+        $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
+        // Test case insensitivity
+        $source = str_replace('lng', 'LnG', $source);
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
+        $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source).'">';
+        $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected).'">';
+
+        $this->assertSame($expected, $insertTags->replace($source, false));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+
+        $this->assertSame($expected, $insertTags->replace($source));
+        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function languageInsertTagsProvider()
+    {
+        return [
+            [
+                'no insert tag',
+                'no insert tag',
+            ],
+            [
+                '{{iflng::de}}DE{{iflng}}',
+                '',
+            ],
+            [
+                '{{iflng::en}}EN{{iflng}}',
+                'EN',
+            ],
+            [
+                '{{iflng::de}}DE{{iflng}}',
+                'DE',
+                'de',
+            ],
+            [
+                '{{iflng::de,en}}DE,EN{{iflng}}',
+                'DE,EN',
+            ],
+            [
+                '{{iflng::en*}}EN*{{iflng}}',
+                'EN*',
+            ],
+            [
+                '{{iflng::en*}}EN*{{iflng}}',
+                'EN*',
+                'en_US',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+                '',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::en}}EN{{iflng}}',
+                'EN',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+                'DE',
+                'de',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::de,en}}DE,EN{{iflng}}',
+                'DE,EN',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
+                'EN*',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
+                'EN*',
+                'en_US',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+                'RU',
+                'ru',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::en}}EN{{iflng}}',
+                'RU',
+                'ru',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::de}}DE{{iflng}}',
+                'RU',
+                'ru',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::de,en}}DE,EN{{iflng}}',
+                'RU',
+                'ru',
+            ],
+            [
+                '{{iflng::ru}}RU{{iflng::en*}}EN*{{iflng}}',
+                'RU',
+                'ru',
+            ],
+            [
+                '{{ifnlng::de}}DE{{ifnlng}}',
+                'DE',
+            ],
+            [
+                '{{ifnlng::en}}EN{{ifnlng}}',
+                '',
+            ],
+            [
+                '{{ifnlng::de}}DE{{ifnlng}}',
+                '',
+                'de',
+            ],
+            [
+                '{{ifnlng::de,en}}DE,EN{{ifnlng}}',
+                '',
+            ],
+            [
+                '{{ifnlng::en*}}EN*{{ifnlng}}',
+                '',
+            ],
+            [
+                '{{ifnlng::en*}}EN*{{ifnlng}}',
+                '',
+                'en_US',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+                'RUDE',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::en}}EN{{ifnlng}}',
+                'RU',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+                'RU',
+                'de',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::de,en}}DE,EN{{ifnlng}}',
+                'RU',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
+                'RU',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
+                'RU',
+                'en_US',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+                'DE',
+                'ru',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::en}}EN{{ifnlng}}',
+                'EN',
+                'ru',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::de}}DE{{ifnlng}}',
+                'DE',
+                'ru',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::de,en}}DE,EN{{ifnlng}}',
+                'DE,EN',
+                'ru',
+            ],
+            [
+                '{{ifnlng::ru}}RU{{ifnlng::en*}}EN*{{ifnlng}}',
+                'EN*',
+                'ru',
+            ],
+            [
+                '{{ifnlng::de}}not DE{{ifnlng::en}}not EN{{ifnlng}}',
+                'not DE',
+            ],
+            [
+                '{{ifnlng::de}}not DE{{ifnlng::en}}not EN{{ifnlng}}',
+                'not EN',
+                'de',
+            ],
+            [
+                '{{iflng::de}}should{{iflngg}}not{{iflng-x}}stop{{iflng:}}the{{ifnlng}}conditional{{iflng}}until here',
+                'until here',
             ],
         ];
     }
