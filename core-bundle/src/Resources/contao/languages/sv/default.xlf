@@ -1057,10 +1057,6 @@
         <source>Open the link in a new browser window.</source>
         <target>Om du väljer detta alternativ kommer mål-URL:en att öppnas ett nytt webbläsarfönster.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>

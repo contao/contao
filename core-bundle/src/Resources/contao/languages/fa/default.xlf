@@ -1045,10 +1045,6 @@
         <source>Open the link in a new browser window.</source>
         <target>پیوند در پنجره جدید مرورگر باز می‌گردد.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>rtl</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>

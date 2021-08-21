@@ -1056,10 +1056,6 @@
         <source>Open the link in a new browser window.</source>
         <target>如果你选择此选项，目标URL地址将在新浏览器窗口中被打开。</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>

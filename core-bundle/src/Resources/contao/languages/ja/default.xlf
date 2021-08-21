@@ -1057,10 +1057,6 @@
         <source>Open the link in a new browser window.</source>
         <target>ブラウザーの新しいウィンドウでリンクを開きます。</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
