@@ -58,6 +58,11 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
             $locale = $this->translator->getLocale();
         }
 
+        if ('MSC.textDirection' === $id)
+        {
+            @trigger_error('Using "MSC.textDirection" to retrieve the locale\'s text direction will no longer work in Contao 5.0. Use the PHP intl library instead.', E_USER_DEPRECATED);
+        }
+
         $this->framework->initialize();
         $this->loadLanguageFile(substr($domain, 7), $locale);
 

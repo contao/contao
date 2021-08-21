@@ -18,7 +18,6 @@ use Contao\Database\Updater;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
-use Salarmehr\Cosmopolitan\Cosmo;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -523,9 +522,16 @@ abstract class System
 		}
 
 		// Set MSC.textDirection (see #3360)
-		if ('default' === $strName && empty($GLOBALS['TL_LANG']['MSC']['textDirection']))
+		if ('default' === $strName)
 		{
-			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
+			if (empty($GLOBALS['TL_LANG']['MSC']['textDirection']))
+			{
+				$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
+			}
+			else
+			{
+				@trigger_error('Using "MSC.textDirection" to set the text direction will no longer work in Contao 5.0. To override the text direction create a custom "fe_page" template instead.', E_USER_DEPRECATED);
+			}
 		}
 
 		// HOOK: allow to load custom labels
