@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Util\PackageUtil;
+use Salarmehr\Cosmopolitan\Cosmo;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -177,10 +178,7 @@ class PageRegular extends Frontend
 		$this->Template->sections = $arrCustomSections;
 
 		// Mark RTL languages (see #7171)
-		if ($GLOBALS['TL_LANG']['MSC']['textDirection'] == 'rtl')
-		{
-			$this->Template->isRTL = true;
-		}
+		$this->Template->isRTL = 'rtl' === Cosmo::create($GLOBALS['TL_LANGUAGE'])->direction();
 
 		// HOOK: modify the page or layout object
 		if (isset($GLOBALS['TL_HOOKS']['generatePage']) && \is_array($GLOBALS['TL_HOOKS']['generatePage']))

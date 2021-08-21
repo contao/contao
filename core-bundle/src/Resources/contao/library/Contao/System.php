@@ -18,6 +18,7 @@ use Contao\Database\Updater;
 use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
+use Salarmehr\Cosmopolitan\Cosmo;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -519,6 +520,12 @@ abstract class System
 					}
 				}
 			}
+		}
+
+		// Set MSC.textDirection
+		if ('default' === $strName)
+		{
+			$GLOBALS['TL_LANG']['MSC']['textDirection'] = Cosmo::create($strLanguage)->direction();
 		}
 
 		// HOOK: allow to load custom labels
