@@ -528,7 +528,7 @@ abstract class System
 			{
 				$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
 			}
-			else
+			elseif (!isset(static::$arrLanguageFiles[$strName][$strLanguage]))
 			{
 				@trigger_error('Using "MSC.textDirection" to set the text direction will no longer work in Contao 5.0. To override the text direction create a custom "fe_page" template instead.', E_USER_DEPRECATED);
 			}
