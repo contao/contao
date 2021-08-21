@@ -522,7 +522,7 @@ abstract class System
 			}
 		}
 
-		// Set MSC.textDirection
+		// Set MSC.textDirection (see #3360)
 		if ('default' === $strName)
 		{
 			$GLOBALS['TL_LANG']['MSC']['textDirection'] = Cosmo::create($strLanguage)->direction();

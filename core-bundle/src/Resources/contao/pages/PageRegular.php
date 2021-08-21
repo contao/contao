@@ -177,7 +177,7 @@ class PageRegular extends Frontend
 
 		$this->Template->sections = $arrCustomSections;
 
-		// Mark RTL languages (see #7171)
+		// Mark RTL languages (see #7171, #3360)
 		$this->Template->isRTL = 'rtl' === Cosmo::create($GLOBALS['TL_LANGUAGE'])->direction();
 
 		// HOOK: modify the page or layout object
