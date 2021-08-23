@@ -50,7 +50,7 @@ abstract class AbstractInsertTagPickerProvider extends AbstractPickerProvider
     /**
      * Returns the insert tag flags.
      */
-    protected function getInsertTagFlags(PickerConfig $config)
+    protected function getInsertTagFlags(PickerConfig $config): array
     {
         $flags = explode('|', str_replace($this->getInsertTagChunks($config), '', $config->getValue()));
 
