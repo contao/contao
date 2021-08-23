@@ -135,8 +135,9 @@ class FilePickerProviderTest extends ContaoTestCase
                 'fieldType' => 'radio',
                 'filesOnly' => true,
                 'value' => '/foobar',
+                'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{file::'.$uuid.'}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{file::'.$uuid.'|urlattr}}'))
         );
 
         $this->assertSame(
