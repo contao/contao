@@ -1,5 +1,14 @@
 # Change log
 
+## 4.4.57 (2021-08-23)
+
+ * Correctly encode HTML comments, <script> and <style> tags (see #3333).
+ * Add support for namespaced attributes (see #3330).
+ * Fix the "iflng" and "ifnlng" insert tags (see #3332).
+ * Do not show the urlattr flag for rgxp url fields (see #3331).
+ * Improve compatibility with JSON in attributes (see #3328).
+ * Do not encode special characters if no tags are allowed (see #3327).
+
 ## 4.4.56 (2021-08-11)
 
  * Prevent privilege escalation with the form generator (CVE-2021-37627).
