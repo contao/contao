@@ -459,7 +459,6 @@ abstract class System
 		}
 
 		$strCacheKey = $strLanguage;
-		$blnLoaded = isset(static::$arrLanguageFiles[$strName][$strLanguage]);
 
 		// Make sure the language exists
 		if ($strLanguage != 'en' && !static::isInstalledLanguage($strLanguage))
@@ -488,12 +487,6 @@ abstract class System
 		// Prepare the XLIFF loader
 		$xlfLoader = new XliffFileLoader(static::getContainer()->getParameter('kernel.project_dir'), true);
 		$strCacheDir = static::getContainer()->getParameter('kernel.cache_dir');
-
-		// Always unset MSC.textDirection before loading the language (see #3360)
-		if ('default' === $strName)
-		{
-			unset($GLOBALS['TL_LANG']['MSC']['textDirection']);
-		}
 
 		// Load the language(s)
 		foreach ($arrCreateLangs as $strCreateLang)
@@ -531,14 +524,7 @@ abstract class System
 		// Set MSC.textDirection (see #3360)
 		if ('default' === $strName)
 		{
-			if (empty($GLOBALS['TL_LANG']['MSC']['textDirection']))
-			{
-				$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
-			}
-			elseif (!$blnLoaded)
-			{
-				@trigger_error('Using "MSC.textDirection" to set the text direction will no longer work in Contao 5.0. To override the text direction create a custom "fe_page" template instead.', E_USER_DEPRECATED);
-			}
+			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
 		}
 
 		// HOOK: allow to load custom labels
