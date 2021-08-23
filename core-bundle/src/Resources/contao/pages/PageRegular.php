@@ -177,7 +177,7 @@ class PageRegular extends Frontend
 		$this->Template->sections = $arrCustomSections;
 
 		// Mark RTL languages (see #7171, #3360)
-		$this->Template->isRTL = 'rtl' === ($GLOBALS['TL_LANG']['MSC']['textDirection'] ?? ((\ResourceBundle::create($GLOBALS['TL_LANGUAGE'], 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr'));
+		$this->Template->isRTL = 'rtl' === ((\ResourceBundle::create($GLOBALS['TL_LANGUAGE'], 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr');
 
 		// HOOK: modify the page or layout object
 		if (isset($GLOBALS['TL_HOOKS']['generatePage']) && \is_array($GLOBALS['TL_HOOKS']['generatePage']))
