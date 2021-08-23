@@ -149,12 +149,7 @@ class Version480Update extends AbstractMigration
         $controller = $this->framework->getAdapter(Controller::class);
 
         foreach (['jquery' => 'j_mediaelement', 'scripts' => 'js_mediaelement'] as $column => $templateName) {
-            if (
-                \array_key_exists(
-                    $templateName,
-                    $controller->getTemplateGroup(explode('_', $templateName)[0].'_')
-                )
-            ) {
+            if (\array_key_exists($templateName, $controller->getTemplateGroup(explode('_', $templateName)[0].'_'))) {
                 // Do not delete scripts that still exist
                 continue;
             }
