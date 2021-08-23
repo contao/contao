@@ -186,6 +186,7 @@ class MigrateCommand extends Command
                     if (!$asJson) {
                         $this->io->section('Pending migrations');
                     }
+
                     $first = false;
                 }
 
@@ -293,14 +294,12 @@ class MigrateCommand extends Command
                 return true;
             }
 
-            $hasNewCommands = \count(
-                array_filter(
-                    array_keys($commands),
-                    static function ($hash) use ($commandsByHash) {
-                        return !isset($commandsByHash[$hash]);
-                    }
-                )
-            );
+            $hasNewCommands = \count(array_filter(
+                array_keys($commands),
+                static function ($hash) use ($commandsByHash) {
+                    return !isset($commandsByHash[$hash]);
+                }
+            ));
 
             if (!$hasNewCommands) {
                 return true;
@@ -343,7 +342,6 @@ class MigrateCommand extends Command
             }
 
             $count = 0;
-
             $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
 
             do {

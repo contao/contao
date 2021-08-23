@@ -228,7 +228,6 @@ class MigrateCommandTest extends TestCase
         );
 
         $tester = new CommandTester($command);
-
         $code = $tester->execute(['--dry-run' => true, '--format' => $format]);
         $display = $tester->getDisplay();
 
@@ -336,7 +335,6 @@ class MigrateCommandTest extends TestCase
         ;
 
         $command = $this->getCommand([], [], [], $installer);
-
         $tester = new CommandTester($command);
 
         if ('ndjson' !== $format) {
@@ -349,6 +347,7 @@ class MigrateCommandTest extends TestCase
         $this->assertSame(1, $code);
 
         $json = $this->jsonArrayFromNdjson($display)[0];
+
         $this->assertSame('error', $json['type']);
         $this->assertSame('Fatal', $json['message']);
     }
