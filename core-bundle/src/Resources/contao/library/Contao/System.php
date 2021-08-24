@@ -523,6 +523,12 @@ abstract class System
 			}
 		}
 
+		// Set MSC.textDirection (see #3360)
+		if ('default' === $strName)
+		{
+			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
+		}
+
 		// HOOK: allow to load custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{

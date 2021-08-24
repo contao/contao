@@ -123,8 +123,9 @@ class ArticlePickerProviderTest extends ContaoTestCase
                 'fieldType' => 'radio',
                 'preserveRecord' => 'tl_article.2',
                 'value' => '5',
+                'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{article_url::5|urlattr}}'))
         );
 
         $this->assertSame(
