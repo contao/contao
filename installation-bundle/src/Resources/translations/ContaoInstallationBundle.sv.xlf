@@ -353,6 +353,14 @@
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
         <target>Det gick inte att ansluta till databasen med anslutnings-URL: en som hittades i omgivningsvariabeln &lt;code&gt;DATABASE_URL&lt;/code&gt;.</target>
       </trans-unit>
+      <trans-unit id="89" resname="strict_sql_mode">
+        <source>Your database server is not running in strict mode!</source>
+        <target>Din databasserver körs inte i strict mode! </target>
+      </trans-unit>
+      <trans-unit id="90" resname="strict_sql_mode_explain">
+        <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>Att köra MySQL i non-strict mode kan orsaka korrupta eller trunkerade data. Aktivera det strict mode antingen i din &lt;code&gt;my.cnf&lt;/code&gt;-fil eller konfigurera anslutningsalternativen i filen &lt;code&gt;config/config.yml&lt;/code&gt; enligt följande:</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

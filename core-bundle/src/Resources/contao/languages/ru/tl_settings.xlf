@@ -83,12 +83,15 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
+        <target>Разрешенные атрибуты HTML</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Список разрешенных атрибутов HTML, которые не будут удалены. Имя тега или атрибута &lt;code&gt;*&lt;/code&gt; обозначает все теги или атрибуты. Подстановочные знаки можно использовать для атрибутов с тире, наприм., &lt;code&gt;data-*&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Разрешенные атрибуты &lt;code&gt;*&lt;/code&gt; могут использоваться   для атак XSS. Делайте это только в случае, если всем пользователям панели управления есть доверие!</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>

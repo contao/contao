@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Komentiranje dovoli samo prijavljenim uporabnikom.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
@@ -173,6 +174,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Prikaži komentarje arhiva novic z ID %s</target>
       </trans-unit>
     </body>
   </file>

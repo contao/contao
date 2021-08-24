@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.11.9] (2021-08-24)
+
+**Fixed issues:**
+
+- [#3340] Fix another undefined array key warning ([bytehead])
+- [#3308] Fix undefined array keys ([BugBuster1701])
+
 ## [4.11.8] (2021-08-12)
 
 ## [4.11.7] (2021-08-11)
@@ -167,6 +174,7 @@ This project adheres to [Semantic Versioning].
 - [#2284] Replace phpunit/token-stream with nikic/php-parser ([m-vo])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.11.9]: https://github.com/contao/contao/releases/tag/4.11.9
 [4.11.8]: https://github.com/contao/contao/releases/tag/4.11.8
 [4.11.7]: https://github.com/contao/contao/releases/tag/4.11.7
 [4.11.6]: https://github.com/contao/contao/releases/tag/4.11.6
@@ -186,6 +194,7 @@ This project adheres to [Semantic Versioning].
 [ArndtZiegler]: https://github.com/ArndtZiegler
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[BugBuster1701]: https://github.com/BugBuster1701
 [bytehead]: https://github.com/bytehead
 [dmolineus]: https://github.com/dmolineus
 [fritzmg]: https://github.com/fritzmg
@@ -195,6 +204,8 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [simonreitinger]: https://github.com/simonreitinger
 [Toflar]: https://github.com/Toflar
+[#3340]: https://github.com/contao/contao/pull/3340
+[#3308]: https://github.com/contao/contao/pull/3308
 [#3253]: https://github.com/contao/contao/pull/3253
 [#3208]: https://github.com/contao/contao/pull/3208
 [#3130]: https://github.com/contao/contao/pull/3130
