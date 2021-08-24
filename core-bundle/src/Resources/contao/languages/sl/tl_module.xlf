@@ -227,6 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.0">
         <source>Context length</source>
+        <target>Obseg konteksta</target>
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
@@ -426,6 +427,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
         <source>Allow the new member to log into the front end.</source>
+        <target>Dovoli uporabniku, da se prijavi v ospredje - front end.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -473,6 +475,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Prosimo, izberite stran, kamor bodo preusmerjeni uporabniki po zaključeni poizvedbi.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -560,6 +563,15 @@ The confirmation link is valid for 24 hours.
 
 If you did not request an account, please ignore this e-mail.
 </source>
+        <target>Zahvaljujemo se vam za vašo registracijo na domeni ##domain##.
+
+Prosimo le še to, da zaključite registracijo in aktivirate vaš uporabniški račun.
+
+##link##
+
+Povezava je veljavna 24 ur.
+
+V kolikor niste zahtevali omenjenega računa, prosimo ignorirajte to e-sporočilo.</target>
       </trans-unit>
       <trans-unit id="tl_module.passwordText.0">
         <source>Your password request on %s</source>
