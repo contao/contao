@@ -90,6 +90,7 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
+        <target>فایل CSV (Microsoft Excel)</target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>

@@ -147,12 +147,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.httpurl.0">
         <source>Absolute URL</source>
+        <target>Celoten URL</target>
       </trans-unit>
       <trans-unit id="tl_form_field.httpurl.1">
         <source>Checks whether the input is a valid absolute URL.</source>
+        <target>Preveri, če je vnešen celoten URL.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.custom.0">
         <source>Custom</source>
+        <target>Po meri</target>
       </trans-unit>
       <trans-unit id="tl_form_field.custom.1">
         <source>Checks against a custom regular expression.</source>

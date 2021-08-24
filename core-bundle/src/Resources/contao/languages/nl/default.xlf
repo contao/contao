@@ -1078,10 +1078,6 @@
         <source>Open the link in a new browser window.</source>
         <target>Open de link in een nieuw browser venster.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>

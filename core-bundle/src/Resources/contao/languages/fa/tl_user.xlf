@@ -167,6 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements.1">
         <source>Here you can select the allowed content element types.</source>
+        <target>اینجا می‌توانید انواع عناصر محتوایی مجاز را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.0">
         <source>Form fields</source>
@@ -174,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_user.fields.1">
         <source>Here you can select the allowed form field types.</source>
+        <target>اینجا می‌توانید انواع فیلدهای فرم مجاز را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>

@@ -272,9 +272,11 @@
       </trans-unit>
       <trans-unit id="tl_layout.viewport.0">
         <source>Viewport tag</source>
+        <target>Element viewport</target>
       </trans-unit>
       <trans-unit id="tl_layout.viewport.1">
         <source>Here you can set a custom viewport tag.</source>
+        <target>Tu lahko nastavite poljubno vsebino elementa viewport.</target>
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.0">
         <source>Title tag</source>
@@ -282,6 +284,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.titleTag.1">
         <source>Here you can overwrite the title tag.</source>
+        <target>Tu lahko prepišete oznako title.</target>
       </trans-unit>
       <trans-unit id="tl_layout.onload.0">
         <source>Body onload</source>
