@@ -52,7 +52,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', '--env=prod'], $flags),
+            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', 'public', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
             array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
