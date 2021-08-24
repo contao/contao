@@ -83,7 +83,7 @@ class CoreResponseContextFactory
         /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
 
-        $title = $pageModel->pageTitle ?: StringUtil::inputEncodedToPlainText($pageModel->title ?: '');
+        $title = StringUtil::inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
 
         $htmlHeadBag
             ->setTitle($title ?: '')
