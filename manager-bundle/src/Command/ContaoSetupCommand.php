@@ -84,7 +84,7 @@ class ContaoSetupCommand extends Command
         }
 
         $commands = [
-            ['contao:install-web-dir', '--env=prod'],
+            ['contao:install-web-dir', $this->webDir, '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=prod'],
             ['cache:clear', '--no-warmup', '--env=dev'],
             ['cache:warmup', '--env=prod'],
