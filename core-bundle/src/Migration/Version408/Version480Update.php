@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version408;
 
+use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -126,19 +127,59 @@ class Version480Update extends AbstractMigration
             return false;
         }
 
-        return (bool) $this->connection->fetchOne("
-            SELECT EXISTS(
-                SELECT id
-                FROM tl_layout
-                WHERE
-                    jquery LIKE '%j_mediaelement%'
-                    OR scripts LIKE '%js_mediaelement%'
-            )
-        ");
+        if (
+            !$this->connection->fetchOne("
+                SELECT EXISTS(
+                    SELECT id
+                    FROM tl_layout
+                    WHERE
+                        jquery LIKE '%j_mediaelement%'
+                        OR scripts LIKE '%js_mediaelement%'
+                )
+            ")
+        ) {
+            // Early return without initializing the framework
+            return false;
+        }
+
+        $this->framework->initialize();
+
+        /** @var Controller $controller */
+        $controller = $this->framework->getAdapter(Controller::class);
+
+        foreach (['jquery' => 'j_mediaelement', 'scripts' => 'js_mediaelement'] as $column => $templateName) {
+            if (\array_key_exists($templateName, $controller->getTemplateGroup(explode('_', $templateName)[0].'_'))) {
+                // Do not delete scripts that still exist
+                continue;
+            }
+
+            if (
+                $this->connection->fetchOne("
+                    SELECT EXISTS(
+                        SELECT id
+                        FROM tl_layout
+                        WHERE
+                            $column LIKE '%$templateName%'
+                    )
+                ")
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function runMediaelement(): void
     {
+        $this->framework->initialize();
+
+        /** @var Controller $controller */
+        $controller = $this->framework->getAdapter(Controller::class);
+
+        $jTemplateExists = \array_key_exists('j_mediaelement', $controller->getTemplateGroup('j_'));
+        $jsTemplateExists = \array_key_exists('js_mediaelement', $controller->getTemplateGroup('js_'));
+
         $rows = $this->connection->fetchAllAssociative('
             SELECT
                 id, jquery, scripts
@@ -148,7 +189,7 @@ class Version480Update extends AbstractMigration
 
         // Remove the "j_mediaelement" and "js_mediaelement" templates
         foreach ($rows as $row) {
-            if ($row['jquery']) {
+            if ($row['jquery'] && !$jTemplateExists) {
                 $jquery = StringUtil::deserialize($row['jquery']);
 
                 if (\is_array($jquery) && false !== ($i = array_search('j_mediaelement', $jquery, true))) {
@@ -167,7 +208,7 @@ class Version480Update extends AbstractMigration
                 }
             }
 
-            if ($row['scripts']) {
+            if ($row['scripts'] && !$jsTemplateExists) {
                 $scripts = StringUtil::deserialize($row['scripts']);
 
                 if (\is_array($scripts) && false !== ($i = array_search('js_mediaelement', $scripts, true))) {

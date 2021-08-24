@@ -64,6 +64,10 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = $this->getInsertTagValue($config);
+
+            if ($flags = $this->getInsertTagFlags($config)) {
+                $attributes['flags'] = $flags;
+            }
         }
 
         return $attributes;

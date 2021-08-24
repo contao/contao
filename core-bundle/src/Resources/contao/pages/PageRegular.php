@@ -178,8 +178,8 @@ class PageRegular extends Frontend
 
 		$this->Template->sections = $arrCustomSections;
 
-		// Mark RTL languages (see #7171)
-		if (($GLOBALS['TL_LANG']['MSC']['textDirection'] ?? null) == 'rtl')
+		// Mark RTL languages (see #7171, #3360)
+		if ((\ResourceBundle::create($locale, 'ICUDATA', true)['layout']['characters'] ?? null) == 'right-to-left')
 		{
 			$this->Template->isRTL = true;
 		}

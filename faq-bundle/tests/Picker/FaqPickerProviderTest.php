@@ -105,8 +105,9 @@ class FaqPickerProviderTest extends ContaoTestCase
                 'fieldType' => 'radio',
                 'preserveRecord' => 'tl_faq.2',
                 'value' => '5',
+                'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5|urlattr}}'))
         );
 
         $this->assertSame(
