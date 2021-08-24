@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.20] (2021-08-24)
+
+**Fixed issues:**
+
+- [#3369] Fix using insert tags in the page title ([ausi])
+- [#3360] Use intl for text direction ([fritzmg])
+- [#3367] Handle insert tag flags in the picker ([leofeyer])
+- [#3310] Add the "dry-run" and "format=ndjson" options to the migrate command ([ausi])
+- [#3359] Fix the media element migration ([ausi])
+- [#3346] Fix versioning condition in DC_Folder edit action ([ausi])
+- [#3356] Make the metadata available in the download element ([leofeyer])
+- [#3341] Clarify contao.preview_script usage ([fritzmg])
+- [#3314] Add support for namespaced attributes ([ausi])
+- [#3303] Warn if the DB server is not running in strict mode ([ausi])
+- [#3321] Correctly explode foreign keys in the DCA ([fritzmg])
+- [#3323] Remove reference to other table from column classname in DC_Table ([dennisbohn])
+- [#3319] Correctly encode HTML comments, <script> and <style> tags ([ausi])
+- [#3315] Do not encode special characters if no tags are allowed ([ausi])
+- [#3311] Fix version creation for entries with dynamic ptable ([fritzmg])
+- [#3278] Check if stopwatch is started before stopping ([bytehead])
+- [#3283] Check if the indexer service exists when purging search tables ([bytehead])
+
 ## [4.9.19] (2021-08-12)
 
 **Fixed issues:**
@@ -672,6 +694,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.20]: https://github.com/contao/contao/releases/tag/4.9.20
 [4.9.19]: https://github.com/contao/contao/releases/tag/4.9.19
 [4.9.18]: https://github.com/contao/contao/releases/tag/4.9.18
 [4.9.17]: https://github.com/contao/contao/releases/tag/4.9.17
@@ -710,6 +733,7 @@ This project adheres to [Semantic Versioning].
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
 [cliffparnitzky]: https://github.com/cliffparnitzky
+[dennisbohn]: https://github.com/dennisbohn
 [denniserdmann]: https://github.com/denniserdmann
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
@@ -725,6 +749,23 @@ This project adheres to [Semantic Versioning].
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[#3369]: https://github.com/contao/contao/pull/3369
+[#3360]: https://github.com/contao/contao/pull/3360
+[#3367]: https://github.com/contao/contao/pull/3367
+[#3310]: https://github.com/contao/contao/pull/3310
+[#3359]: https://github.com/contao/contao/pull/3359
+[#3346]: https://github.com/contao/contao/pull/3346
+[#3356]: https://github.com/contao/contao/pull/3356
+[#3341]: https://github.com/contao/contao/pull/3341
+[#3314]: https://github.com/contao/contao/pull/3314
+[#3303]: https://github.com/contao/contao/pull/3303
+[#3321]: https://github.com/contao/contao/pull/3321
+[#3323]: https://github.com/contao/contao/pull/3323
+[#3319]: https://github.com/contao/contao/pull/3319
+[#3315]: https://github.com/contao/contao/pull/3315
+[#3311]: https://github.com/contao/contao/pull/3311
+[#3278]: https://github.com/contao/contao/pull/3278
+[#3283]: https://github.com/contao/contao/pull/3283
 [#3293]: https://github.com/contao/contao/pull/3293
 [#3292]: https://github.com/contao/contao/pull/3292
 [#3291]: https://github.com/contao/contao/pull/3291

@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_text.0">
         <source>Custom text</source>
+        <target>Poljubno besedilo</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
         <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
@@ -53,9 +54,11 @@
       </trans-unit>
       <trans-unit id="tl_module.nl_template.1">
         <source>Here you can select a newsletter template.</source>
+        <target>Tukaj lahko izberete predlogo za e-novico.</target>
       </trans-unit>
       <trans-unit id="tl_module.text_legend">
         <source>Custom text</source>
+        <target>Poljubno besedilo</target>
       </trans-unit>
       <trans-unit id="tl_module.text_subscribe.0">
         <source>Your subscription on %s</source>
@@ -74,6 +77,18 @@ The confirmation link is valid for 24 hours. You can cancel your subscription at
 
 If you did not subscribe yourself, please ignore this e-mail.
 </source>
+        <target>Naročili ste se na naslednje novice na ##domain##:
+
+##channels##
+
+Prosimo kliknite tu za aktivacijo vaše prijave:
+
+##link##
+
+Poveza je veljavna 24 ur. Naročnino lahko kadarkoli prekinete.
+
+Če se niste prijavili vi, prosimo ignorirajte ta e-mail.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.text_unsubscribe.0">
         <source>Your subscription on %s</source>

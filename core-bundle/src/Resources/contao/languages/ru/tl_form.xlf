@@ -231,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+        <target>Определите доступные таблицы в следующей конфигурации DCA: &lt;code&gt;%s&lt;/code&gt;.</target>
       </trans-unit>
     </body>
   </file>
