@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.1] (2021-08-25)
+
+**Fixed issues:**
+
+- [#3362] Allow extending both front end and back end templates with Twig ([m-vo])
+- [#3380] Also convert the page title to plain text in the response context ([leofeyer])
+- [#3378] Pass contao.web_dir to the contao:install-web-dir command ([leofeyer])
+- [#3368] Fix another invalid array access ([bytehead])
+- [#3365] Use 4 spaces to indent the strict mode notice ([fritzmg])
+- [#3353] Fix dynamic debug mode for templates ([ausi])
+
 ## [4.12.0] (2021-08-19)
 
 **Fixed issues:**
@@ -122,6 +133,7 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.1]: https://github.com/contao/contao/releases/tag/4.12.1
 [4.12.0]: https://github.com/contao/contao/releases/tag/4.12.0
 [4.12.0-RC3]: https://github.com/contao/contao/releases/tag/4.12.0-RC3
 [4.12.0-RC2]: https://github.com/contao/contao/releases/tag/4.12.0-RC2
@@ -139,6 +151,12 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
+[#3362]: https://github.com/contao/contao/pull/3362
+[#3380]: https://github.com/contao/contao/pull/3380
+[#3378]: https://github.com/contao/contao/pull/3378
+[#3368]: https://github.com/contao/contao/pull/3368
+[#3365]: https://github.com/contao/contao/pull/3365
+[#3353]: https://github.com/contao/contao/pull/3353
 [#3343]: https://github.com/contao/contao/pull/3343
 [#3339]: https://github.com/contao/contao/pull/3339
 [#3337]: https://github.com/contao/contao/pull/3337
