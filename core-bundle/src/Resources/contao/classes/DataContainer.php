@@ -901,7 +901,7 @@ abstract class DataContainer extends Backend
 			// Custom icon (see #5541)
 			if ($v['icon'] ?? null)
 			{
-				$v['class'] = trim($v['class'] . ' header_icon');
+				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
 
 				// Add the theme path if only the file name is given
 				if (strpos($v['icon'], '/') === false)

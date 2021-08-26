@@ -121,8 +121,9 @@ class PagePickerProviderTest extends ContaoTestCase
             [
                 'fieldType' => 'radio',
                 'value' => '5',
+                'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5|urlattr}}'))
         );
 
         $this->assertSame(

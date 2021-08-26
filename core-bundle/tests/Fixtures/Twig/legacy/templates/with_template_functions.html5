@@ -1,0 +1,7 @@
+<?php
+
+// via \Contao\FrontendTemplateTrait
+echo $this->hasAuthenticatedBackendUser()."\n";
+
+// via \Contao\BackendTemplateTrait
+echo $this->getDateString();

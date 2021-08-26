@@ -696,8 +696,6 @@ class InsertTags extends Controller
 
 				// Page
 				case 'page':
-					$flags[] = 'attr';
-
 					if (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
 					{
 						$elements[1] = 'parentTitle';
@@ -728,6 +726,11 @@ class InsertTags extends Controller
 					else
 					{
 						// Do not use StringUtil::specialchars() here (see #4687)
+						if (!\in_array($elements[1], array('title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'), true))
+						{
+							$flags[] = 'attr';
+						}
+
 						$arrCache[$strTag] = $objPage->{$elements[1]};
 					}
 					break;

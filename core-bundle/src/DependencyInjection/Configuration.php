@@ -81,7 +81,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. preview.php).')
+                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
