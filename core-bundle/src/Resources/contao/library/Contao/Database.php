@@ -572,6 +572,12 @@ class Database
 
 		while ($objPages->next())
 		{
+			// TODO: Find a better solution for this? Why does this method include the ID itself?
+			if ($objPages->id == $intId)
+			{
+				continue;
+			}
+
 			$arrReturn[] = $objPages->id;
 		}
 
