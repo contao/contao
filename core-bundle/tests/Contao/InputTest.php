@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Config;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
+use Contao\StringUtil;
 
 /**
  * @group legacy
@@ -407,5 +408,83 @@ class InputTest extends TestCase
         $expected = '<div class="gets-normalized"><span class="gets-normalized">foo</span></div>&lt;notallowed&#62;&lt;/notallowed&#62;';
 
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
+    }
+
+    /**
+     * @dataProvider simpleTokensWithHtmlProvider
+     */
+    public function testSimpleTokensWithHtml(string $source, array $tokens, string $expected): void
+    {
+        // Input encode the source
+        Input::resetCache();
+        $_POST = ['html' => $source];
+        $html = Input::postHtml('html', true);
+        unset($_POST);
+        Input::resetCache();
+
+        $this->assertSame($expected, StringUtil::parseSimpleTokens($html, $tokens));
+    }
+
+    public function simpleTokensWithHtmlProvider(): \Generator
+    {
+        yield 'Token only' => [
+            'foo##foo##baz',
+            ['foo' => 'bar'],
+            'foobarbaz',
+        ];
+
+        yield 'Token between tags' => [
+            '<b>##foo##</b>',
+            ['foo' => 'bar'],
+            '<b>bar</b>',
+        ];
+
+        yield 'Token in attribute' => [
+            '<b title="##foo##">##foo##</b>',
+            ['foo' => 'bar'],
+            '<b title="bar">bar</b>',
+        ];
+
+        yield 'Token in URL attribute' => [
+            '<a href="##foo##">##foo##</a>',
+            ['foo' => 'bar'],
+            '<a href="bar">bar</a>',
+        ];
+
+        yield 'Condition only' => [
+            'a{if foo != ""}b{else}c{endif}d{if bar<6}e{else}f{endif}g{if bar>4}h{else}i{endif}j',
+            ['foo' => 'bar', 'bar' => 5],
+            'abdeghj',
+        ];
+
+        yield 'Condition between tags' => [
+            '<b>a{if foo != ""}b{else}c{endif}d{if bar<6}e{else}f{endif}g{if bar>4}h{else}i{endif}j</b>',
+            ['foo' => 'bar', 'bar' => 5],
+            '<b>abdeghj</b>',
+        ];
+
+        yield 'Condition in attribute' => [
+            '<b title=\'a{if foo != ""}b{else}c{endif}d{if bar<6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></b>',
+            ['foo' => 'bar', 'bar' => 5],
+            '<b title="abdeghj"></b>',
+        ];
+
+        yield 'Condition in URL attribute' => [
+            '<a href=\'a{if foo != ""}b{else}c{endif}d{if bar<6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></a>',
+            ['foo' => 'bar', 'bar' => 5],
+            '<a href="abdeghj"></a>',
+        ];
+
+        yield 'Condition encoded in attribute' => [
+            '<b title=\'a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></b>',
+            ['foo' => 'bar', 'bar' => 5],
+            '<b title="abdeghj"></b>',
+        ];
+
+        yield 'Condition encoded in URL attribute' => [
+            '<a href=\'a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></a>',
+            ['foo' => 'bar', 'bar' => 5],
+            '<a href="abdeghj"></a>',
+        ];
     }
 }

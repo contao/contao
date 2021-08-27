@@ -339,6 +339,7 @@ class StringUtilTest extends TestCase
     public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens));
+        $this->assertSame($expected, StringUtil::parseSimpleTokens($string, $tokens, false));
     }
 
     public function parseSimpleTokensCorrectNewlines(): \Generator
