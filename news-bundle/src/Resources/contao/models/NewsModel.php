@@ -28,7 +28,10 @@ use Contao\Model\Collection;
  * @property string         $robots
  * @property string|null    $description
  * @property string         $subheadline
+ * @property string         $teaserType
  * @property string|null    $teaser
+ * @property string|integer $teaserElements
+ * @property string|integer $teaserChars
  * @property string|boolean $addImage
  * @property string|boolean $overwriteMeta
  * @property string|null    $singleSRC

@@ -485,6 +485,27 @@ class News extends Frontend
 		return $jsonLd;
 	}
 
+	public static function hasNewsContent(NewsModel $objArticle, array $arrOptions = [])
+	{
+		return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news', $arrOptions) > 0;
+	}
+
+	public static function getNewsContent(NewsModel $objArticle, array $arrOptions = []): string
+	{
+		$strText = '';
+		$objElement = ContentModel::findPublishedByPidAndTable($objArticle->id, 'tl_news', $arrOptions);
+
+		if ($objElement !== null)
+		{
+			while ($objElement->next())
+			{
+				$strText .= Controller::getContentElement($objElement->current());
+			}
+		}
+
+		return $strText;
+	}
+
 	/**
 	 * Return the link of a news article
 	 *
