@@ -358,12 +358,12 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @return Environment&MockObject
      */
-    private function getTwigMock(string $render = 'CONTAO'): Environment
+    private function getTwigMock(): Environment
     {
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn($render)
+            ->willReturn('CONTAO')
         ;
 
         return $twig;
@@ -372,12 +372,12 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @return RouterInterface&MockObject
      */
-    private function mockRouterWithContext(array $expectedParameters = [], string $expectedRoute = 'contao_backend_switch', int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): RouterInterface
+    private function mockRouterWithContext(): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
-            ->with($expectedRoute, $expectedParameters, $referenceType)
+            ->with('contao_backend_switch', [], UrlGeneratorInterface::ABSOLUTE_PATH)
         ;
 
         $router

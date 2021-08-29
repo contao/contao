@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Patchwork\Utf8;
 
 /**
@@ -32,8 +32,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventlist extends Events
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Current date object
 	 * @var Date
@@ -190,7 +188,7 @@ class ModuleEventlist extends Events
 		$arrEvents = array();
 
 		// Remove events outside the scope
-		foreach ($arrAllEvents as $key=>$days)
+		foreach ($arrAllEvents as $days)
 		{
 			foreach ($days as $day=>$events)
 			{
@@ -325,6 +323,8 @@ class ModuleEventlist extends Events
 				$objTemplate->hasDetails = false;
 			}
 
+			$objTemplate->hasReader = $event['source'] == 'default';
+
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
@@ -348,7 +348,7 @@ class ModuleEventlist extends Events
 			$objTemplate->addBefore = false;
 
 			// Add an image
-			if ($event['addImage'] && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($event['singleSRC'])))
+			if ($event['addImage'])
 			{
 				/** @var CalendarEventsModel $eventModel */
 				$eventModel = CalendarEventsModel::findByPk($event['id']);
@@ -365,23 +365,29 @@ class ModuleEventlist extends Events
 					}
 				}
 
+				$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+
 				$figure = $figureBuilder
+					->from($event['singleSRC'])
 					->setSize($imgSize)
 					->setMetadata($eventModel->getOverwriteMetadata())
 					->enableLightbox((bool) $eventModel->fullsize)
-					->build();
+					->buildIfResourceExists();
 
-				// Rebuild with link to event if none is set
-				if (!$figure->getLinkHref())
+				if (null !== $figure)
 				{
-					$figure = $figureBuilder
-						->setLinkHref($event['href'])
-						->setLinkAttribute('title', $objTemplate->readMore)
-						->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
-						->build();
-				}
+					// Rebuild with link to event if none is set
+					if (!$figure->getLinkHref())
+					{
+						$figure = $figureBuilder
+							->setLinkHref($event['href'])
+							->setLinkAttribute('title', $objTemplate->readMore)
+							->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
+							->build();
+					}
 
-				$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+					$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+				}
 			}
 
 			$objTemplate->enclosure = array();
@@ -391,6 +397,19 @@ class ModuleEventlist extends Events
 			{
 				$this->addEnclosuresToTemplate($objTemplate, $event);
 			}
+
+			// schema.org information
+			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array
+			{
+				$jsonLd = Events::getSchemaOrgData((new CalendarEventsModel())->setRow($event));
+
+				if ($objTemplate->addImage && $objTemplate->figure)
+				{
+					$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
+				}
+
+				return $jsonLd;
+			};
 
 			$strEvents .= $objTemplate->parse();
 

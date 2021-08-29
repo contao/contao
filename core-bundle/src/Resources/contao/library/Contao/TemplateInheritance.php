@@ -11,7 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the template inheritance logic
@@ -69,12 +71,22 @@ trait TemplateInheritance
 	protected $intBufferLevel = 0;
 
 	/**
+	 * @var bool|null
+	 */
+	protected $blnDebug;
+
+	/**
 	 * Parse the template file and return it as string
 	 *
 	 * @return string The template markup
 	 */
 	public function inherit()
 	{
+		if (null !== ($result = $this->renderTwigSurrogateIfExists()))
+		{
+			return $result;
+		}
+
 		$strBuffer = '';
 
 		// Start with the template itself
@@ -133,14 +145,35 @@ trait TemplateInheritance
 		// Reset the internal arrays
 		$this->arrBlocks = array();
 
+		$blnDebug = $this->blnDebug;
+
+		if ($blnDebug === null)
+		{
+			$blnDebug = System::getContainer()->getParameter('kernel.debug');
+
+			// Backwards compatibility
+			if ($blnDebug !== (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false))
+			{
+				trigger_deprecation('contao/core-bundle', '4.12', 'Dynamically setting TL_CONFIG.debugMode has been deprecated. Use %s::setDebug() instead.', __CLASS__);
+				$blnDebug = (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false);
+			}
+		}
+
 		// Add start and end markers in debug mode
-		if (Config::get('debugMode'))
+		if ($blnDebug)
 		{
 			$strRelPath = StringUtil::stripRootDir($this->getTemplatePath($this->strTemplate, $this->strFormat));
 			$strBuffer = "\n<!-- TEMPLATE START: $strRelPath -->\n$strBuffer\n<!-- TEMPLATE END: $strRelPath -->\n";
 		}
 
 		return $strBuffer;
+	}
+
+	public function setDebug(bool $debug = null): self
+	{
+		$this->blnDebug = $debug;
+
+		return $this;
 	}
 
 	/**
@@ -322,6 +355,26 @@ trait TemplateInheritance
 		}
 
 		return Controller::getTemplate($strTemplate);
+	}
+
+	/**
+	 * Render a Twig template if one exists
+	 */
+	protected function renderTwigSurrogateIfExists(): ?string
+	{
+		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		{
+			return null;
+		}
+
+		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
+
+		if ($twig->getLoader()->exists($templateCandidate))
+		{
+			return $twig->render($templateCandidate, ContextHelper::fromContaoTemplate($this));
+		}
+
+		return null;
 	}
 }
 

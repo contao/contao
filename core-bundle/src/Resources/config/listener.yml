@@ -29,6 +29,12 @@ services:
             - '@request_stack'
         public: true
 
+    Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener:
+        arguments:
+            - '@database_connection'
+            - '@translator'
+        public: true
+
     Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
         arguments:
             - '@Contao\CoreBundle\Routing\Page\PageRegistry'
@@ -132,6 +138,10 @@ services:
             # The priority must be higher than the one of the Symfony save session listener (defaults to -1000)
             - { name: kernel.event_listener, priority: -768 }
 
+    Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener:
+        tags:
+            - { name: kernel.event_listener }
+
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
@@ -229,7 +239,7 @@ services:
         arguments:
             - '@translator'
             - '@contao.routing.scope_matcher'
-            - '%contao.locales%'
+            - '@Contao\CoreBundle\Intl\Locales'
         tags:
             - kernel.event_subscriber
 
@@ -304,7 +314,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
-            - '@contao.csrf.token_manager'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
             - '%contao.csrf_cookie_prefix%'
         tags:

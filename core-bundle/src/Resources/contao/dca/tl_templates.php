@@ -36,6 +36,8 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	'config' => array
 	(
 		'dataContainer'               => 'Folder',
+		'uploadPath'                  => 'templates',
+		'editableFileTypes'           => 'html5,twig',
 		'closed'                      => true,
 		'onload_callback' => array
 		(
@@ -99,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'source' => array
 			(
@@ -137,11 +139,11 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_files']['name'],
 			'inputType'               => 'text',
-			'wizard' => array
+			'load_callback' => array
 			(
 				array('tl_templates', 'addFileLocation')
 			),
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50', 'addWizardClass'=>false)
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50')
 		)
 	)
 );
@@ -158,8 +160,9 @@ class tl_templates extends Backend
 	 */
 	public function adjustSettings()
 	{
-		Config::set('uploadPath', 'templates');
-		Config::set('editableFiles', 'html5,twig');
+		// Backwards compatibility
+		$GLOBALS['TL_CONFIG']['uploadPath'] = $GLOBALS['TL_DCA']['tl_templates']['config']['uploadPath'];
+		$GLOBALS['TL_CONFIG']['editableFiles'] = $GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'];
 	}
 
 	/**
@@ -499,9 +502,7 @@ class tl_templates extends Backend
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = Config::get('characterSet');
-
-		Config::set('debugMode', false);
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
 	}
@@ -582,21 +583,25 @@ class tl_templates extends Backend
 	 */
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
-		return in_array(Path::getExtension($row['id'], true), array('html5', 'twig')) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		/** @var DC_Folder $dc */
+		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
+		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+
+		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
 	 * Add the file location instead of the help text (see #6503)
 	 *
+	 * @param mixed         $value
 	 * @param DataContainer $dc
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function addFileLocation(DataContainer $dc)
+	public function addFileLocation($value, DataContainer $dc)
 	{
-		// Unset the default help text
-		unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1]);
+		$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][1] = sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id);
 
-		return '<p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileLocation'], $dc->id) . '</p>';
+		return $value;
 	}
 }

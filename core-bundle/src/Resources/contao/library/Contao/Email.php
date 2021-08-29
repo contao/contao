@@ -129,7 +129,7 @@ class Email
 	public function __construct($objMailer = null)
 	{
 		$this->objMailer = $objMailer ?: System::getContainer()->get('mailer');
-		$this->strCharset = Config::get('characterSet');
+		$this->strCharset = System::getContainer()->getParameter('kernel.charset');
 
 		if ($this->objMailer instanceof MailerInterface)
 		{

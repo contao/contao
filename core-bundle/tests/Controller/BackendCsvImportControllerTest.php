@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
-use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
@@ -44,7 +43,6 @@ class BackendCsvImportControllerTest extends TestCase
         $container->set('contao.resource_finder', $finder);
 
         System::setContainer($container);
-        Config::set('debugMode', false);
     }
 
     public function testRendersTheListWizardMarkup(): void
@@ -59,11 +57,11 @@ class BackendCsvImportControllerTest extends TestCase
         ;
 
         $expect = <<<'EOF'
-<form id="tl_csv_import_lw">
-  <div class="uploader"></div>
-</form>
+            <form id="tl_csv_import_lw">
+              <div class="uploader"></div>
+            </form>
 
-EOF;
+            EOF;
 
         $this->assertSame($expect, $html);
     }
@@ -112,11 +110,11 @@ EOF;
         ;
 
         $expect = <<<'EOF'
-<form id="tl_csv_import_tw">
-  <div class="uploader"></div>
-</form>
+            <form id="tl_csv_import_tw">
+              <div class="uploader"></div>
+            </form>
 
-EOF;
+            EOF;
 
         $this->assertSame($expect, $html);
     }
@@ -165,11 +163,11 @@ EOF;
         ;
 
         $expect = <<<'EOF'
-<form id="tl_csv_import_ow">
-  <div class="uploader"></div>
-</form>
+            <form id="tl_csv_import_ow">
+              <div class="uploader"></div>
+            </form>
 
-EOF;
+            EOF;
 
         $this->assertSame($expect, $html);
     }

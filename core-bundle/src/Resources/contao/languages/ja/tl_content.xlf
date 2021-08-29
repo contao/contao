@@ -289,6 +289,22 @@
         <source>Note that the code will not be executed. Use F11 to toggle the fullscreen mode if you are using the code editor.</source>
         <target>コードを実行するわけではないことに注意してください。コードエディターを使用している場合はF11キーで全画面モードとの切り替えができます。</target>
       </trans-unit>
+      <trans-unit id="tl_content.markdownSource.0">
+        <source>Markdown source</source>
+        <target>Markdownのソース</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.1">
+        <source>Please choose the Markdown source.</source>
+        <target>Markdownのソースを選択してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceText">
+        <source>Text</source>
+        <target>テキスト</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceFile">
+        <source>File</source>
+        <target>ファイル</target>
+      </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
         <target>リンクのテキスト</target>
@@ -360,14 +376,6 @@
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>1ページの項目の数です。0にすると複数のページに分けません。</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>画像の総数</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>画像の数の総数を制限できます。0にするとすべて表示します。</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -779,7 +787,7 @@
         <target>インラインで再生(全画面モードにしない)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
+        <source>Auto (preload the entire video)</source>
         <target>自動(動画全体を先読み込み)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
@@ -821,10 +829,6 @@
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
         <target>関連する動画を同じチャンネルに限定</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>プレビューの最上部のバーを非表示</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

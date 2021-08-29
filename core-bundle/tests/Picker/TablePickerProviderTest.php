@@ -18,9 +18,9 @@ use Contao\CoreBundle\Picker\TablePickerProvider;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ForwardCompatibility\Result;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\DBAL\Statement;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -327,12 +327,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'id' => '1',
         ];
 
-        $config = $this->mockPickerConfig('tl_article', '15');
+        $config = $this->mockPickerConfig('tl_article', '42');
 
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, ['pid' => 1])
+            $this->mockConnectionForQuery('tl_article', 42, ['pid' => 1])
         );
 
         $provider->getUrl($config);
@@ -359,12 +359,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'id' => 7,
         ];
 
-        $config = $this->mockPickerConfig('tl_content', '15');
+        $config = $this->mockPickerConfig('tl_content', '2');
 
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_content', 15, ['pid' => 7, 'ptable' => 'tl_news'], true)
+            $this->mockConnectionForQuery('tl_content', 2, ['pid' => 7, 'ptable' => 'tl_news'], true)
         );
 
         $provider->getUrl($config);
@@ -406,12 +406,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'picker' => 'foobar',
         ];
 
-        $config = $this->mockPickerConfig('tl_article', '15');
+        $config = $this->mockPickerConfig('tl_article', '42');
 
         $provider = $this->createTableProvider(
             $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
-            $this->mockConnectionForQuery('tl_article', 15, false)
+            $this->mockConnectionForQuery('tl_article', 42, false)
         );
 
         $provider->getUrl($config);
@@ -624,8 +624,8 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturnSelf()
         ;
 
-        $statement = $this->createMock(Statement::class);
-        $statement
+        $result = $this->createMock(Result::class);
+        $result
             ->expects($this->once())
             ->method('fetchAssociative')
             ->willReturn($data)
@@ -669,7 +669,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('execute')
-            ->willReturn($statement)
+            ->willReturn($result)
         ;
 
         $connection = $this->createMock(Connection::class);

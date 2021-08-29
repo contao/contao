@@ -21,11 +21,10 @@ use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -51,8 +50,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag($parameters);
+        $request = new Request([], $parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -84,8 +82,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_always_use_target_path' => '0',
         ];
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag($parameters);
+        $request = new Request([], $parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -118,8 +115,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag($parameters);
+        $request = new Request([], $parameters);
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -153,8 +149,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag($parameters);
+        $request = new Request([], $parameters);
 
         /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
@@ -260,8 +255,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag($parameters);
+        $request = new Request([], $parameters);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -301,8 +295,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
             '_target_path' => base64_encode('http://localhost/target'),
         ];
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag($parameters);
+        $request = new Request([], $parameters);
 
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
@@ -343,8 +336,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->method('save')
         ;
 
-        /** @var TwoFactorTokenInterface&MockObject $token */
-        $token = $this->createMock(TwoFactorTokenInterface::class);
+        /** @var TwoFactorToken&MockObject $token */
+        $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -395,8 +388,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
         /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
 
-        /** @var TwoFactorTokenInterface&MockObject $token */
-        $token = $this->createMock(TwoFactorTokenInterface::class);
+        /** @var TwoFactorToken&MockObject $token */
+        $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
             ->method('getUser')
@@ -405,7 +398,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $token
             ->expects($this->once())
-            ->method('getProviderKey')
+            ->method('getFirewallName')
             ->willReturn('contao_frontend')
         ;
 
@@ -423,18 +416,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->with('_security.contao_frontend.target_path')
         ;
 
-        $request = $this->createMock(Request::class);
-        $request->request = new ParameterBag(['_target_path' => base64_encode('/')]);
-
-        $request
-            ->method('getSession')
-            ->willReturn($session)
-        ;
-
-        $request
-            ->method('hasSession')
-            ->willReturn(true)
-        ;
+        $request = new Request([], ['_target_path' => base64_encode('/')]);
+        $request->setSession($session);
 
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
@@ -445,7 +428,7 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $token
             ->expects($this->once())
-            ->method('getProviderKey')
+            ->method(method_exists($token, 'getFirewallName') ? 'getFirewallName' : 'getProviderKey')
             ->willReturn('contao_frontend')
         ;
 

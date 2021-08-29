@@ -387,7 +387,7 @@ class tl_newsletter_recipients extends Backend
 	{
 		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

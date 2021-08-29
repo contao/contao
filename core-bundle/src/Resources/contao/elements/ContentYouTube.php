@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 
 /**
  * Content element "YouTube".
@@ -19,8 +19,6 @@ use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
  */
 class ContentYouTube extends ContentElement
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -88,7 +86,6 @@ class ContentYouTube extends ContentElement
 				{
 					case 'youtube_fs':
 					case 'youtube_rel':
-					case 'youtube_showinfo':
 					case 'youtube_controls':
 						$params[] = substr($option, 8) . '=0';
 						break;
@@ -103,6 +100,10 @@ class ContentYouTube extends ContentElement
 
 					case 'youtube_nocookie':
 						$domain = 'https://www.youtube-nocookie.com';
+						break;
+
+					case 'youtube_showinfo':
+						// This option has been removed (see #3012)
 						break;
 
 					default:
@@ -129,14 +130,20 @@ class ContentYouTube extends ContentElement
 		}
 
 		// Add a splash image
-		if ($this->splashImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
+		if ($this->splashImage)
 		{
-			$figure = $figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($this->singleSRC)
 				->setSize($this->size)
-				->build();
+				->buildIfResourceExists();
 
-			$this->Template->splashImage = (object) $figure->getLegacyTemplateData();
-			$this->Template->splashImage->figure = $figure;
+			if (null !== $figure)
+			{
+				$this->Template->splashImage = (object) $figure->getLegacyTemplateData();
+				$this->Template->splashImage->figure = $figure;
+			}
 		}
 
 		$this->Template->src = $url;

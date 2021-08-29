@@ -158,10 +158,6 @@ class Versions extends Controller
 			return;
 		}
 
-		// Delete old versions from the database
-		$tstamp = time() - (int) Config::get('versionPeriod');
-		$this->Database->query("DELETE FROM tl_version WHERE tstamp<$tstamp");
-
 		// Get the new record
 		$objRecord = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 									->limit(1)
@@ -597,7 +593,7 @@ class Versions extends Controller
 		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
-		$objTemplate->charset = Config::get('characterSet');
+		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
 		throw new ResponseException($objTemplate->getResponse());
 	}

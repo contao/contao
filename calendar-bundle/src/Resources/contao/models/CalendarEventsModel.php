@@ -16,49 +16,51 @@ use Contao\Model\Collection;
 /**
  * Reads and writes events
  *
- * @property integer $id
- * @property integer $pid
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property integer $author
- * @property boolean $addTime
- * @property integer $startTime
- * @property integer $endTime
- * @property integer $startDate
- * @property integer $endDate
- * @property string  $pageTitle
- * @property string  $robots
- * @property string  $description
- * @property string  $location
- * @property string  $address
- * @property string  $teaser
- * @property boolean $addImage
- * @property string  $singleSRC
- * @property string  $alt
- * @property string  $size
- * @property string  $imagemargin
- * @property string  $imageUrl
- * @property boolean $fullsize
- * @property string  $caption
- * @property string  $floating
- * @property boolean $recurring
- * @property string  $repeatEach
- * @property integer $repeatEnd
- * @property integer $recurrences
- * @property boolean $addEnclosure
- * @property string  $enclosure
- * @property string  $source
- * @property integer $jumpTo
- * @property integer $articleId
- * @property string  $url
- * @property boolean $target
- * @property string  $cssClass
- * @property boolean $noComments
- * @property boolean $featured
- * @property boolean $published
- * @property string  $start
- * @property string  $stop
+ * @property string|integer      $id
+ * @property string|integer      $pid
+ * @property string|integer      $tstamp
+ * @property string              $title
+ * @property string              $alias
+ * @property string|integer      $author
+ * @property string|boolean      $addTime
+ * @property string|integer|null $startTime
+ * @property string|integer|null $endTime
+ * @property string|integer|null $startDate
+ * @property string|integer|null $endDate
+ * @property string              $pageTitle
+ * @property string              $robots
+ * @property string|null         $description
+ * @property string              $location
+ * @property string              $address
+ * @property string|null         $teaser
+ * @property string|boolean      $addImage
+ * @property string|boolean      $overwriteMeta
+ * @property string|null         $singleSRC
+ * @property string              $alt
+ * @property string              $imageTitle
+ * @property string|integer      $size
+ * @property string|array        $imagemargin
+ * @property string              $imageUrl
+ * @property string|boolean      $fullsize
+ * @property string              $caption
+ * @property string              $floating
+ * @property string|boolean      $recurring
+ * @property string              $repeatEach
+ * @property string|integer      $repeatEnd
+ * @property string|integer      $recurrences
+ * @property string|boolean      $addEnclosure
+ * @property string|array|null   $enclosure
+ * @property string              $source
+ * @property string|integer      $jumpTo
+ * @property string|integer      $articleId
+ * @property string              $url
+ * @property string|boolean      $target
+ * @property string              $cssClass
+ * @property string|boolean      $noComments
+ * @property string|boolean      $featured
+ * @property string|boolean      $published
+ * @property string|integer      $start
+ * @property string|integer      $stop
  *
  * @method static CalendarEventsModel|null findById($id, array $opt=array())
  * @method static CalendarEventsModel|null findByPk($id, array $opt=array())
@@ -81,8 +83,10 @@ use Contao\Model\Collection;
  * @method static CalendarEventsModel|null findOneByAddress($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByTeaser($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByAddImage($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByOverwriteMeta($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneBySingleSRC($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByAlt($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneByImageTitle($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneBySize($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByImagemargin($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByImageUrl($val, array $opt=array())
@@ -124,8 +128,10 @@ use Contao\Model\Collection;
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddress($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByTeaser($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAddImage($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByOverwriteMeta($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySingleSRC($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAlt($val, array $opt=array())
+ * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImageTitle($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySize($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImagemargin($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImageUrl($val, array $opt=array())
@@ -171,8 +177,10 @@ use Contao\Model\Collection;
  * @method static integer countByAddress($val, array $opt=array())
  * @method static integer countByTeaser($val, array $opt=array())
  * @method static integer countByAddImage($val, array $opt=array())
+ * @method static integer countByOverwriteMeta($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
  * @method static integer countByAlt($val, array $opt=array())
+ * @method static integer countByImageTitle($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
  * @method static integer countByImagemargin($val, array $opt=array())
  * @method static integer countByImageUrl($val, array $opt=array())

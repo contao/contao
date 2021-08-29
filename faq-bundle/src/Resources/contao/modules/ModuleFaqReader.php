@@ -10,8 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Patchwork\Utf8;
 
 /**
@@ -25,8 +28,6 @@ use Patchwork\Utf8;
  */
 class ModuleFaqReader extends Module
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -60,30 +61,17 @@ class ModuleFaqReader extends Module
 			Input::setGet('items', Input::get('auto_item'));
 		}
 
-		// Do not index or cache the page if no FAQ has been specified
+		// Return an empty string if "items" is not set (to combine list and reader on same page)
 		if (!Input::get('items'))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
 			return '';
 		}
 
 		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
-		// Do not index or cache the page if there are no categories
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			$objPage->noSearch = 1;
-			$objPage->cache = 0;
-
-			return '';
+			throw new InternalServerErrorException('The FAQ reader ID ' . $this->id . ' has no categories specified.');
 		}
 
 		return parent::generate();
@@ -110,28 +98,36 @@ class ModuleFaqReader extends Module
 		// Add the FAQ record to the template (see #221)
 		$this->Template->faq = $objFaq->row();
 
-		// Overwrite the page title and description (see #2853 and #4955)
-		if ($objFaq->pageTitle)
-		{
-			$objPage->pageTitle = $objFaq->pageTitle;
-		}
-		elseif ($objFaq->question)
-		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objFaq->question));
-		}
+		// Overwrite the page meta data (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		if ($objFaq->description)
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
-			$objPage->description = $objFaq->description;
-		}
-		elseif ($objFaq->question)
-		{
-			$objPage->description = $this->prepareMetaDescription($objFaq->question);
-		}
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-		if ($objFaq->robots)
-		{
-			$objPage->robots = $objFaq->robots;
+			if ($objFaq->pageTitle)
+			{
+				$htmlHeadBag->setTitle($objFaq->pageTitle); // Already stored decoded
+			}
+			elseif ($objFaq->question)
+			{
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objFaq->question));
+			}
+
+			if ($objFaq->description)
+			{
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->description));
+			}
+			elseif ($objFaq->question)
+			{
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->question));
+			}
+
+			if ($objFaq->robots)
+			{
+				$htmlHeadBag->setMetaRobots($objFaq->robots);
+			}
 		}
 
 		$this->Template->question = $objFaq->question;
@@ -144,14 +140,21 @@ class ModuleFaqReader extends Module
 		$this->Template->before = false;
 
 		// Add image
-		if ($objFaq->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objFaq->singleSRC)))
+		if ($objFaq->addImage)
 		{
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)
 				->setMetadata($objFaq->getOverwriteMetadata())
 				->enableLightbox((bool) $objFaq->fullsize)
-				->build()
-				->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
+				->buildIfResourceExists();
+
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
+			}
 		}
 
 		$this->Template->enclosure = array();
@@ -178,6 +181,12 @@ class ModuleFaqReader extends Module
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_faq.' . $objFaq->id));
 		}
+
+		// schema.org information
+		$this->Template->getSchemaOrgData = static function () use ($objFaq)
+		{
+			return ModuleFaq::getSchemaOrgData(array($objFaq));
+		};
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 

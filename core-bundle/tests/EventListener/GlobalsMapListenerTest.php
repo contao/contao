@@ -23,52 +23,22 @@ class GlobalsMapListenerTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testMergesTheValuesIntoTheGlobalsArray(array $globals, array $values, array $expected): void
+    public function testMergesTheValuesIntoTheGlobalsArray(string $key, $existing, $new): void
     {
-        $GLOBALS = $globals;
+        $GLOBALS[$key] = $existing;
 
-        $listener = new GlobalsMapListener($values);
+        $listener = new GlobalsMapListener([$key => $new]);
         $listener->onInitializeSystem();
 
-        $this->assertSame($expected, $GLOBALS);
+        $this->assertSame($new, $GLOBALS[$key]);
     }
 
     public function getValuesData(): \Generator
     {
-        yield [
-            [],
-            ['foo' => 'bar'],
-            ['foo' => 'bar'],
-        ];
+        yield ['foo', null, 'bar'];
+        yield ['foo', 'bar', 'baz'];
 
-        yield [
-            ['bar' => 'baz'],
-            ['foo' => 'bar'],
-            ['bar' => 'baz', 'foo' => 'bar'],
-        ];
-
-        yield [
-            [],
-            ['TL_CTE' => ['foo' => 'bar']],
-            ['TL_CTE' => ['foo' => 'bar']],
-        ];
-
-        yield [
-            ['TL_CTE' => ['bar' => 'baz']],
-            ['TL_CTE' => ['foo' => 'bar']],
-            ['TL_CTE' => ['bar' => 'baz', 'foo' => 'bar']],
-        ];
-
-        yield [
-            ['TL_CTE' => ['foo' => 'bar']],
-            ['TL_CTE' => ['foo' => 'baz']],
-            ['TL_CTE' => ['foo' => 'baz']],
-        ];
-
-        yield [
-            ['TL_CTE' => ['foo' => 'bar']],
-            ['TL_CTE' => ['foo' => 'baz', 'bar' => 'baz']],
-            ['TL_CTE' => ['foo' => 'baz', 'bar' => 'baz']],
-        ];
+        yield ['TL_CTE', null, ['foo' => 'bar']];
+        yield ['TL_CTE', ['foo' => 'bar'], ['foo' => 'baz']];
     }
 }

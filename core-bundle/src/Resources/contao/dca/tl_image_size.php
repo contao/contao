@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Image;
@@ -209,7 +208,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'skipIfDimensionsMatch' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['skipIfDimensionsMatch'],
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50 m12'),
@@ -405,7 +403,7 @@ class tl_image_size extends Backend
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
-		if (!in_array('webp', StringUtil::trimsplit(',', Config::get('validImageTypes'))))
+		if (!in_array('webp', System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
 			return $formats;
 		}

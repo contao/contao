@@ -289,6 +289,19 @@
         <source>Note that the code will not be executed. Use F11 to toggle the fullscreen mode if you are using the code editor.</source>
         <target>Обратите пажњу да кȏд неће бити извршен. Користите taster F11 да искључите приказ пуног монитора, ако користите уређивач кȏда.</target>
       </trans-unit>
+      <trans-unit id="tl_content.markdownSource.0">
+        <source>Markdown source</source>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.1">
+        <source>Please choose the Markdown source.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceText">
+        <source>Text</source>
+        <target>Текст</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceFile">
+        <source>File</source>
+      </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
         <target>Текст као линк</target>
@@ -360,14 +373,6 @@
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Број ставки по страници. Поставите 0 ако желите да искључите пагинацију.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Укупан број слика.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Овде можете да ограничите укупан број слика. Поставите 0 ако желите да прикажете све слике.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -778,8 +783,7 @@
         <target>Пусти у оквиру странице (без опције преко целог екрана)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
-        <target>Аутоматски (одмах учитај цели видео)</target>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -820,10 +824,6 @@
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
         <target>Видео фајлови морају да припадају истом каналу</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Сакриј горњу траку у прегледу</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

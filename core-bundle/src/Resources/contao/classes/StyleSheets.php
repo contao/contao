@@ -640,10 +640,10 @@ class StyleSheets extends Backend
 			// Border width
 			if (\is_array($row['borderwidth']))
 			{
-				$top = $row['borderwidth']['top'];
-				$right = $row['borderwidth']['right'];
-				$bottom = $row['borderwidth']['bottom'];
-				$left = $row['borderwidth']['left'];
+				$top = $row['borderwidth']['top'] ?? '';
+				$right = $row['borderwidth']['right'] ?? '';
+				$bottom = $row['borderwidth']['bottom'] ?? '';
+				$left = $row['borderwidth']['left'] ?? '';
 
 				// Try to shorten the definition
 				if ($top != '' && $right != '' && $bottom != '' && $left != '' && $top == $right && $top == $bottom && $top == $left)
@@ -849,7 +849,7 @@ class StyleSheets extends Backend
 			$fnColor = StringUtil::deserialize($row['fontcolor'], true);
 
 			// Font color
-			if ($fnColor[0] != '')
+			if (!empty($fnColor[0]))
 			{
 				$return .= $lb . 'color:' . $this->compileColor($fnColor, $blnWriteToFile, $vars) . ';';
 			}

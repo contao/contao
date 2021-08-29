@@ -19,6 +19,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -177,6 +178,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $reflection->newInstanceArgs($args);
     }
 
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return Adapter<T>
+     */
     public function getAdapter($class): Adapter
     {
         if (!isset($this->adapterCache[$class])) {
@@ -351,7 +359,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $language = 'en';
 
         if (null !== $this->request) {
-            $language = str_replace('_', '-', $this->request->getLocale());
+            $language = LocaleUtil::formatAsLanguageTag($this->request->getLocale());
         }
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0

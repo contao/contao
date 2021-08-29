@@ -139,7 +139,7 @@ class Image
 		}
 
 		$this->fileObj = $file;
-		$arrAllowedTypes = StringUtil::trimsplit(',', strtolower(Config::get('validImageTypes')));
+		$arrAllowedTypes = System::getContainer()->getParameter('contao.image.valid_extensions');
 
 		// Check the file type
 		if (!\in_array($this->fileObj->extension, $arrAllowedTypes))
@@ -373,7 +373,7 @@ class Image
 		$path = $this->resizedPath;
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
-		// Strip the web/ prefix (see #337)
+		// Strip the contao.web_dir directory prefix (see #337)
 		if (strncmp($path, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
 			$path = substr($path, \strlen($webDir) + 1);
@@ -708,7 +708,7 @@ class Image
 
 		$objFile = new File($src);
 
-		// Strip the web/ prefix (see #337)
+		// Strip the contao.web_dir directory prefix (see #337)
 		if (strncmp($src, $webDir . '/', \strlen($webDir) + 1) === 0)
 		{
 			$src = substr($src, \strlen($webDir) + 1);

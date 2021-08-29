@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage'),
+		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource'),
 		'default'                     => '{type_legend},type',
 		'headline'                    => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'text'                        => '{type_legend},type,headline;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -130,7 +130,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'sliderStart'                 => '{type_legend},type,headline;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'sliderStop'                  => '{type_legend},type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests;{invisible_legend:hide},invisible,start,stop',
 		'code'                        => '{type_legend},type,headline;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'markdown'                    => '{type_legend},type,headline;{text_legend},code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'markdown'                    => '{type_legend},type,headline;{text_legend},markdownSource;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,imagemargin,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -156,7 +156,9 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
 		'overwriteLink'               => 'linkTitle,titleText',
 		'protected'                   => 'groups',
-		'splashImage'                 => 'singleSRC,size'
+		'splashImage'                 => 'singleSRC,size',
+		'markdownSource_sourceText'   => 'code',
+		'markdownSource_sourceFile'   => 'singleSRC'
 	),
 
 	// Fields
@@ -282,7 +284,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'fullsize' => array
@@ -431,6 +433,15 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
+		'markdownSource' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'select',
+			'options'                 => array('sourceText', 'sourceFile'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['markdownSource'],
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(12) NOT NULL default 'sourceText'"
+		),
 		'code' => array
 		(
 			'exclude'                 => true,
@@ -450,7 +461,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'target' => array
@@ -547,6 +558,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'numberOfItems' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['numberOfItems'],
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
@@ -699,7 +711,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['playerOptions'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_showinfo', 'youtube_nocookie'),
+			'options'                 => array('youtube_autoplay', 'youtube_controls', 'youtube_cc_load_policy', 'youtube_fs', 'youtube_hl', 'youtube_iv_load_policy', 'youtube_modestbranding', 'youtube_rel', 'youtube_nocookie'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'eval'                    => array('multiple'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
@@ -1241,7 +1253,7 @@ class tl_content extends Backend
 	public function addCteType($arrRow)
 	{
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
-		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?: '&nbsp;';
+		$type = $GLOBALS['TL_LANG']['CTE'][$arrRow['type']][0] ?? $arrRow['type'];
 		$class = 'limit_height';
 
 		// Remove the class if it is a wrapper element
@@ -1274,10 +1286,6 @@ class tl_content extends Backend
 		if ($arrRow['protected'])
 		{
 			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ')';
-		}
-		elseif ($arrRow['guests'])
-		{
-			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['guests'] . ')';
 		}
 
 		// Add the headline level (see #5858)
@@ -1859,11 +1867,15 @@ class tl_content extends Backend
 				case 'accordionSingle':
 				case 'youtube':
 				case 'vimeo':
-					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = '%contao.image.valid_extensions%';
 					break;
 
 				case 'download':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('allowedDownload');
+					break;
+
+				case 'markdown':
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = 'md';
 					break;
 			}
 		}
@@ -1887,7 +1899,7 @@ class tl_content extends Backend
 			{
 				case 'gallery':
 					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['isGallery'] = true;
-					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = Config::get('validImageTypes');
+					$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['extensions'] = '%contao.image.valid_extensions%';
 					break;
 
 				case 'downloads':
@@ -1962,7 +1974,7 @@ class tl_content extends Backend
 	{
 		if (Input::get('cid'))
 		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

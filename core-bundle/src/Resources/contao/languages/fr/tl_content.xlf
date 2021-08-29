@@ -289,6 +289,19 @@
         <source>Note that the code will not be executed. Use F11 to toggle the fullscreen mode if you are using the code editor.</source>
         <target>Noter que le code ne sera pas exécuté. Utiliser F11 pour basculer en mode plein écran si vous utilisez l'éditeur de code.</target>
       </trans-unit>
+      <trans-unit id="tl_content.markdownSource.0">
+        <source>Markdown source</source>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.1">
+        <source>Please choose the Markdown source.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceText">
+        <source>Text</source>
+        <target>Texte</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceFile">
+        <source>File</source>
+      </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
         <target>Texte du lien</target>
@@ -360,14 +373,6 @@
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>Le nombre d'éléments par page. Saisir 0 pour désactiver la pagination.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Nombre total d'images</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Limiter le nombre total d'images. Mettre à 0 pour tout afficher.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -778,8 +783,7 @@
         <target>Lecture inline (pas de mode plein écran)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
-        <target>Auto (précharge la vidéo complète)</target>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -819,10 +823,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Cacher la bar supérieure lors de la prévisualisation</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

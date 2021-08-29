@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+    Contao\CoreBundle\Controller\Page\RootPageController: ~

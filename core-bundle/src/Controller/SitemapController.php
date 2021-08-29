@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\Backend;
+use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Contao\System;
-use Contao\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,6 +30,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SitemapController extends AbstractController
 {
+    /**
+     * @var PageRegistry
+     */
+    private $pageRegistry;
+
+    public function __construct(PageRegistry $pageRegistry)
+    {
+        $this->pageRegistry = $pageRegistry;
+    }
+
     /**
      * @Route("/sitemap.xml")
      */
@@ -49,25 +60,25 @@ class SitemapController extends AbstractController
             }
         }
 
-        $pages = [];
+        $urls = [];
         $rootPageIds = [];
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            /** @var Backend $backend */
-            $backend = $this->get('contao.framework')->getAdapter(Backend::class);
-            $pages = array_merge($pages, $backend->findSearchablePages($rootPage->id, '', true));
-            $pages = $this->callLegacyHook($rootPage, $pages);
+            $pages = $this->getPageAndArticleUrls((int) $rootPage->id);
+            $urls[] = $this->callLegacyHook($rootPage, $pages);
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
         }
 
+        $urls = array_unique(array_merge(...$urls));
+
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->formatOutput = true;
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
-        foreach ($pages as $url) {
+        foreach ($urls as $url) {
             $loc = $sitemap->createElement('loc', $url);
             $urlEl = $sitemap->createElement('url');
             $urlEl->appendChild($loc);
@@ -80,16 +91,9 @@ class SitemapController extends AbstractController
 
         // Cache the response for a month in the shared cache and tag it for invalidation purposes
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
-        $response->setSharedMaxAge(2592000);
+        $response->setSharedMaxAge(2592000); // will be unset by the MakeResponsePrivateListener if a user is logged in
 
         $this->tagResponse($tags);
-
-        // Do not cache the response if a user is logged in.
-        if ($this->getUser() instanceof User) {
-            $response->headers->removeCacheControlDirective('s-maxage');
-            $response->headers->addCacheControlDirective('no-store');
-            $response->setPrivate();
-        }
 
         return $response;
     }
@@ -109,5 +113,51 @@ class SitemapController extends AbstractController
         }
 
         return $pages;
+    }
+
+    private function getPageAndArticleUrls(int $parentPageId): array
+    {
+        /** @var PageModel $pageModelAdapter */
+        $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+
+        // Since the publication status of a page is not inherited by its child
+        // pages, we have to use findByPid() instead of findPublishedByPid() and
+        // filter out unpublished pages in the foreach loop (see #2217)
+        $pageModels = $pageModelAdapter->findByPid($parentPageId, ['order' => 'sorting']);
+
+        if (null === $pageModels) {
+            return [];
+        }
+
+        /** @var ArticleModel $articleModelAdapter */
+        $articleModelAdapter = $this->get('contao.framework')->getAdapter(ArticleModel::class);
+
+        $result = [];
+
+        // Recursively walk through all subpages
+        foreach ($pageModels as $pageModel) {
+            if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
+                continue;
+            }
+
+            $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time());
+
+            if ($isPublished && !$pageModel->requireItem && $this->pageRegistry->supportsContentComposition($pageModel)) {
+                $urls = [$pageModel->getAbsoluteUrl()];
+
+                // Get articles with teaser
+                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                    foreach ($articleModels as $articleModel) {
+                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                    }
+                }
+
+                $result[] = $urls;
+            }
+
+            $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
+        }
+
+        return array_merge(...$result);
     }
 }

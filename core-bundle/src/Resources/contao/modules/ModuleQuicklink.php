@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
 
 /**
@@ -72,7 +73,7 @@ class ModuleQuicklink extends Module
 		global $objPage;
 
 		// Get all active pages
-		$objPages = PageModel::findPublishedRegularWithoutGuestsByIds($this->pages);
+		$objPages = PageModel::findPublishedRegularByIds($this->pages);
 
 		// Return if there are no pages
 		if ($objPages === null)
@@ -81,49 +82,64 @@ class ModuleQuicklink extends Module
 		}
 
 		$items = array();
+		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
-			$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
-			$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
+			$objSubpage->loadDetails();
 
-			// Get href
-			switch ($objSubpage->type)
+			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
+			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
 			{
-				case 'redirect':
-					$href = $objSubpage->url;
-					break;
-
-				case 'forward':
-					if ($objSubpage->jumpTo)
-					{
-						$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-					}
-					else
-					{
-						$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-					}
-
-					if ($objNext instanceof PageModel)
-					{
-						$href = $objNext->getFrontendUrl();
-						break;
-					}
-					// no break
-
-				default:
-					$href = $objSubpage->getFrontendUrl();
-					break;
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				continue;
 			}
 
-			$items[] = array
-			(
-				'href' => $href,
-				'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
-				'link' => $objSubpage->title,
-				'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
-			);
+			// PageModel->groups is an array after calling loadDetails()
+			if (!$objSubpage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
+			{
+				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
+				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
+
+				// Get href
+				switch ($objSubpage->type)
+				{
+					case 'redirect':
+						$href = $objSubpage->url;
+						break;
+
+					case 'forward':
+						if ($objSubpage->jumpTo)
+						{
+							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+						}
+						else
+						{
+							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+						}
+
+						if ($objNext instanceof PageModel)
+						{
+							$href = $objNext->getFrontendUrl();
+							break;
+						}
+						// no break
+
+					default:
+						$href = $objSubpage->getFrontendUrl();
+						break;
+				}
+
+				$items[] = array
+				(
+					'href' => $href,
+					'title' => StringUtil::specialchars($objSubpage->pageTitle ?: $objSubpage->title),
+					'link' => $objSubpage->title,
+					'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
+				);
+			}
 		}
 
 		$this->Template->items = $items;

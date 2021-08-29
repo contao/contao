@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\Config;
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -45,6 +43,8 @@ class RouteProviderTest extends TestCase
         $page->id = 17;
         $page->rootId = 1;
         $page->urlPrefix = '';
+        $page->language = 'en';
+        $page->rootLanguage = 'en';
 
         $route = new PageRoute($page);
 
@@ -104,6 +104,8 @@ class RouteProviderTest extends TestCase
         $page1->rootId = 1;
         $page1->urlPrefix = '';
         $page1->urlSuffix = '';
+        $page1->language = 'en';
+        $page1->rootLanguage = 'en';
 
         /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
@@ -111,6 +113,8 @@ class RouteProviderTest extends TestCase
         $page2->rootId = 1;
         $page2->urlPrefix = '';
         $page2->urlSuffix = '';
+        $page2->language = 'en';
+        $page2->rootLanguage = 'en';
 
         $pageAdapter = $this->mockAdapter(['findBy']);
         $pageAdapter
@@ -142,6 +146,8 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->domain = 'example.org';
         $page->urlPrefix = '';
+        $page->language = 'en';
+        $page->rootLanguage = 'en';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -174,6 +180,8 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->domain = 'example.org:8080';
         $page->urlPrefix = '';
+        $page->language = 'en';
+        $page->rootLanguage = 'en';
 
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
@@ -425,9 +433,9 @@ class RouteProviderTest extends TestCase
 
         yield 'Appends "de" in case "de_CH" is accepted and "de" is not' => [
             [
-                1 => $this->createPage('de', 'foo', false),
                 3 => $this->createPage('fr', 'foo', false),
-                0 => $this->createPage('en', 'foo', false),
+                0 => $this->createPage('de', 'foo', false),
+                1 => $this->createPage('en', 'foo', false),
                 2 => $this->createPage('it', 'foo'),
             ],
             ['de_CH', 'en'],
@@ -638,61 +646,10 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function testIgnoresRoutesWithoutRootId(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
-        $page->rootId = null;
-
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findBy']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/foo.html');
-        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
-    public function testIgnoresPagesWithNoRootPageFoundException(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-            ->willThrowException(new NoRootPageFoundException())
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findBy']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/foo.html');
-        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
     /**
      * @return Request&MockObject
      */
-    private function mockRequestWithPath(string $path, array $languages = ['en'], string $host = 'example.com'): Request
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
     {
         $request = $this->createMock(Request::class);
         $request
@@ -707,7 +664,7 @@ class RouteProviderTest extends TestCase
 
         $request
             ->method('getHttpHost')
-            ->willReturn($host)
+            ->willReturn('example.com')
         ;
 
         return $request;
@@ -716,9 +673,9 @@ class RouteProviderTest extends TestCase
     /**
      * @return ContaoFramework&MockObject
      */
-    private function mockFramework(Adapter $pageAdapter = null, Adapter $configAdapter = null): ContaoFramework
+    private function mockFramework(Adapter $pageAdapter = null): ContaoFramework
     {
-        return $this->mockContaoFramework([PageModel::class => $pageAdapter, Config::class => $configAdapter]);
+        return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
     }
 
     /**
@@ -748,7 +705,7 @@ class RouteProviderTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function createRootPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null): PageModel
+    private function createRootPage(string $language, string $alias, bool $fallback = true): PageModel
     {
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
@@ -756,12 +713,12 @@ class RouteProviderTest extends TestCase
         $page->rootId = 1;
         $page->type = 'root';
         $page->alias = $alias;
-        $page->domain = $domain;
+        $page->domain = '';
         $page->urlPrefix = '';
         $page->urlSuffix = '.html';
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
-        $page->rootUseSSL = 'https' === $scheme;
+        $page->rootUseSSL = false;
         $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
 
         return $page;

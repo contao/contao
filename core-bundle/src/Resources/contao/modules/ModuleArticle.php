@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+
 /**
  * Provides methodes to handle articles.
  *
@@ -124,7 +127,7 @@ class ModuleArticle extends Module
 		$this->Template->date = Date::parse($objPage->datimFormat, $this->tstamp);
 
 		// Clean the RTE output
-		$this->teaser = StringUtil::toHtml5($this->teaser);
+		$this->teaser = StringUtil::toHtml5($this->teaser ?? '');
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
@@ -157,18 +160,25 @@ class ModuleArticle extends Module
 		}
 
 		// Get section and article alias
-		$chunks = explode(':', Input::get('articles'));
+		$chunks = explode(':', Input::get('articles') ?? '');
 		$strSection = $chunks[0] ?? null;
 		$strArticle = $chunks[1] ?? $strSection;
 
-		// Overwrite the page title (see #2853 and #4955)
+		// Overwrite the page meta data (see #2853, #4955 and #87)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($this->title));
+			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-			if ($this->teaser)
+			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
-				$objPage->description = $this->prepareMetaDescription($this->teaser);
+				/** @var HtmlHeadBag $htmlHeadBag */
+				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
+
+				if ($this->teaser)
+				{
+					$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($this->teaser));
+				}
 			}
 		}
 
@@ -272,7 +282,7 @@ class ModuleArticle extends Module
 
 		// Generate article
 		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, Config::get('characterSet'));
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

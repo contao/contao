@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BackendTemplate extends Template
 {
+	use BackendTemplateTrait;
+
 	/**
 	 * Add a hook to modify the template output
 	 *

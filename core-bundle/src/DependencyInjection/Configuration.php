@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
@@ -28,15 +28,9 @@ class Configuration implements ConfigurationInterface
      */
     private $projectDir;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    public function __construct(string $projectDir, string $defaultLocale)
+    public function __construct(string $projectDir)
     {
         $this->projectDir = $projectDir;
-        $this->defaultLocale = $defaultLocale;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -63,6 +57,7 @@ class Configuration implements ConfigurationInterface
                     ->max(32767)
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
+                ->append($this->addIntlNode())
                 ->booleanNode('legacy_routing')
                     ->defaultTrue()
                     ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
@@ -72,12 +67,13 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
+                    ->setDeprecated(...$this->getDeprecationArgs('4.12', 'Using contao.locales is deprecated. Please use contao.intl.enabled_locales instead.'))
                     ->prototype('scalar')->end()
-                    ->defaultValue($this->getLocales())
+                    ->defaultValue([])
                 ->end()
                 ->booleanNode('prepend_locale')
                     ->info('Whether or not to add the page language to the URL.')
-                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
+                    ->setDeprecated(...$this->getDeprecationArgs('4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
                     ->defaultFalse()
                 ->end()
                 ->booleanNode('pretty_error_screens')
@@ -85,7 +81,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. preview.php).')
+                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
@@ -103,7 +99,7 @@ class Configuration implements ConfigurationInterface
                     ->validate()
                         ->ifTrue(
                             static function (string $v): int {
-                                return preg_match('@^(app|assets|bin|config|contao|plugins|share|system|templates|var|vendor|web)(/|$)@', $v);
+                                return preg_match('@^(app|assets|bin|config|contao|plugins|public|share|system|templates|var|vendor|web)(/|$)@', $v);
                             }
                         )
                         ->thenInvalid('%s')
@@ -113,13 +109,13 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
                 ->end()
                 ->scalarNode('url_suffix')
-                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
+                    ->setDeprecated(...$this->getDeprecationArgs('4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.'))
                     ->defaultValue('.html')
                 ->end()
                 ->scalarNode('web_dir')
-                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/web.')
+                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'web'))
+                    ->defaultValue($this->getDefaultWebDir())
                     ->validate()
                         ->always(
                             static function (string $value): string {
@@ -282,7 +278,7 @@ class Configuration implements ConfigurationInterface
                                         ->scalarNode('sizes')
                                         ->end()
                                         ->enumNode('resizeMode')
-                                            ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.'))
+                                            ->setDeprecated(...$this->getDeprecationArgs('4.9', 'Using contao.image.sizes.*.items.resizeMode is deprecated. Please use contao.image.sizes.*.items.resize_mode instead.'))
                                             ->values([
                                                 ResizeConfiguration::MODE_CROP,
                                                 ResizeConfiguration::MODE_BOX,
@@ -293,7 +289,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->enumNode('resizeMode')
-                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.'))
+                                ->setDeprecated(...$this->getDeprecationArgs('4.9', 'Using contao.image.sizes.*.resizeMode is deprecated. Please use contao.image.sizes.*.resize_mode instead.'))
                                 ->values([
                                     ResizeConfiguration::MODE_CROP,
                                     ResizeConfiguration::MODE_BOX,
@@ -301,13 +297,13 @@ class Configuration implements ConfigurationInterface
                                 ])
                             ->end()
                             ->scalarNode('cssClass')
-                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.'))
+                                ->setDeprecated(...$this->getDeprecationArgs('4.9', 'Using contao.image.sizes.*.cssClass is deprecated. Please use contao.image.sizes.*.css_class instead.'))
                             ->end()
                             ->booleanNode('lazyLoading')
-                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.'))
+                                ->setDeprecated(...$this->getDeprecationArgs('4.9', 'Using contao.image.sizes.*.lazyLoading is deprecated. Please use contao.image.sizes.*.lazy_loading instead.'))
                             ->end()
                             ->booleanNode('skipIfDimensionsMatch')
-                                ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.'))
+                                ->setDeprecated(...$this->getDeprecationArgs('4.9', 'Using contao.image.sizes.*.skipIfDimensionsMatch is deprecated. Please use contao.image.sizes.*.skip_if_dimensions_match instead.'))
                             ->end()
                         ->end()
                     ->end()
@@ -326,12 +322,94 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('target_path')
-                    ->setDeprecated(...$this->getDeprecationArgs('contao/core-bundle', '4.9', 'Use the "contao.image.target_dir" parameter instead.'))
+                    ->setDeprecated(...$this->getDeprecationArgs('4.9', 'Use the "contao.image.target_dir" parameter instead.'))
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addIntlNode(): NodeDefinition
+    {
+        return (new TreeBuilder('intl'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('locales')
+                    ->info('Adds, removes or overwrites the list of ICU locale IDs. Defaults to all locale IDs known to the system.')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->example(['+de', '-de_AT', 'gsw_CH'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $locales): bool {
+                                foreach ($locales as $locale) {
+                                    if (!preg_match('/^[+-]?[a-z]{2}/', $locale)) {
+                                        return true;
+                                    }
+
+                                    $locale = ltrim($locale, '+-');
+
+                                    if (LocaleUtil::canonicalize($locale) !== $locale) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
+                    ->end()
+                ->end()
+                ->arrayNode('enabled_locales')
+                    ->info('Adds, removes or overwrites the list of enabled locale IDs that can be used in the Backend for example. Defaults to all languages for which a translation exists.')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->example(['+de', '-de_AT', 'gsw_CH'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $locales): bool {
+                                foreach ($locales as $locale) {
+                                    if (!preg_match('/^[+-]?[a-z]{2}/', $locale)) {
+                                        return true;
+                                    }
+
+                                    $locale = ltrim($locale, '+-');
+
+                                    if (LocaleUtil::canonicalize($locale) !== $locale) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
+                    ->end()
+                ->end()
+                ->arrayNode('countries')
+                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
+                    ->prototype('scalar')->end()
+                    ->defaultValue([])
+                    ->example(['+DE', '-AT', 'CH'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $countries): bool {
+                                foreach ($countries as $country) {
+                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9]$/', $country)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            }
+                        )
+                        ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
+                    ->end()
                 ->end()
             ->end()
         ;
@@ -365,12 +443,12 @@ class Configuration implements ConfigurationInterface
                     ->info('The default search indexer, which indexes pages in the database.')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('enable')
+                        ->booleanNode('enable')
                             ->defaultTrue()
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('index_protected')
+                ->booleanNode('index_protected')
                     ->info('Enables indexing of protected pages.')
                     ->defaultFalse()
                 ->end()
@@ -378,11 +456,11 @@ class Configuration implements ConfigurationInterface
                     ->info('The search index listener can index valid and delete invalid responses upon every request. You may limit it to one of the features or disable it completely.')
                     ->addDefaultsIfNotSet()
                     ->children()
-                        ->scalarNode('index')
+                        ->booleanNode('index')
                             ->info('Enables indexing successful responses.')
                             ->defaultTrue()
                         ->end()
-                        ->scalarNode('delete')
+                        ->booleanNode('delete')
                             ->info('Enables deleting unsuccessful responses from the index.')
                             ->defaultTrue()
                         ->end()
@@ -513,33 +591,15 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    /**
-     * @return array<string>
-     */
-    private function getLocales(): array
+    private function getDefaultWebDir(): string
     {
-        $dirs = [__DIR__.'/../Resources/contao/languages'];
+        $webDir = Path::join($this->projectDir, 'web');
 
-        if (is_dir($path = Path::join($this->projectDir, 'contao/languages'))) {
-            $dirs[] = $path;
+        if ((new Filesystem())->exists($webDir)) {
+            return $webDir;
         }
 
-        // Backwards compatibility
-        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/languages'))) {
-            $dirs[] = $path;
-        }
-
-        // The default locale must be the first supported language (see contao/core#6533)
-        $languages = [$this->defaultLocale];
-
-        /** @var array<SplFileInfo> $finder */
-        $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2}(_[A-Z]{2})?$/')->in($dirs);
-
-        foreach ($finder as $file) {
-            $languages[] = $file->getFilename();
-        }
-
-        return array_values(array_unique($languages));
+        return Path::join($this->projectDir, 'public');
     }
 
     /**
@@ -547,13 +607,12 @@ class Configuration implements ConfigurationInterface
      *
      * @todo Remove this as soon as we are on Symfony 5 only
      */
-    private function getDeprecationArgs(string $package, string $version, string $message): array
+    private function getDeprecationArgs(string $version, string $message): array
     {
-        /** @phpstan-ignore-next-line */
-        if (method_exists('root', TreeBuilder::class)) {
+        if (method_exists(TreeBuilder::class, 'root')) {
             return [$message];
         }
 
-        return [$package, $version, $message];
+        return ['contao/core-bundle', $version, $message];
     }
 }

@@ -373,7 +373,7 @@ class Search
 	/**
 	 * @return string[]
 	 */
-	private static function splitIntoWords(string $strText, string $strLocale)
+	public static function splitIntoWords(string $strText, string $strLocale): array
 	{
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
@@ -405,8 +405,31 @@ class Search
 	 * @return Result The database result object
 	 *
 	 * @throws \Exception If the cleaned keyword string is empty
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.
+	 *             Use the Search::query() method instead.
 	 */
 	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false, $intMinlength=0)
+	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Search::query()" instead.', __METHOD__);
+
+		$objSearchResult = static::query((string) $strKeywords, (bool) $blnOrSearch, \is_array($arrPid) ? $arrPid : array(), (bool) $blnFuzzy, (int) $intMinlength);
+
+		return new Result($objSearchResult->getResults($intRows ?: PHP_INT_MAX, $intOffset), 'SELECT * FROM tl_search');
+	}
+
+	/**
+	 * Search the index and return the result object
+	 *
+	 * @param string  $strKeywords  The keyword string
+	 * @param boolean $blnOrSearch  If true, the result can contain any keyword
+	 * @param array   $arrPid       An optional array of page IDs to limit the result to
+	 * @param boolean $blnFuzzy     If true, the search will be fuzzy
+	 * @param integer $intMinlength Ignore keywords deceeding the minimum length
+	 *
+	 * @throws \Exception If the cleaned keyword string is empty
+	 */
+	public static function query(string $strKeywords, bool $blnOrSearch=false, array $arrPid=array(), bool $blnFuzzy=false, int $intMinlength=0): SearchResult
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
@@ -423,6 +446,7 @@ class Search
 		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
+		$arrPhrasesRegExp = array();
 		$arrKeywords = array();
 		$arrWildcards = array();
 		$arrIncluded = array();
@@ -442,7 +466,8 @@ class Search
 				case '"':
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
-						$arrPhrases[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
+						$arrPhrases[] = $strKeyword;
+						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
 					}
 					break;
 
@@ -502,10 +527,7 @@ class Search
 			$arrKeywords = array();
 		}
 
-		$strQuery = "SELECT *, similarity / vectorLength AS relevance FROM (SELECT tl_search_index.pid AS sid";
-
-		// Remember found terms so we can highlight them later
-		$strQuery .= ", GROUP_CONCAT(matchedTerm.term) AS matches";
+		$strQuery = "SELECT id, protected, `groups`, similarity / vectorLength AS relevance FROM (SELECT tl_search_index.pid AS sid";
 
 		$arrValues = array();
 		$arrAllKeywords = array();
@@ -548,7 +570,7 @@ class Search
 		// Get keywords from phrases
 		foreach ($arrPhrases as $strPhrase)
 		{
-			foreach (self::splitIntoWords(str_replace('[^[:alnum:]]+', ' ', $strPhrase), $GLOBALS['TL_LANGUAGE']) as $strKeyword)
+			foreach (self::splitIntoWords($strPhrase, $GLOBALS['TL_LANGUAGE']) as $strKeyword)
 			{
 				$arrMatches[] = \count($arrAllKeywords);
 				$arrAllKeywords[] = 'term=?';
@@ -660,10 +682,10 @@ class Search
 		$strQuery .= ") matches LEFT JOIN tl_search ON(matches.sid=tl_search.id) WHERE 1";
 
 		// Get phrases
-		if (\count($arrPhrases))
+		if (\count($arrPhrasesRegExp))
 		{
-			$strQuery .= " AND (" . implode(($blnOrSearch ? ' OR ' : ' AND '), array_fill(0, \count($arrPhrases), 'tl_search.text REGEXP ?')) . ')';
-			$arrValues = array_merge($arrValues, $arrPhrases);
+			$strQuery .= " AND (" . implode(($blnOrSearch ? ' OR ' : ' AND '), array_fill(0, \count($arrPhrasesRegExp), 'tl_search.text REGEXP ?')) . ')';
+			$arrValues = array_merge($arrValues, $arrPhrasesRegExp);
 		}
 
 		// Limit results to a particular set of pages
@@ -677,65 +699,10 @@ class Search
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
-
-		if ($intRows > 0)
-		{
-			$objResultStmt->limit($intRows, $intOffset);
-		}
-
 		$objResult = $objResultStmt->execute($arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
-		foreach ($arrResult as $k=>$v)
-		{
-			if ((float) $v['relevance'] === 0.0)
-			{
-				$arrResult[$k]['relevance'] = PHP_FLOAT_EPSILON;
-			}
-
-			$arrHighlight = array();
-			$arrMatches = explode(',', $v['matches']);
-
-			foreach ($arrKeywords as $strKeyword)
-			{
-				if (\in_array($strKeyword, $arrMatches))
-				{
-					$arrHighlight[] = $strKeyword;
-				}
-			}
-
-			foreach ($arrIncluded as $strKeyword)
-			{
-				if (\in_array($strKeyword, $arrMatches))
-				{
-					$arrHighlight[] = $strKeyword;
-				}
-			}
-
-			// Highlight the words which matched the wildcard keywords
-			foreach ($arrWildcards as $strKeyword)
-			{
-				if ($matches = preg_grep('/' . str_replace('%', '.*', $strKeyword) . '/', $arrMatches))
-				{
-					$arrHighlight = array_merge($arrHighlight, $matches);
-				}
-			}
-
-			// Highlight phrases if all their words have matched
-			foreach ($arrPhrases as $strPhrase)
-			{
-				$strPhrase = str_replace('[^[:alnum:]]+', ' ', $strPhrase);
-
-				if (!array_diff(explode(' ', $strPhrase), $arrMatches))
-				{
-					$arrHighlight[] = $strPhrase;
-				}
-			}
-
-			$arrResult[$k]['matches'] = implode(',', $arrHighlight);
-		}
-
-		return new Result($arrResult, $objResult->query);
+		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);
 	}
 
 	/**

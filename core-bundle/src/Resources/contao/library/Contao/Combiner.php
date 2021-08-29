@@ -32,25 +32,21 @@ class Combiner extends System
 {
 	/**
 	 * The .css file extension
-	 * @var string
 	 */
 	const CSS = '.css';
 
 	/**
 	 * The .js file extension
-	 * @var string
 	 */
 	const JS = '.js';
 
 	/**
 	 * The .scss file extension
-	 * @var string
 	 */
 	const SCSS = '.scss';
 
 	/**
 	 * The .less file extension
-	 * @var string
 	 */
 	const LESS = '.less';
 
@@ -93,8 +89,6 @@ class Combiner extends System
 
 		$this->strRootDir = $container->getParameter('kernel.project_dir');
 		$this->strWebDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
-
-		parent::__construct();
 	}
 
 	/**
@@ -132,7 +126,7 @@ class Combiner extends System
 		// Check the source file
 		if (!file_exists($this->strRootDir . '/' . $strFile))
 		{
-			// Handle public bundle resources in web/
+			// Handle public bundle resources in the contao.web_dir folder
 			if (file_exists($this->strRootDir . '/' . $this->strWebDir . '/' . $strFile))
 			{
 				$strFile = $this->strWebDir . '/' . $strFile;
@@ -209,6 +203,7 @@ class Combiner extends System
 
 		$return = array();
 		$strTarget = substr($this->strMode, 1);
+		$blnDebug = System::getContainer()->getParameter('kernel.debug');
 
 		foreach ($this->arrFiles as $arrFile)
 		{
@@ -217,7 +212,7 @@ class Combiner extends System
 			{
 				$strPath = 'assets/' . $strTarget . '/' . str_replace('/', '_', $arrFile['name']) . $this->strMode;
 
-				if (Config::get('debugMode') || !file_exists($this->strRootDir . '/' . $strPath))
+				if ($blnDebug || !file_exists($this->strRootDir . '/' . $strPath))
 				{
 					$objFile = new File($strPath);
 					$objFile->write($this->handleScssLess(file_get_contents($this->strRootDir . '/' . $arrFile['name']), $arrFile));
@@ -230,7 +225,7 @@ class Combiner extends System
 			{
 				$name = $arrFile['name'];
 
-				// Strip the web/ prefix (see #328)
+				// Strip the contao.web_dir directory prefix (see #328)
 				if (strncmp($name, $this->strWebDir . '/', \strlen($this->strWebDir) + 1) === 0)
 				{
 					$name = substr($name, \strlen($this->strWebDir) + 1);
@@ -258,7 +253,7 @@ class Combiner extends System
 	 */
 	public function getCombinedFile($strUrl=null)
 	{
-		if (Config::get('debugMode'))
+		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			return $this->getDebugMarkup($strUrl);
 		}
@@ -404,18 +399,20 @@ class Combiner extends System
 	 */
 	protected function handleScssLess($content, $arrFile)
 	{
+		$blnDebug = System::getContainer()->getParameter('kernel.debug');
+
 		if ($arrFile['extension'] == self::SCSS)
 		{
 			$objCompiler = new Compiler();
 			$objCompiler->setImportPaths($this->strRootDir . '/' . \dirname($arrFile['name']));
-			$objCompiler->setOutputStyle((Config::get('debugMode') ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
+			$objCompiler->setOutputStyle(($blnDebug ? OutputStyle::EXPANDED : OutputStyle::COMPRESSED));
 
-			if (Config::get('debugMode'))
+			if ($blnDebug)
 			{
 				$objCompiler->setSourceMap(Compiler::SOURCE_MAP_INLINE);
 			}
 
-			return $this->fixPaths($objCompiler->compile($content, $this->strRootDir . '/' . $arrFile['name']), $arrFile);
+			return $this->fixPaths($objCompiler->compileString($content, $this->strRootDir . '/' . $arrFile['name'])->getCss(), $arrFile);
 		}
 
 		$strPath = \dirname($arrFile['name']);
@@ -423,7 +420,7 @@ class Combiner extends System
 		$arrOptions = array
 		(
 			'strictMath' => true,
-			'compress' => !Config::get('debugMode'),
+			'compress' => !$blnDebug,
 			'import_dirs' => array($this->strRootDir . '/' . $strPath => $strPath)
 		);
 
@@ -446,7 +443,7 @@ class Combiner extends System
 	{
 		$strName = $arrFile['name'];
 
-		// Strip the web/ prefix
+		// Strip the contao.web_dir directory prefix
 		if (strpos($strName, $this->strWebDir . '/') === 0)
 		{
 			$strName = substr($strName, \strlen($this->strWebDir) + 1);

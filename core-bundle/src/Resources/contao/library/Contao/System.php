@@ -12,11 +12,13 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
 use League\Uri\Components\Query;
-use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -438,13 +440,18 @@ abstract class System
 	{
 		if ($strLanguage === null)
 		{
-			$strLanguage = str_replace('-', '_', $GLOBALS['TL_LANGUAGE'] ?? 'en');
+			$strLanguage = LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE'] ?? 'en');
 		}
 
 		// Fall back to English
 		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
+		}
+
+		if (1 !== preg_match('/^[a-z0-9_-]+$/i', $strName))
+		{
+			throw new \InvalidArgumentException(sprintf('Invalid language file name "%s"', $strName));
 		}
 
 		// Return if the language file has been loaded already
@@ -516,6 +523,12 @@ abstract class System
 			}
 		}
 
+		// Set MSC.textDirection (see #3360)
+		if ('default' === $strName)
+		{
+			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
+		}
+
 		// HOOK: allow to load custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
@@ -552,6 +565,11 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
+			if (LocaleUtil::canonicalize($strLanguage) !== $strLanguage)
+			{
+				return false;
+			}
+
 			$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 			if (is_dir($projectDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
@@ -575,38 +593,17 @@ abstract class System
 	 * Return the countries as array
 	 *
 	 * @return array An array of country names
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\Intl\Countries service instead
 	 */
 	public static function getCountries()
 	{
-		$return = array();
-		$countries = array();
-		$arrAux = array();
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Countries::class);
 
-		static::loadLanguageFile('countries');
-		include __DIR__ . '/../../config/countries.php';
+		$arrCountries = self::getContainer()->get(Countries::class)->getCountries();
 
-		foreach ($countries as $strKey=>$strName)
-		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
-		}
-
-		asort($arrAux);
-
-		foreach (array_keys($arrAux) as $strKey)
-		{
-			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $countries[$strKey];
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getCountries']) && \is_array($GLOBALS['TL_HOOKS']['getCountries']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback)
-			{
-				static::importStatic($callback[0])->{$callback[1]}($return, $countries);
-			}
-		}
-
-		return $return;
+		return array_combine(array_map('strtolower', array_keys($arrCountries)), $arrCountries);
 	}
 
 	/**
@@ -615,51 +612,20 @@ abstract class System
 	 * @param boolean $blnInstalledOnly If true, return only installed languages
 	 *
 	 * @return array An array of languages
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\Intl\Locales service instead
 	 */
 	public static function getLanguages($blnInstalledOnly=false)
 	{
-		$return = array();
-		$languages = array();
-		$arrAux = array();
-		$langsNative = array();
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Locales::class);
 
-		static::loadLanguageFile('languages');
-		include __DIR__ . '/../../config/languages.php';
-
-		foreach ($languages as $strKey=>$strName)
+		if ($blnInstalledOnly)
 		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
+			return self::getContainer()->get(Locales::class)->getEnabledLocales(null, true);
 		}
 
-		asort($arrAux);
-
-		$arrBackendLanguages = self::getContainer()->getParameter('contao.locales');
-
-		foreach (array_keys($arrAux) as $strKey)
-		{
-			if ($blnInstalledOnly && !\in_array($strKey, $arrBackendLanguages))
-			{
-				continue;
-			}
-
-			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $languages[$strKey];
-
-			if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey])
-			{
-				$return[$strKey] .= ' - ' . $langsNative[$strKey];
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && \is_array($GLOBALS['TL_HOOKS']['getLanguages']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback)
-			{
-				static::importStatic($callback[0])->{$callback[1]}($return, $languages, $langsNative, $blnInstalledOnly);
-			}
-		}
-
-		return $return;
+		return self::getContainer()->get(Locales::class)->getLocales(null, true);
 	}
 
 	/**

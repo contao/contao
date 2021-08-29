@@ -19,6 +19,8 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -393,6 +395,14 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
+
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
+
 		$objRow->typePrefix = 'mod_';
 
 		/** @var Module $objModule */
@@ -412,6 +422,11 @@ abstract class Controller extends System
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -492,6 +507,14 @@ abstract class Controller extends System
 			}
 		}
 
+		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
+
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
+
 		$objArticle = new ModuleArticle($objRow, $strColumn);
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
@@ -499,6 +522,11 @@ abstract class Controller extends System
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -550,6 +578,13 @@ abstract class Controller extends System
 		}
 
 		$objRow->typePrefix = 'ce_';
+		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
+
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
 
 		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
@@ -568,6 +603,11 @@ abstract class Controller extends System
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -720,21 +760,17 @@ abstract class Controller extends System
 		// Only apply the restrictions in the front end
 		if (TL_MODE == 'FE')
 		{
-			$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+			$security = System::getContainer()->get('security.helper');
 
-			// Protected element
 			if ($objElement->protected)
 			{
-				if (!$blnFeUserLoggedIn || !FrontendUser::getInstance()->isMemberOf(StringUtil::deserialize($objElement->groups)))
-				{
-					$blnReturn = false;
-				}
+				$groups = StringUtil::deserialize($objElement->groups, true);
+				$blnReturn = $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
 			}
-
-			// Show to guests only
-			elseif ($objElement->guests && $blnFeUserLoggedIn)
+			elseif ($objElement->guests)
 			{
-				$blnReturn = false;
+				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
+				$blnReturn = !$security->isGranted('ROLE_MEMBER'); // backwards compatibility
 			}
 		}
 
@@ -819,10 +855,10 @@ abstract class Controller extends System
 			}
 		}
 
-		/** @var PageModel $objPage */
+		/** @var PageModel|null $objPage */
 		global $objPage;
 
-		$objLayout = LayoutModel::findByPk($objPage->layoutId);
+		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
 		$blnCombineScripts = ($objLayout === null) ? false : $objLayout->combineScripts;
 
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
@@ -1166,6 +1202,8 @@ abstract class Controller extends System
 		// Set the language
 		if ($strForceLang !== null)
 		{
+			$strForceLang = LocaleUtil::formatAsLocale($strForceLang);
+
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
 
@@ -1275,7 +1313,7 @@ abstract class Controller extends System
 		}
 
 		// Limit downloads to the files directory
-		if (!preg_match('@^' . preg_quote(Config::get('uploadPath'), '@') . '@i', $strFile))
+		if (!preg_match('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '@i', $strFile))
 		{
 			throw new PageNotFoundException('Invalid path');
 		}
@@ -1493,11 +1531,8 @@ abstract class Controller extends System
 		{
 			if ($interpretAsContentModel)
 			{
-				/** @var ContentModel $contentModel */
-				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
-
 				// This will be null if "overwriteMeta" is not set
-				return $contentModel->setRow($rowData)->getOverwriteMetadata();
+				return (new ContentModel())->setRow($rowData)->getOverwriteMetadata();
 			}
 
 			// Manually create metadata that always contains certain properties (BC)
@@ -1625,7 +1660,7 @@ abstract class Controller extends System
 			}
 
 			$size[0] = $maxWidth;
-			$size[1] = floor($maxWidth * ($height / $width));
+			$size[1] = (int) floor($maxWidth * ($height / $width));
 
 			return array($size, $margin);
 		};
@@ -2118,11 +2153,11 @@ abstract class Controller extends System
 	 * @return array An array of available back end languages
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use System::getLanguages(true) instead.
+	 *             Use the Contao\CoreBundle\Intl\Locales service instead.
 	 */
 	protected function getBackendLanguages()
 	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getBackendLanguages()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\System::getLanguages(true)" instead.');
+		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getBackendLanguages()" has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Intl\Locales service instead.');
 
 		return $this->getLanguages(true);
 	}

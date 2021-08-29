@@ -80,6 +80,14 @@ class ContentModule extends ContentElement
 		$objModel->cssID = $cssID;
 		$objModel->typePrefix = 'ce_';
 
+		$strStopWatchId = 'contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')';
+
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
+
 		/** @var Module $objModule */
 		$objModule = new $strClass($objModel, $this->strColumn);
 
@@ -90,7 +98,14 @@ class ContentModule extends ContentElement
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}
 
-		return $objModule->generate();
+		$strBuffer = $objModule->generate();
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
+		}
+
+		return $strBuffer;
 	}
 
 	/**

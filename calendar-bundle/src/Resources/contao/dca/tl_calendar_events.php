@@ -344,7 +344,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['singleSRC'],
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>Config::get('validImageTypes'), 'mandatory'=>true),
+			'eval'                    => array('filesOnly'=>true, 'fieldType'=>'radio', 'extensions'=>'%contao.image.valid_extensions%', 'mandatory'=>true),
 			'sql'                     => "binary(16) NULL"
 		),
 		'alt' => array
@@ -426,7 +426,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'recurring' => array
 		(
 			'exclude'                 => true,
-			'search'                  => true,
+			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -499,7 +499,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'target' => array
@@ -520,7 +520,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'noComments' => array
 		(
 			'exclude'                 => true,
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 clr'),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -1107,7 +1106,7 @@ class tl_calendar_events extends Backend
 	{
 		if (Input::get('fid'))
 		{
-			$this->toggleFeatured(Input::get('fid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleFeatured(Input::get('fid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 
@@ -1258,7 +1257,7 @@ class tl_calendar_events extends Backend
 	{
 		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

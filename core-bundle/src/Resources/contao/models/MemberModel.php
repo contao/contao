@@ -16,41 +16,43 @@ use Contao\Model\Registry;
 /**
  * Reads and writes members
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $firstname
- * @property string  $lastname
- * @property string  $dateOfBirth
- * @property string  $gender
- * @property string  $company
- * @property string  $street
- * @property string  $postal
- * @property string  $city
- * @property string  $state
- * @property string  $country
- * @property string  $phone
- * @property string  $mobile
- * @property string  $fax
- * @property string  $email
- * @property string  $website
- * @property string  $language
- * @property string  $groups
- * @property boolean $login
- * @property string  $username
- * @property string  $password
- * @property boolean $assignDir
- * @property string  $homeDir
- * @property boolean $disable
- * @property string  $start
- * @property string  $stop
- * @property integer $dateAdded
- * @property integer $lastLogin
- * @property integer $currentLogin
- * @property integer $loginAttempts
- * @property integer $locked
- * @property string  $session
- * @property integer $createdOn
- * @property string  $newsletter
+ * @property string|integer    $id
+ * @property string|integer    $tstamp
+ * @property string            $firstname
+ * @property string            $lastname
+ * @property string|integer    $dateOfBirth
+ * @property string            $gender
+ * @property string            $company
+ * @property string            $street
+ * @property string            $postal
+ * @property string            $city
+ * @property string            $state
+ * @property string            $country
+ * @property string            $phone
+ * @property string            $mobile
+ * @property string            $fax
+ * @property string            $email
+ * @property string            $website
+ * @property string            $language
+ * @property string|array|null $groups
+ * @property string|boolean    $login
+ * @property string|null       $username
+ * @property string            $password
+ * @property string|boolean    $assignDir
+ * @property string|null       $homeDir
+ * @property string|boolean    $disable
+ * @property string|integer    $start
+ * @property string|integer    $stop
+ * @property string|integer    $dateAdded
+ * @property string|integer    $lastLogin
+ * @property string|integer    $currentLogin
+ * @property string|integer    $loginAttempts
+ * @property string|integer    $locked
+ * @property string|array|null $session
+ * @property string|null       $secret
+ * @property string|boolean    $useTwoFactor
+ * @property string|null       $backupCodes
+ * @property string|integer    $trustedTokenVersion
  *
  * @method static MemberModel|null findById($id, array $opt=array())
  * @method static MemberModel|null findByPk($id, array $opt=array())
@@ -88,8 +90,10 @@ use Contao\Model\Registry;
  * @method static MemberModel|null findOneByLoginAttempts($val, array $opt=array())
  * @method static MemberModel|null findOneByLocked($val, array $opt=array())
  * @method static MemberModel|null findOneBySession($val, array $opt=array())
- * @method static MemberModel|null findOneByCreatedOn($val, array $opt=array())
- * @method static MemberModel|null findOneByNewsletter($val, array $opt=array())
+ * @method static MemberModel|null findOneBySecret($val, array $opt=array())
+ * @method static MemberModel|null findOneByUseTwoFactor($val, array $opt=array())
+ * @method static MemberModel|null findOneByBackupCodes($val, array $opt=array())
+ * @method static MemberModel|null findOneByTrustedTokenVersion($val, array $opt=array())
  *
  * @method static Collection|MemberModel[]|MemberModel|null findByTstamp($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByFirstname($val, array $opt=array())
@@ -122,8 +126,10 @@ use Contao\Model\Registry;
  * @method static Collection|MemberModel[]|MemberModel|null findByLoginAttempts($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findByLocked($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findBySession($val, array $opt=array())
- * @method static Collection|MemberModel[]|MemberModel|null findByCreatedOn($val, array $opt=array())
- * @method static Collection|MemberModel[]|MemberModel|null findByNewsletter($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findBySecret($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByUseTwoFactor($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByBackupCodes($val, array $opt=array())
+ * @method static Collection|MemberModel[]|MemberModel|null findByTrustedTokenVersion($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|MemberModel[]|MemberModel|null findAll(array $opt=array())
@@ -161,8 +167,10 @@ use Contao\Model\Registry;
  * @method static integer countByLoginAttempts($val, array $opt=array())
  * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countBySession($val, array $opt=array())
- * @method static integer countByCreatedOn($val, array $opt=array())
- * @method static integer countByNewsletter($val, array $opt=array())
+ * @method static integer countBySecret($val, array $opt=array())
+ * @method static integer countByUseTwoFactor($val, array $opt=array())
+ * @method static integer countByBackupCodes($val, array $opt=array())
+ * @method static integer countByTrustedTokenVersion($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */

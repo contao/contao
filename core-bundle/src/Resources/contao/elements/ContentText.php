@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 
 /**
  * Front end content element "text".
@@ -19,8 +19,6 @@ use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
  */
 class ContentText extends ContentElement
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -37,7 +35,7 @@ class ContentText extends ContentElement
 		// Add the static files URL to images
 		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
 		{
-			$path = Config::get('uploadPath') . '/';
+			$path = System::getContainer()->getParameter('contao.upload_path') . '/';
 			$this->text = str_replace(' src="' . $path, ' src="' . $staticUrl . $path, $this->text);
 		}
 
@@ -46,14 +44,21 @@ class ContentText extends ContentElement
 		$this->Template->addBefore = false;
 
 		// Add an image
-		if ($this->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($this->singleSRC)))
+		if ($this->addImage)
 		{
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($this->singleSRC)
 				->setSize($this->size)
 				->setMetadata($this->objModel->getOverwriteMetadata())
 				->enableLightbox((bool) $this->fullsize)
-				->build()
-				->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
+				->buildIfResourceExists();
+
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
+			}
 		}
 	}
 }

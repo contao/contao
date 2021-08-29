@@ -27,6 +27,8 @@ class Metadata
     public const VALUE_CAPTION = 'caption';
     public const VALUE_TITLE = 'title';
     public const VALUE_URL = 'link';
+    public const VALUE_UUID = 'uuid';
+    public const VALUE_LICENSE = 'license';
 
     /**
      * Key-value pairs of metadata.
@@ -35,9 +37,36 @@ class Metadata
      */
     private $values;
 
-    public function __construct(array $values)
+    /**
+     * JSON-LD data where the key matches the schema.org type.
+     *
+     * @var array<string, array>
+     */
+    private $schemaOrgJsonLd;
+
+    /**
+     * @param array<string, mixed>      $values
+     * @param array<string, array>|null $schemaOrgJsonLd
+     */
+    public function __construct(array $values, array $schemaOrgJsonLd = null)
     {
         $this->values = $values;
+        $this->schemaOrgJsonLd = $schemaOrgJsonLd;
+    }
+
+    /**
+     * Returns a new metadata representation that also contains the given
+     * values. Existing keys will be overwritten.
+     *
+     * @param array<string, mixed> $values
+     */
+    public function with(array $values): self
+    {
+        if (empty($values)) {
+            return $this;
+        }
+
+        return new self(array_merge($this->values, $values));
     }
 
     /**
@@ -69,6 +98,19 @@ class Metadata
     }
 
     /**
+     * Returns a UUID reference in ASCII format or null if not set.
+     */
+    public function getUuid(): ?string
+    {
+        return $this->values[self::VALUE_UUID] ?? null;
+    }
+
+    public function getLicense(): string
+    {
+        return $this->values[self::VALUE_LICENSE] ?? '';
+    }
+
+    /**
      * Returns true if this container contains a given value, false otherwise.
      */
     public function has(string $key): bool
@@ -90,5 +132,40 @@ class Metadata
     public function empty(): bool
     {
         return empty($this->values);
+    }
+
+    public function getSchemaOrgData(string $type = null): array
+    {
+        // Lazy initialize
+        if (null === $this->schemaOrgJsonLd) {
+            $this->extractBasicSchemaOrgData();
+        }
+
+        if (null === $type) {
+            return $this->schemaOrgJsonLd;
+        }
+
+        return $this->schemaOrgJsonLd[$type] ?? [];
+    }
+
+    private function extractBasicSchemaOrgData(): void
+    {
+        if ($this->has(self::VALUE_TITLE)) {
+            $this->schemaOrgJsonLd['AudioObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['ImageObject']['name'] = $this->getTitle();
+            $this->schemaOrgJsonLd['MediaObject']['name'] = $this->getTitle();
+        }
+
+        if ($this->has(self::VALUE_CAPTION)) {
+            $this->schemaOrgJsonLd['AudioObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['ImageObject']['caption'] = $this->getCaption();
+            $this->schemaOrgJsonLd['MediaObject']['caption'] = $this->getCaption();
+        }
+
+        if ($this->has(self::VALUE_LICENSE)) {
+            $this->schemaOrgJsonLd['AudioObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['ImageObject']['license'] = $this->getLicense();
+            $this->schemaOrgJsonLd['MediaObject']['license'] = $this->getLicense();
+        }
     }
 }

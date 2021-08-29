@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Search\Document;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -318,12 +319,11 @@ abstract class Frontend extends Controller
 			throw new NoRootPageFoundException('No root page found');
 		}
 
-		$host = Environment::get('host');
-		$logger = System::getContainer()->get('monolog.logger.contao');
 		$accept_language = Environment::get('httpAcceptLanguage');
+		$blnAddLanguageToUrl = System::getContainer()->getParameter('contao.prepend_locale');
 
 		// Get the language from the URL if it is not set (see #456)
-		if (!isset($_GET['language']) && Config::get('addLanguageToUrl'))
+		if (!isset($_GET['language']) && $blnAddLanguageToUrl)
 		{
 			$arrMatches = array();
 
@@ -337,7 +337,7 @@ abstract class Frontend extends Controller
 		}
 
 		// The language is set in the URL
-		if (!empty($_GET['language']) && Config::get('addLanguageToUrl'))
+		if (!empty($_GET['language']) && $blnAddLanguageToUrl)
 		{
 			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
 		}
@@ -377,9 +377,9 @@ abstract class Frontend extends Controller
 		// Redirect to the website root or language root (e.g. en/)
 		if (!Environment::get('relativeRequest'))
 		{
-			if (Config::get('addLanguageToUrl'))
+			if ($blnAddLanguageToUrl)
 			{
-				$arrParams = array('_locale' => $objRootPage->language);
+				$arrParams = array('_locale' => LocaleUtil::formatAsLocale($objRootPage->language));
 
 				$strUrl = System::getContainer()->get('router')->generate('contao_index', $arrParams);
 				$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
@@ -557,7 +557,7 @@ abstract class Frontend extends Controller
 		$arrData = StringUtil::deserialize($strData);
 
 		// Convert the language to a locale (see #5678)
-		$strLanguage = str_replace('-', '_', $strLanguage);
+		$strLanguage = LocaleUtil::formatAsLocale($strLanguage);
 
 		if (!\is_array($arrData) || !isset($arrData[$strLanguage]))
 		{
@@ -573,9 +573,14 @@ abstract class Frontend extends Controller
 	 * @param string $strText
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
+	 *             Use StringUtil::htmlToPlainText() instead.
 	 */
 	protected function prepareMetaDescription($strText)
 	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use Contao\StringUtil::htmlToPlainText() instead.');
+
 		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);

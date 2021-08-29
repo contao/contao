@@ -71,12 +71,6 @@ class ListWizard extends Widget
 			$this->varValue = array('');
 		}
 
-		// Initialize the tab index
-		if (!Cache::has('tabindex'))
-		{
-			Cache::set('tabindex', 1);
-		}
-
 		$return = '<ul id="ctrl_' . $this->strId . '" class="tl_listwizard">';
 
 		// Add input fields

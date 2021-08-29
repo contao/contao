@@ -27,7 +27,6 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\PathUtil\Path;
 
 class FigureTest extends TestCase
@@ -561,7 +560,6 @@ class FigureTest extends TestCase
     public function testApplyLegacyTemplate(): void
     {
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('request_stack', new RequestStack());
 
         System::setContainer($container);
 
@@ -600,6 +598,38 @@ class FigureTest extends TestCase
 
         $this->assertSame('do-not-overwrite', $template->href);
         $this->assertSame('foo://bar', $template->imageHref);
+    }
+
+    public function testGettingSchemaOrgData(): void
+    {
+        $figure = new Figure($this->getImageMock());
+
+        $this->assertSame(
+            [
+                '@type' => 'ImageObject',
+                'contentUrl' => 'https://assets.url/files/public/foo.jpg',
+                'identifier' => 'https://assets.url/files/public/foo.jpg',
+            ],
+            $figure->getSchemaOrgData()
+        );
+
+        $figure = new Figure(
+            $this->getImageMock(),
+            new Metadata([
+                Metadata::VALUE_UUID => 'uuid',
+                Metadata::VALUE_CAPTION => 'caption',
+            ])
+        );
+
+        $this->assertSame(
+            [
+                '@type' => 'ImageObject',
+                'caption' => 'caption',
+                'contentUrl' => 'https://assets.url/files/public/foo.jpg',
+                'identifier' => '#/schema/image/uuid',
+            ],
+            $figure->getSchemaOrgData()
+        );
     }
 
     /**

@@ -22,14 +22,14 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 /**
  * Provide methods to handle data container arrays.
  *
- * @property integer     $id
- * @property string      $table
- * @property mixed       $value
- * @property string      $field
- * @property string      $inputName
- * @property string      $palette
- * @property object|null $activeRecord
- * @property array       $rootIds
+ * @property string|integer $id
+ * @property string         $table
+ * @property mixed          $value
+ * @property string         $field
+ * @property string         $inputName
+ * @property string         $palette
+ * @property object|null    $activeRecord
+ * @property array          $rootIds
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -37,7 +37,7 @@ abstract class DataContainer extends Backend
 {
 	/**
 	 * Current ID
-	 * @var integer
+	 * @var integer|string
 	 */
 	protected $intId;
 
@@ -274,7 +274,6 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		/** @var Widget $strClass */
 		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
 
 		// Return if the widget class does not exists
@@ -325,7 +324,7 @@ abstract class DataContainer extends Backend
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$suffix = ($this instanceof DC_Folder ? md5($this->intId) : $this->intId);
+			$suffix = $this->getFormFieldSuffix();
 			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
 
 			// Calculate the current palette
@@ -501,6 +500,11 @@ abstract class DataContainer extends Backend
 			$wizard .= Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], $this->strTable, $this->strField, $this->strInputName);
 		}
 
+		if (($arrData['inputType'] ?? null) == 'password')
+		{
+			$wizard .= Backend::getTogglePasswordWizard($this->strInputName);
+		}
+
 		// Add a custom wizard
 		if (\is_array($arrData['wizard'] ?? null))
 		{
@@ -518,16 +522,18 @@ abstract class DataContainer extends Backend
 			}
 		}
 
+		$hasWizardClass = \in_array('wizard', $arrClasses);
+
 		if ($wizard)
 		{
 			$objWidget->wizard = $wizard;
 
-			if (($arrData['eval']['addWizardClass'] ?? null) !== false && !\in_array('wizard', $arrClasses))
+			if (!$hasWizardClass)
 			{
 				$arrClasses[] = 'wizard';
 			}
 		}
-		elseif (\in_array('wizard', $arrClasses))
+		elseif ($hasWizardClass)
 		{
 			unset($arrClasses[array_search('wizard', $arrClasses)]);
 		}
@@ -538,10 +544,7 @@ abstract class DataContainer extends Backend
 			$this->blnUploadable = true;
 		}
 
-		if (($arrData['inputType'] ?? null) != 'password')
-		{
-			$arrClasses[] = 'widget';
-		}
+		$arrClasses[] = 'widget';
 
 		// Mark floated single checkboxes
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null) && \in_array('w50', $arrClasses))
@@ -776,8 +779,8 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($v['label']))
 				{
-					$label = $v['label'][0];
-					$title = sprintf($v['label'][1], $id);
+					$label = $v['label'][0] ?? null;
+					$title = sprintf($v['label'][1] ?? '', $id);
 				}
 				else
 				{
@@ -892,13 +895,13 @@ abstract class DataContainer extends Backend
 
 			$v = \is_array($v) ? $v : array($v);
 			$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-			$title = \is_array($v['label']) ? $v['label'][1] : $v['label'];
+			$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
 			if ($v['icon'] ?? null)
 			{
-				$v['class'] = trim($v['class'] . ' header_icon');
+				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
 
 				// Add the theme path if only the file name is given
 				if (strpos($v['icon'], '/') === false)
@@ -1389,6 +1392,16 @@ abstract class DataContainer extends Backend
 				$this->addCtableTags($ctable, $objIds->id, $tags);
 			}
 		}
+	}
+
+	/**
+	 * Return the form field suffix
+	 *
+	 * @return integer|string
+	 */
+	protected function getFormFieldSuffix()
+	{
+		return $this->intId;
 	}
 
 	/**

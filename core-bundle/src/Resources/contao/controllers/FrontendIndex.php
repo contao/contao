@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -45,7 +47,6 @@ class FrontendIndex extends Frontend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendIndex::run()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
 
 		$pageId = $this->getPageIdFromUrl();
-		$objRootPage = null;
 
 		// Load a website root page object if there is no page ID
 		if ($pageId === null)
@@ -97,7 +98,6 @@ class FrontendIndex extends Frontend
 		{
 			trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\FrontendIndex::renderPage()" with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.');
 
-			$objNewPage = null;
 			$arrPages = array();
 
 			// Order by domain and language
@@ -129,7 +129,7 @@ class FrontendIndex extends Frontend
 			}
 
 			// Use the first result (see #4872)
-			if (!System::getContainer()->getParameter('contao.legacy_routing') || !Config::get('addLanguageToUrl'))
+			if (!System::getContainer()->getParameter('contao.legacy_routing') || !System::getContainer()->getParameter('contao.prepend_locale'))
 			{
 				$objNewPage = current($arrLangs);
 			}
@@ -246,8 +246,8 @@ class FrontendIndex extends Frontend
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		// Check wether the language matches the root page language
-		if (isset($_GET['language']) && Config::get('addLanguageToUrl') && Input::get('language') != $objPage->rootLanguage)
+		// Check whether the language matches the root page language
+		if (isset($_GET['language']) && $objPage->urlPrefix && Input::get('language') != LocaleUtil::formatAsLanguageTag($objPage->rootLanguage))
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
@@ -263,23 +263,21 @@ class FrontendIndex extends Frontend
 		// Authenticate the user if the page is protected
 		if ($objPage->protected)
 		{
-			$container = System::getContainer();
-			$token = $container->get('security.token_storage')->getToken();
+			$security = System::getContainer()->get('security.helper');
 
-			if ($container->get('security.authentication.trust_resolver')->isAnonymous($token))
+			if (!$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
 			{
-				throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
-			}
+				if (($token = $security->getToken()) === null || System::getContainer()->get('security.authentication.trust_resolver')->isAnonymous($token))
+				{
+					throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
+				}
 
-			if (!$container->get('security.authorization_checker')->isGranted('ROLE_MEMBER'))
-			{
-				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
-			}
+				$user = $security->getUser();
 
-			// Check the user groups
-			if (!$this->User->isMemberOf($objPage->groups))
-			{
-				$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', (array) $objPage->groups) . '" (current user groups: ' . implode(', ', $this->User->groups) . ')', __METHOD__, TL_ERROR);
+				if ($user instanceof FrontendUser)
+				{
+					$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, TL_ERROR);
+				}
 
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
 			}

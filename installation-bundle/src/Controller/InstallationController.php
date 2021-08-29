@@ -12,13 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Contao\Validator;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception;
 use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -99,6 +100,8 @@ class InstallationController implements ContainerAwareInterface
 
         $this->runDatabaseUpdates();
 
+        $installTool->checkStrictMode($this->context);
+
         if (null !== ($response = $this->adjustDatabaseTables())) {
             return $response;
         }
@@ -173,19 +176,10 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $password = $request->request->get('password');
-        $confirmation = $request->request->get('confirmation');
-
-        // The passwords do not match
-        if ($password !== $confirmation) {
-            return $this->render('password.html.twig', [
-                'error' => $this->trans('password_confirmation_mismatch'),
-            ]);
-        }
-
         $installTool = $this->container->get('contao.install_tool');
         $minlength = $installTool->getConfig('minPasswordLength');
 
-        // The passwords is too short
+        // The password is too short
         if (Utf8::strlen($password) < $minlength) {
             return $this->render('password.html.twig', [
                 'error' => sprintf($this->trans('password_too_short'), $minlength),
@@ -437,7 +431,7 @@ class InstallationController implements ContainerAwareInterface
 
         try {
             $installTool->importTemplate($template, '1' === $request->request->get('preserve'));
-        } catch (DBALException $e) {
+        } catch (Exception $e) {
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);
 
@@ -486,13 +480,11 @@ class InstallationController implements ContainerAwareInterface
         $name = $request->request->get('name');
         $email = $request->request->get('email');
         $password = $request->request->get('password');
-        $confirmation = $request->request->get('confirmation');
 
         $this->context['admin_username_value'] = $username;
         $this->context['admin_name_value'] = $name;
         $this->context['admin_email_value'] = $email;
         $this->context['admin_password_value'] = $password;
-        $this->context['admin_confirmation_value'] = $confirmation;
 
         // All fields are mandatory
         if ('' === $username || '' === $name || '' === $email || '' === $password) {
@@ -518,13 +510,6 @@ class InstallationController implements ContainerAwareInterface
         // Validate the e-mail address (see #6003)
         if (!Validator::isEmail($email)) {
             $this->context['admin_email_error'] = $this->trans('admin_error_email');
-
-            return null;
-        }
-
-        // The passwords do not match
-        if ($password !== $confirmation) {
-            $this->context['admin_password_error'] = $this->trans('admin_error_password_match');
 
             return null;
         }
@@ -634,7 +619,7 @@ class InstallationController implements ContainerAwareInterface
             return '';
         }
 
-        return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
+        return $this->container->get(ContaoCsrfTokenManager::class)->getToken($tokenName)->getValue();
     }
 
     /**

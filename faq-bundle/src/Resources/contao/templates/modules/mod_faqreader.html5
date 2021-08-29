@@ -49,3 +49,7 @@
   <?php endif; ?>
 
 <?php $this->endblock(); ?>
+
+<?php
+
+$this->addSchemaOrg($this->getSchemaOrgData());

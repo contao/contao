@@ -41,11 +41,11 @@ class SymlinksCommandTest extends TestCase
         parent::tearDown();
 
         (new Filesystem())->remove([
+            Path::join($this->getTempDir(), 'public'),
             Path::join($this->getTempDir(), 'system/config'),
             Path::join($this->getTempDir(), 'system/logs'),
             Path::join($this->getTempDir(), 'system/themes'),
             Path::join($this->getTempDir(), 'var'),
-            Path::join($this->getTempDir(), 'web'),
         ]);
     }
 
@@ -58,21 +58,21 @@ class SymlinksCommandTest extends TestCase
 
         $this->assertSame(0, $code);
 
-        $this->assertNotRegExp('# web/files +files #', $display);
-        $this->assertRegExp('# web/files/public +files/public #', $display);
-        $this->assertRegExp('# web/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
-        $this->assertRegExp('# web/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
-        $this->assertRegExp('# web/system/modules/foobar/html +system/modules/foobar/html #', $display);
+        $this->assertNotRegExp('# public/files +files #', $display);
+        $this->assertRegExp('# public/files/public +files/public #', $display);
+        $this->assertRegExp('# public/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
+        $this->assertRegExp('# public/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
+        $this->assertRegExp('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
         $this->assertRegExp('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
         $this->assertRegExp('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
-        $this->assertRegExp('# web/assets +assets #', $display);
-        $this->assertRegExp('# web/system/themes +system/themes #', $display);
+        $this->assertRegExp('# public/assets +assets #', $display);
+        $this->assertRegExp('# public/system/themes +system/themes #', $display);
         $this->assertRegExp('# system/logs +var/logs #', $display);
 
-        $this->assertFileExists(Path::join(self::getTempDir(), 'web/files/public'));
-        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'web/system/modules/foobar'));
-        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'web/system/themes/default'));
-        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'web/assets'));
+        $this->assertFileExists(Path::join(self::getTempDir(), 'public/files/public'));
+        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/modules/foobar'));
+        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/themes/default'));
+        $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/assets'));
     }
 
     public function testConvertsAbsolutePathsToRelativePaths(): void

@@ -16,7 +16,6 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -80,7 +79,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $this->assertSame('https://localhost', $response->getTargetUrl());
     }
 
-    public function testReadsTheUsernameFromTheRequest(): void
+    public function testDoesNotReadTheUsernameFromTheRequest(): void
     {
         $exception = $this->createMock(AccountStatusException::class);
         $exception
@@ -92,7 +91,7 @@ class AuthenticationFailureHandlerTest extends TestCase
         $context = new ContaoContext(
             'Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler::logException',
             ContaoContext::ACCESS,
-            'barfoo'
+            'anon.'
         );
 
         $logger = $this->createMock(LoggerInterface::class);
@@ -103,13 +102,13 @@ class AuthenticationFailureHandlerTest extends TestCase
         ;
 
         $handler = new AuthenticationFailureHandler($logger);
-        $handler->onAuthenticationFailure($this->getRequest('barfoo'), $exception);
+        $handler->onAuthenticationFailure($this->getRequest(), $exception);
     }
 
     /**
      * Returns a request object with session.
      */
-    private function getRequest(string $username = null): Request
+    private function getRequest(): Request
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -128,14 +127,6 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->expects($this->once())
             ->method('getSession')
             ->willReturn($session)
-        ;
-
-        $request->request = $this->createMock(ParameterBag::class);
-        $request->request
-            ->expects(null === $username ? $this->never() : $this->once())
-            ->method('get')
-            ->with('username')
-            ->willReturn($username)
         ;
 
         return $request;

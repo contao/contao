@@ -62,7 +62,7 @@ class InsertTagsListener
 
         $faq = $adapter->findByIdOrAlias($elements[1]);
 
-        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', $flags, true)))) {
+        if (null === $faq || false === ($url = $this->generateUrl($faq, \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true)))) {
             return '';
         }
 
@@ -99,7 +99,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
                     $url ?: './',
-                    StringUtil::specialchars($faq->question),
+                    StringUtil::specialcharsAttribute($faq->question),
                     $faq->question
                 );
 
@@ -107,14 +107,14 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s">',
                     $url ?: './',
-                    StringUtil::specialchars($faq->question)
+                    StringUtil::specialcharsAttribute($faq->question)
                 );
 
             case 'faq_url':
                 return $url ?: './';
 
             case 'faq_title':
-                return StringUtil::specialchars($faq->question);
+                return StringUtil::specialcharsAttribute($faq->question);
         }
 
         return false;

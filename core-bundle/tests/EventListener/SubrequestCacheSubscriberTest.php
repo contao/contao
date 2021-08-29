@@ -41,7 +41,7 @@ class SubrequestCacheSubscriberTest extends TestCase
     {
         $subscriber = new SubrequestCacheSubscriber();
 
-        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+        $this->onKernelRequest($subscriber);
 
         $subResponse = new Response();
         $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
@@ -66,7 +66,7 @@ class SubrequestCacheSubscriberTest extends TestCase
     {
         $subscriber = new SubrequestCacheSubscriber();
 
-        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+        $this->onKernelRequest($subscriber);
 
         $subResponse = new Response();
         $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
@@ -89,7 +89,7 @@ class SubrequestCacheSubscriberTest extends TestCase
     {
         $subscriber = new SubrequestCacheSubscriber();
 
-        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+        $this->onKernelRequest($subscriber);
 
         $subResponse = new Response();
         $subResponse->setPrivate();
@@ -111,7 +111,7 @@ class SubrequestCacheSubscriberTest extends TestCase
     {
         $subscriber = new SubrequestCacheSubscriber();
 
-        $this->onKernelRequest($subscriber, KernelInterface::MASTER_REQUEST);
+        $this->onKernelRequest($subscriber);
 
         $subResponse = new Response();
         $subResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
@@ -130,9 +130,9 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
-    private function onKernelRequest(SubrequestCacheSubscriber $subscriber, int $requestType): void
+    private function onKernelRequest(SubrequestCacheSubscriber $subscriber): void
     {
-        $event = new RequestEvent($this->createMock(Kernel::class), new Request(), $requestType);
+        $event = new RequestEvent($this->createMock(Kernel::class), new Request(), KernelInterface::MASTER_REQUEST);
         $subscriber->onKernelRequest($event);
     }
 

@@ -151,7 +151,7 @@ class TemplateOptionsListenerTest extends TestCase
     /**
      * @return ContaoFramework&MockObject
      */
-    private function getFramework(array $adapters = []): ContaoFramework
+    private function getFramework(): ContaoFramework
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
         $controllerAdapter
@@ -168,7 +168,7 @@ class TemplateOptionsListenerTest extends TestCase
             ])
         ;
 
-        return $this->mockContaoFramework(array_merge([Controller::class => $controllerAdapter], $adapters));
+        return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
     /**

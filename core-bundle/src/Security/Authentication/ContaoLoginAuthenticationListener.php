@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Security\Authentication;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -51,10 +50,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
             && 0 === strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8);
     }
 
-    /**
-     * @return Response|TokenInterface|null
-     */
-    protected function attemptAuthentication(Request $request)
+    protected function attemptAuthentication(Request $request): ?TokenInterface
     {
         $currentToken = $this->tokenStorage->getToken();
 
@@ -67,7 +63,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
         $username = $request->request->get('username');
         $password = $request->request->get('password');
 
-        if (!\is_string($username) && (!\is_object($username) || !method_exists($username, '__toString'))) {
+        if (!\is_string($username)) {
             throw new BadRequestHttpException(sprintf('The key "username" must be a string, "%s" given.', \gettype($username)));
         }
 

@@ -120,6 +120,16 @@ class DocumentTest extends TestCase
             ],
         ];
 
+        yield 'Test with one valid json ld element with context' => [
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true}</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+            ],
+        ];
+
         yield 'Test with one valid json ld element with context prefix' => [
             '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/contao.org\/"},"@type":"contao:Page","contao:foobar":true}</script></body></html>',
             [
@@ -140,6 +150,56 @@ class DocumentTest extends TestCase
                 [
                     '@type' => 'Page',
                     'foobar' => false,
+                ],
+            ],
+        ];
+
+        yield 'Test with two valid json ld elements combined in one script tag' => [
+            '<html><body><script type="application/ld+json">[{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true},{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":false}]</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => false,
+                ],
+            ],
+        ];
+
+        yield 'Test with two valid json ld elements combined in one script tag with @graph property' => [
+            '<html><body><script type="application/ld+json">[{"@context":"https:\/\/contao.org\/","@graph":[{"@type":"Page","foobar":true}]},{"@context":"https:\/\/contao.org\/","@graph":[{"@type":"Page","foobar":false},{"@type":"Article","foobar":null}]}]</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => false,
+                ],
+                [
+                    '@type' => 'Article',
+                    'foobar' => null,
+                ],
+            ],
+        ];
+
+        yield 'Test with two valid json ld elements combined in one script tag and one extra json ld element in a separate script tag' => [
+            '<html><body><script type="application/ld+json">[{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":true},{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":false}]</script><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","foobar":null}</script></body></html>',
+            [
+                [
+                    '@type' => 'Page',
+                    'foobar' => true,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => false,
+                ],
+                [
+                    '@type' => 'Page',
+                    'foobar' => null,
                 ],
             ],
         ];
@@ -166,6 +226,23 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with no context filter provided' => [
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","title":"Welcome to the official Contao Demo Site","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
+            [
+                [
+                    '@context' => 'https://schema.contao.org/',
+                    '@type' => 'https://schema.contao.org/Page',
+                    'https://schema.contao.org/title' => 'Welcome to the official Contao Demo Site',
+                    'https://schema.contao.org/pageId' => 2,
+                    'https://schema.contao.org/noSearch' => false,
+                    'https://schema.contao.org/protected' => false,
+                    'https://schema.contao.org/groups' => [],
+                    'https://schema.contao.org/fePreview' => false,
+                ],
+            ],
+            '',
+        ];
+
+        yield 'Test with no context filter provided prefix context' => [
             '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"Welcome to the official Contao Demo Site","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
             [
                 [

@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Intl\Locales;
+use Contao\CoreBundle\Util\LocaleUtil;
+
 /**
  * Provide methods to handle file meta information.
  *
@@ -80,6 +83,11 @@ class MetaWizard extends Widget
 		{
 			if ($k != 'language')
 			{
+				if (!empty($v['link']))
+				{
+					$v['link'] = StringUtil::specialcharsUrl($v['link']);
+				}
+
 				$varInput[$k] = array_map('trim', $v);
 			}
 			else
@@ -111,11 +119,13 @@ class MetaWizard extends Widget
 		$this->import(BackendUser::class, 'User');
 
 		// Only show the root page languages (see #7112, #7667)
-		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
+		$objRootLangs = $this->Database->query("SELECT language FROM tl_page WHERE type='root'");
 		$existing = $objRootLangs->fetchEach('language');
 
 		foreach ($existing as $lang)
 		{
+			$lang = LocaleUtil::formatAsLocale($lang);
+
 			if (!isset($this->varValue[$lang]))
 			{
 				$this->varValue[$lang] = array();
@@ -128,7 +138,7 @@ class MetaWizard extends Widget
 			return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';
 		}
 
-		$languages = $this->getLanguages(true);
+		$languages = System::getContainer()->get(Locales::class)->getDisplayNames(array_keys($this->varValue));
 
 		// Add the existing entries
 		if (!empty($this->varValue))

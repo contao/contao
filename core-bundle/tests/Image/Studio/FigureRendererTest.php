@@ -22,7 +22,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
 use Webmozart\PathUtil\Path;
@@ -127,7 +126,6 @@ class FigureRendererTest extends TestCase
 
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
 
@@ -146,6 +144,34 @@ class FigureRendererTest extends TestCase
         $this->expectException(NoSuchPropertyException::class);
 
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
+    }
+
+    /**
+     * @dataProvider provideInvalidTemplates
+     */
+    public function testFailsWithInvalidTemplate(string $invalidTemplate): void
+    {
+        $figureRenderer = $this->getFigureRenderer();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches("/Invalid Contao template name '.*'\\./");
+
+        $figureRenderer->render(1, null, [], $invalidTemplate);
+    }
+
+    public function provideInvalidTemplates(): \Generator
+    {
+        yield 'not treated as Twig template, has extension' => [
+            'foo.twig',
+        ];
+
+        yield 'contains slashes' => [
+            '/some/path/foo',
+        ];
+
+        yield 'contains whitespaces' => [
+            'f oo',
+        ];
     }
 
     public function testReturnsNullIfTheResourceDoesNotExist(): void

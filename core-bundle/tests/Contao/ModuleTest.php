@@ -115,9 +115,9 @@ class ModuleTest extends ContaoTestCase
             {
             }
 
-            public function execute()
+            public function execute(): ?array
             {
-                return static::getPublishedSubpagesWithoutGuestsByPid(1);
+                return self::getPublishedSubpagesByPid(1);
             }
         };
 

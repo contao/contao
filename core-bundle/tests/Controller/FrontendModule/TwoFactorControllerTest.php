@@ -47,7 +47,6 @@ class TwoFactorControllerTest extends TestCase
     public function testReturnsEmptyResponseIfTheUserIsNotFullyAuthenticated(): void
     {
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper()
@@ -70,7 +69,6 @@ class TwoFactorControllerTest extends TestCase
         $user = $this->createMock(BackendUser::class);
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -95,7 +93,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '1';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -122,7 +119,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -150,7 +146,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '1';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -197,7 +192,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '1';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -230,7 +224,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
             $this->mockSecurityHelper($user, true)
@@ -262,7 +255,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator($user, false),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -301,7 +293,6 @@ class TwoFactorControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator($user, true),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -337,7 +328,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '1';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -366,7 +356,6 @@ class TwoFactorControllerTest extends TestCase
         $user->useTwoFactor = '1';
 
         $container = $this->getContainerWithFrameworkTemplate(
-            'mod_two_factor',
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
             $this->mockSecurityHelper($user, true)
@@ -476,7 +465,7 @@ class TwoFactorControllerTest extends TestCase
         return $page;
     }
 
-    private function getContainerWithFrameworkTemplate(string $templateName, Authenticator $authenticator, AuthenticationUtils $authenticationUtils, Security $security): ContainerBuilder
+    private function getContainerWithFrameworkTemplate(Authenticator $authenticator, AuthenticationUtils $authenticationUtils, Security $security): ContainerBuilder
     {
         $template = $this->createMock(FrontendTemplate::class);
         $template
@@ -493,7 +482,7 @@ class TwoFactorControllerTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
         $framework
             ->method('createInstance')
-            ->with(FrontendTemplate::class, [$templateName])
+            ->with(FrontendTemplate::class, ['mod_two_factor'])
             ->willReturn($template)
         ;
 

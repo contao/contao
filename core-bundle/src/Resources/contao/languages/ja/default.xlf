@@ -157,10 +157,6 @@
         <source>Your username and password must not be the same!</source>
         <target>ユーザー名とパスワードは同一にはできません。</target>
       </trans-unit>
-      <trans-unit id="ERR.passwordMatch">
-        <source>The passwords did not match!</source>
-        <target>パスワードが一致しませんでした。</target>
-      </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
         <target>このアカウントはロックされています。%d分後に再びログインできるようになります。</target>
@@ -1089,10 +1085,6 @@
         <source>Open the link in a new browser window.</source>
         <target>ブラウザーの新しいウィンドウでリンクを開きます。</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1293,6 +1285,10 @@
         <source>Caption</source>
         <target>キャプション</target>
       </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+        <target>ライセンス</target>
+      </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
         <target>題名</target>
@@ -1478,12 +1474,20 @@
         <target>パスワードを入力してください。</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>パスワードの再入力</target>
+        <source>Confirm password</source>
+        <target>パスワードの確認</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
         <target>確認のためにパスワードを再度入力してください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+        <target>パスワードを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
+        <target>パスワードを非表示</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2078,8 +2082,8 @@
         <target>保護した状態</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>guests only</source>
-        <target>ゲストだけに表示</target>
+        <source>Guests</source>
+        <target>ゲスト</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2637,6 +2641,10 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>テーマをインポートする権限を持ったユーザーグループがあります。テーマには任意のテンプレートを含めることができ、テンプレートはPHPファイルなので、これらのグループは暗黙の内にシステム全体を制御できます!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>フロントエンドモジュールの「リスティング」と、その&quot;list_*&quot;の項目にアクセス権のあるユーザーグループが存在します。これらには任意のSQLの問い合わせを含めることができるため、これらのグループのユーザーは暗黙の内にシステム全体に渡る制御権を持っています!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>有効</target>
@@ -2656,6 +2664,14 @@
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
         <target>Google検索の結果のメタデータをプレビューできます。他の検索エンジンでは、さらに長いテキストを表示したり、異なる位置で切り詰めるかもしれません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.0">
+        <source>Number of items</source>
+        <target>項目の数</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.1">
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>項目の総数を制限できます。0にするとすべて表示します。</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>

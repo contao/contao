@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
-        <target>گونه‌ی عنصر</target>
+        <target>نوع المان</target>
       </trans-unit>
       <trans-unit id="tl_content.type.1">
         <source>Please choose the type of content element.</source>
-        <target>لطفا گونه‌ی عنصر را انتخاب نمایید.</target>
+        <target>لطفا نوع المان را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_content.headline.1">
         <source>Here you can add a headline to the content element.</source>
-        <target>اینجا می‌توانید عنوان اصلی را به عنصر محتوا اضافه کنید.</target>
+        <target>اینجا می‌توانید عنوان اصلی را به المان محتوا اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_content.addImage.1">
         <source>Add an image to the content element.</source>
-        <target>افزودن تصویر به عنصر محتوا.</target>
+        <target>افزودن تصویر به المان محتوا.</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>به جای باز کردن کادر دانلود، پرونده را در مرورگر نمایش دهید.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
@@ -130,11 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_content.listtype.0">
         <source>List type</source>
-        <target>گونه‌ی فهرست</target>
+        <target>نوع فهرست</target>
       </trans-unit>
       <trans-unit id="tl_content.listtype.1">
         <source>Please choose the type of list.</source>
-        <target>لطفا گونه‌ی فهرست را انتخاب نمایید.</target>
+        <target>لطفا نوع فهرست را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.listitems.0">
         <source>List items</source>
@@ -178,7 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
-        <target>استفاده از سربرگ ردیف</target>
+        <target>استفاده از سربرگ‌های ردیف</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.1">
         <source>Define the left column as row header.</source>
@@ -214,7 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooType.1">
         <source>Please select the operation mode of the accordion element.</source>
-        <target>لطفا حالت فرایند عنصر آکاردیونی را انتخاب نمایید.</target>
+        <target>لطفا حالت فرایند المان آکاردیونی را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStart.0">
         <source>Wrapper start</source>
@@ -222,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooStart.1">
         <source>Marks the beginning of an accordion pane that spans several content elements.</source>
-        <target>مشخص کردن شروع قطعه آکاردیونی که شامل چندین عنصر محتوایی است.</target>
+        <target>مشخص کردن شروع قطعه آکاردیونی که شامل چندین المان محتوایی است.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStop.0">
         <source>Wrapper stop</source>
@@ -230,11 +231,11 @@
       </trans-unit>
       <trans-unit id="tl_content.mooStop.1">
         <source>Marks the end of an accordion pane that spans several content elements.</source>
-        <target>مشخص کردن پایان قطعه آکاردیونی که شامل چندین عنصر محتوایی است.</target>
+        <target>مشخص کردن پایان قطعه آکاردیونی که شامل چندین المان محتوایی است.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooSingle.0">
         <source>Single element</source>
-        <target>عنصر تکی</target>
+        <target>المان تکی</target>
       </trans-unit>
       <trans-unit id="tl_content.mooSingle.1">
         <source>Behaves like a single text element that is inside an accordion pane.</source>
@@ -258,7 +259,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooClasses.0">
         <source>Element classes</source>
-        <target>کلاس‌های عنصر</target>
+        <target>کلاس‌های المان</target>
       </trans-unit>
       <trans-unit id="tl_content.mooClasses.1">
         <source>Leave blank to use the default classes or enter a custom toggler and accordion class.</source>
@@ -287,6 +288,22 @@
       <trans-unit id="tl_content.code.1">
         <source>Note that the code will not be executed. Use F11 to toggle the fullscreen mode if you are using the code editor.</source>
         <target>توجه کنید که کد نباید اجراء شود.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.0">
+        <source>Markdown source</source>
+        <target>منبع Markdown</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.1">
+        <source>Please choose the Markdown source.</source>
+        <target>لطفا منبع Markdown را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceText">
+        <source>Text</source>
+        <target>متن</target>
+      </trans-unit>
+      <trans-unit id="tl_content.markdownSource.sourceFile">
+        <source>File</source>
+        <target>پرونده</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -357,14 +374,6 @@
       <trans-unit id="tl_content.perPage.1">
         <source>The number of items per page. Set to 0 to disable pagination.</source>
         <target>تعداد موارد در هر برگه. 0 را برای از کار انداختن برگه‌بندی انتخاب کنید.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>تعداد کل تصاویر</target>
-      </trans-unit>
-      <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>اینجا می‌توانید تعدادکل تصاویر را محدود کنید. صفر برای نمایش همه.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -440,6 +449,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.1">
         <source>Here you can select the player options.</source>
+        <target>اینجا می‌توانید تنظیمات پلیر را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.0">
         <source>Preloading</source>
@@ -478,6 +488,7 @@
       </trans-unit>
       <trans-unit id="tl_content.splashImage.0">
         <source>Use a splash image</source>
+        <target>از تصویر اسپلش استفاده کنید</target>
       </trans-unit>
       <trans-unit id="tl_content.splashImage.1">
         <source>Only load the video after the user has clicked on the splash image.</source>
@@ -523,11 +534,11 @@
       </trans-unit>
       <trans-unit id="tl_content.cteAlias.0">
         <source>Referenced element</source>
-        <target>عنصر ارجاعی</target>
+        <target>المان ارجاعی</target>
       </trans-unit>
       <trans-unit id="tl_content.cteAlias.1">
         <source>Please choose the content element you want to insert.</source>
-        <target>لطفا عنصر محتوایی را که می‌خواهید درج نمایید را انتخاب نمایید.</target>
+        <target>لطفا المان محتوایی را که می‌خواهید درج نمایید را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_content.articleAlias.0">
         <source>Referenced article</source>
@@ -563,11 +574,11 @@
       </trans-unit>
       <trans-unit id="tl_content.protected.0">
         <source>Protect element</source>
-        <target>حفاظت از عنصر</target>
+        <target>حفاظت از المان</target>
       </trans-unit>
       <trans-unit id="tl_content.protected.1">
         <source>Show the content element to certain member groups only.</source>
-        <target>نمایش عنصر محتوا فقط برای گروه‌های اعضاء خاص.</target>
+        <target>نمایش المان محتوا فقط برای گروه‌های اعضاء خاص.</target>
       </trans-unit>
       <trans-unit id="tl_content.groups.0">
         <source>Allowed member groups</source>
@@ -583,7 +594,7 @@
       </trans-unit>
       <trans-unit id="tl_content.guests.1">
         <source>Hide the content element if a member is logged in.</source>
-        <target>پنهان کردن عنصر محتوا اگر عضوی وارد شده باشد.</target>
+        <target>پنهان کردن المان محتوا اگر عضوی وارد شده باشد.</target>
       </trans-unit>
       <trans-unit id="tl_content.cssID.0">
         <source>CSS ID/class</source>
@@ -599,7 +610,7 @@
       </trans-unit>
       <trans-unit id="tl_content.invisible.1">
         <source>Hide the element on the website.</source>
-        <target>پنهان کردن عنصر در وب‌سایت.</target>
+        <target>پنهان کردن المان در وب‌سایت.</target>
       </trans-unit>
       <trans-unit id="tl_content.start.0">
         <source>Show from</source>
@@ -607,6 +618,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید المان قبل از تاریخ/ساعت مشخصی در وب‌سایت نمایش داده نشود اینجا می‌توانید وارد کنید. درغیراین‌صورت خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -617,7 +629,7 @@
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
-        <target>گونه‌ی عنصر</target>
+        <target>نوع المان</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -756,15 +768,18 @@
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
+        <target>پخش خطی (بدون حالت تمام صفحه)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
+        <target>فراداده (فقط فراداده‌ها را پیش‌بارگذاری کنید)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.none">
         <source>None (do not preload anything)</source>
+        <target>هیچ (هیچ چیزی پیش‌بارگذاری نشود)</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_autoplay">
         <source>Autoplay</source>
@@ -784,6 +799,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
+        <target>از زبان برگه Contao استفاده کنید</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
@@ -795,9 +811,6 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
@@ -828,27 +841,27 @@
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
-        <target>ساخت عنصر محتوای جدید</target>
+        <target>ساخت المان محتوای جدید</target>
       </trans-unit>
       <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>نمایش جزئیات عنصر شناسه‌ی %s</target>
+        <target>نمایش جزئیات المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
-        <target>جابجایی عنصر شناسه‌ی %s</target>
+        <target>جابجایی المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>تکثیر عنصر شناسه‌ی %s</target>
+        <target>تکثیر المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
-        <target>حذف عنصر شناسه‌ی %s</target>
+        <target>حذف المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
-        <target>ویرایش عنصر شناسه‌ی %s</target>
+        <target>ویرایش المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editheader">
         <source>Edit the article settings</source>
@@ -864,7 +877,7 @@
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
-        <target>افزودن بعد از عنصر شناسه‌ی %s</target>
+        <target>افزودن بعد از المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
@@ -874,7 +887,7 @@
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
-        <target>ویرایش عنصر منبع شناسه‌ی %s</target>
+        <target>ویرایش المان منبع شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editarticle">
         <source>Edit article ID %s</source>

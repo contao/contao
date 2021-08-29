@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
-use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
@@ -32,8 +31,8 @@ class CombinerTest extends ContaoTestCase
 
         $fs = new Filesystem();
         $fs->mkdir(static::getTempDir().'/assets/css');
+        $fs->mkdir(static::getTempDir().'/public');
         $fs->mkdir(static::getTempDir().'/system/tmp');
-        $fs->mkdir(static::getTempDir().'/web');
     }
 
     protected function setUp(): void
@@ -49,19 +48,18 @@ class CombinerTest extends ContaoTestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->setParameter('contao.web_dir', $this->getTempDir().'/web');
+        $container->setParameter('contao.web_dir', $this->getTempDir().'/public');
         $container->set('contao.assets.assets_context', $context);
 
-        Config::set('debugMode', false);
         System::setContainer($container);
     }
 
     public function testCombinesCssFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');
-        $this->filesystem->dumpFile($this->getTempDir().'/web/file2.css', 'web/file2');
+        $this->filesystem->dumpFile($this->getTempDir().'/public/file2.css', 'public/file2');
         $this->filesystem->dumpFile($this->getTempDir().'/file3.css', 'file3');
-        $this->filesystem->dumpFile($this->getTempDir().'/web/file3.css', 'web/file3');
+        $this->filesystem->dumpFile($this->getTempDir().'/public/file3.css', 'public/file3');
 
         $mtime = filemtime($this->getTempDir().'/file1.css');
 
@@ -97,10 +95,10 @@ class CombinerTest extends ContaoTestCase
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combinedFile,
-            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\nweb/file2\n}\n@media screen{\nfile3\n}\n"
+            "file1 { background: url(\"../../foo.bar\") }\n@media screen{\npublic/file2\n}\n@media screen{\nfile3\n}\n"
         );
 
-        Config::set('debugMode', true);
+        System::getContainer()->setParameter('kernel.debug', true);
 
         $hash = substr(md5((string) $mtime), 0, 8);
 
@@ -117,16 +115,16 @@ class CombinerTest extends ContaoTestCase
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url(foo.bar) }
-test2 { background: url("foo.bar") }
-test3 { background: url('foo.bar') }
-EOF;
+            test1 { background: url(foo.bar) }
+            test2 { background: url("foo.bar") }
+            test3 { background: url('foo.bar') }
+            EOF;
 
         $expected = <<<'EOF'
-test1 { background: url(../../foo.bar) }
-test2 { background: url("../../foo.bar") }
-test3 { background: url('../../foo.bar') }
-EOF;
+            test1 { background: url(../../foo.bar) }
+            test2 { background: url("../../foo.bar") }
+            test3 { background: url('../../foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
@@ -141,42 +139,42 @@ EOF;
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url(foo.bar) }
-test2 { background: url("foo.bar") }
-test3 { background: url('foo.bar') }
-EOF;
+            test1 { background: url(foo.bar) }
+            test2 { background: url("foo.bar") }
+            test3 { background: url('foo.bar') }
+            EOF;
 
         $expected = <<<'EOF'
-test1 { background: url("../../\"test\"/foo.bar") }
-test2 { background: url("../../\"test\"/foo.bar") }
-test3 { background: url('../../"test"/foo.bar') }
-EOF;
+            test1 { background: url("../../\"test\"/foo.bar") }
+            test2 { background: url("../../\"test\"/foo.bar") }
+            test3 { background: url('../../"test"/foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/"test"/file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/"test"/file.css']])
         );
 
         $expected = <<<'EOF'
-test1 { background: url("../../'test'/foo.bar") }
-test2 { background: url("../../'test'/foo.bar") }
-test3 { background: url('../../\'test\'/foo.bar') }
-EOF;
+            test1 { background: url("../../'test'/foo.bar") }
+            test2 { background: url("../../'test'/foo.bar") }
+            test3 { background: url('../../\'test\'/foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => "web/'test'/file.css"]])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => "public/'test'/file.css"]])
         );
 
         $expected = <<<'EOF'
-test1 { background: url("../../(test)/foo.bar") }
-test2 { background: url("../../(test)/foo.bar") }
-test3 { background: url('../../(test)/foo.bar') }
-EOF;
+            test1 { background: url("../../(test)/foo.bar") }
+            test2 { background: url("../../(test)/foo.bar") }
+            test3 { background: url('../../(test)/foo.bar') }
+            EOF;
 
         $this->assertSame(
             $expected,
-            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'web/(test)/file.css']])
+            $method->invokeArgs($class->newInstance(), [$css, ['name' => 'public/(test)/file.css']])
         );
     }
 
@@ -187,9 +185,9 @@ EOF;
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
-test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
-EOF;
+            test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
+            test2 { background: url("data:image/svg+xml;utf8,<svg id='foo'></svg>") }
+            EOF;
 
         $this->assertSame(
             $css,
@@ -204,10 +202,10 @@ EOF;
         $method->setAccessible(true);
 
         $css = <<<'EOF'
-test1 { background: url('/path/to/file.jpg') }
-test2 { background: url(https://example.com/file.jpg) }
-test3 { background: url('#foo') }
-EOF;
+            test1 { background: url('/path/to/file.jpg') }
+            test2 { background: url(https://example.com/file.jpg) }
+            test3 { background: url('#foo') }
+            EOF;
 
         $this->assertSame(
             $css,
@@ -241,7 +239,7 @@ EOF;
             "body{color:red}\nbody{color:green}\n"
         );
 
-        Config::set('debugMode', true);
+        System::getContainer()->setParameter('kernel.debug', true);
 
         $hash1 = substr(md5((string) $mtime1), 0, 8);
         $hash2 = substr(md5((string) $mtime2), 0, 8);
@@ -255,10 +253,10 @@ EOF;
     public function testCombinesJsFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.js', 'file1();');
-        $this->filesystem->dumpFile($this->getTempDir().'/web/file2.js', 'file2();');
+        $this->filesystem->dumpFile($this->getTempDir().'/public/file2.js', 'file2();');
 
         $mtime1 = filemtime($this->getTempDir().'/file1.js');
-        $mtime2 = filemtime($this->getTempDir().'/web/file2.js');
+        $mtime2 = filemtime($this->getTempDir().'/public/file2.js');
 
         $combiner = new Combiner();
         $combiner->add('file1.js');
@@ -277,7 +275,7 @@ EOF;
         $this->assertRegExp('/^assets\/js\/file1\.js\,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
-        Config::set('debugMode', true);
+        System::getContainer()->setParameter('kernel.debug', true);
 
         $hash1 = substr(md5((string) $mtime1), 0, 8);
         $hash2 = substr(md5((string) $mtime2), 0, 8);

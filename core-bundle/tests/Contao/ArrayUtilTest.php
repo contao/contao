@@ -145,4 +145,40 @@ class ArrayUtilTest extends TestCase
             [0, 1, 2],
         ];
     }
+
+    public function testRecursiveKeySort(): void
+    {
+        $unsorted = [
+            'foo' => 'bar',
+            '@type' => 'foo',
+            '@id' => 'foo',
+            'nested' => [
+                'foo' => 'bar',
+                '@foo' => 'foo',
+                'bar' => [
+                    'baz' => 'bar',
+                    'ab' => 'yz',
+                ],
+            ],
+        ];
+
+        ArrayUtil::recursiveKeySort($unsorted);
+
+        $this->assertSame(
+            [
+                '@id' => 'foo',
+                '@type' => 'foo',
+                'foo' => 'bar',
+                'nested' => [
+                    '@foo' => 'foo',
+                    'bar' => [
+                        'ab' => 'yz',
+                        'baz' => 'bar',
+                    ],
+                    'foo' => 'bar',
+                ],
+            ],
+            $unsorted
+        );
+    }
 }

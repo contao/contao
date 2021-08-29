@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -66,14 +67,13 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyMceLanguage()
 	{
-		$lang = $GLOBALS['TL_LANGUAGE'];
+		$lang = LocaleUtil::formatAsLocale((string) $GLOBALS['TL_LANGUAGE']);
 
 		if (!$lang)
 		{
 			return 'en';
 		}
 
-		$lang = str_replace('-', '_', $lang);
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// The translation exists
@@ -169,7 +169,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTinyTemplates()
 	{
-		$strDir = Config::get('uploadPath') . '/tiny_templates';
+		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		if (!is_dir($projectDir . '/' . $strDir))
@@ -635,9 +635,13 @@ abstract class Backend extends Controller
 	 * @param boolean $blnIsXmlSitemap
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
 	 */
 	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
 	{
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Backend::findSearchablePages()" has been deprecated and will no longer work in Contao 5.0.');
+
 		// Since the publication status of a page is not inherited by its child
 		// pages, we have to use findByPid() instead of findPublishedByPid() and
 		// filter out unpublished pages in the foreach loop (see #2217)
@@ -659,8 +663,12 @@ abstract class Backend extends Controller
 		// Recursively walk through all subpages
 		foreach ($objPages as $objPage)
 		{
+			$objPage->loadDetails();
+
+			// PageModel->groups is an array after calling loadDetails()
+			// Cannot use security voters across firewall context (backend to frontend)
+			$indexProtected = (!$user && \in_array(-1, $objPage->groups)) || ($user && $user->isMemberOf($objPage->groups));
 			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
-			$indexProtected = $user && $user->isMemberOf(StringUtil::deserialize($objPage->groups));
 
 			// Searchable and not protected
 			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || $indexProtected))
@@ -750,7 +758,7 @@ abstract class Backend extends Controller
 		$objPage->loadDetails();
 
 		// Convert the language to a locale (see #5678)
-		$strLanguage = str_replace('-', '_', $objPage->rootLanguage);
+		$strLanguage = LocaleUtil::formatAsLocale($objPage->rootLanguage);
 
 		if (isset($arrMeta[$strLanguage]))
 		{
@@ -1010,8 +1018,8 @@ abstract class Backend extends Controller
 		}
 
 		$objUser  = BackendUser::getInstance();
-		$strPath  = Config::get('uploadPath');
-		$arrNodes = explode('/', preg_replace('/^' . preg_quote(Config::get('uploadPath'), '/') . '\//', '', $strNode));
+		$strPath  = System::getContainer()->getParameter('contao.upload_path');
+		$arrNodes = explode('/', preg_replace('/^' . preg_quote($strPath, '/') . '\//', '', $strNode));
 		$arrLinks = array();
 
 		// Add root link
@@ -1117,12 +1125,39 @@ abstract class Backend extends Controller
       Backend.openModalSelector({
         "id": "tl_listing",
         "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0]) . ',
-        "url": this.href + "&value=" + document.getElementById("ctrl_' . $inputName . '").value,
+        "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");
           $("ctrl_' . $inputName . '").fireEvent("change");
         }.bind(this)
       });
+    });
+  </script>';
+	}
+
+	/**
+	 * Generate the DCA toggle password wizard
+	 *
+	 * @param string $inputName
+	 *
+	 * @return string
+	 */
+	public static function getTogglePasswordWizard($inputName)
+	{
+		return ' ' . Image::getHtml('visible.svg', '', 'title="' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '" id="pw_' . $inputName . '"') . '
+  <script>
+    $("pw_' . $inputName . '").addEvent("click", function(e) {
+      e.preventDefault();
+      var el = $("ctrl_' . $inputName . '");
+      if (el.type == "password") {
+        el.type = "text";
+        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
+        this.src = this.src.replace("visible.svg", "visible_.svg");
+      } else {
+        el.type = "password";
+        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
+        this.src = this.src.replace("visible_.svg", "visible.svg");
+      }
     });
   </script>';
 	}
@@ -1136,7 +1171,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== 'false')
+		if (strpos($host, 'xn--') !== false)
 		{
 			$host = Idna::decode($host);
 		}
@@ -1290,7 +1325,7 @@ abstract class Backend extends Controller
 
 		if ($this->User->isAdmin)
 		{
-			return $this->doCreateFileList(Config::get('uploadPath'), -1, $strFilter);
+			return $this->doCreateFileList(System::getContainer()->getParameter('contao.upload_path'), -1, $strFilter);
 		}
 
 		$return = '';

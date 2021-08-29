@@ -17,7 +17,7 @@ use Doctrine\DBAL\Connection;
 
 class PageRegistry
 {
-    private const DISABLE_CONTENT_COMPOSITION = ['root', 'redirect', 'forward', 'logout'];
+    private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
     /**
      * @var Connection

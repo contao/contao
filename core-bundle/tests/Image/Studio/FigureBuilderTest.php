@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -25,11 +27,12 @@ use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Webmozart\PathUtil\Path;
 
 class FigureBuilderTest extends TestCase
@@ -325,6 +328,61 @@ class FigureBuilderTest extends TestCase
         $this->getFigureBuilder($studio, $framework)->from($identifier)->build();
     }
 
+    public function testFromNullFails(): void
+    {
+        $figureBuilder = $this->getFigureBuilder();
+        $figureBuilder->from(null);
+
+        $exception = $figureBuilder->getLastException();
+
+        $this->assertInstanceOf(InvalidResourceException::class, $exception);
+        $this->assertSame("The defined resource is 'null'.", $exception->getMessage());
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        $this->expectExceptionObject($exception);
+
+        $figureBuilder->build();
+    }
+
+    /**
+     * @dataProvider provideInvalidTypes
+     */
+    public function testFromInvalidTypeThrowsTypeError($invalidType, string $typeString): void
+    {
+        $framework = $this->mockContaoFramework([
+            Validator::class => new Adapter(Validator::class),
+        ]);
+
+        $figureBuilder = $this->getFigureBuilder(null, $framework);
+
+        $this->expectException(\TypeError::class);
+
+        $this->expectExceptionMessage(sprintf(
+            'Contao\CoreBundle\Image\Studio\FigureBuilder::from(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given',
+            $typeString
+        ));
+
+        $figureBuilder->from($invalidType);
+    }
+
+    public function provideInvalidTypes(): \Generator
+    {
+        yield 'true' => [
+            true,
+            'boolean',
+        ];
+
+        yield 'false' => [
+            false,
+            'boolean',
+        ];
+
+        yield 'object' => [
+            new Metadata([]),
+            Metadata::class,
+        ];
+    }
+
     public function provideMixedIdentifiers(): \Generator
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
@@ -515,10 +573,7 @@ class FigureBuilderTest extends TestCase
      */
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
     {
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('request_stack', $this->createMock(RequestStack::class));
-
-        System::setContainer($container);
+        System::setContainer($this->getContainerWithContaoConfiguration());
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
@@ -693,6 +748,122 @@ class FigureBuilderTest extends TestCase
 
         // Note: $GLOBALS['objPage'] is not set at this point
         $this->assertSame($emptyMetadata, $figure->getMetadata()->all());
+    }
+
+    /**
+     * @dataProvider provideUuidMetadataAutoFetchCases
+     */
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
+    {
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
+        $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];
+
+        /** @var PageModel&MockObject $currentPage */
+        $currentPage = $this->mockClassWithProperties(PageModel::class);
+        $currentPage->language = 'en';
+        $currentPage->rootFallbackLanguage = 'de';
+
+        $GLOBALS['objPage'] = $currentPage;
+
+        [$absoluteFilePath] = $this->getTestFilePaths();
+
+        $filesModelAdapter = $this->mockAdapter(['getMetaFields', 'findByPath']);
+        $filesModelAdapter
+            ->method('getMetaFields')
+            ->willReturn(array_keys($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']))
+        ;
+
+        $filesModelAdapter
+            ->method('findByPath')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            FilesModel::class => $filesModelAdapter,
+            Validator::class => new Adapter(Validator::class),
+        ]);
+
+        $studio = $this->getStudioMockForImage($absoluteFilePath);
+
+        $figure = $this->getFigureBuilder($studio, $framework)
+            ->from($resource)
+            ->setMetadata($metadataToSet)
+            ->setLocale($locale)
+            ->build()
+        ;
+
+        $this->assertSame($expectedMetadata, $figure->getMetadata()->all());
+
+        unset($GLOBALS['TL_DCA'], $GLOBALS['objPage']);
+    }
+
+    public function provideUuidMetadataAutoFetchCases(): \Generator
+    {
+        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+
+        $getFilesModel = static function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+            /** @var FilesModel $filesModel */
+            $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
+
+            $filesModel->setRow([
+                'type' => 'file',
+                'path' => $relativeFilePath,
+                'meta' => serialize($metaData),
+                'uuid' => $uuid,
+            ]);
+
+            return $filesModel;
+        };
+
+        yield 'explicitly set metadata without files model' => [
+            $absoluteFilePath,
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar'],
+        ];
+
+        yield 'explicitly set metadata with files model (no uuid)' => [
+            $getFilesModel(['foobar' => 'baz'], null),
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar'],
+        ];
+
+        yield 'explicitly set metadata with files model (ASCII uuid)' => [
+            $getFilesModel(['foobar' => 'baz'], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
+        ];
+
+        yield 'explicitly set metadata with files model (binary uuid)' => [
+            $getFilesModel(['foobar' => 'baz'], StringUtil::uuidToBin('beefaff3-434a-106e-8ff0-f0b59095e5a1')),
+            new Metadata(['foo' => 'bar']),
+            'de',
+            ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
+        ];
+
+        yield 'metadata from files model in a matching locale' => [
+            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            null,
+            'en',
+            [
+                Metadata::VALUE_TITLE => '',
+                'foo' => 'bar',
+                Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1',
+            ],
+        ];
+
+        yield 'default metadata from meta fields' => [
+            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            null,
+            'es',
+            [
+                Metadata::VALUE_TITLE => '',
+                Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1',
+            ],
+        ];
     }
 
     public function testSetLinkAttribute(): void
@@ -1040,6 +1211,32 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($lightboxImageResult, $figure2->getLightbox());
     }
 
+    public function testDispatchesDefineMetadataEvent(): void
+    {
+        [$absoluteFilePath] = $this->getTestFilePaths();
+
+        $studio = $this->getStudioMockForImage($absoluteFilePath);
+
+        $eventDispatcher = new EventDispatcher();
+
+        $eventDispatcher->addListener(
+            FileMetadataEvent::class,
+            function (FileMetadataEvent $event): void {
+                $this->assertSame([Metadata::VALUE_TITLE => 'foo'], $event->getMetadata()->all());
+
+                $event->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'bar']));
+            }
+        );
+
+        $figure = $this->getFigureBuilder($studio, null, $eventDispatcher)
+            ->fromPath($absoluteFilePath, false)
+            ->setMetadata(new Metadata([Metadata::VALUE_TITLE => 'foo']))
+            ->build()
+        ;
+
+        $this->assertSame([Metadata::VALUE_TITLE => 'bar'], $figure->getMetadata()->all());
+    }
+
     private function getFigure(\Closure $configureBuilderCallback = null, Studio $studio = null): Figure
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
@@ -1097,7 +1294,7 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null): FigureBuilder
+    private function getFigureBuilder(Studio $studio = null, ContaoFramework $framework = null, EventDispatcher $eventDispatcher = null): FigureBuilder
     {
         [, , $projectDir, $uploadPath] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();
@@ -1109,6 +1306,7 @@ class FigureBuilderTest extends TestCase
             ->willReturnMap([
                 [Studio::class, $studio],
                 ['contao.framework', $framework],
+                ['event_dispatcher', $eventDispatcher ?? new EventDispatcher()],
             ])
         ;
 

@@ -62,7 +62,7 @@ services:
             - '%kernel.project_dir%'
             - '@database_connection'
             - '@contao.framework'
-            - '%contao.locales%'
+            - '@Contao\CoreBundle\Intl\Locales'
         public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
@@ -93,7 +93,7 @@ services:
             - '@security.helper'
             - '@twig'
             - '@router'
-            - '@contao.csrf.token_manager'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
         tags:
             - controller.service_arguments
@@ -102,11 +102,15 @@ services:
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
         # TODO: re-enable this as soon as we are on Symfony 5 only
-        #deprecated:
-        #    package: contao/core-bundle
-        #    version: 4.9
-        #    message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
+        # deprecated:
+        #     package: contao/core-bundle
+        #     version: 4.9
+        #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
+
+    Contao\CoreBundle\Controller\ContentElement\MarkdownController:
+        tags:
+            - { name: contao.content_element, category: texts }
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
@@ -119,7 +123,6 @@ services:
     Contao\CoreBundle\Controller\FrontendController:
         tags:
             - controller.service_arguments
-            - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -148,10 +151,10 @@ services:
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
         # TODO: re-enable this as soon as we are on Symfony 5 only
-        #deprecated:
-        #    package: contao/core-bundle
-        #    version: 4.9
-        #    message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
+        # deprecated:
+        #     package: contao/core-bundle
+        #     version: 4.9
+        #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
         public: true
 
     Contao\CoreBundle\Controller\InsertTagsController:
@@ -164,10 +167,10 @@ services:
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
         # TODO: re-enable this as soon as we are on Symfony 5 only
-        #deprecated:
-        #    package: contao/core-bundle
-        #    version: 4.9
-        #    message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
+        # deprecated:
+        #     package: contao/core-bundle
+        #     version: 4.9
+        #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
         public: true
 
     Contao\CoreBundle\Controller\RobotsTxtController:
@@ -178,6 +181,8 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\SitemapController:
+        arguments:
+            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
         tags:
             - controller.service_arguments
             - container.service_subscriber
@@ -229,11 +234,23 @@ services:
         arguments:
             - '@contao.framework'
 
-    contao.csrf.token_manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+    Contao\CoreBundle\Cron\PurgeExpiredDataCron:
         arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
+    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
+        arguments:
+            - '@request_stack'
+            - '%contao.csrf_cookie_prefix%'
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
+        public: true
+
+    # Backwards compatibility
+    contao.csrf.token_manager:
+        alias: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Csrf\ContaoCsrfTokenManager" instead.
         public: true
 
     contao.csrf.token_storage:
@@ -395,6 +412,28 @@ services:
         tags:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
+
+    Contao\CoreBundle\Intl\Countries:
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - '@contao.framework'
+            - ~ # Default countries from IntlInstalledLocalesAndCountriesPass
+            - '%contao.intl.countries%'
+            - '%kernel.default_locale%'
+        public: true
+
+    Contao\CoreBundle\Intl\Locales:
+        arguments:
+            - '@translator'
+            - '@request_stack'
+            - '@contao.framework'
+            - ~ # Default locales from IntlInstalledLocalesAndCountriesPass
+            - ~ # Default enabled locales from IntlInstalledLocalesAndCountriesPass
+            - '%contao.intl.locales%'
+            - '%contao.intl.enabled_locales%'
+            - '%kernel.default_locale%'
+        public: true
 
     Contao\CoreBundle\Mailer\AvailableTransports:
         arguments:
@@ -654,6 +693,18 @@ services:
             - '@contao.routing.frontend_matcher'
         public: true
 
+    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
+        arguments:
+            - '@request_stack'
+        public: true
+
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
+        arguments:
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
+            - '@event_dispatcher'
+            - '@contao.security.token_checker'
+        public: true
+
     contao.search.indexer.default:
         class: Contao\CoreBundle\Search\Indexer\DefaultIndexer
         arguments:
@@ -808,6 +859,8 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Security\Voter\MemberGroupVoter: ~
+
     contao.session.contao_backend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:
@@ -853,6 +906,7 @@ services:
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.translation.translator.data_collector:
         class: Contao\CoreBundle\Translation\DataCollectorTranslator
@@ -862,16 +916,43 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
-    Contao\CoreBundle\Twig\Extension\ImageExtension: ~
-
-    Contao\CoreBundle\Twig\Extension\TextExtension: ~
-
-    Contao\CoreBundle\Twig\FailTolerantFilesystemLoader:
-        decorates: twig.loader.native_filesystem
+    Contao\CoreBundle\Twig\Extension\ContaoExtension:
         arguments:
-            - '@Contao\CoreBundle\Twig\FailTolerantFilesystemLoader.inner'
-            - '@cache.system'
+            - '@twig'
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+        public: true
+
+    Contao\CoreBundle\Twig\Loader\TemplateLocator:
+        arguments:
             - '%kernel.project_dir%'
+            - '%kernel.bundles%'
+            - '%kernel.bundles_metadata%'
+
+    Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
+        arguments:
+            - []
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 1 }
+
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
+        arguments:
+            - '@cache.system'
+            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '%kernel.project_dir%'
+        tags:
+            - { name: twig.loader, priority: 2 }
+            - { name: kernel.reset, method: reset }
+
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
+        arguments:
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '%kernel.project_dir%'
+            - '%kernel.environment%'
+        tags:
+            - { name: kernel.cache_warmer }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
@@ -881,14 +962,17 @@ services:
         arguments:
             - '@contao.framework'
 
-    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
-
-    contao.twig.template_extension:
-        class: Contao\CoreBundle\Twig\Extension\ContaoTemplateExtension
+    Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:
             - '@request_stack'
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
+
+    Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
+
+    Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime:
+        arguments:
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
 
     Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:

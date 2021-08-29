@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
-        <target>گونه‌ی پرونده %s برای بارگزاری مجاز نمی‌باشد!</target>
+        <target>نوع پرونده %s برای بارگزاری مجاز نمی‌باشد!</target>
       </trans-unit>
       <trans-unit id="ERR.filepartial">
         <source>File %s was only partially uploaded!</source>
@@ -156,10 +156,6 @@
       <trans-unit id="ERR.passwordName">
         <source>Your username and password must not be the same!</source>
         <target>نام کاربری و گذرواژه‌تان نباید یکسان باشند!</target>
-      </trans-unit>
-      <trans-unit id="ERR.passwordMatch">
-        <source>The passwords did not match!</source>
-        <target>گذرواژه و تکرار آن یکسان نیستند!</target>
       </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
@@ -259,6 +255,7 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>هیچ کدام از برگه‌های ریشه وب‌سایت فعال بدون تنظیمات DNS مشخص، تنظیمات گزینه‌ی زبان پشتیبان را دارد.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
@@ -325,15 +322,19 @@
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>لطفا همه ماژول‌ها را به یک ستون اختصاص دهید!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidHttpUrl">
         <source>Please enter an absolute URL starting with https:// or http://!</source>
+        <target>لطفا یک آدرس URL کامل که با https:// یا http:// شروع می‌شود وارد کنید!</target>
       </trans-unit>
       <trans-unit id="ERR.customRgxp">
         <source>Please enter a value that matches %s!</source>
+        <target>لطفا یه مقدار که با %s هم‌خوانی داشته باشد وارد کنید!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidCustomRgxp">
         <source>Invalid custom regular expression!</source>
+        <target>عبارت باقاعده اختصاصی نامعتبر!</target>
       </trans-unit>
       <trans-unit id="ERR.applicationCache">
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
@@ -368,7 +369,7 @@
       </trans-unit>
       <trans-unit id="CTE.text.1">
         <source>Generates a rich text element.</source>
-        <target>یک عنصر متنی غنی تولید می‌نماید.</target>
+        <target>یک المان متنی غنی تولید می‌نماید.</target>
       </trans-unit>
       <trans-unit id="CTE.html.0">
         <source>HTML</source>
@@ -416,11 +417,11 @@
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
         <source>Single element</source>
-        <target>عنصر تکی</target>
+        <target>المان تکی</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
-        <target>یک عنصر آکوردئون تکی تولید می‌نماید.</target>
+        <target>یک المان آکوردئون تکی تولید می‌نماید.</target>
       </trans-unit>
       <trans-unit id="CTE.code.0">
         <source>Code</source>
@@ -460,7 +461,7 @@
       </trans-unit>
       <trans-unit id="CTE.links">
         <source>Link elements</source>
-        <target>عنصر‌های پیوندی</target>
+        <target>المان‌های پیوندی</target>
       </trans-unit>
       <trans-unit id="CTE.hyperlink.0">
         <source>Hyperlink</source>
@@ -480,7 +481,7 @@
       </trans-unit>
       <trans-unit id="CTE.media">
         <source>Media elements</source>
-        <target>عنصر‌های رسانه‌ای</target>
+        <target>المان‌های رسانه‌ای</target>
       </trans-unit>
       <trans-unit id="CTE.image.0">
         <source>Image</source>
@@ -524,7 +525,7 @@
       </trans-unit>
       <trans-unit id="CTE.files">
         <source>File elements</source>
-        <target>عنصر‌های پرونده‌ای</target>
+        <target>المان‌های پرونده‌ای</target>
       </trans-unit>
       <trans-unit id="CTE.download.0">
         <source>Download</source>
@@ -544,7 +545,7 @@
       </trans-unit>
       <trans-unit id="CTE.includes">
         <source>Include elements</source>
-        <target>عنصر‌های گنجانیدنی</target>
+        <target>المان‌های گنجانیدنی</target>
       </trans-unit>
       <trans-unit id="CTE.article.0">
         <source>Article</source>
@@ -556,11 +557,11 @@
       </trans-unit>
       <trans-unit id="CTE.alias.0">
         <source>Content element</source>
-        <target>نام عنصر</target>
+        <target>نام المان</target>
       </trans-unit>
       <trans-unit id="CTE.alias.1">
         <source>Includes another content element.</source>
-        <target>عنصر محتوایی دیگری را می‌گنجاند.</target>
+        <target>المان محتوایی دیگری را می‌گنجاند.</target>
       </trans-unit>
       <trans-unit id="CTE.form.0">
         <source>Form</source>
@@ -608,6 +609,7 @@
       </trans-unit>
       <trans-unit id="FFL.fieldsetStart.1">
         <source>The opening part of a fieldset with an optional legend.</source>
+        <target>قسمت گشایش مجموعه فیلد با یک شرح اختیاری.</target>
       </trans-unit>
       <trans-unit id="FFL.fieldsetStop.0">
         <source>Fieldset stop</source>
@@ -710,7 +712,7 @@
       </trans-unit>
       <trans-unit id="PTY.regular.1">
         <source>A regular page contains articles and content elements. It is the default page type.</source>
-        <target>برگه عادی شامل مقاله‌ها و عنصرهای محتوایی می‌باشد. این گونه برگه پیش‌فرض است.</target>
+        <target>برگه عادی شامل مقاله‌ها و عنصرهای محتوایی می‌باشد. این نوع برگه پیش‌فرض است.</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
@@ -718,7 +720,7 @@
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
         <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
-        <target>اين گونه برگه به طور خودکار بازدیدکنندگان را به يک نشانی خارجی باز می‌گرداند. این مانند یک پیوند عمل می‌کند.</target>
+        <target>اين نوع برگه به طور خودکار بازدیدکنندگان را به يک نشانی خارجی باز می‌گرداند. این مانند یک پیوند عمل می‌کند.</target>
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
@@ -726,7 +728,7 @@
       </trans-unit>
       <trans-unit id="PTY.forward.1">
         <source>This type of page automatically forwards visitors to another page within the site structure.</source>
-        <target>این گونه برگه به طور خودکار بازدیدکنندگان را به برگه‌ای داخل ساختار سایت منتقل می‌نماید.</target>
+        <target>این نوع برگه به طور خودکار بازدیدکنندگان را به برگه‌ای داخل ساختار سایت منتقل می‌نماید.</target>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
@@ -734,7 +736,7 @@
       </trans-unit>
       <trans-unit id="PTY.root.1">
         <source>This type of page marks the starting point of a new website within the site structure.</source>
-        <target>این گونه برگه نقطه شروع وب‌سایت جدید را داخل ساختار سایت مشخص می‌نماید.</target>
+        <target>این نوع برگه نقطه شروع وب‌سایت جدید را داخل ساختار سایت مشخص می‌نماید.</target>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -1073,10 +1075,6 @@
         <source>Open the link in a new browser window.</source>
         <target>پیوند در پنجره جدید مرورگر باز می‌گردد.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>rtl</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1127,19 +1125,19 @@
       </trans-unit>
       <trans-unit id="MSC.lw_copy">
         <source>Duplicate the element</source>
-        <target>تکثیر عنصر</target>
+        <target>تکثیر المان</target>
       </trans-unit>
       <trans-unit id="MSC.lw_up">
         <source>Move the element one position up</source>
-        <target>جابجایی عنصر یک جایگاه به بالا</target>
+        <target>جابجایی المان یک جایگاه به بالا</target>
       </trans-unit>
       <trans-unit id="MSC.lw_down">
         <source>Move the element one position down</source>
-        <target>جابجایی عنصر یک جایگاه به پایین</target>
+        <target>جابجایی المان یک جایگاه به پایین</target>
       </trans-unit>
       <trans-unit id="MSC.lw_delete">
         <source>Delete the element</source>
-        <target>حذف عنصر</target>
+        <target>حذف المان</target>
       </trans-unit>
       <trans-unit id="MSC.ow_import.0">
         <source>CSV import</source>
@@ -1276,6 +1274,10 @@
       <trans-unit id="MSC.aw_caption">
         <source>Caption</source>
         <target>زیرنویس</target>
+      </trans-unit>
+      <trans-unit id="MSC.aw_license">
+        <source>License</source>
+        <target>مجوز</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1462,12 +1464,20 @@
         <target>لطفا گذرواژه را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>تایید</target>
+        <source>Confirm password</source>
+        <target>تایید گذرواژه</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
         <target>لطفا گذرواژه را تایید کنید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.showPassword">
+        <source>Show password</source>
+        <target>نمایش گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="MSC.hidePassword">
+        <source>Hide password</source>
+        <target>پنهان کردن گذرواژه</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2060,8 +2070,8 @@
         <target>حفاظت شده</target>
       </trans-unit>
       <trans-unit id="MSC.guests">
-        <source>guests only</source>
-        <target>فقط مهمانان</target>
+        <source>Guests</source>
+        <target>میهمان‌ها</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2212,7 +2222,7 @@
       </trans-unit>
       <trans-unit id="MSC.editElement">
         <source>Edit the element</source>
-        <target>ویرایش عنصر</target>
+        <target>ویرایش المان</target>
       </trans-unit>
       <trans-unit id="MSC.table">
         <source>Table</source>
@@ -2240,7 +2250,7 @@
       </trans-unit>
       <trans-unit id="MSC.selectNewPosition">
         <source>Next, please choose the (new) position of the element</source>
-        <target>سپس، جایگاه (جدید) عنصر را انتخاب نمایید</target>
+        <target>سپس، جایگاه (جدید) المان را انتخاب نمایید</target>
       </trans-unit>
       <trans-unit id="MSC.go">
         <source>Go</source>
@@ -2567,6 +2577,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>اگر نمی‌توانید کد QR را اسکن کنید، در عوض این کلید را وارد کنید:</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
@@ -2605,6 +2616,9 @@
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>فعال</target>
@@ -2623,6 +2637,13 @@
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
       </trans-unit>
+      <trans-unit id="MSC.numberOfItems.0">
+        <source>Number of items</source>
+        <target>تعداد موردها</target>
+      </trans-unit>
+      <trans-unit id="MSC.numberOfItems.1">
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+      </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
         <target>پاک کردن ابزارهای مورد اعتماد</target>
@@ -2633,6 +2654,7 @@
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>در حال حاضر هیچ ابزار تاییده‌شده‌ای وجود ندارد.</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
@@ -2659,6 +2681,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>گزینه نامعلوم: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
@@ -2742,7 +2765,7 @@
       </trans-unit>
       <trans-unit id="COLS.header">
         <source>Header</source>
-        <target>سربرگ سایت</target>
+        <target>سربرگ</target>
       </trans-unit>
       <trans-unit id="COLS.left">
         <source>Left column</source>
@@ -2766,7 +2789,7 @@
       </trans-unit>
       <trans-unit id="SECTIONS.before">
         <source>After the page header</source>
-        <target>بعد از سربرگ</target>
+        <target>بعد از سربرگ صفحه</target>
       </trans-unit>
       <trans-unit id="SECTIONS.main">
         <source>Inside the main column</source>
@@ -2774,7 +2797,7 @@
       </trans-unit>
       <trans-unit id="SECTIONS.after">
         <source>Before the page footer</source>
-        <target>قبل از پاورقی</target>
+        <target>قبل از پاورقی برگه</target>
       </trans-unit>
       <trans-unit id="SECTIONS.bottom">
         <source>After the wrapper</source>

@@ -103,12 +103,12 @@ abstract class Hybrid extends Frontend
 			return;
 		}
 
-		/** @var Model $strModelClass */
 		$strModelClass = Model::getClassFromTable($this->strTable);
 
 		// Load the model
 		if (class_exists($strModelClass))
 		{
+			/** @var Model|null $objHybrid */
 			$objHybrid = $strModelClass::findByPk($objElement->{$this->strKey});
 
 			if ($objHybrid === null)
@@ -261,6 +261,12 @@ abstract class Hybrid extends Frontend
 		if (!$this->objParent instanceof ContentModel)
 		{
 			return false;
+		}
+
+		// Skip unsaved elements (see #2708)
+		if (isset($this->objParent->tstamp) && !$this->objParent->tstamp)
+		{
+			return true;
 		}
 
 		$isInvisible = $this->objParent->invisible || ($this->objParent->start && $this->objParent->start > time()) || ($this->objParent->stop && $this->objParent->stop <= time());

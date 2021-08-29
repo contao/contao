@@ -83,7 +83,7 @@ class PreviewAuthenticationListenerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());
     }
 
-    private function getRequestEvent(Request $request = null, bool $isSubRequest = false): RequestEvent
+    private function getRequestEvent(Request $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 
@@ -91,8 +91,6 @@ class PreviewAuthenticationListenerTest extends TestCase
             $request = new Request();
         }
 
-        $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MASTER_REQUEST;
-
-        return new RequestEvent($kernel, $request, $type);
+        return new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 }

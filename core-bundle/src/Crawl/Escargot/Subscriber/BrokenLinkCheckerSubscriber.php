@@ -90,8 +90,10 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
     public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): string
     {
-        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 400) {
-            $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
+        $statusCode = $response->getStatusCode();
+
+        if ($statusCode < 200 || $statusCode >= 400) {
+            $this->logError($crawlUri, 'HTTP Status Code: '.$statusCode);
 
             return SubscriberInterface::DECISION_NEGATIVE;
         }

@@ -16,15 +16,11 @@ interface FragmentRegistryInterface
 {
     /**
      * Adds a fragment or overwrites an existing fragment with the same identifier.
-     *
-     * @return FragmentRegistryInterface
      */
     public function add(string $identifier, FragmentConfig $config): self;
 
     /**
      * Removes a fragment.
-     *
-     * @return FragmentRegistryInterface
      */
     public function remove(string $identifier): self;
 

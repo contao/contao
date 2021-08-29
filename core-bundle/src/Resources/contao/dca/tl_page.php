@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Idna;
 use Contao\Image;
@@ -177,8 +178,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,alias,type',
 		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
@@ -249,7 +250,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'language' => array
@@ -257,8 +258,21 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'language', 'maxlength'=>5, 'nospace'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(5) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'nospace'=>true, 'decodeEntities'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(64) NOT NULL default ''",
+			'save_callback'           => array
+			(
+				static function ($value)
+				{
+					// Make sure there is at least a basic language
+					if (!preg_match('/^[a-z]{2,}/i', $value))
+					{
+						throw new RuntimeException($GLOBALS['TL_LANG']['ERR']['language']);
+					}
+
+					return LocaleUtil::canonicalize($value);
+				}
+			)
 		),
 		'robots' => array
 		(
@@ -319,7 +333,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'addWizardClass'=>false, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'target' => array
@@ -468,7 +482,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'urlSuffix' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_page']['urlSuffix'],
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
@@ -793,7 +806,7 @@ class tl_page extends Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_page']) && is_array($session['CLIPBOARD']['tl_page']['id']))
+		if (is_array($session['CLIPBOARD']['tl_page']['id'] ?? null))
 		{
 			$clipboard = array();
 
@@ -1164,7 +1177,7 @@ class tl_page extends Backend
 
 		System::getContainer()
 			->get(PageUrlListener::class)
-			->purgeSearchIndex($dc)
+			->purgeSearchIndex((int) $dc->id)
 		;
 	}
 
@@ -1223,9 +1236,9 @@ class tl_page extends Backend
 	/**
 	 * Load the DNS settings
 	 *
-	 * @param mixed $varValue
+	 * @param string $varValue
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function loadDns($varValue)
 	{
@@ -1235,9 +1248,9 @@ class tl_page extends Backend
 	/**
 	 * Check the DNS settings
 	 *
-	 * @param mixed $varValue
+	 * @param string $varValue
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function checkDns($varValue)
 	{
@@ -1663,7 +1676,7 @@ class tl_page extends Backend
 	{
 		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

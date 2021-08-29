@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -99,7 +100,13 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function prepareLocale(array &$parameters): void
     {
-        if (!$this->prependLocale && \array_key_exists('_locale', $parameters)) {
+        if (!\array_key_exists('_locale', $parameters)) {
+            return;
+        }
+
+        if ($this->prependLocale) {
+            $parameters['_locale'] = LocaleUtil::formatAsLanguageTag($parameters['_locale']);
+        } else {
             unset($parameters['_locale']);
         }
     }

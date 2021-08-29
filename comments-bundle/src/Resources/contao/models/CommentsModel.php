@@ -15,23 +15,23 @@ use Contao\Model\Collection;
 /**
  * Reads and writes comments
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $source
- * @property integer $parent
- * @property string  $date
- * @property string  $name
- * @property string  $email
- * @property string  $website
- * @property string  $member
- * @property string  $comment
- * @property boolean $addReply
- * @property integer $author
- * @property string  $reply
- * @property boolean $published
- * @property string  $ip
- * @property boolean $notified
- * @property boolean $notifiedReply
+ * @property string|integer $id
+ * @property string|integer $tstamp
+ * @property string         $source
+ * @property string|integer $parent
+ * @property string         $date
+ * @property string         $name
+ * @property string         $email
+ * @property string         $website
+ * @property string|integer $member
+ * @property string|null    $comment
+ * @property string|boolean $addReply
+ * @property string|integer $author
+ * @property string|null    $reply
+ * @property string|boolean $published
+ * @property string         $ip
+ * @property string|boolean $notified
+ * @property string|boolean $notifiedReply
  *
  * @method static CommentsModel|null findById($id, array $opt=array())
  * @method static CommentsModel|null findByPk($id, array $opt=array())

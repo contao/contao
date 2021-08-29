@@ -24,8 +24,10 @@ use Contao\Template;
  * use the provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
+ *
+ * @final This class will be made final in Contao 5.
  */
-final class Figure
+class Figure
 {
     /**
      * @var ImageResult
@@ -122,6 +124,32 @@ final class Figure
 
         /** @var Metadata */
         return $this->metadata;
+    }
+
+    public function getSchemaOrgData(): array
+    {
+        $imageIdentifier = $this->getImage()->getImageSrc();
+
+        if ($this->hasMetadata() && $this->getMetadata()->has(Metadata::VALUE_UUID)) {
+            $imageIdentifier = '#/schema/image/'.$this->getMetadata()->getUuid();
+        }
+
+        $jsonLd = [
+            '@type' => 'ImageObject',
+            'identifier' => $imageIdentifier,
+            'contentUrl' => $this->getImage()->getImageSrc(),
+        ];
+
+        if (!$this->hasMetadata()) {
+            ksort($jsonLd);
+
+            return $jsonLd;
+        }
+
+        $jsonLd = array_merge($this->getMetadata()->getSchemaOrgData('ImageObject'), $jsonLd);
+        ksort($jsonLd);
+
+        return $jsonLd;
     }
 
     /**
@@ -257,7 +285,7 @@ final class Figure
 
         $image = $this->getImage();
         $originalSize = $image->getOriginalDimensions()->getSize();
-        $fileInfoImageSize = (array) (new File($image->getImageSrc(true)))->imageSize;
+        $fileInfoImageSize = (new File($image->getImageSrc(true)))->imageSize;
 
         $linkAttributes = $this->getLinkAttributes();
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);

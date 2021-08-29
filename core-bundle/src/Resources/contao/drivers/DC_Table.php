@@ -298,21 +298,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
-		$undoPeriod = (int) Config::get('undoPeriod');
-		$logPeriod = (int) Config::get('logPeriod');
-
-		// Clean up old tl_undo and tl_log entries
-		if ($this->strTable == 'tl_undo' && $undoPeriod > 0)
-		{
-			$this->Database->prepare("DELETE FROM tl_undo WHERE tstamp<?")
-						   ->execute(time() - $undoPeriod);
-		}
-		elseif ($this->strTable == 'tl_log' && $logPeriod > 0)
-		{
-			$this->Database->prepare("DELETE FROM tl_log WHERE tstamp<?")
-						   ->execute(time() - $logPeriod);
-		}
-
 		$this->reviseTable();
 
 		// Add to clipboard
@@ -2189,7 +2174,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->theme = Backend::getTheme();
-				$objTemplate->charset = Config::get('characterSet');
+				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->base = Environment::get('base');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
@@ -3319,6 +3304,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 
+		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+		{
+			$ptable = $this->strTable;
+		}
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
@@ -3411,6 +3401,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
 				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
+			}
+			elseif ($ptable == $this->strTable)
+			{
+				$objIds = $this->Database->execute('SELECT c.id FROM ' . $this->strTable . ' c LEFT JOIN ' . $ptable . ' p ON c.pid=p.id WHERE p.id IS NULL AND c.pid > 0');
 			}
 			else
 			{
@@ -3978,8 +3972,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (strpos($v, ':') !== false)
 			{
-				list($strKey, $strTable) = explode(':', $v);
-				list($strTable, $strField) = explode('.', $strTable);
+				list($strKey, $strTable) = explode(':', $v, 2);
+				list($strTable, $strField) = explode('.', $strTable, 2);
 
 				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 										 ->limit(1)
@@ -4440,7 +4434,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// LIMIT
 			if ($this->limit)
 			{
-				$arrLimit = explode(',', $this->limit);
+				$arrLimit = explode(',', $this->limit) + array(null, null);
 				$objOrderByStmt->limit($arrLimit[1], $arrLimit[0]);
 			}
 
@@ -4814,7 +4808,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		if ($this->limit)
 		{
-			$arrLimit = explode(',', $this->limit);
+			$arrLimit = explode(',', $this->limit) + array(null, null);
 			$objRowStmt->limit($arrLimit[1], $arrLimit[0]);
 		}
 
@@ -4825,7 +4819,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 <div id="tl_buttons">' . ((Input::get('act') == 'select' || $this->ptable) ? '
 <a href="' . $this->getReferer(true, $this->ptable) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
 <a href="contao/main.php?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)) ? '
-<a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons() . '
+<a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < 4) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1] ?? '') . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons() . '
 </div>';
 
 		// Return "no records found" message
@@ -4921,8 +4915,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if (strpos($v, ':') !== false)
 					{
-						list($strKey, $strTable) = explode(':', $v);
-						list($strTable, $strField) = explode('.', $strTable);
+						list($strKey, $strTable) = explode(':', $v, 2);
+						list($strTable, $strField) = explode('.', $strTable, 2);
 
 						$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 												 ->limit(1)
@@ -5000,7 +4994,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					$current = $row[$firstOrderBy];
 					$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array();
-					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null);
 					$remoteNew = $this->formatCurrentValue($firstOrderBy, $current, $sortingMode);
 
 					// Add the group header
@@ -5068,7 +5062,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							$value = (string) $arg !== '' ? $arg : '-';
 						}
 
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $field . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
+						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}
 				}
 				else
@@ -5975,7 +5969,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . $option_label . '</option>'] = Utf8::toAscii($option_label);
+					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $session['filter'][$filter][$field] == $value) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>'] = Utf8::toAscii($option_label);
 				}
 
 				// Sort by option values
@@ -6022,7 +6016,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
-		list($offset, $limit) = explode(',', $this->limit);
+		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 
 		// Set the limit filter based on the page number
 		if (isset($_GET['lp']))
@@ -6171,7 +6165,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$lookup[$field] = $this->$strClass->$strMethod($this);
 			}
 
-			$group = $lookup[$field][$value];
+			$group = $lookup[$field][$value] ?? null;
 		}
 		else
 		{

@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Model\Collection;
 
 /**
@@ -21,8 +21,6 @@ use Contao\Model\Collection;
  */
 class ContentGallery extends ContentElement
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Files object
 	 * @var Collection|FilesModel
@@ -217,8 +215,9 @@ class ContentGallery extends ContentElement
 		$colwidth = floor(100/$this->perRow);
 		$body = array();
 
-		$figureBuilder = $this
-			->getFigureBuilder()
+		$figureBuilder = System::getContainer()
+			->get(Studio::class)
+			->createFigureBuilder()
 			->setSize($this->size)
 			->setLightboxGroupIdentifier('lb' . $this->id)
 			->enableLightbox((bool) $this->fullsize);

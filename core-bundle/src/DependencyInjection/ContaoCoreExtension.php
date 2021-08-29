@@ -41,18 +41,16 @@ class ContaoCoreExtension extends Extension
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration(
-            $container->getParameter('kernel.project_dir'),
-            $container->getParameter('kernel.default_locale')
-        );
+        return new Configuration($container->getParameter('kernel.project_dir'));
     }
 
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $configuration = new Configuration(
-            $container->getParameter('kernel.project_dir'),
-            $container->getParameter('kernel.default_locale')
-        );
+        if ('UTF-8' !== $container->getParameter('kernel.charset')) {
+            trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
+        }
+
+        $configuration = new Configuration($container->getParameter('kernel.project_dir'));
 
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -62,6 +60,7 @@ class ContaoCoreExtension extends Extension
         );
 
         $loader->load('commands.yml');
+        $loader->load('controller.yml');
         $loader->load('listener.yml');
         $loader->load('services.yml');
         $loader->load('migrations.yml');
@@ -83,6 +82,9 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
         $container->setParameter('contao.backend', $config['backend']);
+        $container->setParameter('contao.intl.locales', $config['intl']['locales']);
+        $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
+        $container->setParameter('contao.intl.countries', $config['intl']['countries']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
@@ -125,7 +127,7 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.search_indexer')
         ;
 
-        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        // Set the two parameters, so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 

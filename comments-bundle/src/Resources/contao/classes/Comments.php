@@ -247,7 +247,6 @@ class Comments extends Frontend
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
@@ -293,12 +292,6 @@ class Comments extends Frontend
 
 			if ($flashBag->has('comment_added'))
 			{
-				/** @var PageModel $objPage */
-				global $objPage;
-
-				$objPage->noSearch = 1;
-				$objPage->cache = 0;
-
 				$objTemplate->confirm = $flashBag->get('comment_added')[0];
 			}
 		}

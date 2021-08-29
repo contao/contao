@@ -13,7 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Image\Studio\LegacyFigureBuilderTrait;
+use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Patchwork\Utf8;
 
 /**
@@ -28,8 +30,6 @@ use Patchwork\Utf8;
  */
 class ModuleEventReader extends Events
 {
-	use LegacyFigureBuilderTrait;
-
 	/**
 	 * Template
 	 * @var string
@@ -75,7 +75,7 @@ class ModuleEventReader extends Events
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
 		{
-			throw new InternalServerErrorException('The event reader ID ' . $this->id . ' has no calendars specified.', $this->id);
+			throw new InternalServerErrorException('The event reader ID ' . $this->id . ' has no calendars specified.');
 		}
 
 		return parent::generate();
@@ -129,29 +129,36 @@ class ModuleEventReader extends Events
 				throw new InternalServerErrorException('Empty target URL');
 		}
 
-		// Overwrite the page title (see #2853, #4955 and #87)
-		if ($objEvent->pageTitle)
-		{
-			$objPage->pageTitle = $objEvent->pageTitle;
-		}
-		elseif ($objEvent->title)
-		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objEvent->title));
-		}
+		// Overwrite the page meta data (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		// Overwrite the page description
-		if ($objEvent->description)
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
-			$objPage->description = $objEvent->description;
-		}
-		elseif ($objEvent->teaser)
-		{
-			$objPage->description = $this->prepareMetaDescription($objEvent->teaser);
-		}
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-		if ($objEvent->robots)
-		{
-			$objPage->robots = $objEvent->robots;
+			if ($objEvent->pageTitle)
+			{
+				$htmlHeadBag->setTitle($objEvent->pageTitle); // Already stored decoded
+			}
+			elseif ($objEvent->title)
+			{
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
+			}
+
+			if ($objEvent->description)
+			{
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
+			}
+			elseif ($objEvent->teaser)
+			{
+				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
+			}
+
+			if ($objEvent->robots)
+			{
+				$htmlHeadBag->setMetaRobots($objEvent->robots);
+			}
 		}
 
 		$intStartTime = $objEvent->startTime;
@@ -244,6 +251,7 @@ class ModuleEventReader extends Events
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
+		$objTemplate->hasReader = true;
 
 		// Clean the RTE output
 		if ($objEvent->teaser)
@@ -257,6 +265,7 @@ class ModuleEventReader extends Events
 		if ($objEvent->source != 'default')
 		{
 			$objTemplate->hasDetails = true;
+			$objTemplate->hasReader = false;
 		}
 
 		// Compile the event text
@@ -290,7 +299,7 @@ class ModuleEventReader extends Events
 		$objTemplate->addBefore = false;
 
 		// Add an image
-		if ($objEvent->addImage && null !== ($figureBuilder = $this->getFigureBuilderIfResourceExists($objEvent->singleSRC)))
+		if ($objEvent->addImage)
 		{
 			$imgSize = $objEvent->size ?: null;
 
@@ -305,12 +314,19 @@ class ModuleEventReader extends Events
 				}
 			}
 
-			$figureBuilder
+			$figure = System::getContainer()
+				->get(Studio::class)
+				->createFigureBuilder()
+				->from($objEvent->singleSRC)
 				->setSize($imgSize)
 				->setMetadata($objEvent->getOverwriteMetadata())
 				->enableLightbox((bool) $objEvent->fullsize)
-				->build()
-				->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+				->buildIfResourceExists();
+
+			if (null !== $figure)
+			{
+				$figure->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+			}
 		}
 
 		$objTemplate->enclosure = array();
@@ -395,6 +411,19 @@ class ModuleEventReader extends Events
 			}
 
 			return $dates;
+		};
+
+		// schema.org information
+		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objEvent): array
+		{
+			$jsonLd = Events::getSchemaOrgData($objEvent);
+
+			if ($objTemplate->addImage && $objTemplate->figure)
+			{
+				$jsonLd['image'] = $objTemplate->figure->getSchemaOrgData();
+			}
+
+			return $jsonLd;
 		};
 
 		$this->Template->event = $objTemplate->parse();

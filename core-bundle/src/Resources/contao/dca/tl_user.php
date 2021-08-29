@@ -13,6 +13,8 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Intl\Locales;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -124,11 +126,11 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	(
 		'__selector__'                => array('inherit', 'admin'),
 		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme',
-		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{account_legend},disable,start,stop',
-		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},pwChange,password;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
+		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -172,16 +174,16 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'language' => array
 		(
-			'default'                 => str_replace('-', '_', $GLOBALS['TL_LANGUAGE']),
+			'default'                 => LocaleUtil::formatAsLocale($GLOBALS['TL_LANGUAGE']),
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'eval'                    => array('rgxp'=>'locale', 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getLanguages(true);
+				return System::getContainer()->get(Locales::class)->getEnabledLocales(null, Input::get('do') != 'user');
 			},
-			'sql'                     => "varchar(5) NOT NULL default ''"
+			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'backendTheme' => array
 		(
@@ -232,7 +234,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
 			'exclude'                 => true,
 			'inputType'               => 'password',
-			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength')),
+			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength'), 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'pwChange' => array
@@ -240,6 +242,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
+			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'admin' => array
@@ -949,7 +952,7 @@ class tl_user extends Backend
 	{
 		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

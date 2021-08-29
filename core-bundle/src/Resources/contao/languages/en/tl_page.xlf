@@ -30,7 +30,7 @@
         <source>Language</source>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. "en" for English or "en-US" for American English).</source>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. "en" for English or "en_US" for American English).</source>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -234,7 +234,7 @@
         <source>Group</source>
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
-        <source>Please select a group as the owner of the page.</source>
+        <source>Please select a user group as the owner of the page.</source>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>
@@ -267,10 +267,10 @@
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
+        <source>Hide in navigation</source>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
+        <source>Hide the page in the navigation menu.</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Show to guests only</source>

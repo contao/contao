@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Patchwork\Utf8;
 
 /**
@@ -71,7 +73,7 @@ class ModuleNewsReader extends ModuleNews
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
-			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.', $this->id);
+			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.');
 		}
 
 		return parent::generate();
@@ -82,9 +84,6 @@ class ModuleNewsReader extends ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$this->Template->articles = '';
 		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
@@ -134,29 +133,36 @@ class ModuleNewsReader extends ModuleNews
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
-		// Overwrite the page title (see #2853, #4955 and #87)
-		if ($objArticle->pageTitle)
-		{
-			$objPage->pageTitle = $objArticle->pageTitle;
-		}
-		elseif ($objArticle->headline)
-		{
-			$objPage->pageTitle = strip_tags(StringUtil::stripInsertTags($objArticle->headline));
-		}
+		// Overwrite the page meta data (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
-		// Overwrite the page description
-		if ($objArticle->description)
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
-			$objPage->description = $objArticle->description;
-		}
-		elseif ($objArticle->teaser)
-		{
-			$objPage->description = $this->prepareMetaDescription($objArticle->teaser);
-		}
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-		if ($objArticle->robots)
-		{
-			$objPage->robots = $objArticle->robots;
+			if ($objArticle->pageTitle)
+			{
+				$htmlHeadBag->setTitle($objArticle->pageTitle); // Already stored decoded
+			}
+			elseif ($objArticle->headline)
+			{
+				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objArticle->headline));
+			}
+
+			if ($objArticle->description)
+			{
+				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objArticle->description));
+			}
+			elseif ($objArticle->teaser)
+			{
+				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objArticle->teaser));
+			}
+
+			if ($objArticle->robots)
+			{
+				$htmlHeadBag->setMetaRobots($objArticle->robots);
+			}
 		}
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');

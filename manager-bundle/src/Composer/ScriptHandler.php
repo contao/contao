@@ -31,10 +31,7 @@ class ScriptHandler
     {
         trigger_deprecation('contao/manager-bundle', '4.11', 'Using ScriptHandler::initializeApplication() has been deprecated and will no longer work in Contao 5.0. Use the "contao-setup" binary instead.');
 
-        $command = array_filter([
-            'contao-setup',
-            $event->getIO()->isDecorated() ? '--ansi' : '--no-ansi',
-        ]);
+        $command = ['contao-setup', $event->getIO()->isDecorated() ? '--ansi' : '--no-ansi'];
 
         $event->getIO()->write(
             sprintf(

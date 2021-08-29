@@ -48,13 +48,11 @@ abstract class Model
 {
 	/**
 	 * Insert flag
-	 * @var integer
 	 */
 	const INSERT = 1;
 
 	/**
 	 * Update flag
-	 * @var integer
 	 */
 	const UPDATE = 2;
 
@@ -222,7 +220,7 @@ abstract class Model
 	 */
 	public function __set($strKey, $varValue)
 	{
-		if ($this->$strKey === $varValue)
+		if (isset($this->arrData[$strKey]) && $this->arrData[$strKey] === $varValue)
 		{
 			return;
 		}
@@ -1236,7 +1234,10 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		/** @var static $strClass */
+		/**
+		 * @var static               $strClass
+		 * @var class-string<static> $strClass
+		 */
 		$strClass = static::getClassFromTable(static::$strTable);
 
 		return new $strClass($objResult);

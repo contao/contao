@@ -65,7 +65,7 @@ class ModuleRssReader extends Module
 			$this->objFeed->set_feed_url($arrUrls[0]);
 		}
 
-		$this->objFeed->set_output_encoding(Config::get('characterSet'));
+		$this->objFeed->set_output_encoding(System::getContainer()->getParameter('kernel.charset'));
 		$this->objFeed->set_cache_location(System::getContainer()->getParameter('kernel.project_dir') . '/system/tmp');
 		$this->objFeed->enable_cache(false);
 

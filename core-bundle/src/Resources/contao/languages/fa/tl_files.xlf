@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncExclude.1">
         <source>Do not synchronize the folder and its subfolders with the database.</source>
+        <target>پوشه و زیرپوشه‌هایش را با پایگاه داده همگام‌سازی نکنید.</target>
       </trans-unit>
       <trans-unit id="tl_files.importantPartX.0">
         <source>Important part x coordinate</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
+        <target>اینجا می‌توانید فراداده پرونده را وارد کنید. برای افزودن یک زبان، برگه‌ی ریشه مربوطه را در ساختار سایت ایجاد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
@@ -93,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_files.editor.1">
         <source>Here you can edit the file source (press F11 to toggle fullscreen mode).</source>
+        <target>اینجا می‌توانید منبع پرونده را ویرایش کنید ( F11 را برای تغییر وضعیت به حالت تمام‌صفحه فشار دهید).</target>
       </trans-unit>
       <trans-unit id="tl_files.uploadNback">
         <source>Upload files and go back</source>

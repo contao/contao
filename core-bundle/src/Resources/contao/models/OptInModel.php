@@ -16,16 +16,16 @@ use Contao\Model\Registry;
 /**
  * Reads and writes double opt-in tokens
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $token
- * @property integer $createdOn
- * @property integer $confirmedOn
- * @property integer $removeOn
- * @property string  $invalidatedThrough
- * @property string  $email
- * @property string  $emailSubject
- * @property string  $emailText
+ * @property string|integer $id
+ * @property string|integer $tstamp
+ * @property string         $token
+ * @property string|integer $createdOn
+ * @property string|integer $confirmedOn
+ * @property string|integer $removeOn
+ * @property string         $invalidatedThrough
+ * @property string         $email
+ * @property string         $emailSubject
+ * @property string|null    $emailText
  *
  * @method static OptInModel|null findById($id, array $opt=array())
  * @method static OptInModel|null findByPk($id, array $opt=array())

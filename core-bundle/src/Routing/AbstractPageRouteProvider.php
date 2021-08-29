@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
@@ -44,7 +45,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
      */
     protected function findCandidatePages(Request $request): array
     {
-        $candidates = $this->candidates->getCandidates($request);
+        $candidates = array_map('strval', $this->candidates->getCandidates($request));
 
         if (empty($candidates)) {
             return [];
@@ -132,8 +133,17 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $langB = null;
 
         if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
-            $langA = $languages[$pageA->rootLanguage] ?? null;
-            $langB = $languages[$pageB->rootLanguage] ?? null;
+            $fallbackA = LocaleUtil::getFallbacks($pageA->rootLanguage);
+            $fallbackB = LocaleUtil::getFallbacks($pageB->rootLanguage);
+            $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
+            $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
+
+            if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === \Locale::getPrimaryLanguage($pageB->rootLanguage)) {
+                // If both pages have the same language without region and neither region has a priority,
+                // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
+                $langA = $pageA->rootSorting;
+                $langB = $pageB->rootSorting;
+            }
         }
 
         if (null === $langA && null === $langB) {
@@ -189,19 +199,31 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
     protected function convertLanguagesForSorting(array $languages): array
     {
-        foreach ($languages as &$language) {
-            $language = str_replace('_', '-', $language);
+        $result = [];
 
-            if (5 === \strlen($language)) {
-                $lng = substr($language, 0, 2);
+        foreach ($languages as $language) {
+            $locales = LocaleUtil::getFallbacks($language);
+            $language = array_pop($locales);
+            $result[] = $language;
 
-                // Append the language if only language plus dialect is given (see #430)
-                if (!\in_array($lng, $languages, true)) {
-                    $languages[] = $lng;
+            foreach (array_reverse($locales) as $locale) {
+                if (!\in_array($locale, $result, true)) {
+                    $result[] = $locale;
                 }
             }
         }
 
-        return array_flip(array_values($languages));
+        return array_flip($result);
+    }
+
+    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): ?int
+    {
+        foreach (array_reverse($locales) as $locale) {
+            if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {
+                return $languagePriority[$locale];
+            }
+        }
+
+        return null;
     }
 }

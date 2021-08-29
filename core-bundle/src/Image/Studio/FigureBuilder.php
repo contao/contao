@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -188,7 +192,7 @@ class FigureBuilder
         $this->lastException = null;
 
         if ('file' !== $filesModel->type) {
-            $this->lastException = new InvalidResourceException("DBAFS item '{$filesModel->path}' is not a file.");
+            $this->lastException = new InvalidResourceException("DBAFS item '$filesModel->path' is not a file.");
 
             return $this;
         }
@@ -197,7 +201,7 @@ class FigureBuilder
         $this->filesModel = $filesModel;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
         }
 
         return $this;
@@ -210,7 +214,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->filesModelAdapter()->findByUuid($uuid);
+        $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
             $this->lastException = new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
@@ -228,7 +232,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->filesModelAdapter()->findByPk($id);
+        $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
             $this->lastException = new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
@@ -253,7 +257,7 @@ class FigureBuilder
 
         // Only check for a FilesModel if the resource is inside the upload path
         if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
-            $filesModel = $this->filesModelAdapter()->findByPath($path);
+            $filesModel = $this->getFilesModelAdapter()->findByPath($path);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
@@ -264,7 +268,7 @@ class FigureBuilder
         $this->filesModel = null;
 
         if (!$this->filesystem->exists($this->filePath)) {
-            $this->lastException = new InvalidResourceException("No resource could be located at path '{$this->filePath}'.");
+            $this->lastException = new InvalidResourceException("No resource could be located at path '$this->filePath'.");
         }
 
         return $this;
@@ -281,10 +285,16 @@ class FigureBuilder
     /**
      * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
     public function from($identifier): self
     {
+        if (null === $identifier) {
+            $this->lastException = new InvalidResourceException("The defined resource is 'null'.");
+
+            return $this;
+        }
+
         if ($identifier instanceof FilesModel) {
             return $this->fromFilesModel($identifier);
         }
@@ -293,7 +303,9 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        if ($this->validatorAdapter()->isUuid($identifier)) {
+        $isString = \is_string($identifier);
+
+        if ($isString && $this->getValidatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -301,7 +313,13 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        return $this->fromPath($identifier);
+        if ($isString) {
+            return $this->fromPath($identifier);
+        }
+
+        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
+
+        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
     }
 
     /**
@@ -555,7 +573,11 @@ class FigureBuilder
             $imageResult,
             \Closure::bind(
                 function (Figure $figure): ?Metadata {
-                    return $this->onDefineMetadata();
+                    $event = new FileMetadataEvent($this->onDefineMetadata());
+
+                    $this->locator->get('event_dispatcher')->dispatch($event);
+
+                    return $event->getMetadata();
                 },
                 $settings
             ),
@@ -584,8 +606,21 @@ class FigureBuilder
             return null;
         }
 
+        $getUuid = static function (?FilesModel $filesModel): ?string {
+            if (null === $filesModel || null === $filesModel->uuid) {
+                return null;
+            }
+
+            // Normalize UUID to ASCII format
+            return Validator::isBinaryUuid($filesModel->uuid)
+                ? StringUtil::binToUuid($filesModel->uuid)
+                : $filesModel->uuid;
+        };
+
+        $fileReferenceData = array_filter([Metadata::VALUE_UUID => $getUuid($this->filesModel)]);
+
         if (null !== $this->metadata) {
-            return $this->metadata;
+            return $this->metadata->with($fileReferenceData);
         }
 
         if (null === $this->filesModel) {
@@ -597,14 +632,19 @@ class FigureBuilder
         $metadata = $this->filesModel->getMetadata(...$locales);
 
         if (null !== $metadata) {
-            return $metadata;
+            return $metadata->with($fileReferenceData);
         }
 
-        // If no metadata can be obtained from the model, we create a
-        // container from the default meta fields with empty values instead
-        $metaFields = $this->filesModelAdapter()->getMetaFields();
+        // If no metadata can be obtained from the model, we create a container
+        // from the default meta fields with empty values instead
+        $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
-        return new Metadata(array_combine($metaFields, array_fill(0, \count($metaFields), '')));
+        $data = array_merge(
+            array_combine($metaFields, array_fill(0, \count($metaFields), '')),
+            $fileReferenceData
+        );
+
+        return new Metadata($data);
     }
 
     /**
@@ -689,7 +729,12 @@ class FigureBuilder
         ;
     }
 
-    private function filesModelAdapter()
+    /**
+     * @return FilesModel
+     *
+     * @phpstan-return Adapter<FilesModel>
+     */
+    private function getFilesModelAdapter(): Adapter
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();
@@ -697,7 +742,12 @@ class FigureBuilder
         return $framework->getAdapter(FilesModel::class);
     }
 
-    private function validatorAdapter()
+    /**
+     * @return Validator
+     *
+     * @phpstan-return Adapter<Validator>
+     */
+    private function getValidatorAdapter(): Adapter
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();
@@ -718,10 +768,10 @@ class FigureBuilder
             return [];
         }
 
-        $locales = [str_replace('-', '_', $page->language)];
+        $locales = [LocaleUtil::formatAsLocale($page->language)];
 
         if (null !== $page->rootFallbackLanguage) {
-            $locales[] = str_replace('-', '_', $page->rootFallbackLanguage);
+            $locales[] = LocaleUtil::formatAsLocale($page->rootFallbackLanguage);
         }
 
         return array_unique(array_filter($locales));

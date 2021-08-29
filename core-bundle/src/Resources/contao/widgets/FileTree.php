@@ -85,6 +85,16 @@ class FileTree extends Widget
 		}
 	}
 
+	public function __set($strKey, $varValue)
+	{
+		if ($strKey === 'extensions' && \is_array($varValue))
+		{
+			$varValue = implode(',', $varValue);
+		}
+
+		parent::__set($strKey, $varValue);
+	}
+
 	/**
 	 * Return an array if the "multiple" attribute is set
 	 *

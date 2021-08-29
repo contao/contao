@@ -75,7 +75,7 @@ class Version440Update extends AbstractMigration
                         id = :id
                 ');
 
-                $stmt->execute([':scripts' => serialize(array_values(array_unique($scripts))), ':id' => $layout['id']]);
+                $stmt->executeStatement([':scripts' => serialize(array_values(array_unique($scripts))), ':id' => $layout['id']]);
             }
         }
 

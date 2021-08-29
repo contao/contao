@@ -1,9 +1,9 @@
 <p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
 <p align="center">
-<a href="https://github.com/contao/contao/actions"><img src="https://img.shields.io/github/workflow/status/contao/contao/CI/4.9.svg" alt="GitHub"></a>
-<a href="https://codecov.io/gh/contao/contao"><img src="https://img.shields.io/codecov/c/gh/contao/contao/4.9.svg" alt="Codecov"></a>
-<a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt="Packagist"></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=4.12" alt></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/4.12/graph/badge.svg" alt></a>
+<a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt></a>
 </p>
 
 ## About

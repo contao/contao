@@ -38,6 +38,8 @@ class MetadataTest extends TestCase
             Metadata::VALUE_CAPTION => 'caption',
             Metadata::VALUE_TITLE => 'title',
             Metadata::VALUE_URL => 'url',
+            Metadata::VALUE_UUID => '1234-5678',
+            Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
             'foo' => 'bar',
         ]);
 
@@ -47,6 +49,7 @@ class MetadataTest extends TestCase
         $this->assertSame('caption', $metadata->getCaption());
         $this->assertSame('title', $metadata->getTitle());
         $this->assertSame('url', $metadata->getUrl());
+        $this->assertSame('https://creativecommons.org/licenses/by/4.0/', $metadata->getLicense());
         $this->assertSame('bar', $metadata->get('foo'));
 
         $this->assertSame(
@@ -55,6 +58,8 @@ class MetadataTest extends TestCase
                 Metadata::VALUE_CAPTION => 'caption',
                 Metadata::VALUE_TITLE => 'title',
                 Metadata::VALUE_URL => 'url',
+                Metadata::VALUE_UUID => '1234-5678',
+                Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
                 'foo' => 'bar',
             ],
             $metadata->all()
@@ -69,6 +74,7 @@ class MetadataTest extends TestCase
         $this->assertSame('', $metadata->getCaption());
         $this->assertSame('', $metadata->getTitle());
         $this->assertSame('', $metadata->getUrl());
+        $this->assertSame('', $metadata->getLicense());
 
         $this->assertNull($metadata->get('foo'));
     }
@@ -183,6 +189,99 @@ class MetadataTest extends TestCase
         $this->assertNull(
             $model->getMetadata('es'),
             'return null if no metadata is available for a locale'
+        );
+    }
+
+    public function testMergesMetadata(): void
+    {
+        $metadata = new Metadata(['foo' => 'FOO', 'bar' => 'BAR']);
+        $newMetadata = $metadata->with(['foobar' => 'FOOBAR', 'bar' => 'BAZ']);
+
+        $this->assertNotSame($metadata, $newMetadata, 'Should be a different instance.');
+
+        $this->assertSame(
+            [
+                'foo' => 'FOO',
+                'bar' => 'BAZ',
+                'foobar' => 'FOOBAR',
+            ],
+            $newMetadata->all()
+        );
+    }
+
+    public function testDoesNotCreateANewInstanceWhenMergingEmptyMetadata(): void
+    {
+        $metadata = new Metadata(['foo' => 'FOO', 'bar' => 'BAR']);
+        $newMetadata = $metadata->with([]);
+
+        $this->assertSame($metadata, $newMetadata, 'Should be the same instance.');
+    }
+
+    public function testGettingSchemaOrgData(): void
+    {
+        $metadata = new Metadata([
+            Metadata::VALUE_ALT => 'alt',
+            Metadata::VALUE_CAPTION => 'caption',
+            Metadata::VALUE_TITLE => 'title',
+            Metadata::VALUE_URL => 'url',
+            Metadata::VALUE_UUID => '1234-5678',
+            Metadata::VALUE_LICENSE => 'https://creativecommons.org/licenses/by/4.0/',
+            'foo' => 'bar',
+        ]);
+
+        $this->assertSame(
+            [
+                'AudioObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+                'ImageObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+                'MediaObject' => [
+                    'name' => 'title',
+                    'caption' => 'caption',
+                    'license' => 'https://creativecommons.org/licenses/by/4.0/',
+                ],
+            ],
+            $metadata->getSchemaOrgData()
+        );
+
+        $this->assertSame(
+            [
+                'name' => 'title',
+                'caption' => 'caption',
+                'license' => 'https://creativecommons.org/licenses/by/4.0/',
+            ],
+            $metadata->getSchemaOrgData('ImageObject')
+        );
+
+        $this->assertSame([], $metadata->getSchemaOrgData('WhateverNonsense'));
+    }
+
+    public function testCanCustomizeSchemaOrgData(): void
+    {
+        $metadata = new Metadata(
+            [
+                Metadata::VALUE_ALT => 'alt',
+            ],
+            [
+                'ImageObject' => [
+                    'name' => 'title',
+                    'foobar' => 'baz',
+                ],
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'name' => 'title',
+                'foobar' => 'baz',
+            ],
+            $metadata->getSchemaOrgData('ImageObject')
         );
     }
 }

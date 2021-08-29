@@ -53,8 +53,8 @@ class InstallWebDirCommand extends Command
     {
         $this
             ->setName('contao:install-web-dir')
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory', 'web')
-            ->setDescription('Installs the files in the "web" directory')
+            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
+            ->setDescription('Installs the files in the public directory')
         ;
     }
 
@@ -63,11 +63,21 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = Path::join($this->projectDir, $input->getArgument('target'));
+        $webDir = $input->getArgument('target');
 
-        $this->addHtaccess($webDir);
-        $this->addFiles($webDir);
-        $this->purgeOldFiles($webDir);
+        if (null === $webDir) {
+            if ($this->fs->exists($this->projectDir.'/web')) {
+                $webDir = 'web'; // backwards compatibility
+            } else {
+                $webDir = 'public';
+            }
+        }
+
+        $path = Path::join($this->projectDir, $webDir);
+
+        $this->addHtaccess($path);
+        $this->addFiles($path);
+        $this->purgeOldFiles($path);
 
         return 0;
     }
@@ -77,12 +87,12 @@ class InstallWebDirCommand extends Command
      */
     private function addHtaccess(string $webDir): void
     {
-        $sourcePath = __DIR__.'/../Resources/skeleton/web/.htaccess';
+        $sourcePath = __DIR__.'/../Resources/skeleton/public/.htaccess';
         $targetPath = Path::join($webDir, '.htaccess');
 
         if (!$this->fs->exists($targetPath)) {
             $this->fs->copy($sourcePath, $targetPath, true);
-            $this->io->writeln('Added the <comment>web/.htaccess</comment> file.');
+            $this->io->writeln('Added the <comment>public/.htaccess</comment> file.');
 
             return;
         }
@@ -95,20 +105,20 @@ class InstallWebDirCommand extends Command
         }
 
         $this->fs->dumpFile($targetPath, $existingContent."\n\n".file_get_contents($sourcePath));
-        $this->io->writeln('Updated the <comment>web/.htaccess</comment> file.');
+        $this->io->writeln('Updated the <comment>public/.htaccess</comment> file.');
     }
 
     /**
-     * Adds files from Resources/skeleton/web to the application's web directory.
+     * Adds files from Resources/skeleton/public to the application's public directory.
      */
     private function addFiles(string $webDir): void
     {
-        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/web');
+        $finder = Finder::create()->files()->in(__DIR__.'/../Resources/skeleton/public');
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $this->fs->copy($file->getPathname(), Path::join($webDir, $file->getRelativePathname()), true);
-            $this->io->writeln(sprintf('Added the <comment>web/%s</comment> file.', $file->getFilename()));
+            $this->io->writeln(sprintf('Added the <comment>public/%s</comment> file.', $file->getFilename()));
         }
     }
 
@@ -120,7 +130,7 @@ class InstallWebDirCommand extends Command
         foreach (['app_dev.php', 'install.php'] as $file) {
             if ($this->fs->exists($path = Path::join($webDir, $file))) {
                 $this->fs->remove($path);
-                $this->io->writeln("Deleted the <comment>web/$file</comment> file.");
+                $this->io->writeln("Deleted the <comment>public/$file</comment> file.");
             }
         }
     }

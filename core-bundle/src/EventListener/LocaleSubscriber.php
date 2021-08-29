@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -39,11 +41,11 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     private $availableLocales;
 
-    public function __construct(LocaleAwareInterface $translator, ScopeMatcher $scopeMatcher, array $availableLocales)
+    public function __construct(LocaleAwareInterface $translator, ScopeMatcher $scopeMatcher, Locales $locales)
     {
         $this->translator = $translator;
         $this->scopeMatcher = $scopeMatcher;
-        $this->availableLocales = $availableLocales;
+        $this->availableLocales = $locales->getEnabledLocaleIds();
     }
 
     /**
@@ -85,25 +87,9 @@ class LocaleSubscriber implements EventSubscriberInterface
     private function getLocale(Request $request): string
     {
         if (null !== $request->attributes->get('_locale')) {
-            return $this->formatLocaleId($request->attributes->get('_locale'));
+            return LocaleUtil::formatAsLocale($request->attributes->get('_locale'));
         }
 
         return $request->getPreferredLanguage($this->availableLocales);
-    }
-
-    private function formatLocaleId(string $locale): string
-    {
-        if (!preg_match('/^[a-z]{2}([_-][a-z]{2})?$/i', $locale)) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a supported locale.', $locale));
-        }
-
-        $values = preg_split('/[_-]/', $locale);
-        $locale = strtolower($values[0]);
-
-        if (isset($values[1])) {
-            $locale .= '_'.strtoupper($values[1]);
-        }
-
-        return $locale;
     }
 }

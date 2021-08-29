@@ -24,8 +24,10 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Kernel;
@@ -33,6 +35,8 @@ use Webmozart\PathUtil\Path;
 
 class ContaoKernelTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -396,11 +400,16 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
     public function testReturnsTheContaoCacheInProdMode(): void
     {
+        if (!class_exists(Event::class)) {
+            $this->expectDeprecation('%sLegacyEventDispatcherProxy is deprecated%s');
+        }
+
         unset($_SERVER['APP_ENV']);
 
         $tempDir = realpath($this->getTempDir());
