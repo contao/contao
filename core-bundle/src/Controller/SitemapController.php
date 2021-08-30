@@ -140,7 +140,7 @@ class SitemapController extends AbstractController
                 continue;
             }
 
-            $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time());
+            $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time()) && 'noindex,nofollow' !== $pageModel->robots;
 
             if ($isPublished && !$pageModel->requireItem && $this->pageRegistry->supportsContentComposition($pageModel)) {
                 $urls = [$pageModel->getAbsoluteUrl()];
