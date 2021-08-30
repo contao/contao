@@ -98,7 +98,15 @@ class BearerTokenAuthenticator extends AbstractGuardAuthenticator
     {
         try {
 
-            return Jwt::validateAndVerify($credentials['token'], \base64_encode($user->getUsername()));
+            $currentToken = (string)$credentials['token'];
+            $userToken = (string)$user->jwt;
+            $username = $user->username;
+
+            if ($currentToken === null || $currentToken === '' || $currentToken !== $userToken || Jwt::validateAndVerify($currentToken, \base64_encode($username)) === false) {
+                return false;
+            }
+
+            return true;
 
         } catch (\Exception $ex) {
             throw new AuthenticationException($ex->getMessage());

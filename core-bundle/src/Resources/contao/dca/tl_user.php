@@ -144,6 +144,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
+		'jwt' => array
+		(
+			'sql'                     => "text NULL"
+		),
 		'username' => array
 		(
 			'exclude'                 => true,

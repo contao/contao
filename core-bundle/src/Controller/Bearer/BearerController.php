@@ -156,7 +156,7 @@ class BearerController extends AbstractController
     }
 
     /**
-     * @Route("/bearerFrontend/logout", name="contao_bearer_logout", defaults={"_scope" = "bearerFrontend", "_token_check" = false}, methods="GET")
+     * @Route("/bearerFrontend/logout", name="contao_bearerFrontend_logout", defaults={"_scope" = "bearerFrontend", "_token_check" = false}, methods="GET")
      *
      * @param Request $request
      * @param UserInterface $user
@@ -165,12 +165,28 @@ class BearerController extends AbstractController
      */
     public function logoutMember(Request $request, UserInterface $user): JsonResponse
     {
-        // For future use - but therefore the tokens has to be stored in database and auth should compare to existing database entries
-        throw new \Exception('not supported');
+        try {
+
+            $this->framework->initialize();
+
+            $user = MemberModel::findByUsername($user->getUsername());
+            if ($user === null) {
+                throw new \Exception('user not found');
+            }
+
+            $user->jwt = null;
+            $user->save();
+
+            return (new JsonResponse(true));
+
+        } catch (\Exception $exception) {
+            return (new JsonResponse($exception->getMessage(), 400));
+        }
+
     }
 
     /**
-     * @Route("/bearerBackend/logout", name="contao_bearer_logout", defaults={"_scope" = "bearerBackend", "_token_check" = false}, methods="GET")
+     * @Route("/bearerBackend/logout", name="contao_bearerBackend_logout", defaults={"_scope" = "bearerBackend", "_token_check" = false}, methods="GET")
      *
      * @param Request $request
      * @param UserInterface $user
@@ -179,8 +195,23 @@ class BearerController extends AbstractController
      */
     public function logoutUser(Request $request, UserInterface $user): JsonResponse
     {
-        // For future use - but therefore the tokens has to be stored in database and auth should compare to existing database entries
-        throw new \Exception('not supported');
+        try {
+
+            $this->framework->initialize();
+
+            $user = UserModel::findByUsername($user->getUsername());
+            if ($user === null) {
+                throw new \Exception('user not found');
+            }
+
+            $user->jwt = null;
+            $user->save();
+
+            return (new JsonResponse(true));
+
+        } catch (\Exception $exception) {
+            return (new JsonResponse($exception->getMessage(), 400));
+        }
     }
 
     /**
@@ -206,33 +237,34 @@ class BearerController extends AbstractController
         $encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(User::class);
 
         if ($isBackendUser) {
-
-            $userObject = UserModel::findByUsername($username);
-            if ($userObject === null) {
-                throw new \Exception('user not found');
-            }
-
-            if (!$encoder->isPasswordValid($userObject->password, $password, null)) {
-                throw new \Exception("error auth - invalid password for username:" . $username);
-            }
-
+            $user = UserModel::findByUsername($username);
         } else {
+            $user = MemberModel::findByUsername($username);
+        }
 
-            $memberObject = MemberModel::findByUsername($username);
-            if ($memberObject === null) {
-                throw new \Exception('user not found');
-            }
+        if ($user === null) {
+            throw new \Exception('user not found');
+        }
 
-            if (!$encoder->isPasswordValid($memberObject->password, $password, null)) {
-                throw new \Exception("error auth - invalid password for username:" . $username);
-            }
+        if (!$encoder->isPasswordValid($user->password, $password, null)) {
+
+            $user->jwt = null;
+            $user->save();
+
+            throw new \Exception("error auth - invalid password for username:" . $username);
 
         }
 
+        $token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username));
+        $refresh_token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username, 'isRefreshToken' => true));
+
+        $user->jwt = $token;
+        $user->save();
+
         return [
             'username' => $username,
-            'token' => Jwt::generate(\base64_encode($username), $ttl, array('username' => $username)),
-            'refresh_token' => Jwt::generate(\base64_encode($username), $ttl, array('username' => $username, 'isRefreshToken' => true))
+            'token' => $token,
+            'refresh_token' => $refresh_token
         ];
     }
 
@@ -275,15 +307,28 @@ class BearerController extends AbstractController
                 throw new \Exception('invalid refresh_token');
             }
 
+            if ($isBackendUser) {
+                $user = UserModel::findByUsername($username);
+            } else {
+                $user = MemberModel::findByUsername($username);
+            }
+
+            $token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username));
+            $refresh_token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username, 'isRefreshToken' => true));
+
+            $user->jwt = $token;
+            $user->save();
+
+            return [
+                'username' => $username,
+                'token' => $token,
+                'refresh_token' => $refresh_token
+            ];
+
         } catch (\Exception $ex) {
             throw new \Exception($ex->getMessage());
         }
 
-        return [
-            'username' => $username,
-            'token' => Jwt::generate(\base64_encode($username), $ttl, array('username' => $username)),
-            'refresh_token' => Jwt::generate(\base64_encode($username), $ttl, array('username' => $username, 'isRefreshToken' => true))
-        ];
     }
 
 }
