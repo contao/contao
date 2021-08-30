@@ -584,6 +584,7 @@ abstract class Model
 		if (!isset($this->arrRelations[$strKey]))
 		{
 			$table = static::getTable();
+
 			throw new \Exception("Field $table.$strKey does not seem to be related");
 		}
 
