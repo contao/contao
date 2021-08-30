@@ -82,7 +82,7 @@ class BearerController extends AbstractController
                 return (new JsonResponse($user->getData()));
 
             } else {
-                throw new \Exception('invalid user');
+                throw new \Exception('invalid userInstance');
             }
 
         } catch (\Exception $exception) {
@@ -107,7 +107,7 @@ class BearerController extends AbstractController
                 return (new JsonResponse($user->getData()));
 
             } else {
-                throw new \Exception('invalid user');
+                throw new \Exception('invalid userInstance');
             }
 
         } catch (\Exception $exception) {
@@ -181,15 +181,21 @@ class BearerController extends AbstractController
 
             $this->framework->initialize();
 
-            $user = MemberModel::findByUsername($user->username);
-            if ($user === null) {
-                throw new \Exception('user not found');
+            if ($user instanceof FrontendUser) {
+
+                $user = MemberModel::findByUsername($user->username);
+                if ($user === null) {
+                    throw new \Exception('user not found');
+                }
+
+                $user->bearerToken = null;
+                $user->save();
+
+                return (new JsonResponse(true));
+
+            } else {
+                throw new \Exception('invalid userInstance');
             }
-
-            $user->bearerToken = null;
-            $user->save();
-
-            return (new JsonResponse(true));
 
         } catch (\Exception $exception) {
             return (new JsonResponse($exception->getMessage(), 400));
@@ -213,15 +219,21 @@ class BearerController extends AbstractController
 
             $this->framework->initialize();
 
-            $user = UserModel::findByUsername($user->username);
-            if ($user === null) {
-                throw new \Exception('user not found');
+            if ($user instanceof BackendUser) {
+
+                $user = UserModel::findByUsername($user->username);
+                if ($user === null) {
+                    throw new \Exception('user not found');
+                }
+
+                $user->bearerToken = null;
+                $user->save();
+
+                return (new JsonResponse(true));
+
+            } else {
+                throw new \Exception('invalid userInstance');
             }
-
-            $user->bearerToken = null;
-            $user->save();
-
-            return (new JsonResponse(true));
 
         } catch (\Exception $exception) {
             return (new JsonResponse($exception->getMessage(), 400));
