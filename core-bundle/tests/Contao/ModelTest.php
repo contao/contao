@@ -60,8 +60,9 @@ class ModelTest extends TestCase
 
         // ContentModel could be any other Model class extending from \Contao\Model
         $mock = new \Contao\ContentModel();
-        $reflection = new \ReflectionClass($mock);
-        $reflection->setStaticPropertyValue('strTable', $table);
+        $reflection = (new \ReflectionClass($mock))->getProperty('strTable');
+        $reflection->setAccessible(true);
+        $reflection->setValue($table);
 
         $mock->getRelated($relation);
     }
