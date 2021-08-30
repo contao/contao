@@ -52,8 +52,24 @@ security:
                     - contao.security.logout_handler
                 success_handler: contao.security.logout_success_handler
 
+        contao_bearer_frontend:
+            request_matcher: contao.routing.bearer_frontend_matcher
+            provider: contao.security.frontend_user_provider
+            stateless: true
+            guard:
+                authenticators:
+                    - contao.security.bearer_token_authenticator
+
+        contao_bearer_backend:
+            request_matcher: contao.routing.bearer_backend_matcher
+            provider: contao.security.backend_user_provider
+            stateless: true
+            guard:
+                authenticators:
+                    - contao.security.bearer_token_authenticator
+
     access_control:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/contao(/|$), roles: ROLE_USER }
-        - { path: ^/, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/, roles: [ IS_AUTHENTICATED_ANONYMOUSLY ] }

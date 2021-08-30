@@ -5,15 +5,15 @@ services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
-                - [setFramework, ['@contao.framework']]
+                - [ setFramework, [ '@contao.framework' ] ]
 
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
             calls:
-                - [setContainer, ['@Psr\Container\ContainerInterface']]
+                - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
 
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
-                - [setContainer, ['@service_container']]
+                - [ setContainer, [ '@service_container' ] ]
 
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.image_factory'
@@ -293,7 +293,7 @@ services:
     contao.fragment.pre_handlers:
         class: Symfony\Component\DependencyInjection\ServiceLocator
         arguments:
-            - []
+            - [ ]
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
@@ -304,7 +304,7 @@ services:
             - '@http_kernel'
             - '@event_dispatcher'
         calls:
-            - [setFragmentPath, ['%fragment.path%']]
+            - [ setFragmentPath, [ '%fragment.path%' ] ]
         tags:
             - { name: kernel.fragment_renderer, alias: forward }
 
@@ -566,7 +566,7 @@ services:
     contao.routing.backend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
-            - [matchAttribute, [_scope, backend]]
+            - [ matchAttribute, [ _scope, backend ] ]
 
     contao.routing.candidates:
         class: Contao\CoreBundle\Routing\Candidates\PageCandidates
@@ -588,7 +588,7 @@ services:
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
-            - [matchAttribute, [_scope, frontend]]
+            - [ matchAttribute, [ _scope, frontend ] ]
 
     contao.routing.images_loader:
         class: Contao\CoreBundle\Routing\ImagesLoader
@@ -614,9 +614,9 @@ services:
             - '@contao.routing.route_provider'
             - '@contao.routing.final_matcher'
         calls:
-            - [addRouteFilter, ['@contao.routing.domain_filter']]
-            - [addRouteFilter, ['@contao.routing.published_filter']]
-            - [addRouteFilter, ['@contao.routing.language_filter']]
+            - [ addRouteFilter, [ '@contao.routing.domain_filter' ] ]
+            - [ addRouteFilter, [ '@contao.routing.published_filter' ] ]
+            - [ addRouteFilter, [ '@contao.routing.language_filter' ] ]
         public: true
 
     contao.routing.nested_404_matcher:
@@ -625,8 +625,8 @@ services:
             - '@contao.routing.route_404_provider'
             - '@contao.routing.final_matcher'
         calls:
-            - [addRouteFilter, ['@contao.routing.domain_filter']]
-            - [addRouteFilter, ['@contao.routing.published_filter']]
+            - [ addRouteFilter, [ '@contao.routing.domain_filter' ] ]
+            - [ addRouteFilter, [ '@contao.routing.published_filter' ] ]
         public: true
 
     Contao\CoreBundle\Routing\Page\PageRegistry:
@@ -730,7 +730,7 @@ services:
             - ~
             - '@contao.security.authentication_success_handler'
             - '@contao.security.authentication_failure_handler'
-            - []
+            - [ ]
             - '@?logger'
             - '@?event_dispatcher'
         tags:
@@ -865,14 +865,14 @@ services:
         arguments:
             - _contao_be_attributes
         calls:
-            - [setName, [contao_backend]]
+            - [ setName, [ contao_backend ] ]
 
     contao.session.contao_frontend:
         class: Contao\CoreBundle\Session\Attribute\ArrayAttributeBag
         arguments:
             - _contao_fe_attributes
         calls:
-            - [setName, [contao_frontend]]
+            - [ setName, [ contao_frontend ] ]
 
     contao.slug:
         class: Contao\CoreBundle\Slug\Slug
@@ -929,7 +929,7 @@ services:
 
     Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
         arguments:
-            - []
+            - [ ]
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 1 }
@@ -982,3 +982,24 @@ services:
         arguments:
             - '@Contao\CoreBundle\Util\SimpleTokenExpressionLanguage'
         public: true
+
+    contao.security.bearer_token_authenticator:
+        class: Contao\CoreBundle\Security\Authentication\Bearer\BearerTokenAuthenticator
+        arguments:
+            - '@contao.framework'
+
+    Contao\CoreBundle\Controller\Bearer\BearerController:
+        arguments:
+            - '@contao.framework'
+        tags:
+            - controller.service_arguments
+
+    contao.routing.bearer_frontend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - [ matchAttribute, [ _scope, bearerFrontend ] ]
+
+    contao.routing.bearer_backend_matcher:
+        class: Symfony\Component\HttpFoundation\RequestMatcher
+        calls:
+            - [ matchAttribute, [ _scope, bearerBackend ] ]
