@@ -472,7 +472,7 @@ class SitemapControllerTest extends TestCase
             21 => null,
         ];
 
-        $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
+        $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
         $container = $this->mockContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
