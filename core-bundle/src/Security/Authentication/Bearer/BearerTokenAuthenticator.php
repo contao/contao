@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication\Bearer;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Jwt\Jwt;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
+use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +54,7 @@ class BearerTokenAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null): JsonResponse
     {
-        return new JsonResponse('Auth required', Response::HTTP_UNAUTHORIZED);
+        return new JsonResponse('Bearer Auth required', Response::HTTP_UNAUTHORIZED);
     }
 
     public function getCredentials(Request $request): array
@@ -98,15 +100,21 @@ class BearerTokenAuthenticator extends AbstractGuardAuthenticator
     {
         try {
 
-            $currentToken = (string)$credentials['token'];
-            $userToken = (string)$user->jwt;
-            $username = $user->username;
+            if ($user instanceof FrontendUser || $user instanceof BackendUser) {
 
-            if ($currentToken === null || $currentToken === '' || $currentToken !== $userToken || Jwt::validateAndVerify($currentToken, \base64_encode($username)) === false) {
-                return false;
+                $currentToken = (string)$credentials['token'];
+                $userToken = (string)$user->bearerToken;
+                $username = $user->username;
+
+                if ($currentToken === null || $currentToken === '' || $currentToken !== $userToken || Jwt::validateAndVerify($currentToken, \base64_encode($username)) === false) {
+                    return false;
+                }
+
+                return true;
+
+            } else {
+                throw new AuthenticationException('invalid user instance');
             }
-
-            return true;
 
         } catch (\Exception $ex) {
             throw new AuthenticationException($ex->getMessage());

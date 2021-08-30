@@ -144,7 +144,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'jwt' => array
+		'bearerToken' => array
 		(
 			'sql'                     => "text NULL"
 		),

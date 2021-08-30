@@ -67,6 +67,9 @@ class BearerController extends AbstractController
 
     /**
      * @Route("/bearerFrontend/memberInfo", name="contao_bearerFrontend_memberinfo", defaults={"_scope" = "bearerFrontend", "_token_check" = false}, methods="GET")
+     *
+     * $user is instance of \Contao\FrontendUser
+     *
      */
     public function memberInfo(Request $request, UserInterface $user): JsonResponse
     {
@@ -89,6 +92,9 @@ class BearerController extends AbstractController
 
     /**
      * @Route("/bearerBackend/userInfo", name="contao_bearerBackend_userinfo", defaults={"_scope" = "bearerBackend", "_token_check" = false}, methods="GET")
+     *
+     * $user is instance of \Contao\BackendUser
+     *
      */
     public function userInfo(Request $request, UserInterface $user): JsonResponse
     {
@@ -111,6 +117,8 @@ class BearerController extends AbstractController
 
     /**
      * @Route("/bearerFrontend/refresh", name="contao_bearerFrontend_refresh", defaults={"_scope" = "bearerFrontend", "_token_check" = false}, methods="POST")
+     *
+     * $user is instance of \Contao\FrontendUser
      *
      * @param Request $request
      * @param UserInterface $user
@@ -135,6 +143,8 @@ class BearerController extends AbstractController
     /**
      * @Route("/bearerBackend/refresh", name="contao_bearerBackend_refresh", defaults={"_scope" = "bearerBackend", "_token_check" = false}, methods="POST")
      *
+     * $user is instance of \Contao\BackendUser
+     *
      * @param Request $request
      * @param UserInterface $user
      * @return JsonResponse
@@ -158,6 +168,8 @@ class BearerController extends AbstractController
     /**
      * @Route("/bearerFrontend/logout", name="contao_bearerFrontend_logout", defaults={"_scope" = "bearerFrontend", "_token_check" = false}, methods="GET")
      *
+     * $user is instance of \Contao\FrontendUser
+     *
      * @param Request $request
      * @param UserInterface $user
      * @return JsonResponse
@@ -169,12 +181,12 @@ class BearerController extends AbstractController
 
             $this->framework->initialize();
 
-            $user = MemberModel::findByUsername($user->getUsername());
+            $user = MemberModel::findByUsername($user->username);
             if ($user === null) {
                 throw new \Exception('user not found');
             }
 
-            $user->jwt = null;
+            $user->bearerToken = null;
             $user->save();
 
             return (new JsonResponse(true));
@@ -188,6 +200,8 @@ class BearerController extends AbstractController
     /**
      * @Route("/bearerBackend/logout", name="contao_bearerBackend_logout", defaults={"_scope" = "bearerBackend", "_token_check" = false}, methods="GET")
      *
+     * $user is instance of \Contao\BackendUser
+     *
      * @param Request $request
      * @param UserInterface $user
      * @return JsonResponse
@@ -199,12 +213,12 @@ class BearerController extends AbstractController
 
             $this->framework->initialize();
 
-            $user = UserModel::findByUsername($user->getUsername());
+            $user = UserModel::findByUsername($user->username);
             if ($user === null) {
                 throw new \Exception('user not found');
             }
 
-            $user->jwt = null;
+            $user->bearerToken = null;
             $user->save();
 
             return (new JsonResponse(true));
@@ -248,7 +262,7 @@ class BearerController extends AbstractController
 
         if (!$encoder->isPasswordValid($user->password, $password, null)) {
 
-            $user->jwt = null;
+            $user->bearerToken = null;
             $user->save();
 
             throw new \Exception("error auth - invalid password for username:" . $username);
@@ -258,7 +272,7 @@ class BearerController extends AbstractController
         $token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username));
         $refresh_token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username, 'isRefreshToken' => true));
 
-        $user->jwt = $token;
+        $user->bearerToken = $token;
         $user->save();
 
         return [
@@ -288,7 +302,7 @@ class BearerController extends AbstractController
 
         $refreshToken = (string)$data['refresh_token'];
 
-        $username = $user->getUsername();
+        $username = $user->username;
 
         try {
 
@@ -316,7 +330,7 @@ class BearerController extends AbstractController
             $token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username));
             $refresh_token = Jwt::generate(\base64_encode($username), $ttl, array('username' => $username, 'isRefreshToken' => true));
 
-            $user->jwt = $token;
+            $user->bearerToken = $token;
             $user->save();
 
             return [
