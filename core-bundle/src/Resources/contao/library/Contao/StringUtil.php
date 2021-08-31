@@ -547,15 +547,16 @@ class StringUtil
 	/**
 	 * Parse simple tokens
 	 *
-	 * @param string $strString The string to be parsed
-	 * @param array  $arrData   The replacement data
+	 * @param string $strString    The string to be parsed
+	 * @param array  $arrData      The replacement data
+	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
 	 *
 	 * @return string The converted string
 	 *
 	 * @throws \Exception                If $strString cannot be parsed
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
 	 */
-	public static function parseSimpleTokens($strString, $arrData)
+	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
 		$strReturn = '';
 
@@ -682,37 +683,39 @@ class StringUtil
 		$arrIfStack = array(true);
 
 		// Tokenize the string into tag and text blocks
-		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+		$arrTags = preg_split($blnAllowHtml ? '/((?:{|&#123;)(?:(?!&#12[35];)[^{}])+(?:}|&#125;))\n?/' : '/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		// Parse the tokens
 		foreach ($arrTags as $strTag)
 		{
+			$strTagDecoded = $blnAllowHtml ? html_entity_decode(self::restoreBasicEntities($strTag), ENT_QUOTES, 'UTF-8') : $strTag;
+
 			// True if it is inside a matching if-tag
 			$blnCurrent = $arrStack[\count($arrStack) - 1];
 			$blnCurrentIf = $arrIfStack[\count($arrIfStack) - 1];
 
-			if (strncmp($strTag, '{if ', 4) === 0)
+			if (strncmp($strTagDecoded, '{if ', 4) === 0)
 			{
-				$blnExpression = $evaluateExpression(substr($strTag, 4, -1));
+				$blnExpression = $evaluateExpression(substr($strTagDecoded, 4, -1));
 				$arrStack[] = $blnCurrent && $blnExpression;
 				$arrIfStack[] = $blnExpression;
 			}
-			elseif (strncmp($strTag, '{elseif ', 8) === 0)
+			elseif (strncmp($strTagDecoded, '{elseif ', 8) === 0)
 			{
-				$blnExpression = $evaluateExpression(substr($strTag, 8, -1));
+				$blnExpression = $evaluateExpression(substr($strTagDecoded, 8, -1));
 				array_pop($arrStack);
 				array_pop($arrIfStack);
 				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1] && $blnExpression;
 				$arrIfStack[] = $blnCurrentIf || $blnExpression;
 			}
-			elseif (strncmp($strTag, '{else}', 6) === 0)
+			elseif (strncmp($strTagDecoded, '{else}', 6) === 0)
 			{
 				array_pop($arrStack);
 				array_pop($arrIfStack);
 				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1];
 				$arrIfStack[] = true;
 			}
-			elseif (strncmp($strTag, '{endif}', 7) === 0)
+			elseif (strncmp($strTagDecoded, '{endif}', 7) === 0)
 			{
 				array_pop($arrStack);
 				array_pop($arrIfStack);
