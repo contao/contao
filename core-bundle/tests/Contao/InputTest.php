@@ -421,6 +421,7 @@ class InputTest extends TestCase
     public function testSimpleTokensWithHtml(string $source, array $tokens, string $expected): void
     {
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
+
         $container = new ContainerBuilder();
         $container->set(SimpleTokenParser::class, $simpleTokenParser);
         $container->setParameter('kernel.charset', 'UTF-8');
@@ -437,6 +438,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));
 
         $this->expectDeprecation('%sparseSimpleTokens()%shas been deprecated%s');
+
         $this->assertSame($expected, StringUtil::parseSimpleTokens($html, $tokens));
     }
 
