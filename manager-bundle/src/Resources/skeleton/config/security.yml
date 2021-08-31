@@ -56,6 +56,9 @@ security:
             request_matcher: contao.routing.bearer_frontend_matcher
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
+            anonymous: true
+            lazy: true
+            logout: ~
             stateless: true
             guard:
                 authenticators:
@@ -65,6 +68,9 @@ security:
             request_matcher: contao.routing.bearer_backend_matcher
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
+            anonymous: true
+            lazy: true
+            logout: ~
             stateless: true
             guard:
                 authenticators:
