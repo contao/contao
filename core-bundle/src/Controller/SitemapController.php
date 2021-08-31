@@ -140,9 +140,9 @@ class SitemapController extends AbstractController
                 continue;
             }
 
-            $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time()) && 'noindex,nofollow' !== $pageModel->robots;
+            $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time());
 
-            if ($isPublished && !$pageModel->requireItem && $this->pageRegistry->supportsContentComposition($pageModel)) {
+            if ($isPublished && !$pageModel->requireItem && $this->pageRegistry->supportsContentComposition($pageModel) && 'noindex,nofollow' !== $pageModel->robots) {
                 $urls = [$pageModel->getAbsoluteUrl()];
 
                 // Get articles with teaser
