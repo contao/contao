@@ -54,6 +54,11 @@ use Symfony\Component\Finder\Glob;
 abstract class Controller extends System
 {
 	/**
+	 * @var Query|null
+	 */
+	protected static $objQuery;
+
+	/**
 	 * Find a particular template file and return its path
 	 *
 	 * @param string $strTemplate The name of the template
@@ -1070,7 +1075,12 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		$query = Query::createFromRFC3986(Environment::get('queryString'));
+		if (static::$objQuery === null)
+		{
+			static::$objQuery = Query::createFromRFC3986(Environment::get('queryString'));
+		}
+
+		$query = static::$objQuery;
 
 		// Remove the request token and referer ID
 		$query = $query->withoutParam('rt', 'ref', ...$arrUnset);
