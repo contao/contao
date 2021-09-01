@@ -983,7 +983,8 @@ abstract class Widget extends Controller
 				case 'url':
 					$varInput = StringUtil::specialcharsUrl($varInput);
 					
-					if ($this->decodeEntities) {
+					if ($this->decodeEntities)
+					{
 						$varInput = StringUtil::decodeEntities($varInput);
 					}
 
