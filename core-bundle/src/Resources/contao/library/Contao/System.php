@@ -406,6 +406,11 @@ abstract class System
 					unset($pairs[$param]);
 				}
 
+				if (!$pairs) 
+				{
+					return $path;
+				}
+
 				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 			};
 
