@@ -1075,9 +1075,11 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
 		if (static::$objQuery === null)
 		{
-			static::$objQuery = Query::createFromRFC3986(Environment::get('queryString'));
+			static::$objQuery = Query::createFromRFC3986($request->getQueryString());
 		}
 
 		$query = static::$objQuery;
@@ -1094,7 +1096,7 @@ abstract class Controller extends System
 		// Add the referer ID
 		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
 		{
-			$query = $query->withPair('ref', System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
+			$query = $query->withPair('ref', $request->attributes->get('_contao_referer_id'));
 		}
 
 		$uri = $query->getUriComponent();

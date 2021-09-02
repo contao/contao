@@ -20,7 +20,6 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Environment;
 use Contao\FilesModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
@@ -365,8 +364,6 @@ class ControllerTest extends TestCase
         $container->get('request_stack')->push($request);
         System::setContainer($container);
 
-        Environment::set('queryString', '');
-
         $this->assertSame('', Controller::addToUrl(''));
         $this->assertSame('?do=page&amp;ref=cri', Controller::addToUrl('do=page'));
         $this->assertSame('?do=page&amp;rt=foo&amp;ref=cri', Controller::addToUrl('do=page&amp;rt=foo'));
@@ -405,12 +402,11 @@ class ControllerTest extends TestCase
 
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
+        $request->server->set('QUERY_STRING', 'do=page&id=4');
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->get('request_stack')->push($request);
         System::setContainer($container);
-
-        Environment::set('queryString', 'do=page&id=4');
 
         $this->assertSame('?do=page&amp;id=4', Controller::addToUrl(''));
         $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page'));
