@@ -406,7 +406,7 @@ abstract class System
 					unset($pairs[$param]);
 				}
 
-				if (!$pairs) 
+				if (empty($pairs))
 				{
 					return $path;
 				}
