@@ -289,8 +289,8 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         if (!$kernel->isDebug()) {
             $cache = $kernel->getHttpCache();
 
-            // Enable the Symfony reverse proxy if request has no surrogate capability
-            if (($surrogate = $cache->getSurrogate()) && !$surrogate->hasSurrogateCapability($request)) {
+            // Enable HTTP Cache if not disabled explicitly
+            if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? false)) {
                 return $cache;
             }
         }
