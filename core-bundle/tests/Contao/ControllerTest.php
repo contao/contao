@@ -381,7 +381,7 @@ class ControllerTest extends TestCase
         $this->assertSame('?act=edit&amp;id=2', Controller::addToUrl('act=edit&amp;id=2', false));
         $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
 
-        $_GET['ref'] = 'ref';
+        $request->query->set('ref', 'ref');
 
         $this->assertSame('?ref=cri', Controller::addToUrl('', false));
         $this->assertSame('?do=page&amp;ref=cri', Controller::addToUrl('do=page', false));
@@ -390,8 +390,6 @@ class ControllerTest extends TestCase
         $this->assertSame('?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&id=2', false));
         $this->assertSame('?act=edit&amp;id=2&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
         $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
-
-        unset($_GET['ref']);
     }
 
     /**
@@ -428,7 +426,7 @@ class ControllerTest extends TestCase
         $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
         $this->assertSame('?do=page&amp;key=foo', Controller::addToUrl('key=foo', false, ['id']));
 
-        $_GET['ref'] = 'ref';
+        $request->query->set('ref', 'ref');
 
         $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('', false));
         $this->assertSame('?do=page&amp;id=4&amp;ref=cri', Controller::addToUrl('do=page', false));
@@ -438,7 +436,5 @@ class ControllerTest extends TestCase
         $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
         $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
         $this->assertSame('?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
-
-        unset($_GET['ref']);
     }
 }

@@ -1108,7 +1108,7 @@ abstract class Controller extends System
 		}
 
 		// Add the referer ID
-		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
+		if ($request->query->has('ref') || ($strRequest && $blnAddRef))
 		{
 			$pairs['ref'] = $request->attributes->get('_contao_referer_id');
 		}
