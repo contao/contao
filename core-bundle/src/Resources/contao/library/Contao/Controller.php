@@ -1117,10 +1117,10 @@ abstract class Controller extends System
 
 		if (!empty($pairs))
 		{
-			$uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
-		return TL_SCRIPT . StringUtil::ampersand($uri);
+		return TL_SCRIPT . $uri;
 	}
 
 	/**
