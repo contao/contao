@@ -355,13 +355,14 @@ class ControllerTest extends TestCase
      */
     public function testAddToUrlWithoutQueryString(): void
     {
-        define('TL_SCRIPT', '');
+        \define('TL_SCRIPT', '');
 
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->get('request_stack')->push($request);
+
         System::setContainer($container);
 
         $this->assertSame('', Controller::addToUrl(''));
@@ -398,7 +399,7 @@ class ControllerTest extends TestCase
      */
     public function testAddToUrlWithQueryString(): void
     {
-        define('TL_SCRIPT', '');
+        \define('TL_SCRIPT', '');
 
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
@@ -406,6 +407,7 @@ class ControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->get('request_stack')->push($request);
+
         System::setContainer($container);
 
         $this->assertSame('?do=page&amp;id=4', Controller::addToUrl(''));

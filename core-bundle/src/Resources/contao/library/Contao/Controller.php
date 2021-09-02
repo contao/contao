@@ -30,7 +30,6 @@ use Psr\Log\LogLevel;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
-use Symfony\Component\HttpFoundation\HeaderUtils;
 
 /**
  * Abstract parent class for Controllers
@@ -1084,7 +1083,7 @@ abstract class Controller extends System
 
 			if (!isset(static::$arrQueryCache[$cacheKey]))
 			{
-				$pairs = HeaderUtils::parseQuery($request->server->get('QUERY_STRING'));
+				parse_str($request->server->get('QUERY_STRING'), $pairs);
 				ksort($pairs);
 
 				static::$arrQueryCache[$cacheKey] = $pairs;
@@ -1104,13 +1103,8 @@ abstract class Controller extends System
 		// Merge the request string to be added
 		if ($strRequest)
 		{
-			$newPairs = explode('&', (str_replace('&amp;', '&', $strRequest)));
-
-			foreach ($newPairs as $newPair)
-			{
-				list($k, $v) = explode('=', $newPair, 2);
-				$pairs[$k] = rawurldecode($v);
-			}
+			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
+			$pairs = array_merge($pairs, $newPairs);
 		}
 
 		// Add the referer ID
@@ -1123,7 +1117,7 @@ abstract class Controller extends System
 
 		if (!empty($pairs))
 		{
-			$uri = '?' . http_build_query($pairs, '', '&', \PHP_QUERY_RFC3986);
+			$uri = '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 		}
 
 		return TL_SCRIPT . StringUtil::ampersand($uri);
