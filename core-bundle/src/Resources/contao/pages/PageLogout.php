@@ -67,9 +67,9 @@ class PageLogout extends Frontend
 		// Add the redirect= parameter to the logout URL
 		$pairs['redirect'] = $strRedirect;
 
-		$request->server->set('QUERY_STRING', http_build_query($pairs, '', '&', PHP_QUERY_RFC3986));
+		$uri = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 
-		return new RedirectResponse($request->getUri(), Response::HTTP_TEMPORARY_REDIRECT);
+		return new RedirectResponse($uri, Response::HTTP_TEMPORARY_REDIRECT);
 	}
 }
 

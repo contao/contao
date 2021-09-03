@@ -79,9 +79,9 @@ class ModuleLogout extends Module
 		// Add the redirect= parameter to the logout URL
 		$pairs['redirect'] = $strRedirect;
 
-		$request->server->set('QUERY_STRING', http_build_query($pairs, '', '&', PHP_QUERY_RFC3986));
+		$uri = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 
-		$this->redirect($request->getUri());
+		$this->redirect($uri);
 
 		return '';
 	}
