@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Controller;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class ControllerTest extends ContaoTestCase
+class ControllerTest extends TestCase
 {
     public function testReturnsTheTimeZones(): void
     {
