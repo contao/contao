@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ThemeTemplatesListenerTest extends TestCase
 {
