@@ -18,6 +18,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
+use Doctrine\DBAL\Driver\DriverException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Webmozart\PathUtil\Path;
 
@@ -56,6 +58,26 @@ class TemplateLocatorTest extends TestCase
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
         $locator = $this->getTemplateLocator($projectDir, ['themes/invalid.theme']);
+
+        $this->assertEmpty($locator->findThemeDirectories());
+    }
+
+    public function testIgnoresMissingThemeTable(): void
+    {
+        $themeAdapter = $this->mockAdapter(['findAll']);
+        $themeAdapter
+            ->method('findAll')
+            ->willThrowException(
+                new TableNotFoundException(
+                    'Table tl_theme doesn\'t exist.',
+                    $this->createMock(DriverException::class)
+                )
+            )
+        ;
+
+        $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
+
+        $locator = new TemplateLocator('', [], [], $framework);
 
         $this->assertEmpty($locator->findThemeDirectories());
     }

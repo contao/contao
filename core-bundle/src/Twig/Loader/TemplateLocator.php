@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\ThemeModel;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
 
@@ -63,7 +64,14 @@ class TemplateLocator
         $themeAdapter = $this->framework->getAdapter(ThemeModel::class);
 
         $directories = [];
-        $themes = $themeAdapter->findAll() ?? [];
+
+        // This code might run early during cache warmup where the 'tl_theme'
+        // table couldn't exist, yet.
+        try {
+            $themes = $themeAdapter->findAll() ?? [];
+        } catch (TableNotFoundException $e) {
+            return [];
+        }
 
         foreach ($themes as $theme) {
             if (!is_dir($absolutePath = Path::join($this->projectDir, $theme->templates))) {
