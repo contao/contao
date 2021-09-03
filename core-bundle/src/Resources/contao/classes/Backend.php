@@ -340,19 +340,10 @@ abstract class Backend extends Controller
 		$strTable = Input::get('table') ?: $arrTables[0];
 		$id = $objSession->get('CURRENT_ID');
 
-		// Update the CURRENT_ID
-		if ($currentId = Input::get('id'))
+		// Update the CURRENT_ID in list views and if there is none yet (see #2580)
+		if (Input::get('id') && (!Input::get('act') || !$objSession->has('CURRENT_ID')))
 		{
-			// Always update the CURRENT_ID in list views
-			if (!Input::get('act'))
-			{
-				$id = $currentId;
-			}
-			// Update the CURRENT_ID if there is none yet (see #2580)
-			elseif (!$objSession->has('CURRENT_ID'))
-			{
-				$id = $currentId;
-			}
+			$id = Input::get('id');
 		}
 
 		// Store the current ID in the current session
