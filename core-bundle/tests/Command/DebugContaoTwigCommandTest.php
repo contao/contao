@@ -178,8 +178,8 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         ];
 
         yield 'theme alias' => [
-            ['--theme' => 'foo_bar'],
-            'foo_bar',
+            ['--theme' => 'foo-bar'],
+            'foo-bar',
         ];
 
         yield 'theme path' => [

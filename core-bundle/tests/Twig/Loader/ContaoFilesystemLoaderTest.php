@@ -17,6 +17,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\Model\Collection;
+use Contao\ThemeModel;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -166,7 +168,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1');
 
-        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
+        $loader = $this->getContaoFilesystemLoader(null, $this->getTemplateLocator());
         $loader->addPath($path, 'Contao', true);
 
         $this->assertSame(
@@ -250,7 +252,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy/templates');
 
-        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
+        $loader = $this->getContaoFilesystemLoader(null, $this->getTemplateLocator());
         $loader->addPath($path);
 
         $source = $loader->getSourceContext('@Contao/foo.html5');
@@ -266,7 +268,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy/templates');
 
-        $loader = $this->getContaoFilesystemLoader(null, new TemplateLocator('/', [], []));
+        $loader = $this->getContaoFilesystemLoader(null, $this->getTemplateLocator());
         $loader->addPath($path);
 
         $source = $loader->getSourceContext('@Contao/bar.html5');
@@ -316,7 +318,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
         $cacheTime = 1623924000;
 
-        $locator = new TemplateLocator($projectDir, [], []);
+        $locator = $this->getTemplateLocator($projectDir);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
         (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
 
@@ -377,7 +379,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $cacheTime = 1623924000;
         $expired = $cacheTime + 100;
 
-        $locator = new TemplateLocator($projectDir, [], []);
+        $locator = $this->getTemplateLocator($projectDir, ['templates/my/theme']);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
         (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
 
@@ -413,7 +415,11 @@ class ContaoFilesystemLoaderTest extends TestCase
             'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
         ];
 
-        $locator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
+        $themePaths = [
+            'templates/my/theme',
+        ];
+
+        $locator = $this->getTemplateLocator($projectDir, $themePaths, $bundles, $bundlesMetadata);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod');
@@ -509,7 +515,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $locator = new TemplateLocator($projectDir, [], []);
+        $locator = $this->getTemplateLocator($projectDir);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
         (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
 
@@ -553,8 +559,9 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $locator = new TemplateLocator(
+        $locator = $this->getTemplateLocator(
             $projectDir,
+            [],
             ['App' => 'class'],
             ['App' => ['path' => Path::join($projectDir, 'contao')]],
         );
@@ -598,6 +605,31 @@ class ContaoFilesystemLoaderTest extends TestCase
                 'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             ],
         ];
+    }
+
+    private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
+    {
+        $themeModels = array_map(
+            function (string $path) {
+                return $this->mockClassWithProperties(ThemeModel::class, [
+                    'templates' => $path,
+                ]);
+            },
+            $themePaths
+        );
+
+        $themeAdapter = $this->mockAdapter(['findAll']);
+        $themeAdapter
+            ->method('findAll')
+            ->willReturn(empty($themePaths) ? null : new Collection($themeModels, 'tl_theme'))
+        ;
+
+        return new TemplateLocator(
+            $projectDir,
+            $bundles,
+            $bundlesMetadata,
+            $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
+        );
     }
 
     /**
