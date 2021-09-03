@@ -16,6 +16,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class ControllerTest extends TestCase
 {
@@ -64,8 +65,11 @@ class ControllerTest extends TestCase
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->get('request_stack')->push($request);
+        $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
 
@@ -107,8 +111,11 @@ class ControllerTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'cri');
         $request->server->set('QUERY_STRING', 'do=page&id=4');
 
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->get('request_stack')->push($request);
+        $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
 
