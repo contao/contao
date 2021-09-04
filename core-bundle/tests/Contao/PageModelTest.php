@@ -161,6 +161,99 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
     }
 
+    /**
+     * @dataProvider layoutInheritanceParentPagesProvider
+     */
+    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, $expectedLayout): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+        $numberOfParents = \count($parents);
+
+        // Last page has to be a root page for this test case to prevent
+        // running the check of TL_MODE constant in PageModel::loadDetails()
+        $parents[$numberOfParents - 1][0]['type'] = 'root';
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnCallback(
+                static function () use (&$parents) {
+                    return !empty($parents) ? new Result(array_shift($parents), '') : new Result([], '');
+                }
+            )
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->exactly($numberOfParents + 1))
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+        $page->loadDetails();
+
+        $this->assertSame($page->layout, $expectedLayout);
+    }
+
+    public function layoutInheritanceParentPagesProvider(): \Generator
+    {
+        yield 'no parent with a layout' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            false,
+        ];
+
+        yield 'inherit layout from parent page' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => 'inherit', 'layout' => '2']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '2',
+        ];
+
+        yield 'no layout inheritance defined' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => '', 'layout' => '2']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '2',
+        ];
+
+        yield 'multiple parents with layouts' => [
+            [
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layout' => '1']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '1',
+        ];
+
+        yield 'layout inheritance disabled' => [
+            [
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layoutInheritance' => 'disable', 'layout' => '1']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => 'inherit', 'layout' => '2']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '2',
+        ];
+
+        yield 'customized layout inheritance' => [
+            [
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layoutInheritance' => 'disable', 'layout' => '1']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => 'custom', 'layout' => '2', 'subpagesLayout' => '3']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '3',
+        ];
+    }
+
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');

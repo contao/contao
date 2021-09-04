@@ -1110,7 +1110,14 @@ class PageModel extends Model
 					// Layout
 					if ($objParentPage->includeLayout && $this->layout === false)
 					{
-						$this->layout = $objParentPage->layout;
+						if ($objParentPage->layoutInheritance === 'custom')
+						{
+							$this->layout = $objParentPage->subpagesLayout;
+						}
+						elseif ($objParentPage->layoutInheritance !== 'disable')
+						{
+							$this->layout = $objParentPage->layout;
+						}
 					}
 
 					// Protection
