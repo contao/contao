@@ -123,6 +123,21 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 					return $varValue;
 				},
 			),
+			'save_callback' => array
+			(
+				static function ($strValue)
+				{
+					$arrValue = Contao\StringUtil::deserialize($strValue, true);
+
+					foreach ($arrValue as $intIndex => $arrRow)
+					{
+						$arrValue[$intIndex]['key'] = strtolower($arrRow['key']);
+						$arrValue[$intIndex]['value'] = strtolower($arrRow['value']);
+					}
+
+					return serialize($arrValue);
+				},
+			),
 		),
 		'allowedDownload' => array
 		(
