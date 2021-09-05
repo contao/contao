@@ -386,13 +386,22 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
-						$strUrl = 'javascript:history.go(-1)';
+						$strUrl = '#_back';
 						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 						// No language files if the page is cached
 						if (!$strTitle)
 						{
 							$strTitle = 'Go back';
+						}
+
+						$strBackScript = "<script>document.documentElement.addEventListener('click',function(e){"
+							. "e&&e.target&&e.target.matches('a[href$=\"#_back\"],a[href$=\"#_back\"] *')&&(history.go(-1),e.preventDefault&&e.preventDefault())"
+						. "},true)</script>";
+
+						if (!\in_array($strBackScript, $GLOBALS['TL_HEAD'] ?? array(), true))
+						{
+							$GLOBALS['TL_HEAD'][] = $strBackScript;
 						}
 
 						$strName = $strTitle;
