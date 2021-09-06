@@ -31,6 +31,8 @@ class PageModelTest extends ContaoTestCase
     {
         parent::setUp();
 
+        $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
+
         $platform = $this->createMock(AbstractPlatform::class);
         $platform
             ->method('getIdentifierQuoteCharacter')
@@ -63,6 +65,7 @@ class PageModelTest extends ContaoTestCase
         parent::tearDown();
 
         Registry::getInstance()->reset();
+        unset($GLOBALS['TL_MODELS']['tl_page']);
 
         // Reset database instance
         $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
@@ -202,7 +205,7 @@ class PageModelTest extends ContaoTestCase
         yield 'no parent with a layout' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '2']],
                 [['id' => '3', 'pid' => '0']],
             ],
             false,
@@ -211,44 +214,26 @@ class PageModelTest extends ContaoTestCase
         yield 'inherit layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => 'inherit', 'layout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2']],
                 [['id' => '3', 'pid' => '0']],
             ],
             '2',
         ];
 
-        yield 'no layout inheritance defined' => [
+        yield 'no layout for subpages defined' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => '', 'layout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '0']],
                 [['id' => '3', 'pid' => '0']],
             ],
-            '2',
+            false,
         ];
 
         yield 'multiple parents with layouts' => [
             [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layout' => '1']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2']],
-                [['id' => '3', 'pid' => '0']],
-            ],
-            '1',
-        ];
-
-        yield 'layout inheritance disabled' => [
-            [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layoutInheritance' => 'disable', 'layout' => '1']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => 'inherit', 'layout' => '2']],
-                [['id' => '3', 'pid' => '0']],
-            ],
-            '2',
-        ];
-
-        yield 'customized layout inheritance' => [
-            [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layoutInheritance' => 'disable', 'layout' => '1']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layoutInheritance' => 'custom', 'layout' => '2', 'subpagesLayout' => '3']],
-                [['id' => '3', 'pid' => '0']],
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '0']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '3']],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '4']],
             ],
             '3',
         ];

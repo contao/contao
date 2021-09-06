@@ -175,7 +175,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'layoutInheritance', 'includeChmod', 'enforceTwoFactor'),
+		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,alias,type',
 		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
@@ -194,8 +194,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
 		'createSitemap'               => 'sitemapName',
-		'includeLayout'               => 'layout,layoutInheritance',
-		'layoutInheritance_custom'    => 'subpagesLayout',
+		'includeLayout'               => 'layout,subpagesLayout',
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'enforceTwoFactor'            => 'twoFactorJumpTo'
@@ -539,15 +538,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
-		'layoutInheritance' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options' 				  => array('inherit', 'disable', 'custom'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_page']['layoutInheritance'],
-			'eval'                    => array('tl_class'=>'w50', 'submitOnChange' => true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
 		'subpagesLayout' => array
 		(
 			'exclude'                 => true,
@@ -555,7 +545,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_layout.name',
 			'options_callback'        => array('tl_page', 'getPageLayouts'),
-			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50', 'includeBlankOption' => true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),

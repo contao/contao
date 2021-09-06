@@ -194,26 +194,11 @@
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the "themes" module.</source>
       </trans-unit>
-      <trans-unit id="tl_page.layoutInheritance.0">
-        <source>Layout inheritance</source>
-      </trans-unit>
-      <trans-unit id="tl_page.layoutInheritance.1">
-        <source>Define which layout should be used for subpages of the page.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.layoutInheritance.inherit">
-        <source>use layout on subpages</source>
-      </trans-unit>
-      <trans-unit id="tl_page.layoutInheritance.disable">
-        <source>use layout on this page only</source>
-      </trans-unit>
-      <trans-unit id="tl_page.layoutInheritance.custom">
-        <source>use a custom layout for subpages</source>
-      </trans-unit>
       <trans-unit id="tl_page.subpagesLayout.0">
         <source>Subpages layout</source>
       </trans-unit>
       <trans-unit id="tl_page.subpagesLayout.1">
-        <source>This layout will be used on the subpages of the page.</source>
+        <source>Set the layout for the subpages of the page. Can be overwritten on each subpage.</source>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>

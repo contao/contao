@@ -63,6 +63,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|array|null      $groups
  * @property string|boolean         $includeLayout
  * @property string|integer         $layout
+ * @property string|integer         $subpagesLayout
  * @property string|boolean         $includeCache
  * @property string|integer|boolean $cache
  * @property string|boolean         $alwaysLoadFromCache
@@ -1108,16 +1109,9 @@ class PageModel extends Model
 					}
 
 					// Layout
-					if ($objParentPage->includeLayout && $this->layout === false)
+					if ($this->layout === false && $objParentPage->includeLayout && $objParentPage->subpagesLayout)
 					{
-						if ($objParentPage->layoutInheritance === 'custom')
-						{
-							$this->layout = $objParentPage->subpagesLayout;
-						}
-						elseif ($objParentPage->layoutInheritance !== 'disable')
-						{
-							$this->layout = $objParentPage->layout;
-						}
+						$this->layout = $objParentPage->subpagesLayout;
 					}
 
 					// Protection
