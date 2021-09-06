@@ -70,8 +70,10 @@ class SerpPreview extends Widget
 
 		if ($titleTag = $this->getTitleTag($model))
 		{
-			$title = StringUtil::substr(sprintf(preg_replace('/%(?!s)/g', '%%', $titleTag), $title), 64);
+			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
 		}
+
+		$titleTag = str_replace('%%', '%', $titleTag);
 
 		return <<<EOT
 <div class="serp-preview">
