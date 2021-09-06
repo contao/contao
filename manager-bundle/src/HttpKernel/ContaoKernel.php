@@ -287,11 +287,9 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if (!$kernel->isDebug()) {
-            $cache = $kernel->getHttpCache();
-
             // Enable HTTP Cache if not disabled explicitly
             if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? false)) {
-                return $cache;
+                return $kernel->getHttpCache();
             }
         }
 
