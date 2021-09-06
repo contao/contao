@@ -15,7 +15,6 @@ use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
-use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
@@ -398,10 +397,19 @@ abstract class System
 
 				list($path, $query) = explode('?', $url, 2);
 
-				$queryObj = new Query($query);
-				$queryObj = $queryObj->withoutPairs($params);
+				parse_str($query, $pairs);
 
-				return $path . $queryObj->getUriComponent();
+				foreach ($params as $param)
+				{
+					unset($pairs[$param]);
+				}
+
+				if (empty($pairs))
+				{
+					return $path;
+				}
+
+				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 			};
 
 			// Determine current or last

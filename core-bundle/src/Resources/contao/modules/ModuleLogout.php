@@ -10,9 +10,8 @@
 
 namespace Contao;
 
-use League\Uri\Components\Query;
-use League\Uri\Http;
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Request;
 
 @trigger_error('Using the logout module has been deprecated and will no longer work in Contao 5.0. Use the logout page instead.', E_USER_DEPRECATED);
 
@@ -53,7 +52,6 @@ class ModuleLogout extends Module
 			return $objTemplate->parse();
 		}
 
-		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
 		$strRedirect = Environment::get('base');
 
 		// Redirect to last page visited
@@ -69,13 +67,21 @@ class ModuleLogout extends Module
 			$strRedirect = $objTarget->getAbsoluteUrl();
 		}
 
-		$uri = Http::createFromString($strLogoutUrl);
+		$pairs = array();
+		$strLogoutUrl = System::getContainer()->get('security.logout_url_generator')->getLogoutUrl();
+		$request = Request::create($strLogoutUrl);
+
+		if ($request->server->has('QUERY_STRING'))
+		{
+			parse_str($request->server->get('QUERY_STRING'), $pairs);
+		}
 
 		// Add the redirect= parameter to the logout URL
-		$query = new Query($uri->getQuery());
-		$query = $query->merge('redirect=' . $strRedirect);
+		$pairs['redirect'] = $strRedirect;
 
-		$this->redirect((string) $uri->withQuery((string) $query));
+		$uri = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+
+		$this->redirect($uri);
 
 		return '';
 	}

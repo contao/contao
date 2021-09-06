@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
-use League\Uri\Components\Query;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -43,6 +42,11 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends System
 {
+	/**
+	 * @var array
+	 */
+	protected static $arrQueryCache = array();
+
 	/**
 	 * Find a particular template file and return its path
 	 *
@@ -1107,29 +1111,53 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		$query = new Query(Environment::get('queryString'));
+		$pairs = array();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request->server->has('QUERY_STRING'))
+		{
+			$cacheKey = md5($request->server->get('QUERY_STRING'));
+
+			if (!isset(static::$arrQueryCache[$cacheKey]))
+			{
+				parse_str($request->server->get('QUERY_STRING'), $pairs);
+				ksort($pairs);
+
+				static::$arrQueryCache[$cacheKey] = $pairs;
+			}
+
+			$pairs = static::$arrQueryCache[$cacheKey];
+		}
 
 		// Remove the request token and referer ID
-		$query = $query->withoutPairs(array_merge(array('rt', 'ref'), $arrUnset));
+		unset($pairs['rt'], $pairs['ref']);
+
+		foreach ($arrUnset as $key)
+		{
+			unset($pairs[$key]);
+		}
 
 		// Merge the request string to be added
-		$query = $query->merge(str_replace('&amp;', '&', $strRequest));
+		if ($strRequest)
+		{
+			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
+			$pairs = array_merge($pairs, $newPairs);
+		}
 
 		// Add the referer ID
-		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
+		if ($request->query->has('ref') || ($strRequest && $blnAddRef))
 		{
-			$query = $query->merge('ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
+			$pairs['ref'] = $request->attributes->get('_contao_referer_id');
 		}
 
-		$uri = $query->getUriComponent();
+		$uri = '';
 
-		// The query parser automatically converts %2B to +, so re-convert it here
-		if (strpos($strRequest, '%2B') !== false)
+		if (!empty($pairs))
 		{
-			$uri = str_replace('+', '%2B', $uri);
+			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
-		return TL_SCRIPT . ampersand($uri);
+		return TL_SCRIPT . $uri;
 	}
 
 	/**
