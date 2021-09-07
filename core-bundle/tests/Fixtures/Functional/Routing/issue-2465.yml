@@ -22,6 +22,7 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 15
@@ -45,6 +46,7 @@ tl_page:
       dns: domain1.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 24
@@ -59,6 +61,7 @@ tl_page:
       dns: domain1.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 25
@@ -73,6 +76,7 @@ tl_page:
       dns: domain1.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 58
@@ -88,6 +92,7 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 59
@@ -102,6 +107,7 @@ tl_page:
       dns: domain2.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 61
@@ -116,6 +122,7 @@ tl_page:
       dns: domain2.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 63
@@ -185,6 +192,7 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 921
@@ -199,6 +207,7 @@ tl_page:
       dns: domain3.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 922
@@ -213,6 +222,7 @@ tl_page:
       dns: domain3.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 923
@@ -254,6 +264,7 @@ tl_page:
       dns: domain3.local
       includeLayout: '1'
       layout: 1
+      subpagesLayout: 1
       published: '1'
 
     - id: 962
