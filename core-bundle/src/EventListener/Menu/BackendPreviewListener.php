@@ -120,23 +120,25 @@ class BackendPreviewListener
         $id = $this->getIdFromRequest($request);
         $url = $this->router->generate('contao_backend_preview');
 
-        if (!$id || !$do = $request->query->get('do')) {
+        if (!$do = $request->query->get('do')) {
             return $url;
         }
 
-        if ('page' === $do) {
-            return $url.'?page='.$id;
-        }
-
-        if ('article' === $do) {
-            /** @var ArticleModel $adapter */
-            $adapter = $this->framework->getAdapter(ArticleModel::class);
-
-            if (!$article = $adapter->findByPk($id)) {
-                return $url;
+        if ($id) {
+            if ('page' === $do) {
+                return $url.'?page='.$id;
             }
 
-            return $url.'?page='.$article->pid;
+            if ('article' === $do) {
+                /** @var ArticleModel $adapter */
+                $adapter = $this->framework->getAdapter(ArticleModel::class);
+
+                if (!$article = $adapter->findByPk($id)) {
+                    return $url;
+                }
+
+                return $url.'?page='.$article->pid;
+            }
         }
 
         $event = new PreviewUrlCreateEvent($do, $id);
