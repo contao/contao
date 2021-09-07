@@ -115,7 +115,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 
@@ -150,7 +150,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 
@@ -186,7 +186,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 
@@ -220,7 +220,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 
@@ -253,7 +253,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 
@@ -291,7 +291,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 
@@ -318,7 +318,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(false)
         ;
 
@@ -359,7 +359,7 @@ class RequestTokenListenerTest extends TestCase
 
         $event
             ->expects($this->once())
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(true)
         ;
 

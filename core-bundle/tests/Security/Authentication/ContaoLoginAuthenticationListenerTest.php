@@ -225,7 +225,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
 
     private function mockRequestEvent(Request $request): RequestEvent
     {
-        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MASTER_REQUEST);
+        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MAIN_REQUEST);
     }
 
     private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface

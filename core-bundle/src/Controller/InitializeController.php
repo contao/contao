@@ -167,7 +167,7 @@ class InitializeController
      */
     private function handleException(\Throwable $e, Request $request): void
     {
-        $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $e);
+        $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $e);
         $this->eventDispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
         // A listener might have replaced the exception
@@ -195,12 +195,12 @@ class InitializeController
         }
 
         try {
-            $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
             $response = $event->getResponse();
 
             $this->eventDispatcher->dispatch(
-                new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST),
+                new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST),
                 KernelEvents::FINISH_REQUEST
             );
 
@@ -223,7 +223,7 @@ class InitializeController
      */
     private function handleResponse(Request $request, Response $response): void
     {
-        $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+        $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
         try {
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
@@ -232,7 +232,7 @@ class InitializeController
         }
 
         $this->eventDispatcher->dispatch(
-            new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST),
+            new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST),
             KernelEvents::FINISH_REQUEST
         );
 

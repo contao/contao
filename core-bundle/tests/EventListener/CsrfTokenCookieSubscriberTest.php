@@ -59,7 +59,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
     {
         $requestEvent = $this->createMock(RequestEvent::class);
         $requestEvent
-            ->method('isMasterRequest')
+            ->method('isMainRequest')
             ->willReturn(false)
         ;
 
@@ -257,7 +257,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $responseEvent = new ResponseEvent(
             $this->createMock(Kernel::class),
             new Request(),
-            HttpKernel::MASTER_REQUEST,
+            HttpKernel::MAIN_REQUEST,
             new Response()
         );
 
@@ -291,7 +291,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             $request = new Request();
         }
 
-        return new RequestEvent($this->createMock(Kernel::class), $request, HttpKernel::MASTER_REQUEST);
+        return new RequestEvent($this->createMock(Kernel::class), $request, HttpKernel::MAIN_REQUEST);
     }
 
     public function getResponseEvent(Request $request = null, Response $response = null): ResponseEvent
@@ -304,6 +304,6 @@ class CsrfTokenCookieSubscriberTest extends TestCase
             $response = new Response();
         }
 
-        return new ResponseEvent($this->createMock(Kernel::class), $request, HttpKernel::MASTER_REQUEST, $response);
+        return new ResponseEvent($this->createMock(Kernel::class), $request, HttpKernel::MAIN_REQUEST, $response);
     }
 }

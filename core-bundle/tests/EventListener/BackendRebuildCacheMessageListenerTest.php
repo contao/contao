@@ -59,7 +59,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST
+            HttpKernelInterface::MAIN_REQUEST
         );
 
         $listener($event);
@@ -122,7 +122,7 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST
+            HttpKernelInterface::MAIN_REQUEST
         );
 
         $listener($event);

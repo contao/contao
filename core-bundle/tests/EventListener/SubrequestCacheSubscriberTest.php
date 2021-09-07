@@ -55,7 +55,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $mainResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
-        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MAIN_REQUEST);
 
         $this->assertSame(30, $mainResponse->getMaxAge());
         $this->assertSame('max-age=30, public', $mainResponse->headers->get('Cache-Control'));
@@ -79,7 +79,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $subResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
-        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MAIN_REQUEST);
 
         $this->assertSame('private', $mainResponse->headers->get('Cache-Control'));
         $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
@@ -101,7 +101,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $mainResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
-        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MAIN_REQUEST);
 
         $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
         $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
@@ -124,7 +124,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $mainResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
-        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MASTER_REQUEST);
+        $this->onKernelResponse($subscriber, $mainResponse, KernelInterface::MAIN_REQUEST);
 
         $this->assertSame('max-age=60, public', $mainResponse->headers->get('Cache-Control'));
         $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
@@ -132,7 +132,7 @@ class SubrequestCacheSubscriberTest extends TestCase
 
     private function onKernelRequest(SubrequestCacheSubscriber $subscriber): void
     {
-        $event = new RequestEvent($this->createMock(Kernel::class), new Request(), KernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($this->createMock(Kernel::class), new Request(), KernelInterface::MAIN_REQUEST);
         $subscriber->onKernelRequest($event);
     }
 

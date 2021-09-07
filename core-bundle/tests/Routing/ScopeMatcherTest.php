@@ -55,7 +55,7 @@ class ScopeMatcherTest extends TestCase
     {
         yield [
             ContaoCoreBundle::SCOPE_BACKEND,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             true,
             false,
             true,
@@ -63,7 +63,7 @@ class ScopeMatcherTest extends TestCase
 
         yield [
             ContaoCoreBundle::SCOPE_FRONTEND,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             true,
             true,
             false,
@@ -71,7 +71,7 @@ class ScopeMatcherTest extends TestCase
 
         yield [
             null,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false,
             false,
             false,

@@ -72,7 +72,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -95,7 +95,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(false),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -118,7 +118,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -141,7 +141,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -167,7 +167,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(true, false, 'html', $hasSession),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -206,7 +206,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(true, false, 'html', $hasSession),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -245,7 +245,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -268,7 +268,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(true, true),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -291,7 +291,7 @@ class PreviewToolbarListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
             $this->getRequestMock(true, false, 'json'),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 

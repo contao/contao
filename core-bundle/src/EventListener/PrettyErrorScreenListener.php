@@ -70,7 +70,7 @@ class PrettyErrorScreenListener
      */
     public function __invoke(ExceptionEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

@@ -68,7 +68,7 @@ class RequestTokenListener
     public function __invoke(RequestEvent $event): void
     {
         // Don't do anything if it's not the master request
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
