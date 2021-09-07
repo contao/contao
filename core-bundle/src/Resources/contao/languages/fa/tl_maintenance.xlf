@@ -93,14 +93,6 @@
         <source>Removes the cached versions of the front end pages.</source>
         <target>نسخه‌های کش برگه‌های بخش کاربری را پاک می‌کند.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search results cache</source>
-        <target>پاک‌سازی کش نتایج جستجو</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.1">
-        <source>Removes the cached versions of the search results.</source>
-        <target>نسخه‌های کش‌شده نتایج جستجو را حذف می‌کند.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>پاکسازی پوشه موقت</target>
@@ -121,8 +113,7 @@
         <target>بازخلق پیوندهای نمادی</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
-        <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
-        <target>پیوند‌های نمادی در شاخه &lt;code&gt;web/&lt;/code&gt; (ریشه سند) را بازخلق می‌کند.</target>
+        <source>Recreates the symlinks in the public folder (document root).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

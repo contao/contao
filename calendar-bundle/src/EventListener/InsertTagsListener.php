@@ -54,7 +54,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceEventInsertTag($key, $elements[1], $flags);
+            return $this->replaceEventInsertTag($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
         }
 
         return false;
@@ -74,7 +74,7 @@ class InsertTagsListener
         return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
-    private function replaceEventInsertTag(string $insertTag, string $idOrAlias, array $flags): string
+    private function replaceEventInsertTag(string $insertTag, string $idOrAlias, array $arguments): string
     {
         $this->framework->initialize();
 
@@ -92,23 +92,23 @@ class InsertTagsListener
             case 'event':
                 return sprintf(
                     '<a href="%s" title="%s">%s</a>',
-                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)) ?: './',
-                    StringUtil::specialchars($model->title),
+                    $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+                    StringUtil::specialcharsAttribute($model->title),
                     $model->title
                 );
 
             case 'event_open':
                 return sprintf(
                     '<a href="%s" title="%s">',
-                    $events->generateEventUrl($model, \in_array('absolute', $flags, true)) ?: './',
-                    StringUtil::specialchars($model->title)
+                    $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
+                    StringUtil::specialcharsAttribute($model->title)
                 );
 
             case 'event_url':
-                return $events->generateEventUrl($model, \in_array('absolute', $flags, true)) ?: './';
+                return $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './';
 
             case 'event_title':
-                return StringUtil::specialchars($model->title);
+                return StringUtil::specialcharsAttribute($model->title);
 
             case 'event_teaser':
                 return StringUtil::toHtml5($model->teaser);

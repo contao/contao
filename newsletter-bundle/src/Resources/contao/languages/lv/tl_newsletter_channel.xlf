@@ -23,12 +23,15 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can select an e-mail template.</source>
+        <target>Šeit jūs varat izvēlēties e-pasta veidni.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Pasta sūtījumu transports</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.1">
         <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
+        <target>Šeit jūs varat nomainīt sūtītāja transportu, kas tiek izmantots, lai sūtītu apkārtrakstus šajā kanālā.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

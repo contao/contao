@@ -45,7 +45,7 @@ class QueryBuilder
 			foreach ($objBase->getRelations() as $strKey=>$arrConfig)
 			{
 				// Automatically join the single-relation records
-				if ($arrConfig['load'] == 'eager' || ($arrOptions['eager'] ?? null))
+				if (($arrConfig['load'] ?? null) == 'eager' || ($arrOptions['eager'] ?? null))
 				{
 					if ($arrConfig['type'] == 'hasOne' || $arrConfig['type'] == 'belongsTo')
 					{

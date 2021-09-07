@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -40,11 +41,11 @@ class LocaleSubscriber implements EventSubscriberInterface
      */
     private $availableLocales;
 
-    public function __construct(LocaleAwareInterface $translator, ScopeMatcher $scopeMatcher, array $availableLocales)
+    public function __construct(LocaleAwareInterface $translator, ScopeMatcher $scopeMatcher, Locales $locales)
     {
         $this->translator = $translator;
         $this->scopeMatcher = $scopeMatcher;
-        $this->availableLocales = $availableLocales;
+        $this->availableLocales = $locales->getEnabledLocaleIds();
     }
 
     /**

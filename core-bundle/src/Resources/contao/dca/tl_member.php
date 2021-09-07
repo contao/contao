@@ -13,6 +13,8 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\DataContainer;
 use Contao\FrontendUser;
 use Contao\Image;
@@ -222,7 +224,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getCountries();
+				$countries = System::getContainer()->get(Countries::class)->getCountries();
+
+				// Convert to lower case for backwards compatibility, to be changed in Contao 5.0
+				return array_combine(array_map('strtolower', array_keys($countries)), $countries);
 			},
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
@@ -274,7 +279,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getLanguages();
+				return System::getContainer()->get(Locales::class)->getLocales(null, false);
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -597,7 +602,7 @@ class tl_member extends Backend
 	{
 		if (Input::get('tid'))
 		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

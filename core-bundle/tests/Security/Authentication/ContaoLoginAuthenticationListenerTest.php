@@ -16,6 +16,7 @@ use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -216,14 +217,15 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn($isPost)
         ;
 
-        $request->request = new ParameterBag();
+        /** @phpstan-ignore-next-line */
+        $request->request = class_exists(InputBag::class) ? new InputBag() : new ParameterBag();
 
         return $request;
     }
 
     private function mockRequestEvent(Request $request): RequestEvent
     {
-        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MASTER_REQUEST);
+        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MAIN_REQUEST);
     }
 
     private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface

@@ -23,7 +23,7 @@ interface EscargotSubscriberInterface extends SubscriberInterface
 
     /**
      * Returns the result. As Escargot can pick up on an existing job ID, your
-     * results might be e.g. stored between requests so you might have a
+     * results might be e.g. stored between requests, so you might have a
      * previous result of your subscriber.
      */
     public function getResult(SubscriberResult $previousResult = null): SubscriberResult;

@@ -1,0 +1,15 @@
+...ignored
+<?php echo $this->extend('bar'); ?>
+...ignored
+<?php $this->block('A'); ?>
+baz before A
+<?php $this->parent() ?>
+baz after A
+<?php $this->endblock(); ?>
+...ignored
+<?php $this->block('B'); ?>
+baz before B
+<?php $this->parent() ?>
+baz after B
+<?php $this->endblock(); ?>
+...ignored

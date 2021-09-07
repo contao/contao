@@ -22,6 +22,9 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
+use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
@@ -674,5 +677,47 @@ class DcaSchemaProviderTest extends DoctrineTestCase
             ],
             'Key definition "key path (path)" could not be parsed.',
         ];
+    }
+
+    public function testAppendToSchemaIgnoresExistingMetadataDefinitions(): void
+    {
+        $dcaMetadata = [
+            'tl_page' => [
+                'TABLE_FIELDS' => [
+                    'id' => '`id` int(10) NOT NULL default 0',
+                    'title' => "`title` varchar(128) BINARY NOT NULL default ''",
+                ],
+                'SCHEMA_FIELDS' => [
+                    'published' => ['type' => 'string', 'fixed' => true, 'length' => 1],
+                ],
+                'TABLE_CREATE_DEFINITIONS' => [
+                    'published' => 'KEY `title` (`published`)',
+                ],
+            ],
+        ];
+
+        $entityMetadata = new ClassMetadata(\stdClass::class);
+
+        (new ClassMetadataBuilder($entityMetadata))
+            ->setTable('tl_page')
+            ->addField('id', 'integer')
+            ->addField('published', 'boolean')
+            ->addField('bar', 'string')
+            ->addIndex(['published'], 'published')
+        ;
+
+        $manager = $this->getTestEntityManager();
+        $schema = (new SchemaTool($manager))->getSchemaFromMetadata([$entityMetadata]);
+
+        $provider = $this->getDcaSchemaProvider($dcaMetadata);
+        $provider->appendToSchema($schema);
+
+        $columns = $schema->getTable('tl_page')->getColumns();
+
+        $this->assertCount(4, $columns);
+        $this->assertSame('integer', $columns['id']->getType()->getName());
+        $this->assertSame('boolean', $columns['published']->getType()->getName());
+        $this->assertSame('string', $columns['bar']->getType()->getName());
+        $this->assertSame('string', $columns['title']->getType()->getName());
     }
 }

@@ -33,7 +33,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration($this->getTempDir(), 'en');
+        $this->configuration = new Configuration($this->getTempDir());
     }
 
     public function testAddsTheImagineService(): void

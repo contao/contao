@@ -140,7 +140,7 @@ class ImageResult
     }
 
     /**
-     * Returns the "src" attribute of the image. This will return an URL by
+     * Returns the "src" attribute of the image. This will return a URL by
      * default. Set $asPath to true to get a relative file path instead.
      */
     public function getImageSrc(bool $asPath = false): string

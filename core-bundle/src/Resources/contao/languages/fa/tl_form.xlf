@@ -35,10 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer transport</source>
-        <target>Mailer transport</target>
+        <target>فرستنده‌ی ایمیل</target>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>اینجا می‌توانید فرستنده‌ی ایمیل استفاده شده برای ارسال فرم از طریق ایمیل را تغییر دهید.</target>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
@@ -90,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
+        <target>فایل CSV (Microsoft Excel)</target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>داده‌های فرم به صورت پرونده‌ی CSV که توسط اکسل مایکروسافت قابل خواندن است پیوست خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
@@ -241,6 +244,10 @@
       <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>حذف فرم شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form.targetTableMissingAllowlist">
+        <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+        <target>جدول‌های موجود در پیکربندی DCA ذیل  را تعریف کنید: &lt;code&gt;%s&lt;/code&gt;.</target>
       </trans-unit>
     </body>
   </file>

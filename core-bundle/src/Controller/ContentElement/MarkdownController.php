@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\FilesModel;
+use Contao\Input;
 use Contao\Template;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
@@ -48,14 +49,17 @@ class MarkdownController extends AbstractContentElementController
         /** @var Config $config */
         $config = $this->get('contao.framework')->getAdapter(Config::class);
 
+        /** @var Input $input */
+        $input = $this->get('contao.framework')->getAdapter(Input::class);
+
         $html = $this->createConverter($model, $request)->convertToHtml($markdown)->getContent();
-        $template->content = strip_tags($html, $config->get('allowedTags'));
+        $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
 
         return $template->getResponse();
     }
 
     /**
-     * Hint: This is protected on purpose so you can override it for your app specific requirements.
+     * Hint: This is protected on purpose, so you can override it for your app specific requirements.
      * If you want to provide an extension with additional logic, consider providing your own special
      * content element for that.
      */

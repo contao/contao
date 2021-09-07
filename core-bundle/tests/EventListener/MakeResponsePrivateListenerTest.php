@@ -57,7 +57,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -82,7 +82,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -106,7 +106,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -125,12 +125,12 @@ class MakeResponsePrivateListenerTest extends TestCase
         $response->setMaxAge(600);
 
         $request = new Request();
-        $request->headers->set('Authorization', null); // @phpstan-ignore-line
+        $request->headers->set('Authorization', null);
 
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -161,7 +161,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -184,7 +184,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -206,7 +206,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request([], [], [], ['super-cookie' => 'value']),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
@@ -228,7 +228,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 

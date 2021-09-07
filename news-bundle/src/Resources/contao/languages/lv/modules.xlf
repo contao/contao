@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_news">
         <source>Items</source>
+        <target>Vienumi</target>
       </trans-unit>
       <trans-unit id="FMD.news">
         <source>News</source>

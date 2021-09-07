@@ -298,6 +298,6 @@ class MergeHttpHeadersListenerTest extends TestCase
             $response = new Response();
         }
 
-        return new ResponseEvent($kernel, new Request(), HttpKernelInterface::MASTER_REQUEST, $response);
+        return new ResponseEvent($kernel, new Request(), HttpKernelInterface::MAIN_REQUEST, $response);
     }
 }

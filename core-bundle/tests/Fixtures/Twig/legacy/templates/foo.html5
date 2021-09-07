@@ -1,0 +1,8 @@
+foo: <?php echo $this->foo; ?>
+
+<?php $this->block('A'); ?>
+original A block
+<?php $this->endblock(); ?>
+<?php $this->block('B'); ?>
+original B block
+<?php $this->endblock(); ?>

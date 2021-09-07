@@ -96,14 +96,6 @@
         <source>Removes the cached versions of the front end pages.</source>
         <target>Odstraní meziuložené verze frontendových stránek. </target>
       </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.0">
-        <source>Purge the search results cache</source>
-        <target>Vyčistit meziúložiště pro vyhledávání</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance_jobs.search.1">
-        <source>Removes the cached versions of the search results.</source>
-        <target>Smazat uložené verze výsledků vyhledávání.</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.temp.0">
         <source>Purge the temp folder</source>
         <target>Vyčistit složky s dočasnými soubory</target>
@@ -125,8 +117,7 @@
         <target>Znovu vytvořit symlinky</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
-        <source>Recreates the symlinks in the &lt;code&gt;web/&lt;/code&gt; folder (document root).</source>
-        <target>Znovu vytvoří symlinky v &lt;code&gt;web/&lt;/code&gt; složce (kořenový soubor)</target>
+        <source>Recreates the symlinks in the public folder (document root).</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

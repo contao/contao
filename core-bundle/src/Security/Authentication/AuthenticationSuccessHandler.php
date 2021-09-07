@@ -129,13 +129,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->triggerPostLoginHook();
 
-        if ($request->hasSession()) {
-            // Backwards compatibility with symfony/security <5.2
-            if (method_exists($token, 'getFirewallName')) {
-                $this->removeTargetPath($request->getSession(), $token->getFirewallName());
-            } elseif (method_exists($token, 'getProviderKey')) {
-                $this->removeTargetPath($request->getSession(), $token->getProviderKey());
-            }
+        if ($request->hasSession() && method_exists($token, 'getFirewallName')) {
+            $this->removeTargetPath($request->getSession(), $token->getFirewallName());
         }
 
         return $response;

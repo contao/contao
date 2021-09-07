@@ -38,8 +38,8 @@
         <target>Язык</target>
       </trans-unit>
       <trans-unit id="tl_page.language.1">
-        <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Введите язык страницы согласно стандарта ISO-639-1 (напр. &lt;em&gt;en&lt;/em&gt; для Английского или &quot;en_US&quot; для Американского английского).</target>
+        <source>Please enter the page language according to the ISO-639 standard (e.g. &quot;en&quot; for English or &quot;en_US&quot; for American English).</source>
+        <target>Введите язык страницы согласно стандарта ISO-639 (напр. &quot;en&quot; для Английского или &quot;en_US&quot; для Американского английского).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -310,8 +310,8 @@
         <target>Группа</target>
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
-        <source>Please select a group as the owner of the page.</source>
-        <target>Выберите группу владельцев текущей страницы.</target>
+        <source>Please select a user group as the owner of the page.</source>
+        <target>Выберите группу пользователей, владельцев текущей страницы.</target>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>
@@ -354,11 +354,11 @@
         <target>Вы можете определить, будет ли страница отображаться в HTML-карте веб-сайта.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
-        <source>Hide from navigation</source>
-        <target>Исключить страницу из навигации</target>
+        <source>Hide in navigation</source>
+        <target>Скрыть в навигации</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.1">
-        <source>Hide the page from the navigation menu.</source>
+        <source>Hide the page in the navigation menu.</source>
         <target>Скрыть страницу в меню навигации.</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.0">

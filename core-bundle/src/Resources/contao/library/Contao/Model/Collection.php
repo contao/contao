@@ -243,6 +243,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @return integer The number of rows
 	 */
+	#[\ReturnTypeWillChange]
 	public function count()
 	{
 		return \count($this->arrModels);
@@ -387,6 +388,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @return boolean True if the offset exists
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetExists($offset)
 	{
 		return isset($this->arrModels[$offset]);
@@ -399,6 +401,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @return Model|null The model or null
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		return $this->arrModels[$offset];
@@ -412,6 +415,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @throws \RuntimeException The collection is immutable
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetSet($offset, $value)
 	{
 		throw new \RuntimeException('This collection is immutable');
@@ -424,6 +428,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @throws \RuntimeException The collection is immutable
 	 */
+	#[\ReturnTypeWillChange]
 	public function offsetUnset($offset)
 	{
 		throw new \RuntimeException('This collection is immutable');
@@ -434,6 +439,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @return \ArrayIterator The iterator object
 	 */
+	#[\ReturnTypeWillChange]
 	public function getIterator()
 	{
 		return new \ArrayIterator($this->arrModels);

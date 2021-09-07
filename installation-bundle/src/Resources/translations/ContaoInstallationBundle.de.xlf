@@ -45,17 +45,17 @@
         <source>Password</source>
         <target>Passwort</target>
       </trans-unit>
-      <trans-unit id="12" resname="confirmation">
-        <source>Confirm password</source>
-        <target>Passwort bestätigen</target>
+      <trans-unit id="12" resname="show_password">
+        <source>Show password</source>
+        <target>Passwort anzeigen</target>
       </trans-unit>
-      <trans-unit id="13" resname="save_password">
+      <trans-unit id="13" resname="hide_password">
+        <source>Hide password</source>
+        <target>Passwort ausblenden</target>
+      </trans-unit>
+      <trans-unit id="14" resname="save_password">
         <source>Save password</source>
         <target>Passwort speichern</target>
-      </trans-unit>
-      <trans-unit id="14" resname="password_confirmation_mismatch">
-        <source>The password does not match the confirmation!</source>
-        <target>Das Passwort stimmt nicht mit der Bestätigung überein!</target>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">
         <source>The password should be at least %d characters long!</source>
@@ -352,6 +352,14 @@
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
         <target>Die Datenbankverbindung mit der Verbindungs-URL aus der Environment-Variable &lt;code&gt;DATABASE_URL&lt;/code&gt; ist fehlgeschlagen.</target>
+      </trans-unit>
+      <trans-unit id="89" resname="strict_sql_mode">
+        <source>Your database server is not running in strict mode!</source>
+        <target>Ihr Datenbank-Server läuft nicht im Strict-Mode!</target>
+      </trans-unit>
+      <trans-unit id="90" resname="strict_sql_mode_explain">
+        <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>Wenn MySQL nicht im Strict-Mode läuft, können Daten beschädigt oder abgeschnitten werden. Bitte aktivieren Sie den Strict-Mode entweder in Ihrer &lt;code&gt;my.cnf&lt;/code&gt;-Datei oder konfigurieren Sie die Verbindungsoptionen in der Datei &lt;code&gt;config/config.yml&lt;/code&gt; wie folgt:</target>
       </trans-unit>
     </body>
   </file>

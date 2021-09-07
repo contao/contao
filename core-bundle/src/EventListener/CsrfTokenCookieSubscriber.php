@@ -49,7 +49,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -61,7 +61,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -133,7 +133,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 
     private function replaceTokenOccurrences(Response $response): void
     {
-        // Return if the response is not a HTML document
+        // Return if the response is not an HTML document
         if (false === stripos((string) $response->headers->get('Content-Type'), 'text/html')) {
             return;
         }

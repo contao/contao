@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>フィードのテンプレートを選択します。</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>項目の数</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>項目の数を制限できます。0にするとすべて表示します。</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>モジュールの保護</target>
@@ -500,6 +492,10 @@
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
         <target>名前と種類</target>
+      </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>ラベル</target>
       </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>

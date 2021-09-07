@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Webmozart\PathUtil\Path;
 
 /**
- * Allows to register legacy Contao modules as bundle.
+ * Allows registering legacy Contao modules as bundle.
  */
 final class ContaoModuleBundle extends Bundle
 {

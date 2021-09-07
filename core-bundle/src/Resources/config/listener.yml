@@ -234,7 +234,7 @@ services:
         arguments:
             - '@translator'
             - '@contao.routing.scope_matcher'
-            - '%contao.locales%'
+            - '@Contao\CoreBundle\Intl\Locales'
         tags:
             - kernel.event_subscriber
 
@@ -309,7 +309,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
-            - '@contao.csrf.token_manager'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
             - '%contao.csrf_cookie_prefix%'
         tags:

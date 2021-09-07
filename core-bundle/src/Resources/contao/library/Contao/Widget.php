@@ -986,6 +986,8 @@ abstract class Widget extends Controller
 					break;
 
 				case 'url':
+					$varInput = StringUtil::specialcharsUrl($varInput);
+
 					if (!Validator::isUrl($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));
@@ -1404,6 +1406,12 @@ abstract class Widget extends Controller
 		{
 			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
+		}
+
+		// Convert URL insert tags
+		if ($varValue && 'url' === ($arrData['eval']['rgxp'] ?? null))
+		{
+			$arrAttributes['value'] = str_replace('|urlattr}}', '}}', $varValue);
 		}
 
 		// Add the "rootNodes" array as attribute (see #3563)

@@ -199,6 +199,8 @@ class UrlGeneratorTest extends TestCase
 
     public function testReadsTheContextFromTheDomain(): void
     {
+        $this->expectDeprecation('%sUsing the "%sUrlGenerator" class has been deprecated%s');
+
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
 
@@ -227,11 +229,13 @@ class UrlGeneratorTest extends TestCase
 
     /**
      * To tests this case, we omit the _ssl parameter and set the scheme to
-     * "https" in the context. If the generator still returns a HTTPS URL, we
+     * "https" in the context. If the generator still returns an HTTPS URL, we
      * know that the context has not been modified.
      */
     public function testDoesNotModifyTheContextIfThereIsAHostname(): void
     {
+        $this->expectDeprecation('%sUsing the "%sUrlGenerator" class has been deprecated%s');
+
         $routes = new RouteCollection();
         $routes->add('contao_index', new Route('/'));
 
@@ -262,6 +266,8 @@ class UrlGeneratorTest extends TestCase
         $framework = $this->mockContaoFramework();
 
         $GLOBALS['TL_CONFIG']['useAutoItem'] = $useAutoItem;
+
+        $this->expectDeprecation('%sUsing the "%sUrlGenerator" class has been deprecated%s');
 
         return new UrlGenerator($router, $framework, $prependLocale);
     }

@@ -59,7 +59,7 @@ class Version400Update extends AbstractMigration
                 scripts text NULL
         ');
 
-        // Adjust the framework agnostic scripts
+        // Adjust the framework-agnostic scripts
         $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, addJQuery, jquery, addMooTools, mootools

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -213,7 +214,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->filesModelAdapter()->findByUuid($uuid);
+        $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
             $this->lastException = new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
@@ -231,7 +232,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->filesModelAdapter()->findByPk($id);
+        $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
             $this->lastException = new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
@@ -256,7 +257,7 @@ class FigureBuilder
 
         // Only check for a FilesModel if the resource is inside the upload path
         if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
-            $filesModel = $this->filesModelAdapter()->findByPath($path);
+            $filesModel = $this->getFilesModelAdapter()->findByPath($path);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
@@ -304,7 +305,7 @@ class FigureBuilder
 
         $isString = \is_string($identifier);
 
-        if ($isString && $this->validatorAdapter()->isUuid($identifier)) {
+        if ($isString && $this->getValidatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -636,7 +637,7 @@ class FigureBuilder
 
         // If no metadata can be obtained from the model, we create a container
         // from the default meta fields with empty values instead
-        $metaFields = $this->filesModelAdapter()->getMetaFields();
+        $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
         $data = array_merge(
             array_combine($metaFields, array_fill(0, \count($metaFields), '')),
@@ -728,7 +729,12 @@ class FigureBuilder
         ;
     }
 
-    private function filesModelAdapter()
+    /**
+     * @return FilesModel
+     *
+     * @phpstan-return Adapter<FilesModel>
+     */
+    private function getFilesModelAdapter(): Adapter
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();
@@ -736,7 +742,12 @@ class FigureBuilder
         return $framework->getAdapter(FilesModel::class);
     }
 
-    private function validatorAdapter()
+    /**
+     * @return Validator
+     *
+     * @phpstan-return Adapter<Validator>
+     */
+    private function getValidatorAdapter(): Adapter
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();

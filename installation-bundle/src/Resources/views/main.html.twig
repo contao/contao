@@ -8,11 +8,11 @@
         <p>{{ 'strict_sql_mode_explain'|trans|raw }}</p>
         <div id="sql_wrapper">
         <pre>doctrine:
-  dbal:
-    connections:
-      default:
-        options:
-          {{ optionKey }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
+    dbal:
+        connections:
+            default:
+                options:
+                    {{ optionKey }}: "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))"</pre>
         </div>
     </fieldset>
   {% endif %}

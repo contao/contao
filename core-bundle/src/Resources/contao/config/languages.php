@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+trigger_deprecation('contao/core-bundle', '4.12', 'Using the languages.php file has been deprecated and will no longer work in Contao 5.0. Use the intl library instead.');
+
 $languages = array
 (
 	'aa'    => 'Afar',

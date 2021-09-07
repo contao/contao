@@ -547,8 +547,9 @@ class StringUtil
 	/**
 	 * Parse simple tokens
 	 *
-	 * @param string $strString The string to be parsed
-	 * @param array  $arrData   The replacement data
+	 * @param string $strString    The string to be parsed
+	 * @param array  $arrData      The replacement data
+	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
 	 *
 	 * @return string The converted string
 	 *
@@ -558,11 +559,11 @@ class StringUtil
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
 	 *             Use the SimpleTokenParser::class service instead.
 	 */
-	public static function parseSimpleTokens($strString, $arrData)
+	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData, $blnAllowHtml);
 	}
 
 	/**
@@ -791,8 +792,94 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+	}
+
+	/**
+	 * Encodes specialchars and nested insert tags for attributes
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	{
+		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
+
+		// Improve compatibility with JSON in attributes if no insert tags are present
+		if ($strString === self::stripInsertTags($strString))
+		{
+			$strString = str_replace('}}', '&#125;&#125;', $strString);
+		}
+
+		// Encode insert tags too
+		$strString = preg_replace('/(?:\|attr)?}}/', '|attr}}', $strString);
+		$strString = str_replace('|urlattr|attr}}', '|urlattr}}', $strString);
+
+		// Encode all remaining single closing curly braces
+		$strString = preg_replace_callback(
+			'/}}?/',
+			static function ($match)
+			{
+				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
+			},
+			$strString
+		);
+
+		return $strString;
+	}
+
+	/**
+	 * Encodes disallowed protocols and specialchars for URL attributes
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	{
+		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
+
+		// Encode insert tags too
+		$strString = preg_replace('/(?:\|urlattr|\|attr)?}}/', '|urlattr}}', $strString);
+
+		// Encode all remaining single closing curly braces
+		$strString = preg_replace_callback(
+			'/}}?/',
+			static function ($match)
+			{
+				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
+			},
+			$strString
+		);
+
+		$colonRegEx = '('
+			. ':'                 // Plain text colon
+			. '|'                 // OR
+			. '&colon;'           // Named entity
+			. '|'                 // OR
+			. '&#(?:'             // Start of entity
+				. 'x0*+3a'        // Hex number 3A
+				. '(?![0-9a-f])'  // Must not be followed by another hex digit
+				. '|'             // OR
+				. '0*+58'         // Decimal number 58
+				. '(?![0-9])'     // Must not be followed by another digit
+			. ');?'               // Optional semicolon
+		. ')i';
+
+		// URL-encode colon to prevent disallowed protocols
+		if (
+			!preg_match('@^(?:https?|ftp|mailto|tel|data):@i', self::decodeEntities($strString))
+			&& preg_match($colonRegEx, self::stripInsertTags($strString))
+		) {
+			$strString = preg_replace($colonRegEx, '%3A', $strString);
+		}
+
+		return $strString;
 	}
 
 	/**
