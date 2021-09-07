@@ -73,8 +73,6 @@ class SerpPreview extends Widget
 			$title = StringUtil::substr(sprintf($titleTag, $title), 64);
 		}
 
-		$titleTag = str_replace('%%', '%', $titleTag);
-
 		return <<<EOT
 <div class="serp-preview">
   <p id="serp_url_$id" class="url">$url</p>

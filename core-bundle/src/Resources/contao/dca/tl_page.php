@@ -1019,9 +1019,10 @@ class tl_page extends Contao\Backend
 		$objPage = $model;
 
 		return implode(
-			'%s', 
+			'%s',
 			array_map(
-				function($strVal) {
+				static function ($strVal)
+				{
 					return str_replace('%', '%%', self::replaceInsertTags($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)

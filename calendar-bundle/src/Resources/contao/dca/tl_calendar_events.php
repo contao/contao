@@ -788,9 +788,10 @@ class tl_calendar_events extends Contao\Backend
 		$objPage = $page;
 
 		return implode(
-			'%s', 
+			'%s',
 			array_map(
-				function($strVal) {
+				static function ($strVal)
+				{
 					return str_replace('%', '%%', self::replaceInsertTags($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
