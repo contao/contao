@@ -259,6 +259,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
             $trustedHeaderSet = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO;
 
+            // If we have a limited list of trusted hosts, we can safely use the X-Forwarded-Host header
             if ($trustedHosts) {
                 $trustedHeaderSet |= Request::HEADER_X_FORWARDED_HOST;
             }
