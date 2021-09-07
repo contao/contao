@@ -252,13 +252,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         self::loadEnv($projectDir, 'jwt');
 
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
-            Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
-        }
-
         if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
             Request::setTrustedHosts(explode(',', $trustedHosts));
+        }
+
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
+            $trustedHeaderSet = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO;
+
+            // If we have a limited list of trusted hosts, we can safely use the X-Forwarded-Host header
+            if ($trustedHosts) {
+                $trustedHeaderSet |= Request::HEADER_X_FORWARDED_HOST;
+            }
+
+            Request::setTrustedProxies(explode(',', $trustedProxies), $trustedHeaderSet);
         }
 
         Request::enableHttpMethodParameterOverride();
