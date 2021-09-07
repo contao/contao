@@ -65,7 +65,7 @@ class PageModelTest extends ContaoTestCase
         parent::tearDown();
 
         Registry::getInstance()->reset();
-        unset($GLOBALS['TL_MODELS']['tl_page']);
+        unset($GLOBALS['TL_MODELS']);
 
         // Reset database instance
         $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
