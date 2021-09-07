@@ -41,7 +41,7 @@ class PageSubpagesLayoutMigration extends AbstractMigration
 
         $pageColumns = $schemaManager->listTableColumns('tl_page');
 
-        return !isset($pageColumns['subpageslayout']);
+        return !isset($pageColumns['subpageslayout']) && isset($pageColumns['layout'], $pageColumns['includeLayout']);
     }
 
     public function run(): MigrationResult
