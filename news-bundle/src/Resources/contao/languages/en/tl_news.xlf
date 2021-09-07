@@ -2,6 +2,12 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_news.php" source-language="en">
     <body>
+      <trans-unit id="tl_news._table.0">
+        <source>News</source>
+      </trans-unit>
+      <trans-unit id="tl_news._table.1">
+        <source>News</source>
+      </trans-unit>
       <trans-unit id="tl_news.headline.0">
         <source>Title</source>
       </trans-unit>
