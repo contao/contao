@@ -225,24 +225,6 @@ class Version400Update extends AbstractMigration
 
         $this->connection->query("
             UPDATE
-                tl_module
-            SET
-                type = 'newsletterlist'
-            WHERE
-                type = 'nl_list'
-        ");
-
-        $this->connection->query("
-            UPDATE
-                tl_module
-            SET
-                type = 'newsletterreader'
-            WHERE
-                type = 'nl_reader'
-        ");
-
-        $this->connection->query("
-            UPDATE
                 tl_form_field
             SET
                 type = 'explanation'
