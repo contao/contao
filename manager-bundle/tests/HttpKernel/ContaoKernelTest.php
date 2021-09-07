@@ -313,7 +313,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame([], Request::getTrustedHosts());
 
         $_SERVER['TRUSTED_PROXIES'] = '1.1.1.1,2.2.2.2';
-        $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2';
+        $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2,example.com';
 
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
