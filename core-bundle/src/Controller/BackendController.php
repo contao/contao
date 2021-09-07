@@ -183,7 +183,7 @@ class BackendController extends AbstractController
         if ($request->query->has('extras')) {
             $extras = $request->query->all('extras');
 
-            if (empty($extras) || !\is_array($extras)) {
+            if (empty($extras)) {
                 throw new BadRequestHttpException('Invalid picker extras');
             }
         }
