@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Util;
 
+use Contao\StringUtil;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -42,7 +43,7 @@ class SimpleTokenParser implements LoggerAwareInterface
      * @throws \RuntimeException         If $subject cannot be parsed
      * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
      */
-    public function parse(string $subject, array $tokens): string
+    public function parse(string $subject, array $tokens, bool $allowHtml = true): string
     {
         // Check if we can use the expression language or if legacy tokens have been used
         $canUseExpressionLanguage = $this->canUseExpressionLanguage($tokens);
@@ -54,32 +55,43 @@ class SimpleTokenParser implements LoggerAwareInterface
         $ifStack = [true];
 
         // Tokenize the string into tag and text blocks
-        $tags = preg_split('/({[^{}]+})\n?/', $subject, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $tags = preg_split(
+            $allowHtml
+                ? '/((?:{|&#123;)(?:(?!&#12[35];)[^{}])+(?:}|&#125;))\n?/'
+                : '/({[^{}]+})\n?/',
+            $subject,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY
+        );
 
         // Parse the tokens
         $return = '';
 
         foreach ($tags as $tag) {
+            $decodedTag = $allowHtml
+                ? html_entity_decode(StringUtil::restoreBasicEntities($tag), ENT_QUOTES, 'UTF-8')
+                : $tag;
+
             // True if it is inside a matching if-tag
             $current = $stack[\count($stack) - 1];
             $currentIf = $ifStack[\count($ifStack) - 1];
 
-            if (0 === strncmp($tag, '{if ', 4)) {
-                $expression = $this->evaluateExpression(substr($tag, 4, -1), $tokens, $canUseExpressionLanguage);
+            if (0 === strncmp($decodedTag, '{if ', 4)) {
+                $expression = $this->evaluateExpression(substr($decodedTag, 4, -1), $tokens, $canUseExpressionLanguage);
                 $stack[] = $current && $expression;
                 $ifStack[] = $expression;
-            } elseif (0 === strncmp($tag, '{elseif ', 8)) {
-                $expression = $this->evaluateExpression(substr($tag, 8, -1), $tokens, $canUseExpressionLanguage);
+            } elseif (0 === strncmp($decodedTag, '{elseif ', 8)) {
+                $expression = $this->evaluateExpression(substr($decodedTag, 8, -1), $tokens, $canUseExpressionLanguage);
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1] && $expression;
                 $ifStack[] = $currentIf || $expression;
-            } elseif (0 === strncmp($tag, '{else}', 6)) {
+            } elseif (0 === strncmp($decodedTag, '{else}', 6)) {
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1];
                 $ifStack[] = true;
-            } elseif (0 === strncmp($tag, '{endif}', 7)) {
+            } elseif (0 === strncmp($decodedTag, '{endif}', 7)) {
                 array_pop($stack);
                 array_pop($ifStack);
             } elseif ($current) {
