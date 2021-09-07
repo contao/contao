@@ -154,7 +154,7 @@ class LogoutHandlerTest extends TestCase
         $token = $this->createMock(UsernamePasswordToken::class);
         $token
             ->expects($this->once())
-            ->method(method_exists($token, 'getFirewallName') ? 'getFirewallName' : 'getProviderKey')
+            ->method('getFirewallName')
             ->willReturn('contao_frontend')
         ;
 

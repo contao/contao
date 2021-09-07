@@ -511,7 +511,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         $token
             ->expects($this->atMost(2))
-            ->method('getProviderKey')
+            ->method('getFirewallName')
             ->willReturn('contao_frontend')
         ;
 

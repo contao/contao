@@ -56,13 +56,8 @@ class GetDotEnvCommand extends Command
             return 0;
         }
 
-        if (method_exists(Dotenv::class, 'usePutenv')) {
-            $dotenv = new Dotenv();
-            $dotenv->usePutenv(false);
-        } else {
-            // Backwards compatibility with symfony/dotenv <5.0
-            $dotenv = new Dotenv(false);
-        }
+        $dotenv = new Dotenv();
+        $dotenv->usePutenv(false);
 
         $vars = $dotenv->parse(file_get_contents($path));
         $key = $input->getArgument('key');
