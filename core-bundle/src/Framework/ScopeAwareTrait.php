@@ -28,17 +28,17 @@ trait ScopeAwareTrait
 
     protected function isContaoMasterRequest(KernelEvent $event): bool
     {
-        return $event->isMasterRequest() && $this->isContaoScope();
+        return $event->isMainRequest() && $this->isContaoScope();
     }
 
     protected function isBackendMasterRequest(KernelEvent $event): bool
     {
-        return $event->isMasterRequest() && $this->isBackendScope();
+        return $event->isMainRequest() && $this->isBackendScope();
     }
 
     protected function isFrontendMasterRequest(KernelEvent $event): bool
     {
-        return $event->isMasterRequest() && $this->isFrontendScope();
+        return $event->isMainRequest() && $this->isFrontendScope();
     }
 
     protected function isContaoScope(): bool

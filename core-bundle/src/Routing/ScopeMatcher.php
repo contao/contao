@@ -39,17 +39,17 @@ class ScopeMatcher
 
     public function isContaoMasterRequest(KernelEvent $event): bool
     {
-        return $event->isMasterRequest() && $this->isContaoRequest($event->getRequest());
+        return $event->isMainRequest() && $this->isContaoRequest($event->getRequest());
     }
 
     public function isBackendMasterRequest(KernelEvent $event): bool
     {
-        return $event->isMasterRequest() && $this->isBackendRequest($event->getRequest());
+        return $event->isMainRequest() && $this->isBackendRequest($event->getRequest());
     }
 
     public function isFrontendMasterRequest(KernelEvent $event): bool
     {
-        return $event->isMasterRequest() && $this->isFrontendRequest($event->getRequest());
+        return $event->isMainRequest() && $this->isFrontendRequest($event->getRequest());
     }
 
     public function isContaoRequest(Request $request): bool

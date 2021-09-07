@@ -55,6 +55,6 @@ class ResponseExceptionListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $request = new Request();
 
-        return new ExceptionEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+        return new ExceptionEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception);
     }
 }

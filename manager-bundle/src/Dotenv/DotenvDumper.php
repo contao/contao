@@ -41,13 +41,8 @@ class DotenvDumper
             return;
         }
 
-        if (method_exists(Dotenv::class, 'usePutenv')) {
-            $dotenv = new Dotenv();
-            $dotenv->usePutenv(false);
-        } else {
-            // Backwards compatibility with symfony/dotenv <5.0
-            $dotenv = new Dotenv(false);
-        }
+        $dotenv = new Dotenv();
+        $dotenv->usePutenv(false);
 
         $parameters = $dotenv->parse(file_get_contents($dotenvFile));
 

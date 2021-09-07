@@ -56,7 +56,7 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (KernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        if (KernelInterface::MAIN_REQUEST !== $event->getRequestType()) {
             return;
         }
 
@@ -70,17 +70,17 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
     public function onKernelResponse(ResponseEvent $event): void
     {
         $response = $event->getResponse();
-        $isMasterRequest = KernelInterface::MASTER_REQUEST === $event->getRequestType();
+        $isMainRequest = KernelInterface::MAIN_REQUEST === $event->getRequestType();
 
         if ($this->currentStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
-            if ($isMasterRequest) {
+            if ($isMainRequest) {
                 $this->currentStrategy->update($response);
             } elseif ($response->headers->has('Cache-Control')) {
                 $this->currentStrategy->add($response);
             }
         }
 
-        if ($isMasterRequest) {
+        if ($isMainRequest) {
             $this->currentStrategy = array_pop($this->strategyStack);
             $response->headers->remove(self::MERGE_CACHE_HEADER);
         }

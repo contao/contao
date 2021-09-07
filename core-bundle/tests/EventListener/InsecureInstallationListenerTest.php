@@ -73,6 +73,6 @@ class InsecureInstallationListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
     }
 }
