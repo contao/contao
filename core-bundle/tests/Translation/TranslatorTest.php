@@ -21,20 +21,11 @@ use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator as BaseTranslator;
-use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
     use ExpectDeprecationTrait;
-
-    public function testTranslatorImplementsDeprecatedInterface(): void
-    {
-        $translator = $this->createTranslator();
-
-        $this->assertInstanceOf(TranslatorInterface::class, $translator);
-        $this->assertInstanceOf(LegacyTranslatorInterface::class, $translator);
-    }
 
     /**
      * @dataProvider decoratedTranslatorDomainProvider
@@ -80,30 +71,6 @@ class TranslatorTest extends TestCase
     {
         yield ['domain'];
         yield ['ContaoCoreBundle'];
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testForwardsTheLegacyMethodCallsToTheDecoratedTranslator(): void
-    {
-        if (!method_exists(BaseTranslator::class, 'transChoice')) {
-            $this->markTestSkipped('The transChoice() method no longer exists.');
-        }
-
-        $this->expectDeprecation('The Symfony\Component\Translation\Translator::transChoice method is deprecated %s.');
-
-        $originalTranslator = $this->createMock(BaseTranslator::class);
-        $originalTranslator
-            ->expects($this->once())
-            ->method('transChoice')
-            ->with('id', 3, ['param' => 'value'], 'domain', 'en')
-            ->willReturn('transChoice')
-        ;
-
-        $translator = $this->createTranslator($originalTranslator);
-
-        $this->assertSame('transChoice', $translator->transChoice('id', 3, ['param' => 'value'], 'domain', 'en'));
     }
 
     public function testReadsFromTheGlobalLanguageArray(): void
