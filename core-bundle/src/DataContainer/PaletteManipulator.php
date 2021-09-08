@@ -45,9 +45,8 @@ class PaletteManipulator
      * If the legend already exists, nothing will be changed.
      *
      * @param string|array $parent
-     * @param bool         $hide
      */
-    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, $hide = false): self
+    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, bool $hide = false): self
     {
         $this->validatePosition($position);
 
@@ -55,7 +54,7 @@ class PaletteManipulator
             'name' => $name,
             'parents' => (array) $parent,
             'position' => $position,
-            'hide' => (bool) $hide,
+            'hide' => $hide,
         ];
 
         return $this;
@@ -67,11 +66,10 @@ class PaletteManipulator
      * @param string|array               $name
      * @param string|array               $parent
      * @param string|array|\Closure|null $fallback
-     * @param string                     $fallbackPosition
      *
      * @throws PalettePositionException
      */
-    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND): self
+    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, string $fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 

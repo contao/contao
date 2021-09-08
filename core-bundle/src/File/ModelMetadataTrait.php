@@ -45,7 +45,7 @@ trait ModelMetadataTrait
 
         unset($data['imageTitle'], $data['imageUrl']);
 
-        // Make sure we resolve insert tags pointing to files.
+        // Make sure we resolve insert tags pointing to files
         if (isset($data[Metadata::VALUE_URL])) {
             $data[Metadata::VALUE_URL] = Controller::replaceInsertTags($data[Metadata::VALUE_URL]);
         }

@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -223,7 +224,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
 
     private function mockRequestEvent(Request $request): RequestEvent
     {
-        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MAIN_REQUEST);
+        return new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
     private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface

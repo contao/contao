@@ -102,7 +102,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
-    public function addPath($path, $namespace = 'Contao', bool $trackTemplates = false): void
+    public function addPath(string $path, string $namespace = 'Contao', bool $trackTemplates = false): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
@@ -128,7 +128,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
-    public function prependPath($path, $namespace = 'Contao'): void
+    public function prependPath(string $path, string $namespace = 'Contao'): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
@@ -179,11 +179,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @param string $name The name of the template to load
      *
-     * @throws LoaderError When $name is not found
-     *
      * @return string The cache key
      */
-    public function getCacheKey($name): string
+    public function getCacheKey(string $name): string
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
@@ -197,10 +195,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * the template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
-     *
-     * @throws LoaderError When $name is not found
      */
-    public function getSourceContext($name): Source
+    public function getSourceContext(string $name): Source
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
         $source = parent::getSourceContext($templateName);
@@ -245,7 +241,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @return bool If the template source code is handled by this loader or not
      */
-    public function exists($name): bool
+    public function exists(string $name): bool
     {
         if (parent::exists($name)) {
             return true;
@@ -269,11 +265,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param int    $time Timestamp of the last modification time of the
      *                     cached template
      *
-     * @throws LoaderError When $name is not found
-     *
      * @return bool true if the template is fresh, false otherwise
      */
-    public function isFresh($name, $time): bool
+    public function isFresh(string $name, int $time): bool
     {
         if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
             return false;
