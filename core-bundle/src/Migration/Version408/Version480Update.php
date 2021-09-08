@@ -28,30 +28,15 @@ use Webmozart\PathUtil\Path;
  */
 class Version480Update extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private Connection $connection;
+    private Filesystem $filesystem;
+    private ContaoFramework $framework;
+    private string $projectDir;
 
     /**
      * @var array<string>
      */
-    private $resultMessages = [];
+    private array $resultMessages = [];
 
     public function __construct(Connection $connection, Filesystem $filesystem, ContaoFramework $framework, string $projectDir)
     {

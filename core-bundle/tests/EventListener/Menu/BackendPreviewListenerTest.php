@@ -275,9 +275,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                static function (string $id): string {
-                    return $id;
-                }
+                static fn (string $id): string => $id
             )
         ;
 

@@ -22,62 +22,46 @@ use Doctrine\ORM\Mapping as ORM;
 class TrustedDevice
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    protected ?int $id = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime")
      */
-    protected $created;
+    protected \DateTimeInterface $created;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $userClass;
+    protected ?string $userClass = null;
 
     /**
-     * @var int|null
-     *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $userId;
+    protected ?int $userId = null;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="text", name="user_agent", nullable=true)
      */
-    protected $userAgent;
+    protected ?string $userAgent = null;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", name="ua_family", nullable=true)
      */
-    protected $uaFamily;
+    protected ?string $uaFamily = null;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", name="os_family", nullable=true)
      */
-    protected $osFamily;
+    protected ?string $osFamily = null;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="string", name="device_family", nullable=true)
      */
-    protected $deviceFamily;
+    protected ?string $deviceFamily = null;
 
     public function __construct(User $user)
     {
@@ -98,12 +82,12 @@ class TrustedDevice
         return $this;
     }
 
-    public function getCreated(): \DateTime
+    public function getCreated(): \DateTimeInterface
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created): self
+    public function setCreated(\DateTimeInterface $created): self
     {
         $this->created = $created;
 

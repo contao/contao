@@ -170,9 +170,7 @@ class PageRegistryTest extends TestCase
             ->expects($this->once())
             ->method('configurePageRoute')
             ->with($this->callback(
-                static function ($route) use ($pageModel) {
-                    return $route instanceof PageRoute && $route->getPageModel() === $pageModel;
-                }
+                static fn ($route) => $route instanceof PageRoute && $route->getPageModel() === $pageModel
             ))
         ;
 

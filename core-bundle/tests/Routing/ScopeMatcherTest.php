@@ -22,10 +22,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ScopeMatcherTest extends TestCase
 {
-    /**
-     * @var ScopeMatcher
-     */
-    private $matcher;
+    private ScopeMatcher $matcher;
 
     protected function setUp(): void
     {

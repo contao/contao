@@ -40,10 +40,7 @@ class InstallationController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var array
-     */
-    private $context = [
+    private array $context = [
         'has_admin' => false,
         'hide_admin' => false,
         'sql_message' => '',

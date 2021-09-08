@@ -553,9 +553,7 @@ class AuthenticationProviderTest extends TestCase
         $contextFactory
             ->method('create')
             ->willReturnCallback(
-                static function ($request, $token, $firewallName) {
-                    return new AuthenticationContext($request, $token, $firewallName);
-                }
+                static fn ($request, $token, $firewallName) => new AuthenticationContext($request, $token, $firewallName)
             )
         ;
 
@@ -604,9 +602,7 @@ class AuthenticationProviderTest extends TestCase
         $contextFactory
             ->method('create')
             ->willReturnCallback(
-                static function ($request, $token, $firewallName) {
-                    return new AuthenticationContext($request, $token, $firewallName);
-                }
+                static fn ($request, $token, $firewallName) => new AuthenticationContext($request, $token, $firewallName)
             )
         ;
 

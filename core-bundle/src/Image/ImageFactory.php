@@ -31,60 +31,17 @@ use Webmozart\PathUtil\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
-    /**
-     * @var ResizerInterface
-     */
-    private $resizer;
-
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
-
-    /**
-     * @var ImagineInterface
-     */
-    private $imagineSvg;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var bool
-     */
-    private $bypassCache;
-
-    /**
-     * @var array
-     */
-    private $imagineOptions;
-
-    /**
-     * @var array
-     */
-    private $validExtensions;
-
-    /**
-     * @var string
-     */
-    private $uploadDir;
-
-    /**
-     * @var array
-     */
-    private $predefinedSizes = [];
-
-    /**
-     * @var ?LoggerInterface
-     */
-    private $logger;
+    private ResizerInterface $resizer;
+    private ImagineInterface $imagine;
+    private ImagineInterface $imagineSvg;
+    private ContaoFramework $framework;
+    private Filesystem $filesystem;
+    private bool $bypassCache;
+    private array $imagineOptions;
+    private array $validExtensions;
+    private string $uploadDir;
+    private array $predefinedSizes = [];
+    private ?LoggerInterface $logger;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.image_factory" service instead

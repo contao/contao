@@ -31,25 +31,10 @@ class TwoFactorFrontendListener
 {
     use TargetPathTrait;
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var array
-     */
-    private $supportedTokens;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
+    private TokenStorageInterface $tokenStorage;
+    private array $supportedTokens;
 
     public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, TokenStorageInterface $tokenStorage, array $supportedTokens)
     {

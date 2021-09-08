@@ -1635,27 +1635,21 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter
             ->method('findByPk')
             ->willReturnCallback(
-                static function (int $id) use ($pagesById) {
-                    return $pagesById[$id] ?? null;
-                }
+                static fn (int $id) => $pagesById[$id] ?? null
             )
         ;
 
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(
-                static function (int $id) use ($pagesById) {
-                    return $pagesById[$id] ?? null;
-                }
+                static fn (int $id) => $pagesById[$id] ?? null
             )
         ;
 
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(
-                static function (int $pid) use ($pagesByPid) {
-                    return $pagesByPid[$pid] ?? null;
-                }
+                static fn (int $pid) => $pagesByPid[$pid] ?? null
             )
         ;
 
@@ -1663,9 +1657,7 @@ class PageUrlListenerTest extends TestCase
         $inputAdapter
             ->method('post')
             ->willReturnCallback(
-                static function ($key) use ($inputData) {
-                    return $inputData[$key] ?? null;
-                }
+                static fn ($key) => $inputData[$key] ?? null
             )
         ;
 

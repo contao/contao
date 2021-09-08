@@ -31,10 +31,7 @@ class LegacyRouteProviderTest extends TestCase
      */
     private $frontendLoader;
 
-    /**
-     * @var LegacyRouteProvider
-     */
-    private $provider;
+    private LegacyRouteProvider $provider;
 
     protected function setUp(): void
     {

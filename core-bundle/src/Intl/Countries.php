@@ -21,30 +21,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Countries
 {
+    private RequestStack $requestStack;
+    private ContaoFramework $contaoFramework;
+    private string $defaultLocale;
+
     /**
      * @var TranslatorInterface&TranslatorBagInterface
      */
     private $translator;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $contaoFramework;
-
-    /**
      * @var array<string>
      */
-    private $countries;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale;
+    private array $countries;
 
     /**
      * @param TranslatorInterface&TranslatorBagInterface $translator
@@ -111,9 +100,7 @@ class Countries
     {
         $newList = array_filter(
             $filter,
-            static function ($country) {
-                return !\in_array($country[0], ['-', '+'], true);
-            }
+            static fn ($country) => !\in_array($country[0], ['-', '+'], true)
         );
 
         if ($newList) {

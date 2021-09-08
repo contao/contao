@@ -21,10 +21,7 @@ use Webmozart\PathUtil\Path;
  */
 class InitializeApplicationListener
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     public function __construct(string $projectDir)
     {

@@ -25,35 +25,12 @@ class ContaoContext
     public const NEWSLETTER = 'NEWSLETTER';
     public const REPOSITORY = 'REPOSITORY';
 
-    /**
-     * @var string
-     */
-    private $func;
-
-    /**
-     * @var string|null
-     */
-    private $action;
-
-    /**
-     * @var string|null
-     */
-    private $username;
-
-    /**
-     * @var string|null
-     */
-    private $ip;
-
-    /**
-     * @var string|null
-     */
-    private $browser;
-
-    /**
-     * @var string|null
-     */
-    private $source;
+    private string $func;
+    private ?string $action;
+    private ?string $username;
+    private ?string $ip;
+    private ?string $browser;
+    private ?string $source;
 
     /**
      * @throws \InvalidArgumentException

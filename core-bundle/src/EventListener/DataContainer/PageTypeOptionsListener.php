@@ -25,20 +25,9 @@ use Symfony\Component\Security\Core\Security;
  */
 class PageTypeOptionsListener
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var EventDispatcherInterface|null
-     */
-    private $eventDispatcher;
+    private PageRegistry $pageRegistry;
+    private Security $security;
+    private ?EventDispatcherInterface $eventDispatcher;
 
     public function __construct(PageRegistry $pageRegistry, Security $security, EventDispatcherInterface $eventDispatcher = null)
     {

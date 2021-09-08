@@ -28,10 +28,7 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
+    private TemplateHierarchyInterface $hierarchy;
 
     public function __construct(TemplateHierarchyInterface $hierarchy)
     {

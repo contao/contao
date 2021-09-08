@@ -585,9 +585,7 @@ class SitemapControllerTest extends TestCase
         $pageRegistry
             ->method('supportsContentComposition')
             ->willReturnCallback(
-                static function (PageModel $pageModel) {
-                    return empty($pageModel->type) || 'regular' === $pageModel->type;
-                }
+                static fn (PageModel $pageModel) => empty($pageModel->type) || 'regular' === $pageModel->type
             )
         ;
 
@@ -627,9 +625,7 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(\count($pages)))
             ->method('findByPid')
             ->withConsecutive(...array_map(
-                static function ($parentId) {
-                    return [$parentId, ['order' => 'sorting']];
-                },
+                static fn ($parentId) => [$parentId, ['order' => 'sorting']],
                 array_keys($pages)
             ))
             ->willReturnOnConsecutiveCalls(...$pages)
@@ -640,9 +636,7 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(\count($articles)))
             ->method('findPublishedWithTeaserByPid')
             ->withConsecutive(...array_map(
-                static function ($pageId) {
-                    return [$pageId, ['ignoreFePreview' => true]];
-                },
+                static fn ($pageId) => [$pageId, ['ignoreFePreview' => true]],
                 array_keys($articles)
             ))
             ->willReturnOnConsecutiveCalls(...$articles)
@@ -661,12 +655,10 @@ class SitemapControllerTest extends TestCase
                 ->expects($this->exactly(\count($hooks) * 2))
                 ->method('importStatic')
                 ->withConsecutive(...array_map(
-                    static function ($objectName) {
-                        return [$objectName];
-                    },
-                    array_merge(array_keys($hooks), array_keys($hooks))
+                    static fn ($objectName) => [$objectName],
+                    [...array_keys($hooks), ...array_keys($hooks)]
                 ))
-                ->willReturnOnConsecutiveCalls(...array_merge(array_values($hooks), array_values($hooks)))
+                ->willReturnOnConsecutiveCalls(...[...array_values($hooks), ...array_values($hooks)])
             ;
         }
 

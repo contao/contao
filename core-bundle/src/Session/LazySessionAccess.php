@@ -21,15 +21,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class LazySessionAccess implements \ArrayAccess, \Countable
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var bool
-     */
-    private $hasPreviousSession;
+    private SessionInterface $session;
+    private bool $hasPreviousSession;
 
     public function __construct(SessionInterface $session, bool $hasPreviousSession = true)
     {

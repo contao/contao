@@ -20,10 +20,7 @@ use Webmozart\PathUtil\Path;
  */
 class ResourceFinder implements ResourceFinderInterface
 {
-    /**
-     * @var array
-     */
-    private $paths;
+    private array $paths;
 
     /**
      * @param string|array $paths

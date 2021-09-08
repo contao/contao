@@ -25,10 +25,7 @@ use Webmozart\PathUtil\Path;
  */
 class SetDotEnvCommand extends Command
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     public function __construct(Application $application)
     {

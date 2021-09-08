@@ -37,45 +37,14 @@ class SymlinksCommand extends Command
 {
     protected static $defaultName = 'contao:symlinks';
 
-    /**
-     * @var array
-     */
-    private $rows = [];
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $webDir;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
-
-    /**
-     * @var string
-     */
-    private $logsDir;
-
-    /**
-     * @var ResourceFinderInterface
-     */
-    private $resourceFinder;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var int
-     */
-    private $statusCode = 0;
+    private array $rows = [];
+    private string $projectDir;
+    private ?string $webDir;
+    private string $uploadPath;
+    private string $logsDir;
+    private ResourceFinderInterface $resourceFinder;
+    private EventDispatcherInterface $eventDispatcher;
+    private int $statusCode = 0;
 
     public function __construct(string $projectDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
     {
@@ -163,9 +132,7 @@ class SymlinksCommand extends Command
 
     private function symlinkModules(): void
     {
-        $filter = static function (SplFileInfo $file): bool {
-            return HtaccessAnalyzer::create($file)->grantsAccess();
-        };
+        $filter = static fn (SplFileInfo $file): bool => HtaccessAnalyzer::create($file)->grantsAccess();
 
         $this->createSymlinksFromFinder(
             $this->findIn(Path::join($this->projectDir, 'system/modules'))->files()->filter($filter)->name('.htaccess'),

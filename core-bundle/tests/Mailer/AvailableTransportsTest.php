@@ -38,7 +38,7 @@ class AvailableTransportsTest extends TestCase
             [
                 'table' => 'tl_page',
                 'target' => 'fields.mailerTransport.options',
-                'priority' => null,
+                'priority' => 0,
             ],
             get_object_vars($pageCallback)
         );
@@ -47,7 +47,7 @@ class AvailableTransportsTest extends TestCase
             [
                 'table' => 'tl_form',
                 'target' => 'fields.mailerTransport.options',
-                'priority' => null,
+                'priority' => 0,
             ],
             get_object_vars($formCallback)
         );

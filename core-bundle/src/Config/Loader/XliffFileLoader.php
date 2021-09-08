@@ -20,15 +20,8 @@ use Webmozart\PathUtil\Path;
  */
 class XliffFileLoader extends Loader
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var bool
-     */
-    private $addToGlobals;
+    private string $projectDir;
+    private bool $addToGlobals;
 
     public function __construct(string $projectDir, bool $addToGlobals = false)
     {

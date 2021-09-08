@@ -46,25 +46,18 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cachePool;
-
-    /**
-     * @var TemplateLocator
-     */
-    private $templateLocator;
+    private CacheItemPoolInterface $cachePool;
+    private TemplateLocator $templateLocator;
 
     /**
      * @var array<string,string>
      */
-    private $trackedTemplatesPaths = [];
+    private array $trackedTemplatesPaths = [];
 
     /**
      * @var array<string,array<string,string>>|null
      */
-    private $inheritanceChains;
+    private ?array $inheritanceChains = null;
 
     /**
      * @var string|false|null

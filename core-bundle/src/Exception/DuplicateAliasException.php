@@ -14,10 +14,7 @@ namespace Contao\CoreBundle\Exception;
 
 class DuplicateAliasException extends \RuntimeException
 {
-    /**
-     * @var string
-     */
-    private $url;
+    private string $url;
 
     public function __construct(string $url, string $message = '', int $code = 0, \Throwable $previous = null)
     {

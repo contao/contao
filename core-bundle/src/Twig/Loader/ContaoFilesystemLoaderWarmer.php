@@ -21,25 +21,10 @@ use Webmozart\PathUtil\Path;
  */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var ContaoFilesystemLoader
-     */
-    private $loader;
-
-    /**
-     * @var TemplateLocator
-     */
-    private $templateLocator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $environment;
+    private ContaoFilesystemLoader $loader;
+    private TemplateLocator $templateLocator;
+    private string $projectDir;
+    private string $environment;
 
     public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $environment)
     {

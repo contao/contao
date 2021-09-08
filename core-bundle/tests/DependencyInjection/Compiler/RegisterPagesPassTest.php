@@ -55,9 +55,7 @@ class RegisterPagesPassTest extends TestCase
             ->with(
                 'add',
                 $this->callback(
-                    static function ($arguments) {
-                        return 'my_type' === $arguments[0];
-                    }
+                    static fn ($arguments) => 'my_type' === $arguments[0]
                 )
             )
         ;
@@ -82,9 +80,7 @@ class RegisterPagesPassTest extends TestCase
             ->with(
                 'add',
                 $this->callback(
-                    static function ($arguments) {
-                        return 'contao_core_bundle' === $arguments[0];
-                    }
+                    static fn ($arguments) => 'contao_core_bundle' === $arguments[0]
                 )
             )
         ;
@@ -109,9 +105,7 @@ class RegisterPagesPassTest extends TestCase
             ->with(
                 'add',
                 $this->callback(
-                    static function ($arguments) {
-                        return 'two_factor' === $arguments[0];
-                    }
+                    static fn ($arguments) => 'two_factor' === $arguments[0]
                 )
             )
         ;
@@ -136,9 +130,7 @@ class RegisterPagesPassTest extends TestCase
             ->with(
                 'add',
                 $this->callback(
-                    static function ($arguments) {
-                        return 'test' === $arguments[0];
-                    }
+                    static fn ($arguments) => 'test' === $arguments[0]
                 )
             )
         ;
@@ -267,16 +259,12 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 $this->callback(
-                    static function ($method) {
-                        return 'setContainer' === $method;
-                    }
+                    static fn ($method) => 'setContainer' === $method
                 ),
                 $this->callback(
-                    static function (array $arguments) {
-                        return 1 === \count($arguments)
-                            && $arguments[0] instanceof Reference
-                            && ContainerInterface::class === (string) $arguments[0];
-                    }
+                    static fn (array $arguments) => 1 === \count($arguments)
+                        && $arguments[0] instanceof Reference
+                        && ContainerInterface::class === (string) $arguments[0]
                 )
             )
         ;

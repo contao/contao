@@ -34,10 +34,7 @@ class PictureTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     public static function setUpBeforeClass(): void
     {

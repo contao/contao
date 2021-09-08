@@ -18,15 +18,8 @@ use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 class ScopeMatcher
 {
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $backendMatcher;
-
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $frontendMatcher;
+    private RequestMatcherInterface $backendMatcher;
+    private RequestMatcherInterface $frontendMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.scope_matcher" service instead

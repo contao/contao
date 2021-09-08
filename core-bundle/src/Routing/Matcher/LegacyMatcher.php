@@ -23,25 +23,10 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class LegacyMatcher implements RequestMatcherInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $requestMatcher;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private ContaoFramework $framework;
+    private RequestMatcherInterface $requestMatcher;
+    private string $urlSuffix;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.legacy_matcher" service instead
@@ -118,7 +103,7 @@ class LegacyMatcher implements RequestMatcherInterface
 
         /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
-        $fragments = array_merge([$page->alias], explode('/', substr($parameters, 1)));
+        $fragments = [...[$page->alias], ...explode('/', substr($parameters, 1))];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if ($config->get('useAutoItem') && 0 === \count($fragments) % 2) {

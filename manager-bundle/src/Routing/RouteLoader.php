@@ -22,25 +22,10 @@ use Webmozart\PathUtil\Path;
 
 class RouteLoader implements RouteLoaderInterface
 {
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var PluginLoader
-     */
-    private $pluginLoader;
-
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private LoaderInterface $loader;
+    private PluginLoader $pluginLoader;
+    private KernelInterface $kernel;
+    private string $projectDir;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.routing_loader" service instead

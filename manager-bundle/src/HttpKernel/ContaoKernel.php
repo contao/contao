@@ -38,35 +38,12 @@ use Webmozart\PathUtil\Path;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
-    /**
-     * @var string
-     */
-    protected static $projectDir;
-
-    /**
-     * @var PluginLoader
-     */
-    private $pluginLoader;
-
-    /**
-     * @var BundleLoader
-     */
-    private $bundleLoader;
-
-    /**
-     * @var JwtManager
-     */
-    private $jwtManager;
-
-    /**
-     * @var ManagerConfig
-     */
-    private $managerConfig;
-
-    /**
-     * @var ContaoCache
-     */
-    private $httpCache;
+    protected static ?string $projectDir = null;
+    private ?PluginLoader $pluginLoader = null;
+    private ?BundleLoader $bundleLoader = null;
+    private ?JwtManager $jwtManager = null;
+    private ?ManagerConfig $managerConfig = null;
+    private ?ContaoCache $httpCache = null;
 
     public function shutdown(): void
     {
@@ -402,7 +379,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
         if (\is_array($env = @include Path::join($projectDir, '.env.local.php'))) {
             foreach ($env as $k => $v) {
-                $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
+                $_ENV[$k] ??= isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
             (new Dotenv(false))->loadEnv($filePath, 'APP_ENV', $defaultEnv);

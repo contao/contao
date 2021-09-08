@@ -312,9 +312,7 @@ class FigureBuilderTest extends TestCase
         $validatorAdapter
             ->method('isUuid')
             ->willReturnCallback(
-                static function ($value): bool {
-                    return '1d902bf1-2683-406e-b004-f0b59095e5a1' === $value;
-                }
+                static fn ($value): bool => '1d902bf1-2683-406e-b004-f0b59095e5a1' === $value
             )
         ;
 

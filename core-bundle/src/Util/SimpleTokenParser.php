@@ -25,10 +25,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
+    private ExpressionLanguage $expressionLanguage;
 
     public function __construct(ExpressionLanguage $expressionLanguage)
     {

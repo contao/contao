@@ -16,10 +16,7 @@ use Contao\CoreBundle\File\Metadata;
 
 class FileMetadataEvent
 {
-    /**
-     * @var Metadata|null
-     */
-    private $metadata;
+    private ?Metadata $metadata;
 
     public function __construct(?Metadata $metadata)
     {

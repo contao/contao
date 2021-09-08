@@ -31,35 +31,12 @@ class MigrateCommand extends Command
 {
     protected static $defaultName = 'contao:migrate';
 
-    /**
-     * @var MigrationCollection
-     */
-    private $migrations;
-
-    /**
-     * @var FileLocator
-     */
-    private $fileLocator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ?Installer
-     */
-    private $installer;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private MigrationCollection $migrations;
+    private FileLocator $fileLocator;
+    private string $projectDir;
+    private ContaoFramework $framework;
+    private ?Installer $installer;
+    private ?SymfonyStyle $io = null;
 
     public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Installer $installer = null)
     {
@@ -261,12 +238,7 @@ class MigrateCommand extends Command
             return [];
         }
 
-        return array_map(
-            function ($path) {
-                return Path::makeRelative($path, $this->projectDir);
-            },
-            $files
-        );
+        return array_map(fn ($path) => Path::makeRelative($path, $this->projectDir), $files);
     }
 
     private function executeRunonceFile(string $file): void
@@ -302,9 +274,7 @@ class MigrateCommand extends Command
 
             $hasNewCommands = \count(array_filter(
                 array_keys($commands),
-                static function ($hash) use ($commandsByHash) {
-                    return !isset($commandsByHash[$hash]);
-                }
+                static fn ($hash) => !isset($commandsByHash[$hash])
             ));
 
             if (!$hasNewCommands) {

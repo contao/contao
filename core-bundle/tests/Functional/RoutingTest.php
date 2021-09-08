@@ -23,10 +23,7 @@ class RoutingTest extends FunctionalTestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @var array
-     */
-    private static $lastImport;
+    private static ?array $lastImport = null;
 
     public static function setUpBeforeClass(): void
     {
@@ -1370,9 +1367,7 @@ class RoutingTest extends FunctionalTestCase
         self::$lastImport = $fileNames;
 
         static::loadFixtures(array_map(
-            static function ($file) {
-                return __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml';
-            },
+            static fn ($file) => __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml',
             $fileNames
         ));
     }

@@ -34,30 +34,19 @@ class Factory
 {
     public const USER_AGENT = 'contao/crawler';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private Connection $connection;
+    private ContaoFramework $framework;
+    private array $defaultHttpClientOptions;
 
     /**
      * @var array<string>
      */
-    private $additionalUris;
-
-    /**
-     * @var array
-     */
-    private $defaultHttpClientOptions;
+    private array $additionalUris;
 
     /**
      * @var array<EscargotSubscriberInterface>
      */
-    private $subscribers = [];
+    private array $subscribers = [];
 
     public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
     {
@@ -85,9 +74,7 @@ class Factory
 
         return array_filter(
             $this->subscribers,
-            static function (EscargotSubscriberInterface $subscriber) use ($selectedSubscribers): bool {
-                return \in_array($subscriber->getName(), $selectedSubscribers, true);
-            }
+            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true)
         );
     }
 
@@ -97,9 +84,7 @@ class Factory
     public function getSubscriberNames(): array
     {
         return array_map(
-            static function (EscargotSubscriberInterface $subscriber): string {
-                return $subscriber->getName();
-            },
+            static fn (EscargotSubscriberInterface $subscriber): string => $subscriber->getName(),
             $this->subscribers
         );
     }
@@ -110,9 +95,7 @@ class Factory
             new InMemoryQueue(),
             new DoctrineQueue(
                 $this->connection,
-                static function (): string {
-                    return Uuid::uuid4()->toString();
-                },
+                static fn (): string => Uuid::uuid4()->toString(),
                 'tl_crawl_queue'
             )
         );

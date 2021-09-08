@@ -22,25 +22,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContaoContext implements ContextInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var string
-     */
-    private $field;
-
-    /**
-     * @var bool
-     */
-    private $debug;
+    private RequestStack $requestStack;
+    private ContaoFramework $framework;
+    private string $field;
+    private bool $debug;
 
     public function __construct(RequestStack $requestStack, ContaoFramework $framework, string $field, bool $debug = false)
     {
