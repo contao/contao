@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CookieTheftException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Http\RememberMe\AbstractRememberMeServices;
+use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
 class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 {
@@ -313,16 +313,16 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
     private function assertCookieIsDeleted(Request $request): void
     {
-        $this->assertTrue($request->attributes->has(AbstractRememberMeServices::COOKIE_ATTR_NAME));
-        $this->assertInstanceOf(Cookie::class, $request->attributes->get(AbstractRememberMeServices::COOKIE_ATTR_NAME));
+        $this->assertTrue($request->attributes->has(RememberMeServicesInterface::COOKIE_ATTR_NAME));
+        $this->assertInstanceOf(Cookie::class, $request->attributes->get(RememberMeServicesInterface::COOKIE_ATTR_NAME));
     }
 
     private function assertRequestHasRememberMeCookie(Request $request): void
     {
-        $this->assertTrue($request->attributes->has(AbstractRememberMeServices::COOKIE_ATTR_NAME));
+        $this->assertTrue($request->attributes->has(RememberMeServicesInterface::COOKIE_ATTR_NAME));
 
         /** @var Cookie $cookie */
-        $cookie = $request->attributes->get(AbstractRememberMeServices::COOKIE_ATTR_NAME);
+        $cookie = $request->attributes->get(RememberMeServicesInterface::COOKIE_ATTR_NAME);
 
         $this->assertInstanceOf(Cookie::class, $cookie);
         $this->assertRememberMeCookie($cookie, 'foo', 'baz');

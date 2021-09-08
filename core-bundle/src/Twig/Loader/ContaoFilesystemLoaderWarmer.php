@@ -61,13 +61,13 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         // Global templates path
         $globalTemplatesPath = Path::join($this->projectDir, 'templates');
 
-        $this->loader->addPath($globalTemplatesPath, 'Contao');
+        $this->loader->addPath($globalTemplatesPath);
         $this->loader->addPath($globalTemplatesPath, 'Contao_Global', true);
 
         // Bundle paths (including App)
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {
-                $this->loader->addPath($path, 'Contao');
+                $this->loader->addPath($path);
                 $this->loader->addPath($path, "Contao_$name", true);
             }
         }

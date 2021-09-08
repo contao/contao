@@ -101,13 +101,13 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     /**
      * @param User $user
      */
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
     {
         if (!is_a($user, $this->userClass)) {
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
-        $user->password = $newEncodedPassword;
+        $user->password = $newHashedPassword;
         $user->save();
     }
 

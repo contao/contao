@@ -337,7 +337,7 @@ class FigureBuilder
     /**
      * Sets resize options.
      *
-     * By default or if the argument is set to null, resize options are derived
+     * By default, or if the argument is set to null, resize options are derived
      * from predefined image sizes.
      */
     public function setResizeOptions(?ResizeOptions $resizeOptions): self
@@ -350,7 +350,7 @@ class FigureBuilder
     /**
      * Sets custom metadata.
      *
-     * By default or if the argument is set to null, metadata is trying to be
+     * By default, or if the argument is set to null, metadata is trying to be
      * pulled from the FilesModel.
      */
     public function setMetadata(?Metadata $metadata): self
@@ -373,7 +373,7 @@ class FigureBuilder
     /**
      * Sets a custom locale.
      *
-     * By default or if the argument is set to null, the locale is determined
+     * By default, or if the argument is set to null, the locale is determined
      * from the request context and/or system settings.
      */
     public function setLocale(?string $locale): self
@@ -435,7 +435,7 @@ class FigureBuilder
     /**
      * Sets a custom lightbox resource (file path or ImageInterface) or URL.
      *
-     * By default or if the argument is set to null, the image/target will be
+     * By default, or if the argument is set to null, the image/target will be
      * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
@@ -467,7 +467,7 @@ class FigureBuilder
     /**
      * Sets resize options for the lightbox image.
      *
-     * By default or if the argument is set to null, resize options are derived
+     * By default, or if the argument is set to null, resize options are derived
      * from predefined image sizes.
      */
     public function setLightboxResizeOptions(?ResizeOptions $resizeOptions): self
@@ -480,7 +480,7 @@ class FigureBuilder
     /**
      * Sets a custom lightbox group ID.
      *
-     * By default or if the argument is set to null, the ID will be empty. For
+     * By default, or if the argument is set to null, the ID will be empty. For
      * this setting to take effect, make sure you have enabled the creation of
      * a lightbox by calling enableLightbox().
      */
