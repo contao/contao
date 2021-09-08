@@ -12,11 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authentication;
 
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\PageError401;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -30,17 +26,15 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
     private RouterInterface $router;
     private UriSigner $uriSigner;
-    private ContaoFramework $framework;
     private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_entry_point" service instead
      */
-    public function __construct(RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(RouterInterface $router, UriSigner $uriSigner, ScopeMatcher $scopeMatcher)
     {
         $this->router = $router;
         $this->uriSigner = $uriSigner;
-        $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
     }
 
@@ -50,22 +44,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
             return $this->redirectToBackend($request);
         }
 
-        $this->framework->initialize();
-
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
-        }
-
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
-
-        try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage(), $e);
-        }
+        throw new UnauthorizedHttpException('', 'Not authorized');
     }
 
     private function redirectToBackend(Request $request): RedirectResponse
