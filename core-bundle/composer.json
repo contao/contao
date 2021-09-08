@@ -45,7 +45,6 @@
         "contao-components/tinymce4": "^4.7 || ^5.0",
         "contao/image": "^1.0",
         "contao/imagine-svg": "^1.0",
-        "contao/polyfill-symfony": "^1.0",
         "doctrine/dbal": "^2.13.1",
         "doctrine/doctrine-bundle": "^2.1.1",
         "doctrine/orm": "^2.6.3",

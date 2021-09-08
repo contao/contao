@@ -172,16 +172,16 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "7.0.13",
+            "version": "7.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "122a9bf9a4a2195f74100f47dfb8375982f43cc9"
+                "reference": "15b2b4630c148775debea8e412bc7e128d9868a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/122a9bf9a4a2195f74100f47dfb8375982f43cc9",
-                "reference": "122a9bf9a4a2195f74100f47dfb8375982f43cc9",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/15b2b4630c148775debea8e412bc7e128d9868a3",
+                "reference": "15b2b4630c148775debea8e412bc7e128d9868a3",
                 "shasum": ""
             },
             "require": {
@@ -192,12 +192,12 @@
             },
             "require-dev": {
                 "phing/phing": "2.16.4",
-                "php-parallel-lint/php-parallel-lint": "1.3.0",
-                "phpstan/phpstan": "0.12.93",
+                "php-parallel-lint/php-parallel-lint": "1.3.1",
+                "phpstan/phpstan": "0.12.96",
                 "phpstan/phpstan-deprecation-rules": "0.12.6",
-                "phpstan/phpstan-phpunit": "0.12.21",
-                "phpstan/phpstan-strict-rules": "0.12.10",
-                "phpunit/phpunit": "7.5.20|8.5.5|9.5.7"
+                "phpstan/phpstan-phpunit": "0.12.22",
+                "phpstan/phpstan-strict-rules": "0.12.11",
+                "phpunit/phpunit": "7.5.20|8.5.5|9.5.8"
             },
             "type": "phpcodesniffer-standard",
             "extra": {
@@ -217,7 +217,7 @@
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
             "support": {
                 "issues": "https://github.com/slevomat/coding-standard/issues",
-                "source": "https://github.com/slevomat/coding-standard/tree/7.0.13"
+                "source": "https://github.com/slevomat/coding-standard/tree/7.0.14"
             },
             "funding": [
                 {
@@ -229,7 +229,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-29T14:30:22+00:00"
+            "time": "2021-08-26T12:17:56+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -289,16 +289,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "9.4.27",
+            "version": "9.4.59",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "9a386709e9b01d404d7287d6d049a829b1a2fb94"
+                "reference": "9c4cf0d86630f6faaba129b1fa7c9afc7a069d5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/9a386709e9b01d404d7287d6d049a829b1a2fb94",
-                "reference": "9a386709e9b01d404d7287d6d049a829b1a2fb94",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/9c4cf0d86630f6faaba129b1fa7c9afc7a069d5b",
+                "reference": "9c4cf0d86630f6faaba129b1fa7c9afc7a069d5b",
                 "shasum": ""
             },
             "require": {
@@ -323,7 +323,7 @@
             ],
             "description": "Prefixed scoped version of ECS package",
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.27"
+                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.59"
             },
             "funding": [
                 {
@@ -335,7 +335,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-08-11T09:30:16+00:00"
+            "time": "2021-09-07T21:26:36+00:00"
         }
     ],
     "packages-dev": [],
