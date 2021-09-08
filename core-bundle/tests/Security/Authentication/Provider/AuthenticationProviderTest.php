@@ -561,7 +561,7 @@ class AuthenticationProviderTest extends TestCase
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
-            ->method('getMasterRequest')
+            ->method('getMainRequest')
             ->willReturn($this->createMock(Request::class))
         ;
 
@@ -596,7 +596,7 @@ class AuthenticationProviderTest extends TestCase
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
-            ->method('getMasterRequest')
+            ->method('getMainRequest')
             ->willReturn($this->createMock(Request::class))
         ;
 

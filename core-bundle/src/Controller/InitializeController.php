@@ -83,7 +83,7 @@ class InitializeController
     {
         trigger_deprecation('contao/core-bundle', '4.0', 'Using custom entry points has been deprecated and will no longer work in Contao 5.0.');
 
-        $masterRequest = $this->requestStack->getMasterRequest();
+        $masterRequest = $this->requestStack->getMainRequest();
 
         if (null === $masterRequest) {
             throw new \RuntimeException('The request stack did not contain a master request.');

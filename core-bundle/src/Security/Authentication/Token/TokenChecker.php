@@ -125,7 +125,7 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request || !$request->attributes->get('_preview', false)) {
             return false;
@@ -157,7 +157,7 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): ?TokenInterface
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
             return null;
@@ -175,7 +175,7 @@ class TokenChecker
     private function getTokenFromSession(string $sessionKey): ?TokenInterface
     {
         if (!$this->session->isStarted()) {
-            $request = $this->requestStack->getMasterRequest();
+            $request = $this->requestStack->getMainRequest();
 
             if (!$request || !$request->hasPreviousSession()) {
                 return null;

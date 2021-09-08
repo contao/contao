@@ -123,7 +123,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             return $token;
         }
 
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
 
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);
