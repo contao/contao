@@ -57,7 +57,7 @@ final class Callback implements ServiceTagInterface
             'target' => $this->target,
         ];
 
-        if ($this->priority) {
+        if (null !== $this->priority) {
             $attributes['priority'] = $this->priority;
         }
 
