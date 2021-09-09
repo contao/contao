@@ -102,7 +102,7 @@ class PageError401 extends Frontend
 		}
 		else
 		{
-			$obj401 = PageModel::find401ByPid(\is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj401 = PageModel::find401ByPid(is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
 
 		// Die if there is no page at all

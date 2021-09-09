@@ -101,7 +101,7 @@ class PageError403 extends Frontend
 		}
 		else
 		{
-			$obj403 = PageModel::find403ByPid(\is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj403 = PageModel::find403ByPid(is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
 
 		// Die if there is no page at all
