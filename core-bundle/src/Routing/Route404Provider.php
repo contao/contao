@@ -244,6 +244,11 @@ class Route404Provider extends AbstractPageRouteProvider
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
+        // Convert languages array so key is language and value is priority
+        if (null !== $languages) {
+            $languages = $this->convertLanguagesForSorting($languages);
+        }
+
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
@@ -266,11 +271,6 @@ class Route404Provider extends AbstractPageRouteProvider
 
                 if ($localeB && !$localeA) {
                     return 1;
-                }
-
-                // Convert languages array so key is language and value is priority
-                if (null !== $languages) {
-                    $languages = $this->convertLanguagesForSorting($languages);
                 }
 
                 return $this->compareRoutes($a, $b, $languages);
