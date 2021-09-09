@@ -6225,7 +6225,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		foreach ($this->root as $id)
 		{
-			$trail = array_map('\intval', $this->Database->getParentRecords($id, $table));
+			$trail = array_map('\intval', $this->Database->getParentRecords($id, $table, true));
 
 			$this->rootTrails[$id] = $trail;
 			$topMostPerRoot[$id] = end($trail) ?: $id;

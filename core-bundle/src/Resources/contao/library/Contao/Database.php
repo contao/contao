@@ -559,29 +559,35 @@ class Database
 	 *
 	 * @param integer $intId    The ID of the record
 	 * @param string  $strTable The table name
+	 * @param bool    $skipId   This method will include the provided ID in the result set. Pass true to omit it.
 	 *
 	 * @return array An array of parent record IDs
 	 */
-	public function getParentRecords($intId, $strTable)
+	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
-		$arrReturn = array();
+		$intId = (int) $intId;
 
-		// Currently supports a nesting-level of 10
+		// Limit to a nesting level of 10
 		$objPages = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
 						 ->execute($intId);
 
-		while ($objPages->next())
-		{
-			// TODO: Find a better solution for this? Why does this method include the ID itself?
-			if ($objPages->id == $intId)
-			{
-				continue;
-			}
+		$ids = $objPages->fetchEach('id');
+		$ids = array_map('\intval', $ids);
 
-			$arrReturn[] = $objPages->id;
+		// Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
+		if (\count($ids) === 10)
+		{
+			$ids = array_merge($ids, $this->getParentRecords(end($ids), $strTable, $skipId));
 		}
 
-		return $arrReturn;
+		if ($skipId)
+		{
+			$ids = array_flip($ids);
+			unset($ids[$intId]);
+			$ids = array_values(array_flip($ids));
+		}
+
+		return $ids;
 	}
 
 	/**
