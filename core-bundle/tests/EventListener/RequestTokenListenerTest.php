@@ -299,7 +299,7 @@ class RequestTokenListenerTest extends TestCase
         $listener($event);
     }
 
-    public function testDoesNotValidateTheRequestTokenIfNotAMasterRequest(): void
+    public function testDoesNotValidateTheRequestTokenIfNotAMainRequest(): void
     {
         $framework = $this->mockContaoFramework();
         $framework
