@@ -107,6 +107,7 @@ class Route404Provider implements RouteProviderInterface
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $page->rootLanguage,
+            '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
         ];
 
