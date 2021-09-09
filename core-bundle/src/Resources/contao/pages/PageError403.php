@@ -24,10 +24,15 @@ class PageError403 extends Frontend
 	/**
 	 * Generate an error 403 page
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 */
 	public function generate($objRootPage=null)
 	{
+		if (is_numeric($objRootPage))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError403::generate() has been deprecated and will no longer work in Contao 5.0.');
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -51,12 +56,17 @@ class PageError403 extends Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 *
 	 * @return Response
 	 */
 	public function getResponse($objRootPage=null)
 	{
+		if (is_numeric($objRootPage))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError403::getResponse() has been deprecated and will no longer work in Contao 5.0.');
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -93,14 +103,16 @@ class PageError403 extends Frontend
 		if ($objRootPage === null)
 		{
 			$objRootPage = $this->getRootPageFromUrl();
+			$obj403 = PageModel::find403ByPid($objRootPage->id);
+		}
+		elseif ($objRootPage instanceof PageModel)
+		{
+			$obj403 = $objRootPage->type === 'error_403' ? $objRootPage : PageModel::find403ByPid($objRootPage->id);
 		}
 		else
 		{
-			$objRootPage = PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj403 = PageModel::find403ByPid(is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
-
-		// Look for a 403 page
-		$obj403 = PageModel::find403ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj403)
