@@ -180,7 +180,7 @@ abstract class Template extends Controller
 			throw new \InvalidArgumentException("$strKey is not set or not a callable");
 		}
 
-		return \call_user_func_array($this->arrData[$strKey], $arrParams);
+		return ($this->arrData[$strKey])(...$arrParams);
 	}
 
 	/**
