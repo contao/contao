@@ -48,7 +48,7 @@ final class Hook implements ServiceTagInterface
     {
         $attributes = ['hook' => $this->value];
 
-        if ($this->priority) {
+        if (null !== $this->priority) {
             $attributes['priority'] = $this->priority;
         }
 
