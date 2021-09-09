@@ -64,17 +64,17 @@ class InitializeController
     {
         trigger_deprecation('contao/core-bundle', '4.0', 'Using custom entry points has been deprecated and will no longer work in Contao 5.0.');
 
-        $masterRequest = $this->requestStack->getMasterRequest();
+        $mainRequest = $this->requestStack->getMainRequest();
 
-        if (null === $masterRequest) {
-            throw new \RuntimeException('The request stack did not contain a master request.');
+        if (null === $mainRequest) {
+            throw new \RuntimeException('The request stack did not contain a main request.');
         }
 
         $realRequest = Request::createFromGlobals();
-        $realRequest->setLocale($masterRequest->getLocale());
+        $realRequest->setLocale($mainRequest->getLocale());
 
-        if ($masterRequest->hasSession()) {
-            $realRequest->setSession($masterRequest->getSession());
+        if ($mainRequest->hasSession()) {
+            $realRequest->setSession($mainRequest->getSession());
         }
 
         if (!\defined('TL_SCRIPT')) {
@@ -89,9 +89,9 @@ class InitializeController
             );
         }
 
-        $realRequest->attributes->replace($masterRequest->attributes->all());
+        $realRequest->attributes->replace($mainRequest->attributes->all());
 
-        // Empty the request stack to make our real request the master
+        // Empty the request stack to make our real request the main
         do {
             $pop = $this->requestStack->pop();
         } while ($pop);
@@ -100,9 +100,9 @@ class InitializeController
         $this->requestStack->push($realRequest);
         $this->framework->initialize();
 
-        // Add the master request again. When Kernel::handle() is finished,
+        // Add the main request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.
-        $this->requestStack->push($masterRequest);
+        $this->requestStack->push($mainRequest);
 
         set_exception_handler(
             function ($e) use ($realRequest): void {

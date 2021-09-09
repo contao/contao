@@ -35,7 +35,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
     public function isTokenValid(CsrfToken $token): bool
     {
         if (
-            ($request = $this->requestStack->getMasterRequest())
+            ($request = $this->requestStack->getMainRequest())
             && 'POST' === $request->getRealMethod()
             && $this->canSkipTokenValidation($request, $this->csrfCookiePrefix.$token->getId())
         ) {

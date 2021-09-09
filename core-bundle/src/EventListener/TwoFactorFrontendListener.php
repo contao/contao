@@ -46,7 +46,7 @@ class TwoFactorFrontendListener
 
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isFrontendMasterRequest($event)) {
+        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
             return;
         }
 

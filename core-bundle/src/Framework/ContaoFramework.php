@@ -106,7 +106,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         $this->isFrontend = $isFrontend;
-        $this->request = $this->requestStack->getMasterRequest();
+        $this->request = $this->requestStack->getMainRequest();
 
         $this->setConstants();
         $this->initializeFramework();

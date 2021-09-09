@@ -36,7 +36,7 @@ class RefererIdListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isBackendMasterRequest($event)) {
+        if (!$this->scopeMatcher->isBackendMainRequest($event)) {
             return;
         }
 

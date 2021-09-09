@@ -985,7 +985,7 @@ class Input
 			return $_POST[$strKey];
 		}
 
-		$request = System::getContainer()->get('request_stack')->getMasterRequest();
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
 
 		// Return if the session has not been started before
 		if ($request === null || !$request->hasPreviousSession())

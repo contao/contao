@@ -41,7 +41,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return;
         }
 
-        $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
+        $userAgent = $this->requestStack->getMainRequest()->headers->get('User-Agent');
 
         /** @var Parser&AbstractParser $parser */
         $parser = Parser::create();

@@ -348,7 +348,7 @@ class PreviewToolbarListenerTest extends TestCase
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
-            ->method('isFrontendMasterRequest')
+            ->method('isFrontendMainRequest')
             ->willReturn(true)
         ;
 
