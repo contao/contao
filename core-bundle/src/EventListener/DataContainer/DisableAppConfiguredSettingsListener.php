@@ -23,20 +23,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DisableAppConfiguredSettingsListener
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var array
-     */
-    private $localConfig;
+    private TranslatorInterface $translator;
+    private ContaoFramework $framework;
+    private array $localConfig;
 
     public function __construct(TranslatorInterface $translator, ContaoFramework $framework, array $localConfig)
     {

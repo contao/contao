@@ -29,25 +29,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    private ContaoFramework $framework;
+    private SessionInterface $session;
+    private string $userClass;
+    private ?LoggerInterface $logger;
 
     /**
      * @throws \RuntimeException

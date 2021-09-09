@@ -26,10 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Route404Provider extends AbstractPageRouteProvider
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
+    private PageRegistry $pageRegistry;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead

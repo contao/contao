@@ -37,49 +37,26 @@ use Webmozart\PathUtil\Path;
  */
 class FigureBuilder
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $locator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
+    private ContainerInterface $locator;
+    private string $projectDir;
+    private string $uploadPath;
+    private Filesystem $filesystem;
+    private ?InvalidResourceException $lastException = null;
 
     /**
      * @var array<string>
      */
-    private $validExtensions;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var InvalidResourceException|null
-     */
-    private $lastException;
+    private array $validExtensions;
 
     /**
      * The resource's absolute file path.
-     *
-     * @var string|null
      */
-    private $filePath;
+    private ?string $filePath = null;
 
     /**
      * The resource's file model if applicable.
-     *
-     * @var FilesModel|null
      */
-    private $filesModel;
+    private ?FilesModel $filesModel = null;
 
     /**
      * User defined size configuration.
@@ -94,38 +71,30 @@ class FigureBuilder
      * User defined resize options.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
-     *
-     * @var ResizeOptions|null
      */
-    private $resizeOptions;
+    private ?ResizeOptions $resizeOptions = null;
 
     /**
      * User defined custom locale. This will overwrite the default if set.
-     *
-     * @var string|null
      */
-    private $locale;
+    private ?string $locale = null;
 
     /**
      * User defined metadata. This will overwrite the default if set.
-     *
-     * @var Metadata|null
      */
-    private $metadata;
+    private ?Metadata $metadata = null;
 
     /**
      * Determines if a metadata should never be present in the output.
-     *
-     * @var bool
      */
-    private $disableMetadata;
+    private ?bool $disableMetadata = null;
 
     /**
      * User defined link attributes. These will add to or overwrite the default values.
      *
      * @var array<string, string|null>
      */
-    private $additionalLinkAttributes = [];
+    private array $additionalLinkAttributes = [];
 
     /**
      * User defined lightbox resource or url. This will overwrite the default if set.
@@ -143,24 +112,18 @@ class FigureBuilder
 
     /**
      * User defined lightbox resize options.
-     *
-     * @var ResizeOptions|null
      */
-    private $lightboxResizeOptions;
+    private ?ResizeOptions $lightboxResizeOptions = null;
 
     /**
      * User defined lightbox group identifier. This will overwrite the default if set.
-     *
-     * @var string|null
      */
-    private $lightboxGroupIdentifier;
+    private ?string $lightboxGroupIdentifier = null;
 
     /**
      * Determines if a lightbox (or "fullsize") image should be created.
-     *
-     * @var bool
      */
-    private $enableLightbox;
+    private ?bool $enableLightbox = null;
 
     /**
      * User defined template options.
@@ -169,7 +132,7 @@ class FigureBuilder
      *
      * @var array<string, mixed>
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
@@ -582,15 +545,11 @@ class FigureBuilder
                 $settings
             ),
             \Closure::bind(
-                function (Figure $figure): array {
-                    return $this->onDefineLinkAttributes($figure);
-                },
+                fn (Figure $figure): array => $this->onDefineLinkAttributes($figure),
                 $settings
             ),
             \Closure::bind(
-                function (Figure $figure): ?LightboxResult {
-                    return $this->onDefineLightboxResult($figure);
-                },
+                fn (Figure $figure): ?LightboxResult => $this->onDefineLightboxResult($figure),
                 $settings
             ),
             $settings->options

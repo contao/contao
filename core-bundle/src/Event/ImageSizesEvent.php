@@ -17,15 +17,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ImageSizesEvent extends Event
 {
-    /**
-     * @var array
-     */
-    private $imageSizes;
-
-    /**
-     * @var BackendUser
-     */
-    private $user;
+    private array $imageSizes;
+    private ?BackendUser $user;
 
     public function __construct(array $imageSizes, BackendUser $user = null)
     {

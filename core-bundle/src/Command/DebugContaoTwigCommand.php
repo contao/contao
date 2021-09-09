@@ -30,15 +30,8 @@ class DebugContaoTwigCommand extends Command
 {
     protected static $defaultName = 'debug:contao-twig';
 
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
-
-    /**
-     * @var ContaoFilesystemLoaderWarmer
-     */
-    private $cacheWarmer;
+    private TemplateHierarchyInterface $hierarchy;
+    private ContaoFilesystemLoaderWarmer $cacheWarmer;
 
     public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer)
     {
@@ -68,9 +61,7 @@ class DebugContaoTwigCommand extends Command
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
                 $chains,
-                static function (string $identifier) use ($prefix) {
-                    return 0 === strpos($identifier, $prefix);
-                },
+                static fn (string $identifier) => 0 === strpos($identifier, $prefix),
                 ARRAY_FILTER_USE_KEY
             );
         }

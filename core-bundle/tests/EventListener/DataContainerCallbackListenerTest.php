@@ -17,10 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class DataContainerCallbackListenerTest extends TestCase
 {
-    /**
-     * @var DataContainerCallbackListener
-     */
-    private $listener;
+    private DataContainerCallbackListener $listener;
 
     protected function setUp(): void
     {

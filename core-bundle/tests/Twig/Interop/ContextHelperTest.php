@@ -30,19 +30,11 @@ class ContextHelperTest extends TestCase
             'foo' => 'bar',
             'a' => [1, 2],
             'o' => $object,
-            'lazy1' => static function (): string {
-                return 'evaluated';
-            },
-            'lazy2' => static function (int $n = 0): string {
-                return "evaluated: $n";
-            },
-            'lazy3' => static function (): array {
-                return [1, 2];
-            },
+            'lazy1' => static fn (): string => 'evaluated',
+            'lazy2' => static fn (int $n = 0): string => "evaluated: $n",
+            'lazy3' => static fn (): array => [1, 2],
             'lazy4' => \Closure::fromCallable(
-                static function (): string {
-                    return 'evaluated Closure';
-                }
+                static fn (): string => 'evaluated Closure'
             ),
             'value' => 'strtolower', // do not confuse with callable
         ];
@@ -96,9 +88,7 @@ class ContextHelperTest extends TestCase
         }
 
         $data = [
-            'lazy' => static function (): object {
-                return new \stdClass();
-            },
+            'lazy' => static fn (): object => new \stdClass(),
         ];
 
         $template = $this->createMock(Template::class);

@@ -25,25 +25,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class LegacyRoutingListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
+    private ContaoFramework $framework;
+    private TranslatorInterface $translator;
+    private bool $prependLocale;
+    private string $urlSuffix;
 
     public function __construct(ContaoFramework $framework, TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
     {
@@ -61,16 +46,14 @@ class LegacyRoutingListener
         /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
-        $renderHelpIcon = function () use ($adapter) {
-            return $adapter->getHtml(
-                'show.svg',
-                '',
-                sprintf(
-                    'title="%s"',
-                    StringUtil::specialchars($this->translator->trans('tl_page.legacyRouting', [], 'contao_tl_page'))
-                )
-            );
-        };
+        $renderHelpIcon = fn () => $adapter->getHtml(
+            'show.svg',
+            '',
+            sprintf(
+                'title="%s"',
+                StringUtil::specialchars($this->translator->trans('tl_page.legacyRouting', [], 'contao_tl_page'))
+            )
+        );
 
         foreach (['urlPrefix', 'urlSuffix', 'disableLanguageRedirect'] as $field) {
             $GLOBALS['TL_DCA']['tl_page']['fields'][$field]['eval']['disabled'] = true;

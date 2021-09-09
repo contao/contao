@@ -18,10 +18,7 @@ use Webmozart\PathUtil\Path;
 
 class ContaoCacheClearer implements CacheClearerInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.clear_internal" service instead

@@ -21,15 +21,8 @@ use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class ContaoCsrfTokenManager extends CsrfTokenManager
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $csrfCookiePrefix;
+    private RequestStack $requestStack;
+    private string $csrfCookiePrefix;
 
     public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null)
     {

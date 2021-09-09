@@ -190,7 +190,7 @@ class ContaoCoreExtension extends Extension
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
                 $value = array_merge(
                     $config['image']['sizes']['_defaults'],
-                    array_filter($value, static function ($v) { return !\is_array($v) || !empty($v); })
+                    array_filter($value, static fn ($v) => !\is_array($v) || !empty($v))
                 );
             }
 

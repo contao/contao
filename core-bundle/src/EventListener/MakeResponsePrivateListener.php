@@ -25,10 +25,7 @@ class MakeResponsePrivateListener
 {
     public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
 
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private ScopeMatcher $scopeMatcher;
 
     public function __construct(ScopeMatcher $scopeMatcher)
     {
@@ -84,12 +81,10 @@ class MakeResponsePrivateListener
         if (0 !== \count($cookies)) {
             $this->makePrivate(
                 $response,
-                sprintf('response-cookies (%s)', implode(', ', array_map(
-                    static function (Cookie $cookie) {
-                        return $cookie->getName();
-                    },
-                    $cookies
-                )))
+                sprintf(
+                    'response-cookies (%s)',
+                    implode(', ', array_map(static fn (Cookie $cookie) => $cookie->getName(), $cookies))
+                )
             );
 
             return;

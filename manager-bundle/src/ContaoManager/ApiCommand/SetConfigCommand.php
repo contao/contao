@@ -24,10 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SetConfigCommand extends Command
 {
-    /**
-     * @var ManagerConfig
-     */
-    private $managerConfig;
+    private ManagerConfig $managerConfig;
 
     public function __construct(Application $application)
     {

@@ -20,25 +20,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface
 {
+    private ContaoFramework $framework;
+    private ResourceFinder $resourceFinder;
+    private \SplObjectStorage $catalogues;
+
     /**
      * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
      */
     private $translator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ResourceFinder
-     */
-    private $resourceFinder;
-
-    /**
-     * @var \SplObjectStorage
-     */
-    private $catalogues;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead

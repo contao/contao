@@ -25,20 +25,9 @@ class BackendRebuildCacheMessageListener
 {
     public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
 
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ScopeMatcher $scopeMatcher;
+    private CacheItemPoolInterface $cache;
+    private TranslatorInterface $translator;
 
     public function __construct(ScopeMatcher $scopeMatcher, CacheItemPoolInterface $cache, TranslatorInterface $translator)
     {

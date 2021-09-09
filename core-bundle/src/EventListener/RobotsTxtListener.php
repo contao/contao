@@ -25,10 +25,7 @@ use webignition\RobotsTxt\Record\Record;
  */
 class RobotsTxtListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $contaoFramework;
+    private ContaoFramework $contaoFramework;
 
     public function __construct(ContaoFramework $contaoFramework)
     {

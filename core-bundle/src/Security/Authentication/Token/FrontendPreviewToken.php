@@ -17,10 +17,7 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class FrontendPreviewToken extends AbstractToken
 {
-    /**
-     * @var bool
-     */
-    private $showUnpublished;
+    private bool $showUnpublished;
 
     public function __construct(?FrontendUser $user, bool $showUnpublished)
     {

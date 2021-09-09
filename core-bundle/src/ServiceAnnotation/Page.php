@@ -25,45 +25,14 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class Page implements ServiceTagInterface
 {
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var bool
-     */
-    private $contentComposition = true;
-
-    /**
-     * @var string|null
-     */
-    private $path;
-
-    /**
-     * @var string|null
-     */
-    private $urlSuffix;
-
-    /**
-     * @var array
-     */
-    private $requirements = [];
-
-    /**
-     * @var array
-     */
-    private $options = [];
-
-    /**
-     * @var array
-     */
-    private $defaults = [];
-
-    /**
-     * @var array
-     */
-    private $methods = [];
+    private ?string $type = null;
+    private bool $contentComposition = true;
+    private ?string $path = null;
+    private ?string $urlSuffix = null;
+    private array $requirements = [];
+    private array $options = [];
+    private array $defaults = [];
+    private array $methods = [];
 
     public function __construct(array $data)
     {

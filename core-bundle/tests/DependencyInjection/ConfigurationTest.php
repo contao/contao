@@ -24,10 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends TestCase
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    private Configuration $configuration;
 
     protected function setUp(): void
     {

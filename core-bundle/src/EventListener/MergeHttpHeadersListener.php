@@ -25,25 +25,11 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class MergeHttpHeadersListener implements ResetInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
+    private HeaderStorageInterface $headerStorage;
+    private array $headers = [];
 
-    /**
-     * @var HeaderStorageInterface
-     */
-    private $headerStorage;
-
-    /**
-     * @var array
-     */
-    private $headers = [];
-
-    /**
-     * @var array
-     */
-    private $multiHeaders = [
+    private array $multiHeaders = [
         'set-cookie',
         'link',
         'vary',

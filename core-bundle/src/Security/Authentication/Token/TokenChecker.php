@@ -29,35 +29,12 @@ class TokenChecker
     private const FRONTEND_FIREWALL = 'contao_frontend';
     private const BACKEND_FIREWALL = 'contao_backend';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var FirewallMapInterface
-     */
-    private $firewallMap;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var AuthenticationTrustResolverInterface
-     */
-    private $trustResolver;
-
-    /**
-     * @var VoterInterface
-     */
-    private $roleVoter;
+    private RequestStack $requestStack;
+    private FirewallMapInterface $firewallMap;
+    private TokenStorageInterface $tokenStorage;
+    private SessionInterface $session;
+    private AuthenticationTrustResolverInterface $trustResolver;
+    private VoterInterface $roleVoter;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead

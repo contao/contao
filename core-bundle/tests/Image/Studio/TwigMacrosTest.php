@@ -606,9 +606,7 @@ class TwigMacrosTest extends TestCase
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
-                SchemaOrgRuntime::class => static function () use ($responseContextAccessor) {
-                    return new SchemaOrgRuntime($responseContextAccessor);
-                },
+                SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
             ])
         );
 

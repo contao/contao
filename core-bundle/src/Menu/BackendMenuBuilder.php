@@ -20,15 +20,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BackendMenuBuilder
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $factory;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private FactoryInterface $factory;
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.menu.backend_menu_builder" service instead

@@ -19,10 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead

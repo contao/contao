@@ -22,20 +22,13 @@ class DebugFragmentsCommand extends Command
 {
     protected static $defaultName = 'debug:fragments';
 
-    /**
-     * @var array
-     */
-    private $identifiers = [];
+    private array $identifiers = [];
+    private array $attributes = [];
 
     /**
      * @var array<FragmentConfig>
      */
-    private $configs = [];
-
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private array $configs = [];
 
     public function add(string $identifier, FragmentConfig $config, array $attributes): void
     {

@@ -20,10 +20,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class CombinerTest extends ContaoTestCase
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     public static function setUpBeforeClass(): void
     {

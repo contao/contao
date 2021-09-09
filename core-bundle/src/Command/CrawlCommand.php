@@ -46,20 +46,9 @@ class CrawlCommand extends Command
 {
     protected static $defaultName = 'contao:crawl';
 
-    /**
-     * @var Factory
-     */
-    private $escargotFactory;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var Escargot
-     */
-    private $escargot;
+    private Factory $escargotFactory;
+    private Filesystem $filesystem;
+    private ?Escargot $escargot = null;
 
     public function __construct(Factory $escargotFactory, Filesystem $filesystem)
     {
@@ -205,10 +194,7 @@ class CrawlCommand extends Command
         return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
             use EscargotAwareTrait;
 
-            /**
-             * @var ProgressBar
-             */
-            private $progressBar;
+            private ?ProgressBar $progressBar;
 
             public function __construct(ProgressBar $progressBar)
             {

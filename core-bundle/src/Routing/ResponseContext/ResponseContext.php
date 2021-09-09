@@ -20,20 +20,9 @@ final class ResponseContext
 {
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
-    /**
-     * @var array
-     */
-    private $services = [];
-
-    /**
-     * @var array
-     */
-    private $current = [];
-
-    /**
-     * @var PartialResponseHeaderBag|null
-     */
-    private $headerBag;
+    private array $services = [];
+    private array $current = [];
+    private ?PartialResponseHeaderBag $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void
     {
@@ -58,9 +47,7 @@ final class ResponseContext
     public function addLazy(string $classname, \Closure $factory = null): self
     {
         if (null === $factory) {
-            $factory = function () use ($classname) {
-                return new $classname($this);
-            };
+            $factory = fn () => new $classname($this);
         }
 
         $this->registerService($classname, $factory);
