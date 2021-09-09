@@ -17,20 +17,9 @@ use Symfony\Component\Routing\Route;
 
 class RouteParametersException extends \InvalidArgumentException implements ExceptionInterface
 {
-    /**
-     * @var Route
-     */
-    private $route;
-
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    /**
-     * @var int
-     */
-    private $referenceType;
+    private Route $route;
+    private array $parameters;
+    private int $referenceType;
 
     public function __construct(Route $route, array $parameters, int $referenceType, ExceptionInterface $previous)
     {

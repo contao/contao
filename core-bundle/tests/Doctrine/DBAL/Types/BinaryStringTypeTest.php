@@ -20,10 +20,7 @@ use PHPUnit\Framework\TestCase;
 
 class BinaryStringTypeTest extends TestCase
 {
-    /**
-     * @var BinaryStringType|Type
-     */
-    private $type;
+    private Type $type;
 
     public static function setUpBeforeClass(): void
     {

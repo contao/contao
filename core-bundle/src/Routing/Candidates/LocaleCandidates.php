@@ -17,15 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LocaleCandidates extends AbstractCandidates
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private PageRegistry $pageRegistry;
+    private bool $initialized = false;
 
     public function __construct(PageRegistry $pageRegistry)
     {

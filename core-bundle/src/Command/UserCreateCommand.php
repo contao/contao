@@ -39,25 +39,10 @@ class UserCreateCommand extends Command
 {
     protected static $defaultName = 'contao:user:create';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
-
-    /**
-     * @var array
-     */
-    private $locales;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private EncoderFactoryInterface $encoderFactory;
+    private array $locales;
 
     public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory, Locales $locales)
     {

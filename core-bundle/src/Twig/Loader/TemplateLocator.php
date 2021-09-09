@@ -21,20 +21,17 @@ use Webmozart\PathUtil\Path;
  */
 class TemplateLocator
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     /**
      * @var array<string,string>
      */
-    private $bundles;
+    private array $bundles;
 
     /**
      * @var array<string, array<string, string>>
      */
-    private $bundlesMetadata;
+    private array $bundlesMetadata;
 
     public function __construct(string $projectDir, array $bundles, array $bundlesMetadata)
     {

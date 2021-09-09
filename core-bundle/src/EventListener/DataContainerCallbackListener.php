@@ -31,10 +31,7 @@ class DataContainerCallbackListener
         'title_tag_callback',
     ];
 
-    /**
-     * @var array
-     */
-    private $callbacks = [];
+    private array $callbacks = [];
 
     public function setCallbacks(array $callbacks): void
     {
@@ -101,9 +98,7 @@ class DataContainerCallbackListener
             [],
             ...array_filter(
                 $callbacks,
-                static function ($priority) {
-                    return $priority >= 0;
-                },
+                static fn ($priority) => $priority >= 0,
                 ARRAY_FILTER_USE_KEY
             )
         );
@@ -112,9 +107,7 @@ class DataContainerCallbackListener
             [],
             ...array_filter(
                 $callbacks,
-                static function ($priority) {
-                    return $priority < 0;
-                },
+                static fn ($priority) => $priority < 0,
                 ARRAY_FILTER_USE_KEY
             )
         );

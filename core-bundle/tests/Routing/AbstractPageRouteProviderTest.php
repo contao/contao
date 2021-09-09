@@ -259,23 +259,17 @@ class AbstractPageRouteProviderTest extends TestCase
         $sorting = 0;
 
         $routes = array_map(
-            function ($language) use ($sorting) {
-                return new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]);
-            },
+            fn ($language) => new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]),
             $pageLanguages
         );
 
         usort(
             $routes,
-            static function ($a, $b) use ($method, $instance, $preferredLanguages) {
-                return $method->invoke($instance, $a, $b, $preferredLanguages);
-            }
+            static fn ($a, $b) => $method->invoke($instance, $a, $b, $preferredLanguages)
         );
 
         $result = array_map(
-            static function (Route $route) {
-                return $route->getDefault('pageModel')->rootLanguage;
-            },
+            static fn (Route $route) => $route->getDefault('pageModel')->rootLanguage,
             $routes
         );
 

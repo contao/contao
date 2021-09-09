@@ -21,10 +21,7 @@ class CronCommand extends Command
 {
     protected static $defaultName = 'contao:cron';
 
-    /**
-     * @var Cron
-     */
-    protected $cron;
+    protected Cron $cron;
 
     public function __construct(Cron $cron)
     {

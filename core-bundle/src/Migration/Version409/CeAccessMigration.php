@@ -22,15 +22,8 @@ use Doctrine\DBAL\Connection;
  */
 class CeAccessMigration extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private Connection $connection;
+    private ContaoFramework $framework;
 
     public function __construct(Connection $connection, ContaoFramework $framework)
     {

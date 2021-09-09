@@ -21,15 +21,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class SetConfigCommandTest extends TestCase
 {
+    private SetConfigCommand $command;
+
     /**
      * @var ManagerConfig&MockObject
      */
     private $config;
-
-    /**
-     * @var SetConfigCommand
-     */
-    private $command;
 
     protected function setUp(): void
     {

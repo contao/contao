@@ -22,15 +22,8 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolver implements ArgumentValueResolverInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.model_argument_resolver" service instead

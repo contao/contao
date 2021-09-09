@@ -560,7 +560,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isFrontendMasterRequest')
+            ->method('isFrontendMainRequest')
             ->with($event)
             ->willReturn($hasFrontendUser)
         ;

@@ -19,35 +19,24 @@ class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private ?array $urlPrefixes = null;
+    private ?array $urlSuffixes = null;
 
     /**
      * @var array<RouteConfig>
      */
-    private $routeConfigs = [];
+    private array $routeConfigs = [];
 
     /**
      * @var array<DynamicRouteInterface>
      */
-    private $routeEnhancers = [];
+    private array $routeEnhancers = [];
 
     /**
      * @var array<ContentCompositionInterface|bool>
      */
-    private $contentComposition = [];
-
-    /**
-     * @var array<string>|null
-     */
-    private $urlPrefixes;
-
-    /**
-     * @var array<string>|null
-     */
-    private $urlSuffixes;
+    private array $contentComposition = [];
 
     public function __construct(Connection $connection)
     {
@@ -193,9 +182,7 @@ class PageRegistry
         $urlSuffixes = [
             array_column($results, 'urlSuffix'),
             array_filter(array_map(
-                static function (RouteConfig $config) {
-                    return $config->getUrlSuffix();
-                },
+                static fn (RouteConfig $config) => $config->getUrlSuffix(),
                 $this->routeConfigs
             )),
         ];

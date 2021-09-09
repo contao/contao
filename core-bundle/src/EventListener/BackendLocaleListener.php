@@ -23,15 +23,8 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class BackendLocaleListener
 {
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var LocaleAwareInterface
-     */
-    private $translator;
+    private Security $security;
+    private LocaleAwareInterface $translator;
 
     public function __construct(Security $security, LocaleAwareInterface $translator)
     {

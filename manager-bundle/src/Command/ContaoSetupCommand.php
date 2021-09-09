@@ -26,25 +26,18 @@ class ContaoSetupCommand extends Command
 {
     protected static $defaultName = 'contao:setup';
 
-    /**
-     * @var string
-     */
-    private $webDir;
+    private string $webDir;
+    private string $consolePath;
 
     /**
      * @var \Closure(array<string>):Process
      */
-    private $createProcessHandler;
+    private \Closure $createProcessHandler;
 
     /**
      * @var string|false
      */
     private $phpPath;
-
-    /**
-     * @var string
-     */
-    private $consolePath;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
@@ -55,9 +48,7 @@ class ContaoSetupCommand extends Command
         $this->phpPath = (new PhpExecutableFinder())->find();
         $this->consolePath = Path::canonicalize(__DIR__.'/../../bin/contao-console');
 
-        $this->createProcessHandler = $createProcessHandler ?? static function (array $command) {
-            return new Process($command);
-        };
+        $this->createProcessHandler = $createProcessHandler ?? static fn (array $command) => new Process($command);
 
         parent::__construct();
     }

@@ -62,7 +62,7 @@ class SubrequestCacheSubscriberTest extends TestCase
         $this->assertFalse($mainResponse->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
-    public function testMakeMasterResponsePrivateIfSubrequestIsPrivate(): void
+    public function testMakeMainResponsePrivateIfSubrequestIsPrivate(): void
     {
         $subscriber = new SubrequestCacheSubscriber();
 

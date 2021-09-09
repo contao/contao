@@ -26,9 +26,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class MakeResponsePrivateListenerTest extends TestCase
 {
-    public function testIgnoresNonContaoMasterRequests(): void
+    public function testIgnoresNonContaoMainRequests(): void
     {
-        // Public response with cookie, should be turned into a private response if it was a master request
+        // Public response with cookie, should be turned into a private response if it was a main request
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge(600);
@@ -240,13 +240,13 @@ class MakeResponsePrivateListenerTest extends TestCase
         $this->assertFalse($response->headers->has(MakeResponsePrivateListener::DEBUG_HEADER));
     }
 
-    private function createScopeMatcher(bool $isContaoMasterRequest): ScopeMatcher
+    private function createScopeMatcher(bool $isContaoMainRequest): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isContaoMasterRequest')
-            ->willReturn($isContaoMasterRequest)
+            ->method('isContaoMainRequest')
+            ->willReturn($isContaoMainRequest)
         ;
 
         return $scopeMatcher;

@@ -33,25 +33,10 @@ use Twig\Error\Error as TwigError;
  */
 class PreviewToolbarListener
 {
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var TwigEnvironment
-     */
-    private $twig;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var string
-     */
-    private $previewScript;
+    private ScopeMatcher $scopeMatcher;
+    private TwigEnvironment $twig;
+    private RouterInterface $router;
+    private string $previewScript;
 
     public function __construct(ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
     {
@@ -63,7 +48,7 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMasterRequest($event)) {
+        if ($this->scopeMatcher->isBackendMainRequest($event)) {
             return;
         }
 

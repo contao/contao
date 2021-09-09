@@ -132,7 +132,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         );
     }
 
-    private function createListener(array $localConfig = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
+    private function createListener(array $localConfig = null, TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
 

@@ -21,20 +21,9 @@ use Symfony\Component\Routing\RequestContext;
 
 class UrlGenerator implements UrlGeneratorInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private UrlGeneratorInterface $router;
+    private ContaoFramework $framework;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.url_generator" service instead

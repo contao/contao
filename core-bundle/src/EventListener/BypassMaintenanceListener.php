@@ -20,15 +20,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class BypassMaintenanceListener
 {
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var string
-     */
-    private $requestAttribute;
+    private TokenChecker $tokenChecker;
+    private string $requestAttribute;
 
     public function __construct(TokenChecker $tokenChecker, string $requestAttribute = '_bypass_maintenance')
     {

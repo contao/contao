@@ -23,10 +23,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
  */
 class RememberMeRepository extends ServiceEntityRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(ManagerRegistry $registry)
     {

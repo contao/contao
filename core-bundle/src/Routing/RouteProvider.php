@@ -26,20 +26,9 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private PageRegistry $pageRegistry;
+    private bool $legacyRouting;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
