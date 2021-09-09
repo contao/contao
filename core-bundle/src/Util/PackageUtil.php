@@ -45,7 +45,7 @@ class PackageUtil
      * Parses a version number.
      *
      * The method either returns a version number such as 1.0.0 (a leading "v"
-     * will be stripped) or a branch name such as dev-master.
+     * will be stripped) or a branch name such as dev-main.
      */
     public static function parseVersion(string $version): string
     {

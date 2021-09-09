@@ -36,11 +36,12 @@ class ScopeMatcher
     }
 
     /**
-     * @deprecated Deprecated since Contao 4.13, use isContaoMainRequest instead.
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+     *             ScopeMatcher::isContaoMainRequest() instead
      */
     public function isContaoMasterRequest(KernelEvent $event): bool
     {
-        trigger_deprecation('contao/core-bundle', '4.13', 'Using ScopeMatcher::isContaoMasterRequest() has been deprecated. Use ScopeMatcher::isContaoMainRequest() instead');
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using ScopeMatcher::isContaoMasterRequest() has been deprecated and will no longer work in Contao 5.0. Use ScopeMatcher::isContaoMainRequest() instead.');
 
         return $this->isContaoMainRequest($event);
     }
@@ -51,11 +52,12 @@ class ScopeMatcher
     }
 
     /**
-     * @deprecated Deprecated since Contao 4.13, use isBackendMainRequest instead.
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+     *             ScopeMatcher::isBackendMainRequest() instead
      */
     public function isBackendMasterRequest(KernelEvent $event): bool
     {
-        trigger_deprecation('contao/core-bundle', '4.13', 'Using ScopeMatcher::isBackendMasterRequest() has been deprecated. Use ScopeMatcher::isBackendMainRequest() instead');
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using ScopeMatcher::isBackendMasterRequest() has been deprecated and will no longer work in Contao 5.0. Use ScopeMatcher::isBackendMainRequest() instead.');
 
         return $this->isBackendMainRequest($event);
     }
@@ -66,11 +68,12 @@ class ScopeMatcher
     }
 
     /**
-     * @deprecated Deprecated since Contao 4.13, use isFrontendMainRequest instead.
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+     *             ScopeMatcher::isFrontendMainRequest() instead
      */
     public function isFrontendMasterRequest(KernelEvent $event): bool
     {
-        trigger_deprecation('contao/core-bundle', '4.13', 'Using ScopeMatcher::isFrontendMasterRequest() has been deprecated. Use ScopeMatcher::isFrontendMainRequest() instead');
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using ScopeMatcher::isFrontendMasterRequest() has been deprecated and will no longer work in Contao 5.0. Use ScopeMatcher::isFrontendMainRequest() instead.');
 
         return $this->isFrontendMainRequest($event);
     }
