@@ -63,7 +63,7 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMasterRequest($event)) {
+        if ($this->scopeMatcher->isBackendMainRequest($event)) {
             return;
         }
 

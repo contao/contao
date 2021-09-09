@@ -245,7 +245,7 @@ class MakeResponsePrivateListenerTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isContaoMasterRequest')
+            ->method('isContaoMainRequest')
             ->willReturn($isContaoMasterRequest)
         ;
 

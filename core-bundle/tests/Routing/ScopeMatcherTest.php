@@ -44,9 +44,9 @@ class ScopeMatcherTest extends TestCase
 
         $event = new KernelEvent($this->createMock(KernelInterface::class), $request, $requestType);
 
-        $this->assertSame($isMaster, $this->matcher->isContaoMasterRequest($event));
-        $this->assertSame($isMaster && $isBackend, $this->matcher->isBackendMasterRequest($event));
-        $this->assertSame($isMaster && $isFrontend, $this->matcher->isFrontendMasterRequest($event));
+        $this->assertSame($isMaster, $this->matcher->isContaoMainRequest($event));
+        $this->assertSame($isMaster && $isBackend, $this->matcher->isBackendMainRequest($event));
+        $this->assertSame($isMaster && $isFrontend, $this->matcher->isFrontendMainRequest($event));
         $this->assertSame($isBackend, $this->matcher->isBackendRequest($request));
         $this->assertSame($isFrontend, $this->matcher->isFrontendRequest($request));
     }

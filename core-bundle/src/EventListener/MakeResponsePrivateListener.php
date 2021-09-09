@@ -49,7 +49,7 @@ class MakeResponsePrivateListener
      */
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
         }
 

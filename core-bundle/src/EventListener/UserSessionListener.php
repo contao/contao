@@ -62,7 +62,7 @@ class UserSessionListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
         }
 
@@ -89,7 +89,7 @@ class UserSessionListener
      */
     public function write(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
         }
 
