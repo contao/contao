@@ -93,14 +93,16 @@ class PageError403 extends Frontend
 		if ($objRootPage === null)
 		{
 			$objRootPage = $this->getRootPageFromUrl();
+			$obj403 = PageModel::find403ByPid($objRootPage->id);
+		}
+		elseif ($objRootPage instanceof PageModel)
+		{
+			$obj403 = $objRootPage->type === 'error_403' ? $objRootPage : PageModel::find403ByPid($objRootPage->id);
 		}
 		else
 		{
-			$objRootPage = PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj403 = PageModel::find403ByPid(\is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
-
-		// Look for a 403 page
-		$obj403 = PageModel::find403ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj403)

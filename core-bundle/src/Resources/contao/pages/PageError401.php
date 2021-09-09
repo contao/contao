@@ -94,14 +94,16 @@ class PageError401 extends Frontend
 		if ($objRootPage === null)
 		{
 			$objRootPage = $this->getRootPageFromUrl();
+			$obj401 = PageModel::find401ByPid($objRootPage->id);
+		}
+		elseif ($objRootPage instanceof PageModel)
+		{
+			$obj401 = $objRootPage->type === 'error_401' ? $objRootPage : PageModel::find401ByPid($objRootPage->id);
 		}
 		else
 		{
-			$objRootPage = PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj401 = PageModel::find401ByPid(\is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
-
-		// Look for a 401 page
-		$obj401 = PageModel::find401ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj401)
