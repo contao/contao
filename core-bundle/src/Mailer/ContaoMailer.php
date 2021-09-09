@@ -33,7 +33,7 @@ final class ContaoMailer implements MailerInterface
         $this->requestStack = $requestStack;
     }
 
-    public function send(RawMessage $message, ?Envelope $envelope = null): void
+    public function send(RawMessage $message, Envelope $envelope = null): void
     {
         if ($message instanceof Message) {
             $this->setTransport($message);

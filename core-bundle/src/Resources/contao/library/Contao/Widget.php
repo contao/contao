@@ -756,7 +756,7 @@ abstract class Widget extends Controller
 	{
 		if (\is_callable($this->inputCallback))
 		{
-			return \call_user_func($this->inputCallback);
+			return ($this->inputCallback)();
 		}
 
 		if ($this->useRawRequestData === true)

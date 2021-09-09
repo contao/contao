@@ -313,7 +313,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         // If there are no DB credentials yet (install tool), we have to set
         // the server version to prevent a DBAL exception (see #1422)
         try {
-            $connection = \call_user_func($this->dbalConnectionFactory, $params);
+            $connection = ($this->dbalConnectionFactory)($params);
             $connection->connect();
             $connection->executeQuery('SHOW TABLES');
             $connection->close();

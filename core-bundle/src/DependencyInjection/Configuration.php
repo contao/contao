@@ -82,11 +82,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
-                        ->always(
-                            static function (string $value): string {
-                                return Path::canonicalize($value);
-                            }
-                        )
+                        ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
                 ->scalarNode('upload_path')
@@ -94,11 +90,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('files')
                     ->validate()
-                        ->ifTrue(
-                            static function (string $v): int {
-                                return preg_match('@^(app|assets|bin|config|contao|plugins|public|share|system|templates|var|vendor|web)(/|$)@', $v);
-                            }
-                        )
+                        ->ifTrue(static fn (string $v): int => preg_match('@^(app|assets|bin|config|contao|plugins|public|share|system|templates|var|vendor|web)(/|$)@', $v))
                         ->thenInvalid('%s')
                     ->end()
                 ->end()
@@ -114,11 +106,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue($this->getDefaultWebDir())
                     ->validate()
-                        ->always(
-                            static function (string $value): string {
-                                return Path::canonicalize($value);
-                            }
-                        )
+                        ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
                 ->append($this->addImageNode())
