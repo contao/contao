@@ -18,10 +18,7 @@ use Webmozart\PathUtil\Path;
 
 class BundleCacheClearer implements CacheClearerInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.cache.clear_bundle" service instead

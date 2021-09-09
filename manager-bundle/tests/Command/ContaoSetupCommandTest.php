@@ -148,7 +148,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
      */
     private function getCreateProcessHandler(array $processes, array $validateCommandArguments = null, &$invocationCount = null): callable
     {
-        $invocationCount = $invocationCount ?? 0;
+        $invocationCount ??= 0;
 
         return static function (array $command) use (&$invocationCount, $validateCommandArguments, $processes): Process {
             if (null !== $validateCommandArguments) {

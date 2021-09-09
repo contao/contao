@@ -39,45 +39,14 @@ use Twig\Error\Error as TwigError;
  */
 class BackendPreviewSwitchController
 {
-    /**
-     * @var FrontendPreviewAuthenticator
-     */
-    private $previewAuthenticator;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var TwigEnvironment
-     */
-    private $twig;
-
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private FrontendPreviewAuthenticator $previewAuthenticator;
+    private TokenChecker $tokenChecker;
+    private Connection $connection;
+    private Security $security;
+    private TwigEnvironment $twig;
+    private CsrfTokenManagerInterface $tokenManager;
+    private string $csrfTokenName;
+    private RouterInterface $router;
 
     public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
     {
@@ -170,9 +139,7 @@ class BackendPreviewSwitchController
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             $groups = array_map(
-                static function ($groupId): string {
-                    return '%"'.(int) $groupId.'"%';
-                },
+                static fn ($groupId): string => '%"'.(int) $groupId.'"%',
                 $user->amg
             );
 

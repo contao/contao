@@ -23,15 +23,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class StoreRefererListener
 {
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private Security $security;
+    private ScopeMatcher $scopeMatcher;
 
     public function __construct(Security $security, ScopeMatcher $scopeMatcher)
     {

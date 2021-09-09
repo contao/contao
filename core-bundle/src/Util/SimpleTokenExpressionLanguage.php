@@ -26,9 +26,7 @@ class SimpleTokenExpressionLanguage extends ExpressionLanguage
         // Disable `constant()` function for security reasons.
         $this->register(
             'constant',
-            static function () {
-                return "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');";
-            },
+            static fn () => "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');",
             static function (): void {
                 throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
             }

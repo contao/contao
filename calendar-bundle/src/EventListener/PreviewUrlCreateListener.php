@@ -23,15 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PreviewUrlCreateListener
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private RequestStack $requestStack;
+    private ContaoFramework $framework;
 
     public function __construct(RequestStack $requestStack, ContaoFramework $framework)
     {

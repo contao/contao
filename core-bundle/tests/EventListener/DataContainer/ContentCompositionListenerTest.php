@@ -36,10 +36,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $pageRecord = [
+    private ContentCompositionListener $listener;
+
+    private array $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
         'type' => 'foo',
@@ -47,10 +46,7 @@ class ContentCompositionListenerTest extends TestCase
         'published' => '1',
     ];
 
-    /**
-     * @var array
-     */
-    private $articleRecord = [
+    private array $articleRecord = [
         'id' => 2,
         'pid' => 17,
         'alias' => 'foo-bar',
@@ -97,11 +93,6 @@ class ContentCompositionListenerTest extends TestCase
      * @var RequestStack&MockObject
      */
     private $requestStack;
-
-    /**
-     * @var ContentCompositionListener
-     */
-    private $listener;
 
     protected function setUp(): void
     {

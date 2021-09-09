@@ -26,7 +26,7 @@ class LocaleUtil
     /**
      * @var array<string, array<string>>
      */
-    private static $fallbacks = [];
+    private static array $fallbacks = [];
 
     public static function canonicalize(string $locale): string
     {

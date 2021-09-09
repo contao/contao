@@ -23,10 +23,7 @@ use Webmozart\PathUtil\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     public function __construct(string $projectDir)
     {
@@ -314,11 +311,7 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue(Path::join($this->projectDir, 'assets/images'))
                     ->validate()
-                        ->always(
-                            static function (string $value): string {
-                                return Path::canonicalize($value);
-                            }
-                        )
+                        ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
                 ->end()
                 ->scalarNode('target_path')

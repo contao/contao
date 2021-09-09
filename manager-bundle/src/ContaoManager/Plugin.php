@@ -61,10 +61,7 @@ use Webmozart\PathUtil\Path;
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
-    /**
-     * @var string|null
-     */
-    private static $autoloadModules;
+    private static ?string $autoloadModules = null;
 
     /**
      * @var callable

@@ -79,7 +79,7 @@ class InheritanceTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundlesMetadata = $bundlesMetadata ?? [
+        $bundlesMetadata ??= [
             'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
             'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
             'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],

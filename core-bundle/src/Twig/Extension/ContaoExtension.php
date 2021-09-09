@@ -38,20 +38,9 @@ use Webmozart\PathUtil\Path;
  */
 final class ContaoExtension extends AbstractExtension
 {
-    /**
-     * @var Environment
-     */
-    private $environment;
-
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
-
-    /**
-     * @var array
-     */
-    private $contaoEscaperFilterRules = [];
+    private Environment $environment;
+    private TemplateHierarchyInterface $hierarchy;
+    private array $contaoEscaperFilterRules = [];
 
     public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
@@ -91,9 +80,7 @@ final class ContaoExtension extends AbstractExtension
             // Enables the 'contao_twig' escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
-                function () {
-                    return $this->contaoEscaperFilterRules;
-                }
+                fn () => $this->contaoEscaperFilterRules
             ),
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
@@ -181,9 +168,7 @@ final class ContaoExtension extends AbstractExtension
             public function setBlocks(array $blocks): void
             {
                 $this->arrBlocks = array_map(
-                    static function ($block) {
-                        return \is_array($block) ? $block : [$block];
-                    },
+                    static fn ($block) => \is_array($block) ? $block : [$block],
                     $blocks
                 );
             }

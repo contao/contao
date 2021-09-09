@@ -32,25 +32,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
+    private bool $legacyRouting;
+    private string $projectDir;
+    private bool $prependLocale;
+    private string $urlSuffix;
 
     public function __construct(bool $legacyRouting, string $projectDir, bool $prependLocale, string $urlSuffix)
     {

@@ -37,25 +37,10 @@ use Twig\Error\Error;
  */
 class PrettyErrorScreenListener
 {
-    /**
-     * @var bool
-     */
-    private $prettyErrorScreens;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Security
-     */
-    private $security;
+    private bool $prettyErrorScreens;
+    private Environment $twig;
+    private ContaoFramework $framework;
+    private Security $security;
 
     public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security)
     {

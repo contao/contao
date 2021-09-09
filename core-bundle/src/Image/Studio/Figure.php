@@ -29,10 +29,7 @@ use Contao\Template;
  */
 class Figure
 {
-    /**
-     * @var ImageResult
-     */
-    private $image;
+    private ImageResult $image;
 
     /**
      * @var Metadata|(\Closure(self):Metadata|null)|null
@@ -198,9 +195,7 @@ class Figure
         // Allow removing attributes by setting them to null
         $linkAttributes = array_filter(
             $this->linkAttributes,
-            static function ($attribute): bool {
-                return null !== $attribute;
-            }
+            static fn ($attribute): bool => null !== $attribute
         );
 
         // Optionally strip the href attribute
@@ -325,9 +320,7 @@ class Figure
 
         if (!empty($linkAttributes)) {
             $htmlAttributes = array_map(
-                static function (string $attribute, string $value) {
-                    return sprintf('%s="%s"', $attribute, $value);
-                },
+                static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
                 $linkAttributes
             );

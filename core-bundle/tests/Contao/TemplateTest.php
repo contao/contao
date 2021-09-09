@@ -335,10 +335,7 @@ class TemplateTest extends TestCase
         $GLOBALS['TL_KEYWORDS'] = '';
 
         $template = new class($buffer) extends FrontendTemplate {
-            /**
-             * @var string
-             */
-            private $testBuffer;
+            private ?string $testBuffer;
 
             public function __construct(string $testBuffer)
             {

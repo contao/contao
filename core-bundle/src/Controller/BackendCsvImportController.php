@@ -34,30 +34,11 @@ class BackendCsvImportController
     public const SEPARATOR_SEMICOLON = 'semicolon';
     public const SEPARATOR_TABULATOR = 'tabulator';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private RequestStack $requestStack;
+    private TranslatorInterface $translator;
+    private string $projectDir;
 
     /**
      * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead
@@ -74,9 +55,7 @@ class BackendCsvImportController
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
-            static function (array $data, array $row): array {
-                return array_merge($data, $row);
-            },
+            static fn (array $data, array $row): array => array_merge($data, $row),
             $dc->table,
             'listitems',
             (int) $dc->id,

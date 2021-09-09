@@ -31,10 +31,7 @@ class InsertTagsListener
         'faq_title',
     ];
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {

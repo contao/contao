@@ -26,10 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InsertTagsController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {

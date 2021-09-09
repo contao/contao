@@ -14,20 +14,9 @@ namespace Contao\CoreBundle\Fragment;
 
 class FragmentConfig
 {
-    /**
-     * @var string
-     */
-    private $controller;
-
-    /**
-     * @var string
-     */
-    private $renderer;
-
-    /**
-     * @var array
-     */
-    private $options;
+    private string $controller;
+    private string $renderer;
+    private array $options;
 
     /**
      * @see \Symfony\Component\HttpKernel\Fragment\FragmentHandler::render()

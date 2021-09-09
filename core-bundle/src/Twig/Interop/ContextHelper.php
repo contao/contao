@@ -50,10 +50,7 @@ final class ContextHelper
              */
             private $callable;
 
-            /**
-             * @var string
-             */
-            private $name;
+            private ?string $name;
 
             public function __construct(callable $callable, string $name)
             {

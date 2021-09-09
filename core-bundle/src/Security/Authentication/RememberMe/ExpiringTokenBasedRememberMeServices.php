@@ -33,15 +33,8 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      */
     public const EXPIRATION = 60;
 
-    /**
-     * @var RememberMeRepository
-     */
-    private $repository;
-
-    /**
-     * @var string
-     */
-    private $secret;
+    private RememberMeRepository $repository;
+    private string $secret;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.expiring_token_based_remember_me_services" service instead

@@ -17,10 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class PickerConfigTest extends TestCase
 {
-    /**
-     * @var PickerConfig
-     */
-    private $config;
+    private PickerConfig $config;
 
     protected function setUp(): void
     {

@@ -349,9 +349,7 @@ class PictureFactoryTest extends TestCase
             ->method('generate')
             ->with(
                 $this->callback(
-                    static function (): bool {
-                        return true;
-                    }
+                    static fn (): bool => true
                 ),
                 $this->callback(
                     function (PictureConfiguration $config): bool {
@@ -367,9 +365,7 @@ class PictureFactoryTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    static function (): bool {
-                        return true;
-                    }
+                    static fn (): bool => true
                 )
             )
             ->willReturn($pictureMock)
@@ -394,9 +390,7 @@ class PictureFactoryTest extends TestCase
             ->method('getImportantPartFromLegacyMode')
             ->with(
                 $this->callback(
-                    static function (): bool {
-                        return true;
-                    }
+                    static fn (): bool => true
                 ),
                 $this->callback(
                     function (string $mode): bool {
@@ -675,22 +669,20 @@ class PictureFactoryTest extends TestCase
         $pictureGenerator
             ->method('generate')
             ->willReturnCallback(
-                static function (ImageInterface $image, PictureConfiguration $config) use ($imageMock, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight): Picture {
-                    return new Picture(
-                        [
-                            'src' => $imageMock,
-                            'srcset' => [[$imageMock]],
-                            'width' => $imgWidth,
-                            'height' => $imgHeight,
-                        ],
-                        [[
-                            'src' => $imageMock,
-                            'srcset' => [[$imageMock]],
-                            'width' => $sourceWidth,
-                            'height' => $sourceHeight,
-                        ]]
-                    );
-                }
+                static fn (ImageInterface $image, PictureConfiguration $config): Picture => new Picture(
+                    [
+                        'src' => $imageMock,
+                        'srcset' => [[$imageMock]],
+                        'width' => $imgWidth,
+                        'height' => $imgHeight,
+                    ],
+                    [[
+                        'src' => $imageMock,
+                        'srcset' => [[$imageMock]],
+                        'width' => $sourceWidth,
+                        'height' => $sourceHeight,
+                    ]]
+                )
             )
         ;
 

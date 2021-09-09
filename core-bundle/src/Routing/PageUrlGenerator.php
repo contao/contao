@@ -27,15 +27,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PageUrlGenerator extends SymfonyUrlGenerator
 {
-    /**
-     * @var RouteProviderInterface
-     */
-    private $provider;
-
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
+    private RouteProviderInterface $provider;
+    private PageRegistry $pageRegistry;
 
     public function __construct(RouteProviderInterface $provider, PageRegistry $pageRegistry, LoggerInterface $logger = null)
     {

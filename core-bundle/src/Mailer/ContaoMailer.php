@@ -22,20 +22,9 @@ use Symfony\Component\Mime\RawMessage;
 
 final class ContaoMailer implements MailerInterface
 {
-    /**
-     * @var MailerInterface
-     */
-    private $mailer;
-
-    /**
-     * @var AvailableTransports
-     */
-    private $transports;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private MailerInterface $mailer;
+    private AvailableTransports $transports;
+    private RequestStack $requestStack;
 
     public function __construct(MailerInterface $mailer, AvailableTransports $transports, RequestStack $requestStack)
     {

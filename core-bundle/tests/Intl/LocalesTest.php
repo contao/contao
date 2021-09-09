@@ -274,9 +274,7 @@ class LocalesTest extends TestCase
 
         // Remove regions
         $expected = array_values(array_unique(array_map(
-            static function ($localeId) {
-                return preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId);
-            },
+            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId),
             $expected
         )));
 

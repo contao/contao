@@ -41,15 +41,8 @@ class DebugPluginsCommand extends Command
 {
     protected static $defaultName = 'debug:plugins';
 
-    /**
-     * @var ContaoKernel
-     */
-    private $kernel;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private ContaoKernel $kernel;
+    private ?SymfonyStyle $io = null;
 
     public function __construct(ContaoKernel $kernel)
     {

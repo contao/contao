@@ -43,65 +43,19 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var bool
-     */
-    private static $initialized = false;
+    private static bool $initialized = false;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var int
-     */
-    private $errorLevel;
-
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
-
-    /**
-     * @var Request|null
-     */
-    private $request;
-
-    /**
-     * @var bool
-     */
-    private $isFrontend = false;
-
-    /**
-     * @var array
-     */
-    private $adapterCache = [];
-
-    /**
-     * @var array
-     */
-    private $hookListeners = [];
+    private RequestStack $requestStack;
+    private ScopeMatcher $scopeMatcher;
+    private TokenChecker $tokenChecker;
+    private Filesystem $filesystem;
+    private string $projectDir;
+    private int $errorLevel;
+    private bool $legacyRouting;
+    private ?Request $request = null;
+    private bool $isFrontend = false;
+    private array $adapterCache = [];
+    private array $hookListeners = [];
 
     public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel, bool $legacyRouting)
     {

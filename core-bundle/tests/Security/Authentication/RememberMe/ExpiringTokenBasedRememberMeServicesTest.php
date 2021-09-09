@@ -31,17 +31,9 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 {
     private const SECRET = 'foobar';
 
-    /**
-     * @var RememberMeRepository&MockObject
-     */
-    private $repository;
+    private ExpiringTokenBasedRememberMeServices $listener;
 
-    /**
-     * @var ExpiringTokenBasedRememberMeServices
-     */
-    private $listener;
-
-    private static $options = [
+    private static array $options = [
         'name' => 'REMEMBERME',
         'lifetime' => 31536000,
         'path' => '/',
@@ -52,6 +44,11 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         'always_remember_me' => false,
         'remember_me_parameter' => 'autologin',
     ];
+
+    /**
+     * @var RememberMeRepository&MockObject
+     */
+    private $repository;
 
     protected function setUp(): void
     {
@@ -196,11 +193,18 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $response = new Response();
 
+        $user = $this->createMock(UserInterface::class);
+        $user
+            ->expects($this->once())
+            ->method('getUsername')
+            ->willReturn('foo')
+        ;
+
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->atLeastOnce())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($user)
         ;
 
         $this->repository

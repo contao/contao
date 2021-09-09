@@ -27,10 +27,7 @@ use Webmozart\PathUtil\Path;
  */
 abstract class AbstractLockedCommand extends Command implements ContainerAwareInterface
 {
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
+    private ?ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container = null): void
     {

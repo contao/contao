@@ -17,15 +17,8 @@ use Webmozart\PathUtil\Path;
 
 class LanguageResolver
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $translationsDir;
+    private RequestStack $requestStack;
+    private string $translationsDir;
 
     public function __construct(RequestStack $requestStack, string $translationsDir)
     {

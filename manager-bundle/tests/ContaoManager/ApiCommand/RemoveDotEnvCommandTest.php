@@ -20,25 +20,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class RemoveDotEnvCommandTest extends ContaoTestCase
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $tempdir;
-
-    /**
-     * @var string
-     */
-    private $tempfile;
-
-    /**
-     * @var RemoveDotEnvCommand
-     */
-    private $command;
+    private Filesystem $filesystem;
+    private string $tempdir;
+    private string $tempfile;
+    private RemoveDotEnvCommand $command;
 
     protected function setUp(): void
     {

@@ -20,23 +20,12 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
-    /**
-     * @var PageModel
-     */
-    private $pageModel;
+    private PageModel $pageModel;
+    private ?string $urlPrefix;
+    private ?string $urlSuffix;
 
     /**
-     * @var string
-     */
-    private $urlPrefix;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
-
-    /**
-     * The referenced content object.
+     * The referenced content object (can be anything).
      */
     private $content;
 
