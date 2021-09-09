@@ -88,6 +88,8 @@ class PageError404 extends Frontend
 	 */
 	protected function prepare($page=null)
 	{
+		$obj404 = null;
+
 		if ($page instanceof PageModel && $page->type === 'error_404')
 		{
 			// We don't actually need a root page, we just need the inherited properties to redirect a 404

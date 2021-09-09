@@ -24,7 +24,7 @@ class PageError403 extends Frontend
 	/**
 	 * Generate an error 403 page
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 */
 	public function generate($objRootPage=null)
 	{
@@ -51,7 +51,7 @@ class PageError403 extends Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 *
 	 * @return Response
 	 */

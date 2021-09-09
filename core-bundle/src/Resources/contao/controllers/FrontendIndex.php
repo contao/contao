@@ -301,7 +301,6 @@ class FrontendIndex extends Frontend
 
 				try
 				{
-					/** @var PageRegular $objHandler */
 					$objHandler->generate($objPage, true);
 					$objResponse = new Response(ob_get_contents(), http_response_code());
 				}
@@ -313,7 +312,6 @@ class FrontendIndex extends Frontend
 				return $objResponse;
 			}
 
-			/** @var PageRegular $objHandler */
 			return $objHandler->getResponse($objPage, true);
 		}
 

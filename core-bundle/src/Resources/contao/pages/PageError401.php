@@ -25,7 +25,7 @@ class PageError401 extends Frontend
 	/**
 	 * Generate an error 401 page
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 */
 	public function generate($objRootPage=null)
 	{
@@ -52,7 +52,7 @@ class PageError401 extends Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 *
 	 * @return Response
 	 */
@@ -80,7 +80,7 @@ class PageError401 extends Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 *
 	 * @return PageModel
 	 *
