@@ -28,6 +28,11 @@ class PageError403 extends Frontend
 	 */
 	public function generate($objRootPage=null)
 	{
+		if (is_numeric($objRootPage))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError403::generate() has been deprecated and will no longer work in Contao 5.0.');
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -57,6 +62,11 @@ class PageError403 extends Frontend
 	 */
 	public function getResponse($objRootPage=null)
 	{
+		if (is_numeric($objRootPage))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError403::getResponse() has been deprecated and will no longer work in Contao 5.0.');
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
