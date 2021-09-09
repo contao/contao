@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Menu;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
@@ -118,28 +117,8 @@ class BackendPreviewListener
         }
 
         $id = $this->getIdFromRequest($request);
+        $do = $request->query->get('do', '');
         $url = $this->router->generate('contao_backend_preview');
-
-        if (!$do = $request->query->get('do')) {
-            return $url;
-        }
-
-        if ($id) {
-            if ('page' === $do) {
-                return $url.'?page='.$id;
-            }
-
-            if ('article' === $do) {
-                /** @var ArticleModel $adapter */
-                $adapter = $this->framework->getAdapter(ArticleModel::class);
-
-                if (!$article = $adapter->findByPk($id)) {
-                    return $url;
-                }
-
-                return $url.'?page='.$article->pid;
-            }
-        }
 
         $event = new PreviewUrlCreateEvent($do, $id);
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);
