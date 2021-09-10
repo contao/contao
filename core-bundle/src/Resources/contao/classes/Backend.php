@@ -873,20 +873,14 @@ abstract class Backend extends Controller
 
 				$arrIds[] = $intId;
 
-				// No link for the active page
-				if ($objPage->id == $intNode)
+				// No link for the active page or pages in the trail
+				if ($objPage->id == $intNode || (!$objUser->isAdmin && !$objUser->hasAccess($objPage->id, 'pagemounts')))
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
 				}
 				else
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
-				}
-
-				// Do not show the mounted pages
-				if (!$objUser->isAdmin && $objUser->hasAccess($objPage->id, 'pagemounts'))
-				{
-					break;
 				}
 
 				$intId = $objPage->pid;
