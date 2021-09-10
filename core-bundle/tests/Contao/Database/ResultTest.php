@@ -23,7 +23,9 @@ class ResultTest extends TestCase
 {
     public function testEmptyResult(): void
     {
-        foreach ($results = $this->createResults([]) as $result) {
+        $results = $this->createResults([]);
+
+        foreach ($results as $result) {
             foreach ([null, 'first', 'last', 'reset'] as $methodName) {
                 if ($methodName) {
                     $this->assertSame($result, $result->$methodName());
@@ -61,7 +63,9 @@ class ResultTest extends TestCase
             ['field' => 'value1'],
         ];
 
-        foreach ($results = $this->createResults($data) as $result) {
+        $results = $this->createResults($data);
+
+        foreach ($results as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
             $this->assertSame(1, $result->numRows);
@@ -102,7 +106,9 @@ class ResultTest extends TestCase
             ['field' => 'value2'],
         ];
 
-        foreach ($results = $this->createResults($data) as $result) {
+        $results = $this->createResults($data);
+
+        foreach ($results as $result) {
             $this->assertFalse($result->isModified);
             $this->assertSame(1, $result->numFields);
             $this->assertSame(2, $result->numRows);
@@ -147,7 +153,9 @@ class ResultTest extends TestCase
             ['field' => 'value2'],
         ];
 
-        foreach ($this->createResults($data) as $result) {
+        $results = $this->createResults($data);
+
+        foreach ($results as $result) {
             $this->assertSame(['field' => 'value1'], $result->fetchAssoc());
             $this->assertSame(['field' => 'value1'], $result->row());
             $this->assertSame('value1', $result->field);

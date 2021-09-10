@@ -30,7 +30,6 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Kernel;
 use Webmozart\PathUtil\Path;
 
 class ContaoKernelTest extends ContaoTestCase
@@ -167,17 +166,6 @@ class ContaoKernelTest extends ContaoTestCase
 
         $kernel = new ContaoKernel('prod', false);
         $kernel->getProjectDir();
-    }
-
-    public function testGetRootDir(): void
-    {
-        if (!method_exists(Kernel::class, 'getRootDir')) {
-            $this->markTestSkipped('The getRootDir() method no longer exists.');
-        }
-
-        $kernel = $this->getKernel($this->getTempDir());
-
-        $this->assertSame(Path::normalize($kernel->getProjectDir()).'/app', Path::normalize($kernel->getRootDir()));
     }
 
     public function testGetCacheDir(): void
