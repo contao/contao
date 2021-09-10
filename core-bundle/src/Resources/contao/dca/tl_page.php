@@ -1360,12 +1360,13 @@ class tl_page extends Backend
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
+	 * @param boolean       $isRootTrailPage
 	 *
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isRootTrailPage=false)
 	{
-		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
+		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isRootTrailPage);
 	}
 
 	/**

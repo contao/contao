@@ -3979,6 +3979,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
+		$isRootTrailPage = (isset($this->rootTrails['*']) && \in_array($id, $this->rootTrails['*']));
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -3987,11 +3988,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$strMethod = $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'][1];
 
 			$this->import($strClass);
-			$return .= $this->$strClass->$strMethod($objRow->row(), $label, $this, '', false, $blnProtected);
+			$return .= $this->$strClass->$strMethod($objRow->row(), $label, $this, '', false, $blnProtected, $isRootTrailPage);
 		}
 		elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
 		{
-			$return .= $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']($objRow->row(), $label, $this, '', false, $blnProtected);
+			$return .= $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']($objRow->row(), $label, $this, '', false, $blnProtected, $isRootTrailPage);
 		}
 		else
 		{
@@ -4002,7 +4003,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
 		$_buttons = '';
-		$isRootTrailPage = (isset($this->rootTrails['*']) && \in_array($id, $this->rootTrails['*']));
 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
 		if ($this->strTable == $table && !$isRootTrailPage)

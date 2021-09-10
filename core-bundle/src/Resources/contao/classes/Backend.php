@@ -927,10 +927,11 @@ abstract class Backend extends Controller
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
+	 * @param boolean       $isRootTrailPage
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{
@@ -952,8 +953,11 @@ abstract class Backend extends Controller
 			$label = '<strong>' . $label . '</strong>';
 		}
 
-		// Add the breadcrumb link
-		$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		// Add the breadcrumb link if you have access to that page
+		if (!$isRootTrailPage)
+		{
+			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		}
 
 		// Return the image
 		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
