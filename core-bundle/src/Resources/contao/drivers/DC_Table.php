@@ -4002,9 +4002,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
 		$_buttons = '';
+		$isRootTrailPage = (isset($this->rootTrails['*']) && \in_array($id, $this->rootTrails['*']));
 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
-		if ($this->strTable == $table)
+		if ($this->strTable == $table && !$isRootTrailPage)
 		{
 			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($objRow->row(), $table, $this->root, $blnCircularReference, $childs, $previous, $next);
 
@@ -4014,8 +4015,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
-		// Paste buttons
-		if ($arrClipboard !== false && Input::get('act') != 'select')
+		// Paste buttons (not for root trails)
+		if ($arrClipboard !== false && Input::get('act') != 'select' && !$isRootTrailPage)
 		{
 			$_buttons .= ' ';
 
@@ -6221,11 +6222,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$topMostPerRoot = array();
+		$this->rootTrails['*'] = array();
 
 		foreach ($this->root as $id)
 		{
 			$trail = array_map('\intval', $this->Database->getParentRecords($id, $table, true));
 
+			$this->rootTrails['*'] = array_merge($this->rootTrails['*'], $trail); // Keep an array of all trail IDs
 			$this->rootTrails[$id] = $trail;
 			$topMostPerRoot[$id] = end($trail) ?: $id;
 		}
