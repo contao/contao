@@ -189,7 +189,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(5, 6));
-		$this->root = array();
 		$this->arrModule = $arrModule;
 
 		// Call onload_callback (e.g. to check permissions)
