@@ -83,10 +83,6 @@ class ContextHelperTest extends TestCase
 
     public function testEnhancesErrorMessageIfStringAccessFails(): void
     {
-        if (\PHP_VERSION_ID < 70400) {
-            $this->markTestSkipped('This test requires at least PHP 7.4.');
-        }
-
         $data = [
             'lazy' => static fn (): object => new \stdClass(),
         ];

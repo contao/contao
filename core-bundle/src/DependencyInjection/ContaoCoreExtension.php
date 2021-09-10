@@ -50,7 +50,6 @@ class ContaoCoreExtension extends Extension
         }
 
         $configuration = new Configuration($container->getParameter('kernel.project_dir'));
-
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader(

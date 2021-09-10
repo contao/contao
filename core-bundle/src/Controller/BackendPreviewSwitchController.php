@@ -117,7 +117,7 @@ class BackendPreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
-            $frontendUsername = $request->request->get('user') ?: null;
+            $frontendUsername = $request->request->get('user');
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');

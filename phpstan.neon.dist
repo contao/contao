@@ -10,6 +10,12 @@ rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
 
 parameters:
+    level: 5
+
+    paths:
+        - core-bundle/src
+        - core-bundle/tests
+
     dynamicConstantNames:
         - BE_USER_LOGGED_IN
 

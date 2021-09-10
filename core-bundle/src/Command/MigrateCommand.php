@@ -252,9 +252,6 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($filePath);
     }
 
-    /**
-     * @psalm-suppress InvalidReturnType
-     */
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption): bool
     {
         if (null === $this->installer) {

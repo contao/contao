@@ -173,10 +173,6 @@ class TranslatorTest extends TestCase
 
     public function testUsesDecoratedCatalogues(): void
     {
-        if (!method_exists(BaseTranslator::class, 'getCatalogues')) {
-            $this->markTestSkipped('The getCatalogues() method does not exist in Symfony 4.');
-        }
-
         $originalCatalogueDe = $this->createMock(MessageCatalogueInterface::class);
         $originalCatalogueDe
             ->method('getLocale')
