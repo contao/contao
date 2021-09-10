@@ -772,7 +772,7 @@ class tl_page extends Backend
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS'] ?? null))
 		{
 			$edit_all = array();
 			$delete_all = array();
