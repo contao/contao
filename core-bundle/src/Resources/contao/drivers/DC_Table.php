@@ -3861,8 +3861,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$return = '';
 		$intSpacing = 20;
 
-		// Parent trail
-		if (isset($this->rootTrails[$id]) && \is_array($this->rootTrails[$id]))
+		// Parent trail if enabled
+		if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null) &&  isset($this->rootTrails[$id]) && \is_array($this->rootTrails[$id]))
 		{
 			foreach (array_reverse($this->rootTrails[$id]) as $pid)
 			{

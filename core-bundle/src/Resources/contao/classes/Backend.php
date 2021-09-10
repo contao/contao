@@ -895,8 +895,9 @@ abstract class Backend extends Controller
 			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
-		// Limit tree
+		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
