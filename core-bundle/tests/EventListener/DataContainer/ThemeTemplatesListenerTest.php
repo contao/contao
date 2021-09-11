@@ -16,7 +16,7 @@ use Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ThemeTemplatesListenerTest extends TestCase
@@ -36,8 +36,8 @@ class ThemeTemplatesListenerTest extends TestCase
 
     public function testThrowsFriendlyErrorMessageIfPathIsInvalid(): void
     {
-        $theme = $this->createMock(Theme::class);
-        $theme
+        $themeNamespace = $this->createMock(ThemeNamespace::class);
+        $themeNamespace
             ->method('generateSlug')
             ->with('<bad-path>')
             ->willThrowException(new InvalidThemePathException('<bad-path>', ['.', '_']))
@@ -54,7 +54,7 @@ class ThemeTemplatesListenerTest extends TestCase
             ->willReturn('<message>')
         ;
 
-        $listener = $this->getListener(null, $theme, $translator);
+        $listener = $this->getListener(null, $themeNamespace, $translator);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('<message>');
@@ -62,11 +62,11 @@ class ThemeTemplatesListenerTest extends TestCase
         $listener('<bad-path>');
     }
 
-    private function getListener(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer = null, Theme $theme = null, TranslatorInterface $translator = null): ThemeTemplatesListener
+    private function getListener(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer = null, ThemeNamespace $themeNamespace = null, TranslatorInterface $translator = null): ThemeTemplatesListener
     {
         return new ThemeTemplatesListener(
             $filesystemLoaderWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
-            $theme ?? $this->createMock(Theme::class),
+            $themeNamespace ?? $this->createMock(ThemeNamespace::class),
             $translator ?? $this->createMock(TranslatorInterface::class)
         );
     }

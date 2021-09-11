@@ -57,9 +57,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private $templateLocator;
 
     /**
-     * @var Theme
+     * @var ThemeNamespace
      */
-    private $theme;
+    private $themeNamespace;
 
     /**
      * @var array<string,string>
@@ -76,13 +76,13 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     private $currentThemeSlug;
 
-    public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, Theme $theme, string $rootPath = null)
+    public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, ThemeNamespace $themeNamespace, string $rootPath = null)
     {
         parent::__construct([], $rootPath);
 
         $this->cachePool = $cachePool;
         $this->templateLocator = $templateLocator;
-        $this->theme = $theme;
+        $this->themeNamespace = $themeNamespace;
 
         // Restore paths from cache
         $pathsItem = $cachePool->getItem(self::CACHE_KEY_PATHS);
@@ -349,7 +349,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         foreach ($chains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
-                if (null !== ($namespace = $this->theme->matchThemeNamespace($name)) && $namespace !== $themeSlug) {
+                if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
                     unset($chains[$identifier][$path]);
                 }
             }
@@ -423,7 +423,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return null;
         }
 
-        $namespace = $this->theme->getThemeNamespace($themeSlug);
+        $namespace = $this->themeNamespace->getFromSlug($themeSlug);
         $template = "$namespace/$parts[1]";
 
         return $this->exists($template) ? $template : null;
@@ -440,6 +440,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $this->currentThemeSlug = false;
         }
 
-        return $this->currentThemeSlug = $this->theme->generateSlug(Path::makeRelative($path, 'templates'));
+        return $this->currentThemeSlug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
     }
 }

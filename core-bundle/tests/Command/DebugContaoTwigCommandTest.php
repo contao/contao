@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\DebugContaoTwigCommand;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Webmozart\PathUtil\Path;
@@ -188,7 +188,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         return new DebugContaoTwigCommand(
             $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
             $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
-            new Theme(),
+            new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance')
         );
     }

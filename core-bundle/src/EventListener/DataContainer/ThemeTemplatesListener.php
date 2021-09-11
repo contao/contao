@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -29,19 +29,19 @@ class ThemeTemplatesListener
     private $filesystemLoaderWarmer;
 
     /**
-     * @var Theme
+     * @var ThemeNamespace
      */
-    private $theme;
+    private $themeNamespace;
 
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer, Theme $theme, TranslatorInterface $translator)
+    public function __construct(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer, ThemeNamespace $themeNamespace, TranslatorInterface $translator)
     {
         $this->filesystemLoaderWarmer = $filesystemLoaderWarmer;
-        $this->theme = $theme;
+        $this->themeNamespace = $themeNamespace;
         $this->translator = $translator;
     }
 
@@ -49,7 +49,7 @@ class ThemeTemplatesListener
     {
         try {
             // Make sure the selected theme path can be converted into a slug
-            $this->theme->generateSlug($value);
+            $this->themeNamespace->generateSlug($value);
         } catch (InvalidThemePathException $e) {
             throw new \RuntimeException($this->translator->trans('ERR.invalidThemeTemplatePath', [$e->getPath(), implode('', $e->getInvalidCharacters())], 'contao_default'), 0, $e);
         }

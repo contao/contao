@@ -14,18 +14,18 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 
 class ThemeTest extends TestCase
 {
     /**
      * @dataProvider providePaths
      */
-    public function testCreateDirectorySlug(string $path, string $expectedSlug): void
+    public function testGenerateSlug(string $path, string $expectedSlug): void
     {
-        $theme = $this->getTheme();
+        $themeNamespace = $this->getThemeNamespace();
 
-        $this->assertSame($expectedSlug, $theme->generateSlug($path));
+        $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
     }
 
     public function providePaths(): \Generator
@@ -43,24 +43,24 @@ class ThemeTest extends TestCase
         yield 'relative and nested' => ['../foo/bar', '_foo_bar'];
     }
 
-    public function testCreateDirectorySlugThrowsIfPathIsAbsolute(): void
+    public function testGenerateSlugThrowsIfPathIsAbsolute(): void
     {
-        $theme = $this->getTheme();
+        $themeNamespace = $this->getThemeNamespace();
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Path '/foo/bar' must be relative.");
 
-        $theme->generateSlug('/foo/bar');
+        $themeNamespace->generateSlug('/foo/bar');
     }
 
-    public function testCreateDirectorySlugThrowsIfPathContainsInvalidCharacters(): void
+    public function testGenerateSlugThrowsIfPathContainsInvalidCharacters(): void
     {
-        $theme = $this->getTheme();
+        $themeNamespace = $this->getThemeNamespace();
 
         $this->expectException(InvalidThemePathException::class);
 
         try {
-            $theme->generateSlug('foo.bar/bar_baz');
+            $themeNamespace->generateSlug('foo.bar/bar_baz');
         } catch (InvalidThemePathException $e) {
             $this->assertSame(['.', '_'], $e->getInvalidCharacters());
 
@@ -68,11 +68,11 @@ class ThemeTest extends TestCase
         }
     }
 
-    public function testGetThemeNamespace(): void
+    public function testGetFromSlug(): void
     {
-        $theme = $this->getTheme();
+        $themeNamespace = $this->getThemeNamespace();
 
-        $this->assertSame('@Contao_Theme_foo_bar', $theme->getThemeNamespace('foo_bar'));
+        $this->assertSame('@Contao_Theme_foo_bar', $themeNamespace->getFromSlug('foo_bar'));
     }
 
     /**
@@ -80,9 +80,9 @@ class ThemeTest extends TestCase
      */
     public function testMatchThemeNamespace(string $name, ?string $expectedSlug): void
     {
-        $theme = $this->getTheme();
+        $themeNamespace = $this->getThemeNamespace();
 
-        $this->assertSame($expectedSlug, $theme->matchThemeNamespace($name));
+        $this->assertSame($expectedSlug, $themeNamespace->match($name));
     }
 
     public function provideNamespaces(): \Generator
@@ -108,8 +108,8 @@ class ThemeTest extends TestCase
         ];
     }
 
-    private function getTheme(): Theme
+    private function getThemeNamespace(): ThemeNamespace
     {
-        return new Theme();
+        return new ThemeNamespace();
     }
 }

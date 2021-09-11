@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Twig\Loader;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Webmozart\PathUtil\Path;
 
-class Theme
+class ThemeNamespace
 {
     /**
      * Generates a theme slug from a relative path.
@@ -58,7 +58,7 @@ class Theme
     /**
      * Builds the namespace for a certain theme slug.
      */
-    public function getThemeNamespace(string $slug): string
+    public function getFromSlug(string $slug): string
     {
         return "@Contao_Theme_$slug";
     }
@@ -68,7 +68,7 @@ class Theme
      *
      * @return string the theme slug or null if not a theme namespace
      */
-    public function matchThemeNamespace(string $logicalName): ?string
+    public function match(string $logicalName): ?string
     {
         if (1 === preg_match('%^@Contao_Theme_([a-zA-Z0-9_-]+)/%', $logicalName, $matches)) {
             return $matches[1];

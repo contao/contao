@@ -17,7 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -629,7 +629,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $projectDir,
             $bundles,
             $bundlesMetadata,
-            new Theme(),
+            new ThemeNamespace(),
             $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
         );
     }
@@ -667,7 +667,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         return new ContaoFilesystemLoader(
             $cacheAdapter ?? new NullAdapter(),
             $templateLocator ?? $this->createMock(TemplateLocator::class),
-            new Theme(),
+            new ThemeNamespace(),
             '/',
         );
     }

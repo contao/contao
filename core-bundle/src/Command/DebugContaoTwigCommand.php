@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -42,20 +42,20 @@ class DebugContaoTwigCommand extends Command
     private $cacheWarmer;
 
     /**
-     * @var Theme
+     * @var ThemeNamespace
      */
-    private $theme;
+    private $themeNamespace;
 
     /**
      * @var string
      */
     private $projectDir;
 
-    public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer, Theme $theme, string $projectDir)
+    public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer, ThemeNamespace $themeNamespace, string $projectDir)
     {
         $this->hierarchy = $hierarchy;
         $this->cacheWarmer = $cacheWarmer;
-        $this->theme = $theme;
+        $this->themeNamespace = $themeNamespace;
         $this->projectDir = $projectDir;
 
         parent::__construct();
@@ -115,7 +115,7 @@ class DebugContaoTwigCommand extends Command
         }
 
         if (is_dir(Path::join($this->projectDir, 'templates', $pathOrSlug))) {
-            return $this->theme->generateSlug($pathOrSlug);
+            return $this->themeNamespace->generateSlug($pathOrSlug);
         }
 
         return $pathOrSlug;

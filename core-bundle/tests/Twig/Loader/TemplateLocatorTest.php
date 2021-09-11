@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
-use Contao\CoreBundle\Twig\Loader\Theme;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
 use Doctrine\DBAL\Driver\DriverException;
@@ -81,7 +81,7 @@ class TemplateLocatorTest extends TestCase
             '',
             [],
             [],
-            $this->createMock(Theme::class),
+            $this->createMock(ThemeNamespace::class),
             $framework
         );
 
@@ -173,7 +173,7 @@ class TemplateLocatorTest extends TestCase
             $projectDir,
             $bundles,
             $bundlesMetadata,
-            new Theme(),
+            new ThemeNamespace(),
             $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
         );
     }

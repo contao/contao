@@ -61,7 +61,7 @@ services:
     Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener:
         arguments:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
-            - '@Contao\CoreBundle\Twig\Loader\Theme'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
             - '@translator'
 
     Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener:

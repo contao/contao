@@ -41,21 +41,21 @@ class TemplateLocator
     private $bundlesMetadata;
 
     /**
-     * @var Theme
+     * @var ThemeNamespace
      */
-    private $theme;
+    private $themeNamespace;
 
     /**
      * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, Theme $theme, ContaoFramework $framework)
+    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ThemeNamespace $themeNamespace, ContaoFramework $framework)
     {
         $this->projectDir = $projectDir;
         $this->bundles = $bundles;
         $this->bundlesMetadata = $bundlesMetadata;
-        $this->theme = $theme;
+        $this->themeNamespace = $themeNamespace;
         $this->framework = $framework;
     }
 
@@ -85,7 +85,7 @@ class TemplateLocator
             }
 
             try {
-                $slug = $this->theme->generateSlug(Path::makeRelative($theme->templates, 'templates'));
+                $slug = $this->themeNamespace->generateSlug(Path::makeRelative($theme->templates, 'templates'));
             } catch (InvalidThemePathException $e) {
                 trigger_deprecation('contao/core-bundle', '4.12', 'Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
 
