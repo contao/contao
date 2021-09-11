@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener;
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\Theme;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ThemeTemplatesListenerTest extends TestCase
@@ -27,33 +29,45 @@ class ThemeTemplatesListenerTest extends TestCase
             ->method('refresh')
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
-
-        $listener = new ThemeTemplatesListener($filesystemLoaderWarmer, $translator);
+        $listener = $this->getListener($filesystemLoaderWarmer);
 
         $this->assertSame('templates/foo/bar', $listener('templates/foo/bar'));
     }
 
     public function testThrowsFriendlyErrorMessageIfPathIsInvalid(): void
     {
-        $filesystemLoaderWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
+        $theme = $this->createMock(Theme::class);
+        $theme
+            ->method('generateSlug')
+            ->with('<bad-path>')
+            ->willThrowException(new InvalidThemePathException('<bad-path>', ['.', '_']))
+        ;
 
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
             ->with(
                 'ERR.invalidThemeTemplatePath',
-                ['templates/invalid.path/b_ar', '._'],
+                ['<bad-path>', '._'],
                 'contao_default',
             )
             ->willReturn('<message>')
         ;
 
-        $listener = new ThemeTemplatesListener($filesystemLoaderWarmer, $translator);
+        $listener = $this->getListener(null, $theme, $translator);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('<message>');
 
-        $listener('templates/invalid.path/b_ar');
+        $listener('<bad-path>');
+    }
+
+    private function getListener(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer = null, Theme $theme = null, TranslatorInterface $translator = null): ThemeTemplatesListener
+    {
+        return new ThemeTemplatesListener(
+            $filesystemLoaderWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            $theme ?? $this->createMock(Theme::class),
+            $translator ?? $this->createMock(TranslatorInterface::class)
+        );
     }
 }

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\Theme;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
 use OutOfBoundsException;
@@ -107,9 +108,10 @@ class InheritanceTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
+        $slugGenerator = new Theme();
 
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $framework);
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $slugGenerator, $framework);
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $slugGenerator, $projectDir);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
         $warmer->warmUp('');

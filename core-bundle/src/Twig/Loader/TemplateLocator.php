@@ -41,15 +41,21 @@ class TemplateLocator
     private $bundlesMetadata;
 
     /**
+     * @var Theme
+     */
+    private $theme;
+
+    /**
      * @var ContaoFramework
      */
     private $framework;
 
-    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ContaoFramework $framework)
+    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, Theme $theme, ContaoFramework $framework)
     {
         $this->projectDir = $projectDir;
         $this->bundles = $bundles;
         $this->bundlesMetadata = $bundlesMetadata;
+        $this->theme = $theme;
         $this->framework = $framework;
     }
 
@@ -79,7 +85,7 @@ class TemplateLocator
             }
 
             try {
-                $slug = self::createDirectorySlug(Path::makeRelative($theme->templates, 'templates'));
+                $slug = $this->theme->generateSlug(Path::makeRelative($theme->templates, 'templates'));
             } catch (InvalidThemePathException $e) {
                 trigger_deprecation('contao/core-bundle', '4.12', 'Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
 
@@ -155,42 +161,6 @@ class TemplateLocator
         }
 
         return $templates;
-    }
-
-    /**
-     * @throws InvalidThemePathException if the path contains invalid characters
-     */
-    public static function createDirectorySlug(string $relativePath): string
-    {
-        if (!Path::isRelative($relativePath)) {
-            throw new \InvalidArgumentException("Path '$relativePath' must be relative.");
-        }
-
-        $path = Path::normalize($relativePath);
-        $invalidCharacters = [];
-
-        $slug = implode('_', array_map(
-            static function (string $chunk) use (&$invalidCharacters) {
-                // Allow paths outside the template directory (see #3271)
-                if ('..' === $chunk) {
-                    return '';
-                }
-
-                // Check for invalid characters (see #3354)
-                if (0 !== preg_match_all('%[^a-zA-Z0-9-]%', $chunk, $matches)) {
-                    $invalidCharacters = array_merge($invalidCharacters, $matches[0]);
-                }
-
-                return $chunk;
-            },
-            explode('/', $path)
-        ));
-
-        if (!empty($invalidCharacters)) {
-            throw new InvalidThemePathException($path, $invalidCharacters);
-        }
-
-        return $slug;
     }
 
     private function expandSubdirectories(string $path): array

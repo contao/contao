@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
-use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\Theme;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
 use Doctrine\DBAL\Driver\DriverException;
@@ -77,7 +77,13 @@ class TemplateLocatorTest extends TestCase
 
         $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
 
-        $locator = new TemplateLocator('', [], [], $framework);
+        $locator = new TemplateLocator(
+            '',
+            [],
+            [],
+            $this->createMock(Theme::class),
+            $framework
+        );
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
@@ -146,42 +152,6 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findTemplates('/invalid/path'));
     }
 
-    /**
-     * @dataProvider providePaths
-     */
-    public function testCreateDirectorySlug(string $path, string $expectedSlug): void
-    {
-        $this->assertSame($expectedSlug, TemplateLocator::createDirectorySlug($path));
-    }
-
-    public function providePaths(): \Generator
-    {
-        yield 'simple' => ['foo', 'foo'];
-
-        yield 'with dashes' => ['foo-bar', 'foo-bar'];
-
-        yield 'nested' => ['foo/bar/baz', 'foo_bar_baz'];
-
-        yield 'relative (up one)' => ['../foo', '_foo'];
-
-        yield 'relative (up multiple)' => ['../../../foo', '___foo'];
-
-        yield 'relative and nested' => ['../foo/bar', '_foo_bar'];
-    }
-
-    public function testCreateDirectorySlugThrowsIfPathContainsInvalidCharacters(): void
-    {
-        $this->expectException(InvalidThemePathException::class);
-
-        try {
-            TemplateLocator::createDirectorySlug('foo.bar/bar_baz');
-        } catch (InvalidThemePathException $e) {
-            $this->assertSame(['.', '_'], $e->getInvalidCharacters());
-
-            throw $e;
-        }
-    }
-
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
     {
         $themeModels = array_map(
@@ -203,6 +173,7 @@ class TemplateLocatorTest extends TestCase
             $projectDir,
             $bundles,
             $bundlesMetadata,
+            new Theme(),
             $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
         );
     }

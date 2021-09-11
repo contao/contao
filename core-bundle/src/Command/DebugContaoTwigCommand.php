@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
-use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\Theme;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Webmozart\PathUtil\Path;
 
 /**
  * @experimental
@@ -40,10 +41,22 @@ class DebugContaoTwigCommand extends Command
      */
     private $cacheWarmer;
 
-    public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer)
+    /**
+     * @var Theme
+     */
+    private $theme;
+
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    public function __construct(TemplateHierarchyInterface $hierarchy, ContaoFilesystemLoaderWarmer $cacheWarmer, Theme $theme, string $projectDir)
     {
         $this->hierarchy = $hierarchy;
         $this->cacheWarmer = $cacheWarmer;
+        $this->theme = $theme;
+        $this->projectDir = $projectDir;
 
         parent::__construct();
     }
@@ -52,7 +65,7 @@ class DebugContaoTwigCommand extends Command
     {
         $this
             ->setDescription('Displays the Contao template hierarchy.')
-            ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or alias.')
+            ->addOption('theme', 't', InputOption::VALUE_OPTIONAL, 'Include theme templates with a given theme path or slug.')
             ->addArgument('filter', InputArgument::OPTIONAL, 'Filter the output by an identifier or prefix.')
         ;
     }
@@ -63,7 +76,7 @@ class DebugContaoTwigCommand extends Command
         $this->cacheWarmer->refresh();
 
         $rows = [];
-        $chains = $this->hierarchy->getInheritanceChains($this->getThemeAlias($input));
+        $chains = $this->hierarchy->getInheritanceChains($this->getThemeSlug($input));
 
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
@@ -95,12 +108,16 @@ class DebugContaoTwigCommand extends Command
         return 0;
     }
 
-    private function getThemeAlias(InputInterface $input): ?string
+    private function getThemeSlug(InputInterface $input): ?string
     {
-        if (null === ($theme = $input->getOption('theme'))) {
+        if (null === ($pathOrSlug = $input->getOption('theme'))) {
             return null;
         }
 
-        return TemplateLocator::createDirectorySlug($theme);
+        if (is_dir(Path::join($this->projectDir, 'templates', $pathOrSlug))) {
+            return $this->theme->generateSlug($pathOrSlug);
+        }
+
+        return $pathOrSlug;
     }
 }

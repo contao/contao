@@ -23,7 +23,7 @@ interface TemplateHierarchyInterface
      * order they should appear in the inheritance chain for the respective
      * template identifier.
      *
-     * If a $themeAlias is given the result will additionally include templates
+     * If a $themeSlug is given the result will additionally include templates
      * of that theme if there are any.
      *
      * For example:
@@ -36,15 +36,15 @@ interface TemplateHierarchyInterface
      *
      * @return array<string,array<string, string>>
      */
-    public function getInheritanceChains(string $themeAlias = null): array;
+    public function getInheritanceChains(string $themeSlug = null): array;
 
     /**
      * Finds the next template in the hierarchy and returns the logical name.
      */
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeAlias = null): string;
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string;
 
     /**
      * Finds the first template in the hierarchy and returns the logical name.
      */
-    public function getFirst(string $shortNameOrIdentifier, string $themeAlias = null): string;
+    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string;
 }

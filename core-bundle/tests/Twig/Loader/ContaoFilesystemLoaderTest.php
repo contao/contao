@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\Theme;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
@@ -553,9 +554,9 @@ class ContaoFilesystemLoaderTest extends TestCase
     }
 
     /**
-     * @dataProvider provideThemeAliases
+     * @dataProvider provideThemeSlugs
      */
-    public function testGetInheritanceChains(?string $themeAlias, array $expectedChains): void
+    public function testGetInheritanceChains(?string $themeSlug, array $expectedChains): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -572,14 +573,14 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->addPath(Path::join($projectDir, 'templates/my'), 'Contao_Theme_my', true);
         $loader->addPath(Path::join($projectDir, 'src/Resources/contao/templates'), 'Contao_App', true);
 
-        $this->assertSame($expectedChains, $loader->getInheritanceChains($themeAlias));
+        $this->assertSame($expectedChains, $loader->getInheritanceChains($themeSlug));
     }
 
-    public function provideThemeAliases(): \Generator
+    public function provideThemeSlugs(): \Generator
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        yield 'no theme alias' => [
+        yield 'no theme slug' => [
             null,
             [
                 'text' => [Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig'],
@@ -587,7 +588,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             ],
         ];
 
-        yield 'non-existing alias or no theme templates' => [
+        yield 'non-existing slug or no theme templates' => [
             'foo-theme',
             [
                 'text' => [Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig'],
@@ -595,7 +596,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             ],
         ];
 
-        yield 'existing theme alias and templates' => [
+        yield 'existing theme slug and templates' => [
             'my_theme',
             [
                 'text' => [
@@ -628,6 +629,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $projectDir,
             $bundles,
             $bundlesMetadata,
+            new Theme(),
             $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
         );
     }
@@ -665,6 +667,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         return new ContaoFilesystemLoader(
             $cacheAdapter ?? new NullAdapter(),
             $templateLocator ?? $this->createMock(TemplateLocator::class),
+            new Theme(),
             '/',
         );
     }
