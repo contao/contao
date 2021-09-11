@@ -956,7 +956,7 @@ class tl_calendar_events extends Contao\Backend
 		if ($dc->activeRecord->addTime)
 		{
 			$arrSet['startTime'] = strtotime(date('Y-m-d', $arrSet['startTime']) . ' ' . date('H:i:s', $dc->activeRecord->startTime));
-			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?: $dc->activeRecord->startTime));
+			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?? $dc->activeRecord->startTime));
 		}
 
 		// Adjust end time of "all day" events
