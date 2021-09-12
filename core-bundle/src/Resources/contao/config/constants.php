@@ -8,16 +8,19 @@
  * @license LGPL-3.0-or-later
  */
 
+// Backwards compatibility
 // Core version
 define('VERSION', '4.13');
 define('BUILD', '0-dev');
 define('LONG_TERM_SUPPORT', false);
 
+// Backwards compatibility
 // Link constants
 define('LINK_BLUR', ' onclick="this.blur()"');
 define('LINK_NEW_WINDOW', ' onclick="return !window.open(this.href)"');
 define('LINK_NEW_WINDOW_BLUR', ' onclick="this.blur();return !window.open(this.href)"');
 
+// Backwards compatibility
 // Log constants
 define('TL_ERROR', 'ERROR');
 define('TL_ACCESS', 'ACCESS');

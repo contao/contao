@@ -105,6 +105,27 @@ class Config
 		'jpgQuality'      => 'contao.image.imagine_options[jpeg_quality]',
 	);
 
+	private static $arrToBeRemoved = array
+	(
+		'os'                    => true,
+		'browser'               => true,
+		'dbCharset'             => true,
+		'dbCollation'           => true,
+		'disableRefererCheck'   => true,
+		'requestTokenWhitelist' => true,
+		'encryptionMode'        => true,
+		'encryptionCipher'      => true,
+		'sessionTimeout'        => true,
+		'disableInsertTags'     => true,
+		'rootFiles'             => true,
+		'exampleWebsite'        => true,
+		'coreOnlyMode'          => true,
+		'privacyAnonymizeIp'    => true,
+		'privacyAnonymizeGA'    => true,
+		'bypassCache'           => true,
+		'sslProxyDomain'        => true,
+	);
+
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
@@ -413,6 +434,11 @@ class Config
 			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
 		}
 
+		if (isset(self::$arrToBeRemoved[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+		}
+
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
 	}
 
@@ -427,6 +453,11 @@ class Config
 		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+		}
+
+		if (isset(self::$arrToBeRemoved[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
 		}
 
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;

@@ -10,10 +10,15 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\StyleSheets" class has been deprecated and will no longer work in Contao 5.0. Use external stylesheets instead.');
+
 /**
  * Provide methods to handle style sheets.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use external stylesheets instead.
  */
 class StyleSheets extends Backend
 {
