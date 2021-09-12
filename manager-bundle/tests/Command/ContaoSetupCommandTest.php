@@ -63,7 +63,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $createProcessHandler = $this->getCreateProcessHandler($processes, $commandArguments, $invocationCount);
 
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', $createProcessHandler);
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', $createProcessHandler, '');
 
         (new CommandTester($command))->execute([], $options);
 
@@ -143,6 +143,25 @@ class ContaoSetupCommandTest extends ContaoTestCase
         );
     }
 
+    public function testSetsMemoryLimitForSubProcesses(): void
+    {
+        $createProcessHandler = function (array $command): Process {
+            $this->assertContains('-dmemory_limit=<memory-limit>', $command);
+
+            return $this->getProcessMock();
+        };
+
+        $command = new ContaoSetupCommand(
+            'project/dir',
+            'project/dir/public',
+            $createProcessHandler,
+            '<memory-limit>'
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+    }
+
     /**
      * @return (\Closure(array<string>):Process)
      */
@@ -164,31 +183,36 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $processes = [];
 
         for ($i = 1; $i <= 7; ++$i) {
-            $process = $this->createMock(Process::class);
-            $process
-                ->method('isSuccessful')
-                ->willReturn($successful)
-            ;
-
-            $process
-                ->method('run')
-                ->with($this->callback(
-                    static function ($callable) use ($i) {
-                        $callable('', "[output $i]");
-
-                        return true;
-                    }
-                ))
-            ;
-
-            $process
-                ->method('getErrorOutput')
-                ->willReturn('<error>')
-            ;
-
-            $processes[] = $process;
+            $processes[] = $this->getProcessMock($successful, "[output $i]");
         }
 
         return $processes;
+    }
+
+    private function getProcessMock(bool $successful = true, string $output = ''): Process
+    {
+        $process = $this->createMock(Process::class);
+        $process
+            ->method('isSuccessful')
+            ->willReturn($successful)
+        ;
+
+        $process
+            ->method('run')
+            ->with($this->callback(
+                static function ($callable) use ($output) {
+                    $callable('', $output);
+
+                    return true;
+                }
+            ))
+        ;
+
+        $process
+            ->method('getErrorOutput')
+            ->willReturn('<error>')
+        ;
+
+        return $process;
     }
 }

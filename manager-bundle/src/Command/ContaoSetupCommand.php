@@ -37,6 +37,11 @@ class ContaoSetupCommand extends Command
     private $createProcessHandler;
 
     /**
+     * @var string
+     */
+    private $memoryLimit;
+
+    /**
      * @var string|false
      */
     private $phpPath;
@@ -49,7 +54,7 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null)
+    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null, string $memoryLimit = null)
     {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
@@ -58,6 +63,8 @@ class ContaoSetupCommand extends Command
         $this->createProcessHandler = $createProcessHandler ?? static function (array $command) {
             return new Process($command);
         };
+
+        $this->memoryLimit = $memoryLimit ?? ini_get('memory_limit');
 
         parent::__construct();
     }
@@ -77,6 +84,10 @@ class ContaoSetupCommand extends Command
         }
 
         $php = [$this->phpPath];
+
+        if (!empty($this->memoryLimit)) {
+            $php[] = "-dmemory_limit=$this->memoryLimit";
+        }
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {
             $php[] = '-ddisplay_errors=-1';
