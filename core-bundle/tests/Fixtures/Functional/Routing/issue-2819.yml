@@ -23,7 +23,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: ''
 
     - id: 2
@@ -40,7 +40,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: '1'
 
     - id: 3
@@ -57,7 +57,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: ''
 
     - id: 6
@@ -74,7 +74,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: '1'
 
     - id: 7
@@ -168,7 +168,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: ''
 
     - id: 142
@@ -185,7 +185,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: ''
 
     - id: 170
@@ -211,7 +211,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
-      layoutPropagation: 'propagate'
+      layoutPropagation: propagate
       published: '1'
 
     - id: 193
