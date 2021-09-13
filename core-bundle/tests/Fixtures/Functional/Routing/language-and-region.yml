@@ -14,6 +14,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
+      layoutPropagation: 'propagate'
       published: '1'
 
     - id: 2
@@ -40,6 +41,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
+      layoutPropagation: 'propagate'
       published: '1'
 
     - id: 4
@@ -66,6 +68,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
+      layoutPropagation: 'propagate'
       published: '1'
 
     - id: 6
@@ -92,6 +95,7 @@ tl_page:
       includeLayout: '1'
       layout: 1
       subpagesLayout: 1
+      layoutPropagation: 'propagate'
       published: '1'
 
     - id: 8

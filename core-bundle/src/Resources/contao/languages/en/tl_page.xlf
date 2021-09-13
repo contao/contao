@@ -200,6 +200,21 @@
       <trans-unit id="tl_page.subpagesLayout.1">
         <source>Set the layout for the subpages of the page. Can be overwritten on each subpage.</source>
       </trans-unit>
+      <trans-unit id="tl_page.subpagesLayout.propagate">
+        <source>Inherit page layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.subpagesLayout.disable">
+        <source>Do not change</source>
+      </trans-unit>
+      <trans-unit id="tl_page.layoutPropagation.0">
+        <source>Layout propagation</source>
+      </trans-unit>
+      <trans-unit id="tl_page.layoutPropagation.propagate">
+        <source>Propagate page layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.layoutPropagation.disable">
+        <source>Disable propagation</source>
+      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
       </trans-unit>

@@ -197,16 +197,16 @@ class PageModelTest extends ContaoTestCase
         $this->mockDatabase($database);
         $page->loadDetails();
 
-        $this->assertSame($page->layout, $expectedLayout);
+        $this->assertSame($expectedLayout, $page->layout);
     }
 
     public function layoutInheritanceParentPagesProvider(): \Generator
     {
-        yield 'no parent with a layout' => [
+        yield 'no parent with an inheritable layout' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '2']],
-                [['id' => '3', 'pid' => '0']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '2', 'layoutPropagation' => 'propagate']],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '3', 'layoutPropagation' => 'disable']],
             ],
             false,
         ];
@@ -214,16 +214,25 @@ class PageModelTest extends ContaoTestCase
         yield 'inherit layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2', 'layoutPropagation' => 'propagate']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '1',
+        ];
+
+        yield 'inherit subpages layout from parent page' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2', 'layoutPropagation' => '']],
                 [['id' => '3', 'pid' => '0']],
             ],
             '2',
         ];
 
-        yield 'no layout for subpages defined' => [
+        yield 'disabled layout propagation' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '0']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '2', 'layoutPropagation' => 'disable']],
                 [['id' => '3', 'pid' => '0']],
             ],
             false,
@@ -231,11 +240,11 @@ class PageModelTest extends ContaoTestCase
 
         yield 'multiple parents with layouts' => [
             [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '0']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '3']],
-                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '4']],
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '1', 'layoutPropagation' => 'disable']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '', 'layoutPropagation' => 'propagate']],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '', 'layoutPropagation' => 'propagate']],
             ],
-            '3',
+            '2',
         ];
     }
 
