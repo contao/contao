@@ -39,6 +39,12 @@ class NewsletterModuleMigration extends AbstractMigration
             return false;
         }
 
+        $columns = $schemaManager->listTableColumns('tl_module');
+
+        if (!isset($columns['type']) {
+            return false;
+        }
+
         return $this->connection->fetchOne("SELECT COUNT(*) FROM tl_module WHERE type='nl_list' OR type='nl_reader'") > 0;
     }
 
