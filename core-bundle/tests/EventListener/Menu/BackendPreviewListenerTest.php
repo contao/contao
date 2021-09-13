@@ -76,7 +76,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $eventDispatcher,
+            $eventDispatcher
         );
 
         $listener($event);
@@ -157,7 +157,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $this->createMock(EventDispatcher::class),
+            $this->createMock(EventDispatcher::class)
         );
 
         $listener($event);
@@ -198,7 +198,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class),
+            $this->createMock(EventDispatcher::class)
         );
 
         $listener($event);
@@ -232,7 +232,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class),
+            $this->createMock(EventDispatcher::class)
         );
 
         $listener($event);
