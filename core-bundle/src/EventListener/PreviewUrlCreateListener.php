@@ -46,7 +46,7 @@ class PreviewUrlCreateListener
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
-        if (!$this->framework->isInitialized() || !$event->getId() || !\in_array($event->getKey(), ['page', 'article'], true)) {
+        if (!$this->framework->isInitialized() || !($id = $event->getId()) || !\in_array($event->getKey(), ['page', 'article'], true)) {
             return;
         }
 
@@ -56,13 +56,11 @@ class PreviewUrlCreateListener
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
-        $id = $event->getId();
-
         if ('article' === $event->getKey()) {
             /** @var ArticleModel $adapter */
             $adapter = $this->framework->getAdapter(ArticleModel::class);
 
-            if (!$article = $adapter->findByPk($event->getId())) {
+            if (!$article = $adapter->findByPk($id)) {
                 return;
             }
 
