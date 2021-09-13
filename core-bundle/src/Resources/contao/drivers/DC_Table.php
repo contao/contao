@@ -3173,7 +3173,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$blnHasChanged = $objUpdateStmt->affectedRows > 0;
 
 			// Check if the value has changed in any foreignOptions field
-			if (! $blnHasChanged && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['foreignOptions']) && Input::post($this->strField . '_foreignOptionsChanged'))
+			if (!$blnHasChanged && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['foreignOptions']) && Input::post($this->strField . '_foreignOptionsChanged'))
 			{
 				$blnHasChanged = true;
 			}
