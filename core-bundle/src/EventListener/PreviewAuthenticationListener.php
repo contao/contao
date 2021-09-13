@@ -64,11 +64,19 @@ class PreviewAuthenticationListener
             return;
         }
 
+        $context = $this->router->getContext();
+
+        // Generate the back end URL without the preview fragment (see #3099)
+        $baseUrl = $context->getBaseUrl();
+        $context->setBaseUrl('');
+
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $context->setBaseUrl($baseUrl);
 
         $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }
