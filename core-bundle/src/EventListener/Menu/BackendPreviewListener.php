@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -53,19 +52,13 @@ class BackendPreviewListener
      */
     private $eventDispatcher;
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework)
+    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher)
     {
         $this->security = $security;
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
-        $this->framework = $framework;
     }
 
     public function __invoke(MenuEvent $event): void

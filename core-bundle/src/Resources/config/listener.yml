@@ -58,7 +58,6 @@ services:
             - '@request_stack'
             - '@translator'
             - '@event_dispatcher'
-            - '@contao.framework'
         tags:
             - kernel.event_listener
 

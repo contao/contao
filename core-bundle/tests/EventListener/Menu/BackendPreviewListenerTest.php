@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\Menu;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -78,7 +77,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $requestStack,
             $this->getTranslator(),
             $eventDispatcher,
-            $this->mockContaoFramework()
         );
 
         $listener($event);
@@ -160,7 +158,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $requestStack,
             $this->getTranslator(),
             $this->createMock(EventDispatcher::class),
-            $this->mockContaoFramework()
         );
 
         $listener($event);
@@ -202,7 +199,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(EventDispatcher::class),
-            $this->createMock(ContaoFramework::class)
         );
 
         $listener($event);
@@ -237,7 +233,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(EventDispatcher::class),
-            $this->createMock(ContaoFramework::class)
         );
 
         $listener($event);

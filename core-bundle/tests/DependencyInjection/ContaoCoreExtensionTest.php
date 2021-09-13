@@ -373,7 +373,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('request_stack'),
                 new Reference('translator'),
                 new Reference('event_dispatcher'),
-                new Reference('contao.framework'),
             ],
             $definition->getArguments()
         );
