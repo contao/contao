@@ -41,7 +41,7 @@ class NewsletterModuleMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_module');
 
-        if (!isset($columns['type']) {
+        if (!isset($columns['type'])) {
             return false;
         }
 
