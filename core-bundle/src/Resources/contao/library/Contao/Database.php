@@ -577,7 +577,7 @@ class Database
 		// Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
 		if (\count($ids) === 10)
 		{
-			$ids = array_merge($ids, $this->getParentRecords(end($ids), $strTable, $skipId));
+			$ids = array_merge($ids, $this->getParentRecords(end($ids), $strTable, true));
 		}
 
 		if ($skipId)
