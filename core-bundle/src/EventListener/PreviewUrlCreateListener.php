@@ -69,6 +69,7 @@ class PreviewUrlCreateListener
             $id = $article->pid;
         }
 
+        /** @var PageModel $adapter */
         $adapter = $this->framework->getAdapter(PageModel::class);
 
         if (null !== $adapter->findByPk($id)) {

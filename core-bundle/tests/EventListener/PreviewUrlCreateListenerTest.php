@@ -39,6 +39,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
         $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener($event);
 
@@ -64,6 +65,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
         $listener = new PreviewUrlCreateListener($requestStack, $framework);
         $listener($event);
 
