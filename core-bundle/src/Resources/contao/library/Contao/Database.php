@@ -582,12 +582,10 @@ class Database
 
 		if ($skipId)
 		{
-			$ids = array_flip($ids);
-			unset($ids[$intId]);
-			$ids = array_values(array_flip($ids));
+			unset($ids[array_search($intId, $ids)]);
 		}
 
-		return $ids;
+		return array_values($ids);
 	}
 
 	/**
