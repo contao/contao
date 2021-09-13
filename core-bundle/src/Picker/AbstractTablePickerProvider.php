@@ -241,6 +241,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             return [null, null];
         }
 
+        $data = false;
+
         if ($id) {
             $qb = $this->connection->createQueryBuilder();
             $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $id));
@@ -250,8 +252,6 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             }
 
             $data = $qb->execute()->fetch();
-        } else {
-            $data = false;
         }
 
         if ($dynamicPtable) {
