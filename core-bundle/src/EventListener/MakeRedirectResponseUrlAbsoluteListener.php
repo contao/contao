@@ -41,7 +41,7 @@ class MakeRedirectResponseUrlAbsoluteListener
 
         $url = $response->getTargetUrl();
 
-        if (preg_match('@^(http|/)@i', $url)) {
+        if ('/' === $url[0] || null !== parse_url($url, PHP_URL_SCHEME)) {
             return;
         }
 
