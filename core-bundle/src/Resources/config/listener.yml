@@ -158,6 +158,10 @@ services:
         tags:
             - kernel.event_subscriber
 
+    Contao\CoreBundle\EventListener\MakeRedirectResponseUrlAbsoluteListener:
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         arguments:
