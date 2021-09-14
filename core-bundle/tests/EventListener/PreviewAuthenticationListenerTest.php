@@ -23,7 +23,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RequestContext;
 
 class PreviewAuthenticationListenerTest extends TestCase
 {
@@ -64,12 +63,6 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->method('generate')
             ->with('contao_backend_login')
             ->willReturn('/contao/login')
-        ;
-
-        $router
-            ->expects($this->once())
-            ->method('getContext')
-            ->willReturn($this->createMock(RequestContext::class))
         ;
 
         $uriSigner = $this->createMock(UriSigner::class);

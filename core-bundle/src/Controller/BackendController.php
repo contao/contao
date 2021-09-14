@@ -39,14 +39,9 @@ class BackendController extends AbstractController
     /**
      * @Route("/contao", name="contao_backend")
      */
-    public function mainAction(Request $request): Response
+    public function mainAction(): Response
     {
         $this->initializeContaoFramework();
-
-        // The back end must not be called via the preview entry point (see #3099)
-        if ($request->attributes->has('_preview') && true === $request->attributes->get('_preview')) {
-            return new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''));
-        }
 
         $controller = new BackendMain();
 
