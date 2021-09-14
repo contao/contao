@@ -255,7 +255,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         }
 
         if ($dynamicPtable) {
-            $ptable = $data['ptable'] ?: $ptable;
+            if (!empty($data['ptable'])) {
+                $ptable = $data['ptable'];
+            }
 
             if (!$ptable) {
                 $ptable = 'tl_article'; // backwards compatibility
