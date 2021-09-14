@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -9,7 +19,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 
 /**
  * This makes sure that any redirect response in the Contao frontend scope is at least path-absolute (see #3065).
- * 
+ *
  * @ServiceTag("kernel.event_listener")
  */
 class MakeRedirectResponseUrlAbsoluteListener
