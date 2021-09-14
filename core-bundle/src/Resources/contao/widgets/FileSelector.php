@@ -474,7 +474,7 @@ class FileSelector extends Widget
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && is_file(Path::join($folders[$f], '.public')))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}

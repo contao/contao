@@ -2693,7 +2693,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && is_file(Path::join($folders[$f], '.public')))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}
