@@ -823,7 +823,7 @@ class tl_files extends Contao\Backend
 		$blnUnprotected = $objFolder->isUnprotected();
 
 		// Disable the checkbox if a parent folder is public (see #712)
-		$blnDisable = $blnUnprotected && !file_exists($projectDir . '/' . $strPath . '/.public');
+		$blnDisable = $blnUnprotected && !is_file($projectDir . '/' . $strPath . '/.public');
 
 		// Protect or unprotect the folder
 		if (!$blnDisable && Contao\Input::post('FORM_SUBMIT') == 'tl_files')
