@@ -46,7 +46,7 @@ class PreviewUrlCreateListener
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
-        if (!$this->framework->isInitialized() || !($id = $event->getId()) || !\in_array($event->getKey(), ['page', 'article'], true)) {
+        if (!$this->framework->isInitialized() || (!$id = $event->getId()) || !\in_array($event->getKey(), ['page', 'article'], true)) {
             return;
         }
 
