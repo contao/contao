@@ -12,6 +12,13 @@ services:
         arguments:
             - '@database_connection'
 
+    Contao\CoreBundle\EventListener\PreviewUrlCreateListener:
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -51,7 +58,6 @@ services:
             - '@request_stack'
             - '@translator'
             - '@event_dispatcher'
-            - '@contao.framework'
         tags:
             - kernel.event_listener
 

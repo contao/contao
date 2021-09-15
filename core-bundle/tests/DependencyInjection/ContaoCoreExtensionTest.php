@@ -70,6 +70,7 @@ use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
 use Contao\CoreBundle\EventListener\PreviewAuthenticationListener;
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
 use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
+use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\EventListener\ResponseExceptionListener;
@@ -372,7 +373,6 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('request_stack'),
                 new Reference('translator'),
                 new Reference('event_dispatcher'),
-                new Reference('contao.framework'),
             ],
             $definition->getArguments()
         );
@@ -895,6 +895,23 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('contao.routing.scope_matcher'),
                 new Reference('twig'),
                 new Reference('router'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersThePreviewUrlCreateListener(): void
+    {
+        $this->assertTrue($this->container->has(PreviewUrlCreateListener::class));
+
+        $definition = $this->container->getDefinition(PreviewUrlCreateListener::class);
+
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('contao.framework'),
             ],
             $definition->getArguments()
         );
