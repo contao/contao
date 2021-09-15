@@ -42,7 +42,7 @@ class BackendPreviewRedirectListener
         if (!$request->attributes->has('_preview')
             || true !== $request->attributes->get('_preview')
             || !$this->scopeMatcher->isBackendRequest($request)
-            || ($request->attributes->has('_allow_preview') && true === $request->attributes->has('_allow_preview'))
+            || ($request->attributes->has('_allow_preview') && true === $request->attributes->get('_allow_preview'))
         ) {
             return;
         }
