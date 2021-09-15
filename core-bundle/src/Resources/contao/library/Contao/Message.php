@@ -180,8 +180,8 @@ class Message
 
 		$flashBag = $session->getFlashBag();
 
-		// Find all contao.BE. keys (see #3393)
-		$keys = preg_grep('(^contao\.BE\.)', $flashBag->keys());
+		// Find all contao. keys (see #3393)
+		$keys = preg_grep('(^contao\.)', $flashBag->keys());
 
 		foreach ($keys as $key)
 		{
