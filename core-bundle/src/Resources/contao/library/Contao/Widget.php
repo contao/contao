@@ -988,6 +988,11 @@ abstract class Widget extends Controller
 				case 'url':
 					$varInput = StringUtil::specialcharsUrl($varInput);
 
+					if ($this->decodeEntities)
+					{
+						$varInput = StringUtil::decodeEntities($varInput);
+					}
+
 					if (!Validator::isUrl($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));

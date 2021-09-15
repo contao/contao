@@ -40,7 +40,7 @@ final class PickerProvider implements ServiceTagInterface
 
     public function getAttributes(): array
     {
-        if ($this->priority) {
+        if (null !== $this->priority) {
             return ['priority' => $this->priority];
         }
 

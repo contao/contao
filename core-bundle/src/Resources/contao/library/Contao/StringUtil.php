@@ -219,12 +219,12 @@ class StringUtil
 	 * Decode all entities
 	 *
 	 * @param mixed   $strString     The string to decode
-	 * @param integer $strQuoteStyle The quote style (defaults to ENT_COMPAT)
+	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
 	 * @return string The decoded string
 	 */
-	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
+	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
 	{
 		if ((string) $strString === '')
 		{
@@ -636,7 +636,7 @@ class StringUtil
 	public static function insertTagToSrc($data)
 	{
 		$return = '';
-		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}]+)}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}|]+)[^"}]*}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		for ($i=0, $c=\count($paths); $i<$c; $i+=5)
 		{

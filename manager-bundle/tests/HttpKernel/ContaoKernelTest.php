@@ -319,7 +319,7 @@ class ContaoKernelTest extends ContaoTestCase
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
         $this->assertSame(['1.1.1.1', '2.2.2.2'], Request::getTrustedProxies());
-        $this->assertSame(Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST, Request::getTrustedHeaderSet());
+        $this->assertSame(Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO, Request::getTrustedHeaderSet());
 
         unset($_SERVER['TRUSTED_PROXIES']);
     }
@@ -328,11 +328,13 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $this->assertSame([], Request::getTrustedHosts());
 
-        $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2';
+        $_SERVER['TRUSTED_PROXIES'] = '1.1.1.1,2.2.2.2';
+        $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2,example.com';
 
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
-        $this->assertSame(['{1.1.1.1}i', '{2.2.2.2}i'], Request::getTrustedHosts());
+        $this->assertSame(['{1.1.1.1}i', '{2.2.2.2}i', '{example.com}i'], Request::getTrustedHosts());
+        $this->assertSame(Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_HOST, Request::getTrustedHeaderSet());
 
         unset($_SERVER['TRUSTED_HOSTS']);
     }

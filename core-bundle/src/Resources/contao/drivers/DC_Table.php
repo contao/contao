@@ -348,12 +348,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			$return .= $this->panel();
 			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 4 ? $this->parentView() : $this->listView();
-
-			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
-			{
-				$return .= $this->paginationMenu();
-			}
 		}
 
 		return $return;
@@ -4612,7 +4606,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>' : '') . '
 </div>';
 
-		// Close form
+		// Add another panel at the end of the page
+		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+		{
+			$return .= $this->paginationMenu();
+		}
+
+		// Close the form
 		if (Input::get('act') == 'select')
 		{
 			// Submit buttons
@@ -5084,6 +5084,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '') . '
 </div>';
+
+			// Add another panel at the end of the page
+			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+			{
+				$return .= $this->paginationMenu();
+			}
 
 			// Close the form
 			if (Input::get('act') == 'select')
