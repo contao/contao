@@ -39,9 +39,10 @@ class BackendPreviewRedirectListener
 
         $request = $event->getRequest();
 
-        if (!$request->attributes->has('_preview')
+        if (
+            !$request->attributes->has('_preview')
             || true !== $request->attributes->get('_preview')
-            || !$this->scopeMatcher->isBackendRequest($request)
+            || $this->scopeMatcher->isFrontendRequest($request)
             || ($request->attributes->has('_allow_preview') && true === $request->attributes->get('_allow_preview'))
         ) {
             return;
