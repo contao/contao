@@ -68,7 +68,6 @@ class TemplateLocator
 
         /** @var ThemeModel $themeAdapter */
         $themeAdapter = $this->framework->getAdapter(ThemeModel::class);
-
         $directories = [];
 
         // This code might run early during cache warmup where the 'tl_theme'

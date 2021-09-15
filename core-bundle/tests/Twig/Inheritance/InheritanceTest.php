@@ -99,9 +99,7 @@ class InheritanceTest extends TestCase
             ->method('findAll')
             ->willReturn(
                 new Collection(
-                    [
-                        $this->mockClassWithProperties(ThemeModel::class, ['templates' => 'templates/my/theme']),
-                    ],
+                    [$this->mockClassWithProperties(ThemeModel::class, ['templates' => 'templates/my/theme'])],
                     'tl_theme'
                 )
             )

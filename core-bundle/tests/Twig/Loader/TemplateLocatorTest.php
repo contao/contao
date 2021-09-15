@@ -56,7 +56,6 @@ class TemplateLocatorTest extends TestCase
         $this->expectDeprecation('Since contao/core-bundle 4.12: Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
 
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
-
         $locator = $this->getTemplateLocator($projectDir, ['themes/invalid.theme']);
 
         $this->assertEmpty($locator->findThemeDirectories());

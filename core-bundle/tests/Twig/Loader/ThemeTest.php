@@ -23,9 +23,7 @@ class ThemeTest extends TestCase
      */
     public function testGenerateSlug(string $path, string $expectedSlug): void
     {
-        $themeNamespace = $this->getThemeNamespace();
-
-        $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
+        $this->assertSame($expectedSlug, (new ThemeNamespace())->generateSlug($path));
     }
 
     public function providePaths(): \Generator
@@ -45,7 +43,7 @@ class ThemeTest extends TestCase
 
     public function testGenerateSlugThrowsIfPathIsAbsolute(): void
     {
-        $themeNamespace = $this->getThemeNamespace();
+        $themeNamespace = new ThemeNamespace();
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Path '/foo/bar' must be relative.");
@@ -55,7 +53,7 @@ class ThemeTest extends TestCase
 
     public function testGenerateSlugThrowsIfPathContainsInvalidCharacters(): void
     {
-        $themeNamespace = $this->getThemeNamespace();
+        $themeNamespace = new ThemeNamespace();
 
         $this->expectException(InvalidThemePathException::class);
 
@@ -70,9 +68,7 @@ class ThemeTest extends TestCase
 
     public function testGetFromSlug(): void
     {
-        $themeNamespace = $this->getThemeNamespace();
-
-        $this->assertSame('@Contao_Theme_foo_bar', $themeNamespace->getFromSlug('foo_bar'));
+        $this->assertSame('@Contao_Theme_foo_bar', (new ThemeNamespace())->getFromSlug('foo_bar'));
     }
 
     /**
@@ -80,9 +76,7 @@ class ThemeTest extends TestCase
      */
     public function testMatchThemeNamespace(string $name, ?string $expectedSlug): void
     {
-        $themeNamespace = $this->getThemeNamespace();
-
-        $this->assertSame($expectedSlug, $themeNamespace->match($name));
+        $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));
     }
 
     public function provideNamespaces(): \Generator
@@ -106,10 +100,5 @@ class ThemeTest extends TestCase
             '',
             null,
         ];
-    }
-
-    private function getThemeNamespace(): ThemeNamespace
-    {
-        return new ThemeNamespace();
     }
 }

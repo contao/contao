@@ -36,7 +36,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $path2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/2');
 
         $loader->addPath($path1);
-        $loader->addPath($path2, 'Contao');
+        $loader->addPath($path2);
         $loader->addPath($path1, 'Contao_foo-Bar_Baz2');
 
         $this->assertTrue($loader->exists('@Contao/1.html.twig'));
@@ -53,7 +53,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $path2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/2');
 
         $loader->prependPath($path1);
-        $loader->prependPath($path2, 'Contao');
+        $loader->prependPath($path2);
         $loader->prependPath($path1, 'Contao_Foo');
 
         $this->assertTrue($loader->exists('@Contao/1.html.twig'));

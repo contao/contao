@@ -47,8 +47,8 @@ class ThemeTemplatesListener
 
     public function __invoke(string $value): string
     {
+        // Make sure the selected theme path can be converted into a slug
         try {
-            // Make sure the selected theme path can be converted into a slug
             $this->themeNamespace->generateSlug($value);
         } catch (InvalidThemePathException $e) {
             throw new \RuntimeException($this->translator->trans('ERR.invalidThemeTemplatePath', [$e->getPath(), implode('', $e->getInvalidCharacters())], 'contao_default'), 0, $e);
