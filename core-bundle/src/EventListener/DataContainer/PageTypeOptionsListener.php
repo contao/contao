@@ -22,6 +22,8 @@ use Symfony\Component\Security\Core\Security;
 
 /**
  * @Callback(table="tl_page", target="fields.type.options")
+ * @Callback(table="tl_user", target="fields.alpty.options")
+ * @Callback(table="tl_user_group", target="fields.alpty.options")
  */
 class PageTypeOptionsListener
 {
@@ -50,6 +52,10 @@ class PageTypeOptionsListener
     public function __invoke(DataContainer $dc): array
     {
         $options = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
+
+        if ('tl_user' === $dc->table || 'tl_user_group' === $dc->table) {
+            return array_values($options);
+        }
 
         if (null !== $this->eventDispatcher) {
             $options = $this->eventDispatcher
