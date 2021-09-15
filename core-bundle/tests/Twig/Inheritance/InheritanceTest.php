@@ -18,6 +18,9 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\Model\Collection;
+use Contao\ThemeModel;
 use OutOfBoundsException;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
@@ -91,8 +94,22 @@ class InheritanceTest extends TestCase
             array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
         );
 
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
+        $themeAdapter = $this->mockAdapter(['findAll']);
+        $themeAdapter
+            ->method('findAll')
+            ->willReturn(
+                new Collection(
+                    [$this->mockClassWithProperties(ThemeModel::class, ['templates' => 'templates/my/theme'])],
+                    'tl_theme'
+                )
+            )
+        ;
+
+        $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
+        $themeNamespace = new ThemeNamespace();
+
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $framework);
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
         $warmer->warmUp('');

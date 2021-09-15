@@ -58,6 +58,12 @@ services:
         arguments:
             - '@database_connection'
 
+    Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener:
+        arguments:
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@translator'
+
     Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener:
         arguments:
             - '@translator'

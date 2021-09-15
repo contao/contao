@@ -921,11 +921,15 @@ services:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
         public: true
 
+    Contao\CoreBundle\Twig\Loader\ThemeNamespace: ~
+
     Contao\CoreBundle\Twig\Loader\TemplateLocator:
         arguments:
             - '%kernel.project_dir%'
             - '%kernel.bundles%'
             - '%kernel.bundles_metadata%'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@contao.framework'
 
     Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
         arguments:
@@ -938,6 +942,7 @@ services:
         arguments:
             - '@cache.system'
             - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
