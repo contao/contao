@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * requested front end page while ensuring that the /preview.php entry point is
  * used. When requested, the front end user gets authenticated.
  *
- * @Route(defaults={"_scope" = "backend"})
+ * @Route(defaults={"_scope" = "backend", "_allow_preview" = true})
  */
 class BackendPreviewController
 {
