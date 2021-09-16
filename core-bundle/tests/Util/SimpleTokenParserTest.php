@@ -508,6 +508,7 @@ class SimpleTokenParserTest extends TestCase
     public function testHandlesLineBreaksWhenParsingSimpleTokens(string $string, array $tokens, string $expected): void
     {
         $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
+        $this->assertSame($expected, $this->getParser()->parse($string, $tokens, false));
     }
 
     public function parseSimpleTokensCorrectNewlines(): \Generator
