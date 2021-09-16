@@ -83,11 +83,10 @@ class ContaoSetupCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        $php = [$this->phpPath];
-
-        if (!empty($this->memoryLimit)) {
-            $php[] = "-dmemory_limit=$this->memoryLimit";
-        }
+        $php = [
+            $this->phpPath,
+            "-dmemory_limit=$this->memoryLimit",
+        ];
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {
             $php[] = '-ddisplay_errors=-1';
