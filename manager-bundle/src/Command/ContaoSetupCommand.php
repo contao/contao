@@ -54,7 +54,7 @@ class ContaoSetupCommand extends Command
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
      */
-    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null, string $memoryLimit = null)
+    public function __construct(string $projectDir, string $webDir, \Closure $createProcessHandler = null)
     {
         $this->webDir = Path::makeRelative($webDir, $projectDir);
         $this->phpPath = (new PhpExecutableFinder())->find();
@@ -64,7 +64,7 @@ class ContaoSetupCommand extends Command
             return new Process($command);
         };
 
-        $this->memoryLimit = $memoryLimit ?? ini_get('memory_limit');
+        $this->memoryLimit = ini_get('memory_limit');
 
         parent::__construct();
     }

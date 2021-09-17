@@ -46,9 +46,10 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $phpPath = (new PhpExecutableFinder())->find();
 
-        array_unshift($phpFlags, '-dmemory_limit=1G');
-
         $this->assertStringContainsString('php', $phpPath);
+
+        ini_set('memory_limit', '1G');
+        array_unshift($phpFlags, '-dmemory_limit=1G');
 
         $commandFilePath = (new \ReflectionClass(ContaoSetupCommand::class))->getFileName();
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
@@ -65,7 +66,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $createProcessHandler = $this->getCreateProcessHandler($processes, $commandArguments, $invocationCount);
 
-        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', $createProcessHandler, '1G');
+        $command = new ContaoSetupCommand('project/dir', 'project/dir/public', $createProcessHandler);
 
         (new CommandTester($command))->execute([], $options);
 
