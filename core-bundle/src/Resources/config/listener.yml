@@ -58,6 +58,12 @@ services:
         arguments:
             - '@database_connection'
 
+    Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener:
+        arguments:
+            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@translator'
+
     Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener:
         arguments:
             - '@translator'
@@ -76,6 +82,13 @@ services:
         arguments:
             - '@translator'
 
+    Contao\CoreBundle\EventListener\PreviewUrlCreateListener:
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -84,6 +97,12 @@ services:
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
+
+    Contao\CoreBundle\EventListener\BackendPreviewRedirectListener:
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_listener
 
     contao.listener.menu.backend_menu:
         class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
@@ -115,7 +134,6 @@ services:
             - '@request_stack'
             - '@translator'
             - '@event_dispatcher'
-            - '@contao.framework'
         tags:
             - kernel.event_listener
 

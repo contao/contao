@@ -262,7 +262,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $config = $this->mockPickerConfig('tl_article');
 
         $provider = $this->createTableProvider(
-            null,
+            $this->mockFrameworkWithDcaLoader('tl_article'),
             $this->mockRouterWithExpectedParams($params),
             $this->mockUnusedConnection()
         );
@@ -426,13 +426,12 @@ class TablePickerProviderTest extends ContaoTestCase
             'do' => 'article',
             'popup' => '1',
             'picker' => 'foobar',
-            'table' => 'tl_content',
         ];
 
         $config = $this->mockPickerConfig('tl_content');
 
         $provider = $this->createTableProvider(
-            null,
+            $this->mockFrameworkWithDcaLoader('tl_content'),
             $this->mockRouterWithExpectedParams($params),
             $this->mockUnusedConnection()
         );

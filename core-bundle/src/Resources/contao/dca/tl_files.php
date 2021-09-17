@@ -929,10 +929,10 @@ class tl_files extends Backend
 				throw new RuntimeException('Invalid file or folder name ' . Input::post('name'));
 			}
 
-			$count = 0;
 			$strName = basename($strPath);
+			$strNewPath = str_replace($strName, Input::post('name'), $strPath, $count);
 
-			if ($count > 0 && ($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && is_dir($projectDir . '/' . $strNewPath))
+			if ($count > 0 && is_dir($projectDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}

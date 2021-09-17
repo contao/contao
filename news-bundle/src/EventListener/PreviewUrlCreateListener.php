@@ -54,7 +54,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (null === ($newsModel = $this->getNewsModel($this->getId($event, $request)))) {
+        if ((!$id = $this->getId($event, $request)) || (!$newsModel = $this->getNewsModel($id))) {
             return;
         }
 

@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Menu;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -34,16 +32,14 @@ class BackendPreviewListener
     private RequestStack $requestStack;
     private TranslatorInterface $translator;
     private EventDispatcherInterface $eventDispatcher;
-    private ContaoFramework $framework;
 
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework)
+    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher)
     {
         $this->security = $security;
         $this->router = $router;
         $this->requestStack = $requestStack;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
-        $this->framework = $framework;
     }
 
     public function __invoke(MenuEvent $event): void
@@ -95,26 +91,8 @@ class BackendPreviewListener
         }
 
         $id = $this->getIdFromRequest($request);
+        $do = $request->query->get('do', '');
         $url = $this->router->generate('contao_backend_preview');
-
-        if (!$id || !$do = $request->query->get('do')) {
-            return $url;
-        }
-
-        if ('page' === $do) {
-            return $url.'?page='.$id;
-        }
-
-        if ('article' === $do) {
-            /** @var ArticleModel $adapter */
-            $adapter = $this->framework->getAdapter(ArticleModel::class);
-
-            if (!$article = $adapter->findByPk($id)) {
-                return $url;
-            }
-
-            return $url.'?page='.$article->pid;
-        }
 
         $event = new PreviewUrlCreateEvent($do, $id);
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);

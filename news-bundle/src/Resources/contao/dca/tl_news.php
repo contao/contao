@@ -751,7 +751,16 @@ class tl_news extends Backend
 		// Set the global page object so we can replace the insert tags
 		$objPage = $page;
 
-		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+		return implode(
+			'%s',
+			array_map(
+				static function ($strVal)
+				{
+					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+				},
+				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
+			)
+		);
 	}
 
 	/**
