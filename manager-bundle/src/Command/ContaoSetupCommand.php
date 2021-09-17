@@ -78,7 +78,7 @@ class ContaoSetupCommand extends Command
 
         $php = [
             $this->phpPath,
-            '-dmemory_limit='.ini_get('memory_limit')
+            '-dmemory_limit='.ini_get('memory_limit'),
         ];
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {
