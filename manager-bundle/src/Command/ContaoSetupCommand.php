@@ -37,11 +37,6 @@ class ContaoSetupCommand extends Command
     private $createProcessHandler;
 
     /**
-     * @var string
-     */
-    private $memoryLimit;
-
-    /**
      * @var string|false
      */
     private $phpPath;
@@ -64,8 +59,6 @@ class ContaoSetupCommand extends Command
             return new Process($command);
         };
 
-        $this->memoryLimit = ini_get('memory_limit');
-
         parent::__construct();
     }
 
@@ -85,7 +78,7 @@ class ContaoSetupCommand extends Command
 
         $php = [
             $this->phpPath,
-            "-dmemory_limit=$this->memoryLimit",
+            '-dmemory_limit='.ini_get('memory_limit')
         ];
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {
