@@ -10,8 +10,10 @@ Encore
     .enableVersioning(false)
     .disableSingleRuntimeChunk()
     .enablePostCssLoader()
+    .enableTypeScriptLoader()
+    .enableForkedTypeScriptTypesChecking()
 
-    .addEntry('app', './js/app.js')
+    .addEntry('app', './js/app.ts')
 
     // Disable versioning for git-tracked files
     .configureImageRule({

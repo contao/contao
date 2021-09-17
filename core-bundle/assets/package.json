@@ -12,15 +12,19 @@
     "@tailwindcss/jit": "^0.1.18",
     "alpinejs": "^2.8.0",
     "autoprefixer": "^10.2.3",
-    "postcss": "^8.2.4",
-    "tailwindcss": "^2.0.0"
+    "postcss": "^8.2.6",
+    "tailwindcss": "^2.0.3",
+    "typescript": "^4.2.4"
   },
   "peerDependencies": {
     "autoprefixer": "^10.0.0",
     "tailwindcss": "^2.0.0"
   },
   "devDependencies": {
-    "@symfony/webpack-encore": "^0.33.0",
-    "postcss-loader": "^4.0.0"
+    "@symfony/webpack-encore": "^1.1.2",
+    "file-loader": "^6.0.0",
+    "fork-ts-checker-webpack-plugin": "^6.0.0",
+    "postcss-loader": "^4.0.0",
+    "ts-loader": "^8.0.1"
   }
 }
