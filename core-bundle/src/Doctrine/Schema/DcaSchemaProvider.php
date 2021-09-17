@@ -21,20 +21,9 @@ use Doctrine\DBAL\Schema\Table;
 
 class DcaSchemaProvider
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Registry
-     */
-    private $doctrine;
-
-    /**
-     * @var SchemaProvider
-     */
-    private $schemaProvider;
+    private ContaoFramework $framework;
+    private Registry $doctrine;
+    private SchemaProvider $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead

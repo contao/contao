@@ -76,7 +76,7 @@ final class ContaoEscaper
         }
 
         return preg_replace_callback(
-            '#[^a-zA-Z0-9,\.\-_]#Su',
+            '#[^a-zA-Z0-9,.\-_]#Su',
             static function ($matches) {
                 /**
                  * This function is adapted from code coming from Zend Framework.

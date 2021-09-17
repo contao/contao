@@ -26,15 +26,8 @@ class ValidCharacters
         '0-9a-zA-Z' => 'ascii',
     ];
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private EventDispatcherInterface $eventDispatcher;
+    private TranslatorInterface $translator;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.slug.valid_characters" service instead

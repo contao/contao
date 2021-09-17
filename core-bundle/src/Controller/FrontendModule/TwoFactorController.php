@@ -35,10 +35,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TwoFactorController extends AbstractFrontendModuleController
 {
-    /**
-     * @var PageModel
-     */
-    protected $pageModel;
+    protected ?PageModel $pageModel = null;
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
     {

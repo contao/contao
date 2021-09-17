@@ -260,6 +260,9 @@
       <trans-unit id="ERR.applicationCache">
         <source>Please run the "cache:clear" command or use the Contao Manager to rebuild your application cache.</source>
       </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path "%s" must not contain the following characters: %s</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

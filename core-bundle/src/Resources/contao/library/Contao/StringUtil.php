@@ -219,12 +219,12 @@ class StringUtil
 	 * Decode all entities
 	 *
 	 * @param mixed   $strString     The string to decode
-	 * @param integer $strQuoteStyle The quote style (defaults to ENT_COMPAT)
+	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
 	 * @return string The decoded string
 	 */
-	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
+	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
 	{
 		if ((string) $strString === '')
 		{
@@ -547,8 +547,9 @@ class StringUtil
 	/**
 	 * Parse simple tokens
 	 *
-	 * @param string $strString The string to be parsed
-	 * @param array  $arrData   The replacement data
+	 * @param string $strString    The string to be parsed
+	 * @param array  $arrData      The replacement data
+	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
 	 *
 	 * @return string The converted string
 	 *
@@ -558,11 +559,11 @@ class StringUtil
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
 	 *             Use the SimpleTokenParser::class service instead.
 	 */
-	public static function parseSimpleTokens($strString, $arrData)
+	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData, $blnAllowHtml);
 	}
 
 	/**
@@ -635,7 +636,7 @@ class StringUtil
 	public static function insertTagToSrc($data)
 	{
 		$return = '';
-		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}]+)}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}|]+)[^"}]*}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		for ($i=0, $c=\count($paths); $i<$c; $i+=5)
 		{

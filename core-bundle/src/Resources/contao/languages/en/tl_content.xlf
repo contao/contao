@@ -641,6 +641,9 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
       </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+      </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>
       </trans-unit>

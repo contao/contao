@@ -272,7 +272,7 @@ class TemplateTest extends TestCase
         $this->assertSame($sourceWithComments, $template->setDebug(true)->parse());
 
         $this->assertSame('test', $template->setDebug(false)->parse());
-        $this->assertSame('test', $template->setDebug(null)->parse());
+        $this->assertSame('test', $template->setDebug()->parse());
 
         System::getContainer()->setParameter('kernel.debug', true);
         $GLOBALS['TL_CONFIG']['debugMode'] = true;
@@ -284,7 +284,7 @@ class TemplateTest extends TestCase
 
         $this->expectDeprecation('%sTL_CONFIG.debugMode%s');
 
-        $this->assertSame('test', $template->setDebug(null)->parse());
+        $this->assertSame('test', $template->setDebug()->parse());
     }
 
     public function testFigureFunction(): void
@@ -335,10 +335,7 @@ class TemplateTest extends TestCase
         $GLOBALS['TL_KEYWORDS'] = '';
 
         $template = new class($buffer) extends FrontendTemplate {
-            /**
-             * @var string
-             */
-            private $testBuffer;
+            private ?string $testBuffer;
 
             public function __construct(string $testBuffer)
             {

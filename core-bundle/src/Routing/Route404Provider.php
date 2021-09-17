@@ -26,10 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Route404Provider extends AbstractPageRouteProvider
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
+    private PageRegistry $pageRegistry;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead
@@ -156,6 +153,7 @@ class Route404Provider extends AbstractPageRouteProvider
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $page->rootLanguage,
+            '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
         ];
 
@@ -244,6 +242,11 @@ class Route404Provider extends AbstractPageRouteProvider
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
+        // Convert languages array so key is language and value is priority
+        if (null !== $languages) {
+            $languages = $this->convertLanguagesForSorting($languages);
+        }
+
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
@@ -266,11 +269,6 @@ class Route404Provider extends AbstractPageRouteProvider
 
                 if ($localeB && !$localeA) {
                     return 1;
-                }
-
-                // Convert languages array so key is language and value is priority
-                if (null !== $languages) {
-                    $languages = $this->convertLanguagesForSorting($languages);
                 }
 
                 return $this->compareRoutes($a, $b, $languages);

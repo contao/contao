@@ -21,20 +21,9 @@ use Webmozart\PathUtil\Path;
  */
 class ManagerConfig
 {
-    /**
-     * @var string
-     */
-    private $configFile;
-
-    /**
-     * @var Filesystem|null
-     */
-    private $filesystem;
-
-    /**
-     * @var array
-     */
-    private $config;
+    private string $configFile;
+    private Filesystem $filesystem;
+    private ?array $config = null;
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {

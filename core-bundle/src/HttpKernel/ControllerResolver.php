@@ -18,15 +18,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 class ControllerResolver implements ControllerResolverInterface
 {
-    /**
-     * @var ControllerResolverInterface
-     */
-    private $resolver;
-
-    /**
-     * @var FragmentRegistry
-     */
-    private $registry;
+    private ControllerResolverInterface $resolver;
+    private FragmentRegistry $registry;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.controller_resolver" service instead

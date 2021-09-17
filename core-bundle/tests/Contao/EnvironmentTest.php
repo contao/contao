@@ -21,10 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class EnvironmentTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     protected function setUp(): void
     {

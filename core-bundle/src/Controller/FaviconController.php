@@ -29,20 +29,9 @@ use Webmozart\PathUtil\Path;
  */
 class FaviconController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $contaoFramework;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var ResponseTagger|null
-     */
-    private $responseTagger;
+    private ContaoFramework $contaoFramework;
+    private string $projectDir;
+    private ?ResponseTagger $responseTagger;
 
     public function __construct(ContaoFramework $contaoFramework, string $projectDir, ResponseTagger $responseTagger = null)
     {

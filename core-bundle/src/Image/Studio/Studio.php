@@ -25,25 +25,14 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class Studio implements ServiceSubscriberInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $locator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
+    private ContainerInterface $locator;
+    private string $projectDir;
+    private string $uploadPath;
 
     /**
      * @var array<string>
      */
-    private $validExtensions;
+    private array $validExtensions;
 
     public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
     {

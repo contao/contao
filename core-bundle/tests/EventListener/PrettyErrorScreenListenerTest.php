@@ -151,7 +151,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testRendersServiceUnavailableHttpExceptions(): void
     {
-        $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
+        $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $listener = $this->getListener();
@@ -163,7 +163,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNotRenderExceptionsIfDisabled(): void
     {
-        $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
+        $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException());
         $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
 
         $twig = $this->createMock(Environment::class);
@@ -194,7 +194,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $exception = new ServiceUnavailableHttpException(null, null, new ServiceUnavailableException());
+        $exception = new ServiceUnavailableHttpException(null, '', new ServiceUnavailableException());
         $event = $this->getResponseEvent($exception, null, true);
 
         $listener = new PrettyErrorScreenListener(true, $twig, $framework, $security);
@@ -345,7 +345,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             $request = $this->getRequest();
         }
 
-        $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MASTER_REQUEST;
+        $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;
 
         return new ExceptionEvent($kernel, $request, $type, $exception);
     }

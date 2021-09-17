@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\User;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class UserSessionListenerTest extends TestCase
 {
@@ -254,7 +254,7 @@ class UserSessionListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(new User('foo', 'bar'))
+            ->willReturn(new InMemoryUser('foo', 'bar'))
         ;
 
         $listener = $this->getListener($this->createMock(Connection::class), $security);
@@ -272,7 +272,7 @@ class UserSessionListenerTest extends TestCase
         $security = $this->createMock(Security::class);
         $security
             ->method('getUser')
-            ->willReturn(new User('foo', 'bar'))
+            ->willReturn(new InMemoryUser('foo', 'bar'))
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -362,7 +362,7 @@ class UserSessionListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
     private function getResponseEvent(Request $request = null): ResponseEvent
@@ -373,6 +373,6 @@ class UserSessionListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
+        return new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response());
     }
 }

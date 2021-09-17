@@ -18,10 +18,7 @@ use Webmozart\PathUtil\Path;
 
 class ContaoModuleBundleTest extends TestCase
 {
-    /**
-     * @var ContaoModuleBundle
-     */
-    private $bundle;
+    private ContaoModuleBundle $bundle;
 
     protected function setUp(): void
     {

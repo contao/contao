@@ -39,6 +39,8 @@ services:
         arguments:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '%kernel.project_dir%'
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand

@@ -24,10 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
-    /**
-     * @var array
-     */
-    protected $options = [];
+    protected array $options = [];
 
     public function setFragmentOptions(array $options): void
     {

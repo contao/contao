@@ -14,10 +14,7 @@ namespace Contao\ManagerBundle\Tests\Fixtures;
 
 class IteratorAggregateStub implements \IteratorAggregate
 {
-    /**
-     * @var array
-     */
-    private $data;
+    private array $data;
 
     public function __construct(array $data)
     {

@@ -23,20 +23,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
 {
-    /**
-     * @var ResponseContextAccessor
-     */
-    private $responseContextAccessor;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
+    private ResponseContextAccessor $responseContextAccessor;
+    private EventDispatcherInterface $eventDispatcher;
+    private TokenChecker $tokenChecker;
 
     public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker)
     {

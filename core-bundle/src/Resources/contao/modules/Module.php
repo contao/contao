@@ -532,11 +532,11 @@ abstract class Module extends Frontend
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 *
 	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
-	 *             use Module::getPublishedSubpagesByPid() instead.
+	 *             use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.
 	 */
 	protected static function getPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
 	{
-		@trigger_error('Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead.', E_USER_DEPRECATED);
+		@trigger_error('Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.', E_USER_DEPRECATED);
 
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');

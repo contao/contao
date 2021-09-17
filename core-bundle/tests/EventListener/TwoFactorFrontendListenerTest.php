@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -511,7 +512,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
 
         $token
             ->expects($this->atMost(2))
-            ->method('getProviderKey')
+            ->method('getFirewallName')
             ->willReturn('contao_frontend')
         ;
 
@@ -559,7 +560,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isFrontendMasterRequest')
+            ->method('isFrontendMainRequest')
             ->with($event)
             ->willReturn($hasFrontendUser)
         ;
@@ -575,7 +576,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
             $request = new Request();
         }
 
-        $event = new RequestEvent($kernel, $request, Kernel::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         if (null !== $response) {
             $event->setResponse($response);

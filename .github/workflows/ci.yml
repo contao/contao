@@ -111,7 +111,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
+              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
 
     psalm:
         name: Psalm
@@ -236,7 +236,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.3, 7.4, 8.0]
+                php: [7.4, 8.0]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2

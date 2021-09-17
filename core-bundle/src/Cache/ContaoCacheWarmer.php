@@ -31,40 +31,13 @@ use Webmozart\PathUtil\Path;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var ResourceFinderInterface
-     */
-    private $finder;
-
-    /**
-     * @var FileLocator
-     */
-    private $locator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var array
-     */
-    private $locales;
+    private Filesystem $filesystem;
+    private ResourceFinderInterface $finder;
+    private FileLocator $locator;
+    private string $projectDir;
+    private Connection $connection;
+    private ContaoFramework $framework;
+    private array $locales;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead

@@ -27,27 +27,21 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 class CronJob
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @GeneratedValue
      */
-    protected $id;
+    protected int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=false)
      */
-    protected $name;
+    protected string $name;
 
     /**
-     * @var \DateTimeInterface
-     *
      * @ORM\Column(type="datetime", nullable=false)
      */
-    protected $lastRun;
+    protected \DateTimeInterface $lastRun;
 
     public function __construct(string $name, \DateTimeInterface $lastRun = null)
     {

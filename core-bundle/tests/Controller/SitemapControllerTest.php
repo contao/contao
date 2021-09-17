@@ -434,6 +434,56 @@ class SitemapControllerTest extends TestCase
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page1/articles/1.html']), $response->getContent());
     }
 
+    public function testSkipsNoindexNofollowPages(): void
+    {
+        /** @var PageModel&MockObject $page1 */
+        $page1 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 43,
+            'pid' => 42,
+            'groups' => [],
+            'published' => '1',
+            'robots' => 'index,follow',
+        ]);
+
+        $page1
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com/en/page1.html')
+        ;
+
+        /** @var PageModel&MockObject $page2 */
+        $page2 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 44,
+            'pid' => 42,
+            'groups' => [],
+            'published' => '1',
+            'robots' => 'noindex,nofollow',
+        ]);
+
+        $page2
+            ->expects($this->never())
+            ->method('getAbsoluteUrl')
+        ;
+
+        $pages = [
+            42 => [$page1, $page2],
+            43 => null,
+            44 => null,
+            21 => null,
+        ];
+
+        $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
+        $container = $this->mockContainer($framework);
+
+        $controller = new SitemapController($this->mockPageRegistry());
+        $controller->setContainer($container);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page1.html']), $response->getContent());
+    }
+
     /**
      * @group legacy
      */
@@ -535,9 +585,7 @@ class SitemapControllerTest extends TestCase
         $pageRegistry
             ->method('supportsContentComposition')
             ->willReturnCallback(
-                static function (PageModel $pageModel) {
-                    return empty($pageModel->type) || 'regular' === $pageModel->type;
-                }
+                static fn (PageModel $pageModel) => empty($pageModel->type) || 'regular' === $pageModel->type
             )
         ;
 
@@ -577,9 +625,7 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(\count($pages)))
             ->method('findByPid')
             ->withConsecutive(...array_map(
-                static function ($parentId) {
-                    return [$parentId, ['order' => 'sorting']];
-                },
+                static fn ($parentId) => [$parentId, ['order' => 'sorting']],
                 array_keys($pages)
             ))
             ->willReturnOnConsecutiveCalls(...$pages)
@@ -590,9 +636,7 @@ class SitemapControllerTest extends TestCase
             ->expects($this->exactly(\count($articles)))
             ->method('findPublishedWithTeaserByPid')
             ->withConsecutive(...array_map(
-                static function ($pageId) {
-                    return [$pageId, ['ignoreFePreview' => true]];
-                },
+                static fn ($pageId) => [$pageId, ['ignoreFePreview' => true]],
                 array_keys($articles)
             ))
             ->willReturnOnConsecutiveCalls(...$articles)
@@ -611,12 +655,10 @@ class SitemapControllerTest extends TestCase
                 ->expects($this->exactly(\count($hooks) * 2))
                 ->method('importStatic')
                 ->withConsecutive(...array_map(
-                    static function ($objectName) {
-                        return [$objectName];
-                    },
-                    array_merge(array_keys($hooks), array_keys($hooks))
+                    static fn ($objectName) => [$objectName],
+                    [...array_keys($hooks), ...array_keys($hooks)]
                 ))
-                ->willReturnOnConsecutiveCalls(...array_merge(array_values($hooks), array_values($hooks)))
+                ->willReturnOnConsecutiveCalls(...[...array_values($hooks), ...array_values($hooks)])
             ;
         }
 

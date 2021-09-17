@@ -772,7 +772,7 @@ class tl_page extends Backend
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS'] ?? null))
 		{
 			$edit_all = array();
 			$delete_all = array();
@@ -1064,7 +1064,16 @@ class tl_page extends Backend
 		// Set the global page object so we can replace the insert tags
 		$objPage = $model;
 
-		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+		return implode(
+			'%s',
+			array_map(
+				static function ($strVal)
+				{
+					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+				},
+				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
+			)
+		);
 	}
 
 	/**
