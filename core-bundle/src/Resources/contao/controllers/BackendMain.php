@@ -11,8 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Fragment\Reference\DashboardWidgetReference;
+use Contao\CoreBundle\Fragment\Reference\FragmentReference;
 use Contao\CoreBundle\Util\PackageUtil;
-use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -146,7 +147,7 @@ class BackendMain extends Backend
 		// Welcome screen
 		elseif (!Input::get('do') && !Input::get('act'))
 		{
-			$this->Template->main .= $this->welcomeScreen();
+			$this->Template->main .= $this->dashboard();
 			$this->Template->title = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 		// Open a module
@@ -178,35 +179,22 @@ class BackendMain extends Backend
 	 */
 	protected function welcomeScreen()
 	{
-		System::loadLanguageFile('explain');
+		return $this->dashboard();
+	}
 
-		$objTemplate = new BackendTemplate('be_welcome');
-		$objTemplate->messages = Message::generateUnwrapped() . Backend::getSystemMessages();
-		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
+	private function dashboard(): string
+	{
+		$container = System::getContainer();
 
-		// Add the login message
-		if ($this->User->lastLogin > 0)
-		{
-			$formatter = new DateTimeFormatter(System::getContainer()->get('translator'));
-			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $this->User->lastLogin)), new \DateTime());
+		$widgets = array_values(array_filter(
+			$container->get('contao.fragment.registry')->keys(),
+			static fn ($key) => 0 === strpos($key, DashboardWidgetReference::TAG_NAME . '.')
+		));
 
-			$objTemplate->loginMsg = sprintf(
-				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time title="' . Date::parse(Config::get('datimFormat'), $this->User->lastLogin) . '">' . $diff . '</time>'
-			);
-		}
-
-		// Add the versions overview
-		Versions::addToTemplate($objTemplate);
-
-		$objTemplate->showDifferences = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['showDifferences']));
-		$objTemplate->recordOfTable = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
-		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
-		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
-		$objTemplate->shortcutsLink = $GLOBALS['TL_LANG']['MSC']['shortcuts'][1];
-		$objTemplate->editElement = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
-
-		return $objTemplate->parse();
+		return implode('', array_map(
+			static fn (string $widget): ?string => $container->get('contao.fragment.handler')->render(new FragmentReference($widget), 'forward'),
+			$widgets
+		));
 	}
 
 	/**
