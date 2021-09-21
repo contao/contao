@@ -127,10 +127,13 @@ class Newsletter extends Backend
 
 				// Send
 				$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
-				$this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html);
+
+				if ($this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html))
+				{
+					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+				}
 
 				// Redirect
-				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
 				$this->redirect($referer);
 			}
 
@@ -170,6 +173,7 @@ class Newsletter extends Backend
 								   ->execute(time(), $objNewsletter->id);
 
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
+					$_SESSION['SKIPPED_RECIPIENTS'] = array();
 				}
 
 				$time = time();
@@ -185,9 +189,16 @@ class Newsletter extends Backend
 					}
 
 					$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
-					$this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html);
 
-					echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					if ($this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html))
+					{
+						echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					}
+					else
+					{
+						$_SESSION['SKIPPED_RECIPIENTS'][] = $objRecipients->email;
+						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					}
 				}
 			}
 
@@ -212,9 +223,15 @@ class Newsletter extends Backend
 
 						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, TL_ERROR);
 					}
-
-					unset($_SESSION['REJECTED_RECIPIENTS']);
 				}
+
+				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS']))
+				{
+					$intTotal -= $intSkipped;
+					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
+				}
+
+				unset($_SESSION['REJECTED_RECIPIENTS'], $_SESSION['SKIPPED_RECIPIENTS']);
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
@@ -367,12 +384,14 @@ class Newsletter extends Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param Email  $objEmail
-	 * @param Result $objNewsletter
-	 * @param array  $arrRecipient
-	 * @param string $text
-	 * @param string $html
-	 * @param string $css
+	 * @param Email       $objEmail
+	 * @param Result      $objNewsletter
+	 * @param array       $arrRecipient
+	 * @param string      $text
+	 * @param string      $html
+	 * @param string|null $css
+	 *
+	 * @return bool
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
@@ -397,6 +416,20 @@ class Newsletter extends Backend
 			// Parse template
 			$objEmail->html = $objTemplate->parse();
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
+		}
+
+		// HOOK: prepare newsletter callback
+		if (isset($GLOBALS['TL_HOOKS']['prepareNewsletter']) && \is_array($GLOBALS['TL_HOOKS']['prepareNewsletter']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['prepareNewsletter'] as $callback)
+			{
+				$this->import($callback[0]);
+
+				if ($this->{$callback[0]}->{$callback[1]}($objEmail, $objNewsletter, $arrRecipient, $objTemplate ?? null) === false)
+				{
+					return false;
+				}
+			}
 		}
 
 		// Deactivate invalid addresses
@@ -424,6 +457,8 @@ class Newsletter extends Backend
 				$this->{$callback[0]}->{$callback[1]}($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 			}
 		}
+
+		return true;
 	}
 
 	/**
