@@ -61,6 +61,7 @@ class ContaoCoreExtension extends Extension
         $loader->load('services.yml');
         $loader->load('migrations.yml');
 
+        $container->setParameter('contao.allowed_protocols', $config['allowed_protocols']);
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);

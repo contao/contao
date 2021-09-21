@@ -121,6 +121,23 @@ class Configuration implements ConfigurationInterface
                         )
                     ->end()
                 ->end()
+                ->arrayNode('allowed_protocols')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data'])
+                    ->validate()
+                        ->always(
+                            static function (array $protocols): array {
+                                foreach ($protocols as $protocol) {
+                                    if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
+                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                    }
+                                }
+
+                                return $protocols;
+                            }
+                        )
+                    ->end()
+                ->end()
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
