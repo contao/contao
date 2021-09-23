@@ -917,7 +917,7 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if (!$str)
+		if ((!\is_string($str) && !is_numeric($str)) || '' === $str)
 		{
 			return '';
 		}
@@ -929,7 +929,7 @@ class StringUtil
 
 		if ($from == $to)
 		{
-			return $str;
+			return (string) $str;
 		}
 
 		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
