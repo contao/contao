@@ -201,7 +201,7 @@ class ModuleRegistration extends Module
 				$arrData['eval']['unique'] = false;
 			}
 
-			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], '', '', $this));
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], $field, 'tl_member', $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
