@@ -77,6 +77,9 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('50vw', $sizeItem->getSizes());
                         $this->assertSame('(max-width: 900px)', $sizeItem->getMedia());
 
+                        $this->assertSame(['webp', 'gif'], $pictureConfig->getFormats()['gif']);
+                        $this->assertSame(['webp', 'png', 'jpg'], $pictureConfig->getFormats()['webp']);
+
                         return true;
                     }
                 )
@@ -115,6 +118,7 @@ class PictureFactoryTest extends TestCase
             'densities' => '1x, 2x',
             'cssClass' => 'my-size',
             'lazyLoading' => true,
+            'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
         ];
 
         /** @var ImageSizeModel&MockObject $imageSizeModel */
