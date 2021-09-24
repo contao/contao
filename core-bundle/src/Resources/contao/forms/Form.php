@@ -502,7 +502,7 @@ class Form extends Hybrid
 				}
 			}
 
-			// Load DataContainer of target table before trying to determine empty value
+			// Load DataContainer of target table before trying to determine empty value (see #3499)
 			Controller::loadDataContainer($this->targetTable);
 
 			// Set the correct empty value (see #6284, #6373)
