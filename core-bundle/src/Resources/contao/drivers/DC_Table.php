@@ -5273,11 +5273,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
 			}
 
-			$options_sorter[Utf8::toAscii($option_label) . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . (($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . (($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
 		}
 
 		// Sort by option values
-		$options_sorter = natcaseksort($options_sorter);
+		uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
+
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		return '
@@ -5374,7 +5375,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		uksort($options_sorter, 'strcasecmp');
+		uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
 
 		return '
 <div class="tl_sorting tl_subpanel">
@@ -5956,13 +5957,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>'] = Utf8::toAscii($option_label);
+					$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
 				}
 
 				// Sort by option values
 				if (!$blnDate)
 				{
-					natcasesort($options_sorter);
+					uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
 
 					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(2, 4, 12)))
 					{
@@ -5970,7 +5971,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$fields .= "\n" . implode("\n", array_keys($options_sorter));
+				$fields .= "\n" . implode("\n", array_values($options_sorter));
 			}
 
 			// End select menu

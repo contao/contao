@@ -604,22 +604,16 @@ abstract class System
 	{
 		$return = array();
 		$countries = array();
-		$arrAux = array();
 
 		static::loadLanguageFile('countries');
 		include __DIR__ . '/../../config/countries.php';
 
 		foreach ($countries as $strKey=>$strName)
 		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
+			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $strName;
 		}
 
-		asort($arrAux);
-
-		foreach (array_keys($arrAux) as $strKey)
-		{
-			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $countries[$strKey];
-		}
+		uasort($return, array(Utf8::class, 'strnatcasecmp'));
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getCountries']) && \is_array($GLOBALS['TL_HOOKS']['getCountries']))
@@ -644,35 +638,29 @@ abstract class System
 	{
 		$return = array();
 		$languages = array();
-		$arrAux = array();
 		$langsNative = array();
 
 		static::loadLanguageFile('languages');
 		include __DIR__ . '/../../config/languages.php';
 
-		foreach ($languages as $strKey=>$strName)
-		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
-		}
-
-		asort($arrAux);
-
 		$arrBackendLanguages = self::getContainer()->getParameter('contao.locales');
 
-		foreach (array_keys($arrAux) as $strKey)
+		foreach ($languages as $strKey=>$strName)
 		{
 			if ($blnInstalledOnly && !\in_array($strKey, $arrBackendLanguages))
 			{
 				continue;
 			}
 
-			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $languages[$strKey];
+			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $strName;
 
 			if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey])
 			{
 				$return[$strKey] .= ' - ' . $langsNative[$strKey];
 			}
 		}
+
+		uasort($return, array(Utf8::class, 'strnatcasecmp'));
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && \is_array($GLOBALS['TL_HOOKS']['getLanguages']))
