@@ -28,6 +28,7 @@ use Contao\StringUtil;
 class PictureFactory implements PictureFactoryInterface
 {
     private const ASPECT_RATIO_THRESHOLD = 0.05;
+
     private const FORMATS_ORDER = [
         'jxl' => 1,
         'avif' => 2,
