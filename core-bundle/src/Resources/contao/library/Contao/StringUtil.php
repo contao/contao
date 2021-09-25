@@ -917,9 +917,18 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if ((!\is_string($str) && !is_numeric($str)) || '' === $str)
+		if (!static::isStringable($str))
 		{
+			@trigger_error('Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			return '';
+		}
+
+		$str = static::toString($str);
+
+		if ('' === $str)
+		{
+			return $str;
 		}
 
 		if (!$from)
@@ -929,7 +938,7 @@ class StringUtil
 
 		if ($from == $to)
 		{
-			return (string) $str;
+			return $str;
 		}
 
 		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
@@ -1213,6 +1222,32 @@ class StringUtil
 		}
 
 		return (string) substr($path, $length + 1);
+	}
+
+	/**
+	 * Check if a value can be cast to a string
+	 *
+	 * @param mixed $value The value to check
+	 *
+	 * @return bool
+	 */
+	public static function isStringable($value): bool
+	{
+		return $value === null || is_scalar($value) || (\is_object($value) && method_exists($value, '__toString'));
+	}
+
+	/**
+	 * Cast a value to its string representation
+	 * or return a default value if the value cannot be cast
+	 *
+	 * @param mixed  $value   The input value
+	 * @param string $default Default string for non-stringable value
+	 *
+	 * @return string
+	 */
+	public static function toString($value, string $default = ''): string
+	{
+		return static::isStringable($value) ? (string) $value : $default;
 	}
 }
 

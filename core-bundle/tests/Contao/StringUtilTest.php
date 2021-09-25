@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Fixtures\Dummy\Stringable;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\StringUtil;
 use Contao\System;
@@ -599,7 +600,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @dataProvider encodingProvider
+     * @dataProvider validEncodingsProvider
      */
     public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
     {
@@ -608,7 +609,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function encodingProvider(): \Generator
+    public function validEncodingsProvider(): \Generator
     {
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
@@ -684,11 +685,110 @@ class StringUtilTest extends TestCase
             '0',
         ];
 
-        yield 'Invalid non-string argument' => [
-            [],
+        yield 'Stringable argument' => [
+            new Stringable('foobar'),
             'UTF-8',
+            'foobar',
+            'UTF-8',
+        ];
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider invalidEncodingsProvider
+     *
+     * @expectedDeprecation Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.
+     */
+    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
+    {
+        $result = StringUtil::convertEncoding($value, 'UTF-8');
+
+        $this->assertSame('', $result);
+    }
+
+    public function invalidEncodingsProvider(): \Generator
+    {
+        yield 'Array' => [[]];
+        yield 'Non-stringable object' => [new \stdClass()];
+    }
+
+    /**
+     * @dataProvider stringableProvider
+     */
+    public function testDeterminesIfValueCanBeCastToString($value, bool $stringable, string $expected): void
+    {
+        $this->assertSame($stringable, StringUtil::isStringable($value));
+    }
+
+    /**
+     * @dataProvider stringableProvider
+     */
+    public function testCastsValueToString($value, bool $stringable, string $expected): void
+    {
+        $this->assertSame($expected, StringUtil::toString($value));
+    }
+
+    public function testCastsValueToStringWithDefaultForNonStringableValues(): void
+    {
+        $this->assertSame('foo', StringUtil::toString([], 'foo'));
+        $this->assertSame('bar', StringUtil::toString('bar', 'baz'));
+    }
+
+    public function stringableProvider(): \Generator
+    {
+        yield 'String' => [
+            'foo',
+            true,
+            'foo',
+        ];
+
+        yield 'Integer' => [
+            42,
+            true,
+            '42',
+        ];
+
+        yield 'Float' => [
+            13.37,
+            true,
+            '13.37',
+        ];
+
+        yield 'Boolean false' => [
+            false,
+            true,
             '',
-            'UTF-8',
+        ];
+
+        yield 'Boolean true' => [
+            true,
+            true,
+            '1',
+        ];
+
+        yield 'Stringable object' => [
+            new Stringable('foo'),
+            true,
+            'foo',
+        ];
+
+        yield 'Non-stringable object' => [
+            new \stdClass(),
+            false,
+            '',
+        ];
+
+        yield 'Array' => [
+            [],
+            false,
+            '',
+        ];
+
+        yield 'Integer zero' => [
+            0,
+            true,
+            '0',
         ];
     }
 }
