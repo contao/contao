@@ -1075,8 +1075,10 @@ abstract class System
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Message::generate() instead.
 	 */
-	protected function getMessages($strScope=TL_MODE)
+	protected function getMessages($strScope=null)
 	{
+		$strScope = $strScope ?? TL_MODE;
+
 		@trigger_error('Using System::getMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::generate() instead.', E_USER_DEPRECATED);
 
 		return Message::generate($strScope);
