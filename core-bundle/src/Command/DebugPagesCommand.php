@@ -75,7 +75,7 @@ class DebugPagesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $rows = [];
-        $types = array_keys($GLOBALS['TL_PTY']);
+        $types = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
         natsort($types);
 
         foreach ($types as $type) {
@@ -86,13 +86,13 @@ class DebugPagesCommand extends Command
 
             $rows[] = [
                 $type,
-                $config ? $config->getPath() : '*',
-                $config ? $config->getUrlSuffix() : '*',
+                $config ? $config->getPath() ?: '-' : '*',
+                $config ? $config->getUrlSuffix() ?: '-' : '*',
                 $this->pageRegistry->supportsContentComposition($page) ? 'yes' : 'no',
                 isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
-                $config ? $this->generateArray($config->getRequirements()) : '-',
-                $config ? $this->generateArray($config->getDefaults()) : '-',
-                $config ? $this->generateArray($config->getOptions()) : '-',
+                $config ? $this->generateArray($config->getRequirements()) ?: '-' : '-',
+                $config ? $this->generateArray($config->getDefaults()) ?: '-' : '-',
+                $config ? $this->generateArray($config->getOptions()) ?: '-' : '-',
             ];
         }
 
