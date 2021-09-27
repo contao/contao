@@ -197,7 +197,6 @@ class PictureFactoryTest extends TestCase
             ],
         ];
 
-        $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
