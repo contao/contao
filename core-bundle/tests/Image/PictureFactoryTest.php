@@ -251,30 +251,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $imageFactory
-            ->expects($this->once())
-            ->method('create')
-            ->with(
-                $this->callback(
-                    function (string $imagePath) use ($path): bool {
-                        $this->assertSame($path, $imagePath);
-
-                        return true;
-                    }
-                ),
-                $this->callback(
-                    function (?ResizeConfiguration $size): bool {
-                        $this->assertNull($size);
-
-                        return true;
-                    }
-                )
-            )
-            ->willReturn($imageMock)
-        ;
-
-        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $this->mockContaoFramework());
+        $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $pictureFactory->setPredefinedSizes($predefinedSizes);
 
         $picture = $pictureFactory->create($imageMock, [null, null, 'foobar']);
