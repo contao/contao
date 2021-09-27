@@ -46,6 +46,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->with(
                 $this->callback(
@@ -89,6 +90,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->once())
             ->method('create')
             ->with(
                 $this->callback(
@@ -201,6 +203,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->with(
                 $this->callback(
@@ -250,6 +253,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->once())
             ->method('create')
             ->with(
                 $this->callback(
@@ -315,6 +319,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->with(
                 $this->callback(
@@ -427,6 +432,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->exactly(2))
             ->method('generate')
             ->with(
                 $this->callback(
@@ -466,6 +472,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->exactly(2))
             ->method('create')
             ->with(
                 $this->callback(
@@ -507,6 +514,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->exactly(2))
             ->method('generate')
             ->with(
                 $this->callback(
@@ -539,6 +547,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->exactly(2))
             ->method('create')
             ->with(
                 $this->callback(
@@ -581,6 +590,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->willReturnCallback(
                 function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($imageMock, $expected) {
@@ -593,6 +603,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->once())
             ->method('create')
             ->willReturn($imageMock)
         ;
@@ -675,6 +686,7 @@ class PictureFactoryTest extends TestCase
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->willReturnCallback(
                 static function (ImageInterface $image, PictureConfiguration $config) use ($imageMock, $imgWidth, $imgHeight, $sourceWidth, $sourceHeight): Picture {
