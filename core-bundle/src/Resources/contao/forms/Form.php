@@ -402,7 +402,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = $this->replaceInsertTags($this->subject, false);
+				$email->subject = html_entity_decode($this->replaceInsertTags($this->subject, false), ENT_QUOTES, 'UTF-8');
 			}
 
 			// Send copy to sender
