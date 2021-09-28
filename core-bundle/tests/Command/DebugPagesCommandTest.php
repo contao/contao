@@ -56,10 +56,6 @@ class DebugPagesCommandTest extends ContaoTestCase
 
         System::setContainer($container);
 
-        $adapter = $this->mockAdapter([]);
-        $framework = $this->mockContaoFramework(
-            [PageModel::class => $adapter]
-        );
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
             ->expects($this->once())
@@ -76,7 +72,7 @@ class DebugPagesCommandTest extends ContaoTestCase
             )
         ;
 
-        $command = new DebugPagesCommand($framework, $pageRegistry);
+        $command = new DebugPagesCommand($this->mockContaoFramework(), $pageRegistry);
 
         $GLOBALS['TL_PTY'] = $legacyPages;
 
