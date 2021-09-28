@@ -127,7 +127,6 @@ class ModuleChangePassword extends Module
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
 		{
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']];
 
 			// Continue if the class is not defined

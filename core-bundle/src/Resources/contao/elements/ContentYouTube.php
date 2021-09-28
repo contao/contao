@@ -84,7 +84,6 @@ class ContentYouTube extends ContentElement
 				{
 					case 'youtube_fs':
 					case 'youtube_rel':
-					case 'youtube_showinfo':
 					case 'youtube_controls':
 						$params[] = substr($option, 8) . '=0';
 						break;
@@ -99,6 +98,10 @@ class ContentYouTube extends ContentElement
 
 					case 'youtube_nocookie':
 						$domain = 'https://www.youtube-nocookie.com';
+						break;
+
+					case 'youtube_showinfo':
+						// This option has been removed (see #3012)
 						break;
 
 					default:

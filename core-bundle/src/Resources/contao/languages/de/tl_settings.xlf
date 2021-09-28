@@ -97,6 +97,18 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Hier können Sie eine Liste erlaubter HTML-Tags eingeben, die nicht entfernt werden sollen.</target>
       </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.0">
+        <source>Allowed HTML attributes</source>
+        <target>Erlaubte HTML-Attribute</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.1">
+        <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>List der erlaubten HTML-Attribute, die nicht entfernt werden. Das Tag bzw. der Attributname &lt;code&gt;*&lt;/code&gt; steht für alle Tags bzw. Attribute. Für Attribute mit Bindestrichen können Platzhalter wie z. B. &lt;code&gt;data-*&lt;/code&gt; benutzt werden.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributesWarning">
+        <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>&lt;code&gt;*&lt;/code&gt;-Attribute können für XSS-Angriffe missbraucht werden. Erlauben Sie diese nur, wenn alle Backend-Benutzer vertrauenswürdig sind!</target>
+      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>Anfrage-Tokens deaktivieren</target>

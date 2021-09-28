@@ -740,7 +740,16 @@ class tl_news extends Contao\Backend
 		// Set the global page object so we can replace the insert tags
 		$objPage = $page;
 
-		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+		return implode(
+			'%s',
+			array_map(
+				static function ($strVal)
+				{
+					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+				},
+				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
+			)
+		);
 	}
 
 	/**
@@ -953,7 +962,7 @@ class tl_news extends Contao\Backend
 	{
 		if (Contao\Input::get('fid'))
 		{
-			$this->toggleFeatured(Contao\Input::get('fid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleFeatured(Contao\Input::get('fid'), (Contao\Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 
@@ -1097,7 +1106,7 @@ class tl_news extends Contao\Backend
 	{
 		if (Contao\Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

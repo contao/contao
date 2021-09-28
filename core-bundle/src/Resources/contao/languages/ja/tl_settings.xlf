@@ -97,6 +97,18 @@
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>削除しないで許可するHTMLのタグのリストを指定します。</target>
       </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.0">
+        <source>Allowed HTML attributes</source>
+        <target>許可するHTMLの属性</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.1">
+        <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>除去しないで許可するHTMLの属性の一覧です。タグや属性の&lt;code&gt;*&lt;/code&gt;という名前はすべてのタグや属性を表します。&lt;code&gt;data-*&lt;/code&gt;の様にとダッシュ記号のある属性ではワイルドカードを使用できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributesWarning">
+        <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>&lt;code&gt;*&lt;/code&gt; 属性の許可はXSSの攻撃に利用されます。すべてのバックエンドユーザーが信頼できる場合だけ許可してください!</target>
+      </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
         <target>リクエストトークンを不使用</target>

@@ -369,9 +369,10 @@ abstract class ModuleNews extends Module
 		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
 
 		return sprintf(
-			'<a href="%s" title="%s" itemprop="url">%s%s</a>',
+			'<a href="%s" title="%s"%s itemprop="url">%s%s</a>',
 			$strArticleUrl,
 			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
+			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
 			($blnIsReadMore ? $strLink : '<span itemprop="headline">' . $strLink . '</span>'),
 			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
 		);

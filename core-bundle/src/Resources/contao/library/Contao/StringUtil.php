@@ -219,12 +219,12 @@ class StringUtil
 	 * Decode all entities
 	 *
 	 * @param string  $strString     The string to decode
-	 * @param integer $strQuoteStyle The quote style (defaults to ENT_COMPAT)
+	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
 	 * @return string The decoded string
 	 */
-	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
+	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
 	{
 		if ((string) $strString === '')
 		{
@@ -547,15 +547,16 @@ class StringUtil
 	/**
 	 * Parse simple tokens
 	 *
-	 * @param string $strString The string to be parsed
-	 * @param array  $arrData   The replacement data
+	 * @param string $strString    The string to be parsed
+	 * @param array  $arrData      The replacement data
+	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
 	 *
 	 * @return string The converted string
 	 *
 	 * @throws \Exception                If $strString cannot be parsed
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
 	 */
-	public static function parseSimpleTokens($strString, $arrData)
+	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
 		$strReturn = '';
 
@@ -682,37 +683,39 @@ class StringUtil
 		$arrIfStack = array(true);
 
 		// Tokenize the string into tag and text blocks
-		$arrTags = preg_split('/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+		$arrTags = preg_split($blnAllowHtml ? '/((?:{|&#123;)(?:(?!&#12[35];)[^{}])+(?:}|&#125;))\n?/' : '/({[^{}]+})\n?/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		// Parse the tokens
 		foreach ($arrTags as $strTag)
 		{
+			$strTagDecoded = $blnAllowHtml ? html_entity_decode(self::restoreBasicEntities($strTag), ENT_QUOTES, 'UTF-8') : $strTag;
+
 			// True if it is inside a matching if-tag
 			$blnCurrent = $arrStack[\count($arrStack) - 1];
 			$blnCurrentIf = $arrIfStack[\count($arrIfStack) - 1];
 
-			if (strncmp($strTag, '{if ', 4) === 0)
+			if (strncmp($strTagDecoded, '{if ', 4) === 0)
 			{
-				$blnExpression = $evaluateExpression(substr($strTag, 4, -1));
+				$blnExpression = $evaluateExpression(substr($strTagDecoded, 4, -1));
 				$arrStack[] = $blnCurrent && $blnExpression;
 				$arrIfStack[] = $blnExpression;
 			}
-			elseif (strncmp($strTag, '{elseif ', 8) === 0)
+			elseif (strncmp($strTagDecoded, '{elseif ', 8) === 0)
 			{
-				$blnExpression = $evaluateExpression(substr($strTag, 8, -1));
+				$blnExpression = $evaluateExpression(substr($strTagDecoded, 8, -1));
 				array_pop($arrStack);
 				array_pop($arrIfStack);
 				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1] && $blnExpression;
 				$arrIfStack[] = $blnCurrentIf || $blnExpression;
 			}
-			elseif (strncmp($strTag, '{else}', 6) === 0)
+			elseif (strncmp($strTagDecoded, '{else}', 6) === 0)
 			{
 				array_pop($arrStack);
 				array_pop($arrIfStack);
 				$arrStack[] = !$blnCurrentIf && $arrStack[\count($arrStack) - 1];
 				$arrIfStack[] = true;
 			}
-			elseif (strncmp($strTag, '{endif}', 7) === 0)
+			elseif (strncmp($strTagDecoded, '{endif}', 7) === 0)
 			{
 				array_pop($arrStack);
 				array_pop($arrIfStack);
@@ -802,7 +805,7 @@ class StringUtil
 	public static function insertTagToSrc($data)
 	{
 		$return = '';
-		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}]+)}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}|]+)[^"}]*}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		for ($i=0, $c=\count($paths); $i<$c; $i+=5)
 		{
@@ -958,8 +961,94 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, Config::get('characterSet'), $blnDoubleEncode);
+		return htmlspecialchars($strString, ENT_QUOTES, Config::get('characterSet'), $blnDoubleEncode);
+	}
+
+	/**
+	 * Encodes specialchars and nested insert tags for attributes
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	{
+		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
+
+		// Improve compatibility with JSON in attributes if no insert tags are present
+		if ($strString === self::stripInsertTags($strString))
+		{
+			$strString = str_replace('}}', '&#125;&#125;', $strString);
+		}
+
+		// Encode insert tags too
+		$strString = preg_replace('/(?:\|attr)?}}/', '|attr}}', $strString);
+		$strString = str_replace('|urlattr|attr}}', '|urlattr}}', $strString);
+
+		// Encode all remaining single closing curly braces
+		$strString = preg_replace_callback(
+			'/}}?/',
+			static function ($match)
+			{
+				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
+			},
+			$strString
+		);
+
+		return $strString;
+	}
+
+	/**
+	 * Encodes disallowed protocols and specialchars for URL attributes
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	{
+		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
+
+		// Encode insert tags too
+		$strString = preg_replace('/(?:\|urlattr|\|attr)?}}/', '|urlattr}}', $strString);
+
+		// Encode all remaining single closing curly braces
+		$strString = preg_replace_callback(
+			'/}}?/',
+			static function ($match)
+			{
+				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
+			},
+			$strString
+		);
+
+		$colonRegEx = '('
+			. ':'                 // Plain text colon
+			. '|'                 // OR
+			. '&colon;'           // Named entity
+			. '|'                 // OR
+			. '&#(?:'             // Start of entity
+				. 'x0*+3a'        // Hex number 3A
+				. '(?![0-9a-f])'  // Must not be followed by another hex digit
+				. '|'             // OR
+				. '0*+58'         // Decimal number 58
+				. '(?![0-9])'     // Must not be followed by another digit
+			. ');?'               // Optional semicolon
+		. ')i';
+
+		// URL-encode colon to prevent disallowed protocols
+		if (
+			!preg_match('@^(?:https?|ftp|mailto|tel|data):@i', self::decodeEntities($strString))
+			&& preg_match($colonRegEx, self::stripInsertTags($strString))
+		) {
+			$strString = preg_replace($colonRegEx, '%3A', $strString);
+		}
+
+		return $strString;
 	}
 
 	/**

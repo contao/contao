@@ -61,7 +61,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (null === ($eventModel = $this->getEventModel($this->getId($event, $request)))) {
+        if ((!$id = $this->getId($event, $request)) || (!$eventModel = $this->getEventModel($id))) {
             return;
         }
 

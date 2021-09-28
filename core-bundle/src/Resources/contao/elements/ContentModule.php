@@ -43,6 +43,24 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
+		if (is_a($strClass, ContentProxy::class, true))
+		{
+			if (!empty($this->cssID[1]))
+			{
+				$objModel->classes = array_merge((array) $objModel->classes, array($this->cssID[1]));
+			}
+
+			/** @var ContentProxy $proxy */
+			$proxy = new $strClass($objModel, $this->strColumn);
+
+			if (!empty($this->cssID[0]))
+			{
+				$proxy->cssID = ' id="' . $this->cssID[0] . '"';
+			}
+
+			return $proxy->generate();
+		}
+
 		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)
@@ -62,6 +80,14 @@ class ContentModule extends ContentElement
 		$objModel->cssID = $cssID;
 		$objModel->typePrefix = 'ce_';
 
+		$strStopWatchId = 'contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')';
+
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
+
 		/** @var Module $objModule */
 		$objModule = new $strClass($objModel, $this->strColumn);
 
@@ -72,7 +98,14 @@ class ContentModule extends ContentElement
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
 		}
 
-		return $objModule->generate();
+		$strBuffer = $objModule->generate();
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
+		}
+
+		return $strBuffer;
 	}
 
 	/**

@@ -425,6 +425,9 @@ class ContentModel extends Model
 			$arrColumns[] = "$t.invisible='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "$t.tstamp!=0";
+
 		if (!isset($arrOptions['order']))
 		{
 			$arrOptions['order'] = "$t.sorting";
@@ -461,6 +464,9 @@ class ContentModel extends Model
 			$time = Date::floorToMinute();
 			$arrColumns[] = "$t.invisible='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
+
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "$t.tstamp!=0";
 
 		if (!isset($arrOptions['order']))
 		{

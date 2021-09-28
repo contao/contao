@@ -131,7 +131,6 @@ class ModuleRegistration extends Module
 				'required' => true
 			);
 
-			/** @var FormCaptcha $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'];
 
 			// Fallback to default if the class is not defined
@@ -186,7 +185,6 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			/** @var Widget $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']];
 
 			// Continue if the class is not defined
@@ -203,7 +201,7 @@ class ModuleRegistration extends Module
 				$arrData['eval']['unique'] = false;
 			}
 
-			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], '', '', $this));
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'], $field, 'tl_member', $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;

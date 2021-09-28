@@ -405,7 +405,7 @@ abstract class Backend extends Controller
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
-			$dataContainer = 'DC_' . $GLOBALS['TL_DCA'][$strTable]['config']['dataContainer'];
+			$dataContainer = DataContainer::getDriverForTable($strTable);
 
 			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
@@ -1149,7 +1149,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== 'false')
+		if (strpos($host, 'xn--') !== false)
 		{
 			$host = Idna::decode($host);
 		}

@@ -5,6 +5,10 @@
         <source>Debug mode</source>
         <target>Način za odpravljanje napak</target>
       </trans-unit>
+      <trans-unit id="2" resname="contao_manager_title">
+        <source>Manage updates and extensions and maintain the application</source>
+        <target>Upravljanje posodobitev in dodatkov ter vzdrževanje aplikacije</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

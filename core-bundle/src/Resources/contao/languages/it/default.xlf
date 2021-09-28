@@ -1057,10 +1057,6 @@
         <source>Open the link in a new browser window.</source>
         <target>Se scegli questa opzione, l'URL di destinazione si aprirà in una nuova finestra del browser.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1454,8 +1450,7 @@
         <target>Inserisci una password.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>Conferma la password</target>
+        <source>Confirm password</source>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -2617,6 +2612,9 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Esiste almeno un gruppo di utenti che concede l'autorizzazione per importare temi. Poiché i temi possono contenere modelli arbitrari e i modelli sono file PHP, gli utenti di questi gruppi implicitamente hanno il pieno controllo del sistema!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Abilita</target>
@@ -2670,8 +2668,7 @@
         <target>Chiudi la barra degli strumenti Contao</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Opzione sconosciuta</target>
+        <source>Unknown option: %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

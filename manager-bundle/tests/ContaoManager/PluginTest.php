@@ -451,6 +451,7 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'mysqli',
+                            'host' => 'localhost',
                         ],
                     ],
                 ],
@@ -483,7 +484,7 @@ class PluginTest extends ContaoTestCase
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'driver' => 'mysqli',
+                            'driver' => 'pdo_mysql',
                             'options' => null,
                         ],
                     ],

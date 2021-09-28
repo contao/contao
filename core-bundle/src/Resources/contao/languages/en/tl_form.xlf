@@ -173,6 +173,9 @@
       <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_form.targetTableMissingAllowlist">
+        <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

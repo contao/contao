@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\Config;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -236,15 +235,7 @@ class RouteProvider implements RouteProviderInterface
 
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
-        try {
-            $page->loadDetails();
-
-            if (!$page->rootId) {
-                return;
-            }
-        } catch (NoRootPageFoundException $e) {
-            return;
-        }
+        $page->loadDetails();
 
         $defaults = $this->getRouteDefaults($page);
         $defaults['parameters'] = '';
@@ -326,6 +317,7 @@ class RouteProvider implements RouteProviderInterface
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
             '_locale' => $page->rootLanguage,
+            '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
         ];
     }

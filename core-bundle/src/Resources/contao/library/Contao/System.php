@@ -15,7 +15,6 @@ use Contao\CoreBundle\Config\Loader\XliffFileLoader;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
-use League\Uri\Components\Query;
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
@@ -398,10 +397,19 @@ abstract class System
 
 				list($path, $query) = explode('?', $url, 2);
 
-				$queryObj = new Query($query);
-				$queryObj = $queryObj->withoutPairs($params);
+				parse_str($query, $pairs);
 
-				return $path . $queryObj->getUriComponent();
+				foreach ($params as $param)
+				{
+					unset($pairs[$param]);
+				}
+
+				if (empty($pairs))
+				{
+					return $path;
+				}
+
+				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 			};
 
 			// Determine current or last
@@ -445,6 +453,11 @@ abstract class System
 		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
+		}
+
+		if (1 !== preg_match('/^[a-z0-9_-]+$/i', $strName))
+		{
+			throw new \InvalidArgumentException(sprintf('Invalid language file name "%s"', $strName));
 		}
 
 		// Return if the language file has been loaded already
@@ -516,6 +529,12 @@ abstract class System
 			}
 		}
 
+		// Set MSC.textDirection (see #3360)
+		if ('default' === $strName)
+		{
+			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
+		}
+
 		// HOOK: allow to load custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
@@ -552,6 +571,11 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
+			if (!Validator::isLocale($strLanguage))
+			{
+				return false;
+			}
+
 			$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 			if (is_dir($projectDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
@@ -580,22 +604,16 @@ abstract class System
 	{
 		$return = array();
 		$countries = array();
-		$arrAux = array();
 
 		static::loadLanguageFile('countries');
 		include __DIR__ . '/../../config/countries.php';
 
 		foreach ($countries as $strKey=>$strName)
 		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['CNT'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['CNT'][$strKey]) : $strName;
+			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $strName;
 		}
 
-		asort($arrAux);
-
-		foreach (array_keys($arrAux) as $strKey)
-		{
-			$return[$strKey] = $GLOBALS['TL_LANG']['CNT'][$strKey] ?? $countries[$strKey];
-		}
+		uasort($return, array(Utf8::class, 'strnatcasecmp'));
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getCountries']) && \is_array($GLOBALS['TL_HOOKS']['getCountries']))
@@ -620,35 +638,29 @@ abstract class System
 	{
 		$return = array();
 		$languages = array();
-		$arrAux = array();
 		$langsNative = array();
 
 		static::loadLanguageFile('languages');
 		include __DIR__ . '/../../config/languages.php';
 
-		foreach ($languages as $strKey=>$strName)
-		{
-			$arrAux[$strKey] = isset($GLOBALS['TL_LANG']['LNG'][$strKey]) ? Utf8::toAscii($GLOBALS['TL_LANG']['LNG'][$strKey]) : $strName;
-		}
-
-		asort($arrAux);
-
 		$arrBackendLanguages = self::getContainer()->getParameter('contao.locales');
 
-		foreach (array_keys($arrAux) as $strKey)
+		foreach ($languages as $strKey=>$strName)
 		{
 			if ($blnInstalledOnly && !\in_array($strKey, $arrBackendLanguages))
 			{
 				continue;
 			}
 
-			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $languages[$strKey];
+			$return[$strKey] = $GLOBALS['TL_LANG']['LNG'][$strKey] ?? $strName;
 
 			if (isset($langsNative[$strKey]) && $langsNative[$strKey] != $return[$strKey])
 			{
 				$return[$strKey] .= ' - ' . $langsNative[$strKey];
 			}
 		}
+
+		uasort($return, array(Utf8::class, 'strnatcasecmp'));
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['getLanguages']) && \is_array($GLOBALS['TL_HOOKS']['getLanguages']))
@@ -1063,8 +1075,10 @@ abstract class System
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Message::generate() instead.
 	 */
-	protected function getMessages($strScope=TL_MODE)
+	protected function getMessages($strScope=null)
 	{
+		$strScope = $strScope ?? TL_MODE;
+
 		@trigger_error('Using System::getMessages() has been deprecated and will no longer work in Contao 5.0. Use Message::generate() instead.', E_USER_DEPRECATED);
 
 		return Message::generate($strScope);

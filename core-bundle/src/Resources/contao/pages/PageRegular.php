@@ -176,8 +176,8 @@ class PageRegular extends Frontend
 
 		$this->Template->sections = $arrCustomSections;
 
-		// Mark RTL languages (see #7171)
-		if ($GLOBALS['TL_LANG']['MSC']['textDirection'] == 'rtl')
+		// Mark RTL languages (see #7171, #3360)
+		if ((\ResourceBundle::create($locale, 'ICUDATA', true)['layout']['characters'] ?? null) == 'right-to-left')
 		{
 			$this->Template->isRTL = true;
 		}
@@ -211,7 +211,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description);
+		$this->Template->description = str_replace(array("\n", "\r", '"'), array(' ', '', ''), $objPage->description ?? '');
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
@@ -687,7 +687,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add the user <head> tags
-		if ($strHead = trim($objLayout->head))
+		if ($strHead = trim($objLayout->head ?? ''))
 		{
 			$strHeadTags .= $strHead . "\n";
 		}

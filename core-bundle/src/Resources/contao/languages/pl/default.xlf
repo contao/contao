@@ -1057,10 +1057,6 @@
         <source>Open the link in a new browser window.</source>
         <target>Jeśli zaznaczysz tę opcję, adres URL otworzy się w nowym oknie przeglądarki.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1454,7 +1450,7 @@
         <target>Wprowadź hasło.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
+        <source>Confirm password</source>
         <target>Potwierdź hasło</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
@@ -2617,6 +2613,9 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Istnieje co najmniej jedna grupa użytkowników, która udziela uprawnień do importowania motywów. Ponieważ motywy mogą zawierać dowolne templatki, a templatki są plikami PHP, użytkownicy tych grup domyślnie mają pełną kontrolę nad systemem!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Włącz</target>
@@ -2670,8 +2669,8 @@
         <target>Zamknij toolbar Contao</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>Nieznana opcja</target>
+        <source>Unknown option: %s</source>
+        <target>Nieznana opcja: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

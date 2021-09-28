@@ -93,7 +93,6 @@ class Picture
 			$file = new File(rawurldecode($file));
 		}
 
-		$imageSize = null;
 		$picture = new static($file);
 
 		if (\is_array($size) && !empty($size[2]))

@@ -243,6 +243,7 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <target>هیچ کدام از برگه‌های ریشه وب‌سایت بدون تنظیمات DNS مشخص، تنظیمات گزینه‌ی زبان پشتیبان را دارد.</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
@@ -309,6 +310,7 @@
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>لطفا همه ماژول‌ها را به یک ستون اختصاص دهید!</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1045,10 +1047,6 @@
         <source>Open the link in a new browser window.</source>
         <target>پیوند در پنجره جدید مرورگر باز می‌گردد.</target>
       </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>rtl</target>
-      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1442,8 +1440,8 @@
         <target>لطفا گذرواژه را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
-        <source>Confirmation</source>
-        <target>تایید</target>
+        <source>Confirm password</source>
+        <target>تایید گذرواژه</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -2547,6 +2545,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorTextCode">
         <source>If you cannot scan the QR code, enter this key instead:</source>
+        <target>اگر نمی‌توانید کد QR را اسکن کنید، در عوض این کلید را وارد کنید:</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
@@ -2589,6 +2588,9 @@
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>فعال</target>
@@ -2617,6 +2619,7 @@
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>در حال حاضر هیچ ابزار تاییده‌شده‌ای وجود ندارد.</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
@@ -2639,8 +2642,8 @@
         <target>یستن تولبار کنتائو</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
-        <source>Unknown option</source>
-        <target>انتخاب نامشخص</target>
+        <source>Unknown option: %s</source>
+        <target>گزینه نامعلوم: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2720,7 +2723,7 @@
       </trans-unit>
       <trans-unit id="COLS.header">
         <source>Header</source>
-        <target>سربرگ سایت</target>
+        <target>سربرگ</target>
       </trans-unit>
       <trans-unit id="COLS.left">
         <source>Left column</source>
@@ -2744,7 +2747,7 @@
       </trans-unit>
       <trans-unit id="SECTIONS.before">
         <source>After the page header</source>
-        <target>بعد از سربرگ</target>
+        <target>بعد از سربرگ صفحه</target>
       </trans-unit>
       <trans-unit id="SECTIONS.main">
         <source>Inside the main column</source>

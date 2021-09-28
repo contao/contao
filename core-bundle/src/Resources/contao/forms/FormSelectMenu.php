@@ -162,9 +162,13 @@ class FormSelectMenu extends Widget
 	 */
 	public function __get($strKey)
 	{
-		if ($strKey == 'options')
+		switch ($strKey)
 		{
-			return $this->arrOptions;
+			case 'options':
+				return $this->arrOptions;
+
+			case 'name':
+				return $this->strName . ($this->multiple ? '[]' : '');
 		}
 
 		return parent::__get($strKey);
@@ -183,7 +187,6 @@ class FormSelectMenu extends Widget
 
 		if ($this->multiple)
 		{
-			$this->strName .= '[]';
 			$strClass = 'multiselect';
 		}
 
@@ -284,13 +287,8 @@ class FormSelectMenu extends Widget
 		$strOptions = '';
 		$blnHasGroups = false;
 
-		if ($this->multiple)
-		{
-			$this->strName .= '[]';
-		}
-
 		// Make sure there are no multiple options in single mode
-		elseif (\is_array($this->varValue))
+		if (!$this->multiple && \is_array($this->varValue))
 		{
 			$this->varValue = $this->varValue[0];
 		}
@@ -330,7 +328,7 @@ class FormSelectMenu extends Widget
 
 		return sprintf(
 			'<select name="%s" id="ctrl_%s" class="%s"%s>%s</select>',
-			$this->strName,
+			$this->name,
 			$this->strId,
 			$this->class,
 			$this->getAttributes(),

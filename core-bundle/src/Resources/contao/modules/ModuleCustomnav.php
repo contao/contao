@@ -116,6 +116,9 @@ class ModuleCustomnav extends Module
 		/** @var PageModel[] $arrPages */
 		foreach ($arrPages as $objModel)
 		{
+			// Inherit settings from the parent pages
+			$objModel->loadDetails();
+
 			$_groups = StringUtil::deserialize($objModel->groups);
 
 			// Do not show protected pages unless a front end user is logged in
@@ -249,10 +252,13 @@ class ModuleCustomnav extends Module
 			}
 		}
 
-		// Add classes first and last
-		$items[0]['class'] = trim($items[0]['class'] . ' first');
-		$last = \count($items) - 1;
-		$items[$last]['class'] = trim($items[$last]['class'] . ' last');
+		// Add classes first and last if there are items
+		if (!empty($items))
+		{
+			$items[0]['class'] = trim($items[0]['class'] . ' first');
+			$last = \count($items) - 1;
+			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
+		}
 
 		$objTemplate->items = $items;
 

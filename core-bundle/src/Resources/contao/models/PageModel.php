@@ -92,7 +92,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean $rootIsFallback
  * @property boolean $rootUseSSL
  * @property string  $rootFallbackLanguage
- * @property array   $subpages
  * @property boolean $minifyMarkup
  * @property integer $layoutId
  * @property boolean $hasJQuery
@@ -595,13 +594,19 @@ class PageModel extends Model
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
 	 * @return Collection|PageModel[]|PageModel|null A collection of models or null if there are no pages
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0. Use Module::getPublishedSubpagesWithoutGuestsByPid() instead.
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
-		$time = Date::floorToMinute();
-		$blnFeUserLoggedIn = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+		@trigger_error('Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesWithoutGuestsByPid() instead.', E_USER_DEPRECATED);
 
-		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!BE_USER_LOGGED_IN ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$time = Date::floorToMinute();
+		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
+		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
+		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 											  ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -996,14 +1001,13 @@ class PageModel extends Model
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
-			$this->rootIsFallback = true;
+			$this->rootIsFallback = (bool) $objParentPage->fallback;
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
 
 			// Store the fallback language (see #6874)
 			if (!$objParentPage->fallback)
 			{
-				$this->rootIsFallback = false;
 				$this->rootFallbackLanguage = null;
 
 				$objFallback = static::findPublishedFallbackByHostname($objParentPage->dns);
@@ -1194,15 +1198,15 @@ class PageModel extends Model
 	/**
 	 * Modifies a URL from the URL generator.
 	 *
-	 * @param string $strUrl
-	 * @param string $strParams
+	 * @param string      $strUrl
+	 * @param string|null $strParams
 	 *
 	 * @return string
 	 */
 	private function applyLegacyLogic($strUrl, $strParams)
 	{
 		// Decode sprintf placeholders
-		if (strpos($strParams, '%') !== false)
+		if ($strParams !== null && strpos($strParams, '%') !== false)
 		{
 			@trigger_error('Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
@@ -1222,7 +1226,7 @@ class PageModel extends Model
 
 			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
 			{
-				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams, $strUrl);
+				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams ?? '', $strUrl);
 			}
 
 			return $strUrl;

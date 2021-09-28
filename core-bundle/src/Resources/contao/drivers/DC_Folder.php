@@ -54,6 +54,12 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	protected $strRootDir;
 
 	/**
+	 * Initial ID of the record
+	 * @var string
+	 */
+	protected $initialId;
+
+	/**
 	 * Current filemounts
 	 * @var array
 	 */
@@ -334,7 +340,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
 
 				$objRoot = $this->Database->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE (" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")")
 										  ->execute($for, $for);
@@ -1301,30 +1307,30 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				$this->objActiveRecord = $objModel;
-			}
 
-			$this->blnCreateNewVersion = false;
+				$this->blnCreateNewVersion = false;
 
-			/** @var FilesModel $objModel */
-			$objVersions = new Versions($this->strTable, $objModel->id);
+				/** @var FilesModel $objModel */
+				$objVersions = new Versions($this->strTable, $objModel->id);
 
-			if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
-			{
-				// Compare versions
-				if (Input::get('versions'))
+				if (!$GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'])
 				{
-					$objVersions->compare();
+					// Compare versions
+					if (Input::get('versions'))
+					{
+						$objVersions->compare();
+					}
+
+					// Restore a version
+					if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
+					{
+						$objVersions->restore(Input::post('version'));
+						$this->reload();
+					}
 				}
 
-				// Restore a version
-				if (Input::post('FORM_SUBMIT') == 'tl_version' && Input::post('version'))
-				{
-					$objVersions->restore(Input::post('version'));
-					$this->reload();
-				}
+				$objVersions->initialize();
 			}
-
-			$objVersions->initialize();
 		}
 		else
 		{
@@ -1633,6 +1639,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			foreach ($ids as $id)
 			{
 				$this->intId = $id;
+				$this->initialId = $id;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
 
 				$objModel = null;
@@ -2902,7 +2909,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']);
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey'], 2);
 				$this->procedure[] = "(" . $strPattern . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . ".name)") . ")";
 				$this->values[] = $searchValue;
 			}
@@ -3062,6 +3069,11 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	protected function isProtectedPath($path)
 	{
 		return !(new Folder($path))->isUnprotected();
+	}
+
+	protected function getFormFieldSuffix()
+	{
+		return md5($this->initialId ?: $this->intId);
 	}
 
 	/**
