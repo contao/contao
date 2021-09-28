@@ -395,14 +395,9 @@ class InsertTags extends Controller
 							$strTitle = 'Go back';
 						}
 
-						$strBackScript = "<script>document.documentElement.addEventListener('click',function(e){"
+						$GLOBALS['TL_HEAD']['contao_back_insert_tag'] = "<script>document.documentElement.addEventListener('click',function(e){"
 							. "e&&e.target&&e.target.matches('a[href$=\"#_back\"],a[href$=\"#_back\"] *')&&(history.go(-1),e.preventDefault&&e.preventDefault())"
 						. "},true)</script>";
-
-						if (!\in_array($strBackScript, $GLOBALS['TL_HEAD'] ?? array(), true))
-						{
-							$GLOBALS['TL_HEAD'][] = $strBackScript;
-						}
 
 						$strName = $strTitle;
 					}
