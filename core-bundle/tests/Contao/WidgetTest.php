@@ -144,9 +144,7 @@ class WidgetTest extends TestCase
 
         $widget
             ->setInputCallback(
-                static function (): string {
-                    return 'foobar';
-                }
+                static fn (): string => 'foobar'
             )
             ->validate()
         ;
@@ -155,9 +153,7 @@ class WidgetTest extends TestCase
 
         $widget
             ->setInputCallback(
-                static function () {
-                    return null;
-                }
+                static fn () => null
             )
             ->validate()
         ;

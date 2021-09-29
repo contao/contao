@@ -498,7 +498,6 @@ $GLOBALS['TL_CRON'] = array
 	'daily' => array
 	(
 		'purgeTempFolder' => array(Automator::class, 'purgeTempFolder'),
-		'generateSitemap' => array(Automator::class, 'generateSitemap'),
 		'purgeRegistrations' => array(Automator::class, 'purgeRegistrations'),
 		'purgeOptInTokens' => array(Automator::class, 'purgeOptInTokens')
 	),

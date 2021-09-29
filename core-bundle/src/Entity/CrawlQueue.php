@@ -29,60 +29,44 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 class CrawlQueue
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @GeneratedValue
      */
-    public $id;
+    public int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="job_id", type="string", length=128, options={"fixed"=true})
      */
-    public $jobId;
+    public string $jobId;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text")
      */
-    public $uri;
+    public string $uri;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="uri_hash", type="string", length=40, options={"fixed"=true})
      */
-    public $uriHash;
+    public string $uriHash;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="found_on", type="text", nullable=true)
      */
-    public $foundOn;
+    public ?string $foundOn = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(type="smallint")
      */
-    public $level;
+    public int $level;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(type="boolean")
      */
-    public $processed;
+    public bool $processed;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text", nullable=true)
      */
-    public $tags;
+    public ?string $tags = null;
 }

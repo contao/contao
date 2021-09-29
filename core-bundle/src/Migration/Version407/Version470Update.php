@@ -23,25 +23,10 @@ use Webmozart\PathUtil\Path;
  */
 class Version470Update extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private Connection $connection;
+    private Filesystem $filesystem;
+    private string $uploadPath;
+    private string $projectDir;
 
     public function __construct(Connection $connection, Filesystem $filesystem, string $uploadPath, string $projectDir)
     {

@@ -22,10 +22,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class BackendAccessVoterTest extends TestCase
 {
-    /**
-     * @var BackendAccessVoter
-     */
-    private $voter;
+    private BackendAccessVoter $voter;
 
     protected function setUp(): void
     {

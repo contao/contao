@@ -137,9 +137,7 @@ class PluginTest extends ContaoTestCase
             ->expects($this->atLeastOnce())
             ->method('parse')
             ->willReturnCallback(
-                static function ($resource): array {
-                    return [$resource];
-                }
+                static fn ($resource): array => [$resource]
             )
         ;
 
@@ -462,9 +460,9 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [[
+        $expect = [
+            ...$extensionConfigs,
+            ...[[
                 'dbal' => [
                     'connections' => [
                         'default' => [
@@ -472,8 +470,8 @@ class PluginTest extends ContaoTestCase
                         ],
                     ],
                 ],
-            ]]
-        );
+            ]],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -496,9 +494,9 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [[
+        $expect = [
+            ...$extensionConfigs,
+            ...[[
                 'dbal' => [
                     'connections' => [
                         'default' => [
@@ -506,8 +504,8 @@ class PluginTest extends ContaoTestCase
                         ],
                     ],
                 ],
-            ]]
-        );
+            ]],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -876,9 +874,7 @@ class PluginTest extends ContaoTestCase
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
     {
         $plugin = new Plugin(
-            function () {
-                return $this->createMock(Connection::class);
-            }
+            fn () => $this->createMock(Connection::class)
         );
 
         $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
@@ -946,9 +942,7 @@ class PluginTest extends ContaoTestCase
         }
 
         $plugin = new Plugin(
-            function () {
-                return $this->createMock(Connection::class);
-            }
+            fn () => $this->createMock(Connection::class)
         );
 
         $container = $this->getContainer();

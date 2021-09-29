@@ -14,10 +14,7 @@ namespace Contao\CoreBundle\Search\Indexer;
 
 class IndexerException extends \RuntimeException
 {
-    /**
-     * @var bool
-     */
-    private $isOnlyWarning = false;
+    private bool $isOnlyWarning = false;
 
     public function isOnlyWarning(): bool
     {

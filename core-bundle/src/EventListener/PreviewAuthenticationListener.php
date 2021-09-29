@@ -24,25 +24,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PreviewAuthenticationListener
 {
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var UriSigner
-     */
-    private $uriSigner;
+    private ScopeMatcher $scopeMatcher;
+    private TokenChecker $tokenChecker;
+    private UrlGeneratorInterface $router;
+    private UriSigner $uriSigner;
 
     public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner)
     {

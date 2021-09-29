@@ -38,20 +38,9 @@ class UserPasswordCommand extends Command
 {
     protected static $defaultName = 'contao:user:password';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private EncoderFactoryInterface $encoderFactory;
 
     public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory)
     {

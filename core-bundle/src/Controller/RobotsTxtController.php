@@ -29,15 +29,8 @@ use webignition\RobotsTxt\File\Parser;
  */
 class RobotsTxtController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $contaoFramework;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private ContaoFramework $contaoFramework;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(ContaoFramework $contaoFramework, EventDispatcherInterface $eventDispatcher)
     {

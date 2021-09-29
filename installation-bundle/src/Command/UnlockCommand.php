@@ -24,10 +24,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class UnlockCommand extends Command
 {
-    /**
-     * @var string
-     */
-    private $lockFile;
+    private string $lockFile;
 
     public function __construct(string $lockFile)
     {

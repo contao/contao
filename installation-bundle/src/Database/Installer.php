@@ -20,25 +20,10 @@ use Doctrine\DBAL\Schema\Table;
 
 class Installer
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var array
-     */
-    private $commands;
-
-    /**
-     * @var array
-     */
-    private $commandOrder;
-
-    /**
-     * @var SchemaProvider
-     */
-    private $schemaProvider;
+    private Connection $connection;
+    private ?array $commands = null;
+    private array $commandOrder;
+    private SchemaProvider $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.installer" service instead

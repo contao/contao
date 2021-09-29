@@ -29,45 +29,14 @@ class PictureFactory implements PictureFactoryInterface
 {
     private const ASPECT_RATIO_THRESHOLD = 0.05;
 
-    /**
-     * @var array
-     */
-    private $imageSizeItemsCache = [];
-
-    /**
-     * @var PictureGeneratorInterface
-     */
-    private $pictureGenerator;
-
-    /**
-     * @var ImageFactoryInterface
-     */
-    private $imageFactory;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var bool
-     */
-    private $bypassCache;
-
-    /**
-     * @var array
-     */
-    private $imagineOptions;
-
-    /**
-     * @var string
-     */
-    private $defaultDensities = '';
-
-    /**
-     * @var array
-     */
-    private $predefinedSizes = [];
+    private array $imageSizeItemsCache = [];
+    private PictureGeneratorInterface $pictureGenerator;
+    private ImageFactoryInterface $imageFactory;
+    private ContaoFramework $framework;
+    private bool $bypassCache;
+    private array $imagineOptions;
+    private string $defaultDensities = '';
+    private array $predefinedSizes = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
@@ -127,7 +96,7 @@ class PictureFactory implements PictureFactoryInterface
         }
 
         // Always prefer options passed to this function
-        $options = $options ?? $configOptions ?? new ResizeOptions();
+        $options ??= $configOptions ?? new ResizeOptions();
 
         if (!$options->getImagineOptions()) {
             $options->setImagineOptions($this->imagineOptions);

@@ -29,20 +29,15 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
+    private ?array $escaperFilterNodes = null;
+
     /**
      * We evaluate affected templates on the fly so that rules can be adjusted
      * after building the container. Expects a list of regular expressions to
      * be returned. A template counts as 'affected' if it matches any of the
      * rules.
-     *
-     * @var \Closure():array<string>
      */
-    private $rules;
-
-    /**
-     * @var array<array<FilterExpression|string>>|null
-     */
-    private $escaperFilterNodes;
+    private \Closure $rules;
 
     public function __construct(\Closure $rules)
     {

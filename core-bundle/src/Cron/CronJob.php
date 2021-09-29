@@ -14,25 +14,10 @@ namespace Contao\CoreBundle\Cron;
 
 class CronJob
 {
-    /**
-     * @var object
-     */
-    private $service;
-
-    /**
-     * @var string
-     */
-    private $method;
-
-    /**
-     * @var string
-     */
-    private $interval;
-
-    /**
-     * @var string
-     */
-    private $name;
+    private object $service;
+    private ?string $method;
+    private string $interval;
+    private string $name;
 
     public function __construct(object $service, string $interval, string $method = null)
     {

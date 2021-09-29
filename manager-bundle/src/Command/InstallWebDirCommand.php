@@ -27,20 +27,9 @@ use Webmozart\PathUtil\Path;
  */
 class InstallWebDirCommand extends Command
 {
-    /**
-     * @var Filesystem
-     */
-    private $fs;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ?Filesystem $fs = null;
+    private ?SymfonyStyle $io = null;
+    private string $projectDir;
 
     public function __construct(string $projectDir)
     {

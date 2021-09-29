@@ -27,15 +27,8 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
+    private Security $security;
+    private string $uploadPath;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.file_provider" service instead

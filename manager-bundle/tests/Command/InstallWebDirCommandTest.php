@@ -23,20 +23,9 @@ use Symfony\Component\Finder\Finder;
 
 class InstallWebDirCommandTest extends ContaoTestCase
 {
-    /**
-     * @var InstallWebDirCommand
-     */
-    private $command;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var Finder
-     */
-    private $webFiles;
+    private InstallWebDirCommand $command;
+    private Filesystem $filesystem;
+    private Finder $webFiles;
 
     protected function setUp(): void
     {

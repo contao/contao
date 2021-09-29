@@ -30,10 +30,7 @@ class PageUrlGeneratorTest extends TestCase
      */
     private $pageRegistry;
 
-    /**
-     * @var PageUrlGenerator
-     */
-    private $generator;
+    private PageUrlGenerator $generator;
 
     protected function setUp(): void
     {

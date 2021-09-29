@@ -21,10 +21,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
-    /**
-     * @var PropertyAccessor
-     */
-    private $propertyAccessor;
+    private PropertyAccessor $propertyAccessor;
 
     public function __construct()
     {
@@ -113,9 +110,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         // Prepend prefix
         if (null !== $prefix) {
             $keys = array_map(
-                static function (string $v) use ($prefix): string {
-                    return "$prefix.$v";
-                },
+                static fn (string $v): string => "$prefix.$v",
                 $keys
             );
         }

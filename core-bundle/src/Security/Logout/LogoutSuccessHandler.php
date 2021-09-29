@@ -20,10 +20,7 @@ use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_success_handler" service instead

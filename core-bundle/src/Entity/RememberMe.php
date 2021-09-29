@@ -32,55 +32,41 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class RememberMe
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @GeneratedValue
      */
-    protected $id;
+    protected int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="binary_string", length=32, nullable=false, options={"fixed"=true})
      */
-    protected $series;
+    protected string $series;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="binary_string", length=64, nullable=false, options={"fixed"=true})
      */
-    protected $value;
+    protected string $value;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(type="datetime", nullable=false)
      */
-    protected $lastUsed;
+    protected \DateTimeInterface $lastUsed;
 
     /**
-     * @var \DateTime|null
-     *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $expires;
+    protected ?\DateTimeInterface $expires = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=100, nullable=false)
      */
-    protected $class;
+    protected string $class;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=200, nullable=false)
      */
-    protected $username;
+    protected string $username;
 
     public function __construct(UserInterface $user, string $series)
     {
@@ -109,12 +95,12 @@ class RememberMe
         return $this->value;
     }
 
-    public function getLastUsed(): \DateTime
+    public function getLastUsed(): \DateTimeInterface
     {
         return $this->lastUsed;
     }
 
-    public function getExpires(): ?\DateTime
+    public function getExpires(): ?\DateTimeInterface
     {
         return $this->expires;
     }

@@ -28,25 +28,10 @@ use Webmozart\PathUtil\Path;
 
 class InstallTool
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var MigrationCollection
-     */
-    private $migrations;
+    private Connection $connection;
+    private string $projectDir;
+    private LoggerInterface $logger;
+    private MigrationCollection $migrations;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead

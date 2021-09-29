@@ -15,31 +15,19 @@ namespace Contao\CoreBundle\Translation;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Component\Translation\TranslatorInterface as LegacyTranslatorInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface, LegacyTranslatorInterface
+class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface
 {
+    private ContaoFramework $framework;
+    private ResourceFinder $resourceFinder;
+    private \SplObjectStorage $catalogues;
+
     /**
-     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface|LegacyTranslatorInterface
+     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
      */
     private $translator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ResourceFinder
-     */
-    private $resourceFinder;
-
-    /**
-     * @var \SplObjectStorage
-     */
-    private $catalogues;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
@@ -72,11 +60,6 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         }
 
         return $translated;
-    }
-
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
-    {
-        return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
     public function setLocale($locale): void

@@ -23,10 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PreviewUrlConvertListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {

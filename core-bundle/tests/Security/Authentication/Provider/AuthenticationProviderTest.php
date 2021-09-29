@@ -553,15 +553,13 @@ class AuthenticationProviderTest extends TestCase
         $contextFactory
             ->method('create')
             ->willReturnCallback(
-                static function ($request, $token, $firewallName) {
-                    return new AuthenticationContext($request, $token, $firewallName);
-                }
+                static fn ($request, $token, $firewallName) => new AuthenticationContext($request, $token, $firewallName)
             )
         ;
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
-            ->method('getMasterRequest')
+            ->method('getMainRequest')
             ->willReturn($this->createMock(Request::class))
         ;
 
@@ -596,7 +594,7 @@ class AuthenticationProviderTest extends TestCase
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
-            ->method('getMasterRequest')
+            ->method('getMainRequest')
             ->willReturn($this->createMock(Request::class))
         ;
 
@@ -604,9 +602,7 @@ class AuthenticationProviderTest extends TestCase
         $contextFactory
             ->method('create')
             ->willReturnCallback(
-                static function ($request, $token, $firewallName) {
-                    return new AuthenticationContext($request, $token, $firewallName);
-                }
+                static fn ($request, $token, $firewallName) => new AuthenticationContext($request, $token, $firewallName)
             )
         ;
 

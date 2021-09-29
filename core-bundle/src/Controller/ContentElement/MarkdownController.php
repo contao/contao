@@ -17,8 +17,9 @@ use Contao\ContentModel;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\Template;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
@@ -51,7 +52,7 @@ class MarkdownController extends AbstractContentElementController
         /** @var Input $input */
         $input = $this->get('contao.framework')->getAdapter(Input::class);
 
-        $html = $this->createConverter($model, $request)->convertToHtml($markdown);
+        $html = $this->createConverter($model, $request)->convertToHtml($markdown)->getContent();
         $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
 
         return $template->getResponse();
@@ -64,7 +65,17 @@ class MarkdownController extends AbstractContentElementController
      */
     protected function createConverter(ContentModel $model, Request $request): MarkdownConverterInterface
     {
-        $environment = Environment::createCommonMarkEnvironment();
+        $environment = new Environment([
+            'external_link' => [
+                'internal_hosts' => $request->getHost(),
+                'open_in_new_window' => true,
+                'html_class' => 'external-link',
+                'noopener' => 'external',
+                'noreferrer' => 'external',
+            ],
+        ]);
+
+        $environment->addExtension(new CommonMarkCoreExtension());
 
         // Support GitHub flavoured Markdown (using the individual extensions because we don't want the
         // DisallowedRawHtmlExtension which is included by default)
@@ -75,16 +86,6 @@ class MarkdownController extends AbstractContentElementController
 
         // Automatically mark external links as such if we have a request
         $environment->addExtension(new ExternalLinkExtension());
-
-        $environment->mergeConfig([
-            'external_link' => [
-                'internal_hosts' => $request->getHost(),
-                'open_in_new_window' => true,
-                'html_class' => 'external-link',
-                'noopener' => 'external',
-                'noreferrer' => 'external',
-            ],
-        ]);
 
         return new MarkdownConverter($environment);
     }

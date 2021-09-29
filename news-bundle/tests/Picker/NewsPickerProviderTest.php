@@ -245,9 +245,7 @@ class NewsPickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                static function (string $name, array $params): string {
-                    return $name.'?'.http_build_query($params);
-                }
+                static fn (string $name, array $params): string => $name.'?'.http_build_query($params)
             )
         ;
 

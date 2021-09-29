@@ -18,10 +18,7 @@ use Contao\OptInModel;
 
 class OptIn implements OptInInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.opt-in" service instead

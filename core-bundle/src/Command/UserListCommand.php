@@ -30,10 +30,7 @@ class UserListCommand extends Command
 {
     protected static $defaultName = 'contao:user:list';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -144,9 +141,7 @@ class UserListCommand extends Command
         foreach ($users->fetchAll() as $user) {
             $data[] = array_filter(
                 $user,
-                static function ($key) use ($columns) {
-                    return \in_array($key, $columns, true);
-                },
+                static fn ($key) => \in_array($key, $columns, true),
                 ARRAY_FILTER_USE_KEY
             );
         }

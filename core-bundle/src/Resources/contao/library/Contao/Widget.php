@@ -756,7 +756,7 @@ abstract class Widget extends Controller
 	{
 		if (\is_callable($this->inputCallback))
 		{
-			return \call_user_func($this->inputCallback);
+			return ($this->inputCallback)();
 		}
 
 		if ($this->useRawRequestData === true)
@@ -775,7 +775,7 @@ abstract class Widget extends Controller
 		}
 
 		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
 		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
@@ -987,6 +987,11 @@ abstract class Widget extends Controller
 
 				case 'url':
 					$varInput = StringUtil::specialcharsUrl($varInput);
+
+					if ($this->decodeEntities)
+					{
+						$varInput = StringUtil::decodeEntities($varInput);
+					}
 
 					if (!Validator::isUrl($varInput))
 					{

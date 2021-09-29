@@ -20,25 +20,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $menuFactory;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private FactoryInterface $menuFactory;
+    private RouterInterface $router;
+    private ?TranslatorInterface $translator;
+    private ?TokenStorageInterface $tokenStorage = null;
 
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {

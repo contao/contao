@@ -61,15 +61,6 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         return $translated;
     }
 
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
-    {
-        if (!method_exists($this->translator, 'transChoice')) {
-            return $this->trans($id, $parameters, $domain, $locale);
-        }
-
-        return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
-    }
-
     public function setLocale($locale): void
     {
         $this->translator->setLocale($locale);

@@ -20,10 +20,7 @@ use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteProvider implements RouteProviderInterface
 {
-    /**
-     * @var FrontendLoader
-     */
-    private $frontendLoader;
+    private FrontendLoader $frontendLoader;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.legacy_route_provider" service instead

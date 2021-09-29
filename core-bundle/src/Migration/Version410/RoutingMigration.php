@@ -26,25 +26,10 @@ use Doctrine\DBAL\Types\StringType;
  */
 class RoutingMigration extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private Connection $connection;
+    private ContaoFramework $framework;
+    private string $urlSuffix;
+    private bool $prependLocale;
 
     public function __construct(Connection $connection, ContaoFramework $framework, string $urlSuffix = '.html', bool $prependLocale = false)
     {
