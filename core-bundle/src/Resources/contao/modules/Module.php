@@ -68,6 +68,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $reg_allowLogin
  * @property boolean $reg_skipName
  * @property string  $reg_close
+ * @property boolean $reg_deleteDir
  * @property boolean $reg_assignDir
  * @property string  $reg_homeDir
  * @property boolean $reg_activate
