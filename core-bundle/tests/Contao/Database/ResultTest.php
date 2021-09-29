@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao\Database;
 
-use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
 use Doctrine\DBAL\Cache\ArrayResult;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ForwardCompatibility\Result as ForwardCompatibilityResult;
 use Doctrine\DBAL\Result as DoctrineResult;
 use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\Error\Warning;
@@ -210,21 +208,12 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
-        if (class_exists(ArrayResult::class)) {
-            $arrayResult = new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class));
-        } else {
-            $arrayResult = new DoctrineArrayStatement($data);
-        }
-
-        $resultObjects = [
-            new Result($arrayResult, 'SELECT * FROM test'),
+        return [
+            new Result(
+                new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
+                'SELECT * FROM test'
+            ),
             new Result($data, 'SELECT * FROM test'),
         ];
-
-        if (class_exists(ForwardCompatibilityResult::class)) {
-            $resultObjects[] = new Result(new ForwardCompatibilityResult($arrayResult), 'SELECT * FROM test');
-        }
-
-        return $resultObjects;
     }
 }
