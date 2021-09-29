@@ -185,6 +185,7 @@ class ModuleEventlist extends Events
 			$sort($arrAllEvents[$key]);
 		}
 
+		$intCount = 0;
 		$arrEvents = array();
 
 		// Remove events outside the scope
@@ -227,6 +228,7 @@ class ModuleEventlist extends Events
 
 					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
 					$event['firstDate'] = Date::parse($objPage->dateFormat, $day);
+					$event['count'] = ++$intCount; // see #74
 
 					$arrEvents[] = $event;
 				}
