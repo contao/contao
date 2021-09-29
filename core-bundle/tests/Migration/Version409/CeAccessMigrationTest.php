@@ -18,7 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FormTextField;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
@@ -48,7 +48,7 @@ class CeAccessMigrationTest extends TestCase
 
     public function testActivatesTheFieldsInAllUserGroups(): void
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -95,7 +95,7 @@ class CeAccessMigrationTest extends TestCase
 
     public function testDoesNothingIfTheUserGroupTableDoesNotExist(): void
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -128,7 +128,7 @@ class CeAccessMigrationTest extends TestCase
 
     public function testDoesNothingIfTheElementsColumnDoesNotExist(): void
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')

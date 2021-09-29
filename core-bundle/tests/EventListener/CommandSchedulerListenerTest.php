@@ -19,7 +19,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -180,7 +180,7 @@ class CommandSchedulerListenerTest extends TestCase
      */
     private function mockConnection()
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
