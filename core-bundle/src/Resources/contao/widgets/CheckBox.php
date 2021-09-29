@@ -36,6 +36,17 @@ class CheckBox extends Widget
 	protected $strTemplate = 'be_widget_chk';
 
 	/**
+	 * @param array $arrAttributes
+	 */
+	public function __construct($arrAttributes=null)
+	{
+		parent::__construct($arrAttributes);
+
+		$this->preserveTags = true;
+		$this->decodeEntities = true;
+	}
+
+	/**
 	 * Add specific attributes
 	 *
 	 * @param string $strKey
