@@ -874,7 +874,7 @@ abstract class Backend extends Controller
 				$arrIds[] = $intId;
 
 				// No link for the active page or pages in the trail
-				if ($objPage->id == $intNode || (!$objUser->isAdmin && !$objUser->hasAccess($objPage->id, 'pagemounts')))
+				if ($objPage->id == $intNode || !$objUser->hasAccess($objPage->id, 'pagemounts'))
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
 				}
