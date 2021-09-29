@@ -48,7 +48,7 @@
         "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/dbal": "^3.1",
-        "doctrine/doctrine-bundle": "^2.1.1",
+        "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.10@dev",
         "doctrine/persistence": "^2.0",
         "dragonmantank/cron-expression": "^2.3",
