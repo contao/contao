@@ -6246,14 +6246,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 				->execute()
 				->fetchEach('id');
 			$orderedTopMosts = array_map('\intval', $orderedTopMosts);
-			$flipped = array_flip($topMostPerRoot);
 
-			uksort($flipped, static function ($a, $b) use ($orderedTopMosts)
+			usort($this->root, static function ($a, $b) use ($topMostPerRoot, $orderedTopMosts)
 			{
-				return array_search($a, $orderedTopMosts) > array_search($b, $orderedTopMosts);
+				return array_search($topMostPerRoot[$a], $orderedTopMosts) > array_search($topMostPerRoot[$b], $orderedTopMosts);
 			});
-
-			$this->root = array_values($flipped);
 		}
 	}
 
