@@ -3860,6 +3860,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach (array_reverse($this->rootTrails[$id]) as $pid)
 			{
+				// Prevent the same parents from being rendered multiple times
+				if (isset($this->rootTrailsRendered[$pid]))
+				{
+					continue;
+				}
+
+				$this->rootTrailsRendered[$pid] = true;
 				$return .= $this->generateTree($table, $pid, array(), $blnHasSorting, $intMargin, null, false, false, true, array());
 				$intMargin += $intSpacing;
 			}

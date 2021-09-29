@@ -84,6 +84,12 @@ abstract class DataContainer extends Backend
 	protected $rootTrails = array();
 
 	/**
+	 * IDs of parents already rendered
+	 * @var array
+	 */
+	protected $rootTrailsRendered = array();
+
+	/**
 	 * WHERE clause of the database query
 	 * @var array
 	 */
