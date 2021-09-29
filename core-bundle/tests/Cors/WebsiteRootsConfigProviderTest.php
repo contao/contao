@@ -14,8 +14,8 @@ namespace Contao\CoreBundle\Tests\Cors;
 
 use Contao\CoreBundle\Cors\WebsiteRootsConfigProvider;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ForwardCompatibility\Result;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -133,7 +133,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $request = Request::create('https://foobar.com');
         $request->headers->set('Origin', 'https://origin.com');
 
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -162,7 +162,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
      */
     private function mockConnection(Statement $statement): Connection
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')

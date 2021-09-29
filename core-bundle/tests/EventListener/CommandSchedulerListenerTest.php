@@ -18,7 +18,6 @@ use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -169,7 +168,7 @@ class CommandSchedulerListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('isConnected')
-            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
+            ->willThrowException($this->createMock(DriverException::class))
         ;
 
         $listener = new CommandSchedulerListener($framework, $connection, $cron);
