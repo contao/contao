@@ -16,6 +16,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageModel;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
@@ -155,10 +156,14 @@ class Route404Provider extends AbstractPageRouteProvider
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => $page->rootLanguage,
+            '_format' => 'html',
             '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
         ];
+
+        if ($page->rootLanguage) {
+            $defaults['_locale'] = LocaleUtil::formatAsLocale($page->rootLanguage);
+        }
 
         $requirements = ['_url_fragment' => '.*'];
         $path = '/{_url_fragment}';

@@ -47,17 +47,21 @@ class PageRoute extends Route implements RouteObjectInterface
     {
         $pageModel->loadDetails();
 
-        $defaults = array_merge(
-            [
-                '_token_check' => true,
-                '_controller' => 'Contao\FrontendIndex::renderPage',
-                '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLanguageTag($pageModel->rootLanguage),
-                '_format' => 'html',
-            ],
-            $defaults
-        );
+        $initialDefaults = [
+            '_token_check' => true,
+            '_controller' => 'Contao\FrontendIndex::renderPage',
+            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
+            '_format' => 'html',
+            '_canonical_route' => 'tl_page.'.$pageModel->id,
+        ];
 
+        if ($pageModel->rootLanguage) {
+            $initialDefaults['_locale'] = LocaleUtil::formatAsLocale($pageModel->rootLanguage);
+        }
+
+        $defaults = array_merge($initialDefaults, $defaults);
+
+        // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;
 
         if (!isset($options['utf8'])) {
