@@ -961,7 +961,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars($strString, ENT_QUOTES, Config::get('characterSet'), $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES, Config::get('characterSet'), $blnDoubleEncode);
 	}
 
 	/**

@@ -770,7 +770,7 @@ abstract class Widget extends Controller
 		}
 
 		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
 		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
