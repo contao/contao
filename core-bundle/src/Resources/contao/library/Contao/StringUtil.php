@@ -792,7 +792,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
