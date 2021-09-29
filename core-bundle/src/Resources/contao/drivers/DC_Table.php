@@ -3863,6 +3863,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Prevent the same parents from being rendered multiple times
 				if (isset($this->rootTrailsRendered[$pid]))
 				{
+					$intMargin += $intSpacing;
 					continue;
 				}
 
