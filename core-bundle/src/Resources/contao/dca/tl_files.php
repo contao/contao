@@ -24,7 +24,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
-use Patchwork\Utf8;
 use Symfony\Component\Finder\Finder;
 
 $GLOBALS['TL_DCA']['tl_files'] = array
@@ -623,7 +622,7 @@ class tl_files extends Backend
 					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 				}
 
-				if (Utf8::strlen($varValue) > $intMaxlength)
+				if (mb_strlen($varValue) > $intMaxlength)
 				{
 					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
 				}

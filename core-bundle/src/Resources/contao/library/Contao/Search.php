@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Database\Result;
-use Patchwork\Utf8;
 
 /**
  * Creates and queries the search index
@@ -244,7 +243,7 @@ class Search
 		unset($arrSet);
 
 		// Split words
-		$arrWords = self::splitIntoWords(Utf8::strtolower($strText), $arrData['language']);
+		$arrWords = self::splitIntoWords(mb_strtolower($strText), $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
@@ -433,7 +432,7 @@ class Search
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
-		$strKeywords = Utf8::strtolower($strKeywords);
+		$strKeywords = mb_strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
