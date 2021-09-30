@@ -5296,11 +5296,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		uksort($options_sorter, static function ($a, $b) {
+		uksort($options_sorter, static function ($a, $b)
+		{
 			$a = (new UnicodeString($a))->folded();
 			$b = (new UnicodeString($b))->folded();
 
-			if ($a->toString() === $b->toString()) {
+			if ($a->toString() === $b->toString())
+			{
 				return 0;
 			}
 
@@ -5403,11 +5405,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		uksort($options_sorter, static function ($a, $b) {
+		uksort($options_sorter, static function ($a, $b)
+		{
 			$a = (new UnicodeString($a))->folded();
 			$b = (new UnicodeString($b))->folded();
 
-			if ($a->toString() === $b->toString()) {
+			if ($a->toString() === $b->toString())
+			{
 				return 0;
 			}
 
@@ -6000,11 +6004,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by option values
 				if (!$blnDate)
 				{
-					uksort($options_sorter, static function ($a, $b) {
+					uksort($options_sorter, static function ($a, $b)
+					{
 						$a = (new UnicodeString($a))->folded();
 						$b = (new UnicodeString($b))->folded();
 
-						if ($a->toString() === $b->toString()) {
+						if ($a->toString() === $b->toString())
+						{
 							return 0;
 						}
 

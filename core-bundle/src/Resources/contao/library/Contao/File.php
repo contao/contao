@@ -785,7 +785,7 @@ class File extends System
 		(
 			$inline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 			$filename,
-			(new UnicodeString($this->basename))->ascii()
+			(new UnicodeString($this->basename))->ascii()->toString()
 		);
 
 		$response->headers->addCacheControlDirective('must-revalidate');

@@ -334,7 +334,7 @@ class tl_style_sheet extends Backend
 	 */
 	public function romanizeName($varValue)
 	{
-		return (new UnicodeString($varValue))->ascii();
+		return (new UnicodeString($varValue))->ascii()->toString();
 	}
 
 	/**
