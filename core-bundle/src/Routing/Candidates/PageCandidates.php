@@ -46,7 +46,7 @@ class PageCandidates extends AbstractCandidates
 
         if ($hasRoot || $hasRegex) {
             /** @var Result $result */
-            $result = $qb->execute();
+            $result = $qb->executeQuery();
 
             return array_unique(array_merge($candidates, $result->fetchFirstColumn()));
         }

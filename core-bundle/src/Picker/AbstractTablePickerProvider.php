@@ -233,7 +233,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
                 $qb->addSelect('ptable');
             }
 
-            $data = $qb->execute()->fetchAssociative();
+            $data = $qb->executeQuery()->fetchAssociative();
         }
 
         if ($dynamicPtable) {

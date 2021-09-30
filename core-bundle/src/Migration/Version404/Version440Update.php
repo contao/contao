@@ -36,7 +36,7 @@ class Version440Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_content'])) {
             return false;
@@ -76,7 +76,7 @@ class Version440Update extends AbstractMigration
             }
         }
 
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if ($schemaManager->tablesExist(['tl_calendar_events'])) {
             $this->enableOverwriteMeta('tl_calendar_events');

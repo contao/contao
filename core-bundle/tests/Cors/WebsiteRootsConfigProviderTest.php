@@ -142,7 +142,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -178,7 +178,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
 
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

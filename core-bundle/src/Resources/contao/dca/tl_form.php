@@ -529,7 +529,7 @@ class tl_form extends Backend
 		}
 
 		$arrTables = $this->Database->listTables();
-		$arrViews = System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
+		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))
 		{

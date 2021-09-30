@@ -193,7 +193,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $connection
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

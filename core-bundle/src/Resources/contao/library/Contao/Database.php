@@ -256,7 +256,7 @@ class Database
 				$this->setDatabase($strDatabase);
 			}
 
-			$this->arrCache[$strDatabase] = $this->resConnection->getSchemaManager()->listTableNames();
+			$this->arrCache[$strDatabase] = $this->resConnection->createSchemaManager()->listTableNames();
 
 			// Restore the database
 			if ($strDatabase !== null && $strDatabase != $strOldDatabase)

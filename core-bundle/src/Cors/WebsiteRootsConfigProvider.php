@@ -74,7 +74,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     private function canRunDbQuery(): bool
     {
         try {
-            return $this->connection->getSchemaManager()->tablesExist(['tl_page']);
+            return $this->connection->createSchemaManager()->tablesExist(['tl_page']);
         } catch (DriverException $e) {
             return false;
         }

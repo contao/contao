@@ -33,7 +33,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -62,7 +62,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -91,7 +91,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -144,7 +144,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

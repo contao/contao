@@ -540,7 +540,7 @@ class InstallerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

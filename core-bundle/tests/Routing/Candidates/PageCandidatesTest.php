@@ -545,7 +545,7 @@ class PageCandidatesTest extends TestCase
         ;
 
         $queryBuilder
-            ->method('execute')
+            ->method('executeQuery')
             ->willReturn($result)
         ;
 
