@@ -1231,7 +1231,7 @@ class StringUtil
 	 *
 	 * @return bool
 	 */
-	public static function isStringable($value): bool
+	private static function isStringable($value): bool
 	{
 		return $value === null || is_scalar($value) || (\is_object($value) && method_exists($value, '__toString'));
 	}
@@ -1240,14 +1240,13 @@ class StringUtil
 	 * Cast a value to its string representation
 	 * or return a default value if the value cannot be cast
 	 *
-	 * @param mixed  $value   The input value
-	 * @param string $default Default string for non-stringable value
+	 * @param mixed $value The input value
 	 *
 	 * @return string
 	 */
-	public static function toString($value, string $default = ''): string
+	private static function toString($value): string
 	{
-		return static::isStringable($value) ? (string) $value : $default;
+		return static::isStringable($value) ? (string) $value : '';
 	}
 }
 
