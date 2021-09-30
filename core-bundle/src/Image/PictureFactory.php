@@ -179,10 +179,11 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
-                    $formatsString = implode(';', StringUtil::deserialize($imageSizes->formats, true));
                     $formats = [];
 
-                    if ('' !== $formatsString) {
+                    if ('' !== $imageSizes->formats) {
+                        $formatsString = implode(';', StringUtil::deserialize($imageSizes->formats, true));
+
                         foreach (explode(';', $formatsString) as $format) {
                             [$source, $targets] = explode(':', $format, 2);
                             $targets = explode(',', $targets);
