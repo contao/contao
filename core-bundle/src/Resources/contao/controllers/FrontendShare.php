@@ -31,7 +31,7 @@ class FrontendShare extends Frontend
 			case 'facebook':
 				return new RedirectResponse(
 					'https://www.facebook.com/sharer/sharer.php'
-						. '?u=' . rawurlencode(Input::get('u', true))
+						. '?p[url]=' . rawurlencode(Input::get('u', true))
 				);
 
 			case 'twitter':
