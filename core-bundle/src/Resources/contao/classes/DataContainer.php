@@ -78,16 +78,16 @@ abstract class DataContainer extends Backend
 	protected $root = array();
 
 	/**
-	 * IDs of parents of the root records
+	 * IDs of children of root records (permissions)
 	 * @var array
 	 */
-	protected $rootTrails = array();
+	protected $rootChildren = array();
 
 	/**
-	 * IDs of parents already rendered
+	 * IDs of visible parents of the root records
 	 * @var array
 	 */
-	protected $rootTrailsRendered = array();
+	protected $visibleRootTrails = array();
 
 	/**
 	 * WHERE clause of the database query
