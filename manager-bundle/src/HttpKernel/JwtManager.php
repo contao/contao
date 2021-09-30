@@ -52,7 +52,7 @@ class JwtManager
             $filesystem->dumpFile($secretFile, $secret);
         }
 
-        $this->config = $config ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::file($secretFile));
+        $this->config = $config ?: Configuration::forSymmetricSigner(new Sha256(), InMemory::plainText($secret));
         $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
     }
 
