@@ -3841,7 +3841,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$id = (int) $id;
 
 		// Must be either visible in the root trail or allowed by permissions (or their children)
-		if (!\in_array($id, $this->visibleRootTrails, true) && !\in_array($id, $this->root, true) && !\in_array($id, $this->rootChildren, true)) {
+		if (!\in_array($id, $this->visibleRootTrails, true) && !\in_array($id, $this->root, true) && !\in_array($id, $this->rootChildren, true))
+		{
 			return '';
 		}
 

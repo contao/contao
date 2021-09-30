@@ -922,11 +922,11 @@ abstract class Backend extends Controller
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
-	 * @param boolean       $isRootTrailPage
+	 * @param boolean       $isVisibleRootTrailPage
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isRootTrailPage=false)
+	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{
@@ -949,7 +949,7 @@ abstract class Backend extends Controller
 		}
 
 		// Add the breadcrumb link if you have access to that page
-		if (!$isRootTrailPage)
+		if (!$isVisibleRootTrailPage)
 		{
 			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 		}
