@@ -248,6 +248,7 @@ class ModuleEventReader extends Events
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
