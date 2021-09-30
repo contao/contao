@@ -29,6 +29,17 @@ class PictureFactory implements PictureFactoryInterface
 {
     private const ASPECT_RATIO_THRESHOLD = 0.05;
 
+    private const FORMATS_ORDER = [
+        'jxl' => 1,
+        'avif' => 2,
+        'heic' => 3,
+        'webp' => 4,
+        'png' => 5,
+        'jpg' => 6,
+        'jpeg' => 7,
+        'gif' => 8,
+    ];
+
     /**
      * @var array
      */
@@ -171,22 +182,29 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
-                    $config->setFormats(array_merge(
-                        [],
-                        ...array_map(
-                            static function ($formatsString) {
-                                $formats = [];
+                    $formatsString = implode(';', StringUtil::deserialize($imageSizes->formats, true));
+                    $formats = [];
 
-                                foreach (explode(';', $formatsString) as $format) {
-                                    [$source, $targets] = explode(':', $format, 2);
-                                    $formats[$source] = explode(',', $targets);
-                                }
+                    foreach (explode(';', $formatsString) as $format) {
+                        [$source, $targets] = explode(':', $format, 2);
+                        $targets = explode(',', $targets);
 
-                                return $formats;
-                            },
-                            StringUtil::deserialize($imageSizes->formats, true)
-                        )
-                    ));
+                        if (!isset($formats[$source])) {
+                            $formats[$source] = $targets;
+                            continue;
+                        }
+
+                        $formats[$source] = array_unique(array_merge($formats[$source], $targets));
+
+                        usort(
+                            $formats[$source],
+                            static function ($a, $b) {
+                                return (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b);
+                            }
+                        );
+                    }
+
+                    $config->setFormats($formats);
                 }
 
                 if ($imageSizes) {

@@ -1294,7 +1294,15 @@ abstract class Widget extends Controller
 			}
 		}
 
-		$arrAttributes['allowHtml'] = (($arrData['eval']['allowHtml'] ?? null) || ($arrData['eval']['rte'] ?? null) || ($arrData['eval']['preserveTags'] ?? null));
+		if (!empty($arrData['eval']['preserveTags']))
+		{
+			$arrAttributes['allowHtml'] = true;
+		}
+
+		if (!isset($arrAttributes['allowHtml']))
+		{
+			$arrAttributes['allowHtml'] = \in_array($arrData['eval']['rte'] ?? null, array('tinyMCE', 'ace|html'), true);
+		}
 
 		// Decode entities if HTML is allowed
 		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
