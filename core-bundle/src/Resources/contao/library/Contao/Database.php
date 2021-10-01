@@ -551,7 +551,7 @@ class Database
 			}
 		}
 
-		return $arrReturn;
+		return array_map('\intval', $arrReturn);
 	}
 
 	/**

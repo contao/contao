@@ -3588,8 +3588,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? 'ORDER BY sorting' : ''))
 											 ->execute()
 											 ->fetchEach('id');
-
-			$topMostRootIds = array_map('\intval', $topMostRootIds);
 		}
 
 		// Call a recursive function that builds the tree
@@ -3838,10 +3836,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		$id = (int) $id;
-
 		// Must be either visible in the root trail or allowed by permissions (or their children)
-		if (!\in_array($id, $this->visibleRootTrails, true) && !\in_array($id, $this->root, true) && !\in_array($id, $this->rootChildren, true))
+		if (!\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
 			return '';
 		}
@@ -3982,7 +3978,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
-		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails, true);
+		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -6249,11 +6245,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		// Fetch all children of the root
 		$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
-
-		// Ensure type safety
-		$this->root = array_map('\intval', $this->root);
-		$this->visibleRootTrails = array_map('\intval', $this->visibleRootTrails);
-		$this->rootChildren = array_map('\intval', $this->rootChildren);
 	}
 
 	/**
