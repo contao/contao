@@ -189,7 +189,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(5, 6));
-		$this->root = null;
 		$this->arrModule = $arrModule;
 
 		// Call onload_callback (e.g. to check permissions)
@@ -209,42 +208,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
-		// Get the IDs of all root records (tree view)
-		if ($this->treeView)
-		{
-			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
-
-			// Unless there are any root records specified, use all records with parent ID 0
-			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
-			{
-				$objIds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''))
-										 ->execute(0);
-
-				if ($objIds->numRows > 0)
-				{
-					$this->root = $objIds->fetchEach('id');
-				}
-			}
-
-			// Get root records from global configuration file
-			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
-			{
-				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
-				{
-					$this->root = array(0);
-				}
-				else
-				{
-					$this->root = $this->eliminateNestedPages($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $table, $this->Database->fieldExists('sorting', $table));
-				}
-			}
-		}
-
-		// Get the IDs of all root records (list view or parent view)
-		elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
-		{
-			$this->root = array_unique($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']);
-		}
+		$this->initRoots();
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$route = $request->attributes->get('_route');
@@ -1752,7 +1716,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	public function move()
 	{
 		// Proceed only if all mandatory variables are set
-		if ($this->intId && Input::get('sid') && (!($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) || !\in_array($this->intId, $this->root)))
+		if ($this->intId && Input::get('sid') && (!$this->root || !\in_array($this->intId, $this->root)))
 		{
 			$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=? OR id=?")
 									 ->limit(2)
@@ -3616,12 +3580,22 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
-		// Call a recursive function that builds the tree
-		if (\is_array($this->root))
+		$topMostRootIds = $this->root;
+
+		if (!empty($this->visibleRootTrails))
 		{
-			for ($i=0, $c=\count($this->root); $i<$c; $i++)
+			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? 'ORDER BY sorting' : ''))
+											 ->execute()
+											 ->fetchEach('id');
+		}
+
+		// Call a recursive function that builds the tree
+		if (!empty($topMostRootIds))
+		{
+			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $this->root[$i], array('p'=>($this->root[($i-1)] ?? null), 'n'=>($this->root[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && $blnClipboard && $this->root[$i] == $arrClipboard['id']), false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && $blnClipboard && $this->$topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
 			}
 		}
 
@@ -3657,7 +3631,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$_buttons = '&nbsp;';
 
 		// Show paste button only if there are no root records specified
-		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && ((empty($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null) !== false) || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? null)) && Input::get('act') != 'select')
+		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 && (!$this->root || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? null)) && Input::get('act') != 'select')
 		{
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $childs, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -3862,6 +3836,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
+		// Must be either visible in the root trail or allowed by permissions (or their children)
+		if (!\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		{
+			return '';
+		}
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
@@ -3998,6 +3978,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
+		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -4006,11 +3987,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$strMethod = $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'][1];
 
 			$this->import($strClass);
-			$return .= $this->$strClass->$strMethod($objRow->row(), $label, $this, '', false, $blnProtected);
+			$return .= $this->$strClass->$strMethod($objRow->row(), $label, $this, '', false, $blnProtected, $isVisibleRootTrailPage);
 		}
 		elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
 		{
-			$return .= $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']($objRow->row(), $label, $this, '', false, $blnProtected);
+			$return .= $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']($objRow->row(), $label, $this, '', false, $blnProtected, $isVisibleRootTrailPage);
 		}
 		else
 		{
@@ -4023,7 +4004,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$_buttons = '';
 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
-		if ($this->strTable == $table)
+		if ($this->strTable == $table && !$isVisibleRootTrailPage)
 		{
 			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($objRow->row(), $table, $this->root, $blnCircularReference, $childs, $previous, $next);
 
@@ -4033,8 +4014,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
-		// Paste buttons
-		if ($arrClipboard !== false && Input::get('act') != 'select')
+		// Paste buttons (not for root trails)
+		if ($arrClipboard !== false && Input::get('act') != 'select' && !$isVisibleRootTrailPage)
 		{
 			$_buttons .= ' ';
 
@@ -4062,7 +4043,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Regular tree (on cut: disable buttons of the page and all its childs to avoid circular references)
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
 				{
-					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']) && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || ($this->root && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
 				}
 
@@ -5744,9 +5725,9 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
 
 			// Limit the options if there are root records
-			if (isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) && $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] !== false)
+			if ($this->root)
 			{
-				$rootIds = array_map('\intval', $GLOBALS['TL_DCA'][$table]['list']['sorting']['root']);
+				$rootIds = $this->root;
 
 				// Also add the child records of the table (see #1811)
 				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == 5)
@@ -6209,6 +6190,62 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		return $group;
+	}
+
+	/**
+	 * Initialize the root pages
+	 */
+	protected function initRoots()
+	{
+		$table = $this->strTable;
+
+		// Get the IDs of all root records (tree view)
+		if ($this->treeView)
+		{
+			$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 6 ? $this->ptable : $this->strTable;
+
+			// Unless there are any root records specified, use all records with parent ID 0
+			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
+			{
+				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0");
+
+				if ($objIds->numRows > 0)
+				{
+					$this->root = $objIds->fetchEach('id');
+				}
+			}
+
+			// Get root records from global configuration file
+			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
+			{
+				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
+				{
+					$this->root = array(0);
+				}
+				else
+				{
+					$this->root = $this->eliminateNestedPages($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'], $table);
+				}
+			}
+		}
+
+		// Get the IDs of all root records (list view or parent view)
+		elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
+		{
+			$this->root = array_unique($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']);
+		}
+
+		// Fetch visible root trails if enabled
+		if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
+		{
+			foreach ($this->root as $id)
+			{
+				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $this->Database->getParentRecords($id, $table, true)));
+			}
+		}
+
+		// Fetch all children of the root
+		$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
 	}
 
 	/**

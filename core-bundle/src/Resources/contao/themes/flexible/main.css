@@ -1198,9 +1198,15 @@ table.tl_listing {
 .tl_tree_xtnd .tl_file .tl_left img {
 	margin-right:2px;
 }
-.tl_left > a:last-of-type {
+.tl_left > * {
 	vertical-align:middle;
 }
+@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
+	.tl_left > *:last-of-type {
+		position:relative;
+		top:1px;
+	}
+}}
 .tl_file_manager .tl_file .tl_left > a:first-child {
 	vertical-align:1px;
 }

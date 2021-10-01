@@ -83,6 +83,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'sorting' => array
 		(
 			'mode'                    => 5,
+			'showRootTrails' 	      => true,
 			'icon'                    => 'pagemounts.svg',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
 			'panelLayout'             => 'filter;search'
@@ -1369,12 +1370,13 @@ class tl_page extends Backend
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
+	 * @param boolean       $isVisibleRootTrailPage
 	 *
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
-		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
+		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage);
 	}
 
 	/**

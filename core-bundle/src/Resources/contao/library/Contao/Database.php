@@ -551,7 +551,7 @@ class Database
 			}
 		}
 
-		return $arrReturn;
+		return array_map('\intval', $arrReturn);
 	}
 
 	/**
@@ -559,23 +559,29 @@ class Database
 	 *
 	 * @param integer $intId    The ID of the record
 	 * @param string  $strTable The table name
+	 * @param bool    $skipId   Omit the provided ID in the result set
 	 *
 	 * @return array An array of parent record IDs
 	 */
-	public function getParentRecords($intId, $strTable)
+	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
-		$arrReturn = array();
+		// Limit to a nesting level of 10
+		$ids = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
+					->execute($intId)
+					->fetchEach('id');
 
-		// Currently supports a nesting-level of 10
-		$objPages = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
-						 ->execute($intId);
-
-		while ($objPages->next())
+		// Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
+		if (\count($ids) === 10)
 		{
-			$arrReturn[] = $objPages->id;
+			$ids = array_merge($ids, $this->getParentRecords(end($ids), $strTable, true));
 		}
 
-		return $arrReturn;
+		if ($skipId && ($key = array_search($intId, $ids)) !== false)
+		{
+			unset($ids[$key]);
+		}
+
+		return array_map('\intval', array_values($ids));
 	}
 
 	/**
