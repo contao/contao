@@ -427,6 +427,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $container = new ContainerBuilder(
             new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
                 'kernel.debug' => false,
                 'kernel.charset' => 'UTF-8',
             ])

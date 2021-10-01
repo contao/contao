@@ -28,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webmozart\PathUtil\Path;
 
@@ -323,7 +324,7 @@ class ContaoCoreExtension extends Extension
 
     private function getComposerPublicDir(string $projectDir): ?string
     {
-        if (!file_exists($composerJsonFilePath = Path::join($projectDir, 'composer.json'))) {
+        if (!(new Filesystem())->exists($composerJsonFilePath = Path::join($projectDir, 'composer.json'))) {
             return null;
         }
 
