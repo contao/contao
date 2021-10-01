@@ -133,7 +133,7 @@ class MetaWizard extends Widget
 			return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';
 		}
 
-		$languages = $this->getLanguages(true);
+		$languages = $this->getLanguages();
 
 		// Add the existing entries
 		if (!empty($this->varValue))
