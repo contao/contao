@@ -167,6 +167,68 @@ class PictureFactoryTest extends TestCase
         $this->assertSame('lazy', $picture->getImg()['loading']);
     }
 
+    public function testCorrectlyHandlesEmptyImageFormats(): void
+    {
+        $path = $this->getTempDir().'/images/dummy.jpg';
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
+
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+        $pictureGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with(
+                $this->anything(),
+                $this->callback(
+                    function (PictureConfiguration $pictureConfig): bool {
+                        $this->assertSame([PictureConfiguration::FORMAT_DEFAULT => [PictureConfiguration::FORMAT_DEFAULT]], $pictureConfig->getFormats());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($pictureMock)
+        ;
+
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->willReturn($imageMock)
+        ;
+
+        $imageSizeProperties = [
+            'width' => 100,
+            'height' => 200,
+            'resizeMode' => ResizeConfiguration::MODE_BOX,
+            'zoom' => 50,
+            'sizes' => '100vw',
+            'densities' => '1x, 2x',
+            'cssClass' => 'my-size',
+            'lazyLoading' => true,
+            'formats' => '',
+        ];
+
+        /** @var ImageSizeModel&MockObject $imageSizeModel */
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel
+            ->method('row')
+            ->willReturn($imageSizeProperties)
+        ;
+
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
+        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => null]);
+
+        $adapters = [
+            ImageSizeModel::class => $imageSizeAdapter,
+            ImageSizeItemModel::class => $imageSizeItemAdapter,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
+        $pictureFactory->create($path, 1);
+    }
+
     public function testCreatesAPictureObjectFromAnImageObjectWithAPredefinedImageSize(): void
     {
         $predefinedSizes = [
