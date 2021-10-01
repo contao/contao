@@ -559,7 +559,7 @@ class Database
 	 *
 	 * @param integer $intId    The ID of the record
 	 * @param string  $strTable The table name
-	 * @param bool    $skipId   This method will include the provided ID in the result set. Pass true to omit it.
+	 * @param bool    $skipId   Omit the provided ID in the result set
 	 *
 	 * @return array An array of parent record IDs
 	 */
@@ -571,8 +571,7 @@ class Database
 		$objPages = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
 						 ->execute($intId);
 
-		$ids = $objPages->fetchEach('id');
-		$ids = array_map('\intval', $ids);
+		$ids = array_map('\intval', $objPages->fetchEach('id'));
 
 		// Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
 		if (\count($ids) === 10)

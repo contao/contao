@@ -3580,16 +3580,16 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 		}
 
+		$topMostRootIds = $this->root;
+
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = array_map('\intval', $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? 'ORDER BY sorting' : ''))
-				->execute()
-				->fetchEach('id'));
-		}
-		else
-		{
-			$topMostRootIds = $this->root;
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? 'ORDER BY sorting' : ''))
+											 ->execute()
+											 ->fetchEach('id');
+
+			$topMostRootIds = array_map('\intval', $topMostRootIds);
 		}
 
 		// Call a recursive function that builds the tree
@@ -6195,7 +6195,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return $group;
 	}
 
-	protected function initRoots(): void
+	/**
+	 * Initialize the root pages
+	 */
+	protected function initRoots()
 	{
 		$table = $this->strTable;
 
@@ -6207,8 +6210,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
-				$objIds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?")
-					->execute(0);
+				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0");
 
 				if ($objIds->numRows > 0)
 				{
