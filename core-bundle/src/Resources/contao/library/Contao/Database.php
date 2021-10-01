@@ -566,10 +566,9 @@ class Database
 	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
 		// Limit to a nesting level of 10
-		$objPages = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
-						 ->execute($intId);
-
-		$ids = array_map('\intval', $objPages->fetchEach('id'));
+		$ids = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
+					->execute($intId)
+					->fetchEach('id');
 
 		// Trigger recursion in case our query returned exactly 10 IDs in which case we might have higher parent records
 		if (\count($ids) === 10)
@@ -577,12 +576,12 @@ class Database
 			$ids = array_merge($ids, $this->getParentRecords(end($ids), $strTable, true));
 		}
 
-		if ($skipId)
+		if ($skipId && ($key = array_search($intId, $ids)) !== false)
 		{
-			unset($ids[array_search($intId, $ids)]);
+			unset($ids[$key]);
 		}
 
-		return array_values($ids);
+		return array_map('\intval', array_values($ids));
 	}
 
 	/**
