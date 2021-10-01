@@ -565,8 +565,6 @@ class Database
 	 */
 	public function getParentRecords($intId, $strTable, bool $skipId = false)
 	{
-		$intId = (int) $intId;
-
 		// Limit to a nesting level of 10
 		$objPages = $this->prepare("SELECT id, @pid:=pid FROM $strTable WHERE id=?" . str_repeat(" UNION SELECT id, @pid:=pid FROM $strTable WHERE id=@pid", 9))
 						 ->execute($intId);
