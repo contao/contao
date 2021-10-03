@@ -345,6 +345,15 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $chains;
     }
 
+    public function getCurrentThemeSlug()
+    {
+        if (null === ($page = $GLOBALS['objPage'] ?? null) || null === ($path = $page->templateGroup)) {
+            return $this->currentThemeSlug = false;
+        }
+
+        return $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
+    }
+
     /**
      * Refreshes the template hierarchy. Bear in mind that this will induce
      * filesystem operations for each of the tracked template paths.
@@ -357,24 +366,33 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             $templates = $this->templateLocator->findTemplates($searchPath);
 
             foreach ($templates as $shortName => $templatePath) {
-                $identifier = ContaoTwigUtil::getIdentifier($shortName);
-
-                if (isset($templatesByNamespace[$namespace][$identifier])) {
+                if (isset($templatesByNamespace[$namespace][$shortName])) {
                     $basePath = Path::getLongestCommonBasePath($this->paths[$namespace]);
 
-                    throw new \OutOfBoundsException("There cannot be more than one '$identifier' template in '$basePath'.");
+                    throw new \OutOfBoundsException("There cannot be more than one '$shortName' template in '$basePath'.");
                 }
 
-                $templatesByNamespace[$namespace][$identifier] = [$shortName, $templatePath];
+                $templatesByNamespace[$namespace][$shortName] = $templatePath;
             }
         }
 
         $hierarchy = [];
 
         foreach ($templatesByNamespace as $namespace => $templates) {
-            foreach ($templates as $identifier => [$shortName, $path]) {
+            foreach ($templates as $shortName => $path) {
+                $identifier = ContaoTwigUtil::getIdentifier($shortName);
+
                 if (!isset($hierarchy[$identifier])) {
                     $hierarchy[$identifier] = [];
+                }
+
+                // If both variants are defined, Twig templates take precedence over html5 templates
+                if ('html5' === Path::getExtension($shortName)) {
+                    $twigVariantPath = preg_replace('/^(.*)\.html5$/', '$1.html.twig', $path);
+
+                    if (isset($hierarchy[$identifier][$twigVariantPath])) {
+                        continue;
+                    }
                 }
 
                 $hierarchy[$identifier][$path] = "@$namespace/$shortName";
@@ -402,7 +420,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return null;
         }
 
-        if (false === ($themeSlug = $this->currentThemeSlug ?? $this->getThemeSlug())) {
+        if (null === $this->currentThemeSlug) {
+            $this->currentThemeSlug = $this->getCurrentThemeSlug();
+        }
+
+        if (false === ($themeSlug = $this->currentThemeSlug)) {
             return null;
         }
 
@@ -410,19 +432,5 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $template = "$namespace/$parts[1]";
 
         return $this->exists($template) ? $template : null;
-    }
-
-    /**
-     * Returns and stores the current theme slug or false if not applicable.
-     *
-     * @return string|false
-     */
-    private function getThemeSlug()
-    {
-        if (null === ($page = $GLOBALS['objPage'] ?? null) || null === ($path = $page->templateGroup)) {
-            return $this->currentThemeSlug = false;
-        }
-
-        return $this->currentThemeSlug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
     }
 }

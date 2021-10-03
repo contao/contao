@@ -47,4 +47,11 @@ interface TemplateHierarchyInterface
      * Finds the first template in the hierarchy and returns the logical name.
      */
     public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string;
+
+    /**
+     * Returns the current theme slug or false if not applicable.
+     *
+     * @return string|false
+     */
+    public function getCurrentThemeSlug();
 }

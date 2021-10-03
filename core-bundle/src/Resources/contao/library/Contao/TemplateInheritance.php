@@ -11,9 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provides the template inheritance logic
@@ -362,19 +364,22 @@ trait TemplateInheritance
 	 */
 	protected function renderTwigSurrogateIfExists(): ?string
 	{
-		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		if (
+			!$this instanceof Template ||
+			null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)) ||
+			null === ($hierarchy = System::getContainer()->get(TemplateHierarchyInterface::class, ContainerInterface::NULL_ON_INVALID_REFERENCE))
+		) {
+			return null;
+		}
+
+		$template = $hierarchy->getFirst($this->strTemplate, $hierarchy->getCurrentThemeSlug());
+
+		if ('html5' === Path::getExtension($template, true))
 		{
 			return null;
 		}
 
-		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
-
-		if ($twig->getLoader()->exists($templateCandidate))
-		{
-			return $twig->render($templateCandidate, ContextHelper::fromContaoTemplate($this));
-		}
-
-		return null;
+		return $twig->render($template, ContextHelper::fromContaoTemplate($this));
 	}
 }
 

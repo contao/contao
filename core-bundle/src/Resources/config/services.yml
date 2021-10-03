@@ -944,6 +944,7 @@ services:
             - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
             - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
             - '%kernel.project_dir%'
+        public: true
         tags:
             - { name: twig.loader, priority: 2 }
             - { name: kernel.reset, method: reset }
