@@ -316,9 +316,15 @@ class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define attributes key if href is set
 
-            // Map "imageTitle" to "linkTitle"
-            $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
-            unset($templateData['imageTitle']);
+            // Use link "title" attribute for "linkTitle" as it is already output explicitly in image.html5 (see #3385)
+            if (\array_key_exists('title', $linkAttributes)) {
+                $templateData['linkTitle'] = $linkAttributes['title'];
+                unset($linkAttributes['title']);
+            } else {
+                // Map "imageTitle" to "linkTitle"
+                $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
+                unset($templateData['imageTitle']);
+            }
         } elseif ($metadata->has(Metadata::VALUE_TITLE)) {
             $templateData['picture']['title'] = StringUtil::specialchars($metadata->getTitle());
         }

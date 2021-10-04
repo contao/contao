@@ -194,7 +194,6 @@ abstract class ModuleNews extends Module
 					$figure = $figureBuilder
 						->setLinkHref($objTemplate->link)
 						->setLinkAttribute('title', $linkTitle)
-						->setOptions(array('linkTitle' => $linkTitle)) // Backwards compatibility
 						->build();
 				}
 
