@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\CoreBundle\Fixtures\Dummy\Stringable;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\StringUtil;
 use Contao\System;
