@@ -917,9 +917,18 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if (!$str)
+		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
 		{
+			@trigger_error('Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			return '';
+		}
+
+		$str = (string) $str;
+
+		if ('' === $str)
+		{
+			return $str;
 		}
 
 		if (!$from)
