@@ -686,7 +686,19 @@ class StringUtilTest extends TestCase
         ];
 
         yield 'Stringable argument' => [
-            new Stringable('foobar'),
+            new class('foobar') {
+                private $value;
+
+                public function __construct(string $value)
+                {
+                    $this->value = $value;
+                }
+
+                public function __toString(): string
+                {
+                    return $this->value;
+                }
+            },
             'UTF-8',
             'foobar',
             'UTF-8',
