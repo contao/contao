@@ -163,6 +163,11 @@ class SitemapController extends AbstractController
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
         }
 
+        // Backwards compatibility for PHP 7.3
+        if (empty($result)) {
+            return [];
+        }
+
         return array_merge(...$result);
     }
 }
