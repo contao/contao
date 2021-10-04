@@ -136,6 +136,11 @@ class SitemapController extends AbstractController
 
         // Recursively walk through all subpages
         foreach ($pageModels as $pageModel) {
+            // Skip error pages (see #3415)
+            if (0 === strncmp($pageModel->type, 'error_', 6)) {
+                continue;
+            }
+
             if ($pageModel->protected && !$this->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $pageModel->groups)) {
                 continue;
             }
