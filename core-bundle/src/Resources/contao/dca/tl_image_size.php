@@ -204,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
 			'exclude'                 => true,
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(1024) NOT NULL default ''"
 		),
 		'skipIfDimensionsMatch' => array
 		(
@@ -397,55 +397,87 @@ class tl_image_size extends Backend
 	public function getFormats(DataContainer $dc=null)
 	{
 		$formats = array();
+		$missingSupport = array();
 
 		if ($dc->value)
 		{
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
-		if (!in_array('webp', System::getContainer()->getParameter('contao.image.valid_extensions')))
+		foreach ($this->getSupportedFormats() as $format => $isSupported)
 		{
-			return $formats;
+			if (!in_array($format, System::getContainer()->getParameter('contao.image.valid_extensions')))
+			{
+				continue;
+			}
+
+			if (!$isSupported)
+			{
+				$missingSupport[] = $format;
+
+				continue;
+			}
+
+			$formats[] = "png:$format,png";
+			$formats[] = "jpg:$format,jpg;jpeg:$format,jpeg";
+			$formats[] = "gif:$format,gif";
+			$formats[] = "$format:$format,png";
+			$formats[] = "$format:$format,jpg";
 		}
 
-		if (!$this->supportsWebp())
+		if ($missingSupport)
 		{
 			$GLOBALS['TL_DCA']['tl_image_size']['fields']['formats']['label'] = array
 			(
 				$GLOBALS['TL_LANG']['tl_image_size']['formats'][0],
-				$GLOBALS['TL_LANG']['tl_image_size']['formatsWebpNotSupported'],
+				sprintf($GLOBALS['TL_LANG']['tl_image_size']['formatsNotSupported'], implode(', ', $missingSupport)),
 			);
-
-			return $formats;
 		}
 
-		return array_merge($formats, array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg'));
+		return array_values(array_unique($formats));
 	}
 
 	/**
-	 * Check if WEBP is supported
+	 * Check if WEBP, AVIF, HEIC or JXL is supported
 	 *
-	 * @return boolean
+	 * @return array
 	 */
-	private function supportsWebp()
+	private function getSupportedFormats()
 	{
+		$supported = array
+		(
+			'webp' => false,
+			'avif' => false,
+			'heic' => false,
+			'jxl' => false,
+		);
+
 		$imagine = System::getContainer()->get('contao.image.imagine');
 
 		if ($imagine instanceof ImagickImagine)
 		{
-			return in_array('WEBP', Imagick::queryFormats('WEBP'), true);
+			foreach (array_keys($supported) as $format)
+			{
+				$supported[$format] = in_array(strtoupper($format), Imagick::queryFormats(strtoupper($format)), true);
+			}
 		}
 
 		if ($imagine instanceof GmagickImagine)
 		{
-			return in_array('WEBP', (new Gmagick())->queryformats('WEBP'), true);
+			foreach (array_keys($supported) as $format)
+			{
+				$supported[$format] = in_array(strtoupper($format), (new Gmagick())->queryformats(strtoupper($format)), true);
+			}
 		}
 
 		if ($imagine instanceof GdImagine)
 		{
-			return function_exists('imagewebp');
+			foreach (array_keys($supported) as $format)
+			{
+				$supported[$format] = function_exists('image' . $format);
+			}
 		}
 
-		return false;
+		return $supported;
 	}
 }

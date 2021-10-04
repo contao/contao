@@ -56,8 +56,8 @@
       <trans-unit id="tl_image_size.formats.1">
         <source>Here you can select which image formats shall be converted.</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.formatsWebpNotSupported">
-        <source>WEBP is not supported on your server.</source>
+      <trans-unit id="tl_image_size.formatsNotSupported">
+        <source>The following formats are not supported on your server: %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
@@ -121,6 +121,51 @@
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,jpg">
         <source>WEBP to JPG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.png:avif,png">
+        <source>PNG to AVIF</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jpg:avif,jpg;jpeg:avif,jpeg">
+        <source>JPEG to AVIF</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.gif:avif,gif">
+        <source>GIF to AVIF</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.avif:avif,png">
+        <source>AVIF to PNG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.avif:avif,jpg">
+        <source>AVIF to JPG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.png:heic,png">
+        <source>PNG to HEIC</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jpg:heic,jpg;jpeg:heic,jpeg">
+        <source>JPEG to HEIC</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.gif:heic,gif">
+        <source>GIF to HEIC</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.heic:heic,png">
+        <source>HEIC to PNG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.heic:heic,jpg">
+        <source>HEIC to JPG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.png:jxl,png">
+        <source>PNG to JXL</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jpg:jxl,jpg;jpeg:jxl,jpeg">
+        <source>JPEG to JXL</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.gif:jxl,gif">
+        <source>GIF to JXL</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jxl:jxl,png">
+        <source>JXL to PNG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.jxl:jxl,jpg">
+        <source>JXL to JPG</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
