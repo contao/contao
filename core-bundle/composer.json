@@ -47,7 +47,7 @@
         "contao/imagine-svg": "^1.0",
         "doctrine/dbal": "^3.1",
         "doctrine/doctrine-bundle": "^2.4",
-        "doctrine/orm": "^2.10@dev",
+        "doctrine/orm": "^2.10",
         "doctrine/persistence": "^2.0",
         "dragonmantank/cron-expression": "^2.3",
         "friendsofsymfony/http-cache": "^2.6",
