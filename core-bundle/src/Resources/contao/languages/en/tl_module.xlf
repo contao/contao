@@ -332,6 +332,12 @@
       <trans-unit id="tl_module.reg_close.1">
         <source>Here you can define how to handle the deletion.</source>
       </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.0">
+        <source>Delete home directory</source>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+      </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
       </trans-unit>

@@ -106,6 +106,12 @@ class ModuleCloseAccount extends Module
 				// Remove the account
 				if ($this->reg_close == 'close_delete')
 				{
+					if ($this->reg_deleteDir && $objMember->assignDir && ($filesModel = FilesModel::findByUuid($objMember->homeDir)))
+					{
+						$folder = new Folder($filesModel->path);
+						$folder->delete();
+					}
+
 					$objMember->delete();
 					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
 				}
