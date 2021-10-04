@@ -233,4 +233,130 @@ class StringUtilTest extends TestCase
             "Headline\nText\nList 1\nList 2\nInlinetext and link\nsingle newline",
         ];
     }
+
+    /**
+     * @dataProvider validEncodingsProvider
+     */
+    public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
+    {
+        $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function validEncodingsProvider(): \Generator
+    {
+        yield 'From UTF-8 to ISO-8859-1' => [
+            '𝚏ōȏճăᴦ',
+            'ISO-8859-1',
+            utf8_decode('𝚏ōȏճăᴦ'),
+            'UTF-8',
+        ];
+
+        yield 'From ISO-8859-1 to UTF-8' => [
+            '𝚏ōȏճăᴦ',
+            'UTF-8',
+            utf8_encode('𝚏ōȏճăᴦ'),
+            'ISO-8859-1',
+        ];
+
+        yield 'From UTF-8 to ASCII' => [
+            '𝚏ōȏճăᴦbaz',
+            'ASCII',
+            'baz',
+            'UTF-8',
+        ];
+
+        yield 'Same encoding with UTF-8' => [
+            '𝚏ōȏճăᴦ',
+            'UTF-8',
+            '𝚏ōȏճăᴦ',
+            'UTF-8',
+        ];
+
+        yield 'Same encoding with ASCII' => [
+            'foobar',
+            'ASCII',
+            'foobar',
+            'ASCII',
+        ];
+
+        yield 'Empty string' => [
+            '',
+            'UTF-8',
+            '',
+        ];
+
+        yield 'Integer argument' => [
+            42,
+            'UTF-8',
+            '42',
+            'ASCII',
+        ];
+
+        yield 'Integer argument with same encoding' => [
+            42,
+            'UTF-8',
+            '42',
+            'UTF-8',
+        ];
+
+        yield 'Float argument with same encoding' => [
+            13.37,
+            'ASCII',
+            '13.37',
+            'ASCII',
+        ];
+
+        yield 'String with blanks' => [
+            '  ',
+            'UTF-8',
+            '  ',
+        ];
+
+        yield 'String "0"' => [
+            '0',
+            'UTF-8',
+            '0',
+        ];
+
+        yield 'Stringable argument' => [
+            new class('foobar') {
+                private string $value;
+
+                public function __construct(string $value)
+                {
+                    $this->value = $value;
+                }
+
+                public function __toString(): string
+                {
+                    return $this->value;
+                }
+            },
+            'UTF-8',
+            'foobar',
+            'UTF-8',
+        ];
+    }
+
+    /**
+     * @group legacy
+     *
+     * @dataProvider invalidEncodingsProvider
+     *
+     * @expectedDeprecation Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.
+     */
+    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
+    {
+        $result = StringUtil::convertEncoding($value, 'UTF-8');
+
+        $this->assertSame('', $result);
+    }
+
+    public function invalidEncodingsProvider(): \Generator
+    {
+        yield 'Array' => [[]];
+        yield 'Non-stringable object' => [new \stdClass()];
+    }
 }
