@@ -14,14 +14,17 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentUriGenerator;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 /**
  * @internal
@@ -64,6 +67,14 @@ class PreviewUrlConvertListener
 
             try {
                 $event->setUrl($page->getPreviewUrl($this->getParams($request)));
+            } catch (RouteParametersException $e) {
+                $route = $e->getRoute();
+
+                if (!$e->getPrevious() instanceof InvalidParameterException || !$route instanceof PageRoute || !$route->getPageModel()->requireItem) {
+                    $event->setUrl($this->getFragmentUrl($request, $page));
+                }
+
+                // Swallow exception and set no url for pages with requireItem (see #3525)
             } catch (ExceptionInterface $e) {
                 $event->setUrl($this->getFragmentUrl($request, $page));
             }

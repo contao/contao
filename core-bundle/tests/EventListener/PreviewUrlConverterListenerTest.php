@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
+use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -25,6 +26,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class PreviewUrlConverterListenerTest extends TestCase
 {
@@ -244,5 +246,48 @@ class PreviewUrlConverterListenerTest extends TestCase
         }
 
         return $pageRegistry;
+    }
+
+    public function testReturnsEmptyUrlForFailedRouteGenerationForPageWithRequireItem(): void
+    {
+        $request = new Request();
+        $request->query->set('page', '42');
+
+        $pageModel = $this->createMock(PageModel::class);
+        $route = $this->createMock(PageRoute::class);
+        $previous = new InvalidParameterException();
+        $exception = new RouteParametersException($route, [], 0, $previous);
+
+        $route
+            ->expects($this->once())
+            ->method('getPageModel')
+            ->willReturn($pageModel)
+        ;
+
+        $pageModel
+            ->expects($this->once())
+            ->method('getPreviewUrl')
+            ->with(null)
+            ->willThrowException($exception)
+        ;
+
+        $pageModel
+            ->expects($this->once())
+            ->method('__get')
+            ->with('requireItem')
+            ->willReturn(true)
+        ;
+
+        $adapters = [
+            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlConvertEvent($request);
+
+        $listener = new PreviewUrlConvertListener($framework);
+        $listener($event);
+
+        $this->assertNull($event->getUrl());
     }
 }

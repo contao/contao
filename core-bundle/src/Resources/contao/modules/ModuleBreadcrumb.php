@@ -96,7 +96,8 @@ class ModuleBreadcrumb extends Module
 
 		for ($i=(\count($pages)-1); $i>0; $i--)
 		{
-			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))
+			// Skip pages that require an item (see #3450)
+			if (($pages[$i]->hide && !$this->showHidden) || $pages[$i]->requireItem || (!$pages[$i]->published && !$blnShowUnpublished))
 			{
 				continue;
 			}
@@ -135,20 +136,24 @@ class ModuleBreadcrumb extends Module
 					break;
 			}
 
-			$items[] = array
-			(
-				'isRoot'   => false,
-				'isActive' => false,
-				'href'     => $href,
-				'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
-				'link'     => $pages[$i]->title,
-				'data'     => $pages[$i]->row(),
-				'class'    => ''
-			);
+			// Do not add non-root pages with an empty URL to the breadcrumbs
+			if ('' !== $href)
+			{
+				$items[] = array
+				(
+					'isRoot'   => false,
+					'isActive' => false,
+					'href'     => $href,
+					'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
+					'link'     => $pages[$i]->title,
+					'data'     => $pages[$i]->row(),
+					'class'    => ''
+				);
+			}
 		}
 
-		// Active article
-		if (isset($_GET['articles']))
+		// Only add active article(s) to the breadcrumbs if the current page does not require an item (see #3450)
+		if (isset($_GET['articles']) && !$pages[0]->requireItem)
 		{
 			$items[] = array
 			(
@@ -198,7 +203,8 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => true,
-				'href'     => $this->getPageFrontendUrl($pages[0]),
+				// Use the current request without query string for the current page (see #3450)
+				'href'     => strtok(Environment::get('request'), '?'),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
