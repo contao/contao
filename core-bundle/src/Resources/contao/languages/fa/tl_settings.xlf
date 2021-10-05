@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>این آدرس ایمیل برای ارسال و دریافت پیغام‌های سیستمی استفاده خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -66,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.0">
         <source>Do not collapse elements</source>
-        <target>جمع نکردن عنصر‌ها</target>
+        <target>جمع نکردن المان‌ها</target>
       </trans-unit>
       <trans-unit id="tl_settings.doNotCollapse.1">
         <source>Do not collapse elements in the back end preview.</source>
-        <target>عنصر‌ها را در پیش‌نمایش بخش مدیریت جمع نمی‌کند.</target>
+        <target>المان‌ها را در پیش‌نمایش بخش مدیریت جمع نمی‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_settings.doNotRedirectEmpty.0">
         <source>Do not redirect empty URLs</source>
@@ -102,9 +103,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>لیست ویژگی‌های HTML که حذف نخواهند شد. برچسب یا ویژگی با نام &lt;code&gt;*&lt;/code&gt; به معنی همه برچسب‌ها و ویژگی‌های می‌باشد. Wildcard می‌توانند برای ویژگی‌های دارای خط تیره مانند &lt;code&gt;data-*&lt;/code&gt; استفاده شوند.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>از ویژگی‌های &lt;code&gt;*&lt;/code&gt; می‌توان برای حملات XSS استفاده کرد. اگر به همه کاربران مدیریت سایت اعتماد دارید این کار را انجام دهید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -116,11 +119,11 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
-        <target>گونه‌های پرونده‌های قابل دانلود</target>
+        <target>انواع پرونده‌های قابل دانلود</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
-        <target>اینجا باید فهرست جدا شده با کامل از گونه‌های پرونده قابل دانلود را وارد نمایید.</target>
+        <target>اینجا باید فهرست جدا شده با کامل از انواع پرونده قابل دانلود را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.gdMaxImgWidth.0">
         <source>Maximum GD image width</source>
@@ -140,19 +143,19 @@
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>
-        <target>گونه‌های پرونده بارگزاری</target>
+        <target>انواع پرونده بارگذاری</target>
       </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.1">
         <source>Here you can enter a comma separated list of uploadable file types.</source>
-        <target>اینجا می‌توانید فهرست جداشده با کاما از گونه‌های پرونده قابل بارگزاری را وارد نمایید.</target>
+        <target>اینجا می‌توانید فهرست جداشده با کاما از انواع پرونده قابل بارگذاری را وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.0">
         <source>Maximum upload file size</source>
-        <target>بیشینه اندازه پرونده بارگزاری</target>
+        <target>بیشینه اندازه پرونده بارگذاری</target>
       </trans-unit>
       <trans-unit id="tl_settings.maxFileSize.1">
         <source>Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).</source>
-        <target>اینجا می‌توانید بیشترین اندازه پرونده بارگزاری در واحد بایت (1 MB = 1000 kB = 1000000 byte) وارد نمایید.</target>
+        <target>اینجا می‌توانید بیشترین اندازه پرونده بارگذاری در واحد بایت (1 MB = 1000 kB = 1000000 byte) وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageWidth.0">
         <source>Maximum image width</source>
@@ -160,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.imageWidth.1">
         <source>Here you can enter the maximum width for image uploads in pixels.</source>
-        <target>اینجا می‌توانید بیشترین عرض برای بارگزاری تصویر در واحد پیکسل وارد نمایید.</target>
+        <target>اینجا می‌توانید بیشترین عرض برای بارگذاری تصویر در واحد پیکسل وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.imageHeight.0">
         <source>Maximum image height</source>
@@ -168,7 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.imageHeight.1">
         <source>Here you can enter the maximum height for image uploads in pixels.</source>
-        <target>اینجا می‌توانید بیشترین ارتفاع برای بارگزاری تصویر در واحد پیکسل وارد نمایید.</target>
+        <target>اینجا می‌توانید بیشترین ارتفاع برای بارگذاری تصویر در واحد پیکسل وارد نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultUser.0">
         <source>Default page owner</source>
@@ -220,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.uploads_legend">
         <source>Upload settings</source>
-        <target>تنطیمات بارگزاری</target>
+        <target>تنطیمات بارگذاری</target>
       </trans-unit>
       <trans-unit id="tl_settings.cron_legend">
         <source>Cron job settings</source>

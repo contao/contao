@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Dit e-mailadres wordt gebruikt voor het verzenden en ontvangen van systeemberichten.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -98,12 +99,15 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
+        <target>Toegestane HTML-attributen</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Lijst met toegestane HTML-kenmerken die niet worden verwijderd. De tag of attribuutnaam &lt;code&gt;*&lt;/code&gt; staat voor alle tags of attributen. Wildcards kunnen worden gebruikt voor attributen met streepjes zoals &lt;code&gt;data-*&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Het toestaan van &lt;code&gt;*&lt;/code&gt; attributen kan worden misbruikt voor XSS-aanvallen. Doe dit alleen als alle backend-gebruikers vertrouwd zijn!</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>

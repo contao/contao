@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.reset.css.1">
         <source>Removes the inconsistent default styling of HTML elements in different browsers.</source>
-        <target>سبک‌های پیش‌فرض متناقض عنصر‌های HTML را در مرورگرهای متفاوت حذف می‌نماید.</target>
+        <target>سبک‌های پیش‌فرض متناقض المان‌های HTML را در مرورگرهای متفاوت حذف می‌نماید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.form.css.0">
         <source>Basic forms</source>
@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.form.css.1">
         <source>Adds basic form elements and buttons formatting.</source>
-        <target>افزودن عنصر‌های فرم ساده و قالب‌های دکمه.</target>
+        <target>افزودن المان‌های فرم ساده و قالب‌های دکمه.</target>
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.0">
         <source>Basic icons</source>
@@ -223,6 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.combineScripts.1">
         <source>Combine the .css and .js files (recommended).</source>
+        <target>پرونده‌های .css و .js را ترکیب کن (توصیه‌شده).</target>
       </trans-unit>
       <trans-unit id="tl_layout.external_first">
         <source>Load external style sheets first</source>
@@ -246,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.1">
         <source>Here you can select an image size for the images shown in the lightbox.</source>
+        <target>اینجا می‌توانید یک اندازه‌ی تصویر برای تصاویر نمایش داده شده در lightbox انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.0">
         <source>Default image pixel densities</source>
@@ -253,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.1">
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
+        <target>اینجا می‌توانید چگالی پیکسل پیش‌فرض را تعریف کنید، مثلا &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>
@@ -308,7 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.onload.1">
         <source>Here you can add a body &lt;em&gt;onload&lt;/em&gt; attribute.</source>
-        <target>اینجا می‌توانید خصوصیت &lt;em&gt;onload&lt;/em&gt; body را اضافه نمایید.</target>
+        <target>اینجا می‌توانید ویژگی &lt;em&gt;onload&lt;/em&gt; body را اضافه نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.head.0">
         <source>Additional &amp;lt;head&amp;gt; tags</source>
@@ -332,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.jSource.1">
         <source>Here you can select from where to load the jQuery script.</source>
-        <target>اینجا می‌توانید جایی که اسکریپت جی‌کوئری باید بارگزاری شود را انتخاب نمایید.</target>
+        <target>اینجا می‌توانید جایی که اسکریپت جی‌کوئری باید بارگذاری شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
@@ -388,6 +391,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.externalJs.1">
         <source>Here you can add external JS files from the file system.</source>
+        <target>اینجا می‌توانید پرونده‌های JS خارجی را از سیستم پرونده اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.script.0">
         <source>Custom JavaScript code</source>

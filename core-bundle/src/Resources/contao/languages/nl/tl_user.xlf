@@ -167,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_user.elements.1">
         <source>Here you can select the allowed content element types.</source>
+        <target>Hier kunt u de toegestane typen inhoudselementen selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.0">
         <source>Form fields</source>
+        <target>Formulier velden</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.1">
         <source>Here you can select the allowed form field types.</source>
+        <target>Hier kunt u de toegestane formulierveldtypen selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
@@ -292,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
+        <target>Toegestane elementen</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>

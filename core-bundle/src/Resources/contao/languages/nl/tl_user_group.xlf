@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
+        <target>Toegestane elementen</target>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
+        <target>Groepsinstellingen</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

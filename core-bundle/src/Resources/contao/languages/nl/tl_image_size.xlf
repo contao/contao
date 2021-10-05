@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Hier kunt u de beoogde lay-outbreedte van de afbeelding definiëren, de werkelijke grootte moet via CSS worden gedefinieerd. Voorbeeld: &lt;em&gt;(max-breedte: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -90,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Stel het laden van de afbeelding uit totdat deze in de viewport is gescrold.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -150,6 +152,12 @@
       <trans-unit id="tl_image_size.gif:webp,gif">
         <source>GIF to WEBP</source>
         <target>GIF naar WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,png">
+        <source>WEBP to PNG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,jpg">
+        <source>WEBP to JPG</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

@@ -363,9 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
         <source>Total number of items</source>
+        <target>Numero totale di articoli</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Qui puoi limitare il numero totale di elementi. Imposta a 0 per mostrare tutti.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -777,6 +779,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Auto (precarica l'intero video)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -816,6 +819,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
+        <target>Limitare i video correlati allo stesso canale</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

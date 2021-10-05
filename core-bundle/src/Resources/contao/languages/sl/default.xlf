@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>Številčni vzdevki (aliasi) niso dovoljeni!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -238,6 +239,7 @@
       </trans-unit>
       <trans-unit id="ERR.circularPicker">
         <source>Invalid selection (circular reference)!</source>
+        <target>Napačna izbira (krožni sklic)!</target>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
         <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
@@ -311,6 +313,7 @@
       </trans-unit>
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
+        <target>Prosimo, razvrstite vse module v stolpce.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -716,9 +719,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
+        <target>Napaka 401 Neprijavljen</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>Če bo obiskovalec želel odpreti zaščiteno stran in ne bo prijavljen, se bo prikazala stran z napako 401.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
@@ -726,6 +731,7 @@
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>Če bo prijavljeni uporabnik želel odpreti zaščiteno stran do katere nima dostopa, se bo prikazala stran z napako 403.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -1221,6 +1227,7 @@
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
+        <target>Sklop postavitve</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
         <source>Enable/disable the module</source>
@@ -2627,12 +2634,15 @@
       </trans-unit>
       <trans-unit id="MSC.openToolbar">
         <source>Open the Contao toolbar</source>
+        <target>Odprite orodno vrstico Contao</target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+        <target>Zaprite orodno vrstico Contao</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Neznana možnost: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2844,6 +2854,7 @@
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>Uspešno preverjenih %d povezav. %d je bilo napačnih - broken.</target>
       </trans-unit>
     </body>
   </file>

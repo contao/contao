@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_form_field.type.0">
         <source>Field type</source>
-        <target>گونه‌ی فیلد</target>
+        <target>نوع فیلد</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type.1">
         <source>Please choose the type of field.</source>
-        <target>لطفا گونه‌ی فیلد را انتخاب نمایید.</target>
+        <target>لطفا نوع فیلد را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.name.0">
         <source>Field name</source>
@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>هر چیزی مجاز است به جز نویسه‌هایی که به دلایل امنیتی رمزگذاری شده‌اند: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -166,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxlength.1">
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
-        <target>اندازه فیلد را به یک تعداد کارکتر (متنی) یا بایت (پرونده بارگزاری شده) محدود می‌کند.</target>
+        <target>اندازه فیلد را به یک تعداد کارکتر (متنی) یا بایت (پرونده بارگذاری شده) محدود می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
@@ -174,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
+        <target>اینجا می‌توانید مقدار کمینه برای فیلدهای عددی را وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
@@ -181,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+        <target>اینجا می‌توانید بیشترین مقدار برای فیلدهای عددی را تنظیم کنید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
@@ -188,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
+        <target>اینجا می‌توانید اندازه گام‌های گسسته فیلد را تنظیم کنید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -215,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extensions.0">
         <source>Allowed file types</source>
-        <target>گونه‌های پرونده مجاز</target>
+        <target>انواع پرونده مجاز</target>
       </trans-unit>
       <trans-unit id="tl_form_field.extensions.1">
         <source>A comma separated list of valid file extensions.</source>
@@ -223,11 +227,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.storeFile.0">
         <source>Store uploaded files</source>
-        <target>ذخیره پرونده‌های بارگزاری شده</target>
+        <target>ذخیره پرونده‌های بارگذاری شده</target>
       </trans-unit>
       <trans-unit id="tl_form_field.storeFile.1">
         <source>Move the uploaded files to a folder on the server.</source>
-        <target>جابجایی پرونده‌های بارگزاری شده به پوشه‌ای در سرور.</target>
+        <target>جابجایی پرونده‌های بارگذاری شده به پوشه‌ای در سرور.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.uploadFolder.0">
         <source>Target folder</source>
@@ -243,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.useHomeDir.1">
         <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>اگر یک عضو احراز هویت‌شده باشد، فایل را در پوشه‌ی خانه ذخیره می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.doNotOverwrite.0">
         <source>Preserve existing files</source>
@@ -286,11 +291,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.fSize.0">
         <source>Field size</source>
-        <target>اندازه ورودی</target>
+        <target>اندازه فیلد</target>
       </trans-unit>
       <trans-unit id="tl_form_field.fSize.1">
         <source>Here you can enter the size of the upload field (&lt;em&gt;size&lt;/em&gt; attribute).</source>
-        <target>اینجا می‌توانید اندازه ورودی بارگزاری را وارد نمایید (خصوصیت &lt;em&gt;اندازه&lt;/em&gt;).</target>
+        <target>اینجا می‌توانید اندازه ورودی بارگذاری را وارد نمایید (ویژگی &lt;em&gt;اندازه&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
         <source>Form field template</source>
@@ -298,6 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
         <source>Here you can select the form field template.</source>
+        <target>اینجا می‌توانید قالب فیلد فرم را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>
@@ -329,10 +335,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.1">
         <source>Hide the form field on the website.</source>
+        <target>فیلد فرم را در وب‌سایت مخفی کن.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.type_legend">
         <source>Field type and name</source>
-        <target>گونه و نام فیلد</target>
+        <target>نوع و نام فیلد</target>
       </trans-unit>
       <trans-unit id="tl_form_field.text_legend">
         <source>Text/HTML</source>
@@ -384,6 +391,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.show">
         <source>Show the details of form field ID %s</source>
+        <target>مشاهده‌ی جزئیات فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.edit">
         <source>Edit form field ID %s</source>
@@ -419,9 +427,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.0">
         <source>Create a new form field at the top</source>
+        <target>ایجاد یک فلد فرم جدید در بالا</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pastenew.1">
         <source>Create a new form field after form field ID %s</source>
+        <target>ایجاد یک فیلد فرم جدید بعد از فیلد فرم شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
         <source>Import options from a CSV file</source>

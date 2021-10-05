@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.0">
         <source>Media types</source>
-        <target>گونه‌های رسانه</target>
+        <target>انواع رسانه</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.1">
         <source>Here you can choose the media types the style sheet applies to.</source>
-        <target>اینجا می‌توانید گونه‌های رسانه که باید به شیوه‌نامه اعمال شود را انتخاب نمایید.</target>
+        <target>اینجا می‌توانید انواع رسانه که باید به شیوه‌نامه اعمال شود را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.0">
         <source>Media query</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.mediaQuery.1">
         <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
-        <target>اینجا می‌توانید گونه‌های رسانه را با یک مدیا کوئری مثل &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt; تعریف نمایید. گونه‌ی رسانه‌های تعریف شده در بالا رونویسی خواهند شد.</target>
+        <target>اینجا می‌توانید انواع رسانه را با یک مدیا کوئری مثل &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt; تعریف نمایید. نوع رسانه‌های تعریف شده در بالا رونویسی خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.0">
         <source>Global variables</source>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.1">
         <source>Here you can upload one or more .css files to be imported.</source>
-        <target>اینجا می‌توانید یک یا چند پرونده .css را برای وارد کردن بارگزاری نمایید</target>
+        <target>اینجا می‌توانید یک یا چند پرونده .css را برای وارد کردن بارگذاری نمایید</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.tstamp.0">
         <source>Revision date</source>
