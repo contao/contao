@@ -359,13 +359,13 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
-        // Do not add PDO options if the selected driver is not pdo_mysql
+        // If URL is set it overrides the driver option
         if (null !== $url) {
-            // If URL is set it overrides the driver option
-            if (0 !== strpos($url, 'mysql://')) {
-                return $extensionConfigs;
-            }
-        } elseif (null !== $driver && 'pdo_mysql' !== $driver) {
+            $driver = parse_url($url, PHP_URL_SCHEME);
+        }
+
+        // Do not add PDO options if the selected driver is not mysql
+        if (null !== $driver && !\in_array($driver, ['pdo_mysql', 'mysql', 'mysql2'], true)) {
             return $extensionConfigs;
         }
 
@@ -400,12 +400,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
     {
-        $useMysqli = false;
+        $driver = 'mysql';
         foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['dbal']['connections']['default']['driver'])) {
-                // Loop over all configs so the last one wins
-                $useMysqli = 'mysqli' === $extensionConfig['dbal']['connections']['default']['driver'];
-            }
+            // Loop over all configs so the last one wins
+            $driver = $extensionConfig['dbal']['connections']['default']['driver'] ?? $driver;
         }
 
         $userPassword = '';
@@ -428,7 +426,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         return sprintf(
             '%s://%s%s:%s%s',
-            $useMysqli ? 'mysqli' : 'mysql',
+            $driver,
             $userPassword,
             $container->getParameter('database_host'),
             (int) $container->getParameter('database_port'),
