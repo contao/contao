@@ -231,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>فیلد اول تعداد نویسه‌ها در سمت چپ و راست هر کلیدواژه و دومی طول متن کلی را برای هر نتیجه تعریف می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
@@ -238,6 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.1">
         <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>کلیدواژه‌های با طول کمینه در نتایج جستجو نادیده گرفته می‌شوند. برای غیرفعال کردن روی 0 تنظیم کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.perPage.0">
         <source>Items per page</source>
@@ -269,6 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
+        <target>لطفا بخش چیدمان که می‌خواهید نوشته‌ها لیست شوند را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -468,6 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>لطفا برگه‌ای را که کاربران عضو بعد از اینکه درخواست تکمیل شد بازگردانی خواهند شد را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -483,6 +487,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>می‌توانید از wildcardها استفاده کنید&lt;em&gt;##domain##&lt;/em&gt; (نام دامنه), &lt;em&gt;##link##&lt;/em&gt; (لینک فعال‌سازی) و هر خصوصیت عضو (مثلا &lt;em&gt;##lastname##&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -574,6 +579,14 @@ Click here to set the new password:
 
 If you did not request this e-mail, please contact the website administrator.
 </source>
+        <target>شما یک گذرواژه جدید برای ##domain## درخواست کرده‌اید.
+
+اینجا را برای تنظیم گذرواژه‌ی جدید کلیک کنید:
+
+##link##
+
+اگر شما این ایمیل را درخواست نکرده‌اید، لطفا با مدیر وب‌سایت تماس بگیرید.
+</target>
       </trans-unit>
       <trans-unit id="tl_module.internal">
         <source>Internal file</source>
