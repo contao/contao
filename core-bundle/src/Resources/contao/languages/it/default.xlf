@@ -331,15 +331,23 @@
       </trans-unit>
       <trans-unit id="ERR.invalidHttpUrl">
         <source>Please enter an absolute URL starting with https:// or http://!</source>
+        <target>Inserisci un URL assoluto che inizi con https:// o http://!</target>
       </trans-unit>
       <trans-unit id="ERR.customRgxp">
         <source>Please enter a value that matches %s!</source>
+        <target>Si prega di inserire un valore che corrisponda a %s!</target>
       </trans-unit>
       <trans-unit id="ERR.invalidCustomRgxp">
         <source>Invalid custom regular expression!</source>
+        <target>Espressione regolare personalizzata non valida!</target>
       </trans-unit>
       <trans-unit id="ERR.applicationCache">
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
+        <target>Esegui il comando &quot;cache:clear&quot; o usa il Contao Manager per ricostruire la cache della tua applicazione.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Il percorso del modello &quot;%s&quot; non deve contenere i seguenti caratteri: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1283,6 +1291,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License</source>
+        <target>Licenza</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1470,6 +1479,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Conferma la password</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1477,9 +1487,11 @@
       </trans-unit>
       <trans-unit id="MSC.showPassword">
         <source>Show password</source>
+        <target>Mostrare la password</target>
       </trans-unit>
       <trans-unit id="MSC.hidePassword">
         <source>Hide password</source>
+        <target>Nascondere la password</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2075,6 +2087,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests</source>
+        <target>Ospiti</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2598,6 +2611,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>
+        <target>Assicurati di copiare i codici ora. Non sarai più in grado di vederli!</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
@@ -2633,6 +2647,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Esiste almeno un gruppo di utenti che concede il permesso al modulo front-end &quot;Listing&quot; e ai suoi campi &quot;list_*&quot;. Poiché possono contenere query SQL arbitrarie, gli utenti di questi gruppi hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2660,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Qui puoi limitare il numero totale di elementi. Imposta a 0 per mostrare tutti.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2699,9 +2715,11 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Opzione sconosciuta: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
+        <target>Copiare URL</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
