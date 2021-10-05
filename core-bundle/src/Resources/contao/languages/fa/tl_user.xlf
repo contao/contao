@@ -187,11 +187,11 @@
       </trans-unit>
       <trans-unit id="tl_user.alpty.0">
         <source>Allowed page types</source>
-        <target>گونه‌های برگه مجاز</target>
+        <target>انواع برگه مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.alpty.1">
         <source>Here you can select the page types you want to allow.</source>
-        <target>اینجا می‌توانید گونه‌های برگه مجاز را انتخاب نمایید.</target>
+        <target>اینجا می‌توانید انواع برگه مجاز را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_user.filemounts.0">
         <source>Filemounts</source>
@@ -207,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_user.imageSizes.1">
         <source>Here you can grant access to one or more image sizes.</source>
+        <target>اینجا می‌توانید دسترسی به یک یا چند اندازه تصویر را بدهید.</target>
       </trans-unit>
       <trans-unit id="tl_user.forms.0">
         <source>Allowed forms</source>
@@ -230,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_user.amg.1">
         <source>Members of these groups can be used in the front end preview.</source>
+        <target>اعضاء این گروه‌ها می‌توانند در پیش‌نمایش رابط کاربری استفاده شوند.</target>
       </trans-unit>
       <trans-unit id="tl_user.disable.0">
         <source>Deactivate</source>
@@ -245,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_user.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید مانع فعال شدن حساب کاربری پیش از تاریخ/ساعت مشخصی شوید،  اینجا می‌توانید وارد کنید. در غیر این صورت فیلد را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
@@ -252,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید المان بعد از تاریخ/ساعت مشخصی در وب‌سایت نمایش داده نشود اینجا می‌توانید وارد کنید. درغیراین‌صورت خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -291,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
-        <target>المنت‌های مجاز</target>
+        <target>المان‌های مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>

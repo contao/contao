@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>جدول &lt;code&gt;tl_crawl_queue&lt;/code&gt; را که همه‌ی اطلاعات صف از فرایندهای جزیدن ذخیره می‌کند را پاک می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>تصاویری که به صورت خودکار تولید شده‌اند را حذف می‌کند و سپس کش مشترک را پاک‌سازی می‌کند، تا پیوندی به منابع پاک شده، وجود نداشته باشد.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -85,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
         <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <target>پرونده‌های &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; را حذف می‌کند، برگه‌های سبک داخلی ار بازتولید کرده و سپس نهان‌گاه مشترک را پاک‌سازی می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
@@ -116,6 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>پرونده‌های XML (نقشه سایت و خوراک‌ها) را بازتولید کرده و سپس نهان‌گاه مشترک را پاک‌سازی می‌کند تا پیوندی به منابع حذف‌شده وجود نداشته باشد.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -139,6 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscribers.1">
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>خزنده همه URLهایی را که پیدا می‌کند را می‌خزد. اینجا می‌توانید تصمیم بگیرید با نتایج چه کار کنید.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
@@ -146,9 +151,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
+        <target>به صورت خودکار در رابط کاربری اعضاء برای فهرست کردن برگه‌های حفاظت‌شده وارد شوید.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>خزنده در حال کار کردن است. لطفا برای مشاهده‌ی نتایج صبر کنید.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
@@ -168,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>در حالت فعال بودن نگهداشت  خزیدن امکان‌پذیر نیست.</target>
       </trans-unit>
     </body>
   </file>

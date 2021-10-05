@@ -363,9 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
         <source>Total number of items</source>
+        <target>Ilość elementów</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Tutaj możesz określić ilość elementów. Ustaw 0, aby pokazać wszystkie.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>

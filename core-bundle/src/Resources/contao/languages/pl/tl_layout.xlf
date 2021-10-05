@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
         <source>Front end modules</source>
-        <target>Załączanie modułów</target>
+        <target>Moduły</target>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>

@@ -2,6 +2,56 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.21] (2021-10-05)
+
+**New features:**
+
+- [#3352] Also pass the template object in the "parseFrontendTemplate" hook ([xprojects-de])
+
+**Fixed issues:**
+
+- [#3543] Fix the meta wizard language menu ([leofeyer])
+- [#3496] Handle edge cases in StringUtil::convertEncoding() ([SeverinGloeckle])
+- [#3534] Translate all languages in the file meta data ([aschempp])
+- [#3526] Improve the JwtManager ([aschempp])
+- [#3503] Correctly handle empty image size formats ([aschempp])
+- [#3521] Document another known limitation ([leofeyer])
+- [#3519] Do not encode option values ([ausi])
+- [#3517] Merge duplicate tags in HTML attributes config ([ausi])
+- [#3513] Allow HTML by default only for tinyMCE and ace|html ([ausi])
+- [#3512] Decode the subject when sending form submission via email ([ausi])
+- [#3508] Unset the noComments field if the comments bundle is not installed ([leofeyer])
+- [#3499] Load DataContainer before determining empty value ([fritzmg])
+- [#3497] Fix the option sorting in the back end drop-downs ([leofeyer])
+- [#3475] Allow WebP to PNG/JPG conversion ([fritzmg])
+- [#3480] Correctly handle empty values in the registration module ([fritzmg])
+- [#3481] Fix inconsistencies in the search field rendering ([leofeyer])
+- [#3464] Redirect if the back end is called via the front end preview entry point ([leofeyer])
+- [#3461] Do not reset the entire flash bag when resetting the message system ([leofeyer])
+- [#3416] Dispatch the PreviewUrlCreateEvent even with an empty ID ([SeverinGloeckle])
+- [#3467] Prevent image overflow for selected content elements ([fritzmg])
+- [#3457] Fix the picker for child tables without PID ([ausi])
+- [#3426] Migrate the newsletter module keys in version 4.0 ([aschempp])
+- [#3462] Add a label for "edit multiple" to the deep link confirmation screen ([leofeyer])
+- [#3460] Fix the position of the pagination menu in "edit multiple" mode ([leofeyer])
+- [#3459] Fix a broken if-condition in tl_files::excludeFolder() ([leofeyer])
+- [#3455] Handle flags in insertTagToSrc() ([ausi])
+- [#3454] Fix the event endTime adjustment ([fritzmg])
+- [#3444] Service priority 0 is not the same as not-set priority ([aschempp])
+- [#3441] Add canonical name to routes ([aschempp])
+- [#3329] Make sure X-Forwarded-Host is trusted if trusted hosts are configured ([Toflar])
+- [#3422] Handle `%` characters in the SERP preview ([fritzmg])
+- [#3407] Respect the `decodeEntities` flag with rgxp => url ([rabauss])
+- [#3412] Do not dynamically disable HttpCache but rely on env vars instead ([Toflar])
+- [#3423] Convert allowed attributes to lowercase ([ausi])
+- [#3417] Use PHP functions to modify query strings ([leofeyer])
+- [#3405] Harden the version 4.5.0 migration ([fritzmg])
+- [#3394] Show table name in model relation exception ([SeverinGloeckle])
+- [#3402] Fix the `Adapter::__call()` method signature ([SeverinGloeckle])
+- [#3390] Fix simple token parsing in HTML ([ausi])
+- [#3383] Fix the default quote style ([leofeyer])
+- [#3296] Fix a phpDoc comment in the Pagination class ([zonky2])
+
 ## [4.9.20] (2021-08-24)
 
 **Fixed issues:**
@@ -694,6 +744,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.21]: https://github.com/contao/contao/releases/tag/4.9.21
 [4.9.20]: https://github.com/contao/contao/releases/tag/4.9.20
 [4.9.19]: https://github.com/contao/contao/releases/tag/4.9.19
 [4.9.18]: https://github.com/contao/contao/releases/tag/4.9.18
@@ -746,9 +797,54 @@ This project adheres to [Semantic Versioning].
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
+[SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[xprojects-de]: https://github.com/xprojects-de
+[zonky2]: https://github.com/zonky2
+[#3352]: https://github.com/contao/contao/pull/3352
+[#3543]: https://github.com/contao/contao/pull/3543
+[#3496]: https://github.com/contao/contao/pull/3496
+[#3534]: https://github.com/contao/contao/pull/3534
+[#3526]: https://github.com/contao/contao/pull/3526
+[#3503]: https://github.com/contao/contao/pull/3503
+[#3521]: https://github.com/contao/contao/pull/3521
+[#3519]: https://github.com/contao/contao/pull/3519
+[#3517]: https://github.com/contao/contao/pull/3517
+[#3513]: https://github.com/contao/contao/pull/3513
+[#3512]: https://github.com/contao/contao/pull/3512
+[#3508]: https://github.com/contao/contao/pull/3508
+[#3499]: https://github.com/contao/contao/pull/3499
+[#3497]: https://github.com/contao/contao/pull/3497
+[#3475]: https://github.com/contao/contao/pull/3475
+[#3480]: https://github.com/contao/contao/pull/3480
+[#3481]: https://github.com/contao/contao/pull/3481
+[#3464]: https://github.com/contao/contao/pull/3464
+[#3461]: https://github.com/contao/contao/pull/3461
+[#3416]: https://github.com/contao/contao/pull/3416
+[#3467]: https://github.com/contao/contao/pull/3467
+[#3457]: https://github.com/contao/contao/pull/3457
+[#3426]: https://github.com/contao/contao/pull/3426
+[#3462]: https://github.com/contao/contao/pull/3462
+[#3460]: https://github.com/contao/contao/pull/3460
+[#3459]: https://github.com/contao/contao/pull/3459
+[#3455]: https://github.com/contao/contao/pull/3455
+[#3454]: https://github.com/contao/contao/pull/3454
+[#3444]: https://github.com/contao/contao/pull/3444
+[#3441]: https://github.com/contao/contao/pull/3441
+[#3329]: https://github.com/contao/contao/pull/3329
+[#3422]: https://github.com/contao/contao/pull/3422
+[#3407]: https://github.com/contao/contao/pull/3407
+[#3412]: https://github.com/contao/contao/pull/3412
+[#3423]: https://github.com/contao/contao/pull/3423
+[#3417]: https://github.com/contao/contao/pull/3417
+[#3405]: https://github.com/contao/contao/pull/3405
+[#3394]: https://github.com/contao/contao/pull/3394
+[#3402]: https://github.com/contao/contao/pull/3402
+[#3390]: https://github.com/contao/contao/pull/3390
+[#3383]: https://github.com/contao/contao/pull/3383
+[#3296]: https://github.com/contao/contao/pull/3296
 [#3369]: https://github.com/contao/contao/pull/3369
 [#3360]: https://github.com/contao/contao/pull/3360
 [#3367]: https://github.com/contao/contao/pull/3367

@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_article.teaserCssID.1">
         <source>Here you can set an ID and one or more classes for the teaser element.</source>
-        <target>اینجا می‌توانید یک شناسه و یک و چند کلاس برای عنصر تیزر انتخاب نمایید.</target>
+        <target>اینجا می‌توانید یک شناسه و یک و چند کلاس برای المان تیزر انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_article.showTeaser.0">
         <source>Show teaser</source>

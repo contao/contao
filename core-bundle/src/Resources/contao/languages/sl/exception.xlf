@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="XPT.hint">
         <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>To sporočilo lahko prilagodite, če ustvarite lastno predlogo Twig, ki bo prepisala &lt;em&gt;%s&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="XPT.errorOccurred">
         <source>An error occurred while executing this script. Something does not work properly.</source>

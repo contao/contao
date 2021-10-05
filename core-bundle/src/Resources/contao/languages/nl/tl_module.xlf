@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
         <source>Show items that are usually only visible to authenticated members.</source>
+        <target>Toon items die meestal alleen zichtbaar zijn voor geverifieerde leden.</target>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -82,9 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Module template</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Hier kunt u het module template selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -132,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Leid het lid terug naar de laatst bezochte pagina in plaats van de omleidingspagina.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -411,6 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Hier kunt u de spambeveiliging uitschakelen (niet aanbevolen).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
@@ -426,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
         <source>Allow the new member to log into the front end.</source>
+        <target>Laat het nieuwe lid inloggen op de front-end.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -473,6 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Kies de pagina waarnaar leden worden doorgestuurd nadat het verzoek is voltooid.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -488,6 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>U kunt de wildcards &lt;em&gt;##domain##&lt;/em&gt; (domeinnaam), &lt;em&gt;##link##&lt;/em&gt; (activeringslink) en elke eigenschap van een lid (bijv. &lt;em&gt;##lastname##&lt;/em&gt;) gebruiken.</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

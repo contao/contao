@@ -187,6 +187,7 @@
       </trans-unit>
       <trans-unit id="ERR.aliasNumeric">
         <source>Numeric aliases are not supported!</source>
+        <target>Numerieke aliassen worden niet ondersteund!</target>
       </trans-unit>
       <trans-unit id="ERR.importFolder">
         <source>The folder &quot;%s&quot; cannot be imported!</source>
@@ -654,9 +655,11 @@
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
+        <target>Bereik slider</target>
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>Een bereik slider om een waarde of bereik van waarden tussen een opgegeven minimum en maximum te selecteren.</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -1448,6 +1451,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Bevestig wachtwoord</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1515,6 +1519,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Lees meer informatie over het versnellen van uw workflow door &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2562,27 +2567,35 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesLabel">
         <source>Backup codes</source>
+        <target>Back-upcodes</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesShow">
         <source>Show backup codes</source>
+        <target>Back-upcodes weergeven</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>Back-upcodes kunnen worden gebruikt om toegang te krijgen tot uw account als u uw authenticatieapparaat bent kwijtgeraakt en geen tweefactorcodes meer kunt genereren. Behandel uw back-upcodes even zorgvuldig als uw wachtwoord! Het wordt aanbevolen om ze op te slaan met een wachtwoordbeheerder zoals Lastpass, 1Password of Keeper.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Put the codes in a safe spot. If you lose your authentication device and do not have backup codes, you cannot access your account anymore!</source>
+        <target>Bewaar de codes op een veilige plek. Als u uw authenticatieapparaat kwijtraakt en geen back-upcodes hebt, heeft u geen toegang meer tot uw account!</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
+        <target>Genereer back-upcodes</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerate">
         <source>Regenerate backup codes</source>
+        <target>Genereer back-upcodes opnieuw</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>Wanneer u de back-upcodes opnieuw genereert, werken uw oude codes niet meer.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
+        <target>Vertrouw dit apparaat</target>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
@@ -2594,12 +2607,15 @@
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>Er is ten minste één gewone gebruiker met toestemming om thema's te importeren. Aangezien thema's willekeurige sjablonen kunnen bevatten en sjablonen PHP-bestanden zijn, hebben deze gebruikers impliciet volledige controle over het systeem!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>Er is minimaal één gebruikersgroep die toestemming geeft om thema's te importeren. Aangezien thema's willekeurige sjablonen kunnen bevatten en sjablonen PHP-bestanden zijn, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Er is ten minste één gebruikersgroep die toestemming geeft voor de front-end module &quot;Listing&quot; en zijn &quot;list_*&quot; velden. Omdat ze willekeurige SQL-query's kunnen bevatten, hebben gebruikers van deze groepen impliciet volledige controle over het systeem!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2623,15 +2639,19 @@
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
+        <target>Vertrouwde apparaten wissen</target>
       </trans-unit>
       <trans-unit id="MSC.trustedDevices">
         <source>Trusted devices</source>
+        <target>Vertrouwde apparaten</target>
       </trans-unit>
       <trans-unit id="MSC.noTrustedDevices">
         <source>Currently there are no trusted devices.</source>
+        <target>Er zijn momenteel geen vertrouwde apparaten.</target>
       </trans-unit>
       <trans-unit id="MSC.device">
         <source>Device</source>
+        <target>Apparaat</target>
       </trans-unit>
       <trans-unit id="MSC.browser">
         <source>Browser</source>
@@ -2639,15 +2659,19 @@
       </trans-unit>
       <trans-unit id="MSC.operatingSystem">
         <source>Operating system</source>
+        <target>Besturingssysteem</target>
       </trans-unit>
       <trans-unit id="MSC.openToolbar">
         <source>Open the Contao toolbar</source>
+        <target>De Contao werkbalk openen</target>
       </trans-unit>
       <trans-unit id="MSC.closeToolbar">
         <source>Close the Contao toolbar</source>
+        <target>De Contao werkbalk sluiten</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Onbekende optie: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2855,12 +2879,15 @@
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>%d geïndexeerde URI('s) succesvol. %d mislukt.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d URI('s) zijn overgeslagen (als u er een mist, bekijk dan het foutopsporingslogboek).</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>%d gecontroleerde link(s) succesvol. %d waren gebroken.</target>
       </trans-unit>
     </body>
   </file>

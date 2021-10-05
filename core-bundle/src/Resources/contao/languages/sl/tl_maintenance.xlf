@@ -141,15 +141,18 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
+        <target>Uporabnik spletnega mesta</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Samodejno prijavi uporabnika za indeksiranje zaščitenih strani.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>
+        <target>Prenesite dnevnik debug</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
         <source>Download the log</source>

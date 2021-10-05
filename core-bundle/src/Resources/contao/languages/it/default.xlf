@@ -1451,6 +1451,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Conferma la password</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -2614,6 +2615,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Esiste almeno un gruppo di utenti che concede il permesso al modulo front-end &quot;Listing&quot; e ai suoi campi &quot;list_*&quot;. Poiché possono contenere query SQL arbitrarie, gli utenti di questi gruppi hanno implicitamente il pieno controllo del sistema!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2669,6 +2671,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Opzione sconosciuta: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
