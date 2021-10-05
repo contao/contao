@@ -43,10 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.0">
         <source>Sizes attribute</source>
-        <target>خصوصیت اندازه‌ها</target>
+        <target>ویژگی اندازه‌ها</target>
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>اینجا می‌توانید عرض چیدمان موردنظر تصویر را تعریف کنید، اندازه‌ی واقعی باید از طریق CSS تعریف شود. مثال: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -54,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.densities.1">
         <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>اینجا می‌توانید چگالی پیکسل را تعریف کنید (مثلا &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) یا توصیف‌کننده‌های عرض (مثلا &lt;em&gt;100w, 200w&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.0">
         <source>CSS classes</source>
@@ -61,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be added to the image tag.</source>
+        <target>کلاس‌های CSS به برچسب تصویر اضافه خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formats.0">
         <source>Convert image formats</source>
@@ -68,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.formats.1">
         <source>Here you can select which image formats shall be converted.</source>
+        <target>اینجا می‌توانید فرمت‌های تصویر که باید تبدیل شوند را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formatsWebpNotSupported">
         <source>WEBP is not supported on your server.</source>
@@ -75,9 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
+        <target>استفاده از تصویر اصلی وقتی ابعاد مطابقت داشته باشد</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
+        <target>توجه داشته باشید که در این حالت هیچ بهینه‌سازی مانند حذف فراداده یا فشرده‌سازی JPEG اعمال نخواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -85,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>بارگذاری تصویر را تا زمانی که به نمای‌دید اسکرول شود به تاخیر می‌اندازد.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -145,6 +152,12 @@
       <trans-unit id="tl_image_size.gif:webp,gif">
         <source>GIF to WEBP</source>
         <target>GIF به WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,png">
+        <source>WEBP to PNG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,jpg">
+        <source>WEBP to JPG</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
