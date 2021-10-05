@@ -316,38 +316,45 @@ class SitemapControllerTest extends TestCase
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
-    public function testSkipsErrorPages(): void
+    public function testSkipsNonRegularPages(): void
     {
         /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
-            'type' => 'regular',
+            'type' => 'error_404',
             'groups' => [],
             'published' => '1',
         ]);
 
         $page1
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('getAbsoluteUrl')
-            ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
         /** @var PageModel&MockObject $page1 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
-            'type' => 'error_404',
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
 
         $page2
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com/en/page2.html')
         ;
 
-        $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => [$page2], 21 => null], [43 => null]);
+        $pages = [
+            42 => [$page1],
+            43 => [$page2],
+            44 => null,
+            21 => null,
+        ];
+
+        $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->mockContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
@@ -356,7 +363,7 @@ class SitemapControllerTest extends TestCase
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
-        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page1.html']), $response->getContent());
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
     public function testSkipsPagesIfTheUserDoesNotHaveAccess(): void
