@@ -135,6 +135,7 @@ class Pagination
 		$this->intRows = (int) $intRows;
 		$this->intRowsPerPage = (int) $intPerPage;
 		$this->intNumberOfLinks = (int) $intNumberOfLinks;
+		$this->intTotalPages = $this->intRows > 0 && $this->intRowsPerPage > 0 ? (int) ceil($this->intRows / $this->intRowsPerPage) : 0;
 
 		// Initialize default labels
 		$this->lblFirst = $GLOBALS['TL_LANG']['MSC']['first'];
@@ -227,7 +228,6 @@ class Pagination
 		}
 
 		$this->strVarConnector = $blnQuery ? '&amp;' : '?';
-		$this->intTotalPages = ceil($this->intRows / $this->intRowsPerPage);
 
 		// Return if there is only one page
 		if ($this->intTotalPages < 2 || $this->intRows < 1)
@@ -328,31 +328,38 @@ class Pagination
 	 */
 	public function getItemsAsArray()
 	{
+		if ($this->intTotalPages < 2)
+		{
+			return array();
+		}
+
 		$arrLinks = array();
 
-		$intNumberOfLinks = floor($this->intNumberOfLinks / 2);
-		$intFirstOffset = $this->intPage - $intNumberOfLinks - 1;
+		// Calculate the number of links with a bias to adding one more link after the current page (see #3539)
+		$intNumberOfPreviousLinks = (int) ceil($this->intNumberOfLinks / 2) - 1;
+		$intNumberOfNextLinks = (int) floor($this->intNumberOfLinks / 2);
+		$intFirstOffset = $this->intPage - $intNumberOfPreviousLinks - 1;
 
 		if ($intFirstOffset > 0)
 		{
 			$intFirstOffset = 0;
 		}
 
-		$intLastOffset = $this->intPage + $intNumberOfLinks - $this->intTotalPages;
+		$intLastOffset = $this->intPage + $intNumberOfNextLinks - $this->intTotalPages;
 
 		if ($intLastOffset < 0)
 		{
 			$intLastOffset = 0;
 		}
 
-		$intFirstLink = $this->intPage - $intNumberOfLinks - $intLastOffset;
+		$intFirstLink = $this->intPage - $intNumberOfPreviousLinks - $intLastOffset;
 
 		if ($intFirstLink < 1)
 		{
 			$intFirstLink = 1;
 		}
 
-		$intLastLink = $this->intPage + $intNumberOfLinks - $intFirstOffset;
+		$intLastLink = $this->intPage + $intNumberOfNextLinks - $intFirstOffset;
 
 		if ($intLastLink > $this->intTotalPages)
 		{
