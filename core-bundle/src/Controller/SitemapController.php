@@ -142,7 +142,13 @@ class SitemapController extends AbstractController
 
             $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time());
 
-            if ($isPublished && !$pageModel->requireItem && 'noindex,nofollow' !== $pageModel->robots && $this->pageRegistry->supportsContentComposition($pageModel)) {
+            if (
+                $isPublished
+                && !$pageModel->requireItem
+                && 'noindex,nofollow' !== $pageModel->robots
+                && 'regular' === $pageModel->type // TODO: replace this with a better solution (see #3544)
+                && $this->pageRegistry->supportsContentComposition($pageModel)
+            ) {
                 $urls = [$pageModel->getAbsoluteUrl()];
 
                 // Get articles with teaser
@@ -156,6 +162,11 @@ class SitemapController extends AbstractController
             }
 
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
+        }
+
+        // Backwards compatibility for PHP 7.3
+        if (empty($result)) {
+            return [];
         }
 
         return array_merge(...$result);
