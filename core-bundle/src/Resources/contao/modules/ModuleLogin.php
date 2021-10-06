@@ -63,19 +63,16 @@ class ModuleLogin extends Module
 			return $objTemplate->parse();
 		}
 
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
-
 		// If the form was submitted and the credentials were wrong, take the target
 		// path from the submitted data as otherwise it would take the current page
-		if ($request->isMethod('POST'))
+		if ($request && $request->isMethod('POST'))
 		{
 			$this->targetPath = base64_decode($request->request->get('_target_path'));
 		}
 		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
 		{
 			/** @var UriSigner $uriSigner */
-			$uriSigner = $container->get('uri_signer');
+			$uriSigner = System::getContainer()->get('uri_signer');
 
 			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
 			if ($uriSigner->check($request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . (null !== ($qs = $request->server->get('QUERY_STRING')) ? '?' . $qs : '')))
@@ -96,9 +93,18 @@ class ModuleLogin extends Module
 		global $objPage;
 
 		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$exception = null;
+		$lastUsername = '';
 
-		/** @var AuthenticationException|null $exception */
-		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
+		// Only call the authentication utils if there is an active session to prevent starting an empty session
+		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		{
+			$authUtils = $container->get('security.authentication_utils');
+			$exception = $authUtils->getLastAuthenticationError();
+			$lastUsername = $authUtils->getLastUsername();
+		}
+
 		$authorizationChecker = $container->get('security.authorization_checker');
 
 		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
@@ -174,7 +180,6 @@ class ModuleLogin extends Module
 		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
 		{
 			// Dispatch 2FA form event to prepare 2FA providers
-			$request = $container->get('request_stack')->getCurrentRequest();
 			$token = $container->get('security.token_storage')->getToken();
 			$event = new TwoFactorAuthenticationEvent($request, $token);
 			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
@@ -191,7 +196,7 @@ class ModuleLogin extends Module
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername()));
+		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}

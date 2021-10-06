@@ -17,7 +17,9 @@ use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Statement;
+use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Tools\SchemaTool;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
@@ -719,5 +721,48 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $schema = $provider->createSchema();
 
         $this->assertCount(0, $schema->getTables());
+    }
+
+    public function testAppendToSchemaIgnoresExistingMetadataDefinitions(): void
+    {
+        $dcaMetadata = [
+            'tl_page' => [
+                'TABLE_FIELDS' => [
+                    'id' => '`id` int(10) NOT NULL default 0',
+                    'title' => "`title` varchar(128) BINARY NOT NULL default ''",
+                ],
+                'SCHEMA_FIELDS' => [
+                    'published' => ['type' => 'string', 'fixed' => true, 'length' => 1],
+                ],
+                'TABLE_CREATE_DEFINITIONS' => [
+                    'published' => 'KEY `title` (`published`)',
+                ],
+            ],
+        ];
+
+        $entityMetadata = new ClassMetadata('Page');
+
+        (new ClassMetadataBuilder($entityMetadata))
+            ->setTable('tl_page')
+            ->addField('id', 'integer')
+            ->addField('published', 'boolean')
+            ->addField('bar', 'string')
+            ->addIndex(['published'], 'published')
+        ;
+
+        $registry = $this->mockDoctrineRegistryWithOrm([$entityMetadata]);
+        $manager = $registry->getManager();
+        $schema = (new SchemaTool($manager))->getSchemaFromMetadata($manager->getMetadataFactory()->getAllMetadata());
+
+        $provider = new DcaSchemaProvider($this->mockContaoFrameworkWithInstaller($dcaMetadata), $registry);
+        $provider->appendToSchema($schema);
+
+        $columns = $schema->getTable('tl_page')->getColumns();
+
+        $this->assertCount(4, $columns);
+        $this->assertSame('integer', $columns['id']->getType()->getName());
+        $this->assertSame('boolean', $columns['published']->getType()->getName());
+        $this->assertSame('string', $columns['bar']->getType()->getName());
+        $this->assertSame('string', $columns['title']->getType()->getName());
     }
 }

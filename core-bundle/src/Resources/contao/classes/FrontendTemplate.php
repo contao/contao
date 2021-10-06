@@ -48,7 +48,7 @@ class FrontendTemplate extends Template
 			foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate, $this);
 			}
 		}
 
@@ -152,8 +152,15 @@ class FrontendTemplate extends Template
 			$this->strBuffer = $this->minifyHtml($this->strBuffer);
 		}
 
-		// Replace literal insert tags (see #670)
-		$this->strBuffer = str_replace(array('[{]', '[}]'), array('{{', '}}'), $this->strBuffer);
+		// Replace literal insert tags (see #670, #3249)
+		$this->strBuffer = preg_replace_callback(
+			'/<script[^>]*>.*?<\/script[^>]*>|\[[{}]]/is',
+			static function ($matches)
+			{
+				return $matches[0][0] === '<' ? $matches[0] : '&#' . \ord($matches[0][1]) . ';&#' . \ord($matches[0][1]) . ';';
+			},
+			$this->strBuffer
+		);
 
 		parent::compile();
 	}

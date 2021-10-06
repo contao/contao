@@ -85,6 +85,11 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             return $this->getUrlForValue($config, $module);
         }
 
+        // If the pid is missing for a child table do not add table=xy to the URL
+        if ($ptable && !$pid) {
+            return $this->getUrlForValue($config, $module);
+        }
+
         return $this->getUrlForValue($config, $module, $table, $pid);
     }
 
@@ -226,14 +231,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         // Use the first value if array to find a database record
         $id = (int) explode(',', $value)[0];
 
-        if (!$value) {
-            return [null, null];
-        }
-
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        $pid = null;
         $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
         $dynamicPtable = $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? false;
 
@@ -241,30 +241,34 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             return [null, null];
         }
 
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $id));
+        $data = false;
 
-        if ($dynamicPtable) {
-            $qb->addSelect('ptable');
+        if ($id) {
+            $qb = $this->connection->createQueryBuilder();
+            $qb->select('pid')->from($table)->where($qb->expr()->eq('id', $id));
+
+            if ($dynamicPtable) {
+                $qb->addSelect('ptable');
+            }
+
+            $data = $qb->execute()->fetch();
         }
 
-        $data = $qb->execute()->fetch();
-
-        if (false === $data) {
-            return [null, null];
-        }
-
-        $pid = (int) $data['pid'];
-
         if ($dynamicPtable) {
-            $ptable = $data['ptable'] ?: $ptable;
+            if (!empty($data['ptable'])) {
+                $ptable = $data['ptable'];
+            }
 
             if (!$ptable) {
                 $ptable = 'tl_article'; // backwards compatibility
             }
         }
 
-        return [$ptable, $pid];
+        if (false === $data) {
+            return [$ptable, null];
+        }
+
+        return [$ptable, (int) $data['pid']];
     }
 
     /**

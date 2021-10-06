@@ -362,12 +362,12 @@
         <target>Количество элементов на странице. Установите 0 для отключения нумерации.</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Общее количество изображений</target>
+        <source>Total number of items</source>
+        <target>Общее количество элементов</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Ограничение общего количества изображений. Установите 0, чтобы показать все.</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Ограничение общего количества элементов. Установите 0, чтобы показать все.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -779,6 +779,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Авто (предварительная загрузка видео)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -819,10 +820,6 @@
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
         <target>Ограничить количество связанных видео на одном канале</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Скрыть верхнюю панель в предпросмотре</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

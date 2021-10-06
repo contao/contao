@@ -178,7 +178,15 @@ class Message
 			return;
 		}
 
-		$session->getFlashBag()->clear();
+		$flashBag = $session->getFlashBag();
+
+		// Find all contao. keys (see #3393)
+		$keys = preg_grep('(^contao\.)', $flashBag->keys());
+
+		foreach ($keys as $key)
+		{
+			$flashBag->get($key); // clears the message
+		}
 	}
 
 	/**

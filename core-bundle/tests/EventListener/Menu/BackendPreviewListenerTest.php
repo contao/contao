@@ -12,14 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Menu;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendPreviewListener;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +30,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
     /**
      * @dataProvider getPreviewData
      */
-    public function testAddsThePreviewButton(?string $do, string $uri, bool $dispatch): void
+    public function testAddsThePreviewButton(string $do, int $id): void
     {
         $security = $this->createMock(Security::class);
         $security
@@ -51,11 +48,8 @@ class BackendPreviewListenerTest extends ContaoTestCase
         ;
 
         $request = new Request();
-        $request->query->set('id', 42);
-
-        if (null !== $do) {
-            $request->query->set('do', $do);
-        }
+        $request->query->set('do', $do);
+        $request->query->set('id', $id);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -65,30 +59,16 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
         $eventDispatcher = $this->createMock(EventDispatcher::class);
         $eventDispatcher
-            ->expects($dispatch ? $this->once() : $this->never())
+            ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(
-                function (PreviewUrlCreateEvent $e) {
-                    $e->setQuery('news=42');
-
-                    $this->assertSame('news', $e->getKey());
-                    $this->assertSame(42, $e->getId());
+                function (PreviewUrlCreateEvent $e) use ($do, $id) {
+                    $this->assertSame($do, $e->getKey());
+                    $this->assertSame($id, $e->getId());
 
                     return true;
                 }
             ))
-        ;
-
-        /** @var ArticleModel&MockObject $article */
-        $article = $this->mockClassWithProperties(ArticleModel::class);
-        $article->pid = 3;
-
-        $adapter = $this->mockAdapter(['findByPk']);
-        $adapter
-            ->expects('article' === $do ? $this->once() : $this->never())
-            ->method('findByPk')
-            ->with(42)
-            ->willReturn($article)
         ;
 
         $listener = new BackendPreviewListener(
@@ -96,8 +76,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $eventDispatcher,
-            $this->mockContaoFramework([ArticleModel::class => $adapter])
+            $eventDispatcher
         );
 
         $listener($event);
@@ -108,7 +87,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
         $this->assertSame(['preview'], array_keys($children));
 
         $this->assertSame('MSC.fePreview', $children['preview']->getLabel());
-        $this->assertSame($uri, $children['preview']->getUri());
         $this->assertSame(['translation_domain' => 'contao_default'], $children['preview']->getExtras());
 
         $this->assertSame(
@@ -124,10 +102,10 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
     public function getPreviewData(): \Generator
     {
-        yield [null, '/contao/preview', false];
-        yield ['page', '/contao/preview?page=42', false];
-        yield ['article', '/contao/preview?page=3', false];
-        yield ['news', '/contao/preview?news=42', true];
+        yield ['', 0];
+        yield ['page', 42];
+        yield ['article', 3];
+        yield ['news', 1];
     }
 
     /**
@@ -159,7 +137,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             ->expects($this->once())
             ->method('get')
             ->with('CURRENT_ID')
-            ->willReturn(3)
+            ->willReturn(null)
         ;
 
         $request->setSession($session);
@@ -179,8 +157,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             $requestStack,
             $this->getTranslator(),
-            $this->createMock(EventDispatcher::class),
-            $this->mockContaoFramework()
+            $this->createMock(EventDispatcher::class)
         );
 
         $listener($event);
@@ -189,8 +166,6 @@ class BackendPreviewListenerTest extends ContaoTestCase
 
         $this->assertCount(2, $children);
         $this->assertSame($expect, array_keys($children));
-
-        $this->assertSame('/contao/preview?page=3', $children['preview']->getUri());
     }
 
     public function getItemNames(): \Generator
@@ -223,8 +198,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(EventDispatcher::class)
         );
 
         $listener($event);
@@ -258,8 +232,7 @@ class BackendPreviewListenerTest extends ContaoTestCase
             $router,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(EventDispatcher::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(EventDispatcher::class)
         );
 
         $listener($event);

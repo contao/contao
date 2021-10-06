@@ -2,7 +2,132 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.21] (2021-10-05)
+
+**New features:**
+
+- [#3352] Also pass the template object in the "parseFrontendTemplate" hook ([xprojects-de])
+
+**Fixed issues:**
+
+- [#3543] Fix the meta wizard language menu ([leofeyer])
+- [#3496] Handle edge cases in StringUtil::convertEncoding() ([SeverinGloeckle])
+- [#3534] Translate all languages in the file meta data ([aschempp])
+- [#3526] Improve the JwtManager ([aschempp])
+- [#3503] Correctly handle empty image size formats ([aschempp])
+- [#3521] Document another known limitation ([leofeyer])
+- [#3519] Do not encode option values ([ausi])
+- [#3517] Merge duplicate tags in HTML attributes config ([ausi])
+- [#3513] Allow HTML by default only for tinyMCE and ace|html ([ausi])
+- [#3512] Decode the subject when sending form submission via email ([ausi])
+- [#3508] Unset the noComments field if the comments bundle is not installed ([leofeyer])
+- [#3499] Load DataContainer before determining empty value ([fritzmg])
+- [#3497] Fix the option sorting in the back end drop-downs ([leofeyer])
+- [#3475] Allow WebP to PNG/JPG conversion ([fritzmg])
+- [#3480] Correctly handle empty values in the registration module ([fritzmg])
+- [#3481] Fix inconsistencies in the search field rendering ([leofeyer])
+- [#3464] Redirect if the back end is called via the front end preview entry point ([leofeyer])
+- [#3461] Do not reset the entire flash bag when resetting the message system ([leofeyer])
+- [#3416] Dispatch the PreviewUrlCreateEvent even with an empty ID ([SeverinGloeckle])
+- [#3467] Prevent image overflow for selected content elements ([fritzmg])
+- [#3457] Fix the picker for child tables without PID ([ausi])
+- [#3426] Migrate the newsletter module keys in version 4.0 ([aschempp])
+- [#3462] Add a label for "edit multiple" to the deep link confirmation screen ([leofeyer])
+- [#3460] Fix the position of the pagination menu in "edit multiple" mode ([leofeyer])
+- [#3459] Fix a broken if-condition in tl_files::excludeFolder() ([leofeyer])
+- [#3455] Handle flags in insertTagToSrc() ([ausi])
+- [#3454] Fix the event endTime adjustment ([fritzmg])
+- [#3444] Service priority 0 is not the same as not-set priority ([aschempp])
+- [#3441] Add canonical name to routes ([aschempp])
+- [#3329] Make sure X-Forwarded-Host is trusted if trusted hosts are configured ([Toflar])
+- [#3422] Handle `%` characters in the SERP preview ([fritzmg])
+- [#3407] Respect the `decodeEntities` flag with rgxp => url ([rabauss])
+- [#3412] Do not dynamically disable HttpCache but rely on env vars instead ([Toflar])
+- [#3423] Convert allowed attributes to lowercase ([ausi])
+- [#3417] Use PHP functions to modify query strings ([leofeyer])
+- [#3405] Harden the version 4.5.0 migration ([fritzmg])
+- [#3394] Show table name in model relation exception ([SeverinGloeckle])
+- [#3402] Fix the `Adapter::__call()` method signature ([SeverinGloeckle])
+- [#3390] Fix simple token parsing in HTML ([ausi])
+- [#3383] Fix the default quote style ([leofeyer])
+- [#3296] Fix a phpDoc comment in the Pagination class ([zonky2])
+
+## [4.9.20] (2021-08-24)
+
+**Fixed issues:**
+
+- [#3369] Fix using insert tags in the page title ([ausi])
+- [#3360] Use intl for text direction ([fritzmg])
+- [#3367] Handle insert tag flags in the picker ([leofeyer])
+- [#3310] Add the "dry-run" and "format=ndjson" options to the migrate command ([ausi])
+- [#3359] Fix the media element migration ([ausi])
+- [#3346] Fix versioning condition in DC_Folder edit action ([ausi])
+- [#3356] Make the metadata available in the download element ([leofeyer])
+- [#3341] Clarify contao.preview_script usage ([fritzmg])
+- [#3314] Add support for namespaced attributes ([ausi])
+- [#3303] Warn if the DB server is not running in strict mode ([ausi])
+- [#3321] Correctly explode foreign keys in the DCA ([fritzmg])
+- [#3323] Remove reference to other table from column classname in DC_Table ([dennisbohn])
+- [#3319] Correctly encode HTML comments, <script> and <style> tags ([ausi])
+- [#3315] Do not encode special characters if no tags are allowed ([ausi])
+- [#3311] Fix version creation for entries with dynamic ptable ([fritzmg])
+- [#3278] Check if stopwatch is started before stopping ([bytehead])
+- [#3283] Check if the indexer service exists when purging search tables ([bytehead])
+
+## [4.9.19] (2021-08-12)
+
+**Fixed issues:**
+
+- [#3293] Do not show the urlattr flag for rgxp url fields ([ausi])
+- [#3292] Improve compatibility with JSON in attributes ([ausi])
+- [#3291] Fix the "iflng" and "ifnlng" insert tags ([ausi])
+- [#3275] Fix missing tooltips for widget help text ([ausi])
+
+## [4.9.18] (2021-08-11)
+
+**Security fixes:**
+
+- Prevent privilege escalation with the form generator ([CVE-2021-37627])
+- Prevent PHP file inclusion via insert tags ([CVE-2021-37626])
+- Prevent XSS via HTML attributes in the back end ([CVE-2021-35955])
+
+## [4.9.17] (2021-08-04)
+
+**New features:**
+
+- [#2940] Show the Contao layout in the Symfony profiler ([aschempp])
+
+**Fixed issues:**
+
+- [#3256] Revert 'Lazy-load the `rootFallbackLanguage` property' ([leofeyer])
+- [#3214] Support request tokens in Symfony forms ([ausi])
+- [#3251] Harden literal insert tag replacement ([m-vo])
+- [#3245] Fix a func_get_arg() value error ([ausi])
+- [#3220] Correctly clean up left-over records in DCA mode 5 ([aschempp])
+- [#3218] Do not start the session in the login module ([ausi])
+- [#3197] Allow defining entities alongside DCA definitions ([m-vo])
+- [#3190] Consider the robots.txt content in the SearchIndexSubscriber ([Toflar])
+- [#3221] Remove the dev firewall ([aschempp])
+- [#3217] Allow robots setting for redirect pages ([fritzmg])
+- [#3210] Ensure the numberOfItems label does refer to items only ([Toflar])
+- [#3216] Add Google Conversion Linker cookie to deny list ([ausi])
+- [#3179] Backport support for namespaced DC drivers ([fritzmg])
+- [#3174] Correctly handle form fields in DC_Folder in "editAll" mode ([leofeyer])
+- [#3047] Update the YouTube options ([leofeyer])
+- [#3158] Undeprecate the "importUser" hook ([bytehead])
+- [#3125] Check if tstamp exists before hiding unsaved elements ([aschempp])
+- [#3077] Correctly render showColumns in the picker widget ([aschempp])
+- [#2958] Fix the tooltips in the JavaScript wizards ([rabauss])
+- [#3085] Do not disable search and cache in FAQ and newsletter readers ([fritzmg])
+- [#3083] Fix the indentation in the news_full template ([fritzmg])
+- [#3078] Purge log and undo tables via cron ([Toflar])
+- [#3067] Lazy-load the `rootFallbackLanguage` property ([aschempp])
+
 ## [4.9.16] (2021-06-23)
+
+**Security fixes:**
+
+- Prevent XSS in the system log ([CVE-2021-35210])
 
 **Fixed issues:**
 
@@ -204,6 +329,10 @@ This project adheres to [Semantic Versioning].
 - [#2343] Only use $dc->id in the protectFolder() method ([leofeyer])
 
 ## [4.9.6] (2020-09-24)
+
+**Security fixes:**
+
+- Prevent insert tag injection in forms ([CVE-2020-25768])
 
 **New features:**
 
@@ -615,6 +744,11 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.21]: https://github.com/contao/contao/releases/tag/4.9.21
+[4.9.20]: https://github.com/contao/contao/releases/tag/4.9.20
+[4.9.19]: https://github.com/contao/contao/releases/tag/4.9.19
+[4.9.18]: https://github.com/contao/contao/releases/tag/4.9.18
+[4.9.17]: https://github.com/contao/contao/releases/tag/4.9.17
 [4.9.16]: https://github.com/contao/contao/releases/tag/4.9.16
 [4.9.15]: https://github.com/contao/contao/releases/tag/4.9.15
 [4.9.14]: https://github.com/contao/contao/releases/tag/4.9.14
@@ -634,6 +768,11 @@ This project adheres to [Semantic Versioning].
 [4.9.0]: https://github.com/contao/contao/releases/tag/4.9.0
 [4.9.0-RC2]: https://github.com/contao/contao/releases/tag/4.9.0-RC2
 [4.9.0-RC1]: https://github.com/contao/contao/releases/tag/4.9.0-RC1
+[CVE-2021-37627]: https://github.com/contao/contao/security/advisories/GHSA-hq5m-mqmx-fw6m
+[CVE-2021-37626]: https://github.com/contao/contao/security/advisories/GHSA-r6mv-ppjc-4hgr
+[CVE-2021-35955]: https://github.com/contao/contao/security/advisories/GHSA-hr3h-x6gq-rqcp
+[CVE-2021-35210]: https://github.com/contao/contao/security/advisories/GHSA-h58v-c6rf-g9f7
+[CVE-2020-25768]: https://github.com/contao/contao/security/advisories/GHSA-f7wm-x4gw-6m23
 [AlexejKossmann]: https://github.com/AlexejKossmann
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
@@ -645,6 +784,7 @@ This project adheres to [Semantic Versioning].
 [bohnmedia]: https://github.com/bohnmedia
 [bytehead]: https://github.com/bytehead
 [cliffparnitzky]: https://github.com/cliffparnitzky
+[dennisbohn]: https://github.com/dennisbohn
 [denniserdmann]: https://github.com/denniserdmann
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
@@ -657,9 +797,99 @@ This project adheres to [Semantic Versioning].
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
+[SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [xchs]: https://github.com/xchs
+[xprojects-de]: https://github.com/xprojects-de
+[zonky2]: https://github.com/zonky2
+[#3352]: https://github.com/contao/contao/pull/3352
+[#3543]: https://github.com/contao/contao/pull/3543
+[#3496]: https://github.com/contao/contao/pull/3496
+[#3534]: https://github.com/contao/contao/pull/3534
+[#3526]: https://github.com/contao/contao/pull/3526
+[#3503]: https://github.com/contao/contao/pull/3503
+[#3521]: https://github.com/contao/contao/pull/3521
+[#3519]: https://github.com/contao/contao/pull/3519
+[#3517]: https://github.com/contao/contao/pull/3517
+[#3513]: https://github.com/contao/contao/pull/3513
+[#3512]: https://github.com/contao/contao/pull/3512
+[#3508]: https://github.com/contao/contao/pull/3508
+[#3499]: https://github.com/contao/contao/pull/3499
+[#3497]: https://github.com/contao/contao/pull/3497
+[#3475]: https://github.com/contao/contao/pull/3475
+[#3480]: https://github.com/contao/contao/pull/3480
+[#3481]: https://github.com/contao/contao/pull/3481
+[#3464]: https://github.com/contao/contao/pull/3464
+[#3461]: https://github.com/contao/contao/pull/3461
+[#3416]: https://github.com/contao/contao/pull/3416
+[#3467]: https://github.com/contao/contao/pull/3467
+[#3457]: https://github.com/contao/contao/pull/3457
+[#3426]: https://github.com/contao/contao/pull/3426
+[#3462]: https://github.com/contao/contao/pull/3462
+[#3460]: https://github.com/contao/contao/pull/3460
+[#3459]: https://github.com/contao/contao/pull/3459
+[#3455]: https://github.com/contao/contao/pull/3455
+[#3454]: https://github.com/contao/contao/pull/3454
+[#3444]: https://github.com/contao/contao/pull/3444
+[#3441]: https://github.com/contao/contao/pull/3441
+[#3329]: https://github.com/contao/contao/pull/3329
+[#3422]: https://github.com/contao/contao/pull/3422
+[#3407]: https://github.com/contao/contao/pull/3407
+[#3412]: https://github.com/contao/contao/pull/3412
+[#3423]: https://github.com/contao/contao/pull/3423
+[#3417]: https://github.com/contao/contao/pull/3417
+[#3405]: https://github.com/contao/contao/pull/3405
+[#3394]: https://github.com/contao/contao/pull/3394
+[#3402]: https://github.com/contao/contao/pull/3402
+[#3390]: https://github.com/contao/contao/pull/3390
+[#3383]: https://github.com/contao/contao/pull/3383
+[#3296]: https://github.com/contao/contao/pull/3296
+[#3369]: https://github.com/contao/contao/pull/3369
+[#3360]: https://github.com/contao/contao/pull/3360
+[#3367]: https://github.com/contao/contao/pull/3367
+[#3310]: https://github.com/contao/contao/pull/3310
+[#3359]: https://github.com/contao/contao/pull/3359
+[#3346]: https://github.com/contao/contao/pull/3346
+[#3356]: https://github.com/contao/contao/pull/3356
+[#3341]: https://github.com/contao/contao/pull/3341
+[#3314]: https://github.com/contao/contao/pull/3314
+[#3303]: https://github.com/contao/contao/pull/3303
+[#3321]: https://github.com/contao/contao/pull/3321
+[#3323]: https://github.com/contao/contao/pull/3323
+[#3319]: https://github.com/contao/contao/pull/3319
+[#3315]: https://github.com/contao/contao/pull/3315
+[#3311]: https://github.com/contao/contao/pull/3311
+[#3278]: https://github.com/contao/contao/pull/3278
+[#3283]: https://github.com/contao/contao/pull/3283
+[#3293]: https://github.com/contao/contao/pull/3293
+[#3292]: https://github.com/contao/contao/pull/3292
+[#3291]: https://github.com/contao/contao/pull/3291
+[#3275]: https://github.com/contao/contao/pull/3275
+[#2940]: https://github.com/contao/contao/pull/2940
+[#3256]: https://github.com/contao/contao/pull/3256
+[#3214]: https://github.com/contao/contao/pull/3214
+[#3251]: https://github.com/contao/contao/pull/3251
+[#3245]: https://github.com/contao/contao/pull/3245
+[#3220]: https://github.com/contao/contao/pull/3220
+[#3218]: https://github.com/contao/contao/pull/3218
+[#3197]: https://github.com/contao/contao/pull/3197
+[#3190]: https://github.com/contao/contao/pull/3190
+[#3221]: https://github.com/contao/contao/pull/3221
+[#3217]: https://github.com/contao/contao/pull/3217
+[#3210]: https://github.com/contao/contao/pull/3210
+[#3216]: https://github.com/contao/contao/pull/3216
+[#3179]: https://github.com/contao/contao/pull/3179
+[#3174]: https://github.com/contao/contao/pull/3174
+[#3047]: https://github.com/contao/contao/pull/3047
+[#3158]: https://github.com/contao/contao/pull/3158
+[#3125]: https://github.com/contao/contao/pull/3125
+[#3077]: https://github.com/contao/contao/pull/3077
+[#2958]: https://github.com/contao/contao/pull/2958
+[#3085]: https://github.com/contao/contao/pull/3085
+[#3083]: https://github.com/contao/contao/pull/3083
+[#3078]: https://github.com/contao/contao/pull/3078
+[#3067]: https://github.com/contao/contao/pull/3067
 [#3112]: https://github.com/contao/contao/pull/3112
 [#3046]: https://github.com/contao/contao/pull/3046
 [#2960]: https://github.com/contao/contao/pull/2960

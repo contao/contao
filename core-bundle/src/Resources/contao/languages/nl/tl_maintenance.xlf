@@ -175,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>Crawlen is niet mogelijk terwijl de onderhoudsmodus is ingeschakeld.</target>
       </trans-unit>
     </body>
   </file>

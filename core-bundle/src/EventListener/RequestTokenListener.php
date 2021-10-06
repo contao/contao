@@ -13,12 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Validates the request token if the request is a Contao request.
@@ -38,7 +39,7 @@ class RequestTokenListener
     private $scopeMatcher;
 
     /**
-     * @var CsrfTokenManagerInterface
+     * @var ContaoCsrfTokenManager
      */
     private $csrfTokenManager;
 
@@ -52,7 +53,7 @@ class RequestTokenListener
      */
     private $csrfCookiePrefix;
 
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, CsrfTokenManagerInterface $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
+    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
     {
         $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
@@ -83,11 +84,7 @@ class RequestTokenListener
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
             || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
-            || (
-                (0 === $request->cookies->count() || [$this->csrfCookiePrefix.$this->csrfTokenName] === $request->cookies->keys())
-                && !$request->getUserInfo()
-                && !($request->hasSession() && $request->getSession()->isStarted())
-            )
+            || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
         ) {
             return;
         }
@@ -119,12 +116,28 @@ class RequestTokenListener
             }
         }
 
-        $token = new CsrfToken($this->csrfTokenName, $request->request->get('REQUEST_TOKEN'));
+        $token = new CsrfToken($this->csrfTokenName, $this->getTokenFromRequest($request));
 
         if ($this->csrfTokenManager->isTokenValid($token)) {
             return;
         }
 
         throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
+    }
+
+    private function getTokenFromRequest(Request $request): ?string
+    {
+        if ($request->request->has('REQUEST_TOKEN')) {
+            return $request->request->get('REQUEST_TOKEN');
+        }
+
+        // Look for the token inside the root level arrays as they would be in named Symfony forms
+        foreach ($request->request as $value) {
+            if (\is_array($value) && isset($value['REQUEST_TOKEN'])) {
+                return $value['REQUEST_TOKEN'];
+            }
+        }
+
+        return null;
     }
 }

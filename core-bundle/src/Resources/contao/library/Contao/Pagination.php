@@ -114,8 +114,8 @@ class Pagination
 	protected $arrData = array();
 
 	/**
-	 * Data array
-	 * @var array
+	 * Force URL parameter
+	 * @var boolean
 	 */
 	protected $blnForceParam = false;
 

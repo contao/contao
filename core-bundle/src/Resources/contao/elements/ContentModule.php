@@ -80,10 +80,12 @@ class ContentModule extends ContentElement
 		$objModel->cssID = $cssID;
 		$objModel->typePrefix = 'ce_';
 
+		$strStopWatchId = 'contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')';
+
 		if (System::getContainer()->getParameter('kernel.debug'))
 		{
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
-			$objStopwatch->start('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')', 'contao.layout');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
 
 		/** @var Module $objModule */
@@ -98,9 +100,9 @@ class ContentModule extends ContentElement
 
 		$strBuffer = $objModule->generate();
 
-		if (isset($objStopwatch))
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
 		{
-			$objStopwatch->stop('contao.frontend_module.' . $objModel->type . ' (ID ' . $objModel->id . ')');
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;

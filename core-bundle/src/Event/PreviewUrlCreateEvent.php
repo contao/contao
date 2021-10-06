@@ -22,7 +22,7 @@ class PreviewUrlCreateEvent extends Event
     private $key;
 
     /**
-     * @var int
+     * @var string|int
      */
     private $id;
 

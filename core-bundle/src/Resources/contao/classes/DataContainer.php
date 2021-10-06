@@ -37,7 +37,7 @@ abstract class DataContainer extends Backend
 {
 	/**
 	 * Current ID
-	 * @var integer
+	 * @var integer|string
 	 */
 	protected $intId;
 
@@ -274,7 +274,6 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		/** @var Widget $strClass */
 		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType']];
 
 		// Return if the widget class does not exists
@@ -325,7 +324,7 @@ abstract class DataContainer extends Backend
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$suffix = ($this instanceof DC_Folder ? md5($this->intId) : $this->intId);
+			$suffix = $this->getFormFieldSuffix();
 			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
 
 			// Calculate the current palette
@@ -1391,6 +1390,16 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
+	 * Return the form field suffix
+	 *
+	 * @return integer|string
+	 */
+	protected function getFormFieldSuffix()
+	{
+		return $this->intId;
+	}
+
+	/**
 	 * Return the name of the current palette
 	 *
 	 * @return string
@@ -1405,6 +1414,25 @@ abstract class DataContainer extends Backend
 	 * @throws \Exception
 	 */
 	abstract protected function save($varValue);
+
+	/**
+	 * Return the class name of the DataContainer driver for the given table.
+	 *
+	 * @param string $table
+	 *
+	 * @return string
+	 */
+	public static function getDriverForTable(string $table): string
+	{
+		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
+
+		if (false === strpos($dataContainer, '\\'))
+		{
+			$dataContainer = 'DC_' . $dataContainer;
+		}
+
+		return $dataContainer;
+	}
 }
 
 class_alias(DataContainer::class, 'DataContainer');

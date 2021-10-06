@@ -43,7 +43,6 @@ class FrontendIndex extends Frontend
 	public function run()
 	{
 		$pageId = $this->getPageIdFromUrl();
-		$objRootPage = null;
 
 		// Load a website root page object if there is no page ID
 		if ($pageId === null)
@@ -94,7 +93,6 @@ class FrontendIndex extends Frontend
 		{
 			@trigger_error('Using FrontendIndex::renderPage() with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.', E_USER_DEPRECATED);
 
-			$objNewPage = null;
 			$arrPages = array();
 
 			// Order by domain and language

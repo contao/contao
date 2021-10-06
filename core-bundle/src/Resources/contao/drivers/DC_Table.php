@@ -348,12 +348,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			$return .= $this->panel();
 			$return .= ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 4) ? $this->parentView() : $this->listView();
-
-			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
-			{
-				$return .= $this->paginationMenu();
-			}
 		}
 
 		return $return;
@@ -3301,6 +3295,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'];
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'];
 
+		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+		{
+			$ptable = $this->strTable;
+		}
+
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
@@ -3393,6 +3392,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'])
 			{
 				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
+			}
+			elseif ($ptable == $this->strTable)
+			{
+				$objIds = $this->Database->execute('SELECT c.id FROM ' . $this->strTable . ' c LEFT JOIN ' . $ptable . ' p ON c.pid=p.id WHERE p.id IS NULL AND c.pid > 0');
 			}
 			else
 			{
@@ -3952,8 +3955,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (strpos($v, ':') !== false)
 			{
-				list($strKey, $strTable) = explode(':', $v);
-				list($strTable, $strField) = explode('.', $strTable);
+				list($strKey, $strTable) = explode(':', $v, 2);
+				list($strTable, $strField) = explode('.', $strTable, 2);
 
 				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 										 ->limit(1)
@@ -4588,7 +4591,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>' : '') . '
 </div>';
 
-		// Close form
+		// Add another panel at the end of the page
+		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+		{
+			$return .= $this->paginationMenu();
+		}
+
+		// Close the form
 		if (Input::get('act') == 'select')
 		{
 			// Submit buttons
@@ -4891,8 +4900,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if (strpos($v, ':') !== false)
 					{
-						list($strKey, $strTable) = explode(':', $v);
-						list($strTable, $strField) = explode('.', $strTable);
+						list($strKey, $strTable) = explode(':', $v, 2);
+						list($strTable, $strField) = explode('.', $strTable, 2);
 
 						$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 												 ->limit(1)
@@ -5034,7 +5043,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 							$value = (string) $arg !== '' ? $arg : '-';
 						}
 
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . $field . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
+						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}
 				}
 				else
@@ -5056,6 +5065,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
 </div>' : '') . '
 </div>';
+
+			// Add another panel at the end of the page
+			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+			{
+				$return .= $this->paginationMenu();
+			}
 
 			// Close the form
 			if (Input::get('act') == 'select')
@@ -5258,11 +5273,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
 			}
 
-			$options_sorter[Utf8::toAscii($option_label) . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . (($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
+			$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($field) . '"' . (($field == $session['search'][$this->strTable]['field']) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
 		}
 
 		// Sort by option values
-		$options_sorter = natcaseksort($options_sorter);
+		uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
+
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
 		return '
@@ -5359,7 +5375,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		uksort($options_sorter, 'strcasecmp');
+		uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
 
 		return '
 <div class="tl_sorting tl_subpanel">
@@ -5941,13 +5957,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
-					$options_sorter['  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>'] = Utf8::toAscii($option_label);
+					$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
 				}
 
 				// Sort by option values
 				if (!$blnDate)
 				{
-					natcasesort($options_sorter);
+					uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
 
 					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(2, 4, 12)))
 					{
@@ -5955,7 +5971,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$fields .= "\n" . implode("\n", array_keys($options_sorter));
+				$fields .= "\n" . implode("\n", array_values($options_sorter));
 			}
 
 			// End select menu

@@ -549,7 +549,7 @@ class tl_calendar_events extends Contao\Backend
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields']);
-			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key]);
+			unset($GLOBALS['TL_DCA']['tl_calendar_events']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_calendar_events']['fields']['noComments']);
 		}
 
 		if ($this->User->isAdmin)
@@ -787,7 +787,16 @@ class tl_calendar_events extends Contao\Backend
 		// Set the global page object so we can replace the insert tags
 		$objPage = $page;
 
-		return self::replaceInsertTags(str_replace('{{page::pageTitle}}', '%s', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}'));
+		return implode(
+			'%s',
+			array_map(
+				static function ($strVal)
+				{
+					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+				},
+				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
+			)
+		);
 	}
 
 	/**
@@ -947,7 +956,7 @@ class tl_calendar_events extends Contao\Backend
 		if ($dc->activeRecord->addTime)
 		{
 			$arrSet['startTime'] = strtotime(date('Y-m-d', $arrSet['startTime']) . ' ' . date('H:i:s', $dc->activeRecord->startTime));
-			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?: $dc->activeRecord->startTime));
+			$arrSet['endTime'] = strtotime(date('Y-m-d', $arrSet['endTime']) . ' ' . date('H:i:s', $dc->activeRecord->endTime ?? $dc->activeRecord->startTime));
 		}
 
 		// Adjust end time of "all day" events
@@ -1068,7 +1077,7 @@ class tl_calendar_events extends Contao\Backend
 	{
 		if (Contao\Input::get('tid'))
 		{
-			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (@func_get_arg(12) ?: null));
+			$this->toggleVisibility(Contao\Input::get('tid'), (Contao\Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
 			$this->redirect($this->getReferer());
 		}
 

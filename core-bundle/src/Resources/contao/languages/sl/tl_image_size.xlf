@@ -61,6 +61,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.1">
         <source>The CSS classes will be added to the image tag.</source>
+        <target>Razredi CSS bodo dodani k slikovnemu elementu - image tag.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.formats.0">
         <source>Convert image formats</source>
@@ -146,6 +147,12 @@
       <trans-unit id="tl_image_size.gif:webp,gif">
         <source>GIF to WEBP</source>
         <target>GIF v WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,png">
+        <source>WEBP to PNG</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,jpg">
+        <source>WEBP to JPG</source>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

@@ -73,6 +73,10 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = $this->getInsertTagValue($config);
+
+            if ($flags = $this->getInsertTagFlags($config)) {
+                $attributes['flags'] = $flags;
+            }
         }
 
         return $attributes;
