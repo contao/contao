@@ -401,6 +401,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
     {
         $driver = 'mysql';
+
         foreach ($extensionConfigs as $extensionConfig) {
             // Loop over all configs so the last one wins
             $driver = $extensionConfig['dbal']['connections']['default']['driver'] ?? $driver;
