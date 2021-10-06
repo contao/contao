@@ -491,11 +491,6 @@ h2.sub_headline {
 	-webkit-appearance:textfield;
 	box-sizing:content-box;
 }
-@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
-	.tl_search .tl_text {
-		margin-top:2px;
-	}
-}}
 .tl_sorting {
 	width:26%;
 }
