@@ -343,6 +343,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $driver = null;
         $url = null;
+
         foreach ($extensionConfigs as $extensionConfig) {
             if (isset($extensionConfig['dbal']['connections']['default']['driver'])) {
                 $driver = $extensionConfig['dbal']['connections']['default']['driver'];
