@@ -568,7 +568,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'pdo_mysql',
                             'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
                             ],
                         ],
                     ],
