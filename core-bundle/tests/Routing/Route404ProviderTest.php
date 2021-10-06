@@ -209,6 +209,7 @@ class Route404ProviderTest extends TestCase
                 'type' => 'error_404',
                 'domain' => 'example.com',
                 'rootUseSSL' => true,
+                'rootLanguage' => 'en',
             ]
         );
 
