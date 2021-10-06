@@ -15,9 +15,9 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Doctrine\DBAL\Exception\DriverException;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Provide methods to modify the database.
@@ -3972,7 +3972,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$label = vsprintf($GLOBALS['TL_DCA'][$table]['list']['label']['format'] ?? '%s', $args);
 
 		// Shorten the label if it is too long
-		if (($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < Utf8::strlen(strip_tags($label)))
+		if (($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < mb_strlen(strip_tags($label)))
 		{
 			$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
 		}
@@ -5277,7 +5277,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
+		uksort($options_sorter, static function ($a, $b)
+		{
+			$a = (new UnicodeString($a))->folded();
+			$b = (new UnicodeString($b))->folded();
+
+			if ($a->toString() === $b->toString())
+			{
+				return 0;
+			}
+
+			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
+		});
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
@@ -5375,7 +5386,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Sort by option values
-		uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
+		uksort($options_sorter, static function ($a, $b)
+		{
+			$a = (new UnicodeString($a))->folded();
+			$b = (new UnicodeString($b))->folded();
+
+			if ($a->toString() === $b->toString())
+			{
+				return 0;
+			}
+
+			return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
+		});
 
 		return '
 <div class="tl_sorting tl_subpanel">
@@ -5963,7 +5985,18 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by option values
 				if (!$blnDate)
 				{
-					uksort($options_sorter, array(Utf8::class, 'strnatcasecmp'));
+					uksort($options_sorter, static function ($a, $b)
+					{
+						$a = (new UnicodeString($a))->folded();
+						$b = (new UnicodeString($b))->folded();
+
+						if ($a->toString() === $b->toString())
+						{
+							return 0;
+						}
+
+						return strnatcmp($a->ascii()->toString(), $b->ascii()->toString());
+					});
 
 					if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(2, 4, 12)))
 					{
@@ -6062,7 +6095,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 		elseif (\in_array($mode, array(1, 2)))
 		{
-			$remoteNew = $value ? ucfirst(Utf8::substr($value, 0, 1)) : '-';
+			$remoteNew = $value ? mb_strtoupper(mb_substr($value, 0, 1)) : '-';
 		}
 		elseif (\in_array($mode, array(3, 4)))
 		{
@@ -6071,7 +6104,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				$GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'] = 2;
 			}
 
-			$remoteNew = $value ? ucfirst(Utf8::substr($value, 0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])) : '-';
+			$remoteNew = $value ? (new UnicodeString($value))->slice(0, $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['length'])->title()->toString() : '-';
 		}
 		elseif (\in_array($mode, array(5, 6)))
 		{

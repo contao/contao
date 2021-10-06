@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -44,7 +43,7 @@ class StringUtil
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
 
-		if (Utf8::strlen($strString) <= $intNumberOfChars)
+		if (mb_strlen($strString) <= $intNumberOfChars)
 		{
 			return $strString;
 		}
@@ -56,7 +55,7 @@ class StringUtil
 
 		foreach ($arrChunks as $strChunk)
 		{
-			$intCharCount += Utf8::strlen(static::decodeEntities($strChunk));
+			$intCharCount += mb_strlen(static::decodeEntities($strChunk));
 
 			if ($intCharCount++ <= $intNumberOfChars)
 			{
@@ -65,10 +64,10 @@ class StringUtil
 			}
 
 			// If the first word is longer than $intNumberOfChars already, shorten it
-			// with Utf8::substr() so the method does not return an empty string.
+			// with mb_substr() so the method does not return an empty string.
 			if (empty($arrWords))
 			{
-				$arrWords[] = Utf8::substr($strChunk, 0, $intNumberOfChars);
+				$arrWords[] = mb_substr($strChunk, 0, $intNumberOfChars);
 			}
 
 			if ($strEllipsis !== false)
@@ -134,7 +133,7 @@ class StringUtil
 			}
 
 			$blnModified = ($buffer !== $arrChunks[$i]);
-			$intCharCount += Utf8::strlen(static::decodeEntities($arrChunks[$i]));
+			$intCharCount += mb_strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)
 			{
@@ -330,11 +329,11 @@ class StringUtil
 		foreach ($arrEmails as $strEmail)
 		{
 			$strEncoded = '';
-			$arrCharacters = Utf8::str_split($strEmail);
+			$arrCharacters = mb_str_split($strEmail);
 
 			foreach ($arrCharacters as $index => $strCharacter)
 			{
-				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', Utf8::ord($strCharacter));
+				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -934,7 +933,7 @@ class StringUtil
 
 		if (!$blnPreserveUppercase)
 		{
-			$strString = Utf8::strtolower($strString);
+			$strString = mb_strtolower($strString);
 		}
 
 		return trim($strString, '-');

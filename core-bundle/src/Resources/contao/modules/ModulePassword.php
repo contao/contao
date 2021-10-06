@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
@@ -42,7 +41,7 @@ class ModulePassword extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['lostPassword'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['lostPassword'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
