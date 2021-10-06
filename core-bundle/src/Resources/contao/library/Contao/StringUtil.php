@@ -1053,7 +1053,7 @@ class StringUtil
 
 		// URL-encode colon to prevent disallowed protocols
 		if (
-			!preg_match('@^(?:' . implode('|', array_map('preg_quote', $arrAllowedProtocols)) . '):@i', self::decodeEntities($strString))
+			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
 			$strString = preg_replace($colonRegEx, '%3A', $strString);
