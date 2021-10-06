@@ -354,14 +354,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
             // Do not add PDO options if custom options have been defined
             // Since this is merged recursively, we don't need to check other configs
-            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
+            if (isset($extensionConfig['dbal']['connections']['default']['options'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
                 return $extensionConfigs;
             }
         }
 
         // If URL is set it overrides the driver option
         if (null !== $url) {
-            $driver = parse_url($url, PHP_URL_SCHEME);
+            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
         // Do not add PDO options if the selected driver is not mysql
@@ -426,7 +426,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         return sprintf(
             '%s://%s%s:%s%s',
-            $driver,
+            str_replace('_', '-', $driver),
             $userPassword,
             $container->getParameter('database_host'),
             (int) $container->getParameter('database_port'),

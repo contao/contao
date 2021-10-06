@@ -367,42 +367,42 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            'mysql://localhost:3306',
+            'pdo-mysql://localhost:3306',
         ];
 
         yield [
             null,
             null,
             'contao_test',
-            'mysql://localhost:3306/contao_test',
+            'pdo-mysql://localhost:3306/contao_test',
         ];
 
         yield [
             null,
             'foobar',
             'contao_test',
-            'mysql://localhost:3306/contao_test',
+            'pdo-mysql://localhost:3306/contao_test',
         ];
 
         yield [
             'root',
             null,
             'contao_test',
-            'mysql://root@localhost:3306/contao_test',
+            'pdo-mysql://root@localhost:3306/contao_test',
         ];
 
         yield [
             'root',
             'foobar',
             'contao_test',
-            'mysql://root:foobar@localhost:3306/contao_test',
+            'pdo-mysql://root:foobar@localhost:3306/contao_test',
         ];
 
         yield [
             'root',
             'aA&3yuA?123-2ABC',
             'contao_test',
-            'mysql://root:aA%%263yuA%%3F123-2ABC@localhost:3306/contao_test',
+            'pdo-mysql://root:aA%%263yuA%%3F123-2ABC@localhost:3306/contao_test',
         ];
     }
 
@@ -559,7 +559,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function testDoesNotAddDefaultPdoOptionsIfCustomOptionsPresent(): void
+    public function testDoesNotOverrideThePdoMultiStatementsOption(): void
     {
         $extensionConfigs = [
             [
@@ -567,7 +567,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
-                            'options' => null,
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true
+                            ],
                         ],
                     ],
                 ],
