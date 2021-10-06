@@ -263,7 +263,7 @@ class StringUtilTest extends TestCase
         yield 'From UTF-8 to ASCII' => [
             '𝚏ōȏճăᴦbaz',
             'ASCII',
-            'baz',
+            '??????baz',
             'UTF-8',
         ];
 
