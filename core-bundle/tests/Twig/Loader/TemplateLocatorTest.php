@@ -18,7 +18,6 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\Model\Collection;
 use Contao\ThemeModel;
-use Doctrine\DBAL\Driver\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Webmozart\PathUtil\Path;
@@ -66,12 +65,7 @@ class TemplateLocatorTest extends TestCase
         $themeAdapter = $this->mockAdapter(['findAll']);
         $themeAdapter
             ->method('findAll')
-            ->willThrowException(
-                new TableNotFoundException(
-                    'Table tl_theme doesn\'t exist.',
-                    $this->createMock(DriverException::class)
-                )
-            )
+            ->willThrowException($this->createMock(TableNotFoundException::class))
         ;
 
         $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
