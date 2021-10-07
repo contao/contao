@@ -151,24 +151,27 @@ class PictureFactory implements PictureFactoryInterface
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
 
-                    $formatsString = implode(';', StringUtil::deserialize($imageSizes->formats, true));
                     $formats = [];
 
-                    foreach (explode(';', $formatsString) as $format) {
-                        [$source, $targets] = explode(':', $format, 2);
-                        $targets = explode(',', $targets);
+                    if ('' !== $imageSizes->formats) {
+                        $formatsString = implode(';', StringUtil::deserialize($imageSizes->formats, true));
 
-                        if (!isset($formats[$source])) {
-                            $formats[$source] = $targets;
-                            continue;
+                        foreach (explode(';', $formatsString) as $format) {
+                            [$source, $targets] = explode(':', $format, 2);
+                            $targets = explode(',', $targets);
+
+                            if (!isset($formats[$source])) {
+                                $formats[$source] = $targets;
+                                continue;
+                            }
+
+                            $formats[$source] = array_unique(array_merge($formats[$source], $targets));
+
+                            usort(
+                                $formats[$source],
+                                static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b)
+                            );
                         }
-
-                        $formats[$source] = array_unique(array_merge($formats[$source], $targets));
-
-                        usort(
-                            $formats[$source],
-                            static fn ($a, $b) => (self::FORMATS_ORDER[$a] ?? $a) <=> (self::FORMATS_ORDER[$b] ?? $b)
-                        );
                     }
 
                     $config->setFormats($formats);

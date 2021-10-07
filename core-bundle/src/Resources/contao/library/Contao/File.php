@@ -13,9 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\ImageDimensions;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Creates, reads, writes and deletes files
@@ -785,7 +785,7 @@ class File extends System
 		(
 			$inline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 			$filename,
-			Utf8::toAscii($this->basename)
+			(new UnicodeString($this->basename))->ascii()->toString()
 		);
 
 		$response->headers->addCacheControlDirective('must-revalidate');

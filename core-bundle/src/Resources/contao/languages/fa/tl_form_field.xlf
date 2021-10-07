@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxlength.1">
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
-        <target>اندازه فیلد را به یک تعداد کارکتر (متنی) یا بایت (پرونده بارگزاری شده) محدود می‌کند.</target>
+        <target>اندازه فیلد را به یک تعداد کارکتر (متنی) یا بایت (پرونده بارگذاری شده) محدود می‌کند.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
@@ -259,11 +259,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.storeFile.0">
         <source>Store uploaded files</source>
-        <target>ذخیره پرونده‌های بارگزاری شده</target>
+        <target>ذخیره پرونده‌های بارگذاری شده</target>
       </trans-unit>
       <trans-unit id="tl_form_field.storeFile.1">
         <source>Move the uploaded files to a folder on the server.</source>
-        <target>جابجایی پرونده‌های بارگزاری شده به پوشه‌ای در سرور.</target>
+        <target>جابجایی پرونده‌های بارگذاری شده به پوشه‌ای در سرور.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.uploadFolder.0">
         <source>Target folder</source>
@@ -327,7 +327,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.fSize.1">
         <source>Here you can enter the size of the upload field (&lt;em&gt;size&lt;/em&gt; attribute).</source>
-        <target>اینجا می‌توانید اندازه ورودی بارگزاری را وارد نمایید (خصوصیت &lt;em&gt;اندازه&lt;/em&gt;).</target>
+        <target>اینجا می‌توانید اندازه ورودی بارگذاری را وارد نمایید (ویژگی &lt;em&gt;اندازه&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
         <source>Form field template</source>

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Provide methods to handle password fields.
  *
@@ -112,7 +110,7 @@ class Password extends Widget
 		// Check password length either from DCA or use Config as fallback (#1086)
 		$intLength = $this->minlength ?: Config::get('minPasswordLength');
 
-		if (Utf8::strlen($varInput) < $intLength)
+		if (mb_strlen($varInput) < $intLength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}

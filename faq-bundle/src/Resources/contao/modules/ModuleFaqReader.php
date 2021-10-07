@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Patchwork\Utf8;
 
 /**
  * Class ModuleFaqReader
@@ -46,7 +45,7 @@ class ModuleFaqReader extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqreader'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['faqreader'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;

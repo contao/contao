@@ -106,6 +106,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.meta_legend">
         <source>Metadata</source>
+        <target>Meta data</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
