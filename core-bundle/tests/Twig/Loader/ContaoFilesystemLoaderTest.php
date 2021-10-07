@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -606,6 +607,32 @@ class ContaoFilesystemLoaderTest extends TestCase
                 'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
             ],
         ];
+    }
+
+    public function testCatchesInvalidThemePathExceptionWhenGeneratingSlug(): void
+    {
+        $themeNamespace = $this->createMock(ThemeNamespace::class);
+        $themeNamespace
+            ->method('generateSlug')
+            ->with('my_theme')
+            ->willThrowException(new InvalidThemePathException('my_theme', ['_']))
+        ;
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $this->createMock(TemplateLocator::class),
+            $themeNamespace,
+            '/'
+        );
+
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my_theme';
+
+        $GLOBALS['objPage'] = $page;
+
+        $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
+
+        unset($GLOBALS['objPage']);
     }
 
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
