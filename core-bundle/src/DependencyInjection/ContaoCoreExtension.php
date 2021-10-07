@@ -66,6 +66,7 @@ class ContaoCoreExtension extends Extension
         $loader->load('services.yml');
         $loader->load('migrations.yml');
 
+        // TODO: Change $config['web_dir'] to 'public' in Contao 5 (see #3535)
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
@@ -324,7 +325,9 @@ class ContaoCoreExtension extends Extension
 
     private function getComposerPublicDir(string $projectDir): ?string
     {
-        if (!(new Filesystem())->exists($composerJsonFilePath = Path::join($projectDir, 'composer.json'))) {
+        $fs = new Filesystem();
+
+        if (!$fs->exists($composerJsonFilePath = Path::join($projectDir, 'composer.json'))) {
             return null;
         }
 

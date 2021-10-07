@@ -463,9 +463,9 @@ class ContaoCoreExtensionTest extends TestCase
             ])
         );
 
-        $filesystem = new Filesystem();
         $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
 
+        $filesystem = new Filesystem();
         $filesystem->dumpFile($composerJsonFilePath, json_encode($composerJson, JSON_THROW_ON_ERROR));
 
         (new ContaoCoreExtension())->load([], $container);

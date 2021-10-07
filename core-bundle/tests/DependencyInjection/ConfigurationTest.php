@@ -76,7 +76,7 @@ class ConfigurationTest extends TestCase
      */
     public function testResolvesThePaths(string $unix, string $windows): void
     {
-        $this->expectDeprecation("Since contao/core-bundle 4.13: Setting the web directory via container config is deprecated since Contao 4.13. Use the 'extra.public-dir' config key in your root composer.json instead.");
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated since Contao 4.13. Use the "extra.public-dir" config key in your root composer.json instead.');
 
         $params = [
             'contao' => [
