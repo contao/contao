@@ -135,6 +135,10 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
+		'bearerToken' => array
+		(
+			'sql'                     => "text NULL"
+		),
 		'firstname' => array
 		(
 			'exclude'                 => true,
