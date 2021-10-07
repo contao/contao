@@ -145,7 +145,7 @@ class DebugPagesCommandTest extends ContaoTestCase
                   Type      Path      URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                                      Options       
                  --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
                   bar       foo/bar   .html        no                    -                -              _controller : Contao\CoreBundle\Fixtures\Controller\Page\TestPageController   -             
-                  baz       -         -            no                    -                page : \d+     -                                                                             utf8 : false  
+                  baz       *         *            no                    -                page : \d+     -                                                                             utf8 : false  
                   regular   *         *            yes                   -                -              -                                                                             -             
                   root      foo       .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController            -             
                  --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 

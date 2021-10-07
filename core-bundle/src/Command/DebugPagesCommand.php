@@ -86,13 +86,13 @@ class DebugPagesCommand extends Command
 
             $rows[] = [
                 $type,
-                $config ? $config->getPath() ?: '-' : '*',
-                $config ? $config->getUrlSuffix() ?: '-' : '*',
+                $config && $config->getPath() ? $config->getPath() : '*',
+                $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $this->pageRegistry->supportsContentComposition($page) ? 'yes' : 'no',
                 isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
-                $config ? $this->generateArray($config->getRequirements()) ?: '-' : '-',
-                $config ? $this->generateArray($config->getDefaults()) ?: '-' : '-',
-                $config ? $this->generateArray($config->getOptions()) ?: '-' : '-',
+                $config ? $this->generateArray($config->getRequirements()) : '-',
+                $config ? $this->generateArray($config->getDefaults()) : '-',
+                $config ? $this->generateArray($config->getOptions()) : '-',
             ];
         }
 
@@ -124,6 +124,6 @@ class DebugPagesCommand extends Command
             $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), (string) $v);
         }
 
-        return implode("\n", $return);
+        return !empty($return) ? implode("\n", $return) : '-';
     }
 }
