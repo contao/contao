@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Loader;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
@@ -72,7 +73,7 @@ class TemplateLocator
             // framework here because this function will be called when the
             // container is built (see #3567)
             $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException|ConnectionException $e) {
             return [];
         }
 
