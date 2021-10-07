@@ -17,24 +17,16 @@ use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
 
-/**
- * Needs to run in a separate process because it includes the functions.php file.
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class PaginationTest extends TestCase
 {
     protected function setUp(): void
     {
-        include_once __DIR__.'/../../src/Resources/contao/helper/functions.php';
-
-        $GLOBALS['TL_LANG']['MSC']['first'] = '';
-        $GLOBALS['TL_LANG']['MSC']['previous'] = '';
-        $GLOBALS['TL_LANG']['MSC']['next'] = '';
-        $GLOBALS['TL_LANG']['MSC']['last'] = '';
-        $GLOBALS['TL_LANG']['MSC']['totalPages'] = '';
-        $GLOBALS['TL_LANG']['MSC']['goToPage'] = '';
+        $GLOBALS['TL_LANG']['MSC']['first'] = 'First';
+        $GLOBALS['TL_LANG']['MSC']['previous'] = 'Previous';
+        $GLOBALS['TL_LANG']['MSC']['next'] = 'Next';
+        $GLOBALS['TL_LANG']['MSC']['last'] = 'Last';
+        $GLOBALS['TL_LANG']['MSC']['totalPages'] = 'Total';
+        $GLOBALS['TL_LANG']['MSC']['goToPage'] = 'Go to';
 
         parent::setUp();
     }
@@ -57,7 +49,6 @@ class PaginationTest extends TestCase
         $_GET['page'] = $data['currentPage'] ?? 1;
 
         $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
-
         $items = $pagination->getItemsAsArray();
 
         $this->assertCount($data['expectedCount'], $items);

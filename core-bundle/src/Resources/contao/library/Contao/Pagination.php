@@ -135,7 +135,12 @@ class Pagination
 		$this->intRows = (int) $intRows;
 		$this->intRowsPerPage = (int) $intPerPage;
 		$this->intNumberOfLinks = (int) $intNumberOfLinks;
-		$this->intTotalPages = $this->intRows > 0 && $this->intRowsPerPage > 0 ? (int) ceil($this->intRows / $this->intRowsPerPage) : 0;
+		$this->intTotalPages = 0;
+
+		if ($this->intRows > 0 && $this->intRowsPerPage > 0)
+		{
+			$this->intTotalPages = (int) ceil($this->intRows / $this->intRowsPerPage);
+		}
 
 		// Initialize default labels
 		$this->lblFirst = $GLOBALS['TL_LANG']['MSC']['first'];
@@ -402,10 +407,10 @@ class Pagination
 	{
 		if ($intPage <= 1 && !$this->blnForceParam)
 		{
-			return ampersand($this->strUrl);
+			return StringUtil::ampersand($this->strUrl);
 		}
 
-		return ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
+		return StringUtil::ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }
 
