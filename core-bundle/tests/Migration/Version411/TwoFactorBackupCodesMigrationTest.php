@@ -15,14 +15,14 @@ namespace Contao\CoreBundle\Tests\Migration\Version411;
 use Contao\CoreBundle\Migration\Version411\TwoFactorBackupCodesMigration;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Statement;
 
 class TwoFactorBackupCodesMigrationTest extends TestCase
 {
     public function testDoesNothingIfTheTablesDoNotExist(): void
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -33,7 +33,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -44,7 +44,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
     public function testDodesNothingIfTheColumnsDoNotExist(): void
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -62,7 +62,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -73,7 +73,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
 
     public function testDoesNothingIfThereAreNoRows(): void
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -91,7 +91,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 
@@ -119,7 +119,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
             ],
         ];
 
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->expects($this->once())
             ->method('tablesExist')
@@ -144,7 +144,7 @@ class TwoFactorBackupCodesMigrationTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

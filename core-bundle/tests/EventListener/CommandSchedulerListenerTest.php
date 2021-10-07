@@ -18,9 +18,8 @@ use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Exception\DriverException;
-use Doctrine\DBAL\Schema\MySqlSchemaManager;
+use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -169,7 +168,7 @@ class CommandSchedulerListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('isConnected')
-            ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
+            ->willThrowException($this->createMock(DriverException::class))
         ;
 
         $listener = new CommandSchedulerListener($framework, $connection, $cron);
@@ -181,7 +180,7 @@ class CommandSchedulerListenerTest extends TestCase
      */
     private function mockConnection()
     {
-        $schemaManager = $this->createMock(MySqlSchemaManager::class);
+        $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
             ->method('tablesExist')
             ->willReturn(true)
@@ -194,7 +193,7 @@ class CommandSchedulerListenerTest extends TestCase
         ;
 
         $connection
-            ->method('getSchemaManager')
+            ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
 

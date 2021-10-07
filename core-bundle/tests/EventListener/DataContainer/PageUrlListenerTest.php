@@ -21,7 +21,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -1703,7 +1703,7 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnectionWithStatement(): Connection
     {
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createMock(Result::class);
         $statement
             ->method('fetchAll')
             ->willReturn([])

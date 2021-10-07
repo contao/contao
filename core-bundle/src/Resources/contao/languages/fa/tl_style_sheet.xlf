@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.1">
         <source>Here you can upload one or more .css files to be imported.</source>
-        <target>اینجا می‌توانید یک یا چند پرونده .css را برای وارد کردن بارگزاری نمایید</target>
+        <target>اینجا می‌توانید یک یا چند پرونده .css را برای وارد کردن بارگذاری نمایید</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.tstamp.0">
         <source>Revision date</source>
