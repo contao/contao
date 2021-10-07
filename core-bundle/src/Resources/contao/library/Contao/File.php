@@ -269,6 +269,9 @@ class File extends System
 									'jpeg' => IMAGETYPE_JPEG,
 									'png' => IMAGETYPE_PNG,
 									'webp' => IMAGETYPE_WEBP,
+									'avif' => \defined('IMAGETYPE_AVIF') ? IMAGETYPE_AVIF : 19,
+									'heic' => IMAGETYPE_UNKNOWN, // TODO: replace with IMAGETYPE_HEIC once available
+									'jxl' => IMAGETYPE_UNKNOWN, // TODO: replace with IMAGETYPE_JXL once available
 								);
 
 								$this->arrImageSize = array
@@ -361,7 +364,7 @@ class File extends System
 				return $this->isGdImage || $this->isSvgImage;
 
 			case 'isGdImage':
-				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png', 'webp'));
+				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl'));
 
 			case 'isSvgImage':
 				return \in_array($this->extension, array('svg', 'svgz'));
