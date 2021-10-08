@@ -83,7 +83,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'sorting' => array
 		(
 			'mode'                    => 5,
-			'showRootTrails' 	      => true,
+			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
 			'panelLayout'             => 'filter;search'
