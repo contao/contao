@@ -24,10 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ParseJwtCookieCommand extends Command
 {
-    /**
-     * @var JwtManager
-     */
-    private $jwtManager;
+    private JwtManager $jwtManager;
 
     public function __construct(Application $application, JwtManager $jwtManager = null)
     {

@@ -22,15 +22,12 @@ use Symfony\Component\HttpFoundation\Cookie;
 
 class GenerateJwtCookieCommandTest extends ContaoTestCase
 {
+    private GenerateJwtCookieCommand $command;
+
     /**
      * @var JwtManager&MockObject
      */
     private $jwtManager;
-
-    /**
-     * @var GenerateJwtCookieCommand
-     */
-    private $command;
 
     protected function setUp(): void
     {

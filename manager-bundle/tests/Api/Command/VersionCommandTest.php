@@ -22,6 +22,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class VersionCommandTest extends TestCase
 {
+    private VersionCommand $command;
+
     /**
      * @var Application&MockObject
      */
@@ -31,11 +33,6 @@ class VersionCommandTest extends TestCase
      * @var PluginLoader&MockObject
      */
     private $pluginLoader;
-
-    /**
-     * @var VersionCommand
-     */
-    private $command;
 
     protected function setUp(): void
     {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
@@ -228,6 +229,39 @@ class ContaoExtensionTest extends TestCase
             ]),
             $output
         );
+    }
+
+    public function testRenderLegacyTemplateWithTemplateFunctions(): void
+    {
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasBackendUser')
+            ->willReturn(true)
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
+        $container->set('contao.security.token_checker', $tokenChecker);
+
+        System::setContainer($container);
+
+        $GLOBALS['TL_LANG'] = [
+            'MONTHS' => ['a', 'b'],
+            'DAYS' => ['c', 'd'],
+            'MONTHS_SHORT' => ['e', 'f'],
+            'DAYS_SHORT' => ['g', 'h'],
+            'DP' => ['select_a_time' => 'i', 'use_mouse_wheel' => 'j', 'time_confirm_button' => 'k', 'apply_range' => 'l', 'cancel' => 'm', 'week' => 'n'],
+        ];
+
+        $output = $this->getContaoExtension()->renderLegacyTemplate('with_template_functions.html5', [], []);
+
+        $expected =
+            "1\n".
+            'Locale.define("en-US","Date",{months:["a","b"],days:["c","d"],months_abbr:["e","f"],days_abbr:["g","h"]});'.
+            'Locale.define("en-US","DatePicker",{select_a_time:"i",use_mouse_wheel:"j",time_confirm_button:"k",apply_range:"l",cancel:"m",week:"n"});';
+
+        $this->assertSame($expected, $output);
+
+        unset($GLOBALS['TL_LANG']);
     }
 
     /**

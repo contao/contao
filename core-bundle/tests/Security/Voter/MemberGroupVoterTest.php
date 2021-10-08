@@ -21,10 +21,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class MemberGroupVoterTest extends TestCase
 {
-    /**
-     * @var MemberGroupVoter
-     */
-    private $voter;
+    private MemberGroupVoter $voter;
 
     protected function setUp(): void
     {

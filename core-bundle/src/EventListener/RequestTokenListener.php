@@ -28,30 +28,11 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class RequestTokenListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var ContaoCsrfTokenManager
-     */
-    private $csrfTokenManager;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
-
-    /**
-     * @var string
-     */
-    private $csrfCookiePrefix;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
+    private ContaoCsrfTokenManager $csrfTokenManager;
+    private string $csrfTokenName;
+    private string $csrfCookiePrefix;
 
     public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
     {
@@ -67,8 +48,8 @@ class RequestTokenListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        // Don't do anything if it's not the master request
-        if (!$event->isMasterRequest()) {
+        // Don't do anything if it's not the main request
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -83,8 +64,8 @@ class RequestTokenListener
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
             || false === $request->attributes->get('_token_check')
-            || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
             || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
+            || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
         ) {
             return;
         }

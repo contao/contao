@@ -111,7 +111,7 @@ jobs:
                   composer bin phpstan install --no-interaction --no-progress
 
             - name: Run PHPStan
-              run: tools/phpstan/vendor/bin/phpstan analyse core-bundle/src core-bundle/tests --level=5 --no-progress
+              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
 
     psalm:
         name: Psalm
@@ -167,7 +167,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.3, 7.4, 8.0]
+                php: [7.4, 8.0]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -219,7 +219,10 @@ jobs:
               uses: actions/checkout@v1
 
             - name: Install the dependencies
-              run: composer install --ignore-platform-reqs --no-interaction --no-progress
+              run: |
+                  composer install --ignore-platform-req=php --no-interaction --no-progress
+                  # TODO: Remove the next line once Symfony 5.3.7 was released
+                  composer require "symfony/http-foundation:5.3.*@dev" --ignore-platform-req=php --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always

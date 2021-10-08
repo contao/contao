@@ -291,53 +291,28 @@ class FrontendIndex extends Frontend
 
 		try
 		{
-			// Generate the page
-			switch ($objPage->type)
+			$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
+			$objHandler = new $pageType();
+
+			// Backwards compatibility
+			if (!method_exists($objHandler, 'getResponse'))
 			{
-				case 'error_401':
-					$objHandler = new $GLOBALS['TL_PTY']['error_401']();
+				ob_start();
 
-					/** @var PageError401 $objHandler */
-					return $objHandler->getResponse($objPage->rootId);
+				try
+				{
+					$objHandler->generate($objPage, true);
+					$objResponse = new Response(ob_get_contents(), http_response_code());
+				}
+				finally
+				{
+					ob_end_clean();
+				}
 
-				case 'error_403':
-					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
-
-					/** @var PageError403 $objHandler */
-					return $objHandler->getResponse($objPage->rootId);
-
-				case 'error_404':
-					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-					/** @var PageError404 $objHandler */
-					return $objHandler->getResponse();
-
-				default:
-					$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
-					$objHandler = new $pageType();
-
-					// Backwards compatibility
-					if (!method_exists($objHandler, 'getResponse'))
-					{
-						ob_start();
-
-						try
-						{
-							/** @var PageRegular $objHandler */
-							$objHandler->generate($objPage, true);
-							$objResponse = new Response(ob_get_contents(), http_response_code());
-						}
-						finally
-						{
-							ob_end_clean();
-						}
-
-						return $objResponse;
-					}
-
-					/** @var PageRegular $objHandler */
-					return $objHandler->getResponse($objPage, true);
+				return $objResponse;
 			}
+
+			return $objHandler->getResponse($objPage, true);
 		}
 
 		// Render the error page (see #5570)

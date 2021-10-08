@@ -345,6 +345,10 @@
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
         <target>Uruchom polecenie &quot;cache:clear&quot; lub użyj Contao Managera, aby odbudować pamięć podręczną aplikacji.</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Ścieżka szablonu &quot;%s&quot; nie może zawierać następujących znaków: %s</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosimy dodać %d i %d.</target>
@@ -1084,10 +1088,6 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Jeśli zaznaczysz tę opcję, adres URL otworzy się w nowym oknie przeglądarki.</target>
-      </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -2645,6 +2645,10 @@
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Istnieje co najmniej jedna grupa użytkowników, która udziela uprawnień do importowania motywów. Ponieważ motywy mogą zawierać dowolne templatki, a templatki są plikami PHP, użytkownicy tych grup domyślnie mają pełną kontrolę nad systemem!</target>
       </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Jest przynajmniej jedna grupa użytkowników dająca uprawnienia to modułu &quot;Listing&quot; i jego pól &quot;list_*&quot;. Ponieważ mogą one zawierać zapytania SQL, użytkownicy tych grup mają bezwarunkowo pełną kontrolę nad systemem!</target>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
         <target>Włącz</target>
@@ -2671,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Tutaj możesz określić ilość elementów. Ustaw 0, aby pokazać wszystkie.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>

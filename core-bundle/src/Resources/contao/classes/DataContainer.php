@@ -72,10 +72,22 @@ abstract class DataContainer extends Backend
 	protected $strPalette;
 
 	/**
-	 * IDs of all root records
+	 * IDs of all root records (permissions)
 	 * @var array
 	 */
-	protected $root;
+	protected $root = array();
+
+	/**
+	 * IDs of children of root records (permissions)
+	 * @var array
+	 */
+	protected $rootChildren = array();
+
+	/**
+	 * IDs of visible parents of the root records
+	 * @var array
+	 */
+	protected $visibleRootTrails = array();
 
 	/**
 	 * WHERE clause of the database query
@@ -901,7 +913,7 @@ abstract class DataContainer extends Backend
 			// Custom icon (see #5541)
 			if ($v['icon'] ?? null)
 			{
-				$v['class'] = trim($v['class'] . ' header_icon');
+				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
 
 				// Add the theme path if only the file name is given
 				if (strpos($v['icon'], '/') === false)
@@ -1108,10 +1120,10 @@ abstract class DataContainer extends Backend
 		switch ($this->strPickerFieldType)
 		{
 			case 'checkbox':
-				return ' <input type="checkbox" name="picker[]" id="picker_' . $id . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars(\call_user_func($this->objPickerCallback, $value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
+				return ' <input type="checkbox" name="picker[]" id="picker_' . $id . '" class="tl_tree_checkbox" value="' . StringUtil::specialchars(($this->objPickerCallback)($value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
 
 			case 'radio':
-				return ' <input type="radio" name="picker" id="picker_' . $id . '" class="tl_tree_radio" value="' . StringUtil::specialchars(\call_user_func($this->objPickerCallback, $value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
+				return ' <input type="radio" name="picker" id="picker_' . $id . '" class="tl_tree_radio" value="' . StringUtil::specialchars(($this->objPickerCallback)($value)) . '" onfocus="Backend.getScrollOffset()"' . Widget::optionChecked($value, $this->arrPickerValue) . $attributes . '>';
 		}
 
 		return '';

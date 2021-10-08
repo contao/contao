@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Safely read the user input
  *
@@ -174,7 +172,7 @@ class Input
 
 			$varValue = static::decodeEntities($varValue);
 			$varValue = static::xssClean($varValue);
-			$varValue = static::stripTags($varValue, Config::get('allowedTags'));
+			$varValue = static::stripTags($varValue, Config::get('allowedTags'), Config::get('allowedAttributes'));
 
 			if (!$blnDecodeEntities)
 			{
@@ -473,13 +471,20 @@ class Input
 	/**
 	 * Strip HTML and PHP tags preserving HTML comments
 	 *
-	 * @param mixed  $varValue       A string or array
-	 * @param string $strAllowedTags A string of tags to preserve
+	 * @param mixed  $varValue             A string or array
+	 * @param string $strAllowedTags       A string of tags to preserve
+	 * @param string $strAllowedAttributes A serialized string of attributes to preserve
 	 *
 	 * @return mixed The cleaned string or array
 	 */
-	public static function stripTags($varValue, $strAllowedTags='')
+	public static function stripTags($varValue, $strAllowedTags='', $strAllowedAttributes='')
 	{
+		if ($strAllowedTags !== '' && \func_num_args() < 3)
+		{
+			trigger_deprecation('contao/core-bundle', '4.4', 'Using %s() with $strAllowedTags but without $strAllowedAttributes has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+			$strAllowedAttributes = Config::get('allowedAttributes');
+		}
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -490,34 +495,233 @@ class Input
 		{
 			foreach ($varValue as $k=>$v)
 			{
-				$varValue[$k] = static::stripTags($v, $strAllowedTags);
+				$varValue[$k] = static::stripTags($v, $strAllowedTags, $strAllowedAttributes);
 			}
 
 			return $varValue;
 		}
 
-		// Encode opening arrow brackets (see #3998)
-		$varValue = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags)
+		$arrAllowedAttributes = array();
+
+		foreach (StringUtil::deserialize($strAllowedAttributes, true) as $arrRow)
 		{
-			if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
+			if (!empty($arrRow['key']) && !empty($arrRow['value']))
 			{
-				$matches[0] = str_replace('<', '&lt;', $matches[0]);
+				$arrAllowedAttributes[trim($arrRow['key'])] = StringUtil::trimsplit(',', $arrRow['value']);
 			}
+		}
 
-			return $matches[0];
-		}, $varValue);
+		// Encode opening arrow brackets (see #3998)
+		$varValue = preg_replace_callback(
+			'@</?([^\s<>/]*)@',
+			static function ($matches) use ($strAllowedTags)
+			{
+				if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
+				{
+					$matches[0] = str_replace('<', '&lt;', $matches[0]);
+				}
 
-		// Strip the tags and restore HTML comments
+				return $matches[0];
+			},
+			$varValue
+		);
+
+		// Strip the tags
 		$varValue = strip_tags($varValue, $strAllowedTags);
-		$varValue = str_replace(array('&lt;!--', '&lt;!['), array('<!--', '<!['), $varValue);
 
-		// Recheck for encoded null bytes
-		while (strpos($varValue, '\\0') !== false)
+		// Restore HTML comments and recheck for encoded null bytes
+		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+
+		// Strip attributes
+		if ($strAllowedTags)
 		{
-			$varValue = str_replace('\\0', '', $varValue);
+			$varValue = self::stripAttributes($varValue, $strAllowedTags, $arrAllowedAttributes);
 		}
 
 		return $varValue;
+	}
+
+	/**
+	 * Strip HTML attributes and normalize them to lowercase and double quotes
+	 *
+	 * @param string $strHtml
+	 * @param string $strAllowedTags
+	 * @param array  $arrAllowedAttributes
+	 *
+	 * @return string
+	 */
+	private static function stripAttributes($strHtml, $strAllowedTags, $arrAllowedAttributes)
+	{
+		// Skip if all attributes are allowed on all tags
+		if (\in_array('*', $arrAllowedAttributes['*'] ?? array(), true))
+		{
+			return $strHtml;
+		}
+
+		$blnCommentOpen = false;
+		$strOpenRawtext = null;
+
+		// Match every single starting and closing tag or special characters outside of tags
+		return preg_replace_callback(
+			'@</?([^\s<>/]*)([^<>]*)>?|-->|[>"\'=]+@',
+			static function ($matches) use ($strAllowedTags, $arrAllowedAttributes, &$blnCommentOpen, &$strOpenRawtext)
+			{
+				$strTagName = strtolower($matches[1] ?? '');
+
+				if ($strOpenRawtext === $strTagName && '/' === $matches[0][1])
+				{
+					$strOpenRawtext = null;
+
+					return '</' . $strTagName . '>';
+				}
+
+				if (null !== $strOpenRawtext)
+				{
+					return $matches[0];
+				}
+
+				if ($blnCommentOpen && substr($matches[0], -3) === '-->')
+				{
+					$blnCommentOpen = false;
+
+					return static::encodeSpecialChars(substr($matches[0], 0, -3)) . '-->';
+				}
+
+				if (!$blnCommentOpen && 0 === strncmp($matches[0], '<!--', 4))
+				{
+					if (substr($matches[0], -3) === '-->')
+					{
+						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4, -3)) . '-->';
+					}
+
+					$blnCommentOpen = true;
+
+					return '<!--' . static::encodeSpecialChars(substr($matches[0], 4));
+				}
+
+				// Matched special characters or tag is invalid or not allowed, return everything encoded
+				if ($strTagName == '' || stripos($strAllowedTags, '<' . $strTagName . '>') === false)
+				{
+					return static::encodeSpecialChars($matches[0]);
+				}
+
+				// Closing tags have no attributes
+				if ('/' === substr($matches[0], 1, 1))
+				{
+					return '</' . $strTagName . '>';
+				}
+
+				// Special parsing for RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
+				if (!$blnCommentOpen && \in_array($strTagName, array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript')))
+				{
+					$strOpenRawtext = $strTagName;
+				}
+
+				$arrAttributes = self::getAttributesFromTag($matches[2]);
+
+				// Only keep allowed attributes
+				$arrAttributes = array_filter(
+					$arrAttributes,
+					static function ($strAttribute) use ($strTagName, $arrAllowedAttributes)
+					{
+						// Skip if all attributes are allowed
+						if (\in_array('*', $arrAllowedAttributes[$strTagName] ?? array(), true))
+						{
+							return true;
+						}
+
+						$arrCandidates = array($strAttribute);
+
+						// Check for wildcard attributes like data-*
+						if (false !== $intDashPosition = strpos($strAttribute, '-'))
+						{
+							$arrCandidates[] = substr($strAttribute, 0, $intDashPosition + 1) . '*';
+						}
+
+						foreach ($arrCandidates as $strCandidate)
+						{
+							if (
+								\in_array($strCandidate, $arrAllowedAttributes['*'] ?? array(), true)
+								|| \in_array($strCandidate, $arrAllowedAttributes[$strTagName] ?? array(), true)
+							) {
+								return true;
+							}
+						}
+
+						return false;
+					},
+					ARRAY_FILTER_USE_KEY
+				);
+
+				// Build the tag in its normalized form
+				$strReturn = '<' . $strTagName;
+
+				foreach ($arrAttributes as $strAttributeName => $strAttributeValue)
+				{
+					// The value was already encoded by the getAttributesFromTag() method
+					$strReturn .= ' ' . $strAttributeName . '="' . $strAttributeValue . '"';
+				}
+
+				$strReturn .= '>';
+
+				return $strReturn;
+			},
+			$strHtml
+		);
+	}
+
+	/**
+	 * Get the attributes as key/value pairs with the values already encoded for HTML
+	 *
+	 * @param string $strAttributes
+	 *
+	 * @return array
+	 */
+	private static function getAttributesFromTag($strAttributes)
+	{
+		// Match every attribute name value pair
+		if (!preg_match_all('@\s+([a-z][a-z0-9:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
+		{
+			return array();
+		}
+
+		$arrAttributes = array();
+
+		foreach ($matches as $arrMatch)
+		{
+			$strAttribute = strtolower($arrMatch[1]);
+
+			// Skip attributes that end with dashes or use a double dash
+			if (substr($strAttribute, -1) === '-' || false !== strpos($strAttribute, '--'))
+			{
+				continue;
+			}
+
+			// Default to empty string for the value
+			$strValue = $arrMatch[2] ?? '';
+
+			// Remove the quotes if matched by the regular expression
+			if (
+				(strpos($strValue, '"') === 0 && substr($strValue, -1) === '"')
+				|| (strpos($strValue, "'") === 0 && substr($strValue, -1) === "'")
+			) {
+				$strValue = substr($strValue, 1, -1);
+			}
+
+			// Encode all special characters and insert tags that are not encoded yet
+			if (1 === preg_match('((?:^|:)(?:src|srcset|href|action|formaction|codebase|cite|background|longdesc|profile|usemap|classid|data|icon|manifest|poster|archive)$)', $strAttribute))
+			{
+				$strValue = StringUtil::specialcharsUrl($strValue);
+			}
+			else
+			{
+				$strValue = StringUtil::specialcharsAttribute($strValue);
+			}
+
+			$arrAttributes[$strAttribute] = $strValue;
+		}
+
+		return $arrAttributes;
 	}
 
 	/**
@@ -559,17 +763,11 @@ class Input
 		$varValue = preg_replace('/\r+/', '', $varValue);
 
 		// Replace unicode entities
-		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) { return Utf8::chr(hexdec($matches[1])); }, $varValue);
-		$varValue = preg_replace_callback('~&#([0-9]+);~', static function ($matches) { return Utf8::chr($matches[1]); }, $varValue);
+		$varValue = preg_replace_callback('~&#x([0-9a-f]+);~i', static function ($matches) { return mb_chr(hexdec($matches[1])); }, $varValue);
+		$varValue = preg_replace_callback('~&#([0-9]+);~', static function ($matches) { return mb_chr($matches[1]); }, $varValue);
 
 		// Remove null bytes
-		$varValue = str_replace(\chr(0), '', $varValue);
-
-		// Remove encoded null bytes
-		while (strpos($varValue, '\\0') !== false)
-		{
-			$varValue = str_replace('\\0', '', $varValue);
-		}
+		$varValue = str_replace(array(\chr(0), '\\0'), array('', '&#92;0'), $varValue);
 
 		// Define a list of keywords
 		$arrKeywords = array
@@ -637,10 +835,7 @@ class Input
 		$varValue = preg_replace($arrRegexp, '', $varValue);
 
 		// Recheck for encoded null bytes
-		while (strpos($varValue, '\\0') !== false)
-		{
-			$varValue = str_replace('\\0', '', $varValue);
-		}
+		$varValue = str_replace('\\0', '&#92;0', $varValue);
 
 		return $varValue;
 	}
@@ -737,8 +932,16 @@ class Input
 			return $varValue;
 		}
 
-		$arrSearch = array('#', '<', '>', '(', ')', '\\', '=');
-		$arrReplace = array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;');
+		$arrSearch = array(
+			'#', '<', '>', '(', ')', '\\', '=', '"', "'",
+			// Revert double encoded #
+			'&&#35;35;', '&&#35;60;', '&&#35;62;', '&&#35;40;', '&&#35;41;', '&&#35;92;', '&&#35;61;', '&&#35;34;', '&&#35;39;',
+		);
+
+		$arrReplace = array(
+			'&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;',
+			'&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;',
+		);
 
 		return str_replace($arrSearch, $arrReplace, $varValue);
 	}
@@ -780,7 +983,7 @@ class Input
 			return $_POST[$strKey];
 		}
 
-		$request = System::getContainer()->get('request_stack')->getMasterRequest();
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
 
 		// Return if the session has not been started before
 		if ($request === null || !$request->hasPreviousSession())

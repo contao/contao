@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Front end module "close account".
  *
@@ -38,7 +36,7 @@ class ModuleCloseAccount extends Module
 		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['closeAccount'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['closeAccount'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -106,6 +104,12 @@ class ModuleCloseAccount extends Module
 				// Remove the account
 				if ($this->reg_close == 'close_delete')
 				{
+					if ($this->reg_deleteDir && $objMember->assignDir && ($filesModel = FilesModel::findByUuid($objMember->homeDir)))
+					{
+						$folder = new Folder($filesModel->path);
+						$folder->delete();
+					}
+
 					$objMember->delete();
 					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
 				}

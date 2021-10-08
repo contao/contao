@@ -18,7 +18,6 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
-use League\Uri\Components\Query;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -400,10 +399,19 @@ abstract class System
 
 				list($path, $query) = explode('?', $url, 2);
 
-				$queryObj = new Query($query);
-				$queryObj = $queryObj->withoutPairs($params);
+				parse_str($query, $pairs);
 
-				return $path . $queryObj->getUriComponent();
+				foreach ($params as $param)
+				{
+					unset($pairs[$param]);
+				}
+
+				if (empty($pairs))
+				{
+					return $path;
+				}
+
+				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 			};
 
 			// Determine current or last
@@ -447,6 +455,11 @@ abstract class System
 		if (!$strLanguage)
 		{
 			$strLanguage = 'en';
+		}
+
+		if (1 !== preg_match('/^[a-z0-9_-]+$/i', $strName))
+		{
+			throw new \InvalidArgumentException(sprintf('Invalid language file name "%s"', $strName));
 		}
 
 		// Return if the language file has been loaded already
@@ -518,6 +531,12 @@ abstract class System
 			}
 		}
 
+		// Set MSC.textDirection (see #3360)
+		if ('default' === $strName)
+		{
+			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
+		}
+
 		// HOOK: allow to load custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
@@ -554,6 +573,11 @@ abstract class System
 	{
 		if (!isset(static::$arrLanguages[$strLanguage]))
 		{
+			if (LocaleUtil::canonicalize($strLanguage) !== $strLanguage)
+			{
+				return false;
+			}
+
 			$projectDir = self::getContainer()->getParameter('kernel.project_dir');
 
 			if (is_dir($projectDir . '/vendor/contao/core-bundle/src/Resources/contao/languages/' . $strLanguage))
@@ -1013,11 +1037,11 @@ abstract class System
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use Message::generate() instead.
 	 */
-	protected function getMessages($strScope=TL_MODE)
+	protected function getMessages($strScope=null)
 	{
 		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::getMessages()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Message::generate()" instead.');
 
-		return Message::generate($strScope);
+		return Message::generate($strScope ?? TL_MODE);
 	}
 
 	/**

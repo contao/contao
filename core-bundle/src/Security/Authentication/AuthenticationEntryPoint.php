@@ -28,25 +28,10 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var UriSigner
-     */
-    private $uriSigner;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private RouterInterface $router;
+    private UriSigner $uriSigner;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.entry_point" service instead

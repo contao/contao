@@ -5,7 +5,7 @@
 
 <?php if ($this->wildcard): ?>
   <div class="tl_gray">
-    <?= $this->wildcard ?>
+    <span class="upper"><?= $this->wildcard ?></span>
     <?php if ($this->link): ?>
       <br>
       <?= $this->link ?> (<a href="<?= $this->href.'&amp;rt='.REQUEST_TOKEN ?>" class="tl_gray">ID: <?= $this->id ?></a>)

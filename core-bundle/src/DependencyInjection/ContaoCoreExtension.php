@@ -50,7 +50,6 @@ class ContaoCoreExtension extends Extension
         }
 
         $configuration = new Configuration($container->getParameter('kernel.project_dir'));
-
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader(
@@ -121,7 +120,7 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.search_indexer')
         ;
 
-        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        // Set the two parameters, so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 
@@ -190,7 +189,7 @@ class ContaoCoreExtension extends Extension
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
                 $value = array_merge(
                     $config['image']['sizes']['_defaults'],
-                    array_filter($value, static function ($v) { return !\is_array($v) || !empty($v); })
+                    array_filter($value, static fn ($v) => !\is_array($v) || !empty($v))
                 );
             }
 

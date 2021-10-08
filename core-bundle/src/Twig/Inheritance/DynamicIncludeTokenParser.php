@@ -18,7 +18,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Token;
-use Twig\TokenParser\IncludeTokenParser;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * This parser is a drop in replacement for @\Twig\TokenParser\IncludeTokenParser
@@ -26,12 +26,9 @@ use Twig\TokenParser\IncludeTokenParser;
  *
  * @experimental
  */
-final class DynamicIncludeTokenParser extends IncludeTokenParser
+final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
+    private TemplateHierarchyInterface $hierarchy;
 
     public function __construct(TemplateHierarchyInterface $hierarchy)
     {
@@ -47,6 +44,11 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         $this->traverseAndAdjustTemplateNames($expr);
 
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+    }
+
+    public function getTag(): string
+    {
+        return 'include';
     }
 
     /**
@@ -66,6 +68,35 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         } catch (\LogicException $e) {
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
+    }
+
+    private function parseArguments(): array
+    {
+        $stream = $this->parser->getStream();
+
+        $ignoreMissing = false;
+
+        if ($stream->nextIf(Token::NAME_TYPE, 'ignore')) {
+            $stream->expect(Token::NAME_TYPE, 'missing');
+
+            $ignoreMissing = true;
+        }
+
+        $variables = null;
+
+        if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
+            $variables = $this->parser->getExpressionParser()->parseExpression();
+        }
+
+        $only = false;
+
+        if ($stream->nextIf(Token::NAME_TYPE, 'only')) {
+            $only = true;
+        }
+
+        $stream->expect(Token::BLOCK_END_TYPE);
+
+        return [$variables, $only, $ignoreMissing];
     }
 
     private function traverseAndAdjustTemplateNames(Node $node): void

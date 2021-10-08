@@ -29,20 +29,9 @@ use Webmozart\PathUtil\Path;
  */
 class FaviconController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $contaoFramework;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var ResponseTagger|null
-     */
-    private $responseTagger;
+    private ContaoFramework $contaoFramework;
+    private string $projectDir;
+    private ?ResponseTagger $responseTagger;
 
     public function __construct(ContaoFramework $contaoFramework, string $projectDir, ResponseTagger $responseTagger = null)
     {
@@ -79,7 +68,7 @@ class FaviconController
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        // Cache the response for 1 year and tag it so it is invalidated when the settings are edited
+        // Cache the response for 1 year and tag it, so it is invalidated when the settings are edited
         $response = new BinaryFileResponse(Path::join($this->projectDir, $faviconModel->path));
         $response->setSharedMaxAge(31556952);
 

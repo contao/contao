@@ -38,35 +38,12 @@ use Webmozart\PathUtil\Path;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
-    /**
-     * @var string
-     */
-    protected static $projectDir;
-
-    /**
-     * @var PluginLoader
-     */
-    private $pluginLoader;
-
-    /**
-     * @var BundleLoader
-     */
-    private $bundleLoader;
-
-    /**
-     * @var JwtManager
-     */
-    private $jwtManager;
-
-    /**
-     * @var ManagerConfig
-     */
-    private $managerConfig;
-
-    /**
-     * @var ContaoCache
-     */
-    private $httpCache;
+    protected static ?string $projectDir = null;
+    private ?PluginLoader $pluginLoader = null;
+    private ?BundleLoader $bundleLoader = null;
+    private ?JwtManager $jwtManager = null;
+    private ?ManagerConfig $managerConfig = null;
+    private ?ContaoCache $httpCache = null;
 
     public function shutdown(): void
     {
@@ -249,13 +226,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         self::loadEnv($projectDir, 'jwt');
 
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
-            Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
-        }
-
         if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
             Request::setTrustedHosts(explode(',', $trustedHosts));
+        }
+
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
+            $trustedHeaderSet = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO;
+
+            // If we have a limited list of trusted hosts, we can safely use the X-Forwarded-Host header
+            if ($trustedHosts) {
+                $trustedHeaderSet |= Request::HEADER_X_FORWARDED_HOST;
+            }
+
+            Request::setTrustedProxies(explode(',', $trustedProxies), $trustedHeaderSet);
         }
 
         Request::enableHttpMethodParameterOverride();
@@ -283,13 +266,9 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $kernel->setJwtManager($jwtManager);
         }
 
-        if (!$kernel->isDebug()) {
-            $cache = $kernel->getHttpCache();
-
-            // Enable the Symfony reverse proxy if request has no surrogate capability
-            if (($surrogate = $cache->getSurrogate()) && !$surrogate->hasSurrogateCapability($request)) {
-                return $cache;
-            }
+        // Enable the Symfony reverse proxy if not disabled explicitly
+        if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? null) && !$kernel->isDebug()) {
+            return $kernel->getHttpCache();
         }
 
         return $kernel;
@@ -324,7 +303,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             return;
         }
 
-        // Set the plugin loader again so it is available at runtime (synthetic service)
+        // Set the plugin loader again, so it is available at runtime (synthetic service)
         $container->set('contao_manager.plugin_loader', $this->getPluginLoader());
 
         // Set the JWT manager only if the debug mode has not been configured in env variables
@@ -402,7 +381,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
         if (\is_array($env = @include Path::join($projectDir, '.env.local.php'))) {
             foreach ($env as $k => $v) {
-                $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
+                $_ENV[$k] ??= isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
             (new Dotenv(false))->loadEnv($filePath, 'APP_ENV', $defaultEnv);

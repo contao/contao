@@ -25,10 +25,15 @@ class PageError401 extends Frontend
 	/**
 	 * Generate an error 401 page
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 */
 	public function generate($objRootPage=null)
 	{
+		if (is_numeric($objRootPage))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError401::generate() has been deprecated and will no longer work in Contao 5.0.');
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -52,12 +57,17 @@ class PageError401 extends Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 *
 	 * @return Response
 	 */
 	public function getResponse($objRootPage=null)
 	{
+		if (is_numeric($objRootPage))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError401::getResponse() has been deprecated and will no longer work in Contao 5.0.');
+		}
+
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -80,7 +90,7 @@ class PageError401 extends Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|integer|null $objRootPage
 	 *
 	 * @return PageModel
 	 *
@@ -94,14 +104,16 @@ class PageError401 extends Frontend
 		if ($objRootPage === null)
 		{
 			$objRootPage = $this->getRootPageFromUrl();
+			$obj401 = PageModel::find401ByPid($objRootPage->id);
+		}
+		elseif ($objRootPage instanceof PageModel)
+		{
+			$obj401 = $objRootPage->type === 'error_401' ? $objRootPage : PageModel::find401ByPid($objRootPage->id);
 		}
 		else
 		{
-			$objRootPage = PageModel::findPublishedById(\is_int($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj401 = PageModel::find401ByPid(is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
 		}
-
-		// Look for a 401 page
-		$obj401 = PageModel::find401ByPid($objRootPage->id);
 
 		// Die if there is no page at all
 		if (null === $obj401)

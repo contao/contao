@@ -28,15 +28,8 @@ class LogoutHandler implements LogoutHandlerInterface
 {
     use TargetPathTrait;
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    private ContaoFramework $framework;
+    private ?LoggerInterface $logger;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_handler" service instead
@@ -49,13 +42,8 @@ class LogoutHandler implements LogoutHandlerInterface
 
     public function logout(Request $request, ?Response $response, TokenInterface $token): void
     {
-        if ($request->hasSession()) {
-            // Backwards compatibility with symfony/security <5.2
-            if (method_exists($token, 'getFirewallName')) {
-                $this->removeTargetPath($request->getSession(), $token->getFirewallName());
-            } elseif (method_exists($token, 'getProviderKey')) {
-                $this->removeTargetPath($request->getSession(), $token->getProviderKey());
-            }
+        if ($request->hasSession() && method_exists($token, 'getFirewallName')) {
+            $this->removeTargetPath($request->getSession(), $token->getFirewallName());
         }
 
         $user = $token->getUser();

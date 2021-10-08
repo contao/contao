@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageError404;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
@@ -37,25 +38,10 @@ use Twig\Error\Error;
  */
 class PrettyErrorScreenListener
 {
-    /**
-     * @var bool
-     */
-    private $prettyErrorScreens;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Security
-     */
-    private $security;
+    private bool $prettyErrorScreens;
+    private Environment $twig;
+    private ContaoFramework $framework;
+    private Security $security;
 
     public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security)
     {
@@ -70,7 +56,7 @@ class PrettyErrorScreenListener
      */
     public function __invoke(ExceptionEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -230,7 +216,7 @@ class PrettyErrorScreenListener
             'statusName' => Response::$statusTexts[$statusCode],
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
-            'language' => $event->getRequest()->getLocale(),
+            'language' => LocaleUtil::formatAsLanguageTag($event->getRequest()->getLocale()),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'isBackendUser' => $isBackendUser,
             'exception' => $event->getThrowable()->getMessage(),

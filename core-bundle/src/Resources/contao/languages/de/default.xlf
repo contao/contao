@@ -345,6 +345,10 @@
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
         <target>Bitte führen Sie das Kommando &quot;cache:clear&quot; aus oder verwenden Sie den Contao Manager, um den Cache der Applikation neu aufzubauen.</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Der Template-Pfad &quot;%s&quot; darf folgende Zeichen nicht enthalten: %s</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -1084,10 +1088,6 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Den Link in einem neuen Browserfenster öffnen.</target>
-      </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -2644,6 +2644,10 @@
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Mindestens eine Benutzergruppe gewährt das Recht, Themes zu importieren. Da Themes beliebige Templates enthalten können und Templates PHP-Dateien sind, haben die Benutzer dieser Gruppen implizit die volle Kontrolle über das System!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Mindestens eine Benutzergruppe gewährt Zugriff auf das Frontend-Modul &quot;Auflistung&quot; und seine &quot;list_*&quot;-Felder. Da diese beliebige SQL-Abfragen enthalten können, haben die Benutzer dieser Gruppen implizit die volle Kontrolle über das System!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

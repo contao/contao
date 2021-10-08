@@ -31,10 +31,7 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -93,7 +90,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s"%s>%s</a>',
                     $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->headline),
+                    StringUtil::specialcharsAttribute($model->headline),
                     \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->headline
                 );
@@ -102,7 +99,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s"%s>',
                     $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->headline),
+                    StringUtil::specialcharsAttribute($model->headline),
                     \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
@@ -110,7 +107,7 @@ class InsertTagsListener
                 return $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './';
 
             case 'news_title':
-                return StringUtil::specialchars($model->headline);
+                return StringUtil::specialcharsAttribute($model->headline);
 
             case 'news_teaser':
                 return StringUtil::toHtml5($model->teaser);

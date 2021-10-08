@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get(Locales::class)->getEnabledLocales(null, true);
+				return System::getContainer()->get(Locales::class)->getEnabledLocales(null, Input::get('do') != 'user');
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -334,7 +334,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'default'                 => array('regular', 'redirect', 'forward'),
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options'                 => array_keys($GLOBALS['TL_PTY']),
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
 			'sql'                     => "blob NULL"

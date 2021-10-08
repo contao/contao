@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Class FormCaptcha
  *
@@ -185,11 +183,11 @@ class FormCaptcha extends Widget
 		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';
-		$arrCharacters = Utf8::str_split($question);
+		$arrCharacters = mb_str_split($question);
 
 		foreach ($arrCharacters as $index => $strCharacter)
 		{
-			$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', Utf8::ord($strCharacter));
+			$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
 		}
 
 		return $strEncoded;

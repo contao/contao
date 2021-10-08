@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Monolog;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -26,15 +26,8 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var string
-     */
-    private $dbalServiceName = 'doctrine.dbal.default_connection';
-
-    /**
-     * @var Statement
-     */
-    private $statement;
+    private string $dbalServiceName = 'doctrine.dbal.default_connection';
+    private ?Statement $statement = null;
 
     public function getDbalServiceName(): string
     {

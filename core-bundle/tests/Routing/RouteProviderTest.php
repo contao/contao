@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class RouteProviderTest extends TestCase
 {
-    private $pageModelAutoIncrement = 0;
+    private int $pageModelAutoIncrement = 0;
 
     protected function tearDown(): void
     {
@@ -719,7 +719,7 @@ class RouteProviderTest extends TestCase
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = false;
-        $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
+        $page->rootSorting = array_reduce((array) $language, static fn ($c, $i) => $c + \ord($i), 0);
 
         return $page;
     }

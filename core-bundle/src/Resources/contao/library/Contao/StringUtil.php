@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -44,7 +43,7 @@ class StringUtil
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
 
-		if (Utf8::strlen($strString) <= $intNumberOfChars)
+		if (mb_strlen($strString) <= $intNumberOfChars)
 		{
 			return $strString;
 		}
@@ -56,7 +55,7 @@ class StringUtil
 
 		foreach ($arrChunks as $strChunk)
 		{
-			$intCharCount += Utf8::strlen(static::decodeEntities($strChunk));
+			$intCharCount += mb_strlen(static::decodeEntities($strChunk));
 
 			if ($intCharCount++ <= $intNumberOfChars)
 			{
@@ -65,10 +64,10 @@ class StringUtil
 			}
 
 			// If the first word is longer than $intNumberOfChars already, shorten it
-			// with Utf8::substr() so the method does not return an empty string.
+			// with mb_substr() so the method does not return an empty string.
 			if (empty($arrWords))
 			{
-				$arrWords[] = Utf8::substr($strChunk, 0, $intNumberOfChars);
+				$arrWords[] = mb_substr($strChunk, 0, $intNumberOfChars);
 			}
 
 			if ($strEllipsis !== false)
@@ -134,7 +133,7 @@ class StringUtil
 			}
 
 			$blnModified = ($buffer !== $arrChunks[$i]);
-			$intCharCount += Utf8::strlen(static::decodeEntities($arrChunks[$i]));
+			$intCharCount += mb_strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)
 			{
@@ -219,12 +218,12 @@ class StringUtil
 	 * Decode all entities
 	 *
 	 * @param mixed   $strString     The string to decode
-	 * @param integer $strQuoteStyle The quote style (defaults to ENT_COMPAT)
+	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
 	 * @return string The decoded string
 	 */
-	public static function decodeEntities($strString, $strQuoteStyle=ENT_COMPAT, $strCharset=null)
+	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
 	{
 		if ((string) $strString === '')
 		{
@@ -330,11 +329,11 @@ class StringUtil
 		foreach ($arrEmails as $strEmail)
 		{
 			$strEncoded = '';
-			$arrCharacters = Utf8::str_split($strEmail);
+			$arrCharacters = mb_str_split($strEmail);
 
 			foreach ($arrCharacters as $index => $strCharacter)
 			{
-				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', Utf8::ord($strCharacter));
+				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -547,8 +546,9 @@ class StringUtil
 	/**
 	 * Parse simple tokens
 	 *
-	 * @param string $strString The string to be parsed
-	 * @param array  $arrData   The replacement data
+	 * @param string $strString    The string to be parsed
+	 * @param array  $arrData      The replacement data
+	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
 	 *
 	 * @return string The converted string
 	 *
@@ -558,11 +558,11 @@ class StringUtil
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
 	 *             Use the SimpleTokenParser::class service instead.
 	 */
-	public static function parseSimpleTokens($strString, $arrData)
+	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData);
+		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData, $blnAllowHtml);
 	}
 
 	/**
@@ -635,7 +635,7 @@ class StringUtil
 	public static function insertTagToSrc($data)
 	{
 		$return = '';
-		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}]+)}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}|]+)[^"}]*}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
 
 		for ($i=0, $c=\count($paths); $i<$c; $i+=5)
 		{
@@ -747,9 +747,18 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if (!$str)
+		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
 		{
+			@trigger_error('Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 			return '';
+		}
+
+		$str = (string) $str;
+
+		if ('' === $str)
+		{
+			return $str;
 		}
 
 		if (!$from)
@@ -791,8 +800,94 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		// Use ENT_COMPAT here (see #4889)
-		return htmlspecialchars($strString, ENT_COMPAT, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+	}
+
+	/**
+	 * Encodes specialchars and nested insert tags for attributes
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialcharsAttribute($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	{
+		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
+
+		// Improve compatibility with JSON in attributes if no insert tags are present
+		if ($strString === self::stripInsertTags($strString))
+		{
+			$strString = str_replace('}}', '&#125;&#125;', $strString);
+		}
+
+		// Encode insert tags too
+		$strString = preg_replace('/(?:\|attr)?}}/', '|attr}}', $strString);
+		$strString = str_replace('|urlattr|attr}}', '|urlattr}}', $strString);
+
+		// Encode all remaining single closing curly braces
+		$strString = preg_replace_callback(
+			'/}}?/',
+			static function ($match)
+			{
+				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
+			},
+			$strString
+		);
+
+		return $strString;
+	}
+
+	/**
+	 * Encodes disallowed protocols and specialchars for URL attributes
+	 *
+	 * @param string  $strString          The input string
+	 * @param boolean $blnStripInsertTags True to strip insert tags
+	 * @param boolean $blnDoubleEncode    True to encode existing html entities
+	 *
+	 * @return string The converted string
+	 */
+	public static function specialcharsUrl($strString, $blnStripInsertTags=false, $blnDoubleEncode=false)
+	{
+		$strString = self::specialchars($strString, $blnStripInsertTags, $blnDoubleEncode);
+
+		// Encode insert tags too
+		$strString = preg_replace('/(?:\|urlattr|\|attr)?}}/', '|urlattr}}', $strString);
+
+		// Encode all remaining single closing curly braces
+		$strString = preg_replace_callback(
+			'/}}?/',
+			static function ($match)
+			{
+				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
+			},
+			$strString
+		);
+
+		$colonRegEx = '('
+			. ':'                 // Plain text colon
+			. '|'                 // OR
+			. '&colon;'           // Named entity
+			. '|'                 // OR
+			. '&#(?:'             // Start of entity
+				. 'x0*+3a'        // Hex number 3A
+				. '(?![0-9a-f])'  // Must not be followed by another hex digit
+				. '|'             // OR
+				. '0*+58'         // Decimal number 58
+				. '(?![0-9])'     // Must not be followed by another digit
+			. ');?'               // Optional semicolon
+		. ')i';
+
+		// URL-encode colon to prevent disallowed protocols
+		if (
+			!preg_match('@^(?:https?|ftp|mailto|tel|data):@i', self::decodeEntities($strString))
+			&& preg_match($colonRegEx, self::stripInsertTags($strString))
+		) {
+			$strString = preg_replace($colonRegEx, '%3A', $strString);
+		}
+
+		return $strString;
 	}
 
 	/**
@@ -838,7 +933,7 @@ class StringUtil
 
 		if (!$blnPreserveUppercase)
 		{
-			$strString = Utf8::strtolower($strString);
+			$strString = mb_strtolower($strString);
 		}
 
 		return trim($strString, '-');

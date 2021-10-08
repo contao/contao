@@ -26,20 +26,9 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private PageRegistry $pageRegistry;
+    private bool $legacyRouting;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
@@ -242,6 +231,11 @@ class RouteProvider extends AbstractPageRouteProvider
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
+        // Convert languages array so key is language and value is priority
+        if (null !== $languages) {
+            $languages = $this->convertLanguagesForSorting($languages);
+        }
+
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
@@ -257,11 +251,6 @@ class RouteProvider extends AbstractPageRouteProvider
 
                 if ($fallbackB && !$fallbackA) {
                     return -1;
-                }
-
-                // Convert languages array so key is language and value is priority
-                if (null !== $languages) {
-                    $languages = $this->convertLanguagesForSorting($languages);
                 }
 
                 return $this->compareRoutes($a, $b, $languages);

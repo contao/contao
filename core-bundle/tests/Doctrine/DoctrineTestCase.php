@@ -20,7 +20,7 @@ use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\ORM\Configuration;
@@ -47,7 +47,7 @@ abstract class DoctrineTestCase extends TestCase
         if ($connection instanceof MockObject) {
             $connection
                 ->method('getDatabasePlatform')
-                ->willReturn(new MySqlPlatform())
+                ->willReturn(new MySQLPlatform())
             ;
 
             $connection

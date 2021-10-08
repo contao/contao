@@ -47,12 +47,15 @@
       </trans-unit>
       <trans-unit id="12" resname="show_password">
         <source>Show password</source>
+        <target>Mostrare la password</target>
       </trans-unit>
       <trans-unit id="13" resname="hide_password">
         <source>Hide password</source>
+        <target>Nascondere la password</target>
       </trans-unit>
       <trans-unit id="14" resname="save_password">
         <source>Save password</source>
+        <target>Salva la password</target>
       </trans-unit>
       <trans-unit id="15" resname="password_too_short">
         <source>The password should be at least %d characters long!</source>
@@ -352,9 +355,11 @@
       </trans-unit>
       <trans-unit id="89" resname="strict_sql_mode">
         <source>Your database server is not running in strict mode!</source>
+        <target>Il server del database non sta funzionando in modalità strict!</target>
       </trans-unit>
       <trans-unit id="90" resname="strict_sql_mode_explain">
         <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>L'esecuzione di MySQL in modalità non strict può causare dati corrotti o troncati. Abilita la modalità strict o nel tuo file &lt;code&gt;my.cnf&lt;/code&gt; o configura le opzioni di connessione nel file &lt;code&gt;config/config.yml&lt;/code&gt; come segue:</target>
       </trans-unit>
     </body>
   </file>

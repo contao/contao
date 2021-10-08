@@ -18,10 +18,7 @@ use Contao\System;
 
 class LegacyCron
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {

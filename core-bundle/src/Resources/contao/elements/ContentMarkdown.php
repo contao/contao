@@ -62,7 +62,7 @@ class ContentMarkdown extends ContentElement
 		}
 
 		$this->code = MarkdownExtra::defaultTransform($this->code);
-		$this->Template->content = strip_tags($this->code, Config::get('allowedTags'));
+		$this->Template->content = Input::stripTags($this->code, Config::get('allowedTags'), Config::get('allowedAttributes'));
 	}
 }
 

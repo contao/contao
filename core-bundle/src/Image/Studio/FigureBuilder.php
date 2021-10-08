@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -36,49 +37,26 @@ use Webmozart\PathUtil\Path;
  */
 class FigureBuilder
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $locator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
+    private ContainerInterface $locator;
+    private string $projectDir;
+    private string $uploadPath;
+    private Filesystem $filesystem;
+    private ?InvalidResourceException $lastException = null;
 
     /**
      * @var array<string>
      */
-    private $validExtensions;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var InvalidResourceException|null
-     */
-    private $lastException;
+    private array $validExtensions;
 
     /**
      * The resource's absolute file path.
-     *
-     * @var string|null
      */
-    private $filePath;
+    private ?string $filePath = null;
 
     /**
      * The resource's file model if applicable.
-     *
-     * @var FilesModel|null
      */
-    private $filesModel;
+    private ?FilesModel $filesModel = null;
 
     /**
      * User defined size configuration.
@@ -93,38 +71,30 @@ class FigureBuilder
      * User defined resize options.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
-     *
-     * @var ResizeOptions|null
      */
-    private $resizeOptions;
+    private ?ResizeOptions $resizeOptions = null;
 
     /**
      * User defined custom locale. This will overwrite the default if set.
-     *
-     * @var string|null
      */
-    private $locale;
+    private ?string $locale = null;
 
     /**
      * User defined metadata. This will overwrite the default if set.
-     *
-     * @var Metadata|null
      */
-    private $metadata;
+    private ?Metadata $metadata = null;
 
     /**
      * Determines if a metadata should never be present in the output.
-     *
-     * @var bool
      */
-    private $disableMetadata;
+    private ?bool $disableMetadata = null;
 
     /**
      * User defined link attributes. These will add to or overwrite the default values.
      *
      * @var array<string, string|null>
      */
-    private $additionalLinkAttributes = [];
+    private array $additionalLinkAttributes = [];
 
     /**
      * User defined lightbox resource or url. This will overwrite the default if set.
@@ -142,24 +112,18 @@ class FigureBuilder
 
     /**
      * User defined lightbox resize options.
-     *
-     * @var ResizeOptions|null
      */
-    private $lightboxResizeOptions;
+    private ?ResizeOptions $lightboxResizeOptions = null;
 
     /**
      * User defined lightbox group identifier. This will overwrite the default if set.
-     *
-     * @var string|null
      */
-    private $lightboxGroupIdentifier;
+    private ?string $lightboxGroupIdentifier = null;
 
     /**
      * Determines if a lightbox (or "fullsize") image should be created.
-     *
-     * @var bool
      */
-    private $enableLightbox;
+    private ?bool $enableLightbox = null;
 
     /**
      * User defined template options.
@@ -168,7 +132,7 @@ class FigureBuilder
      *
      * @var array<string, mixed>
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
@@ -213,7 +177,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->filesModelAdapter()->findByUuid($uuid);
+        $filesModel = $this->getFilesModelAdapter()->findByUuid($uuid);
 
         if (null === $filesModel) {
             $this->lastException = new InvalidResourceException("DBAFS item with UUID '$uuid' could not be found.");
@@ -231,7 +195,7 @@ class FigureBuilder
     {
         $this->lastException = null;
 
-        $filesModel = $this->filesModelAdapter()->findByPk($id);
+        $filesModel = $this->getFilesModelAdapter()->findByPk($id);
 
         if (null === $filesModel) {
             $this->lastException = new InvalidResourceException("DBAFS item with ID '$id' could not be found.");
@@ -256,7 +220,7 @@ class FigureBuilder
 
         // Only check for a FilesModel if the resource is inside the upload path
         if ($autoDetectDbafsPaths && Path::isBasePath(Path::join($this->projectDir, $this->uploadPath), $path)) {
-            $filesModel = $this->filesModelAdapter()->findByPath($path);
+            $filesModel = $this->getFilesModelAdapter()->findByPath($path);
 
             if (null !== $filesModel) {
                 return $this->fromFilesModel($filesModel);
@@ -304,7 +268,7 @@ class FigureBuilder
 
         $isString = \is_string($identifier);
 
-        if ($isString && $this->validatorAdapter()->isUuid($identifier)) {
+        if ($isString && $this->getValidatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -336,7 +300,7 @@ class FigureBuilder
     /**
      * Sets resize options.
      *
-     * By default or if the argument is set to null, resize options are derived
+     * By default, or if the argument is set to null, resize options are derived
      * from predefined image sizes.
      */
     public function setResizeOptions(?ResizeOptions $resizeOptions): self
@@ -349,7 +313,7 @@ class FigureBuilder
     /**
      * Sets custom metadata.
      *
-     * By default or if the argument is set to null, metadata is trying to be
+     * By default, or if the argument is set to null, metadata is trying to be
      * pulled from the FilesModel.
      */
     public function setMetadata(?Metadata $metadata): self
@@ -372,7 +336,7 @@ class FigureBuilder
     /**
      * Sets a custom locale.
      *
-     * By default or if the argument is set to null, the locale is determined
+     * By default, or if the argument is set to null, the locale is determined
      * from the request context and/or system settings.
      */
     public function setLocale(?string $locale): self
@@ -434,7 +398,7 @@ class FigureBuilder
     /**
      * Sets a custom lightbox resource (file path or ImageInterface) or URL.
      *
-     * By default or if the argument is set to null, the image/target will be
+     * By default, or if the argument is set to null, the image/target will be
      * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
@@ -466,7 +430,7 @@ class FigureBuilder
     /**
      * Sets resize options for the lightbox image.
      *
-     * By default or if the argument is set to null, resize options are derived
+     * By default, or if the argument is set to null, resize options are derived
      * from predefined image sizes.
      */
     public function setLightboxResizeOptions(?ResizeOptions $resizeOptions): self
@@ -479,7 +443,7 @@ class FigureBuilder
     /**
      * Sets a custom lightbox group ID.
      *
-     * By default or if the argument is set to null, the ID will be empty. For
+     * By default, or if the argument is set to null, the ID will be empty. For
      * this setting to take effect, make sure you have enabled the creation of
      * a lightbox by calling enableLightbox().
      */
@@ -581,15 +545,11 @@ class FigureBuilder
                 $settings
             ),
             \Closure::bind(
-                function (Figure $figure): array {
-                    return $this->onDefineLinkAttributes($figure);
-                },
+                fn (Figure $figure): array => $this->onDefineLinkAttributes($figure),
                 $settings
             ),
             \Closure::bind(
-                function (Figure $figure): ?LightboxResult {
-                    return $this->onDefineLightboxResult($figure);
-                },
+                fn (Figure $figure): ?LightboxResult => $this->onDefineLightboxResult($figure),
                 $settings
             ),
             $settings->options
@@ -636,7 +596,7 @@ class FigureBuilder
 
         // If no metadata can be obtained from the model, we create a container
         // from the default meta fields with empty values instead
-        $metaFields = $this->filesModelAdapter()->getMetaFields();
+        $metaFields = $this->getFilesModelAdapter()->getMetaFields();
 
         $data = array_merge(
             array_combine($metaFields, array_fill(0, \count($metaFields), '')),
@@ -728,7 +688,12 @@ class FigureBuilder
         ;
     }
 
-    private function filesModelAdapter()
+    /**
+     * @return FilesModel
+     *
+     * @phpstan-return Adapter<FilesModel>
+     */
+    private function getFilesModelAdapter(): Adapter
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();
@@ -736,7 +701,12 @@ class FigureBuilder
         return $framework->getAdapter(FilesModel::class);
     }
 
-    private function validatorAdapter()
+    /**
+     * @return Validator
+     *
+     * @phpstan-return Adapter<Validator>
+     */
+    private function getValidatorAdapter(): Adapter
     {
         $framework = $this->locator->get('contao.framework');
         $framework->initialize();

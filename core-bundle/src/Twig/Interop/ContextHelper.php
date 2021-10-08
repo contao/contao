@@ -50,10 +50,7 @@ final class ContextHelper
              */
             private $callable;
 
-            /**
-             * @var string
-             */
-            private $name;
+            private ?string $name;
 
             public function __construct(callable $callable, string $name)
             {
@@ -82,7 +79,7 @@ final class ContextHelper
                         return '';
                     }
 
-                    throw new \RuntimeException("Error evaluating '{$this->name}': {$e->getMessage()}", 0, $e);
+                    throw new \RuntimeException("Error evaluating '$this->name': {$e->getMessage()}", 0, $e);
                 }
             }
 

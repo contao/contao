@@ -37,10 +37,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var LegacyImage|null
-     */
-    private $legacyImage;
+    private ?LegacyImage $legacyImage = null;
 
     public function resize(ImageInterface $image, ResizeConfiguration $config, ResizeOptions $options): ImageInterface
     {

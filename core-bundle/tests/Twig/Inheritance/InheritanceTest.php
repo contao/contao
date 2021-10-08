@@ -18,7 +18,9 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
-use OutOfBoundsException;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\Model\Collection;
+use Contao\ThemeModel;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Webmozart\PathUtil\Path;
@@ -69,7 +71,7 @@ class InheritanceTest extends TestCase
     {
         $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle');
 
-        $this->expectException(OutOfBoundsException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage("There cannot be more than one 'foo' template in '$bundlePath/templates'.");
 
         $this->getDemoEnvironment(['InvalidBundle' => ['path' => $bundlePath]]);
@@ -79,7 +81,7 @@ class InheritanceTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundlesMetadata = $bundlesMetadata ?? [
+        $bundlesMetadata ??= [
             'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
             'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
             'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
@@ -91,8 +93,22 @@ class InheritanceTest extends TestCase
             array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
         );
 
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
+        $themeAdapter = $this->mockAdapter(['findAll']);
+        $themeAdapter
+            ->method('findAll')
+            ->willReturn(
+                new Collection(
+                    [$this->mockClassWithProperties(ThemeModel::class, ['templates' => 'templates/my/theme'])],
+                    'tl_theme'
+                )
+            )
+        ;
+
+        $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
+        $themeNamespace = new ThemeNamespace();
+
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $framework);
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
         $warmer->warmUp('');

@@ -31,10 +31,7 @@ class InsertTagsListener
         'event_teaser',
     ];
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -93,7 +90,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s"%s>%s</a>',
                     $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->title),
+                    StringUtil::specialcharsAttribute($model->title),
                     \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->title
                 );
@@ -102,7 +99,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s"%s>',
                     $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialchars($model->title),
+                    StringUtil::specialcharsAttribute($model->title),
                     \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
@@ -110,7 +107,7 @@ class InsertTagsListener
                 return $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './';
 
             case 'event_title':
-                return StringUtil::specialchars($model->title);
+                return StringUtil::specialcharsAttribute($model->title);
 
             case 'event_teaser':
                 return StringUtil::toHtml5($model->teaser);

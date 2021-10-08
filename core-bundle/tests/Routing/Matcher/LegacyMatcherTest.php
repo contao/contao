@@ -652,9 +652,7 @@ class LegacyMatcherTest extends TestCase
         $configAdapter
             ->method('get')
             ->willReturnCallback(
-                static function ($param) use ($config) {
-                    return $config[$param] ?? null;
-                }
+                static fn ($param) => $config[$param] ?? null
             )
         ;
 

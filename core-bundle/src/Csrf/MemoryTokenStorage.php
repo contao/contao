@@ -18,15 +18,8 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
 {
-    /**
-     * @var array|null
-     */
-    private $tokens;
-
-    /**
-     * @var array
-     */
-    private $usedTokens = [];
+    private ?array $tokens = null;
+    private array $usedTokens = [];
 
     public function getToken($tokenId): string
     {

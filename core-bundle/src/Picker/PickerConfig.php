@@ -14,25 +14,14 @@ namespace Contao\CoreBundle\Picker;
 
 class PickerConfig implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
-    private $context;
-
-    /**
-     * @var array
-     */
-    private $extras;
+    private string $context;
+    private array $extras;
+    private string $current;
 
     /**
      * @var string|int
      */
     private $value;
-
-    /**
-     * @var string
-     */
-    private $current;
 
     /**
      * @param string|int $value

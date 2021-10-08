@@ -22,10 +22,7 @@ use Doctrine\DBAL\Connection;
  */
 class RemoveJsHighlightMigration extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -34,7 +31,7 @@ class RemoveJsHighlightMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;

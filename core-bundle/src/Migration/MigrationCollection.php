@@ -17,7 +17,7 @@ class MigrationCollection
     /**
      * @var iterable<MigrationInterface>
      */
-    private $migrations;
+    private iterable $migrations;
 
     /**
      * @param iterable<MigrationInterface> $migrations

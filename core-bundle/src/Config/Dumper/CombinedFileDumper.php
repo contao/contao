@@ -21,25 +21,10 @@ use Webmozart\PathUtil\Path;
  */
 class CombinedFileDumper implements DumperInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var string
-     */
-    private $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
+    private Filesystem $filesystem;
+    private LoaderInterface $loader;
+    private string $cacheDir;
+    private string $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
     public function __construct(Filesystem $filesystem, LoaderInterface $loader, string $cacheDir)
     {

@@ -22,10 +22,7 @@ use Doctrine\DBAL\Connection;
  */
 class Version400Update extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -39,7 +36,7 @@ class Version400Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
@@ -59,7 +56,7 @@ class Version400Update extends AbstractMigration
                 scripts text NULL
         ');
 
-        // Adjust the framework agnostic scripts
+        // Adjust the framework-agnostic scripts
         $layouts = $this->connection->fetchAllAssociative("
             SELECT
                 id, addJQuery, jquery, addMooTools, mootools

@@ -18,10 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 class SchemaProvider
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

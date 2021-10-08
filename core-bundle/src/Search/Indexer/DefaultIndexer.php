@@ -19,20 +19,9 @@ use Doctrine\DBAL\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var bool
-     */
-    private $indexProtected;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private bool $indexProtected;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead

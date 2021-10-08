@@ -20,20 +20,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PageCandidates extends AbstractCandidates
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private Connection $connection;
+    private PageRegistry $pageRegistry;
+    private bool $initialized = false;
 
     public function __construct(Connection $connection, PageRegistry $pageRegistry)
     {
@@ -57,7 +46,7 @@ class PageCandidates extends AbstractCandidates
 
         if ($hasRoot || $hasRegex) {
             /** @var Result $result */
-            $result = $qb->execute();
+            $result = $qb->executeQuery();
 
             return array_unique(array_merge($candidates, $result->fetchFirstColumn()));
         }
@@ -101,9 +90,7 @@ class PageCandidates extends AbstractCandidates
         }
 
         $prefixes = array_map(
-            static function ($prefix) {
-                return $prefix ? preg_quote('/'.$prefix, '#') : '';
-            },
+            static fn ($prefix) => $prefix ? preg_quote('/'.$prefix, '#') : '',
             $this->urlPrefixes
         );
 

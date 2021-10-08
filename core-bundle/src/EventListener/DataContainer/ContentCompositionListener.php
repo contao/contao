@@ -32,35 +32,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private ContaoFramework $framework;
+    private Security $security;
+    private PageRegistry $pageRegistry;
+    private TranslatorInterface $translator;
+    private Connection $connection;
+    private RequestStack $requestStack;
 
     /**
      * @var Image

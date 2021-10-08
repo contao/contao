@@ -345,6 +345,9 @@
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
         <target>Kör kommandot &quot;cache: clear&quot; eller använd Contao Manager för att bygga om din applikationscache.</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Addera %d och %d.</target>
@@ -1084,10 +1087,6 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Om du väljer detta alternativ kommer mål-URL:en att öppnas ett nytt webbläsarfönster.</target>
-      </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -2644,6 +2643,9 @@
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Det finns minst en användargrupp som ger behörighet att importera teman. Eftersom teman kan innehålla godtyckliga mallar och mallar är PHP-filer, har användare av dessa grupper implicit kontroll över systemet!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

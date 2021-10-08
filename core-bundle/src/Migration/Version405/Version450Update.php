@@ -21,10 +21,7 @@ use Doctrine\DBAL\Connection;
  */
 class Version450Update extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -38,7 +35,7 @@ class Version450Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
@@ -51,47 +48,65 @@ class Version450Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement('
-            ALTER TABLE
-                tl_content
-            ADD
-                youtubeOptions text NULL
-        ');
+        $columns = $this->connection
+            ->createSchemaManager()
+            ->listTableColumns('tl_content')
+        ;
 
-        $this->connection->executeStatement('
-            ALTER TABLE
-                tl_content
-            ADD
-                youtubeStart int(10) unsigned NOT NULL default 0
-        ');
+        if (!isset($columns['youtubeoptions'])) {
+            $this->connection->executeStatement('
+                ALTER TABLE
+                    tl_content
+                ADD
+                    youtubeOptions text NULL
+            ');
+        }
 
-        $this->connection->executeStatement('
-            ALTER TABLE
-                tl_content
-            ADD
-                youtubeStop int(10) unsigned NOT NULL default 0
-        ');
+        if (!isset($columns['youtubestart'])) {
+            $this->connection->executeStatement('
+                ALTER TABLE
+                    tl_content
+                ADD
+                    youtubeStart int(10) unsigned NOT NULL default 0
+            ');
+        }
 
-        $this->connection->executeStatement("
-            UPDATE
-                tl_form_field
-            SET
-                type = 'fieldsetStart'
-            WHERE
-                type = 'fieldset' AND fsType = 'fsStart'
-        ");
-
-        $this->connection->executeStatement("
-            UPDATE
-                tl_form_field
-            SET
-                type = 'fieldsetStop'
-            WHERE
-                type = 'fieldset' AND fsType = 'fsStop'
-        ");
+        if (!isset($columns['youtubestop'])) {
+            $this->connection->executeStatement('
+                ALTER TABLE
+                    tl_content
+                ADD
+                    youtubeStop int(10) unsigned NOT NULL default 0
+            ');
+        }
 
         $columns = $this->connection
-            ->getSchemaManager()
+            ->createSchemaManager()
+            ->listTableColumns('tl_form_field')
+        ;
+
+        if (isset($columns['fstype'])) {
+            $this->connection->executeStatement("
+                UPDATE
+                    tl_form_field
+                SET
+                    type = 'fieldsetStart'
+                WHERE
+                    type = 'fieldset' AND fsType = 'fsStart'
+            ");
+
+            $this->connection->executeStatement("
+                UPDATE
+                    tl_form_field
+                SET
+                    type = 'fieldsetStop'
+                WHERE
+                    type = 'fieldset' AND fsType = 'fsStop'
+            ");
+        }
+
+        $columns = $this->connection
+            ->createSchemaManager()
             ->listTableColumns('tl_module')
         ;
 

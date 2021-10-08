@@ -38,20 +38,9 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
-    /**
-     * @var IndexerInterface
-     */
-    private $indexer;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var array
-     */
-    private $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
+    private IndexerInterface $indexer;
+    private TranslatorInterface $translator;
+    private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
     public function __construct(IndexerInterface $indexer, TranslatorInterface $translator)
     {
@@ -77,7 +66,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
-        // Skip the links that have the "type" attribute set and it's not text/html
+        // Skip the links that have a "type" attribute which is not text/html
         if ($crawlUri->hasTag(HtmlCrawlerSubscriber::TAG_NO_TEXT_HTML_TYPE)) {
             $this->logWithCrawlUri(
                 $crawlUri,

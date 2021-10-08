@@ -22,30 +22,11 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler as BaseFragmentHandler
 
 class FragmentHandler extends BaseFragmentHandler
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $renderers;
-
-    /**
-     * @var BaseFragmentHandler
-     */
-    private $fragmentHandler;
-
-    /**
-     * @var FragmentRegistryInterface
-     */
-    private $fragmentRegistry;
-
-    /**
-     * @var ContainerInterface
-     */
-    private $preHandlers;
-
-    /**
-     * @var array
-     */
-    private $initialized = [];
+    private ContainerInterface $renderers;
+    private BaseFragmentHandler $fragmentHandler;
+    private FragmentRegistryInterface $fragmentRegistry;
+    private ContainerInterface $preHandlers;
+    private array $initialized = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead

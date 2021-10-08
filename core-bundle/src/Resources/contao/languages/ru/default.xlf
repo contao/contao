@@ -345,6 +345,10 @@
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
         <target>Запустите команду &quot;cache:clear&quot; или воспользуйтесь Contao Manager для восстановления кэша приложения.</target>
       </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Путь к шаблону &quot;%s&quot; не должен содержать следующие символы: %s</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>
@@ -1084,10 +1088,6 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Открыть ссылку в новом окне браузера.</target>
-      </trans-unit>
-      <trans-unit id="MSC.textDirection">
-        <source>ltr</source>
-        <target>ltr</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -2644,6 +2644,10 @@
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
         <target>Существует как минимум одна группа пользователей, предоставляющая разрешение на импорт тем. Поскольку темы могут содержать произвольные шаблоны, а шаблоны - файлы PHP, пользователи этих групп неявно имеют полный контроль над системой!</target>
+      </trans-unit>
+      <trans-unit id="MSC.groupListingModule">
+        <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Существует как минимум одна группа пользователей, предоставляющая доступ к модулю &quot;Listing&quot; внешнего интерфейса и его полям &quot;list_*&quot;. Поскольку они могут содержать произвольные SQL-запросы, пользователи этих групп неявно получают полный контроль над системой!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

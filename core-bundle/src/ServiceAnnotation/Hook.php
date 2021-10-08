@@ -29,15 +29,8 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class Hook implements ServiceTagInterface
 {
-    /**
-     * @var string
-     */
-    public $value;
-
-    /**
-     * @var int
-     */
-    public $priority;
+    public string $value;
+    public ?int $priority = null;
 
     public function getName(): string
     {
@@ -48,7 +41,7 @@ final class Hook implements ServiceTagInterface
     {
         $attributes = ['hook' => $this->value];
 
-        if ($this->priority) {
+        if (null !== $this->priority) {
             $attributes['priority'] = $this->priority;
         }
 

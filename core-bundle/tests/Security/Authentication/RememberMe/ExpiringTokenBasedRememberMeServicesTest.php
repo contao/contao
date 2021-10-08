@@ -25,23 +25,15 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CookieTheftException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Http\RememberMe\AbstractRememberMeServices;
+use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
 class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 {
     private const SECRET = 'foobar';
 
-    /**
-     * @var RememberMeRepository&MockObject
-     */
-    private $repository;
+    private ExpiringTokenBasedRememberMeServices $listener;
 
-    /**
-     * @var ExpiringTokenBasedRememberMeServices
-     */
-    private $listener;
-
-    private static $options = [
+    private static array $options = [
         'name' => 'REMEMBERME',
         'lifetime' => 31536000,
         'path' => '/',
@@ -52,6 +44,11 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         'always_remember_me' => false,
         'remember_me_parameter' => 'autologin',
     ];
+
+    /**
+     * @var RememberMeRepository&MockObject
+     */
+    private $repository;
 
     protected function setUp(): void
     {
@@ -196,11 +193,18 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $response = new Response();
 
+        $user = $this->createMock(UserInterface::class);
+        $user
+            ->expects($this->once())
+            ->method('getUsername')
+            ->willReturn('foo')
+        ;
+
         $token = $this->createMock(TokenInterface::class);
         $token
             ->expects($this->atLeastOnce())
             ->method('getUser')
-            ->willReturn($this->createMock(UserInterface::class))
+            ->willReturn($user)
         ;
 
         $this->repository
@@ -313,16 +317,16 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
     private function assertCookieIsDeleted(Request $request): void
     {
-        $this->assertTrue($request->attributes->has(AbstractRememberMeServices::COOKIE_ATTR_NAME));
-        $this->assertInstanceOf(Cookie::class, $request->attributes->get(AbstractRememberMeServices::COOKIE_ATTR_NAME));
+        $this->assertTrue($request->attributes->has(RememberMeServicesInterface::COOKIE_ATTR_NAME));
+        $this->assertInstanceOf(Cookie::class, $request->attributes->get(RememberMeServicesInterface::COOKIE_ATTR_NAME));
     }
 
     private function assertRequestHasRememberMeCookie(Request $request): void
     {
-        $this->assertTrue($request->attributes->has(AbstractRememberMeServices::COOKIE_ATTR_NAME));
+        $this->assertTrue($request->attributes->has(RememberMeServicesInterface::COOKIE_ATTR_NAME));
 
         /** @var Cookie $cookie */
-        $cookie = $request->attributes->get(AbstractRememberMeServices::COOKIE_ATTR_NAME);
+        $cookie = $request->attributes->get(RememberMeServicesInterface::COOKIE_ATTR_NAME);
 
         $this->assertInstanceOf(Cookie::class, $cookie);
         $this->assertRememberMeCookie($cookie, 'foo', 'baz');

@@ -28,7 +28,7 @@ class FailTolerantFilesystemLoader extends FilesystemLoader
      * @param string $path      A path where to look for templates
      * @param string $namespace A path namespace
      */
-    public function addPath($path, $namespace = self::MAIN_NAMESPACE): void
+    public function addPath(string $path, string $namespace = self::MAIN_NAMESPACE): void
     {
         try {
             parent::addPath($path, $namespace);
@@ -43,7 +43,7 @@ class FailTolerantFilesystemLoader extends FilesystemLoader
      * @param string $path      A path where to look for templates
      * @param string $namespace A path namespace
      */
-    public function prependPath($path, $namespace = self::MAIN_NAMESPACE): void
+    public function prependPath(string $path, string $namespace = self::MAIN_NAMESPACE): void
     {
         try {
             parent::prependPath($path, $namespace);

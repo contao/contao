@@ -31,8 +31,9 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\DBAL\DBALException as DoctrineDbalDbalException;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Exception as DoctrineDbalException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -60,10 +61,7 @@ use Webmozart\PathUtil\Path;
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
-    /**
-     * @var string|null
-     */
-    private static $autoloadModules;
+    private static ?string $autoloadModules = null;
 
     /**
      * @var callable
@@ -315,11 +313,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         // If there are no DB credentials yet (install tool), we have to set
         // the server version to prevent a DBAL exception (see #1422)
         try {
-            $connection = \call_user_func($this->dbalConnectionFactory, $params);
+            $connection = ($this->dbalConnectionFactory)($params);
             $connection->connect();
             $connection->executeQuery('SHOW TABLES');
             $connection->close();
-        } catch (DriverException | \mysqli_sql_exception $e) {
+        } catch (DoctrineDbalException | DoctrineDbalDbalException | \mysqli_sql_exception $e) {
             $extensionConfigs[] = [
                 'dbal' => [
                     'connections' => [
@@ -480,7 +478,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * to their config.yml, the merged configuration will lead to an error, since
      * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
-     * Thus the default mailer configuration needs to be added dynamically, if
+     * Thus, the default mailer configuration needs to be added dynamically if
      * not already present.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>

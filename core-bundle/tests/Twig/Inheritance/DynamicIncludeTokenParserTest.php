@@ -18,6 +18,9 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Twig\Environment;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
+use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Parser;
 use Twig\Source;
 
@@ -124,5 +127,51 @@ class DynamicIncludeTokenParserTest extends TestCase
         $this->expectExceptionMessage('<original message> Did you try to include a non-existent template or a template from a theme directory?');
 
         $parser->parse($tokenStream);
+    }
+
+    /**
+     * @dataProvider provideTokens
+     */
+    public function testParsesArguments(string $source, ?AbstractExpression $variables, bool $only, bool $ignoreMissing): void
+    {
+        $environment = new Environment($this->createMock(LoaderInterface::class));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(TemplateHierarchyInterface::class)));
+
+        $tokenStream = (new Lexer($environment))->tokenize(new Source($source, 'foo.html.twig'));
+        $parser = new Parser($environment);
+        $includeNode = $parser->parse($tokenStream)->getNode('body')->getNode('0');
+
+        if (null !== $variables) {
+            $this->assertSame((string) $variables, (string) $includeNode->getNode('variables'));
+        } else {
+            $this->assertFalse($includeNode->hasNode('variables'));
+        }
+
+        $this->assertSame($only, $includeNode->getAttribute('only'));
+        $this->assertSame($ignoreMissing, $includeNode->getAttribute('ignore_missing'));
+    }
+
+    public function provideTokens(): \Generator
+    {
+        yield 'with data' => [
+            "{% include 'bar.html.twig' with {a: 1} %}",
+            new ArrayExpression([new ConstantExpression('a', 0), new ConstantExpression(1, 0)], 0),
+            false,
+            false,
+        ];
+
+        yield 'with data only' => [
+            "{% include 'bar.html.twig' with {} only %}",
+            new ArrayExpression([], 0),
+            true,
+            false,
+        ];
+
+        yield 'ignore missing' => [
+            "{% include 'bar.html.twig' ignore missing %}",
+            null,
+            false,
+            true,
+        ];
     }
 }

@@ -17,20 +17,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PickerBuilder implements PickerBuilderInterface
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $menuFactory;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private FactoryInterface $menuFactory;
+    private RouterInterface $router;
 
     /**
      * @var array<PickerProviderInterface>
      */
-    private $providers = [];
+    private array $providers = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.builder" service instead
@@ -59,9 +52,7 @@ class PickerBuilder implements PickerBuilderInterface
 
         $providers = array_filter(
             $providers,
-            static function (PickerProviderInterface $provider) use ($config): bool {
-                return $provider->supportsContext($config->getContext());
-            }
+            static fn (PickerProviderInterface $provider): bool => $provider->supportsContext($config->getContext())
         );
 
         if (empty($providers)) {

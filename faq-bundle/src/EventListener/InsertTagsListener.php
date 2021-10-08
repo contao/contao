@@ -31,10 +31,7 @@ class InsertTagsListener
         'faq_title',
     ];
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -99,7 +96,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s"%s>%s</a>',
                     $url ?: './',
-                    StringUtil::specialchars($faq->question),
+                    StringUtil::specialcharsAttribute($faq->question),
                     $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $faq->question
                 );
@@ -108,7 +105,7 @@ class InsertTagsListener
                 return sprintf(
                     '<a href="%s" title="%s"%s>',
                     $url ?: './',
-                    StringUtil::specialchars($faq->question),
+                    StringUtil::specialcharsAttribute($faq->question),
                     $blank ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
@@ -116,7 +113,7 @@ class InsertTagsListener
                 return $url ?: './';
 
             case 'faq_title':
-                return StringUtil::specialchars($faq->question);
+                return StringUtil::specialcharsAttribute($faq->question);
         }
 
         return false;

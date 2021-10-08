@@ -14,19 +14,9 @@ namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
 final class HtmlHeadBag
 {
-    /**
-     * @var string
-     */
-    private $title = '';
-
-    /**
-     * @var string
-     */
-    private $metaDescription = '';
-    /**
-     * @var string
-     */
-    private $metaRobots = 'index,follow';
+    private string $title = '';
+    private string $metaDescription = '';
+    private string $metaRobots = 'index,follow';
 
     public function getTitle(): string
     {

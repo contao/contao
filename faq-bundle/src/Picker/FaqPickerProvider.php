@@ -28,10 +28,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_faq.picker.faq_provider" service instead
@@ -73,6 +70,10 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = $this->getInsertTagValue($config);
+
+            if ($flags = $this->getInsertTagFlags($config)) {
+                $attributes['flags'] = $flags;
+            }
         }
 
         return $attributes;

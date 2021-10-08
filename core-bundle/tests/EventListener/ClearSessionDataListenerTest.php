@@ -42,7 +42,7 @@ class ClearSessionDataListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new Response()
         );
 
@@ -137,7 +137,7 @@ class ClearSessionDataListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new Response()
         );
 
@@ -160,7 +160,7 @@ class ClearSessionDataListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new Response()
         );
 
@@ -187,7 +187,7 @@ class ClearSessionDataListenerTest extends TestCase
         $event = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new Response()
         );
 

@@ -19,15 +19,8 @@ use Contao\StringUtil;
 
 class Slug
 {
-    /**
-     * @var SlugGeneratorInterface
-     */
-    private $slugGenerator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private SlugGeneratorInterface $slugGenerator;
+    private ContaoFramework $framework;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.slug" service instead

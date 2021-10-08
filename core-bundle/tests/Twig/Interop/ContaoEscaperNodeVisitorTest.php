@@ -26,7 +26,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 {
     public function testPriority(): void
     {
-        $visitor = new ContaoEscaperNodeVisitor(static function () { return []; });
+        $visitor = new ContaoEscaperNodeVisitor(static fn () => []);
 
         $this->assertSame(1, $visitor->getPriority());
     }
@@ -69,9 +69,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $environment->addFunction(
             new TwigFunction(
                 'heart',
-                static function () {
-                    return '&#9829;';
-                }
+                static fn () => '&#9829;'
             )
         );
 
