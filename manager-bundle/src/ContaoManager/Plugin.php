@@ -346,18 +346,18 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $url = null;
 
         foreach ($extensionConfigs as $extensionConfig) {
+            // Do not add PDO options if custom options have been defined
+            // Since this is merged recursively, we don't need to check other configs
+            if (isset($extensionConfig['dbal']['connections']['default']['options'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+                return $extensionConfigs;
+            }
+
             if (isset($extensionConfig['dbal']['connections']['default']['driver'])) {
                 $driver = $extensionConfig['dbal']['connections']['default']['driver'];
             }
 
             if (isset($extensionConfig['dbal']['connections']['default']['url'])) {
                 $url = $container->resolveEnvPlaceholders($extensionConfig['dbal']['connections']['default']['url'], true);
-            }
-
-            // Do not add PDO options if custom options have been defined
-            // Since this is merged recursively, we don't need to check other configs
-            if (isset($extensionConfig['dbal']['connections']['default']['options'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
-                return $extensionConfigs;
             }
         }
 
