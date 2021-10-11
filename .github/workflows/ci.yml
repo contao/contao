@@ -8,7 +8,7 @@ on:
         tags:
             - '*'
     schedule:
-        - cron: 0 13 * * MON,TUE
+        - cron: 0 13 * * MON,THU
 
 jobs:
     coverage:
