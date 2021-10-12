@@ -473,6 +473,11 @@ class InsertTags extends Controller
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
 
+					if (!$strTarget && \in_array('blank', \array_slice($elements, 2), true))
+					{
+						$strTarget = ' target="_blank" rel="noreferrer noopener"';
+					}
+
 					// Replace the tag
 					switch (strtolower($elements[0]))
 					{
@@ -549,16 +554,17 @@ class InsertTags extends Controller
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
 					{
 						case 'article':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $objArticle->title);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
 							break;
 
 						case 'article_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, StringUtil::specialcharsAttribute($objArticle->title));
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
 							break;
 
 						case 'article_url':
