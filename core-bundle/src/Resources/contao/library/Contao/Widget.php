@@ -1278,7 +1278,8 @@ abstract class Widget extends Controller
 
 		if (!isset($arrAttributes['allowHtml']))
 		{
-			$arrAttributes['allowHtml'] = \in_array($arrData['eval']['rte'] ?? null, array('tinyMCE', 'ace|html'), true);
+			$rte = $arrData['eval']['rte'] ?? '';
+			$arrAttributes['allowHtml'] = 'ace|html' === $rte || 0 === strpos($rte, 'tiny');
 		}
 
 		// Decode entities if HTML is allowed
