@@ -56,8 +56,12 @@ class LocaleUtil
             return self::$fallbacks[$locale];
         }
 
+        $result = [];
         $data = \Locale::parseLocale($locale);
-        $result = [$data[\Locale::LANG_TAG]];
+
+        if (isset($data[\Locale::LANG_TAG])) {
+            $result[] = $data[\Locale::LANG_TAG];
+        }
 
         if (isset($data[\Locale::REGION_TAG])) {
             $result[] = $data[\Locale::LANG_TAG].'_'.$data[\Locale::REGION_TAG];
