@@ -1,7 +1,6 @@
-Contao 4 test case
-==================
+# Contao 4 test case
 
-Contao is an Open Source PHP Content Management System for people who want a
+Contao is an open source PHP content management system for people who want a
 professional website that is easy to maintain. Visit the [project website][1]
 for more information.
 
@@ -17,9 +16,7 @@ class MyTest extends ContaoTestCase
 }
 ```
 
-
-Mocking the Symfony container
------------------------------
+## Mocking the Symfony container
 
 The `getContainerWithContaoConfiguration()` method mocks a Symfony container
 with the default configuration of the Contao core extension.
@@ -40,15 +37,12 @@ echo $container->getParameter('kernel.root_dir'); // will output "/tmp/app"
 echo $container->getParameter('kernel.cache_dir'); // will output "/tmp/var/cache"
 ```
 
-
-Mocking the Contao framework
-----------------------------
+## Mocking the Contao framework
 
 The `mockContaoFramework)` method mocks an initialized Contao framework.
 
 ```php
 $framework = $this->mockContaoFramework();
-
 $framework
     ->expect($this->atLeastOnce())
     ->method('initialize')
@@ -77,15 +71,12 @@ $framework = $this->mockContaoFramework($adapters);
 
 The given Config adapter will overwrite the default Config adapter.
 
-
-Mocking an adapter
-------------------
+## Mocking an adapter
 
 The `mockAdapter()` method will mock an adapter with the given methods.
 
 ```php
 $adapter = $this->mockAdapter(['findById']);
-
 $adapter
     ->method('findById')
     ->willReturn($model)
@@ -102,9 +93,7 @@ $adapter = $this->mockConfiguredAdapter(['findById' => $model]);
 
 This code does exactly the same as the code above.
 
-
-Mocking a class with magic properties
--------------------------------------
+## Mocking a class with magic properties
 
 The `mockClassWithProperties()` method mocks a class that uses magic `__set()`
 and `__get()` methods to manage properties.
@@ -131,22 +120,17 @@ $mock = $this->mockClassWithProperties(Contao\PageModel::class, $properties);
 echo $mock->title; // will output "Home"
 ```
 
-
-Mocking a token storage
------------------------
+## Mocking a token storage
 
 The `mockTokenStorage()` mocks a token storage with a token returning either a
 Contao back end or front end user.
 
 ```php
 $tokenStorage = $this->mockTokenStorage(Contao\BackendUser::class);
-
 $user = $tokenStorage->getToken()->getUser();
 ```
 
-
-Using a temporary directory
----------------------------
+## Using a temporary directory
 
 The `getTempDir()` method creates a temporary directory based on the test class
 name and returns its path.
@@ -172,6 +156,5 @@ class MyTest extends ContaoTestCase
     }
 }
 ```
-
 
 [1]: https://contao.org

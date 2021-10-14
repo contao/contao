@@ -177,7 +177,7 @@ abstract class ContaoTestCase extends TestCase
             $mock
                 ->method('__set')
                 ->willReturnCallback(
-                    static function (string $key, $value) use (&$properties) {
+                    static function (string $key, $value) use (&$properties): void {
                         $properties[$key] = $value;
                     }
                 )

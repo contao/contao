@@ -78,7 +78,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
 
                 return false;
             },
-            E_DEPRECATED | E_USER_DEPRECATED
+            \E_DEPRECATED | \E_USER_DEPRECATED
         );
 
         try {
