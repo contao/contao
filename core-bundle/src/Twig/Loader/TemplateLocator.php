@@ -68,9 +68,9 @@ class TemplateLocator
         // This code might run early during cache warmup where the 'tl_theme'
         // table couldn't exist, yet.
         try {
-            // Note: we cannot use models or other parts of the Contao
-            //       framework here because this function will be called
-            //       during cache warmup (see #3567)
+            // Note: We cannot use models or other parts of the Contao
+            // framework here because this function will be called when the
+            // container is built (see #3567)
             $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
         } catch (TableNotFoundException $e) {
             return [];
