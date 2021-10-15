@@ -56,6 +56,10 @@ class LocaleUtil
             return self::$fallbacks[$locale];
         }
 
+        if ('' === $locale) {
+            return [];
+        }
+
         $result = [];
         $data = \Locale::parseLocale($locale);
 
