@@ -66,7 +66,7 @@ class ContaoCoreExtension extends Extension
         $loader->load('services.yml');
         $loader->load('migrations.yml');
 
-        // TODO: Change $config['web_dir'] to 'public' in Contao 5 (see #3535)
+        // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);

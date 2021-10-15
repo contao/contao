@@ -472,10 +472,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $filesystem->remove($composerJsonFilePath);
 
-        $this->assertSame(
-            Path::join($this->getTempDir(), $expectedWebDir),
-            $container->getParameter('contao.web_dir')
-        );
+        $this->assertSame(Path::join($this->getTempDir(), $expectedWebDir), $container->getParameter('contao.web_dir'));
     }
 
     public function provideComposerJsonContent(): \Generator
