@@ -365,7 +365,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
@@ -377,7 +377,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
