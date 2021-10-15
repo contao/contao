@@ -13,9 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
-use Contao\ThemeModel;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Webmozart\PathUtil\Path;
@@ -46,17 +45,17 @@ class TemplateLocator
     private $themeNamespace;
 
     /**
-     * @var ContaoFramework
+     * @var Connection
      */
-    private $framework;
+    private $connection;
 
-    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ThemeNamespace $themeNamespace, ContaoFramework $framework)
+    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ThemeNamespace $themeNamespace, Connection $connection)
     {
         $this->projectDir = $projectDir;
         $this->bundles = $bundles;
         $this->bundlesMetadata = $bundlesMetadata;
         $this->themeNamespace = $themeNamespace;
-        $this->framework = $framework;
+        $this->connection = $connection;
     }
 
     /**
@@ -64,27 +63,26 @@ class TemplateLocator
      */
     public function findThemeDirectories(): array
     {
-        $this->framework->initialize();
-
-        /** @var ThemeModel $themeAdapter */
-        $themeAdapter = $this->framework->getAdapter(ThemeModel::class);
         $directories = [];
 
         // This code might run early during cache warmup where the 'tl_theme'
         // table couldn't exist, yet.
         try {
-            $themes = $themeAdapter->findAll() ?? [];
+            // Note: We cannot use models or other parts of the Contao
+            // framework here because this function will be called when the
+            // container is built (see #3567)
+            $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
         } catch (TableNotFoundException $e) {
             return [];
         }
 
-        foreach ($themes as $theme) {
-            if (!is_dir($absolutePath = Path::join($this->projectDir, $theme->templates))) {
+        foreach ($themePaths as $themePath) {
+            if (!is_dir($absolutePath = Path::join($this->projectDir, $themePath))) {
                 continue;
             }
 
             try {
-                $slug = $this->themeNamespace->generateSlug(Path::makeRelative($theme->templates, 'templates'));
+                $slug = $this->themeNamespace->generateSlug(Path::makeRelative($themePath, 'templates'));
             } catch (InvalidThemePathException $e) {
                 trigger_deprecation('contao/core-bundle', '4.12', 'Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
 

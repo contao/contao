@@ -929,7 +929,7 @@ services:
             - '%kernel.bundles%'
             - '%kernel.bundles_metadata%'
             - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
-            - '@contao.framework'
+            - '@database_connection'
 
     Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
         arguments:

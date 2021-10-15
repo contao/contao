@@ -19,8 +19,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\Model\Collection;
-use Contao\ThemeModel;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -637,19 +636,10 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
     {
-        $themeModels = array_map(
-            function (string $path) {
-                return $this->mockClassWithProperties(ThemeModel::class, [
-                    'templates' => $path,
-                ]);
-            },
-            $themePaths
-        );
-
-        $themeAdapter = $this->mockAdapter(['findAll']);
-        $themeAdapter
-            ->method('findAll')
-            ->willReturn(empty($themePaths) ? null : new Collection($themeModels, 'tl_theme'))
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn($themePaths)
         ;
 
         return new TemplateLocator(
@@ -657,7 +647,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
+            $connection
         );
     }
 
