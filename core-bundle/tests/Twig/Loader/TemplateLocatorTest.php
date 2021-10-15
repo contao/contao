@@ -18,6 +18,8 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\DriverException;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Webmozart\PathUtil\Path;
@@ -60,17 +62,15 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function testIgnoresMissingThemeTable(): void
+    /**
+     * @dataProvider provideDatabaseExceptions
+     */
+    public function testIgnoresDbalExceptions(Exception $exception): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchFirstColumn')
-            ->willThrowException(
-                new TableNotFoundException(
-                    'Table tl_theme doesn\'t exist.',
-                    $this->createMock(DriverException::class)
-                )
-            )
+            ->willThrowException($exception)
         ;
 
         $locator = new TemplateLocator(
@@ -82,6 +82,23 @@ class TemplateLocatorTest extends TestCase
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
+    }
+
+    public function provideDatabaseExceptions(): \Generator
+    {
+        yield 'table not found' => [
+            new TableNotFoundException(
+                'Table tl_theme doesn\'t exist.',
+                $this->createMock(DriverException::class)
+            ),
+        ];
+
+        yield 'failing connection' => [
+            new ConnectionException(
+                'No database selected',
+                $this->createMock(DriverException::class)
+            ),
+        ];
     }
 
     public function testFindsResourcesPaths(): void
