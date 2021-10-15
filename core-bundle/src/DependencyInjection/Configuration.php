@@ -103,6 +103,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
+                    ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
                     ->defaultValue($this->getDefaultWebDir())
                     ->validate()
