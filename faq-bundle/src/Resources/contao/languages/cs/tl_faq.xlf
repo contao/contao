@@ -139,9 +139,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.0">
         <source>Create a new question at the top</source>
+        <target>Vytvořit novou otázku na prvním místě</target>
       </trans-unit>
       <trans-unit id="tl_faq.pastenew.1">
         <source>Create a new question after question ID %s</source>
+        <target>Vytvořit novou otázku po otázce ID%s</target>
       </trans-unit>
     </body>
   </file>
