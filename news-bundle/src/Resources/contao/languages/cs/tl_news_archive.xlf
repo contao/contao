@@ -70,11 +70,12 @@
         <target>Vyžadovat přihlášení pro přidávání komentářů</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.requireLogin.1">
-        <source>Allow only authenticated users to create comments.</source>
-        <target>Povolit přidávat komentáře jen přihlášeným uživatelům.</target>
+        <source>Allow only authenticated members to create comments.</source>
+        <target>Povolit komentování jen ověřeným členům.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Vypnout ochranu proti spamu</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.disableCaptcha.1">
         <source>Use this option only if you have limited comments to authenticated users.</source>
@@ -138,21 +139,27 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
+        <target>Spravovat kanály RSS</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.0">
         <source>New</source>
+        <target>Nové</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
+        <target>Vytvořit nový archiv novinek</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
+        <target>Zobrazit podrobnosti k archivu novinek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
+        <target>Upravit archiv novinek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
+        <target>Upravit nastavení archivu novinek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
@@ -160,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
+        <target>Duplikovat archiv novinek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
+        <target>Duplikovat archiv novinek ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
+        <target>Zobrazit podrobnosti k archivu novinek ID %s</target>
       </trans-unit>
     </body>
   </file>

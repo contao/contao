@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.0">
         <source>Import</source>
+        <target>Import</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.1">
         <source>Import a style sheet</source>
+        <target>Importovat kaskádovité styly</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
         <source>New</source>
