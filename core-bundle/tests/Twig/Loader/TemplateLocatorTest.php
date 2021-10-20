@@ -16,8 +16,10 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\Model\Collection;
-use Contao\ThemeModel;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DriverException;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Webmozart\PathUtil\Path;
@@ -60,25 +62,37 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function testIgnoresMissingThemeTable(): void
+    /**
+     * @dataProvider provideDatabaseExceptions
+     */
+    public function testIgnoresDbalExceptions(Exception $exception): void
     {
-        $themeAdapter = $this->mockAdapter(['findAll']);
-        $themeAdapter
-            ->method('findAll')
-            ->willThrowException($this->createMock(TableNotFoundException::class))
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willThrowException($exception)
         ;
-
-        $framework = $this->mockContaoFramework([ThemeModel::class => $themeAdapter]);
 
         $locator = new TemplateLocator(
             '',
             [],
             [],
             $this->createMock(ThemeNamespace::class),
-            $framework
+            $connection
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
+    }
+
+    public function provideDatabaseExceptions(): \Generator
+    {
+        yield 'table not found' => [
+            new TableNotFoundException($this->createMock(DriverException::class), null),
+        ];
+
+        yield 'failing connection' => [
+            new ConnectionException($this->createMock(DriverException::class), null),
+        ];
     }
 
     public function testFindsResourcesPaths(): void
@@ -147,19 +161,10 @@ class TemplateLocatorTest extends TestCase
 
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
     {
-        $themeModels = array_map(
-            function (string $path) {
-                return $this->mockClassWithProperties(ThemeModel::class, [
-                    'templates' => $path,
-                ]);
-            },
-            $themePaths
-        );
-
-        $themeAdapter = $this->mockAdapter(['findAll']);
-        $themeAdapter
-            ->method('findAll')
-            ->willReturn(empty($themePaths) ? null : new Collection($themeModels, 'tl_theme'))
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn($themePaths)
         ;
 
         return new TemplateLocator(
@@ -167,7 +172,7 @@ class TemplateLocatorTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
+            $connection
         );
     }
 }

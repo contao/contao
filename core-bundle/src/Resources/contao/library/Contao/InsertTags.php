@@ -385,8 +385,10 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
+						@trigger_error('Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 						$strUrl = 'javascript:history.go(-1)';
-						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'];
+						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;
 
 						// No language files if the page is cached
 						if (!$strTitle)
@@ -1350,12 +1352,16 @@ class InsertTags extends Controller
 			// Add the urlattr insert tags flag in URL attributes
 			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
 			{
-				$attributesResult .= preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
+				$matches[0][0] = preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
+
+				// Backwards compatibility
+				if (trim($matches[0][0]) === 'href="{{link_url::back|urlattr}}"')
+				{
+					$matches[0][0] = str_replace('{{link_url::back|urlattr}}', '{{link_url::back}}', $matches[0][0]);
+				}
 			}
-			else
-			{
-				$attributesResult .= $matches[0][0];
-			}
+
+			$attributesResult .= $matches[0][0];
 		}
 
 		$attributesResult .= substr($attributes, $offset);

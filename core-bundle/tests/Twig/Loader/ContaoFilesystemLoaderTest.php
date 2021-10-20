@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\Model\Collection;
-use Contao\ThemeModel;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -608,21 +608,38 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
     }
 
-    private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
+    public function testCatchesInvalidThemePathExceptionWhenGeneratingSlug(): void
     {
-        $themeModels = array_map(
-            function (string $path) {
-                return $this->mockClassWithProperties(ThemeModel::class, [
-                    'templates' => $path,
-                ]);
-            },
-            $themePaths
+        $themeNamespace = $this->createMock(ThemeNamespace::class);
+        $themeNamespace
+            ->method('generateSlug')
+            ->with('my_theme')
+            ->willThrowException(new InvalidThemePathException('my_theme', ['_']))
+        ;
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $this->createMock(TemplateLocator::class),
+            $themeNamespace,
+            '/'
         );
 
-        $themeAdapter = $this->mockAdapter(['findAll']);
-        $themeAdapter
-            ->method('findAll')
-            ->willReturn(empty($themePaths) ? null : new Collection($themeModels, 'tl_theme'))
+        $page = new \stdClass();
+        $page->templateGroup = 'templates/my_theme';
+
+        $GLOBALS['objPage'] = $page;
+
+        $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
+
+        unset($GLOBALS['objPage']);
+    }
+
+    private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn($themePaths)
         ;
 
         return new TemplateLocator(
@@ -630,7 +647,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $bundles,
             $bundlesMetadata,
             new ThemeNamespace(),
-            $this->mockContaoFramework([ThemeModel::class => $themeAdapter])
+            $connection
         );
     }
 
