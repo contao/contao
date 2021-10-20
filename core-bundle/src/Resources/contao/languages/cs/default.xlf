@@ -347,6 +347,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Cesta k předloze &quot;%s&quot; nemůže obsahovat následující znaky: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -370,7 +371,7 @@
       </trans-unit>
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
-        <target>Samostatný nadpis, který je obalen tagem &lt;h1&gt;.</target>
+        <target>Vytvoří nadpis (h1 - h6).</target>
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
@@ -1289,6 +1290,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License</source>
+        <target>Licence</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1476,6 +1478,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Potvrdit heslo</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1483,9 +1486,11 @@
       </trans-unit>
       <trans-unit id="MSC.showPassword">
         <source>Show password</source>
+        <target>Zobrazit heslo</target>
       </trans-unit>
       <trans-unit id="MSC.hidePassword">
         <source>Hide password</source>
+        <target>Skrýt heslo</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2081,6 +2086,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests</source>
+        <target>Hosté</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2520,6 +2526,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <target>Musíte přidat kořenovou stránku do této struktury, abyste zadali soubor s meta daty.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2604,6 +2611,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>
+        <target>Ujistěte se, že si teď zkopírujete kód. Nebudete se moct k němu kdykoli vrátit později. </target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
@@ -2639,6 +2647,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Existuje přinejmenším jedna skupina, která má přistup k frontendovému modulu Seznam a jeho &quot;list_*&quot; polím. Od té doby, kdy mohou obsahovat náhodné SQL údaje, mají uživatele této skupiny plnou kontrolu nad systémem!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2658,6 +2667,7 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>Zde můžete vidět náhled meta informací zobrazených jako výsledek hledání v Googlu. Jiné vyhledávače mohou zobrazovat delší texty nebo je umísťovat na jiném místě.</target>
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.0">
         <source>Number of items</source>
@@ -2665,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Zde můžete obezit celkový počet položek. Nastavte na 0 pro zobrazení všech</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2700,12 +2711,15 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>Nelze vytvořit URL náhledu, protože má povinná parametry.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Neplatná možnost: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
+        <target>Zkopírovat URL</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

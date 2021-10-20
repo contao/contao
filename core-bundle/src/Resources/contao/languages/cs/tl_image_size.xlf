@@ -83,6 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
+        <target>Mějte na paměti, že v tomto případě nebudou použité žádné optimalizace jako přepsání meta informací nebo komprese JPEGu.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
@@ -154,9 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,png">
         <source>WEBP to PNG</source>
+        <target>WEBP z PNG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,jpg">
         <source>WEBP to JPG</source>
+        <target>WEBP z JPG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

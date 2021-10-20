@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.3] (2021-10-20)
+
+**Fixed issues:**
+
+- [#3560] Harden the template locator against failing DB connections ([m-vo])
+- [#3583] Fix the regex for the static URL fields ([leofeyer])
+- [#3576] Do not boot the Contao framework during cache warmup ([m-vo])
+- [#3559] Do not throw an exception if a theme path contains an underscore ([m-vo])
+- [#3577] Handle invalid accept-language headers ([leofeyer])
+- [#3574] Correctly format the locale for legacy requests ([aschempp])
+- [#3552] Always set the _locale attribute from the page language ([aschempp])
+
 ## [4.12.2] (2021-10-05)
 
 **Fixed issues:**
@@ -155,6 +167,7 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.3]: https://github.com/contao/contao/releases/tag/4.12.3
 [4.12.2]: https://github.com/contao/contao/releases/tag/4.12.2
 [4.12.1]: https://github.com/contao/contao/releases/tag/4.12.1
 [4.12.0]: https://github.com/contao/contao/releases/tag/4.12.0
@@ -174,6 +187,13 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
+[#3560]: https://github.com/contao/contao/pull/3560
+[#3583]: https://github.com/contao/contao/pull/3583
+[#3576]: https://github.com/contao/contao/pull/3576
+[#3559]: https://github.com/contao/contao/pull/3559
+[#3577]: https://github.com/contao/contao/pull/3577
+[#3574]: https://github.com/contao/contao/pull/3574
+[#3552]: https://github.com/contao/contao/pull/3552
 [#3544]: https://github.com/contao/contao/pull/3544
 [#3536]: https://github.com/contao/contao/pull/3536
 [#3537]: https://github.com/contao/contao/pull/3537
