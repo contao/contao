@@ -107,6 +107,7 @@
         "twig/twig": "^3.0",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
+        "webfactory/slimdump": "^1.12",
         "webmozart/path-util": "^2.2",
         "wikimedia/less.php": "^1.7"
     },

@@ -22,6 +22,10 @@ services:
         arguments:
             - '@Contao\CoreBundle\Cron\Cron'
 
+    Contao\CoreBundle\Command\DatabaseDumpCommand:
+        arguments:
+            - '@database_connection'
+
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
