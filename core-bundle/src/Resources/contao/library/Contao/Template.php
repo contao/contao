@@ -14,6 +14,7 @@ use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
+use Webmozart\PathUtil\Url;
 
 /**
  * Parses and outputs template files
@@ -400,6 +401,12 @@ abstract class Template extends Controller
 	public function asset($path, $packageName = null)
 	{
 		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+		if ($request !== null)
+		{
+			return Url::makeRelative($url, $request->getBasePath());
+		}
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
 		return ltrim($url, '/');
