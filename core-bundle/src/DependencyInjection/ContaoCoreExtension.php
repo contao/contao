@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
-use Contao\CoreBundle\Command\DatabaseDumpCommand;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
@@ -96,7 +96,7 @@ class ContaoCoreExtension extends Extension
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
-        $this->handleDatabaseDumpCommand($config, $container);
+        $this->handleDatabaseDumper($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -302,14 +302,14 @@ class ContaoCoreExtension extends Extension
         }
     }
 
-    private function handleDatabaseDumpCommand(array $config, ContainerBuilder $container): void
+    private function handleDatabaseDumper(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(DatabaseDumpCommand::class)) {
+        if (!$container->hasDefinition(DatabaseDumper::class)) {
             return;
         }
 
-        $dumpDbCommand = $container->getDefinition(DatabaseDumpCommand::class);
-        $dumpDbCommand->replaceArgument(2, $config['database']['dump']['ignore_tables']);
+        $dbDumper = $container->getDefinition(DatabaseDumper::class);
+        $dbDumper->replaceArgument(2, $config['database']['dump']['ignore_tables']);
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

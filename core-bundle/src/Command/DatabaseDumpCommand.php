@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -10,20 +12,13 @@
 
 namespace Contao\CoreBundle\Command;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\Schema\Table;
+use Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Webfactory\Slimdump\Config\Config;
-use Webfactory\Slimdump\Config\ConfigBuilder;
-use Webfactory\Slimdump\DumpTask;
 
 /**
  * Dumps the database.
@@ -34,15 +29,11 @@ class DatabaseDumpCommand extends Command
 {
     protected static $defaultName = 'contao:database:dump';
 
-    private Connection $connection;
-    private string $projectDir;
-    private array $tablesToIgnore;
+    private DatabaseDumper $databaseDumper;
 
-    public function __construct(Connection $connection, string $projectDir, array $tablesToIgnore)
+    public function __construct(DatabaseDumper $databaseDumper)
     {
-        $this->connection = $connection;
-        $this->projectDir = $projectDir;
-        $this->tablesToIgnore = $tablesToIgnore;
+        $this->databaseDumper = $databaseDumper;
 
         parent::__construct();
     }
@@ -51,91 +42,43 @@ class DatabaseDumpCommand extends Command
     {
         $this
             ->setAliases(['contao:db:dump'])
-            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump.', sprintf('%s/var/db_dump_%s.sql.gz', $this->projectDir, date('dmY')))
-            ->addOption('buffer-size', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
-            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
-            ->setDescription('Dumps an database to a given target file.');
+            ->addArgument('targetPath', InputArgument::OPTIONAL, 'The path to the SQL dump.')
+            ->addOption('bufferSize', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
+            ->addOption('ignoreTables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
+            ->setDescription('Dumps an database to a given target file.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $file = $input->getArgument('file');
-        $bufferSize = $this->parseBufferSize($input->getOption('buffer-size') ?: '100MB');
-        $tablesToIgnore = $input->getOption('ignore-tables') ? explode(',', $input->getOption('ignore-tables')) : $this->tablesToIgnore;
-        $config = $this->createConfig($tablesToIgnore);
-        $enableGzCompression = strcasecmp(substr($file, -3), '.gz') === 0;
-        $handler = fopen($file, 'w');
-        $deflateContext = $enableGzCompression ? deflate_init(ZLIB_ENCODING_GZIP, ['level' => 9]) : null;
+        $config = $this->databaseDumper->createDefaultConfig();
 
-        $output = $this->getOutput($handler, $deflateContext);
-
-        $dumptask = new DumpTask($this->connection, $config, true, true, $bufferSize, $output);
-        $dumptask->dump();
-
-        if ($deflateContext) {
-            fwrite($handler, deflate_add($deflateContext, '', ZLIB_FINISH));
+        if ($targetPath = $input->getArgument('targetPath')) {
+            $config = $config->withTargetPath($targetPath);
         }
 
-        fclose($handler);
+        if ($bufferSize = $input->getOption('bufferSize')) {
+            $bufferSize = $this->parseBufferSize($bufferSize);
+            $config = $config->withBufferSize($bufferSize);
+        }
 
-        $io->success(sprintf('Successfully created an SQL dump while ignoring following tables: %s.', implode(', ', $tablesToIgnore)));
+        if ($tablesToIgnore = $input->getOption('ignoreTables')) {
+            $config = $config->withTablesToIgnore(explode(',', $tablesToIgnore));
+        }
+
+        $this->databaseDumper->dump($config);
+
+        $io->success(
+            sprintf(
+                'Successfully created an SQL dump at "%s" while ignoring following tables: %s.',
+                $config->getTargetPath(),
+                implode(', ', $config->getTablesToIgnore())
+            )
+        );
 
         return 0;
-    }
-
-    private function createConfig(array $tablesToIgnore = []): Config
-    {
-        $tables = $this->connection->getSchemaManager()->listTables();
-        $tableNames = array_map(function(Table $table) {
-            return $table->getName();
-        }, $tables);
-
-        $tableNames = array_diff($tableNames, $tablesToIgnore);
-
-        $doc = new \DOMDocument();
-        $slimDump = $doc->createElement('slimdump');
-
-        foreach ($tableNames as $tableName) {
-            $table = $doc->createElement('table');
-            $table->setAttribute('name', $tableName);
-            $table->setAttribute('dump', 'full');
-            $slimDump->appendChild($table);
-        }
-
-        $doc->appendChild($slimDump);
-
-        return ConfigBuilder::createFromXmlString($doc->saveXML());
-    }
-
-    private function getOutput($handler, $deflateContext = null): OutputInterface
-    {
-        $output = new class($handler) extends StreamOutput {
-            private $deflateContext = null;
-
-            public function setDeflateContext($deflateContext)
-            {
-                $this->deflateContext = $deflateContext;
-            }
-
-            protected function doWrite(string $message, bool $newline)
-            {
-                if ($newline) {
-                    $message .= \PHP_EOL;
-                }
-
-                if ($this->deflateContext) {
-                    $message = deflate_add($this->deflateContext, $message, ZLIB_NO_FLUSH);
-                }
-
-                parent::doWrite($message, false);
-            }
-        };
-
-        $output->setDeflateContext($deflateContext);
-
-        return $output;
     }
 
     private function parseBufferSize(string $bufferSize): ?int
