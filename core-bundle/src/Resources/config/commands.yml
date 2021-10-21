@@ -21,7 +21,7 @@ services:
     Contao\CoreBundle\Command\CronCommand:
         arguments:
             - '@Contao\CoreBundle\Cron\Cron'
-            -
+
     Contao\CoreBundle\Command\DatabaseImportCommand:
         arguments:
             - '@database_connection'
