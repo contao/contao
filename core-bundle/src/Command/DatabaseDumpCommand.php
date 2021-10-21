@@ -42,9 +42,9 @@ class DatabaseDumpCommand extends Command
     {
         $this
             ->setAliases(['contao:db:dump'])
-            ->addArgument('targetPath', InputArgument::OPTIONAL, 'The path to the SQL dump.')
-            ->addOption('bufferSize', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
-            ->addOption('ignoreTables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
+            ->addArgument('target-path', InputArgument::OPTIONAL, 'The path to the SQL dump.')
+            ->addOption('buffer-size', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
+            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
             ->setDescription('Dumps an database to a given target file.')
         ;
     }
@@ -55,16 +55,16 @@ class DatabaseDumpCommand extends Command
 
         $config = $this->databaseDumper->createDefaultConfig();
 
-        if ($targetPath = $input->getArgument('targetPath')) {
+        if ($targetPath = $input->getArgument('target-path')) {
             $config = $config->withTargetPath($targetPath);
         }
 
-        if ($bufferSize = $input->getOption('bufferSize')) {
+        if ($bufferSize = $input->getOption('buffer-size')) {
             $bufferSize = $this->parseBufferSize($bufferSize);
             $config = $config->withBufferSize($bufferSize);
         }
 
-        if ($tablesToIgnore = $input->getOption('ignoreTables')) {
+        if ($tablesToIgnore = $input->getOption('ignore-tables')) {
             $config = $config->withTablesToIgnore(explode(',', $tablesToIgnore));
         }
 
