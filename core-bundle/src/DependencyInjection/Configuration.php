@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
+                ->append($this->addDatabaseNode())
             ->end()
         ;
 
@@ -561,6 +562,26 @@ class Configuration implements ConfigurationInterface
                     ->example('develop')
                     ->defaultValue('')
                 ->end()
+            ->end()
+        ;
+    }
+
+    private function addDatabaseNode(): NodeDefinition
+    {
+        return (new TreeBuilder('database'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('dump')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->arrayNode('ignore_tables')
+                                ->info('These tables are ignored by default when running the contao:database:dump command without any options.')
+                                ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
+                                ->scalarPrototype()->end()
+                            ->end()
+                        ->end()
+                    ->end()
             ->end()
         ;
     }

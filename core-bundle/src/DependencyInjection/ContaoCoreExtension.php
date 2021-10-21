@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Command\DatabaseDumpCommand;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
@@ -95,6 +96,7 @@ class ContaoCoreExtension extends Extension
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
+        $this->handleDatabaseDumpCommand($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -298,6 +300,16 @@ class ContaoCoreExtension extends Extension
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
         }
+    }
+
+    private function handleDatabaseDumpCommand(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition(DatabaseDumpCommand::class)) {
+            return;
+        }
+
+        $dumpDbCommand = $container->getDefinition(DatabaseDumpCommand::class);
+        $dumpDbCommand->replaceArgument(2, $config['database']['dump']['ignore_tables']);
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

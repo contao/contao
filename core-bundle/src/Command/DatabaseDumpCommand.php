@@ -36,11 +36,13 @@ class DatabaseDumpCommand extends Command
 
     private Connection $connection;
     private string $projectDir;
+    private array $tablesToIgnore;
 
-    public function __construct(Connection $connection, string $projectDir)
+    public function __construct(Connection $connection, string $projectDir, array $tablesToIgnore)
     {
         $this->connection = $connection;
         $this->projectDir = $projectDir;
+        $this->tablesToIgnore = $tablesToIgnore;
 
         parent::__construct();
     }
@@ -61,7 +63,7 @@ class DatabaseDumpCommand extends Command
 
         $file = $input->getArgument('file');
         $bufferSize = $this->parseBufferSize($input->getOption('buffer-size') ?: '100MB');
-        $tablesToIgnore = $input->getOption('ignore-tables') ? explode(',', $input->getOption('ignore-tables')) : ['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term']; // TODO: Make this a bundle config (e.g. contao.db.dump.ignoreTable or something similar)
+        $tablesToIgnore = $input->getOption('ignore-tables') ? explode(',', $input->getOption('ignore-tables')) : $this->tablesToIgnore;
         $config = $this->createConfig($tablesToIgnore);
         $enableGzCompression = strcasecmp(substr($file, -3), '.gz') === 0;
         $handler = fopen($file, 'w');

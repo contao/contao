@@ -30,6 +30,7 @@ services:
         arguments:
             - '@database_connection'
             - '%kernel.project_dir%'
+            - [] # Set by extension
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
