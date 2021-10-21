@@ -29,6 +29,7 @@ services:
     Contao\CoreBundle\Command\DatabaseDumpCommand:
         arguments:
             - '@database_connection'
+            - '%kernel.project_dir%'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand

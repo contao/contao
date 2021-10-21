@@ -35,10 +35,12 @@ class DatabaseDumpCommand extends Command
     protected static $defaultName = 'contao:database:dump';
 
     private Connection $connection;
+    private string $projectDir;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, string $projectDir)
     {
         $this->connection = $connection;
+        $this->projectDir = $projectDir;
 
         parent::__construct();
     }
@@ -47,7 +49,7 @@ class DatabaseDumpCommand extends Command
     {
         $this
             ->setAliases(['contao:db:dump'])
-            ->addArgument('file', InputArgument::REQUIRED, 'The path to the SQL dump.')
+            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump.', sprintf('%s/var/db_dump_%s.sql.gz', $this->projectDir, date('dmY')))
             ->addOption('buffer-size', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
             ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
             ->setDescription('Dumps an database to a given target file.');
