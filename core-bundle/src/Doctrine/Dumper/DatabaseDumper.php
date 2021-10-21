@@ -37,7 +37,7 @@ class DatabaseDumper
 
     public function createDefaultConfig(): Config
     {
-        $defaultFilename = sprintf('%s/var/db_dump_%s.sql.gz', $this->projectDir, date('dmY'));
+        $defaultFilename = sprintf('%s/var/cache/backups/db_dump_%s.sql.gz', $this->projectDir, date('dmY'));
 
         return (new Config($defaultFilename))
             ->withTablesToIgnore($this->tablesToIgnore)

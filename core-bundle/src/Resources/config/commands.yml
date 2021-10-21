@@ -67,6 +67,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
+            - '@Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper'
             - '@?contao.installer'
 
     contao.command.resize_images:
