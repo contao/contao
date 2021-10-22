@@ -24,7 +24,7 @@ services:
 
     Contao\CoreBundle\Command\DatabaseImportCommand:
         arguments:
-            - '@database_connection'
+            - '@Contao\CoreBundle\Doctrine\Dumper\Dumper'
 
     Contao\CoreBundle\Command\DatabaseDumpCommand:
         arguments:

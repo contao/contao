@@ -10,21 +10,20 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Doctrine\Dumper;
+namespace Contao\CoreBundle\Doctrine\Dumper\Config;
 
-class Config
+abstract class AbstractConfig
 {
     private array $tablesToIgnore = [];
-    private string $targetPath;
+    private string $filePath;
     private bool $gzCompression;
-    private int $bufferSize = 104857600; // 100 MB
 
-    public function __construct(string $targetPath)
+    public function __construct(string $filePath)
     {
-        $this->targetPath = $targetPath;
+        $this->filePath = $filePath;
 
-        // Enable gz compression by default if target path ends on .gz
-        $this->gzCompression = 0 === strcasecmp(substr($targetPath, -3), '.gz');
+        // Enable gz compression by default if path ends on .gz
+        $this->gzCompression = 0 === strcasecmp(substr($filePath, -3), '.gz');
     }
 
     public function getTablesToIgnore(): array
@@ -32,27 +31,14 @@ class Config
         return $this->tablesToIgnore;
     }
 
-    public function getTargetPath(): string
+    public function getFilePath(): string
     {
-        return $this->targetPath;
+        return $this->filePath;
     }
 
     public function isGzCompressionEnabled(): bool
     {
         return $this->gzCompression;
-    }
-
-    public function getBufferSize(): int
-    {
-        return $this->bufferSize;
-    }
-
-    public function withBufferSize(int $bufferSizeInBytes): self
-    {
-        $new = clone $this;
-        $new->bufferSize = $bufferSizeInBytes;
-
-        return $new;
     }
 
     public function withGzCompression(bool $enable): self
@@ -71,10 +57,10 @@ class Config
         return $new;
     }
 
-    public function withTargetPath(string $targetPath): self
+    public function withFilePath(string $filePath): self
     {
         $new = clone $this;
-        $new->targetPath = $targetPath;
+        $new->filePath = $filePath;
 
         return $new;
     }

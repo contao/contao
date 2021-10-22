@@ -96,10 +96,10 @@ class MigrateCommand extends Command
             return;
         }
 
-        $config = $this->databaseDumper->createDefaultConfig();
+        $config = $this->databaseDumper->createDefaultDumpConfig();
         $this->io->info(sprintf(
             'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-            $config->getTargetPath()
+            $config->getFilePath()
         ));
         $this->databaseDumper->dump($config);
     }

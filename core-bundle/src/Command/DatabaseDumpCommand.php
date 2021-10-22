@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Doctrine\Dumper\Dumper;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use Contao\CoreBundle\Doctrine\Dumper\DumperException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,26 +23,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * @internal
  */
-class DatabaseDumpCommand extends Command
+class DatabaseDumpCommand extends AbstractDatabaseCommand
 {
     protected static $defaultName = 'contao:database:dump';
 
-    private Dumper $databaseDumper;
-
-    public function __construct(Dumper $databaseDumper)
-    {
-        $this->databaseDumper = $databaseDumper;
-
-        parent::__construct();
-    }
-
     protected function configure(): void
     {
+        parent::configure();
+
         $this
-            ->setAliases(['contao:db:dump'])
-            ->addArgument('target-path', InputArgument::OPTIONAL, 'The path to the SQL dump.')
             ->addOption('buffer-size', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
-            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
             ->setDescription('Dumps an database to a given target file.')
         ;
     }
@@ -53,27 +41,26 @@ class DatabaseDumpCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $config = $this->databaseDumper->createDefaultConfig();
-
-        if ($targetPath = $input->getArgument('target-path')) {
-            $config = $config->withTargetPath($targetPath);
-        }
+        $config = $this->databaseDumper->createDefaultImportConfig();
+        $config = $this->handleCommonConfig($input, $config);
 
         if ($bufferSize = $input->getOption('buffer-size')) {
             $bufferSize = $this->parseBufferSize($bufferSize);
             $config = $config->withBufferSize($bufferSize);
         }
 
-        if ($tablesToIgnore = $input->getOption('ignore-tables')) {
-            $config = $config->withTablesToIgnore(explode(',', $tablesToIgnore));
-        }
+        try {
+            $this->databaseDumper->dump($config);
+        } catch (DumperException $e) {
+            $io->error($e->getMessage());
 
-        $this->databaseDumper->dump($config);
+            return 1;
+        }
 
         $io->success(
             sprintf(
                 'Successfully created an SQL dump at "%s" while ignoring following tables: %s.',
-                $config->getTargetPath(),
+                $config->getFilePath(),
                 implode(', ', $config->getTablesToIgnore())
             )
         );
