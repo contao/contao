@@ -401,15 +401,22 @@ abstract class Template extends Controller
 	public function asset($path, $packageName = null)
 	{
 		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
+
+		$basePath = '/';
 		$request = System::getContainer()->get('request_stack')->getMasterRequest();
 
 		if ($request !== null)
 		{
-			return Url::makeRelative($url, $request->getBasePath());
+			$basePath = $request->getBasePath().'/';
+		}
+
+		if (0 === strncmp($url, $basePath, strlen($basePath)))
+		{
+			return substr($url, strlen($basePath));
 		}
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
-		return ltrim($url, '/');
+		return $url;
 	}
 
 	/**
