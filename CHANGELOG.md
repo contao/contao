@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.22] (2021-10-20)
+
+**Fixed issues:**
+
+- [#3585] Fix link_url::back insert tag backwards compatibility ([ausi])
+- [#3527] Update the Facebook share link ([aschempp])
+- [#3134] Use the driver from the database URL if there is one ([aschempp])
+- [#3571] Correctly check for tinyMCE ([aschempp])
+- [#3548] Fix pagination item calculation for an even number of links ([SeverinGloeckle])
+
 ## [4.9.21] (2021-10-05)
 
 **New features:**
@@ -744,6 +754,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.22]: https://github.com/contao/contao/releases/tag/4.9.22
 [4.9.21]: https://github.com/contao/contao/releases/tag/4.9.21
 [4.9.20]: https://github.com/contao/contao/releases/tag/4.9.20
 [4.9.19]: https://github.com/contao/contao/releases/tag/4.9.19
@@ -803,6 +814,11 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#3585]: https://github.com/contao/contao/pull/3585
+[#3527]: https://github.com/contao/contao/pull/3527
+[#3134]: https://github.com/contao/contao/pull/3134
+[#3571]: https://github.com/contao/contao/pull/3571
+[#3548]: https://github.com/contao/contao/pull/3548
 [#3352]: https://github.com/contao/contao/pull/3352
 [#3543]: https://github.com/contao/contao/pull/3543
 [#3496]: https://github.com/contao/contao/pull/3496

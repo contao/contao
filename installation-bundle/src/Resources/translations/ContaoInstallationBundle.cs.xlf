@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="12" resname="confirmation">
         <source>Confirm password</source>
+        <target>Potvrdit heslo</target>
       </trans-unit>
       <trans-unit id="13" resname="save_password">
         <source>Save password</source>
@@ -314,6 +315,7 @@
       </trans-unit>
       <trans-unit id="79" resname="unsupported_collation_explain">
         <source>The configured collation &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <target>Nastavenou koalaci &lt;code&gt;%s&lt;/code&gt;nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou znakovou sazbu a koalaci v souboru &lt;code&gt;app/config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="80" resname="unsupported_engine">
         <source>The configured database engine is not supported!</source>
@@ -321,12 +323,15 @@
       </trans-unit>
       <trans-unit id="81" resname="unsupported_engine_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; is not available on your server. Please install it (recommended) or configure a different database engine in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <target>Nastavenou databázi &lt;code&gt;%s&lt;/code&gt; nelze použít na Vašem serveru. Prosím nainstalujte (doporučeno) nebo nastavte jinou databázi v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="82" resname="engine_mismatch">
         <source>Invalid combination of database engine and collation!</source>
+        <target>Neplatná kombinace formy databáze a koalace!</target>
       </trans-unit>
       <trans-unit id="83" resname="engine_mismatch_explain">
         <source>The configured database engine &lt;code&gt;%s&lt;/code&gt; does not support utf8mb4. Please use InnoDB instead (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <target>Nastavená databanka &lt;code&gt;%s&lt;/code&gt; nepodporouje utf8mb4. Použijte místo toho InnoDB a nastavte použití jiného kódování znaků a koalic v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="84" resname="innodb_large_prefix">
         <source>The innodb_large_prefix option is not enabled!</source>
@@ -334,6 +339,7 @@
       </trans-unit>
       <trans-unit id="85" resname="innodb_large_prefix_explain">
         <source>The &lt;code&gt;innodb_large_prefix&lt;/code&gt; option is not enabled on your server. Please enable it (recommended) or configure a different character set and collation in the &lt;code&gt;config/config.yml&lt;/code&gt; file.</source>
+        <target>Funkce &lt;code&gt;innodb_large_prefix&lt;/code&gt;Prosím povolte (doporučeno) nebo nastavte jinou znakovou sazbu a koalaci v souboru &lt;code&gt;config/config.yml&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="86" resname="innodb_additional">
         <source>InnoDB is not configured properly!</source>
@@ -346,6 +352,14 @@
       <trans-unit id="88" resname="misconfigured_database_url_explain">
         <source>Could not connect to the database using the connection URL found in the &lt;code&gt;DATABASE_URL&lt;/code&gt; environment variable.</source>
         <target>Nelze se přihlásit k databance použitím cesty &lt;code&gt;DATABASE_URL&lt;/code&gt; uvedené v nastavovacím souboru.</target>
+      </trans-unit>
+      <trans-unit id="89" resname="strict_sql_mode">
+        <source>Your database server is not running in strict mode!</source>
+        <target>Váš server databáze neběží v přísném režimu!</target>
+      </trans-unit>
+      <trans-unit id="90" resname="strict_sql_mode_explain">
+        <source>Running MySQL in non-strict mode can cause corrupt or truncated data. Please enable the strict mode either in your &lt;code&gt;my.cnf&lt;/code&gt; file or configure the connection options in the &lt;code&gt;config/config.yml&lt;/code&gt; file as follows:</source>
+        <target>Běh MySQL bez přísného režimu může způsobit poničení nebo ztrátu dat. Aktivujte přísný režim ve Vaší &lt;code&gt;config.yml&lt;/code&gt; a nastavte možnosti připojení následujícím kódem:</target>
       </trans-unit>
     </body>
   </file>
