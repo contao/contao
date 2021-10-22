@@ -401,7 +401,7 @@ abstract class Template extends Controller
 	public function asset($path, $packageName = null)
 	{
 		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
+		$request = System::getContainer()->get('request_stack')->getMasterRequest();
 
 		if ($request !== null)
 		{
