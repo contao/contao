@@ -69,7 +69,9 @@ class MigrateCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        $this->backup($input);
+        if (!$input->getOption('no-backup')) {
+            $this->backup($input);
+        }
 
         if ('ndjson' !== $input->getOption('format')) {
             return $this->executeCommand($input);
@@ -90,12 +92,8 @@ class MigrateCommand extends Command
         return 1;
     }
 
-    private function backup(InputInterface $input): void
+    private function backup(): void
     {
-        if ($input->getOption('no-backup')) {
-            return;
-        }
-
         $config = $this->databaseDumper->createDefaultDumpConfig();
         $this->io->info(sprintf(
             'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
