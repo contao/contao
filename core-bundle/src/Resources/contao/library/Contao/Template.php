@@ -406,12 +406,12 @@ abstract class Template extends Controller
 
 		if ($request !== null)
 		{
-			$basePath = $request->getBasePath().'/';
+			$basePath = $request->getBasePath() . '/';
 		}
 
-		if (0 === strncmp($url, $basePath, strlen($basePath)))
+		if (0 === strncmp($url, $basePath, \strlen($basePath)))
 		{
-			return substr($url, strlen($basePath));
+			return substr($url, \strlen($basePath));
 		}
 
 		// Contao paths are relative to the <base> tag, so remove leading slashes
