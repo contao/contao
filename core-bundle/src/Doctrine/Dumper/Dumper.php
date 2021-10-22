@@ -70,6 +70,7 @@ class Dumper
 
         $output = $this->getDumperOutput($handle, $deflateContext);
         $output->writeln($this->getDumpHeader());
+        $output->writeln('-- Generated at ' . (new \DateTime())->format(\DateTimeInterface::ISO8601));
 
         try {
             $dumptask = new DumpTask($this->connection, $this->createSlimDumpConfig($config), true, true, $config->getBufferSize(), $output);
