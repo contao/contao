@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper;
+use Contao\CoreBundle\Doctrine\Dumper\Dumper;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -36,11 +36,11 @@ class MigrateCommand extends Command
     private FileLocator $fileLocator;
     private string $projectDir;
     private ContaoFramework $framework;
-    private DatabaseDumper $databaseDumper;
+    private Dumper $databaseDumper;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, DatabaseDumper $databaseDumper, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Dumper $databaseDumper, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;

@@ -28,7 +28,7 @@ services:
 
     Contao\CoreBundle\Command\DatabaseDumpCommand:
         arguments:
-            - '@Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper'
+            - '@Contao\CoreBundle\Doctrine\Dumper\Dumper'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
@@ -67,7 +67,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
-            - '@Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper'
+            - '@Contao\CoreBundle\Doctrine\Dumper\Dumper'
             - '@?contao.installer'
 
     contao.command.resize_images:

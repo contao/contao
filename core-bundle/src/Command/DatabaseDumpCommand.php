@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper;
+use Contao\CoreBundle\Doctrine\Dumper\Dumper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,9 +29,9 @@ class DatabaseDumpCommand extends Command
 {
     protected static $defaultName = 'contao:database:dump';
 
-    private DatabaseDumper $databaseDumper;
+    private Dumper $databaseDumper;
 
-    public function __construct(DatabaseDumper $databaseDumper)
+    public function __construct(Dumper $databaseDumper)
     {
         $this->databaseDumper = $databaseDumper;
 

@@ -268,7 +268,7 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
-    Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper:
+    Contao\CoreBundle\Doctrine\Dumper\Dumper:
         arguments:
             - '@database_connection'
             - '%kernel.project_dir%'

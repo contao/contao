@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
-use Contao\CoreBundle\Doctrine\Dumper\DatabaseDumper;
+use Contao\CoreBundle\Doctrine\Dumper\Dumper;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
@@ -304,11 +304,11 @@ class ContaoCoreExtension extends Extension
 
     private function handleDatabaseDumper(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(DatabaseDumper::class)) {
+        if (!$container->hasDefinition(Dumper::class)) {
             return;
         }
 
-        $dbDumper = $container->getDefinition(DatabaseDumper::class);
+        $dbDumper = $container->getDefinition(Dumper::class);
         $dbDumper->replaceArgument(2, $config['database']['dump']['ignore_tables']);
     }
 

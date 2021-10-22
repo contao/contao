@@ -24,7 +24,7 @@ use Webfactory\Slimdump\DumpTask;
  * @internal
  * @final
  */
-class DatabaseDumper
+class Dumper
 {
     private Connection $connection;
 
