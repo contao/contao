@@ -40,6 +40,7 @@ class ContaoContextTest extends TestCase
     public function testReturnsTheBasePathIfThePageDoesNotDefineIt(): void
     {
         $page = $this->getPageWithDetails();
+
         $GLOBALS['objPage'] = $page;
 
         $request = Request::create(
