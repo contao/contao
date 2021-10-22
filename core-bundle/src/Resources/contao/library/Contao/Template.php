@@ -14,7 +14,6 @@ use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use MatthiasMullie\Minify;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\VarDumper\VarDumper;
-use Webmozart\PathUtil\Url;
 
 /**
  * Parses and outputs template files
