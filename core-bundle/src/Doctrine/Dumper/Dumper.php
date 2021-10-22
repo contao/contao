@@ -179,13 +179,11 @@ class Dumper
 
     /**
      * @throws DumperException
-     *
-     * @return mixed
      */
-    private function executeWrappedQuery(string $query)
+    private function executeWrappedQuery(string $query): void
     {
         try {
-            return $this->connection->executeQuery($query);
+            $this->connection->executeQuery($query);
         } catch (Exception $e) {
             throw new DumperException($e->getMessage());
         }
