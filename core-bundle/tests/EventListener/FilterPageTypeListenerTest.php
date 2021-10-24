@@ -126,9 +126,7 @@ class FilterPageTypeListenerTest extends TestCase
     {
         $activeRecord = array_filter(
             compact('id', 'pid'),
-            static function ($v): bool {
-                return null !== $v;
-            }
+            static fn ($v): bool => null !== $v
         );
 
         /** @var DataContainer&MockObject */

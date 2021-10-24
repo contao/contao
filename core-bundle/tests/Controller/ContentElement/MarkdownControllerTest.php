@@ -14,8 +14,10 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
+use Contao\Input;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
@@ -43,9 +45,10 @@ class MarkdownControllerTest extends ContaoTestCase
     {
         $expectedHtml = <<<'HTML'
             <h1>Headline</h1>
-
-            I might be evil.
-            <video controls>
+            &lt;iframe src&#61;&#34;https://example.com&#34;&#62;&lt;/iframe&#62;
+            &lt;script&#62;I might be evil.&lt;/script&#62;
+            <img>
+            <video controls="">
                 <source src="contao.mp4" type="video/mp4">
             </video>
             <p>Foobar.</p>
@@ -61,9 +64,8 @@ class MarkdownControllerTest extends ContaoTestCase
             # Headline
 
             <iframe src="https://example.com"></iframe>
-
             <script>I might be evil.</script>
-
+            <img onerror="I might be evil">
             <video controls>
                 <source src="contao.mp4" type="video/mp4">
             </video>
@@ -126,6 +128,10 @@ class MarkdownControllerTest extends ContaoTestCase
                 [$this->equalTo('content'), $this->equalTo($expectedMarkdown)],
             )
         ;
+
+        if (!isset($frameworkAdapters[Input::class])) {
+            $frameworkAdapters[Input::class] = new Adapter(Input::class);
+        }
 
         $framework = $this->mockContaoFramework($frameworkAdapters);
         $framework

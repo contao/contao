@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inheritance;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
 use Twig\Token;
-use Twig\TokenParser\IncludeTokenParser;
+use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * This parser is a drop in replacement for @\Twig\TokenParser\IncludeTokenParser
@@ -23,12 +26,9 @@ use Twig\TokenParser\IncludeTokenParser;
  *
  * @experimental
  */
-final class DynamicIncludeTokenParser extends IncludeTokenParser
+final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
+    private TemplateHierarchyInterface $hierarchy;
 
     public function __construct(TemplateHierarchyInterface $hierarchy)
     {
@@ -40,9 +40,15 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
         $expr = $this->parser->getExpressionParser()->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
-        $this->handleContaoIncludes($expr);
+        // Handle Contao includes
+        $this->traverseAndAdjustTemplateNames($expr);
 
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+    }
+
+    public function getTag(): string
+    {
+        return 'include';
     }
 
     /**
@@ -51,29 +57,71 @@ final class DynamicIncludeTokenParser extends IncludeTokenParser
      */
     public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
     {
-        if (null === ($shortNameOrIdentifier = TokenParserHelper::getContaoTemplate($name))) {
+        $parts = ContaoTwigUtil::parseContaoName($name);
+
+        if ('Contao' !== ($parts[0] ?? null)) {
             return $name;
         }
 
         try {
-            return $hierarchy->getFirst($shortNameOrIdentifier);
+            return $hierarchy->getFirst($parts[1] ?? '');
         } catch (\LogicException $e) {
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
     }
 
-    private function handleContaoIncludes(Node $expr): void
+    private function parseArguments(): array
     {
-        TokenParserHelper::traverseConstantExpressions(
-            $expr,
-            function (Node $node): void {
-                $name = (string) $node->getAttribute('value');
-                $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
+        $stream = $this->parser->getStream();
 
-                if ($name !== $adjustedName) {
-                    $node->setAttribute('value', $adjustedName);
+        $ignoreMissing = false;
+
+        if ($stream->nextIf(Token::NAME_TYPE, 'ignore')) {
+            $stream->expect(Token::NAME_TYPE, 'missing');
+
+            $ignoreMissing = true;
+        }
+
+        $variables = null;
+
+        if ($stream->nextIf(Token::NAME_TYPE, 'with')) {
+            $variables = $this->parser->getExpressionParser()->parseExpression();
+        }
+
+        $only = false;
+
+        if ($stream->nextIf(Token::NAME_TYPE, 'only')) {
+            $only = true;
+        }
+
+        $stream->expect(Token::BLOCK_END_TYPE);
+
+        return [$variables, $only, $ignoreMissing];
+    }
+
+    private function traverseAndAdjustTemplateNames(Node $node): void
+    {
+        if (!$node instanceof ConstantExpression) {
+            foreach ($node as $child) {
+                try {
+                    $this->traverseAndAdjustTemplateNames($child);
+                } catch (\LogicException $e) {
+                    // Allow missing templates if they are listed in an array
+                    // like "{% include ['@Contao/missing', '@Contao/existing'] %}"
+                    if (!$node instanceof ArrayExpression) {
+                        throw $e;
+                    }
                 }
             }
-        );
+
+            return;
+        }
+
+        $name = (string) $node->getAttribute('value');
+        $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
+
+        if ($name !== $adjustedName) {
+            $node->setAttribute('value', $adjustedName);
+        }
     }
 }

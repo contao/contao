@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\Exception\LockedException;
-use Patchwork\Utf8;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
@@ -54,7 +53,7 @@ class ModuleLogin extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['login'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['login'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -93,9 +92,18 @@ class ModuleLogin extends Module
 		global $objPage;
 
 		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$exception = null;
+		$lastUsername = '';
 
-		/** @var AuthenticationException|null $exception */
-		$exception = $container->get('security.authentication_utils')->getLastAuthenticationError();
+		// Only call the authentication utils if there is an active session to prevent starting an empty session
+		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
+		{
+			$authUtils = $container->get('security.authentication_utils');
+			$exception = $authUtils->getLastAuthenticationError();
+			$lastUsername = $authUtils->getLastUsername();
+		}
+
 		$authorizationChecker = $container->get('security.authorization_checker');
 
 		if ($authorizationChecker->isGranted('ROLE_MEMBER'))
@@ -171,7 +179,6 @@ class ModuleLogin extends Module
 		if ($authorizationChecker->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS'))
 		{
 			// Dispatch 2FA form event to prepare 2FA providers
-			$request = $container->get('request_stack')->getCurrentRequest();
 			$token = $container->get('security.token_storage')->getToken();
 			$event = new TwoFactorAuthenticationEvent($request, $token);
 			$container->get('event_dispatcher')->dispatch($event, TwoFactorAuthenticationEvents::FORM);
@@ -188,7 +195,7 @@ class ModuleLogin extends Module
 		$this->Template->username = $GLOBALS['TL_LANG']['MSC']['username'];
 		$this->Template->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['login']);
-		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($container->get('security.authentication_utils')->getLastUsername()));
+		$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($lastUsername));
 		$this->Template->autologin = $this->autologin;
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}

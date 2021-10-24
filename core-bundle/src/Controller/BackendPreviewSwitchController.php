@@ -35,49 +35,18 @@ use Twig\Error\Error as TwigError;
  * b) Provide the member usernames for the datalist
  * c) Process the switch action (i.e. log in a specific front end user).
  *
- * @Route(defaults={"_scope" = "backend"})
+ * @Route(defaults={"_scope" = "backend", "_allow_preview" = true})
  */
 class BackendPreviewSwitchController
 {
-    /**
-     * @var FrontendPreviewAuthenticator
-     */
-    private $previewAuthenticator;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var TwigEnvironment
-     */
-    private $twig;
-
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private FrontendPreviewAuthenticator $previewAuthenticator;
+    private TokenChecker $tokenChecker;
+    private Connection $connection;
+    private Security $security;
+    private TwigEnvironment $twig;
+    private CsrfTokenManagerInterface $tokenManager;
+    private string $csrfTokenName;
+    private RouterInterface $router;
 
     public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
     {
@@ -148,7 +117,7 @@ class BackendPreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
-            $frontendUsername = $request->request->get('user') ?: null;
+            $frontendUsername = $request->request->get('user');
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
@@ -170,9 +139,7 @@ class BackendPreviewSwitchController
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             $groups = array_map(
-                static function ($groupId): string {
-                    return '%"'.(int) $groupId.'"%';
-                },
+                static fn ($groupId): string => '%"'.(int) $groupId.'"%',
                 $user->amg
             );
 

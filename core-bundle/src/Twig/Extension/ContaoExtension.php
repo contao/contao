@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Extension;
 
+use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -23,7 +24,8 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
-use Contao\FrontendTemplate;
+use Contao\FrontendTemplateTrait;
+use Contao\Template;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -36,30 +38,21 @@ use Webmozart\PathUtil\Path;
  */
 final class ContaoExtension extends AbstractExtension
 {
-    /**
-     * @var Environment
-     */
-    private $environment;
-
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
-
-    /**
-     * @var array
-     */
-    private $contaoEscaperFilterRules = [];
+    private Environment $environment;
+    private TemplateHierarchyInterface $hierarchy;
+    private array $contaoEscaperFilterRules = [];
 
     public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
         $this->environment = $environment;
+        $this->hierarchy = $hierarchy;
+
+        $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
         $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', [(new ContaoEscaper()), '__invoke']);
-
-        $this->hierarchy = $hierarchy;
+        $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
+        $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
         // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
@@ -87,9 +80,7 @@ final class ContaoExtension extends AbstractExtension
             // Enables the 'contao_twig' escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
-                function () {
-                    return $this->contaoEscaperFilterRules;
-                }
+                fn () => $this->contaoEscaperFilterRules
             ),
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
@@ -170,11 +161,16 @@ final class ContaoExtension extends AbstractExtension
     {
         $template = Path::getFilenameWithoutExtension($name);
 
-        $partialTemplate = new class($template) extends FrontendTemplate {
+        $partialTemplate = new class($template) extends Template {
+            use FrontendTemplateTrait;
+            use BackendTemplateTrait;
+
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = $blocks;
-                $this->arrBlockNames = array_keys($blocks);
+                $this->arrBlocks = array_map(
+                    static fn ($block) => \is_array($block) ? $block : [$block],
+                    $blocks
+                );
             }
 
             public function parse(): string

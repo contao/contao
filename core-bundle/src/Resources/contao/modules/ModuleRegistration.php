@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
 
 /**
  * Front end module "registration".
@@ -40,7 +39,7 @@ class ModuleRegistration extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['registration'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -197,7 +196,7 @@ class ModuleRegistration extends Module
 				$arrData['eval']['unique'] = false;
 			}
 
-			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'] ?? null, '', '', $this));
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'] ?? null, $field, 'tl_member', $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
@@ -351,7 +350,7 @@ class ModuleRegistration extends Module
 			$this->Template->$k = $v;
 
 			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
-			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? $key] = $v;
+			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? ''] = $v;
 		}
 
 		$this->Template->categories = array_filter($arrGroups);

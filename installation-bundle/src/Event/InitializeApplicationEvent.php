@@ -16,10 +16,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class InitializeApplicationEvent extends Event
 {
-    /**
-     * @var string
-     */
-    private $output;
+    private ?string $output = null;
 
     /**
      * Returns the console output.

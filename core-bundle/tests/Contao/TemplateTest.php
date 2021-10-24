@@ -17,6 +17,7 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\VarDumper\VarDumper;
@@ -24,6 +25,8 @@ use Webmozart\PathUtil\Path;
 
 class TemplateTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -248,6 +251,42 @@ class TemplateTest extends TestCase
         $this->assertSame(['test' => 1], $dump);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testShowsDebugComments(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->value ?>'
+        );
+
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+
+        $sourceWithComments = "\n<!-- TEMPLATE START: templates/test_template.html5 -->\n"
+            .'test'
+            ."\n<!-- TEMPLATE END: templates/test_template.html5 -->\n";
+
+        $this->assertSame('test', $template->parse());
+        $this->assertSame($sourceWithComments, $template->setDebug(true)->parse());
+
+        $this->assertSame('test', $template->setDebug(false)->parse());
+        $this->assertSame('test', $template->setDebug()->parse());
+
+        System::getContainer()->setParameter('kernel.debug', true);
+        $GLOBALS['TL_CONFIG']['debugMode'] = true;
+
+        $this->assertSame($sourceWithComments, $template->parse());
+        $this->assertSame('test', $template->setDebug(false)->parse());
+
+        $GLOBALS['TL_CONFIG']['debugMode'] = false;
+
+        $this->expectDeprecation('%sTL_CONFIG.debugMode%s');
+
+        $this->assertSame('test', $template->setDebug()->parse());
+    }
+
     public function testFigureFunction(): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -282,5 +321,77 @@ class TemplateTest extends TestCase
         System::setContainer($container);
 
         (new FrontendTemplate())->figure(1, null);
+    }
+
+    /**
+     * @dataProvider provideBuffer
+     */
+    public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
+    {
+        $page = new \stdClass();
+        $page->minifyMarkup = false;
+
+        $GLOBALS['objPage'] = $page;
+        $GLOBALS['TL_KEYWORDS'] = '';
+
+        $template = new class($buffer) extends FrontendTemplate {
+            private ?string $testBuffer;
+
+            public function __construct(string $testBuffer)
+            {
+                $this->testBuffer = $testBuffer;
+
+                parent::__construct();
+            }
+
+            public function parse(): string
+            {
+                return $this->testBuffer;
+            }
+
+            public function testCompile(): string
+            {
+                $this->compile();
+
+                return $this->strBuffer;
+            }
+
+            public static function replaceInsertTags($strBuffer, $blnCache = true)
+            {
+                return $strBuffer; // ignore insert tags
+            }
+
+            public static function replaceDynamicScriptTags($strBuffer)
+            {
+                return $strBuffer; // ignore dynamic script tags
+            }
+        };
+
+        $this->assertSame($expectedOutput, $template->testCompile());
+
+        unset($GLOBALS['objPage'],$GLOBALS['TL_KEYWORDS']);
+    }
+
+    public function provideBuffer(): \Generator
+    {
+        yield 'plain string' => [
+            'foo bar',
+            'foo bar',
+        ];
+
+        yield 'literal insert tags are replaced' => [
+            'foo[{]bar[{]baz[}]',
+            'foo&#123;&#123;bar&#123;&#123;baz&#125;&#125;',
+        ];
+
+        yield 'literal insert tags inside script tag are not replaced' => [
+            '<script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script>',
+            '<script type="application/javascript">if (/[\[{]$/.test(foo)) {}</script>',
+        ];
+
+        yield 'multiple occurrences' => [
+            '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
+            '&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;',
+        ];
     }
 }

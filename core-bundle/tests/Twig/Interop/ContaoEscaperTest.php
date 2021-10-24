@@ -12,38 +12,40 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
+use Contao\System;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 
 class ContaoEscaperTest extends TestCase
 {
     /**
-     * @dataProvider provideInput
+     * @dataProvider provideHtmlInput
      */
-    public function testEscapesStrings($input, string $expectedOutput): void
+    public function testEscapesHtml($input, string $expectedOutput): void
     {
         $this->assertSame(
             $expectedOutput,
-            $this->invokeContaoEscaper($input, null),
+            $this->invokeEscapeHtml($input, null),
             'no charset specified'
         );
 
         $this->assertSame(
             $expectedOutput,
-            $this->invokeContaoEscaper($input, 'UTF-8'),
+            $this->invokeEscapeHtml($input, 'UTF-8'),
             'UTF-8'
         );
 
         $this->assertSame(
             $expectedOutput,
-            $this->invokeContaoEscaper($input, 'utf-8'),
+            $this->invokeEscapeHtml($input, 'utf-8'),
             'utf-8'
         );
     }
 
-    public function provideInput(): \Generator
+    public function provideHtmlInput(): \Generator
     {
         yield 'simple string' => [
             'foo',
@@ -66,16 +68,106 @@ class ContaoEscaperTest extends TestCase
         ];
     }
 
-    public function testThrowsErrorIfCharsetIsNotUtf8(): void
+    /**
+     * @dataProvider provideHtmlAttributeInput
+     */
+    public function testEscapesHtmlAttributes($input, string $expectedOutput): void
+    {
+        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+
+        System::setContainer($container);
+
+        $this->assertSame(
+            $expectedOutput,
+            $this->invokeEscapeHtmlAttr($input, null),
+            'no charset specified'
+        );
+
+        $this->assertSame(
+            $expectedOutput,
+            $this->invokeEscapeHtmlAttr($input, 'UTF-8'),
+            'UTF-8'
+        );
+
+        $this->assertSame(
+            $expectedOutput,
+            $this->invokeEscapeHtmlAttr($input, 'utf-8'),
+            'utf-8'
+        );
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function executeReplaceInsertTagsCallback(string $tag, bool $cache)
+    {
+        if ('bar' !== $tag) {
+            return false;
+        }
+
+        if ($cache) {
+            $this->fail('Controller::replaceInsertTags must not be called with $blnCache = true.');
+        }
+
+        return 'baz';
+    }
+
+    public function provideHtmlAttributeInput(): \Generator
+    {
+        yield 'simple string' => [
+            'foo',
+            'foo',
+        ];
+
+        yield 'special chars and spaces' => [
+            'foo:{bar}=& "baz"',
+            'foo&#x3A;&#x7B;bar&#x7D;&#x3D;&amp;&#x20;&quot;baz&quot;',
+        ];
+
+        yield 'prevent double encoding' => [
+            'A&amp;B',
+            'A&amp;B',
+        ];
+
+        yield 'replacing insert tags beforehand' => [
+            'foo{{bar}}',
+            'foobaz',
+        ];
+    }
+
+    public function testEscapeHtmlThrowsErrorIfCharsetIsNotUtf8(): void
     {
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage('The "contao_html" escape filter does not support the ISO-8859-1 charset, use UTF-8 instead.');
 
-        $this->invokeContaoEscaper('foo', 'ISO-8859-1');
+        $this->invokeEscapeHtml('foo', 'ISO-8859-1');
     }
 
-    private function invokeContaoEscaper($input, ?string $charset): string
+    public function testEscapeHtmlAttrThrowsErrorIfCharsetIsNotUtf8(): void
     {
-        return (new ContaoEscaper())($this->createMock(Environment::class), $input, $charset);
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('The "contao_html_attr" escape filter does not support the ISO-8859-1 charset, use UTF-8 instead.');
+
+        $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
+    }
+
+    private function invokeEscapeHtml($input, ?string $charset): string
+    {
+        return (new ContaoEscaper())->escapeHtml(
+            $this->createMock(Environment::class),
+            $input,
+            $charset
+        );
+    }
+
+    private function invokeEscapeHtmlAttr($input, ?string $charset): string
+    {
+        return (new ContaoEscaper())->escapeHtmlAttr(
+            $this->createMock(Environment::class),
+            $input,
+            $charset
+        );
     }
 }

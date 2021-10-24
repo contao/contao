@@ -24,15 +24,18 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Kernel;
 use Webmozart\PathUtil\Path;
 
 class ContaoKernelTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -163,17 +166,6 @@ class ContaoKernelTest extends ContaoTestCase
 
         $kernel = new ContaoKernel('prod', false);
         $kernel->getProjectDir();
-    }
-
-    public function testGetRootDir(): void
-    {
-        if (!method_exists(Kernel::class, 'getRootDir')) {
-            $this->markTestSkipped('The getRootDir() method no longer exists.');
-        }
-
-        $kernel = $this->getKernel($this->getTempDir());
-
-        $this->assertSame(Path::normalize($kernel->getProjectDir()).'/app', Path::normalize($kernel->getRootDir()));
     }
 
     public function testGetCacheDir(): void
@@ -315,7 +307,7 @@ class ContaoKernelTest extends ContaoTestCase
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
         $this->assertSame(['1.1.1.1', '2.2.2.2'], Request::getTrustedProxies());
-        $this->assertSame(Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST, Request::getTrustedHeaderSet());
+        $this->assertSame(Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO, Request::getTrustedHeaderSet());
 
         unset($_SERVER['TRUSTED_PROXIES']);
     }
@@ -324,11 +316,13 @@ class ContaoKernelTest extends ContaoTestCase
     {
         $this->assertSame([], Request::getTrustedHosts());
 
-        $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2';
+        $_SERVER['TRUSTED_PROXIES'] = '1.1.1.1,2.2.2.2';
+        $_SERVER['TRUSTED_HOSTS'] = '1.1.1.1,2.2.2.2,example.com';
 
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
-        $this->assertSame(['{1.1.1.1}i', '{2.2.2.2}i'], Request::getTrustedHosts());
+        $this->assertSame(['{1.1.1.1}i', '{2.2.2.2}i', '{example.com}i'], Request::getTrustedHosts());
+        $this->assertSame(Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO | Request::HEADER_X_FORWARDED_HOST, Request::getTrustedHeaderSet());
 
         unset($_SERVER['TRUSTED_HOSTS']);
     }
@@ -396,11 +390,16 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
+     * @group legacy
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
     public function testReturnsTheContaoCacheInProdMode(): void
     {
+        if (!class_exists(Event::class)) {
+            $this->expectDeprecation('%sLegacyEventDispatcherProxy is deprecated%s');
+        }
+
         unset($_SERVER['APP_ENV']);
 
         $tempDir = realpath($this->getTempDir());

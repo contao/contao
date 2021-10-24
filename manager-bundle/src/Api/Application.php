@@ -29,20 +29,9 @@ class Application extends BaseApplication
 {
     public const VERSION = '2';
 
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var PluginLoader
-     */
-    private $pluginLoader;
-
-    /**
-     * @var ManagerConfig
-     */
-    private $managerConfig;
+    private string $projectDir;
+    private ?PluginLoader $pluginLoader = null;
+    private ?ManagerConfig $managerConfig = null;
 
     public function __construct(string $projectDir)
     {

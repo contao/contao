@@ -15,40 +15,33 @@ namespace Contao\CoreBundle\Intl;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\System;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Locales
 {
+    private RequestStack $requestStack;
+    private ContaoFramework $contaoFramework;
+    private string $defaultLocale;
+
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface&TranslatorBagInterface
      */
     private $translator;
 
     /**
-     * @var RequestStack
+     * @var array<string>
      */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $contaoFramework;
+    private array $locales;
 
     /**
      * @var array<string>
      */
-    private $locales;
+    private array $enabledLocales;
 
     /**
-     * @var array<string>
+     * @param TranslatorInterface&TranslatorBagInterface $translator
      */
-    private $enabledLocales;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale;
-
     public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $defaultLocales, array $defaultEnabledLocales, array $configLocales, array $configEnabledLocales, string $defaultLocale)
     {
         $this->translator = $translator;
@@ -203,9 +196,7 @@ class Locales
             // Remove locale IDs potentially added by the hook
             $locales = array_filter(
                 $locales,
-                static function ($locale) use ($localeIds) {
-                    return \in_array($locale, $localeIds, true);
-                },
+                static fn ($locale) => \in_array($locale, $localeIds, true),
                 ARRAY_FILTER_USE_KEY
             );
         }
@@ -223,9 +214,10 @@ class Locales
 
         foreach ($localeIds as $localeId) {
             $langKey = 'LNG.'.$localeId;
-            $label = $this->translator->trans($langKey, [], 'contao_languages', $displayLocale);
 
-            if ($label === $langKey || !\is_string($label) || '' === $label) {
+            if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_languages')) {
+                $label = $this->translator->trans($langKey, [], 'contao_languages', $displayLocale);
+            } else {
                 $label = \Locale::getDisplayName($localeId, $displayLocale ?? $this->defaultLocale);
             }
 
@@ -252,9 +244,7 @@ class Locales
     {
         $newList = array_filter(
             $filter,
-            static function ($locale) {
-                return !\in_array($locale[0], ['-', '+'], true);
-            }
+            static fn ($locale) => !\in_array($locale[0], ['-', '+'], true)
         );
 
         if ($newList) {
@@ -290,16 +280,12 @@ class Locales
         trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getLanguages" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', __CLASS__);
 
         $languages = array_map(
-            static function ($locale) {
-                return \Locale::getDisplayName($locale, 'en') ?: $locale;
-            },
+            static fn ($locale) => \Locale::getDisplayName($locale, 'en') ?: $locale,
             array_combine($this->locales, $this->locales)
         );
 
         $langsNative = array_map(
-            static function ($locale) {
-                return \Locale::getDisplayName($locale, $locale) ?: $locale;
-            },
+            static fn ($locale) => \Locale::getDisplayName($locale, $locale) ?: $locale,
             array_combine($this->locales, $this->locales)
         );
 

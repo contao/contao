@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inheritance;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Twig\Error\SyntaxError;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
-use Twig\TokenStream;
 
 /**
  * This parser is a drop in replacement for @\Twig\TokenParser\ExtendsTokenParser
@@ -26,10 +28,7 @@ use Twig\TokenStream;
  */
 final class DynamicExtendsTokenParser extends AbstractTokenParser
 {
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
+    private TemplateHierarchyInterface $hierarchy;
 
     public function __construct(TemplateHierarchyInterface $hierarchy)
     {
@@ -53,8 +52,10 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
         }
 
         $expr = $this->parser->getExpressionParser()->parseExpression();
+        $sourcePath = $stream->getSourceContext()->getPath();
 
-        $this->handleContaoExtends($expr, $stream);
+        // Handle Contao extends
+        $this->traverseAndAdjustTemplateNames($sourcePath, $expr);
 
         $this->parser->setParent($expr);
 
@@ -68,21 +69,33 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
         return 'extends';
     }
 
-    private function handleContaoExtends(Node $expr, TokenStream $stream): void
+    private function traverseAndAdjustTemplateNames(string $sourcePath, Node $node): void
     {
-        TokenParserHelper::traverseConstantExpressions(
-            $expr,
-            function (Node $node) use ($stream): void {
-                if (null === ($shortName = TokenParserHelper::getContaoTemplate($node->getAttribute('value')))) {
-                    return;
+        if (!$node instanceof ConstantExpression) {
+            foreach ($node as $child) {
+                try {
+                    $this->traverseAndAdjustTemplateNames($sourcePath, $child);
+                } catch (\LogicException $e) {
+                    // Allow missing templates if they are listed in an array
+                    // like "{% extends ['@Contao/missing', '@Contao/existing'] %}"
+                    if (!$node instanceof ArrayExpression) {
+                        throw $e;
+                    }
                 }
-
-                $sourcePath = $stream->getSourceContext()->getPath();
-                $parentName = $this->hierarchy->getDynamicParent($shortName, $sourcePath);
-
-                // Adjust parent template according to the template hierarchy
-                $node->setAttribute('value', $parentName);
             }
-        );
+
+            return;
+        }
+
+        $parts = ContaoTwigUtil::parseContaoName((string) $node->getAttribute('value'));
+
+        if ('Contao' !== ($parts[0] ?? null)) {
+            return;
+        }
+
+        $parentName = $this->hierarchy->getDynamicParent($parts[1] ?? '', $sourcePath);
+
+        // Adjust parent template according to the template hierarchy
+        $node->setAttribute('value', $parentName);
     }
 }

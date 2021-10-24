@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
@@ -19,7 +20,6 @@ use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Contao\Validator;
 use Doctrine\DBAL\Exception;
-use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
@@ -39,10 +39,7 @@ class InstallationController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var array
-     */
-    private $context = [
+    private array $context = [
         'has_admin' => false,
         'hide_admin' => false,
         'sql_message' => '',
@@ -178,8 +175,8 @@ class InstallationController implements ContainerAwareInterface
         $installTool = $this->container->get('contao.install_tool');
         $minlength = $installTool->getConfig('minPasswordLength');
 
-        // The passwords is too short
-        if (Utf8::strlen($password) < $minlength) {
+        // The password is too short
+        if (mb_strlen($password) < $minlength) {
             return $this->render('password.html.twig', [
                 'error' => sprintf($this->trans('password_too_short'), $minlength),
             ]);
@@ -516,7 +513,7 @@ class InstallationController implements ContainerAwareInterface
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The password is too short
-        if (Utf8::strlen($password) < $minlength) {
+        if (mb_strlen($password) < $minlength) {
             $this->context['admin_password_error'] = sprintf($this->trans('password_too_short'), $minlength);
 
             return null;
@@ -618,7 +615,7 @@ class InstallationController implements ContainerAwareInterface
             return '';
         }
 
-        return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
+        return $this->container->get(ContaoCsrfTokenManager::class)->getToken($tokenName)->getValue();
     }
 
     /**

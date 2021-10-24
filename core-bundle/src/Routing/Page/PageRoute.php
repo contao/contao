@@ -20,23 +20,12 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
-    /**
-     * @var PageModel
-     */
-    private $pageModel;
+    private PageModel $pageModel;
+    private ?string $urlPrefix;
+    private ?string $urlSuffix;
 
     /**
-     * @var string
-     */
-    private $urlPrefix;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
-
-    /**
-     * The referenced content object.
+     * The referenced content object (can be anything).
      */
     private $content;
 
@@ -52,12 +41,14 @@ class PageRoute extends Route implements RouteObjectInterface
                 '_token_check' => true,
                 '_controller' => 'Contao\FrontendIndex::renderPage',
                 '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLanguageTag($pageModel->rootLanguage),
+                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage),
                 '_format' => 'html',
+                '_canonical_route' => 'tl_page.'.$pageModel->id,
             ],
             $defaults
         );
 
+        // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;
 
         if (!isset($options['utf8'])) {

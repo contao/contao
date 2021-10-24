@@ -21,7 +21,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -1635,27 +1635,21 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter
             ->method('findByPk')
             ->willReturnCallback(
-                static function (int $id) use ($pagesById) {
-                    return $pagesById[$id] ?? null;
-                }
+                static fn (int $id) => $pagesById[$id] ?? null
             )
         ;
 
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(
-                static function (int $id) use ($pagesById) {
-                    return $pagesById[$id] ?? null;
-                }
+                static fn (int $id) => $pagesById[$id] ?? null
             )
         ;
 
         $pageAdapter
             ->method('findByPid')
             ->willReturnCallback(
-                static function (int $pid) use ($pagesByPid) {
-                    return $pagesByPid[$pid] ?? null;
-                }
+                static fn (int $pid) => $pagesByPid[$pid] ?? null
             )
         ;
 
@@ -1663,9 +1657,7 @@ class PageUrlListenerTest extends TestCase
         $inputAdapter
             ->method('post')
             ->willReturnCallback(
-                static function ($key) use ($inputData) {
-                    return $inputData[$key] ?? null;
-                }
+                static fn ($key) => $inputData[$key] ?? null
             )
         ;
 
@@ -1711,7 +1703,7 @@ class PageUrlListenerTest extends TestCase
      */
     private function mockConnectionWithStatement(): Connection
     {
-        $statement = $this->createMock(Statement::class);
+        $statement = $this->createMock(Result::class);
         $statement
             ->method('fetchAll')
             ->willReturn([])

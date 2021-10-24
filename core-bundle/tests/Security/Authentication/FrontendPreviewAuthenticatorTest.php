@@ -19,7 +19,7 @@ use Contao\FrontendUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -100,7 +100,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $userProvider
             ->expects($this->once())
             ->method('loadUserByUsername')
-            ->willThrowException(new UsernameNotFoundException())
+            ->willThrowException(new UserNotFoundException())
         ;
 
         $logger = $this->createMock(LoggerInterface::class);

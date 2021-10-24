@@ -20,15 +20,8 @@ use Webmozart\PathUtil\Path;
  */
 class XliffFileLoader extends Loader
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var bool
-     */
-    private $addToGlobals;
+    private string $projectDir;
+    private bool $addToGlobals;
 
     public function __construct(string $projectDir, bool $addToGlobals = false)
     {
@@ -180,7 +173,7 @@ class XliffFileLoader extends Loader
         $data = &$GLOBALS['TL_LANG'];
 
         foreach ($chunks as $key) {
-            if (null === $data || !\is_array($data)) {
+            if (!\is_array($data)) {
                 $data = [];
             }
 

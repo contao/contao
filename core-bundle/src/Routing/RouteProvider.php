@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -27,20 +26,9 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
-
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private PageRegistry $pageRegistry;
+    private bool $legacyRouting;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
@@ -179,15 +167,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
-        try {
-            $page->loadDetails();
-
-            if (!$page->rootId) {
-                return;
-            }
-        } catch (NoRootPageFoundException $e) {
-            return;
-        }
+        $page->loadDetails();
 
         $route = $this->pageRegistry->getRoute($page);
         $routes['tl_page.'.$page->id] = $route;
@@ -251,6 +231,11 @@ class RouteProvider extends AbstractPageRouteProvider
      */
     private function sortRoutes(array &$routes, array $languages = null): void
     {
+        // Convert languages array so key is language and value is priority
+        if (null !== $languages) {
+            $languages = $this->convertLanguagesForSorting($languages);
+        }
+
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
@@ -266,11 +251,6 @@ class RouteProvider extends AbstractPageRouteProvider
 
                 if ($fallbackB && !$fallbackA) {
                     return -1;
-                }
-
-                // Convert languages array so key is language and value is priority
-                if (null !== $languages) {
-                    $languages = $this->convertLanguagesForSorting($languages);
                 }
 
                 return $this->compareRoutes($a, $b, $languages);

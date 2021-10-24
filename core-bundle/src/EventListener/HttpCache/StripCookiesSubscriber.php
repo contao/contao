@@ -36,6 +36,9 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         'AMP_TOKEN',
         '__utm.+',
 
+        // Google Conversion Linker (https://support.google.com/tagmanager/answer/7549390)
+        '_gcl.*',
+
         // Matomo (https://matomo.org/faq/general/faq_146/)
         '_pk_id.*',
         '_pk_ref.*',
@@ -68,15 +71,8 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         'CookieConsent',
     ];
 
-    /**
-     * @var array
-     */
-    private $allowList;
-
-    /**
-     * @var array
-     */
-    private $removeFromDenyList = [];
+    private array $allowList;
+    private array $removeFromDenyList = [];
 
     public function __construct(array $allowList = [])
     {

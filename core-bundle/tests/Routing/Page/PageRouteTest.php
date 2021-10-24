@@ -83,11 +83,11 @@ class PageRouteTest extends TestCase
     {
         $route = new PageRoute($this->mockPageModel());
 
-        $this->assertSame('xy', $route->getDefault('_locale'));
+        $this->assertSame('xx', $route->getDefault('_locale'));
 
-        $route = new PageRoute($this->mockPageModel(['rootLanguage' => 'en']));
+        $route = new PageRoute($this->mockPageModel(['rootLanguage' => 'en-US']));
 
-        $this->assertSame('en', $route->getDefault('_locale'));
+        $this->assertSame('en_US', $route->getDefault('_locale'));
     }
 
     public function testSetsPageDomainAsRouteHost(): void
@@ -121,7 +121,7 @@ class PageRouteTest extends TestCase
                     'id' => 17,
                     'alias' => 'bar',
                     'domain' => 'www.example.com',
-                    'rootLanguage' => 'xy',
+                    'rootLanguage' => 'xx',
                     'rootUseSSL' => '1',
                     'urlPrefix' => 'foo',
                     'urlSuffix' => '.baz',

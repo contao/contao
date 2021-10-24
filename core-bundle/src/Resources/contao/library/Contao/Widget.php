@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\Database\Result;
 use Doctrine\DBAL\Types\Types;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -756,7 +755,7 @@ abstract class Widget extends Controller
 	{
 		if (\is_callable($this->inputCallback))
 		{
-			return \call_user_func($this->inputCallback);
+			return ($this->inputCallback)();
 		}
 
 		if ($this->useRawRequestData === true)
@@ -775,7 +774,7 @@ abstract class Widget extends Controller
 		}
 
 		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
 		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
@@ -832,12 +831,12 @@ abstract class Widget extends Controller
 			}
 		}
 
-		if ($this->minlength && $varInput && Utf8::strlen($varInput) < $this->minlength)
+		if ($this->minlength && $varInput && mb_strlen($varInput) < $this->minlength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minlength'], $this->strLabel, $this->minlength));
 		}
 
-		if ($this->maxlength && $varInput && Utf8::strlen($varInput) > $this->maxlength)
+		if ($this->maxlength && $varInput && mb_strlen($varInput) > $this->maxlength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $this->strLabel, $this->maxlength));
 		}
@@ -986,6 +985,13 @@ abstract class Widget extends Controller
 					break;
 
 				case 'url':
+					$varInput = StringUtil::specialcharsUrl($varInput);
+
+					if ($this->decodeEntities)
+					{
+						$varInput = StringUtil::decodeEntities($varInput);
+					}
+
 					if (!Validator::isUrl($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['url'], $this->strLabel));
@@ -1287,7 +1293,16 @@ abstract class Widget extends Controller
 			}
 		}
 
-		$arrAttributes['allowHtml'] = (($arrData['eval']['allowHtml'] ?? null) || ($arrData['eval']['rte'] ?? null) || ($arrData['eval']['preserveTags'] ?? null));
+		if (!empty($arrData['eval']['preserveTags']))
+		{
+			$arrAttributes['allowHtml'] = true;
+		}
+
+		if (!isset($arrAttributes['allowHtml']))
+		{
+			$rte = $arrData['eval']['rte'] ?? '';
+			$arrAttributes['allowHtml'] = 'ace|html' === $rte || 0 === strpos($rte, 'tiny');
+		}
 
 		// Decode entities if HTML is allowed
 		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')
@@ -1404,6 +1419,12 @@ abstract class Widget extends Controller
 		{
 			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$arrAttributes['value'] = $objDate->{$arrData['eval']['rgxp']};
+		}
+
+		// Convert URL insert tags
+		if ($varValue && 'url' === ($arrData['eval']['rgxp'] ?? null))
+		{
+			$arrAttributes['value'] = str_replace('|urlattr}}', '}}', $varValue);
 		}
 
 		// Add the "rootNodes" array as attribute (see #3563)

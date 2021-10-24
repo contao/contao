@@ -15,37 +15,33 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\DebugContaoTwigCommand;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
+use Webmozart\PathUtil\Path;
 
 class DebugContaoTwigCommandTest extends ContaoTestCase
 {
     public function testNameAndArguments(): void
     {
-        $command = new DebugContaoTwigCommand(
-            $this->createMock(TemplateHierarchyInterface::class),
-            $this->createMock(ContaoFilesystemLoaderWarmer::class),
-        );
+        $command = $this->getCommand();
 
         $this->assertSame('debug:contao-twig', $command->getName());
         $this->assertNotEmpty($command->getDescription());
 
-        $this->assertTrue($command->getDefinition()->hasOption('refresh'));
-        $this->assertTrue($command->getDefinition()->hasOption('filter'));
+        $this->assertTrue($command->getDefinition()->hasOption('theme'));
+        $this->assertTrue($command->getDefinition()->hasArgument('filter'));
     }
 
-    public function testDoesNotRefreshLoaderByDefault(): void
+    public function testRefreshesLoader(): void
     {
         $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
         $cacheWarmer
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('refresh')
         ;
 
-        $command = new DebugContaoTwigCommand(
-            $this->createMock(TemplateHierarchyInterface::class),
-            $cacheWarmer,
-        );
+        $command = $this->getCommand(null, $cacheWarmer);
 
         $tester = new CommandTester($command);
         $tester->execute([]);
@@ -54,37 +50,9 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider provideRefreshOptions
+     * @dataProvider provideInput
      */
-    public function testRefreshesLoader(string $refreshOption): void
-    {
-        $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
-        $cacheWarmer
-            ->expects($this->once())
-            ->method('refresh')
-        ;
-
-        $command = new DebugContaoTwigCommand(
-            $this->createMock(TemplateHierarchyInterface::class),
-            $cacheWarmer,
-        );
-
-        $tester = new CommandTester($command);
-        $tester->execute([$refreshOption => null]);
-
-        $this->assertSame(0, $tester->getStatusCode());
-    }
-
-    public function provideRefreshOptions(): \Generator
-    {
-        yield 'regular' => ['--refresh'];
-        yield 'short' => ['-r'];
-    }
-
-    /**
-     * @dataProvider provideFilterOptions
-     */
-    public function testOutputsHierarchy(array $inputOptions, string $expectedOutput): void
+    public function testOutputsHierarchy(array $input, string $expectedOutput): void
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy
@@ -104,13 +72,10 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
             ])
         ;
 
-        $command = new DebugContaoTwigCommand(
-            $hierarchy,
-            $this->createMock(ContaoFilesystemLoaderWarmer::class)
-        );
+        $command = $this->getCommand($hierarchy);
 
         $tester = new CommandTester($command);
-        $tester->execute($inputOptions);
+        $tester->execute($input);
 
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $tester->getDisplay(true));
 
@@ -118,7 +83,7 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideFilterOptions(): \Generator
+    public function provideInput(): \Generator
     {
         yield 'no filter' => [
             [],
@@ -140,8 +105,8 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                 OUTPUT
         ];
 
-        yield 'full word' => [
-            ['--filter' => 'foo'],
+        yield 'filter by full word' => [
+            ['filter' => 'foo'],
             <<<'OUTPUT'
 
                 Template hierarchy
@@ -156,8 +121,8 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
                 OUTPUT
         ];
 
-        yield 'prefix' => [
-            ['--filter' => 'ba'],
+        yield 'filter by prefix' => [
+            ['filter' => 'ba'],
             <<<'OUTPUT'
 
                 Template hierarchy
@@ -172,21 +137,59 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
 
                 OUTPUT
         ];
+    }
 
-        yield 'short option name' => [
-            ['-f' => 'foo'],
-            <<<'OUTPUT'
+    /**
+     * @dataProvider provideThemeOptions
+     */
+    public function testIncludesThemeTemplates(array $input, ?string $expectedThemeSlug): void
+    {
+        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $hierarchy
+            ->expects($this->once())
+            ->method('getInheritanceChains')
+            ->with($expectedThemeSlug)
+            ->willReturn([])
+        ;
 
-                Template hierarchy
-                ==================
-                 ------------ ------------------------ ----------------------
-                  Identifier   Effective logical name   Path
-                 ------------ ------------------------ ----------------------
-                  foo          @A/foo.html.twig         /path1/foo.html.twig
-                               @B/foo.html5             /path2/foo.html5
-                 ------------ ------------------------ ----------------------
+        $command = $this->getCommand($hierarchy);
 
-                OUTPUT
+        $tester = new CommandTester($command);
+        $tester->execute($input);
+
+        $this->assertSame(0, $tester->getStatusCode());
+    }
+
+    public function provideThemeOptions(): \Generator
+    {
+        yield 'no theme' => [
+            [],
+            null,
         ];
+
+        yield 'theme slug' => [
+            ['--theme' => 'my_theme'],
+            'my_theme',
+        ];
+
+        yield 'theme path' => [
+            ['--theme' => 'my/theme'],
+            'my_theme',
+        ];
+
+        yield 'theme path (relative up)' => [
+            ['--theme' => '../themes/foo'],
+            '_themes_foo',
+        ];
+    }
+
+    private function getCommand(TemplateHierarchyInterface $hierarchy = null, ContaoFilesystemLoaderWarmer $cacheWarmer = null): DebugContaoTwigCommand
+    {
+        return new DebugContaoTwigCommand(
+            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
+            $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            new ThemeNamespace(),
+            Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance')
+        );
     }
 }

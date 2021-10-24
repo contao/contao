@@ -19,10 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteRootsConfigProvider implements ProviderInterface
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.cors.website_roots_config_provider" service instead
@@ -77,7 +74,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     private function canRunDbQuery(): bool
     {
         try {
-            return $this->connection->getSchemaManager()->tablesExist(['tl_page']);
+            return $this->connection->createSchemaManager()->tablesExist(['tl_page']);
         } catch (DriverException $e) {
             return false;
         }

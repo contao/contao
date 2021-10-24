@@ -31,10 +31,7 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -54,7 +51,7 @@ class InsertTagsListener
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
-            return $this->replaceNewsInsertTags($key, $elements[1], $flags);
+            return $this->replaceNewsInsertTags($key, $elements[1], array_merge($flags, \array_slice($elements, 2)));
         }
 
         return false;
@@ -74,7 +71,7 @@ class InsertTagsListener
         return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
-    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $flags): string
+    private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $arguments): string
     {
         $this->framework->initialize();
 
@@ -91,24 +88,26 @@ class InsertTagsListener
         switch ($insertTag) {
             case 'news':
                 return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)) ?: './',
-                    StringUtil::specialchars($model->headline),
+                    '<a href="%s" title="%s"%s>%s</a>',
+                    $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+                    StringUtil::specialcharsAttribute($model->headline),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->headline
                 );
 
             case 'news_open':
                 return sprintf(
-                    '<a href="%s" title="%s">',
-                    $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)) ?: './',
-                    StringUtil::specialchars($model->headline)
+                    '<a href="%s" title="%s"%s>',
+                    $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
+                    StringUtil::specialcharsAttribute($model->headline),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
             case 'news_url':
-                return $news->generateNewsUrl($model, false, \in_array('absolute', $flags, true)) ?: './';
+                return $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './';
 
             case 'news_title':
-                return StringUtil::specialchars($model->headline);
+                return StringUtil::specialcharsAttribute($model->headline);
 
             case 'news_teaser':
                 return StringUtil::toHtml5($model->teaser);

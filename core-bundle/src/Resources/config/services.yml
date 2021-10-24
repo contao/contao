@@ -93,7 +93,7 @@ services:
             - '@security.helper'
             - '@twig'
             - '@router'
-            - '@contao.csrf.token_manager'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
         tags:
             - controller.service_arguments
@@ -101,11 +101,10 @@ services:
     # Backwards compatibility
     contao.controller.backend_csv_import:
         alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        # TODO: re-enable this as soon as we are on Symfony 5 only
-        # deprecated:
-        #     package: contao/core-bundle
-        #     version: 4.9
-        #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
+        deprecated:
+            package: contao/core-bundle
+            version: 4.9
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
         public: true
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController:
@@ -123,7 +122,6 @@ services:
     Contao\CoreBundle\Controller\FrontendController:
         tags:
             - controller.service_arguments
-            - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
@@ -151,11 +149,10 @@ services:
     # Backwards compatibility
     contao.controller.images:
         alias: Contao\CoreBundle\Controller\ImagesController
-        # TODO: re-enable this as soon as we are on Symfony 5 only
-        # deprecated:
-        #     package: contao/core-bundle
-        #     version: 4.9
-        #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
+        deprecated:
+            package: contao/core-bundle
+            version: 4.9
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
         public: true
 
     Contao\CoreBundle\Controller\InsertTagsController:
@@ -167,11 +164,10 @@ services:
     # Backwards compatibility
     contao.controller.insert_tags:
         alias: Contao\CoreBundle\Controller\InsertTagsController
-        # TODO: re-enable this as soon as we are on Symfony 5 only
-        # deprecated:
-        #     package: contao/core-bundle
-        #     version: 4.9
-        #     message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
+        deprecated:
+            package: contao/core-bundle
+            version: 4.9
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.
         public: true
 
     Contao\CoreBundle\Controller\RobotsTxtController:
@@ -240,11 +236,21 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
-    contao.csrf.token_manager:
-        class: Symfony\Component\Security\Csrf\CsrfTokenManager
+    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
         arguments:
+            - '@request_stack'
+            - '%contao.csrf_cookie_prefix%'
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
+        public: true
+
+    # Backwards compatibility
+    contao.csrf.token_manager:
+        alias: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
+        deprecated:
+            package: contao/core-bundle
+            version: 4.9
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Csrf\ContaoCsrfTokenManager" instead.
         public: true
 
     contao.csrf.token_storage:
@@ -899,6 +905,7 @@ services:
         arguments:
             - '@contao.translation.translator.inner'
             - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.translation.translator.data_collector:
         class: Contao\CoreBundle\Translation\DataCollectorTranslator
@@ -914,11 +921,15 @@ services:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
         public: true
 
+    Contao\CoreBundle\Twig\Loader\ThemeNamespace: ~
+
     Contao\CoreBundle\Twig\Loader\TemplateLocator:
         arguments:
             - '%kernel.project_dir%'
             - '%kernel.bundles%'
             - '%kernel.bundles_metadata%'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@database_connection'
 
     Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
         arguments:
@@ -931,6 +942,7 @@ services:
         arguments:
             - '@cache.system'
             - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
+            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
@@ -961,6 +973,10 @@ services:
             - '@contao.routing.scope_matcher'
 
     Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime: ~
+
+    Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime:
+        arguments:
+            - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
 
     Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
         arguments:

@@ -24,7 +24,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
-use Patchwork\Utf8;
 use Symfony\Component\Finder\Finder;
 
 $GLOBALS['TL_DCA']['tl_files'] = array
@@ -118,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_files', 'deleteFile')
 			),
 			'show' => array
@@ -623,7 +622,7 @@ class tl_files extends Backend
 					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 				}
 
-				if (Utf8::strlen($varValue) > $intMaxlength)
+				if (mb_strlen($varValue) > $intMaxlength)
 				{
 					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
 				}
@@ -801,7 +800,7 @@ class tl_files extends Backend
 		$objFile = new File($strDecoded);
 
 		/** @var DC_Folder $dc */
-		$dc = (@func_get_arg(12) ?: null);
+		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
 
 		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
@@ -929,10 +928,10 @@ class tl_files extends Backend
 				throw new RuntimeException('Invalid file or folder name ' . Input::post('name'));
 			}
 
-			$count = 0;
 			$strName = basename($strPath);
+			$strNewPath = str_replace($strName, Input::post('name'), $strPath, $count);
 
-			if ($count > 0 && ($strNewPath = str_replace($strName, Input::post('name'), $strPath, $count)) && is_dir($projectDir . '/' . $strNewPath))
+			if ($count > 0 && is_dir($projectDir . '/' . $strNewPath))
 			{
 				$strPath = $strNewPath;
 			}

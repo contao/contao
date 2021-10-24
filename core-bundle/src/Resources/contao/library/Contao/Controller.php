@@ -26,7 +26,6 @@ use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use Imagine\Image\BoxInterface;
-use League\Uri\Components\Query;
 use Psr\Log\LogLevel;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
@@ -53,6 +52,11 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends System
 {
+	/**
+	 * @var array
+	 */
+	protected static $arrQueryCache = array();
+
 	/**
 	 * Find a particular template file and return its path
 	 *
@@ -395,6 +399,14 @@ abstract class Controller extends System
 			return '';
 		}
 
+		$strStopWatchId = 'contao.frontend_module.' . $objRow->type . ' (ID ' . $objRow->id . ')';
+
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
+
 		$objRow->typePrefix = 'mod_';
 
 		/** @var Module $objModule */
@@ -414,6 +426,11 @@ abstract class Controller extends System
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -494,6 +511,14 @@ abstract class Controller extends System
 			}
 		}
 
+		$strStopWatchId = 'contao.article (ID ' . $objRow->id . ')';
+
+		if (System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
+
 		$objArticle = new ModuleArticle($objRow, $strColumn);
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
@@ -501,6 +526,11 @@ abstract class Controller extends System
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -552,6 +582,13 @@ abstract class Controller extends System
 		}
 
 		$objRow->typePrefix = 'ce_';
+		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
+
+		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug'))
+		{
+			$objStopwatch = System::getContainer()->get('debug.stopwatch');
+			$objStopwatch->start($strStopWatchId, 'contao.layout');
+		}
 
 		/** @var ContentElement $objElement */
 		$objElement = new $strClass($objRow, $strColumn);
@@ -570,6 +607,11 @@ abstract class Controller extends System
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+		}
+
+		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
+		{
+			$objStopwatch->stop($strStopWatchId);
 		}
 
 		return $strBuffer;
@@ -817,10 +859,10 @@ abstract class Controller extends System
 			}
 		}
 
-		/** @var PageModel $objPage */
+		/** @var PageModel|null $objPage */
 		global $objPage;
 
-		$objLayout = LayoutModel::findByPk($objPage->layoutId);
+		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
 		$blnCombineScripts = ($objLayout === null) ? false : $objLayout->combineScripts;
 
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
@@ -1032,29 +1074,53 @@ abstract class Controller extends System
 	 */
 	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
 	{
-		$query = new Query(Environment::get('queryString'));
+		$pairs = array();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($request->server->has('QUERY_STRING'))
+		{
+			$cacheKey = md5($request->server->get('QUERY_STRING'));
+
+			if (!isset(static::$arrQueryCache[$cacheKey]))
+			{
+				parse_str($request->server->get('QUERY_STRING'), $pairs);
+				ksort($pairs);
+
+				static::$arrQueryCache[$cacheKey] = $pairs;
+			}
+
+			$pairs = static::$arrQueryCache[$cacheKey];
+		}
 
 		// Remove the request token and referer ID
-		$query = $query->withoutPairs(array_merge(array('rt', 'ref'), $arrUnset));
+		unset($pairs['rt'], $pairs['ref']);
+
+		foreach ($arrUnset as $key)
+		{
+			unset($pairs[$key]);
+		}
 
 		// Merge the request string to be added
-		$query = $query->merge(str_replace('&amp;', '&', $strRequest));
+		if ($strRequest)
+		{
+			parse_str(str_replace('&amp;', '&', $strRequest), $newPairs);
+			$pairs = array_merge($pairs, $newPairs);
+		}
 
 		// Add the referer ID
-		if (isset($_GET['ref']) || ($strRequest && $blnAddRef))
+		if ($request->query->has('ref') || ($strRequest && $blnAddRef))
 		{
-			$query = $query->merge('ref=' . System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'));
+			$pairs['ref'] = $request->attributes->get('_contao_referer_id');
 		}
 
-		$uri = $query->getUriComponent();
+		$uri = '';
 
-		// The query parser automatically converts %2B to +, so re-convert it here
-		if (strpos($strRequest, '%2B') !== false)
+		if (!empty($pairs))
 		{
-			$uri = str_replace('+', '%2B', $uri);
+			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
-		return TL_SCRIPT . StringUtil::ampersand($uri);
+		return TL_SCRIPT . $uri;
 	}
 
 	/**
@@ -1493,11 +1559,8 @@ abstract class Controller extends System
 		{
 			if ($interpretAsContentModel)
 			{
-				/** @var ContentModel $contentModel */
-				$contentModel = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
-
 				// This will be null if "overwriteMeta" is not set
-				return $contentModel->setRow($rowData)->getOverwriteMetadata();
+				return (new ContentModel())->setRow($rowData)->getOverwriteMetadata();
 			}
 
 			// Manually create metadata that always contains certain properties (BC)

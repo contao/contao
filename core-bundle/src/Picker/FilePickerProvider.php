@@ -27,15 +27,8 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
+    private Security $security;
+    private string $uploadPath;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.file_provider" service instead
@@ -161,7 +154,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string,array|string|bool>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {
@@ -173,16 +166,18 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         $value = $config->getValue();
 
         if ($value) {
-            $chunks = $this->getInsertTagChunks($config);
-
-            if (false !== strpos($value, $chunks[0])) {
-                $value = str_replace($chunks, '', $value);
+            if ($this->isMatchingInsertTag($config)) {
+                $value = $this->getInsertTagValue($config);
             }
 
             if (Path::isBasePath($this->uploadPath, $value)) {
                 $attributes['value'] = $this->urlEncode($value);
             } else {
                 $attributes['value'] = $this->urlEncode($this->convertValueToPath($value));
+            }
+
+            if ($flags = $this->getInsertTagFlags($config)) {
+                $attributes['flags'] = $flags;
             }
         }
 

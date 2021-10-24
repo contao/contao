@@ -121,8 +121,9 @@ class PagePickerProviderTest extends ContaoTestCase
             [
                 'fieldType' => 'radio',
                 'value' => '5',
+                'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', [], '{{link_url::5|urlattr}}'))
         );
 
         $this->assertSame(
@@ -207,9 +208,7 @@ class PagePickerProviderTest extends ContaoTestCase
         $router
             ->method('generate')
             ->willReturnCallback(
-                static function (string $name, array $params): string {
-                    return $name.'?'.http_build_query($params);
-                }
+                static fn (string $name, array $params): string => $name.'?'.http_build_query($params)
             )
         ;
 

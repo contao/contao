@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\System;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\TwigFunction;
@@ -24,7 +26,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 {
     public function testPriority(): void
     {
-        $visitor = new ContaoEscaperNodeVisitor(static function () { return []; });
+        $visitor = new ContaoEscaperNodeVisitor(static fn () => []);
 
         $this->assertSame(1, $visitor->getPriority());
     }
@@ -67,9 +69,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $environment->addFunction(
             new TwigFunction(
                 'heart',
-                static function () {
-                    return '&#9829;';
-                }
+                static fn () => '&#9829;'
             )
         );
 
@@ -95,6 +95,34 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         );
 
         $this->assertSame('&quot;A&quot; &amp; &lt;B&gt;', $output);
+    }
+
+    public function testHtmlAttrFilter(): void
+    {
+        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+
+        System::setContainer($container);
+
+        $templateContent = '<span title={{ title|e(\'html_attr\') }}></span>';
+
+        $output = $this->getEnvironment($templateContent)->render(
+            'legacy.html.twig',
+            [
+                'title' => '{{flavor}} _is_ a flavor',
+            ]
+        );
+
+        $this->assertSame('<span title=vanilla&#x20;_is_&#x20;a&#x20;flavor></span>', $output);
+
+        unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function executeReplaceInsertTagsCallback(string $tag)
+    {
+        return 'flavor' === $tag ? 'vanilla' : false;
     }
 
     private function getEnvironment(string $templateContent): Environment

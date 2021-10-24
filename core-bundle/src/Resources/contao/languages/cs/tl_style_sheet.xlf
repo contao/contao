@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.cc.1">
         <source>Conditional comments allow you to create Internet Explorer specific style sheets (e.g. &lt;em&gt;if lt IE 9&lt;/em&gt;).</source>
-        <target>Podmíněný komentář umožňuje nadefinování specifických stylů pro Internet Expolover.</target>
+        <target>Podmíněný komentář umožňuje nadefinování specifických stylů pro Internet Expolover (např. &lt;em&gt;if lt IE 9&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.media.0">
         <source>Media types</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.vars.1">
         <source>Here you can define global variables for the style sheet (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-        <target>Zde můžete určit všeobecné proměnné pro daný styl (např. $red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; nebo &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;)</target>
+        <target>Zde můžete určit všeobecné proměnné pro daný styl (např. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt; -&gt; c00&lt;/em&gt; nebo &lt;em&gt;$margin&lt;/em&gt;--&gt;&lt;em&gt;12px&lt;/em&gt;)</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.source.0">
         <source>Source files</source>
@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.0">
         <source>Import</source>
+        <target>Import</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.1">
         <source>Import a style sheet</source>
+        <target>Importovat kaskádovité styly</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
         <source>New</source>

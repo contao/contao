@@ -29,25 +29,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    private ContaoFramework $framework;
+    private SessionInterface $session;
+    private string $userClass;
+    private ?LoggerInterface $logger;
 
     /**
      * @throws \RuntimeException
@@ -101,13 +86,13 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     /**
      * @param User $user
      */
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
     {
         if (!is_a($user, $this->userClass)) {
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
-        $user->password = $newEncodedPassword;
+        $user->password = $newHashedPassword;
         $user->save();
     }
 

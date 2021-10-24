@@ -365,14 +365,6 @@
         <source>Here you can select the feed template.</source>
         <target>请选择一个布局模板。您可以添加自定义的RSS模板到&lt;em&gt;templates&lt;/em&gt; folder. 模板文件要求以rss_开始和文件扩展名为.tpl</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>记录数</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>您可以在这里限制记录数，设置0显示所有。</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>保护模块</target>

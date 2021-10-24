@@ -21,20 +21,9 @@ class PaletteManipulator
     public const POSITION_PREPEND = 'prepend';
     public const POSITION_APPEND = 'append';
 
-    /**
-     * @var array
-     */
-    private $legends = [];
-
-    /**
-     * @var array
-     */
-    private $fields = [];
-
-    /**
-     * @var array
-     */
-    private $removes = [];
+    private array $legends = [];
+    private array $fields = [];
+    private array $removes = [];
 
     public static function create(): self
     {

@@ -28,10 +28,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class PickerProvider implements ServiceTagInterface
 {
-    /**
-     * @var int
-     */
-    public $priority;
+    public ?int $priority = null;
 
     public function getName(): string
     {
@@ -40,7 +37,7 @@ final class PickerProvider implements ServiceTagInterface
 
     public function getAttributes(): array
     {
-        if ($this->priority) {
+        if (null !== $this->priority) {
             return ['priority' => $this->priority];
         }
 

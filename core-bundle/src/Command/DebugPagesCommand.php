@@ -26,25 +26,18 @@ class DebugPagesCommand extends Command
 {
     protected static $defaultName = 'debug:pages';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var PageRegistry
-     */
-    private $pageRegistry;
+    private ContaoFramework $framework;
+    private PageRegistry $pageRegistry;
 
     /**
      * @var array<RouteConfig>
      */
-    private $routeConfigs = [];
+    private array $routeConfigs = [];
 
     /**
      * @var array<DynamicRouteInterface>
      */
-    private $routeEnhancers = [];
+    private array $routeEnhancers = [];
 
     public function __construct(ContaoFramework $framework, PageRegistry $pageRegistry)
     {

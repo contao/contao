@@ -14,28 +14,15 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
 class SubscriberResult
 {
-    /**
-     * @var bool
-     */
-    private $wasSuccessful;
+    private bool $wasSuccessful;
+    private string $summary;
+    private ?string $warning = null;
 
     /**
-     * @var string
-     */
-    private $summary;
-
-    /**
-     * @var string|null
-     */
-    private $warning;
-
-    /**
-     * Mixed custom info. Must be serializable so
+     * Mixed custom info. Must be serializable, so
      * it can be transported between requests.
-     *
-     * @var array
      */
-    private $info = [];
+    private array $info = [];
 
     public function __construct(bool $wasSuccessful, string $summary)
     {

@@ -34,6 +34,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         $response = $this->getResponse($template, $model, $request);
 
         if (null === $response) {
+            trigger_deprecation('contao/core-bundle', '4.12', 'Returning null in %s::getResponse() is deprecated, return a Response instead.', static::class);
             $response = $template->getResponse();
         }
 

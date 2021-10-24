@@ -19,7 +19,6 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
-use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,25 +38,10 @@ class UserCreateCommand extends Command
 {
     protected static $defaultName = 'contao:user:create';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
-
-    /**
-     * @var array
-     */
-    private $locales;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private EncoderFactoryInterface $encoderFactory;
+    private array $locales;
 
     public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory, Locales $locales)
     {
@@ -130,7 +114,7 @@ class UserCreateCommand extends Command
                 throw new \RuntimeException('The password cannot be empty');
             }
 
-            if (Utf8::strlen($value) < $minLength) {
+            if (mb_strlen($value) < $minLength) {
                 throw new \RuntimeException(sprintf('Please use at least %d characters.', $minLength));
             }
 

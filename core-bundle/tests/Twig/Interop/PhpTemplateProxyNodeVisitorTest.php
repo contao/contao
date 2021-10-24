@@ -43,7 +43,7 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
             new Node(),
             new Node(),
             null,
-            new Source("a\nb", 'foo.html5')
+            new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5')
         );
 
         $environment = $this->createMock(Environment::class);
@@ -52,7 +52,7 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
         /** @var array<BlockNode> $blocks */
         $blocks = iterator_to_array($module->getNode('blocks'));
 
-        $this->assertCount(2, $blocks);
+        $this->assertCount(2, $blocks, 'invalid block names should be ignored');
 
         $this->assertSame('a', $blocks['a']->getAttribute('name'));
         $this->assertSame('b', $blocks['b']->getAttribute('name'));

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
-use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -28,7 +27,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class RouteProviderTest extends TestCase
 {
-    private $pageModelAutoIncrement = 0;
+    private int $pageModelAutoIncrement = 0;
 
     protected function tearDown(): void
     {
@@ -647,57 +646,6 @@ class RouteProviderTest extends TestCase
         }
     }
 
-    public function testIgnoresRoutesWithoutRootId(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
-        $page->rootId = null;
-
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findBy']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/foo.html');
-        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
-    public function testIgnoresPagesWithNoRootPageFoundException(): void
-    {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
-        $page
-            ->expects($this->once())
-            ->method('loadDetails')
-            ->willThrowException(new NoRootPageFoundException())
-        ;
-
-        $pageAdapter = $this->mockAdapter(['findBy']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn(new Collection([$page], 'tl_page'))
-        ;
-
-        $framework = $this->mockFramework($pageAdapter);
-        $request = $this->mockRequestWithPath('/foo.html');
-        $routes = $this->getRouteProvider($framework)->getRouteCollectionForRequest($request)->all();
-
-        $this->assertIsArray($routes);
-        $this->assertEmpty($routes);
-    }
-
     /**
      * @return Request&MockObject
      */
@@ -771,7 +719,7 @@ class RouteProviderTest extends TestCase
         $page->rootLanguage = $language;
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = false;
-        $page->rootSorting = array_reduce((array) $language, static function ($c, $i) { return $c + \ord($i); }, 0);
+        $page->rootSorting = array_reduce((array) $language, static fn ($c, $i) => $c + \ord($i), 0);
 
         return $page;
     }

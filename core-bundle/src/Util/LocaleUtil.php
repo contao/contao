@@ -26,7 +26,7 @@ class LocaleUtil
     /**
      * @var array<string, array<string>>
      */
-    private static $fallbacks = [];
+    private static array $fallbacks = [];
 
     public static function canonicalize(string $locale): string
     {
@@ -56,8 +56,18 @@ class LocaleUtil
             return self::$fallbacks[$locale];
         }
 
+        if ('' === $locale) {
+            return [];
+        }
+
+        $result = [];
         $data = \Locale::parseLocale($locale);
-        $result = [$data[\Locale::LANG_TAG]];
+
+        if (isset($data[\Locale::LANG_TAG])) {
+            $result[] = $data[\Locale::LANG_TAG];
+        } else {
+            $data[\Locale::LANG_TAG] = '';
+        }
 
         if (isset($data[\Locale::REGION_TAG])) {
             $result[] = $data[\Locale::LANG_TAG].'_'.$data[\Locale::REGION_TAG];
@@ -75,7 +85,7 @@ class LocaleUtil
     }
 
     /**
-     * Converts an Locale ID (_) to a Language Tag (-) and strips keywords
+     * Converts a Locale ID (_) to a Language Tag (-) and strips keywords
      * after the @ sign.
      *
      * Language Tag is used in two cases in Contao:

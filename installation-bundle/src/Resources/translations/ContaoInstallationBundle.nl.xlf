@@ -47,9 +47,11 @@
       </trans-unit>
       <trans-unit id="12" resname="show_password">
         <source>Show password</source>
+        <target>Toon wachtwoord</target>
       </trans-unit>
       <trans-unit id="13" resname="hide_password">
         <source>Hide password</source>
+        <target>Verberg wachtwoord</target>
       </trans-unit>
       <trans-unit id="14" resname="save_password">
         <source>Save password</source>

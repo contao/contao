@@ -16,7 +16,6 @@ use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -128,13 +127,6 @@ class AuthenticationFailureHandlerTest extends TestCase
             ->expects($this->once())
             ->method('getSession')
             ->willReturn($session)
-        ;
-
-        $request->request = $this->createMock(ParameterBag::class);
-        $request->request
-            ->expects($this->never())
-            ->method('get')
-            ->with('username')
         ;
 
         return $request;

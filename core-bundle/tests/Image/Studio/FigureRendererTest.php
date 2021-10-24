@@ -146,6 +146,34 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
     }
 
+    /**
+     * @dataProvider provideInvalidTemplates
+     */
+    public function testFailsWithInvalidTemplate(string $invalidTemplate): void
+    {
+        $figureRenderer = $this->getFigureRenderer();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches("/Invalid Contao template name '.*'\\./");
+
+        $figureRenderer->render(1, null, [], $invalidTemplate);
+    }
+
+    public function provideInvalidTemplates(): \Generator
+    {
+        yield 'not treated as Twig template, has extension' => [
+            'foo.twig',
+        ];
+
+        yield 'contains slashes' => [
+            '/some/path/foo',
+        ];
+
+        yield 'contains whitespaces' => [
+            'f oo',
+        ];
+    }
+
     public function testReturnsNullIfTheResourceDoesNotExist(): void
     {
         $figureBuilder = $this->createMock(FigureBuilder::class);

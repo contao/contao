@@ -17,8 +17,8 @@ use Contao\Message;
 use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\String\UnicodeString;
 
 $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 (
@@ -334,7 +334,7 @@ class tl_style_sheet extends Backend
 	 */
 	public function romanizeName($varValue)
 	{
-		return Utf8::toAscii($varValue);
+		return (new UnicodeString($varValue))->ascii()->toString();
 	}
 
 	/**

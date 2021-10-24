@@ -12,23 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeVisitor\AbstractNodeVisitor;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental
  */
 final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 {
-    /**
-     * @var string
-     */
-    private $extensionName;
+    private string $extensionName;
 
     public function __construct(string $extensionName)
     {
@@ -47,7 +44,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 
     protected function doLeaveNode(Node $node, Environment $env): Node
     {
-        if ($node instanceof ModuleNode && 'html5' === Path::getExtension($node->getTemplateName(), true)) {
+        if ($node instanceof ModuleNode && ContaoTwigUtil::isLegacyTemplate($node->getTemplateName() ?? '')) {
             $this->configurePhpTemplateProxy($node);
         }
 
@@ -65,6 +62,11 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
         $blockNodes = [];
 
         foreach (explode("\n", $node->getSourceContext()->getCode()) as $name) {
+            // Sanity check for valid block names
+            if (1 !== preg_match('/^[a-z0-9_-]+$/i', $name)) {
+                continue;
+            }
+
             $blockNodes[$name] = new BlockNode($name, new TextNode('[[TL_PARENT]]', 0), 0);
         }
 

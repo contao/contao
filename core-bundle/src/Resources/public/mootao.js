@@ -118,7 +118,11 @@ Tips.Contao = new Class(
 	options: {
 		id: 'tip',
 		onShow: function() {
-			this.tip.setStyle('display', 'block');
+			var title = this.tip.getElement('div.tip-title');
+			var text = this.tip.getElement('div.tip-text');
+			if ((title && title.innerHTML) || (text && text.innerHTML)) {
+				this.tip.setStyle('display', 'block');
+			}
 		},
 		onHide: function() {
 			this.tip.setStyle('display', 'none');
@@ -442,9 +446,9 @@ Contao.SerpPreview = new Class(
 
 		titleField && titleField.addEvent('input', function() {
 			if (titleField.value) {
-				serpTitle.set('text', this.shorten(titleTag.replace(/\%s/, titleField.value), 64));
+				serpTitle.set('text', this.shorten(titleTag.replace(/%s/, titleField.value).replace(/%%/g, '%'), 64));
 			} else if (titleFallbackField && titleFallbackField.value) {
-				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/\%s/, titleFallbackField.value)), 64));
+				serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleFallbackField.value)).replace(/%%/g, '%'), 64));
 			} else {
 				serpTitle.set('text', '');
 			}
@@ -452,7 +456,7 @@ Contao.SerpPreview = new Class(
 
 		titleFallbackField && titleFallbackField.addEvent('input', function() {
 			if (titleField && titleField.value) return;
-			serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/\%s/, titleFallbackField.value)), 64));
+			serpTitle.set('text', this.shorten(this.html2string(titleTag.replace(/%s/, titleFallbackField.value)).replace(/%%/g, '%'), 64));
 		}.bind(this));
 
 		aliasField && aliasField.addEvent('input', function() {

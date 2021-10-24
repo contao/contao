@@ -873,20 +873,14 @@ abstract class Backend extends Controller
 
 				$arrIds[] = $intId;
 
-				// No link for the active page
-				if ($objPage->id == $intNode)
+				// No link for the active page or pages in the trail
+				if ($objPage->id == $intNode || !$objUser->hasAccess($objPage->id, 'pagemounts'))
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
 				}
 				else
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
-				}
-
-				// Do not show the mounted pages
-				if (!$objUser->isAdmin && $objUser->hasAccess($objPage->id, 'pagemounts'))
-				{
-					break;
 				}
 
 				$intId = $objPage->pid;
@@ -901,8 +895,9 @@ abstract class Backend extends Controller
 			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
-		// Limit tree
+		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
@@ -927,10 +922,11 @@ abstract class Backend extends Controller
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
+	 * @param boolean       $isVisibleRootTrailPage
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{
@@ -952,8 +948,15 @@ abstract class Backend extends Controller
 			$label = '<strong>' . $label . '</strong>';
 		}
 
-		// Add the breadcrumb link
-		$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		// Add the breadcrumb link if you have access to that page
+		if (!$isVisibleRootTrailPage)
+		{
+			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		}
+		else
+		{
+			$label = '<span>' . $label . '</span>';
+		}
 
 		// Return the image
 		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
@@ -124,10 +125,7 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension(
-            $environment,
-            $this->createMock(TemplateHierarchyInterface::class)
-        );
+        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -201,6 +199,71 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame("foo: bar\noriginal A block\noverwritten B block", $output);
     }
 
+    public function testRenderLegacyTemplateNested(): void
+    {
+        $extension = $this->getContaoExtension();
+
+        System::setContainer($this->getContainerWithContaoConfiguration(
+            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
+        ));
+
+        $output = $extension->renderLegacyTemplate(
+            'baz.html5',
+            ['B' => "root before B\n[[TL_PARENT]]root after B"],
+            ['foo' => 'bar']
+        );
+
+        $this->assertSame(
+            implode("\n", [
+                'foo: bar',
+                'baz before A',
+                'bar before A',
+                'original A block',
+                'bar after A',
+                'baz after A',
+                'root before B',
+                'baz before B',
+                'original B block',
+                'baz after B',
+                'root after B',
+            ]),
+            $output
+        );
+    }
+
+    public function testRenderLegacyTemplateWithTemplateFunctions(): void
+    {
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->method('hasBackendUser')
+            ->willReturn(true)
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
+        $container->set('contao.security.token_checker', $tokenChecker);
+
+        System::setContainer($container);
+
+        $GLOBALS['TL_LANG'] = [
+            'MONTHS' => ['a', 'b'],
+            'DAYS' => ['c', 'd'],
+            'MONTHS_SHORT' => ['e', 'f'],
+            'DAYS_SHORT' => ['g', 'h'],
+            'DP' => ['select_a_time' => 'i', 'use_mouse_wheel' => 'j', 'time_confirm_button' => 'k', 'apply_range' => 'l', 'cancel' => 'm', 'week' => 'n'],
+        ];
+
+        $output = $this->getContaoExtension()->renderLegacyTemplate('with_template_functions.html5', [], []);
+
+        $expected =
+            "1\n".
+            'Locale.define("en-US","Date",{months:["a","b"],days:["c","d"],months_abbr:["e","f"],days_abbr:["g","h"]});'.
+            'Locale.define("en-US","DatePicker",{select_a_time:"i",use_mouse_wheel:"j",time_confirm_button:"k",apply_range:"l",cancel:"m",week:"n"});';
+
+        $this->assertSame($expected, $output);
+
+        unset($GLOBALS['TL_LANG']);
+    }
+
     /**
      * @param Environment&MockObject $environment
      */
@@ -208,6 +271,10 @@ class ContaoExtensionTest extends TestCase
     {
         if (null === $environment) {
             $environment = $this->createMock(Environment::class);
+        }
+
+        if (null === $hierarchy) {
+            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         }
 
         $environment
@@ -218,9 +285,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension(
-            $environment,
-            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class)
-        );
+        return new ContaoExtension($environment, $hierarchy);
     }
 }

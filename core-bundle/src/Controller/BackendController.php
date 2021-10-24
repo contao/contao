@@ -23,7 +23,6 @@ use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -182,14 +181,9 @@ class BackendController extends AbstractController
         $extras = [];
 
         if ($request->query->has('extras')) {
-            if ($request->query instanceof InputBag) {
-                $extras = $request->query->all('extras');
-            } else { /** @phpstan-ignore-line */
-                // Backwards compatibility with symfony/http-foundation <5.0
-                $extras = $request->query->get('extras');
-            }
+            $extras = $request->query->all('extras');
 
-            if (empty($extras) || !\is_array($extras)) {
+            if (empty($extras)) {
                 throw new BadRequestHttpException('Invalid picker extras');
             }
         }

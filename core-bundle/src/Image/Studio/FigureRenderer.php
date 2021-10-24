@@ -20,24 +20,12 @@ use Contao\Image\PictureConfiguration;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Twig\Environment;
-use Webmozart\PathUtil\Path;
 
 class FigureRenderer
 {
-    /**
-     * @var Studio
-     */
-    private $studio;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var PropertyAccessor
-     */
-    private $propertyAccessor;
+    private Studio $studio;
+    private Environment $twig;
+    private PropertyAccessor $propertyAccessor;
 
     public function __construct(Studio $studio, Environment $twig)
     {
@@ -92,8 +80,12 @@ class FigureRenderer
 
     private function renderTemplate(Figure $figure, string $template): string
     {
-        if ('twig' === Path::getExtension($template, true)) {
+        if (1 === preg_match('/\.html\.twig$/', $template)) {
             return $this->twig->render($template, ['figure' => $figure]);
+        }
+
+        if (1 !== preg_match('/^[^\/.\s]*$/', $template)) {
+            throw new \InvalidArgumentException("Invalid Contao template name '$template'.");
         }
 
         $imageTemplate = new FrontendTemplate($template);

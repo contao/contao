@@ -28,10 +28,9 @@ use Webmozart\PathUtil\Path;
 
 class ImageResult
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $locator;
+    private ContainerInterface $locator;
+    private ?ResizeOptions $resizeOptions;
+    private string $projectDir;
 
     /**
      * @var string|ImageInterface
@@ -44,28 +43,14 @@ class ImageResult
     private $sizeConfiguration;
 
     /**
-     * @var ResizeOptions|null
-     */
-    private $resizeOptions;
-
-    /**
      * Cached picture.
-     *
-     * @var PictureInterface|null
      */
-    private $picture;
+    private ?PictureInterface $picture = null;
 
     /**
      * Cached image dimensions.
-     *
-     * @var ImageDimensions|null
      */
-    private $originalDimensions;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ?ImageDimensions $originalDimensions = null;
 
     /**
      * @param string|ImageInterface                      $filePathOrImage
@@ -140,7 +125,7 @@ class ImageResult
     }
 
     /**
-     * Returns the "src" attribute of the image. This will return an URL by
+     * Returns the "src" attribute of the image. This will return a URL by
      * default. Set $asPath to true to get a relative file path instead.
      */
     public function getImageSrc(bool $asPath = false): string
@@ -212,9 +197,7 @@ class ImageResult
 
         $deferredImages = array_filter(
             $candidates,
-            static function ($image): bool {
-                return $image instanceof DeferredImageInterface;
-            }
+            static fn ($image): bool => $image instanceof DeferredImageInterface
         );
 
         if (empty($deferredImages)) {

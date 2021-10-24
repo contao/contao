@@ -28,25 +28,10 @@ use Webmozart\PathUtil\Path;
  */
 class ImagesController
 {
-    /**
-     * @var ImageFactoryInterface
-     */
-    private $imageFactory;
-
-    /**
-     * @var ResizerInterface
-     */
-    private $resizer;
-
-    /**
-     * @var string
-     */
-    private $targetDir;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private ImageFactoryInterface $imageFactory;
+    private ResizerInterface $resizer;
+    private string $targetDir;
+    private Filesystem $filesystem;
 
     public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, Filesystem $filesystem = null)
     {

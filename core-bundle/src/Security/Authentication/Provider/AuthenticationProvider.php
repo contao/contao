@@ -36,51 +36,23 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AuthenticationProvider extends DaoAuthenticationProvider
 {
-    /**
-     * @var UserCheckerInterface
-     */
-    private $userChecker;
-
-    /**
-     * @var string
-     */
-    private $providerKey;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var AuthenticationProviderInterface
-     */
-    private $twoFactorAuthenticationProvider;
-
-    /**
-     * @var AuthenticationHandlerInterface
-     */
-    private $twoFactorAuthenticationHandler;
-
-    /**
-     * @var AuthenticationContextFactoryInterface
-     */
-    private $authenticationContextFactory;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var TrustedDeviceManagerInterface
-     */
-    private $trustedDeviceManager;
+    private UserCheckerInterface $userChecker;
+    private string $providerKey;
+    private ContaoFramework $framework;
+    private AuthenticationProviderInterface $twoFactorAuthenticationProvider;
+    private AuthenticationHandlerInterface $twoFactorAuthenticationHandler;
+    private AuthenticationContextFactoryInterface $authenticationContextFactory;
+    private RequestStack $requestStack;
+    private TrustedDeviceManagerInterface $trustedDeviceManager;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_provider" service instead
+     *
+     * @todo Replace EncoderFactoryInterface with Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface
      */
     public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, EncoderFactoryInterface $encoderFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack, TrustedDeviceManagerInterface $trustedDeviceManager)
     {
+        /** @phpstan-ignore-next-line */
         parent::__construct($userProvider, $userChecker, $providerKey, $encoderFactory, false);
 
         $this->userChecker = $userChecker;
@@ -120,7 +92,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
             return $token;
         }
 
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
         $context = $this->authenticationContextFactory->create($request, $token, $this->providerKey);
 
         return $this->twoFactorAuthenticationHandler->beginTwoFactorAuthentication($context);

@@ -598,12 +598,7 @@ class TwigMacrosTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([
-            new ContaoExtension(
-                $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
-            ),
-        ]);
+        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
 
         if (null === $responseContextAccessor) {
             $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -611,9 +606,7 @@ class TwigMacrosTest extends TestCase
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
-                SchemaOrgRuntime::class => static function () use ($responseContextAccessor) {
-                    return new SchemaOrgRuntime($responseContextAccessor);
-                },
+                SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
             ])
         );
 

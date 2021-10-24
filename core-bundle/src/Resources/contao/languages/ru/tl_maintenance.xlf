@@ -119,6 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Воссоздает символические ссылки в общем каталоге (корень документа).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

@@ -20,28 +20,24 @@ use Twig\Node\Node;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
- * This NodeVisitor alters all "escape('html')" filter expressions into
- * "escape('contao_html')" filter expressions if the template they belong
+ * This NodeVisitor alters all "escape('html')" and "escape('html_attr')"
+ * filter expressions into "escape('contao_html')" and
+ * "escape('contao_html_attr')" filter expressions if the template they belong
  * to is amongst the configured affected templates.
  *
  * @experimental
  */
 final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
+    private ?array $escaperFilterNodes = null;
+
     /**
      * We evaluate affected templates on the fly so that rules can be adjusted
      * after building the container. Expects a list of regular expressions to
      * be returned. A template counts as 'affected' if it matches any of the
      * rules.
-     *
-     * @var \Closure():array<string>
      */
-    private $rules;
-
-    /**
-     * @var array|null
-     */
-    private $escaperFilterNodes;
+    private \Closure $rules;
 
     public function __construct(\Closure $rules)
     {
@@ -70,8 +66,10 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 
         if ($node instanceof ModuleNode && $isAffected(($this->rules)(), $node->getTemplateName() ?? '')) {
             $this->escaperFilterNodes = [];
-        } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpressionWithHtmlStrategy($node)) {
-            $this->escaperFilterNodes[] = $node;
+        } elseif (null !== $this->escaperFilterNodes && $this->isEscaperFilterExpression($node, $strategy)) {
+            if (\in_array($strategy, ['html', 'html_attr'], true)) {
+                $this->escaperFilterNodes[] = [$node, $strategy];
+            }
         }
 
         return $node;
@@ -80,8 +78,8 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     protected function doLeaveNode(Node $node, Environment $env)
     {
         if ($node instanceof ModuleNode && null !== $this->escaperFilterNodes) {
-            foreach ($this->escaperFilterNodes as $escaperFilterNode) {
-                $this->setContaoEscaperArguments($escaperFilterNode);
+            foreach ($this->escaperFilterNodes as [$escaperFilterNode, $strategy]) {
+                $this->setContaoEscaperArguments($escaperFilterNode, $strategy);
             }
 
             $this->escaperFilterNodes = null;
@@ -90,21 +88,33 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return $node;
     }
 
-    private function isEscaperFilterExpressionWithHtmlStrategy(Node $node): bool
+    /**
+     * @param-out string $type
+     */
+    private function isEscaperFilterExpression(Node $node, string &$type = null): bool
     {
-        return $node instanceof FilterExpression
-            && 'escape' === $node->getNode('filter')->getAttribute('value')
-            && $node->getNode('arguments')->hasNode(0)
-            && ($argument = $node->getNode('arguments')->getNode(0)) instanceof ConstantExpression
-            && 'html' === $argument->getAttribute('value');
+        if (
+            !$node instanceof FilterExpression
+            || !$node->getNode('arguments')->hasNode('0')
+            || !($argument = $node->getNode('arguments')->getNode('0')) instanceof ConstantExpression
+            || !\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)
+        ) {
+            $type = '';
+
+            return false;
+        }
+
+        $type = $argument->getAttribute('value');
+
+        return true;
     }
 
-    private function setContaoEscaperArguments(FilterExpression $node): void
+    private function setContaoEscaperArguments(FilterExpression $node, string $strategy): void
     {
         $line = $node->getTemplateLine();
 
         $arguments = new Node([
-            new ConstantExpression('contao_html', $line),
+            new ConstantExpression("contao_$strategy", $line),
             new ConstantExpression(null, $line),
             new ConstantExpression(true, $line),
         ]);

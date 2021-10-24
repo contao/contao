@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['delete'],
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] . '\'))return false;Backend.getScrollOffset()"'
+				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
 			),
 			'source' => array
 			(
@@ -504,9 +504,6 @@ class tl_templates extends Backend
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
-		System::getContainer()->setParameter('kernel.debug', false);
-		$GLOBALS['TL_CONFIG']['debugMode'] = false;
-
 		throw new ResponseException($objTemplate->getResponse());
 	}
 
@@ -587,7 +584,7 @@ class tl_templates extends Backend
 	public function editSource($row, $href, $label, $title, $icon, $attributes)
 	{
 		/** @var DC_Folder $dc */
-		$dc = (@func_get_arg(12) ?: null);
+		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
 		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
 
 		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';

@@ -19,10 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
@@ -83,10 +80,12 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             return $attributes;
         }
 
-        $chunks = $this->getInsertTagChunks($config);
+        if ($value && $this->isMatchingInsertTag($config)) {
+            $attributes['value'] = $this->getInsertTagValue($config);
 
-        if ($value && false !== strpos($value, $chunks[0])) {
-            $attributes['value'] = str_replace($chunks, '', $value);
+            if ($flags = $this->getInsertTagFlags($config)) {
+                $attributes['flags'] = $flags;
+            }
         }
 
         return $attributes;

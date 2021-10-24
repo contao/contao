@@ -25,10 +25,7 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PublishedFilter implements RouteFilterInterface
 {
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
+    private TokenChecker $tokenChecker;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.published_filter" service instead

@@ -120,7 +120,7 @@ class StoreRefererListenerTest extends TestCase
         $responseEvent = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new Response('', 404)
         );
 
@@ -136,7 +136,7 @@ class StoreRefererListenerTest extends TestCase
         $responseEvent = new ResponseEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new Response('', 404)
         );
 
@@ -253,6 +253,6 @@ class StoreRefererListenerTest extends TestCase
             $request = new Request();
         }
 
-        return new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, new Response());
+        return new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response());
     }
 }

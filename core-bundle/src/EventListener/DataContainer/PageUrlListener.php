@@ -26,35 +26,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageUrlListener implements ResetInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Slug
-     */
-    private $slug;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var array|null
-     */
-    private $prefixes;
-
-    /**
-     * @var array|null
-     */
-    private $suffixes;
+    private ContaoFramework $framework;
+    private Slug $slug;
+    private TranslatorInterface $translator;
+    private Connection $connection;
+    private ?array $prefixes = null;
+    private ?array $suffixes = null;
 
     public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection)
     {
@@ -93,9 +70,7 @@ class PageUrlListener implements ResetInterface
         $value = $this->slug->generate(
             $dc->activeRecord->title,
             $dc->activeRecord->id,
-            function ($alias) use ($pageModel) {
-                return $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel);
-            }
+            fn ($alias) => $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel)
         );
 
         // Generate folder URL aliases (see #4933)

@@ -28,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webmozart\PathUtil\Path;
 
@@ -49,8 +50,9 @@ class ContaoCoreExtension extends Extension
             trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
         }
 
-        $configuration = new Configuration($container->getParameter('kernel.project_dir'));
+        $projectDir = $container->getParameter('kernel.project_dir');
 
+        $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader(
@@ -64,7 +66,8 @@ class ContaoCoreExtension extends Extension
         $loader->load('services.yml');
         $loader->load('migrations.yml');
 
-        $container->setParameter('contao.web_dir', $config['web_dir']);
+        // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -121,7 +124,7 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.search_indexer')
         ;
 
-        // Set the two parameters so they can be used in our legacy Config class for maximum BC
+        // Set the two parameters, so they can be used in our legacy Config class for maximum BC
         $container->setParameter('contao.search.default_indexer.enable', $config['search']['default_indexer']['enable']);
         $container->setParameter('contao.search.index_protected', $config['search']['index_protected']);
 
@@ -190,7 +193,7 @@ class ContaoCoreExtension extends Extension
                 // Make sure that arrays defined under _defaults will take precedence over empty arrays (see #2783)
                 $value = array_merge(
                     $config['image']['sizes']['_defaults'],
-                    array_filter($value, static function ($v) { return !\is_array($v) || !empty($v); })
+                    array_filter($value, static fn ($v) => !\is_array($v) || !empty($v))
                 );
             }
 
@@ -318,5 +321,22 @@ class ContaoCoreExtension extends Extension
         if ($mergedConfig['legacy_routing']) {
             $loader->load('legacy_routing.yml');
         }
+    }
+
+    private function getComposerPublicDir(string $projectDir): ?string
+    {
+        $fs = new Filesystem();
+
+        if (!$fs->exists($composerJsonFilePath = Path::join($projectDir, 'composer.json'))) {
+            return null;
+        }
+
+        $composerConfig = json_decode(file_get_contents($composerJsonFilePath), true, 512, JSON_THROW_ON_ERROR);
+
+        if (null === ($publicDir = $composerConfig['extra']['public-dir'] ?? null)) {
+            return null;
+        }
+
+        return Path::join($projectDir, $publicDir);
     }
 }

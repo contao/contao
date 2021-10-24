@@ -369,14 +369,6 @@
         <source>Here you can select the feed template.</source>
         <target>Zde můžete vybrat šablonu kanálu.</target>
       </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.0">
-        <source>Number of items</source>
-        <target>Počet položek</target>
-      </trans-unit>
-      <trans-unit id="tl_module.numberOfItems.1">
-        <source>Here you can limit the number of items. Set to 0 to show all.</source>
-        <target>Zde můžete omezit počet položek. Zadejte 0, pokud chcete zobrazit všechny položky.</target>
-      </trans-unit>
       <trans-unit id="tl_module.protected.0">
         <source>Protect module</source>
         <target>Chránit modul</target>

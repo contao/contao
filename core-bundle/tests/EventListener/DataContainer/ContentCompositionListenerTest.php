@@ -27,6 +27,7 @@ use Contao\LayoutModel;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -36,10 +37,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
-    /**
-     * @var array
-     */
-    private $pageRecord = [
+    private ContentCompositionListener $listener;
+
+    private array $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
         'type' => 'foo',
@@ -47,10 +47,7 @@ class ContentCompositionListenerTest extends TestCase
         'published' => '1',
     ];
 
-    /**
-     * @var array
-     */
-    private $articleRecord = [
+    private array $articleRecord = [
         'id' => 2,
         'pid' => 17,
         'alias' => 'foo-bar',
@@ -97,11 +94,6 @@ class ContentCompositionListenerTest extends TestCase
      * @var RequestStack&MockObject
      */
     private $requestStack;
-
-    /**
-     * @var ContentCompositionListener
-     */
-    private $listener;
 
     protected function setUp(): void
     {
@@ -530,6 +522,8 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testGenerateArticleForNewPage(): void
     {
+        ClockMock::withClockMock(true);
+
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
 
@@ -559,6 +553,8 @@ class ContentCompositionListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo', 'activeRecord' => (object) $this->pageRecord]);
 
         $this->listener->generateArticleForPage($dc);
+
+        ClockMock::withClockMock(false);
     }
 
     /**
@@ -566,6 +562,8 @@ class ContentCompositionListenerTest extends TestCase
      */
     public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
     {
+        ClockMock::withClockMock(true);
+
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
 
@@ -604,6 +602,8 @@ class ContentCompositionListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo', 'activeRecord' => (object) $this->pageRecord]);
 
         $this->listener->generateArticleForPage($dc);
+
+        ClockMock::withClockMock(false);
     }
 
     public function moduleConfigProvider(): \Generator

@@ -35,14 +35,14 @@ class Metadata
      *
      * @var array<string, mixed>
      */
-    private $values;
+    private array $values;
 
     /**
      * JSON-LD data where the key matches the schema.org type.
      *
-     * @var array<string, array>
+     * @var array<string, array>|null
      */
-    private $schemaOrgJsonLd;
+    private ?array $schemaOrgJsonLd;
 
     /**
      * @param array<string, mixed>      $values

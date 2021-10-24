@@ -16,7 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
@@ -25,25 +25,10 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
  */
 class CommandSchedulerListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var string
-     */
-    private $fragmentPath;
-
-    /**
-     * @var Cron
-     */
-    private $cron;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private string $fragmentPath;
+    private Cron $cron;
 
     public function __construct(ContaoFramework $framework, Connection $connection, Cron $cron, string $fragmentPath = '_fragment')
     {
@@ -85,8 +70,8 @@ class CommandSchedulerListener
     {
         try {
             return $this->connection->isConnected()
-                && $this->connection->getSchemaManager()->tablesExist(['tl_cron_job']);
-        } catch (DriverException $e) {
+                && $this->connection->createSchemaManager()->tablesExist(['tl_cron_job']);
+        } catch (Exception $e) {
             return false;
         }
     }

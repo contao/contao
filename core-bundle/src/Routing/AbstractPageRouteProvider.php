@@ -24,15 +24,8 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    protected $framework;
-
-    /**
-     * @var CandidatesInterface
-     */
-    protected $candidates;
+    protected ContaoFramework $framework;
+    protected CandidatesInterface $candidates;
 
     public function __construct(ContaoFramework $framework, CandidatesInterface $candidates)
     {
@@ -202,7 +195,10 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $result = [];
 
         foreach ($languages as $language) {
-            $locales = LocaleUtil::getFallbacks($language);
+            if (!$locales = LocaleUtil::getFallbacks($language)) {
+                continue;
+            }
+
             $language = array_pop($locales);
             $result[] = $language;
 

@@ -18,20 +18,9 @@ use Webmozart\PathUtil\Path;
 
 class ParameterDumper
 {
-    /**
-     * @var string
-     */
-    private $configFile;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var array
-     */
-    private $parameters = ['parameters' => []];
+    private string $configFile;
+    private Filesystem $filesystem;
+    private array $parameters = ['parameters' => []];
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {

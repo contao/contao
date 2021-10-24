@@ -21,25 +21,10 @@ use Webmozart\PathUtil\Path;
  */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var ContaoFilesystemLoader
-     */
-    private $loader;
-
-    /**
-     * @var TemplateLocator
-     */
-    private $templateLocator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $environment;
+    private ContaoFilesystemLoader $loader;
+    private TemplateLocator $templateLocator;
+    private string $projectDir;
+    private string $environment;
 
     public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $environment)
     {
@@ -55,19 +40,19 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $themePaths = $this->templateLocator->findThemeDirectories();
 
         foreach ($themePaths as $slug => $path) {
-            $this->loader->addPath($path, "Contao_Theme_$slug");
+            $this->loader->addPath($path, "Contao_Theme_$slug", true);
         }
 
         // Global templates path
         $globalTemplatesPath = Path::join($this->projectDir, 'templates');
 
-        $this->loader->addPath($globalTemplatesPath, 'Contao');
+        $this->loader->addPath($globalTemplatesPath);
         $this->loader->addPath($globalTemplatesPath, 'Contao_Global', true);
 
         // Bundle paths (including App)
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {
-                $this->loader->addPath($path, 'Contao');
+                $this->loader->addPath($path);
                 $this->loader->addPath($path, "Contao_$name", true);
             }
         }

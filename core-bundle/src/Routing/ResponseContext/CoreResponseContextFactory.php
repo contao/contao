@@ -23,20 +23,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
 {
-    /**
-     * @var ResponseContextAccessor
-     */
-    private $responseContextAccessor;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
+    private ResponseContextAccessor $responseContextAccessor;
+    private EventDispatcherInterface $eventDispatcher;
+    private TokenChecker $tokenChecker;
 
     public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker)
     {
@@ -83,7 +72,7 @@ class CoreResponseContextFactory
         /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
 
-        $title = $pageModel->pageTitle ?: StringUtil::inputEncodedToPlainText($pageModel->title ?: '');
+        $title = StringUtil::inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
 
         $htmlHeadBag
             ->setTitle($title ?: '')

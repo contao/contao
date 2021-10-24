@@ -28,10 +28,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
@@ -73,6 +70,10 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 
         if ($this->supportsValue($config)) {
             $attributes['value'] = $this->getInsertTagValue($config);
+
+            if ($flags = $this->getInsertTagFlags($config)) {
+                $attributes['flags'] = $flags;
+            }
         }
 
         return $attributes;
