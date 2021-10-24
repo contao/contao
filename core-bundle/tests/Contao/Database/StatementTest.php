@@ -16,8 +16,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Statement;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\ResultStatement;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Result;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -58,7 +58,7 @@ class StatementTest extends TestCase
      */
     public function testExplainQuery(): void
     {
-        $doctrineResult = $this->createMock(ResultStatement::class);
+        $doctrineResult = $this->createMock(Result::class);
         $doctrineResult
             ->method('columnCount')
             ->willReturn(1)
@@ -120,7 +120,7 @@ class StatementTest extends TestCase
      */
     public function testBackwardsCompatibleReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
     {
-        $doctrineResult = $this->createMock(ResultStatement::class);
+        $doctrineResult = $this->createMock(Result::class);
         $doctrineResult
             ->method('columnCount')
             ->willReturn(1)
@@ -210,7 +210,7 @@ class StatementTest extends TestCase
     /*
     public function testOldImplementationReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
     {
-        $doctrineResult = $this->createMock(ResultStatement::class);
+        $doctrineResult = $this->createMock(Result::class);
         $doctrineResult
             ->method('columnCount')
             ->willReturn(1)

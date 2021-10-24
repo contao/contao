@@ -12,7 +12,7 @@ namespace Contao\Database;
 
 use Contao\Database;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Driver\Result as DoctrineResult;
 use Doctrine\DBAL\Exception\DriverException;
 
 /**
@@ -45,7 +45,7 @@ class Statement
 
 	/**
 	 * Database statement
-	 * @var ResultStatement
+	 * @var DoctrineResult
 	 */
 	protected $statement;
 
