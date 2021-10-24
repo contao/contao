@@ -108,7 +108,17 @@ class ImageSizes implements ResetInterface
         // The framework is required to have the TL_CROP options available
         $this->framework->initialize();
 
+        // Backwards compatibility
         $this->options = $GLOBALS['TL_CROP'] ?? [];
+
+        if (
+            3 !== \count($this->options)
+            || 0 !== \count($this->options['image_sizes'] ?? [])
+            || 2 !== \count($this->options['relative'] ?? [])
+            || 10 !== \count($this->options['exact'] ?? [])
+        ) {
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using $GLOBALS[\'TL_CROP\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.image.image_sizes" service instead.');
+        }
 
         $rows = $this->connection->fetchAllAssociative(
             'SELECT
