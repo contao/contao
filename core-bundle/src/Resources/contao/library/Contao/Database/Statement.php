@@ -267,16 +267,16 @@ class Statement
 			static function ($varParam)
 			{
 				if (
-					!\is_string($varParam)
-					&& !\is_bool($varParam)
-					&& !\is_float($varParam)
-					&& !\is_int($varParam)
-					&& $varParam !== null
+					\is_string($varParam)
+					|| \is_bool($varParam)
+					|| \is_float($varParam)
+					|| \is_int($varParam)
+					|| $varParam === null
 				) {
-					return serialize($varParam);
+					return $varParam;
 				}
 
-				return $varParam;
+				return serialize($varParam);
 			},
 			$arrParams
 		);
