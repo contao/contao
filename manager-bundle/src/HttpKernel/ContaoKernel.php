@@ -226,13 +226,19 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     {
         self::loadEnv($projectDir, 'jwt');
 
-        // See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/public/index.php
-        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
-            Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
-        }
-
         if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
             Request::setTrustedHosts(explode(',', $trustedHosts));
+        }
+
+        if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
+            $trustedHeaderSet = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO;
+
+            // If we have a limited list of trusted hosts, we can safely use the X-Forwarded-Host header
+            if ($trustedHosts) {
+                $trustedHeaderSet |= Request::HEADER_X_FORWARDED_HOST;
+            }
+
+            Request::setTrustedProxies(explode(',', $trustedProxies), $trustedHeaderSet);
         }
 
         Request::enableHttpMethodParameterOverride();
@@ -260,13 +266,9 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $kernel->setJwtManager($jwtManager);
         }
 
-        if (!$kernel->isDebug()) {
-            $cache = $kernel->getHttpCache();
-
-            // Enable the Symfony reverse proxy if request has no surrogate capability
-            if (($surrogate = $cache->getSurrogate()) && !$surrogate->hasSurrogateCapability($request)) {
-                return $cache;
-            }
+        // Enable the Symfony reverse proxy if not disabled explicitly
+        if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? null) && !$kernel->isDebug()) {
+            return $kernel->getHttpCache();
         }
 
         return $kernel;

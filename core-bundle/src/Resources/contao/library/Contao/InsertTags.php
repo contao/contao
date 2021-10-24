@@ -385,8 +385,10 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
+						@trigger_error('Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
 						$strUrl = 'javascript:history.go(-1)';
-						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'];
+						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;
 
 						// No language files if the page is cached
 						if (!$strTitle)
@@ -473,6 +475,11 @@ class InsertTags extends Controller
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
 
+					if (!$strTarget && \in_array('blank', \array_slice($elements, 2), true))
+					{
+						$strTarget = ' target="_blank" rel="noreferrer noopener"';
+					}
+
 					// Replace the tag
 					switch (strtolower($elements[0]))
 					{
@@ -549,16 +556,17 @@ class InsertTags extends Controller
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
 					{
 						case 'article':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $objArticle->title);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
 							break;
 
 						case 'article_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, StringUtil::specialcharsAttribute($objArticle->title));
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
 							break;
 
 						case 'article_url':
@@ -1346,12 +1354,16 @@ class InsertTags extends Controller
 			// Add the urlattr insert tags flag in URL attributes
 			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
 			{
-				$attributesResult .= preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
+				$matches[0][0] = preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
+
+				// Backwards compatibility
+				if (trim($matches[0][0]) === 'href="{{link_url::back|urlattr}}"')
+				{
+					$matches[0][0] = str_replace('{{link_url::back|urlattr}}', '{{link_url::back}}', $matches[0][0]);
+				}
 			}
-			else
-			{
-				$attributesResult .= $matches[0][0];
-			}
+
+			$attributesResult .= $matches[0][0];
 		}
 
 		$attributesResult .= substr($attributes, $offset);

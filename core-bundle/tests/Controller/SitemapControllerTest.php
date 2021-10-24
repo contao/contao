@@ -75,6 +75,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
@@ -103,6 +104,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
@@ -117,6 +119,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
@@ -158,6 +161,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'groups' => [],
             'published' => '',
         ]);
@@ -171,6 +175,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
@@ -209,6 +214,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
             'requireItem' => '1',
@@ -223,6 +229,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
@@ -276,6 +283,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
         ]);
@@ -308,12 +316,63 @@ class SitemapControllerTest extends TestCase
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
+    public function testSkipsNonRegularPages(): void
+    {
+        /** @var PageModel&MockObject $page1 */
+        $page1 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 43,
+            'pid' => 42,
+            'type' => 'error_404',
+            'groups' => [],
+            'published' => '1',
+        ]);
+
+        $page1
+            ->expects($this->never())
+            ->method('getAbsoluteUrl')
+        ;
+
+        /** @var PageModel&MockObject $page1 */
+        $page2 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 44,
+            'pid' => 43,
+            'type' => 'regular',
+            'groups' => [],
+            'published' => '1',
+        ]);
+
+        $page2
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com/en/page2.html')
+        ;
+
+        $pages = [
+            42 => [$page1],
+            43 => [$page2],
+            44 => null,
+            21 => null,
+        ];
+
+        $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
+        $container = $this->mockContainer($framework);
+
+        $controller = new SitemapController($this->mockPageRegistry());
+        $controller->setContainer($container);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
+    }
+
     public function testSkipsPagesIfTheUserDoesNotHaveAccess(): void
     {
         /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'protected' => '',
             'groups' => [],
             'published' => '1',
@@ -329,6 +388,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
+            'type' => 'regular',
             'protected' => '1',
             'groups' => [],
             'published' => '1',
@@ -368,6 +428,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'protected' => '',
             'groups' => [],
             'published' => '1',
@@ -404,6 +465,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'protected' => '',
             'groups' => [],
             'published' => '1',
@@ -440,6 +502,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
             'robots' => 'index,follow',
@@ -455,6 +518,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 42,
+            'type' => 'regular',
             'groups' => [],
             'published' => '1',
             'robots' => 'noindex,nofollow',
@@ -493,6 +557,7 @@ class SitemapControllerTest extends TestCase
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
+            'type' => 'regular',
             'protected' => '',
             'groups' => [],
             'published' => '1',
@@ -508,6 +573,7 @@ class SitemapControllerTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 22,
             'pid' => 21,
+            'type' => 'regular',
             'protected' => '',
             'groups' => [],
             'published' => '1',

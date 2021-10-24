@@ -153,6 +153,14 @@
         <source>GIF to WEBP</source>
         <target>GIFからWEBP</target>
       </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,png">
+        <source>WEBP to PNG</source>
+        <target>WEBPからPNG</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,jpg">
+        <source>WEBP to JPG</source>
+        <target>WEBPからJPG</target>
+      </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>
         <target>新規作成</target>

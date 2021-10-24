@@ -74,8 +74,28 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
+            $listener('news::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
             $listener('news_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            $listener('news_open::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            $listener('news_open::2::absolute::blank', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            $listener('news_open::2::blank::absolute', false, null, [])
         );
 
         $this->assertSame(
@@ -91,6 +111,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         $this->assertSame(
             'http://domain.tld/news/foo-is-not-bar.html',
             $listener('news_url::2::absolute', false, null, [])
+        );
+
+        $this->assertSame(
+            'http://domain.tld/news/foo-is-not-bar.html',
+            $listener('news_url::2::blank::absolute', false, null, [])
         );
 
         $this->assertSame(

@@ -18,6 +18,8 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Webmozart\PathUtil\Path;
@@ -90,8 +92,16 @@ class InheritanceTest extends TestCase
             array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
         );
 
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn(['templates/my/theme'])
+        ;
+
+        $themeNamespace = new ThemeNamespace();
+
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
         $warmer->warmUp('');

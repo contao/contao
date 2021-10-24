@@ -8,22 +8,22 @@
     "packages": [
         {
             "name": "contao/easy-coding-standard",
-            "version": "3.4.0",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "1a0ae8ecbe5a7712bd3c7c6e9052f2fe28572f9d"
+                "reference": "33a1b89545da1b2cd293c2820b9b0d0d2ef4a29b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/1a0ae8ecbe5a7712bd3c7c6e9052f2fe28572f9d",
-                "reference": "1a0ae8ecbe5a7712bd3c7c6e9052f2fe28572f9d",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/33a1b89545da1b2cd293c2820b9b0d0d2ef4a29b",
+                "reference": "33a1b89545da1b2cd293c2820b9b0d0d2ef4a29b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "slevomat/coding-standard": "^7.0",
-                "symplify/easy-coding-standard": "^9.3.3"
+                "symplify/easy-coding-standard": "^9.4.68"
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.5"
@@ -47,9 +47,9 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/3.4.0"
+                "source": "https://github.com/contao/easy-coding-standard/tree/3.5.0"
             },
-            "time": "2021-09-08T16:11:17+00:00"
+            "time": "2021-10-06T14:39:15+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -289,16 +289,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "9.4.59",
+            "version": "9.4.70",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "9c4cf0d86630f6faaba129b1fa7c9afc7a069d5b"
+                "reference": "9276b0c7a1a5671fc4a067656ab40d0aea42aaca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/9c4cf0d86630f6faaba129b1fa7c9afc7a069d5b",
-                "reference": "9c4cf0d86630f6faaba129b1fa7c9afc7a069d5b",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/9276b0c7a1a5671fc4a067656ab40d0aea42aaca",
+                "reference": "9276b0c7a1a5671fc4a067656ab40d0aea42aaca",
                 "shasum": ""
             },
             "require": {
@@ -312,6 +312,11 @@
                 "bin/ecs"
             ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "9.5-dev"
+                }
+            },
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -323,7 +328,7 @@
             ],
             "description": "Prefixed scoped version of ECS package",
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.59"
+                "source": "https://github.com/symplify/easy-coding-standard/tree/9.4.70"
             },
             "funding": [
                 {
@@ -335,7 +340,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-09-07T21:26:36+00:00"
+            "time": "2021-10-02T16:09:04+00:00"
         }
     ],
     "packages-dev": [],

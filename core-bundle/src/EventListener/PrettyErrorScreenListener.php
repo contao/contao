@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageError404;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
@@ -215,7 +216,7 @@ class PrettyErrorScreenListener
             'statusName' => Response::$statusTexts[$statusCode],
             'template' => $view,
             'base' => $event->getRequest()->getBasePath(),
-            'language' => $event->getRequest()->getLocale(),
+            'language' => LocaleUtil::formatAsLanguageTag($event->getRequest()->getLocale()),
             'adminEmail' => '&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$encoded,
             'isBackendUser' => $isBackendUser,
             'exception' => $event->getThrowable()->getMessage(),
