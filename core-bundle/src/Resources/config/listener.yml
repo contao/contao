@@ -114,7 +114,6 @@ services:
         tags:
             - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
 
-
     Contao\CoreBundle\EventListener\InterestCohortListener:
         arguments:
             - '@contao.routing.scope_matcher'
