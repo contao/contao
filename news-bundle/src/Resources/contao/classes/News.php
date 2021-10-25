@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlDecoder;
+
 /**
  * Provide methods regarding news archives.
  *
@@ -460,17 +462,19 @@ class News extends Frontend
 	 */
 	public static function getSchemaOrgData(NewsModel $objArticle): array
 	{
+		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+
 		$jsonLd = array(
 			'@type' => 'NewsArticle',
 			'identifier' => '#/schema/news/' . $objArticle->id,
 			'url' => self::generateNewsUrl($objArticle),
-			'headline' => StringUtil::inputEncodedToPlainText($objArticle->headline),
+			'headline' => $htmlDecoder->inputEncodedToPlainText($objArticle->headline),
 			'datePublished' => date('Y-m-d\TH:i:sP', $objArticle->date),
 		);
 
 		if ($objArticle->teaser)
 		{
-			$jsonLd['description'] = StringUtil::htmlToPlainText($objArticle->teaser);
+			$jsonLd['description'] = $htmlDecoder->htmlToPlainText($objArticle->teaser);
 		}
 
 		/** @var UserModel $objAuthor */

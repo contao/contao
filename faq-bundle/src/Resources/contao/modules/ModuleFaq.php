@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Model\Collection;
 
 /**
@@ -133,14 +134,16 @@ class ModuleFaq extends Frontend
 			'mainEntity' => array(),
 		);
 
+		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+
 		foreach ($arrFaqs as $objFaq)
 		{
 			$jsonLd['mainEntity'][] = array(
 				'@type' => 'Question',
-				'name' => StringUtil::inputEncodedToPlainText($objFaq->question),
+				'name' => $htmlDecoder->inputEncodedToPlainText($objFaq->question),
 				'acceptedAnswer' => array(
 					'@type' => 'Answer',
-					'text' =>  StringUtil::htmlToPlainText(StringUtil::encodeEmail($objFaq->answer))
+					'text' =>  $htmlDecoder->htmlToPlainText(StringUtil::encodeEmail($objFaq->answer))
 				)
 			);
 		}

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
@@ -326,15 +327,16 @@ class PageModel extends Model
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
 
 				switch ($strKey)
 				{
 					case 'pageTitle':
-						$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'description':
-						$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'robots':

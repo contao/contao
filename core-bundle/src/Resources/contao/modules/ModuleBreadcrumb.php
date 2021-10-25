@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlDecoder;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -227,6 +228,7 @@ class ModuleBreadcrumb extends Module
 			);
 
 			$position = 0;
+			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
 
 			foreach ($items as $item)
 			{
@@ -235,7 +237,7 @@ class ModuleBreadcrumb extends Module
 					'position' => ++$position,
 					'item' => array(
 						'@id' => $item['href'] ?: './',
-						'name' => StringUtil::inputEncodedToPlainText($item['link'])
+						'name' => $htmlDecoder->inputEncodedToPlainText($item['link'])
 					)
 				);
 			}

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Provide methods to get all events of a certain period from the database.
@@ -490,10 +491,12 @@ abstract class Events extends Module
 	 */
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
+		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+
 		$jsonLd = array(
 			'@type' => 'Event',
 			'identifier' => '#/schema/events/' . $objEvent->id,
-			'name' => StringUtil::inputEncodedToPlainText($objEvent->title),
+			'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->title),
 			'url' => self::generateEventUrl($objEvent),
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
@@ -507,14 +510,14 @@ abstract class Events extends Module
 		{
 			$jsonLd['location'] = array(
 				'@type' => 'Place',
-				'name' => StringUtil::inputEncodedToPlainText($objEvent->location)
+				'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->location)
 			);
 
 			if ($objEvent->address)
 			{
 				$jsonLd['location']['address'] = array(
 					'@type' => 'PostalAddress',
-					'description' => StringUtil::inputEncodedToPlainText($objEvent->address)
+					'description' => $htmlDecoder->inputEncodedToPlainText($objEvent->address)
 				);
 			}
 		}

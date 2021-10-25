@@ -702,6 +702,7 @@ services:
             - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
             - '@event_dispatcher'
             - '@contao.security.token_checker'
+            - '@Contao\CoreBundle\String\HtmlDecoder'
         public: true
 
     contao.search.indexer.default:
@@ -892,6 +893,12 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@translator'
+        public: true
+
+    Contao\CoreBundle\String\HtmlDecoder:
+        arguments:
+            - '@contao.framework'
+        # TODO: remove this once the deprecated StringUtil methods have been removed
         public: true
 
     contao.token_generator:

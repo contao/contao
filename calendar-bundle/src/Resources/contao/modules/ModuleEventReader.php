@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Front end module "event reader".
@@ -135,6 +136,7 @@ class ModuleEventReader extends Events
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
 
 			if ($objEvent->pageTitle)
 			{
@@ -142,16 +144,16 @@ class ModuleEventReader extends Events
 			}
 			elseif ($objEvent->title)
 			{
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)

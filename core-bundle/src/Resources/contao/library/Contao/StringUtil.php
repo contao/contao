@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Webmozart\PathUtil\Path;
 
@@ -1096,26 +1097,16 @@ class StringUtil
 	 *
 	 * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
 	 *
-	 * @see StringUtil::revertInputEncoding()
-	 *
 	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
 	 */
 	public static function inputEncodedToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
-		if ($blnRemoveInsertTags)
-		{
-			$strValue = static::stripInsertTags($strValue);
-		}
-		else
-		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
-		}
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::inputEncodedToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		$strValue = strip_tags($strValue);
-		$strValue = static::revertInputEncoding($strValue);
-		$strValue = str_replace(array('{{', '}}'), array('[{]', '[}]'), $strValue);
-
-		return $strValue;
+		return System::getContainer()->get(HtmlDecoder::class)->inputEncodedToPlainText($strValue, $blnRemoveInsertTags);
 	}
 
 	/**
@@ -1125,30 +1116,16 @@ class StringUtil
 	 * entities and encoded entities and is meant to be used with content from
 	 * fields that have the allowHtml flag enabled.
 	 *
-	 * @see StringUtil::inputEncodedToPlainText()
-	 *
 	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
 	 */
 	public static function htmlToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
-		if (!$blnRemoveInsertTags)
-		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
-		}
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::htmlToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		// Add new lines before and after block level elements
-		$strValue = preg_replace(
-			array('/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'),
-			array(' ', "\n$0"),
-			$strValue
-		);
-
-		$strValue = static::inputEncodedToPlainText($strValue, true);
-
-		// Remove duplicate line breaks and spaces
-		$strValue = trim(preg_replace(array('/[^\S\n]+/', '/\s*\n\s*/'), array(' ', "\n"), $strValue));
-
-		return $strValue;
+		return System::getContainer()->get(HtmlDecoder::class)->htmlToPlainText($strValue, $blnRemoveInsertTags);
 	}
 }
 

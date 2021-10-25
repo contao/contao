@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Front end module "news reader".
@@ -139,6 +140,7 @@ class ModuleNewsReader extends ModuleNews
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
 
 			if ($objArticle->pageTitle)
 			{
@@ -146,16 +148,16 @@ class ModuleNewsReader extends ModuleNews
 			}
 			elseif ($objArticle->headline)
 			{
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objArticle->headline));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objArticle->headline));
 			}
 
 			if ($objArticle->description)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objArticle->description));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objArticle->description));
 			}
 			elseif ($objArticle->teaser)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objArticle->teaser));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($objArticle->teaser));
 			}
 
 			if ($objArticle->robots)
