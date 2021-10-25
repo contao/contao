@@ -90,7 +90,7 @@ class StringUtil
 	}
 
 	/**
-	 * Shorten a HTML string to a given number of characters
+	 * Shorten an HTML string to a given number of characters
 	 *
 	 * The function preserves words, so the result might be a bit shorter or
 	 * longer than the number of characters given. It preserves allowed tags.
@@ -233,6 +233,10 @@ class StringUtil
 		if ($strCharset === null)
 		{
 			$strCharset = 'UTF-8';
+		}
+		else
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a charset to StringUtil::decodeEntities() has been deprecated and will no longer work in Contao 5.0. Always use UTF-8 instead.');
 		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
@@ -483,9 +487,13 @@ class StringUtil
 	 * @param string $strString The HTML5 string
 	 *
 	 * @return string The XHTML string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function toXhtml($strString)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
+
 		$arrPregReplace = array
 		(
 			'/<(br|hr|img)([^>]*)>/i' => '<$1$2 />', // Close stand-alone tags
@@ -679,9 +687,7 @@ class StringUtil
 		}
 
 		// Remove special characters not supported on e.g. Windows
-		$strName = str_replace(array('\\', '/', ':', '*', '?', '"', '<', '>', '|'), '-', $strName);
-
-		return $strName;
+		return str_replace(array('\\', '/', ':', '*', '?', '"', '<', '>', '|'), '-', $strName);
 	}
 
 	/**
@@ -827,16 +833,7 @@ class StringUtil
 		$strString = str_replace('|urlattr|attr}}', '|urlattr}}', $strString);
 
 		// Encode all remaining single closing curly braces
-		$strString = preg_replace_callback(
-			'/}}?/',
-			static function ($match)
-			{
-				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
-			},
-			$strString
-		);
-
-		return $strString;
+		return preg_replace_callback('/}}?/', static fn ($match) => \strlen($match[0]) === 2 ? $match[0] : '&#125;', $strString);
 	}
 
 	/**
@@ -856,14 +853,7 @@ class StringUtil
 		$strString = preg_replace('/(?:\|urlattr|\|attr)?}}/', '|urlattr}}', $strString);
 
 		// Encode all remaining single closing curly braces
-		$strString = preg_replace_callback(
-			'/}}?/',
-			static function ($match)
-			{
-				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
-			},
-			$strString
-		);
+		$strString = preg_replace_callback('/}}?/', static fn ($match) => \strlen($match[0]) === 2 ? $match[0] : '&#125;', $strString);
 
 		$colonRegEx = '('
 			. ':'                 // Plain text colon
