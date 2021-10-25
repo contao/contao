@@ -79,7 +79,7 @@ class HtmlDecoder
             $buffer = $chunks[$i];
 
             // Get the substring of the current text
-            if (!$chunks[$i] = StringUtil::substr($chunks[$i], $numberOfChars - $charCount, false)) {
+            if (!$chunks[$i] = StringUtil::substr($chunks[$i], $numberOfChars - $charCount, '')) {
                 break;
             }
 
