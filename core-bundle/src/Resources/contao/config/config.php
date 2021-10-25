@@ -39,6 +39,7 @@ use Contao\ContentToplink;
 use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Widget\LanguageDependentModule;
 use Contao\Crawl;
 use Contao\FileSelector;
 use Contao\FilesModel;
@@ -359,7 +360,8 @@ $GLOBALS['BE_FFL'] = array
 	'timePeriod'     => TimePeriod::class,
 	'metaWizard'     => MetaWizard::class,
 	'sectionWizard'  => SectionWizard::class,
-	'serpPreview'    => SerpPreview::class
+	'serpPreview'    => SerpPreview::class,
+	'languageDependentModule' => LanguageDependentModule::class
 );
 
 // Front end form fields
