@@ -43,7 +43,74 @@ class InsertTagsTest extends TestCase
 
     public function replaceInsertTagsHook(string $tag): string
     {
-        return explode('::', $tag, 2)[1] ?? '';
+        return str_replace(['[', ']'], ['{', '}'], explode('::', $tag, 2)[1] ?? '');
+    }
+
+    /**
+     * @dataProvider insertTagsProvider
+     *
+     * @group legacy
+     */
+    public function testInsertTags(string $source, string $expected): void
+    {
+        InsertTags::reset();
+
+        $output = (new InsertTags())->replace($source, false);
+
+        $this->assertSame($expected, $output);
+    }
+
+    public function insertTagsProvider(): \Generator
+    {
+        yield 'Simple' => [
+            'foo{{plain::bar}}baz',
+            'foobarbaz',
+        ];
+
+        yield 'Nested' => [
+            'foo{{plain::1{{plain::2}}3}}baz',
+            'foo123baz',
+        ];
+
+        yield 'Nested broken after' => [
+            'foo{{plain::1{{plain::2}}3}}broken}}baz',
+            'foo123broken}}baz',
+        ];
+
+        yield 'Nested broken before' => [
+            'foo{{broken{{plain::1{{plain::2}}3}}baz',
+            'foo{{broken123baz',
+        ];
+
+        yield 'Nested invalid 1' => [
+            'foo{{plain::1{{plain::2{3}}4}}baz',
+            'foo{{plain::1{{plain::2{3}}4}}baz',
+        ];
+
+        yield 'Nested invalid 2' => [
+            'foo{{plain::1{{plain::2}3}}4}}baz',
+            'foo{{plain::1{{plain::2}3}}4}}baz',
+        ];
+
+        yield 'Nested invalid 3' => [
+            'foo{{plain::1{{plain::2{}3}}4}}baz',
+            'foo{{plain::1{{plain::2{}3}}4}}baz',
+        ];
+
+        yield 'Recursive' => [
+            'foo{{ins::1[[plain::2]]3}}baz',
+            'foo123baz',
+        ];
+
+        yield 'Recursive forward not supported' => [
+            'foo{{ins::1[[plain::2}}3}}baz',
+            'foo1{{plain::23}}baz',
+        ];
+
+        yield 'Recursive backward not supported' => [
+            'foo{{ins::1{{plain::2]]3}}baz',
+            'foo{{ins::12}}3baz',
+        ];
     }
 
     /**

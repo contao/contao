@@ -46,27 +46,6 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * Recursively replace insert tags with their values
-	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
-	 */
-	public function replace($strBuffer, $blnCache=true)
-	{
-		$strBuffer = $this->doReplace($strBuffer, $blnCache);
-
-		// Run the replacement recursively (see #8172)
-		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
-		{
-			$strBuffer = $strTmp;
-		}
-
-		return $strBuffer;
-	}
-
-	/**
 	 * Reset the insert tag cache
 	 */
 	public static function reset()
@@ -75,14 +54,14 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * Replace insert tags with their values
+	 * Recursively replace insert tags with their values
 	 *
 	 * @param string  $strBuffer The text with the tags to be replaced
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
 	 *
 	 * @return string The text with the replaced tags
 	 */
-	protected function doReplace($strBuffer, $blnCache)
+	public function replace($strBuffer, $blnCache=true)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -95,8 +74,19 @@ class InsertTags extends Controller
 
 		$strBuffer = self::encodeHtmlAttributes($strBuffer);
 
-		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-		$tags = preg_split('~{{([a-zA-Z0-9\x80-\xFF][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$strRegExpStart = '{{'           // Starts with two opening curly braces
+			. '('                         // Match the contents fo the tag
+				. '[a-zA-Z0-9\x80-\xFF]'  // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
+				. '(?:[^{}]|'             // Match any character not curly brace or a nested insert tag
+		;
+		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
+
+		$tags = preg_split(
+			'(' . $strRegExpStart . str_repeat('{{(?:' . substr($strRegExpStart, 3), 9) . str_repeat($strRegExpEnd, 10) . ')',
+			$strBuffer,
+			-1,
+			PREG_SPLIT_DELIM_CAPTURE
+		);
 
 		if (\count($tags) < 2)
 		{
@@ -119,6 +109,8 @@ class InsertTags extends Controller
 			{
 				continue;
 			}
+
+			$tags[$_rit+1] = $this->replace($tags[$_rit+1], $blnCache);
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -1165,7 +1157,11 @@ class InsertTags extends Controller
 				}
 			}
 
-			$strBuffer .= $arrCache[$strTag] ?? '';
+			if (isset($arrCache[$strTag]))
+			{
+				$arrCache[$strTag] = $this->replace($arrCache[$strTag], $blnCache);
+				$strBuffer .= $arrCache[$strTag];
+			}
 		}
 
 		return StringUtil::restoreBasicEntities($strBuffer);
@@ -1176,8 +1172,8 @@ class InsertTags extends Controller
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
-		// Restore [&]
-		$url = str_replace('[&]', '&', $url);
+		// Restore [&] and &amp;
+		$url = str_replace(array('[&]', '&amp;'), '&', $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
