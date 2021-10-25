@@ -37,15 +37,30 @@ class ContaoContextTest extends TestCase
         $this->assertSame('', $context->getBasePath());
     }
 
-    public function testReturnsAnEmptyBasePathIfThePageDoesNotDefineIt(): void
+    public function testReturnsTheBasePathIfThePageDoesNotDefineIt(): void
     {
         $page = $this->getPageWithDetails();
 
         $GLOBALS['objPage'] = $page;
 
-        $context = $this->getContaoContext('staticPlugins');
+        $request = Request::create(
+            'https://example.com/foobar/index.php',
+            'GET',
+            [],
+            [],
+            [],
+            [
+                'SCRIPT_FILENAME' => '/foobar/index.php',
+                'SCRIPT_NAME' => '/foobar/index.php',
+            ]
+        );
 
-        $this->assertSame('', $context->getBasePath());
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $context = $this->getContaoContext('staticPlugins', $requestStack);
+
+        $this->assertSame('/foobar', $context->getBasePath());
 
         unset($GLOBALS['objPage']);
     }
