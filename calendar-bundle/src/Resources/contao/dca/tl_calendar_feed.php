@@ -259,7 +259,7 @@ class tl_calendar_feed extends Backend
 		$GLOBALS['TL_DCA']['tl_calendar_feed']['list']['sorting']['root'] = $root;
 
 		// Check permissions to add feeds
-		if (!System::isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS))
+		if (!System::isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS))
 		{
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notCreatable'] = true;

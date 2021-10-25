@@ -1859,7 +1859,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				if (isset($legends[$k]))
 				{
-					[$key, $cls] = explode(':', $legends[$k]) + array(null, null);
+					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
 					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
@@ -3950,8 +3950,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (strpos($v, ':') !== false)
 			{
-				[$strKey, $strTable] = explode(':', $v, 2);
-				[$strTable, $strField] = explode('.', $strTable, 2);
+				list($strKey, $strTable) = explode(':', $v, 2);
+				list($strTable, $strField) = explode('.', $strTable, 2);
 
 				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 										 ->limit(1)
@@ -4712,7 +4712,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($orderBy as $k=>$v)
 			{
-				[$key, $direction] = explode(' ', $v, 2) + array(null, null);
+				list($key, $direction) = explode(' ', $v, 2) + array(null, null);
 
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
@@ -4840,7 +4840,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					if (strpos($f, ':') !== false)
 					{
-						[$f] = explode(':', $f, 2);
+						list($f) = explode(':', $f, 2);
 					}
 
 					if ($firstOrderBy == $f)
@@ -4866,7 +4866,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					if (strpos($f, ':') !== false)
 					{
-						[$f] = explode(':', $f, 2);
+						list($f) = explode(':', $f, 2);
 					}
 
 					$return .= '
@@ -4900,8 +4900,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if (strpos($v, ':') !== false)
 					{
-						[$strKey, $strTable] = explode(':', $v, 2);
-						[$strTable, $strField] = explode('.', $strTable, 2);
+						list($strKey, $strTable) = explode(':', $v, 2);
+						list($strTable, $strField) = explode('.', $strTable, 2);
 
 						$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 												 ->limit(1)
@@ -5250,7 +5250,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
-				[$t, $f] = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
+				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
 				$this->procedure[] = "(" . sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
@@ -6041,7 +6041,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
-		[$offset, $limit] = explode(',', $this->limit) + array(null, null);
+		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 
 		// Set the limit filter based on the page number
 		if (isset($_GET['lp']))
@@ -6321,7 +6321,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		if (isset($attributes['preserveRecord']))
 		{
-			[$table, $id] = explode('.', $attributes['preserveRecord']);
+			list($table, $id) = explode('.', $attributes['preserveRecord']);
 
 			if ($table == $this->strTable)
 			{

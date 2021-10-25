@@ -27,6 +27,7 @@ use Contao\Environment;
 use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
@@ -432,7 +433,7 @@ class tl_comments extends Backend
 											 ->execute($intParent);
 
 				// Do not check the access to the news module (see #5174)
-				if ($objArchive->numRows > 0 && System::isGranted(\Contao\NewsBundle\Security\ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
+				if ($objArchive->numRows > 0 && System::isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
 				{
 					Cache::set($strKey, true);
 				}

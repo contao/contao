@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\DataContainer;
+use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']     = str_replace(',editable', ',editable,newsletters', $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']);
@@ -168,7 +169,7 @@ class tl_module_newsletter extends Backend
 
 		while ($objChannels->next())
 		{
-			if (System::isGranted(\Contao\NewsletterBundle\Security\ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
+			if (System::isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
 			{
 				$arrChannels[$objChannels->id] = $objChannels->title;
 			}

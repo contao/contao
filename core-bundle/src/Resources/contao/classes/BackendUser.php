@@ -634,7 +634,7 @@ class BackendUser extends User
 			return;
 		}
 
-		[$this->admin, $this->amg, $parent] = array_values($data);
+		list($this->admin, $this->amg, $parent) = array_values($data);
 
 		parent::__unserialize($parent);
 	}

@@ -425,7 +425,7 @@ class tl_news_feed extends Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -442,7 +442,7 @@ class tl_news_feed extends Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

@@ -801,7 +801,7 @@ class tl_article extends Backend
 	{
 		$objPage = PageModel::findById($row['pid']);
 
-		return System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
