@@ -45,11 +45,11 @@ class SwitchUserListener
             throw new \RuntimeException('The token storage did not contain a token.');
         }
 
-        $sourceUser = $token->getUsername();
+        $sourceUser = $token->getUserIdentifier();
         $targetUser = $event->getTargetUser();
 
         if ($targetUser instanceof UserInterface) {
-            $targetUser = $targetUser->getUsername();
+            $targetUser = $targetUser->getUserIdentifier();
         }
 
         $this->logger->info(

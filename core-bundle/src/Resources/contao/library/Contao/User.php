@@ -453,53 +453,66 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	/**
 	 * @return User
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public static function loadUserByUsername($username)
 	{
-		/** @var Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use Contao\User::loadUserByIdentifier() instead.');
 
-		if ($request === null)
-		{
-			return null;
-		}
-
-		$user = new static();
-		$isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
-
-		// Load the user object
-		if ($user->findBy('username', $username) === false)
-		{
-			// Return if its not a real login attempt
-			if (!$isLogin)
-			{
-				return null;
-			}
-
-			$password = $request->request->get('password');
-
-			if (self::triggerImportUserHook($username, $password, $user->strTable) === false)
-			{
-				return null;
-			}
-
-			if ($user->findBy('username', Input::post('username')) === false)
-			{
-				return null;
-			}
-		}
-
-		$user->setUserFromDb();
-
-		return $user;
+		return self::loadUserByIdentifier($username);
 	}
+
+    public static function loadUserByIdentifier(string $identifier): ?self
+    {
+        /** @var Request $request */
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+        if ($request === null)
+        {
+            return null;
+        }
+
+        $user = new static();
+        $isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
+
+        // Load the user object
+        if ($user->findBy('username', $identifier) === false)
+        {
+            // Return if its not a real login attempt
+            if (!$isLogin)
+            {
+                return null;
+            }
+
+            $password = $request->request->get('password');
+
+            if (self::triggerImportUserHook($identifier, $password, $user->strTable) === false)
+            {
+                return null;
+            }
+
+            if ($user->findBy('username', Input::post('username')) === false)
+            {
+                return null;
+            }
+        }
+
+        $user->setUserFromDb();
+
+        return $user;
+    }
 
 	/**
 	 * {@inheritdoc}
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public function getUsername()
 	{
-		return $this->username;
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::getUsername()" has been deprecated and will no longer work in Contao 5.0. Use Contao\User::getUserIdentifier() instead.');
+
+		return $this->getUserIdentifier();
 	}
 
 	public function setUsername($username)

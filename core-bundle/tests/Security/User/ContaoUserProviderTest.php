@@ -35,18 +35,18 @@ class ContaoUserProviderTest extends TestCase
     public function testLoadsUsersByUsername(): void
     {
         $user = $this->createMock(BackendUser::class);
-        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
         $provider = $this->getProvider($framework);
 
-        $this->assertSame($user, $provider->loadUserByUsername('foobar'));
+        $this->assertSame($user, $provider->loadUserByIdentifier('foobar'));
     }
 
     public function testFailsToLoadAUserIfTheUsernameDoesNotExist(): void
     {
         $user = $this->createMock(UserInterface::class);
-        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
         $provider = $this->getProvider($framework);
@@ -54,7 +54,7 @@ class ContaoUserProviderTest extends TestCase
         $this->expectException(UsernameNotFoundException::class);
         $this->expectExceptionMessage('Could not find user "foobar"');
 
-        $provider->loadUserByUsername('foobar');
+        $provider->loadUserByIdentifier('foobar');
     }
 
     public function testRefreshesTheUser(): void
@@ -63,7 +63,7 @@ class ContaoUserProviderTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        $adapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $adapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
         $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
 
         $provider = $this->getProvider($framework);
@@ -77,7 +77,7 @@ class ContaoUserProviderTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $userAdapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
 
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
@@ -131,7 +131,7 @@ class ContaoUserProviderTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
-        $userAdapter = $this->mockConfiguredAdapter(['loadUserByUsername' => $user]);
+        $userAdapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
 
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
@@ -263,7 +263,7 @@ class ContaoUserProviderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([
-            BackendUser::class => $this->mockConfiguredAdapter(['loadUserByUsername' => $user]),
+            BackendUser::class => $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]),
             System::class => $systemAdapter,
         ]);
 

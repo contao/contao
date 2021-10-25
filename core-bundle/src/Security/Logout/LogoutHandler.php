@@ -75,7 +75,7 @@ class LogoutHandler implements LogoutHandlerInterface
         /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
-        $GLOBALS['TL_USERNAME'] = $user->getUsername();
+        $GLOBALS['TL_USERNAME'] = $user->getUserIdentifier();
 
         foreach ($GLOBALS['TL_HOOKS']['postLogout'] as $callback) {
             $system->importStatic($callback[0])->{$callback[1]}($user);

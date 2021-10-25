@@ -477,7 +477,7 @@ class AuthenticationProviderTest extends TestCase
 
         $token
             ->expects($this->once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('foo')
         ;
 

@@ -66,7 +66,7 @@ class AuthenticatorTest extends TestCase
 
         $user
             ->expects($this->exactly(2))
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('foobar')
         ;
 
@@ -109,7 +109,7 @@ class AuthenticatorTest extends TestCase
 
         $user
             ->expects($this->once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('foobar')
         ;
 

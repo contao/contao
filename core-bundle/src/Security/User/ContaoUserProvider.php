@@ -51,17 +51,22 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
     public function loadUserByUsername($username): User
     {
+        return $this->loadUserByIdentifier($username);
+    }
+
+    public function loadUserByIdentifier(string $identifier): User
+    {
         $this->framework->initialize();
 
         /** @var User $adapter */
         $adapter = $this->framework->getAdapter($this->userClass);
-        $user = $adapter->loadUserByUsername($username);
+        $user = $adapter->loadUserByIdentifier($identifier);
 
         if (is_a($user, $this->userClass)) {
             return $user;
         }
 
-        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $username));
+        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $identifier));
     }
 
     public function refreshUser(UserInterface $user)
@@ -70,7 +75,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
-        $user = $this->loadUserByUsername($user->getUsername());
+        $user = $this->loadUserByIdentifier($user->getUserIdentifier());
 
         $this->validateSessionLifetime($user);
         $this->triggerPostAuthenticateHook($user);

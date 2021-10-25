@@ -1,0 +1,15 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Contao\CoreBundle\Fixtures\Security\User;
+
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+
+/**
+ * Can't add methods to existing interface, see https://github.com/sebastianbergmann/phpunit/issues/4732
+ */
+interface ForwardCompatibilityTokenInterface extends TokenInterface
+{
+    public function getUserIdentifier(): string;
+}
