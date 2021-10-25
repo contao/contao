@@ -321,10 +321,6 @@ abstract class Template extends Controller
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType . '; charset=' . Config::get('characterSet'));
 
-		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
-		$response->headers->remove('Cache-Control');
-
 		return $response;
 	}
 

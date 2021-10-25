@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
@@ -82,20 +83,27 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     protected function createTemplate(Model $model, string $templateName): Template
     {
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $mainRequest = $this->get('request_stack')->getMasterRequest();
+        $templateClass = FragmentTemplate::class;
+
         if (isset($this->options['template'])) {
             $templateName = $this->options['template'];
         }
 
         if ($model->customTpl) {
-            $request = $this->get('request_stack')->getCurrentRequest();
-
             // Use the custom template unless it is a back end request
             if (null === $request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
                 $templateName = $model->customTpl;
             }
         }
 
-        $template = $this->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
+        // Current request is the main request, which means this must be an ESI fragment
+        if ($request === $mainRequest) {
+            $templateClass = FrontendTemplate::class;
+        }
+
+        $template = $this->get('contao.framework')->createInstance($templateClass, [$templateName]);
         $template->setData($model->row());
 
         return $template;
