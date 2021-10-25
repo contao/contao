@@ -713,6 +713,18 @@ services:
             - '@contao.routing.scope_matcher'
             - '@request_stack'
 
+    contao.security.authenticator:
+        class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
+        arguments:
+            - ~
+            - ~
+            - ~
+            - '@contao.routing.scope_matcher'
+            - '@router.default'
+            - '@uri_signer'
+            - '@contao.framework'
+            - ~
+
     contao.security.access_decision_manager.priority:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
         arguments:

@@ -338,21 +338,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return array();
 	}
 
-	/**
-	 * @return User
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use Contao\User::loadUserByIdentifier() instead.
-	 */
-	public static function loadUserByUsername($username)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::loadUserByIdentifier()" instead.');
-
-		return self::loadUserByIdentifier($username);
-	}
-
 	public static function loadUserByIdentifier(string $identifier): self|null
 	{
+		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)
@@ -392,14 +380,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	/**
 	 * {@inheritdoc}
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use Contao\User::getUserIdentifier() instead.
 	 */
 	public function getUsername()
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::getUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::getUserIdentifier()" instead.');
-
 		return $this->getUserIdentifier();
 	}
 
@@ -429,14 +412,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @see PasswordAuthenticatedUserInterface
 	 */
 	public function getPassword(): string|null
 	{
 		return $this->password;
 	}
 
-	public function setPassword($password)
+	public function setPassword(?string $password): self
 	{
 		$this->password = $password;
 
@@ -446,24 +429,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getSalt()
-	{
-		return $this->salt;
-	}
-
-	public function setSalt($salt)
-	{
-		$this->salt = $salt;
-
-		return $this;
-	}
-
-	/**
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
-	 */
-	public function serialize()
-	{
-		return serialize($this->__serialize());
+	public function getSalt(): ?string
+    {
+		return null;
 	}
 
 	public function __serialize(): array
@@ -477,14 +445,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'start' => $this->start,
 			'stop' => $this->stop
 		);
-	}
-
-	/**
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
-	 */
-	public function unserialize($data)
-	{
-		$this->__unserialize(unserialize($data, array('allowed_classes'=>false)));
 	}
 
 	public function __unserialize(array $data): void

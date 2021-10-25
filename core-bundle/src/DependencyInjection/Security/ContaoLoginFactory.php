@@ -14,11 +14,12 @@ namespace Contao\CoreBundle\DependencyInjection\Security;
 
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ContaoLoginFactory extends AbstractFactory
+class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactoryInterface
 {
     public function __construct()
     {
@@ -107,5 +108,19 @@ class ContaoLoginFactory extends AbstractFactory
             ->replaceArgument(5, false)
             ->addTag('kernel.event_subscriber')
         ;
+    }
+
+    public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId)
+    {
+        $authenticatorId = 'contao.security.authenticator.'.$firewallName;
+        $options = array_intersect_key($config, $this->options);
+        $container
+            ->setDefinition($authenticatorId, new ChildDefinition('contao.security.authenticator'))
+            ->replaceArgument(0, new Reference($userProviderId))
+            ->replaceArgument(1, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
+            ->replaceArgument(2, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
+            ->replaceArgument(7, $options);
+
+        return $authenticatorId;
     }
 }
