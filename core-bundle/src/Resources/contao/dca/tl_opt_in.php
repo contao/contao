@@ -47,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('createdOn DESC'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['createdOn'],
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
