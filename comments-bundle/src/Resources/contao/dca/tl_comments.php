@@ -18,6 +18,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Email;
@@ -406,7 +407,7 @@ class tl_comments extends Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+				if ($objPage->numRows > 0 && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 				{
 					Cache::set($strKey, true);
 				}
@@ -418,7 +419,7 @@ class tl_comments extends Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+				if ($objPage->numRows > 0 && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 				{
 					Cache::set($strKey, true);
 				}

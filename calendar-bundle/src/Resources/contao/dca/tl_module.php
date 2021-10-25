@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Controller;
 use Contao\DataContainer;
 use Contao\System;
@@ -189,7 +190,7 @@ class tl_module_calendar extends Backend
 
 		while ($objCalendars->next())
 		{
-			if ($this->User->hasAccess($objCalendars->id, 'calendars'))
+			if (System::isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
 			{
 				$arrCalendars[$objCalendars->id] = $objCalendars->title;
 			}

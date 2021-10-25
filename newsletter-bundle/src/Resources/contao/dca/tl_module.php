@@ -168,7 +168,7 @@ class tl_module_newsletter extends Backend
 
 		while ($objChannels->next())
 		{
-			if ($this->User->hasAccess($objChannels->id, 'newsletters'))
+			if (System::isGranted(\Contao\NewsletterBundle\Security\ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
 			{
 				$arrChannels[$objChannels->id] = $objChannels->title;
 			}

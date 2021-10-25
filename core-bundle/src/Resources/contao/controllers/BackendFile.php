@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -156,7 +157,7 @@ class BackendFile extends Backend
 		$objTemplate->value = $objSessionBag->get('file_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? null;
 
-		if ($this->User->hasAccess('files', 'modules'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))
 		{
 			$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['fileManager'];
 			$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';

@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -1858,7 +1859,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 				if (isset($legends[$k]))
 				{
-					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
+					[$key, $cls] = explode(':', $legends[$k]) + array(null, null);
 
 					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this,\'' . $key . '\',\'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
@@ -3949,8 +3950,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (strpos($v, ':') !== false)
 			{
-				list($strKey, $strTable) = explode(':', $v, 2);
-				list($strTable, $strField) = explode('.', $strTable, 2);
+				[$strKey, $strTable] = explode(':', $v, 2);
+				[$strTable, $strField] = explode('.', $strTable, 2);
 
 				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 										 ->limit(1)
@@ -4207,7 +4208,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$return .= '
 <div class="tl_content_right">' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? '
-<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteAfter[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>' : ((!($GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] ?? null) && $this->User->canEditFieldsOf($this->ptable)) ? '
+<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteAfter[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>' : ((!($GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] ?? null) && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $this->ptable)) ? '
 <a href="' . preg_replace('/&(amp;)?table=[^& ]*/i', ($this->ptable ? '&amp;table=' . $this->ptable : ''), $this->addToUrl('act=edit' . (Input::get('nb') ? '&amp;nc=1' : ''))) . '" class="edit" title="' . StringUtil::specialchars(sprintf(\is_array($labelEditHeader) ? $labelEditHeader[1] : $labelEditHeader, $objParent->id)) . '">' . $imageEditHeader . '</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)) ? '
 <a href="' . $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId) . '" title="' . StringUtil::specialchars($labelPasteNew[0]) . '">' . $imagePasteNew . '</a>' : ''))) . '
 </div>';
@@ -4711,7 +4712,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			foreach ($orderBy as $k=>$v)
 			{
-				list($key, $direction) = explode(' ', $v, 2) + array(null, null);
+				[$key, $direction] = explode(' ', $v, 2) + array(null, null);
 
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
@@ -4839,7 +4840,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					if (strpos($f, ':') !== false)
 					{
-						list($f) = explode(':', $f, 2);
+						[$f] = explode(':', $f, 2);
 					}
 
 					if ($firstOrderBy == $f)
@@ -4865,7 +4866,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				{
 					if (strpos($f, ':') !== false)
 					{
-						list($f) = explode(':', $f, 2);
+						[$f] = explode(':', $f, 2);
 					}
 
 					$return .= '
@@ -4899,8 +4900,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 					if (strpos($v, ':') !== false)
 					{
-						list($strKey, $strTable) = explode(':', $v, 2);
-						list($strTable, $strField) = explode('.', $strTable, 2);
+						[$strKey, $strTable] = explode(':', $v, 2);
+						[$strTable, $strField] = explode('.', $strTable, 2);
 
 						$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
 												 ->limit(1)
@@ -5249,7 +5250,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
-				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
+				[$t, $f] = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
 				$this->procedure[] = "(" . sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
@@ -6040,7 +6041,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$session = $objSessionBag->all();
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
-		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
+		[$offset, $limit] = explode(',', $this->limit) + array(null, null);
 
 		// Set the limit filter based on the page number
 		if (isset($_GET['lp']))
@@ -6320,7 +6321,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		if (isset($attributes['preserveRecord']))
 		{
-			list($table, $id) = explode('.', $attributes['preserveRecord']);
+			[$table, $id] = explode('.', $attributes['preserveRecord']);
 
 			if ($table == $this->strTable)
 			{

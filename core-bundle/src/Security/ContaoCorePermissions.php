@@ -111,8 +111,8 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_FIELD_TYPE = 'contao_user.fields';
 
     /**
-     * Access is granted if the current user can access the theme.
-     * Subject must be an ID of table tl_theme.
+     * Access is granted if the current user can access the theme module.
+     * Subject must be theme module name.
      */
     public const USER_CAN_ACCESS_THEME = 'contao_user.themes';
 

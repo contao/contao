@@ -164,7 +164,7 @@ class tl_module_news extends Backend
 
 		while ($objArchives->next())
 		{
-			if ($this->User->hasAccess($objArchives->id, 'news'))
+			if (System::isGranted(\Contao\NewsBundle\Security\ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchives->id))
 			{
 				$arrArchives[$objArchives->id] = $objArchives->title;
 			}

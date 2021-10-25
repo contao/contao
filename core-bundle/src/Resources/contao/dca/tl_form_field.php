@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -820,7 +821,7 @@ class tl_form_field extends Backend
 		}
 
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'fields'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -885,7 +886,7 @@ class tl_form_field extends Backend
 			throw new AccessDeniedException('Invalid form field ID ' . $intId . '.');
 		}
 
-		if (!$this->User->hasAccess($objRow->type, 'fields'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $objRow->type))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
 		}

@@ -15,6 +15,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -1009,7 +1010,7 @@ class tl_content extends Backend
 		}
 
 		// Not enough permissions to modify the article
-		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . '.');
 		}
@@ -1212,7 +1213,7 @@ class tl_content extends Backend
 		}
 
 		// Return if the user cannot access the layout module (see #6190)
-		if (!$this->User->hasAccess('themes', 'modules') || !$this->User->hasAccess('layout', 'themes'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'themes') || !System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME, 'layout'))
 		{
 			return;
 		}
@@ -1992,7 +1993,7 @@ class tl_content extends Backend
 		}
 
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -2059,7 +2060,7 @@ class tl_content extends Backend
 			throw new AccessDeniedException('Invalid content element ID ' . $intId . '.');
 		}
 
-		if (!$this->User->hasAccess($objRow->type, 'elements'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $objRow->type))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
 		}

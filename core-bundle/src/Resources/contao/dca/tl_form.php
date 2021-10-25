@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -322,7 +323,7 @@ class tl_form extends Backend
 		$GLOBALS['TL_DCA']['tl_form']['list']['sorting']['root'] = $root;
 
 		// Check permissions to add forms
-		if (!$this->User->hasAccess('create', 'formp'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS))
 		{
 			$GLOBALS['TL_DCA']['tl_form']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_form']['config']['notCreatable'] = true;
@@ -330,7 +331,7 @@ class tl_form extends Backend
 		}
 
 		// Check permissions to delete forms
-		if (!$this->User->hasAccess('delete', 'formp'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS))
 		{
 			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
 		}
@@ -346,7 +347,7 @@ class tl_form extends Backend
 				break;
 
 			case 'create':
-				if (!$this->User->hasAccess('create', 'formp'))
+				if (!System::isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS))
 				{
 					throw new AccessDeniedException('Not enough permissions to create forms.');
 				}
@@ -368,7 +369,7 @@ class tl_form extends Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'formp'))
+				if (Input::get('act') == 'deleteAll' && !System::isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -554,7 +555,7 @@ class tl_form extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_form') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_form') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -571,7 +572,7 @@ class tl_form extends Backend
 	 */
 	public function copyForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'formp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoCorePermissions::USER_CAN_CREATE_FORMS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -588,6 +589,6 @@ class tl_form extends Backend
 	 */
 	public function deleteForm($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'formp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }
