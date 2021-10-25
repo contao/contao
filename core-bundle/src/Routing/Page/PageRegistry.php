@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
+    private const DISABLE_ROUTING = ['error_401', 'error_403', 'error_404'];
 
     private Connection $connection;
     private ?array $urlPrefixes = null;
@@ -54,6 +56,11 @@ class PageRegistry
     public function getRoute(PageModel $pageModel): PageRoute
     {
         $type = $pageModel->type;
+
+        if (\in_array($type, self::DISABLE_ROUTING, true)) {
+            throw new RouteNotFoundException(sprintf('Cannot create route for page type "%s"', $type));
+        }
+
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
