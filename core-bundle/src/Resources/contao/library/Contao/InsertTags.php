@@ -61,7 +61,7 @@ class InsertTags extends Controller
 	 *
 	 * @return string The text with the replaced tags
 	 */
-	public function replace($strBuffer, $blnCache=true)
+	public function replace($strBuffer, $blnCache=true, $blnAsChunks=false)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -93,7 +93,7 @@ class InsertTags extends Controller
 			return StringUtil::restoreBasicEntities($strBuffer);
 		}
 
-		$strBuffer = '';
+		$arrBuffer = array();
 		$container = System::getContainer();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 
@@ -102,12 +102,12 @@ class InsertTags extends Controller
 
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
-			$strBuffer .= $tags[$_rit];
+			$arrBuffer[$_rit] = $tags[$_rit];
 
 			// Skip empty tags
-			if (empty($tags[$_rit+1]))
+			if (!isset($tags[$_rit+1]))
 			{
-				continue;
+				break;
 			}
 
 			$tags[$_rit+1] = $this->replace($tags[$_rit+1], $blnCache);
@@ -120,7 +120,7 @@ class InsertTags extends Controller
 			// Load the value from cache
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
-				$strBuffer .= $arrCache[$strTag];
+				$arrBuffer[$_rit+1] = $arrCache[$strTag];
 				continue;
 			}
 
@@ -142,7 +142,7 @@ class InsertTags extends Controller
 						$attributes['_scope'] = $scope;
 					}
 
-					$strBuffer .= $fragmentHandler->render(
+					$arrBuffer[$_rit+1] = $fragmentHandler->render(
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,
@@ -642,6 +642,7 @@ class InsertTags extends Controller
 
 					// Does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
+					$arrBuffer[$_rit+1] = '';
 					continue 2;
 
 				// Environment
@@ -1160,11 +1161,14 @@ class InsertTags extends Controller
 			if (isset($arrCache[$strTag]))
 			{
 				$arrCache[$strTag] = $this->replace($arrCache[$strTag], $blnCache);
-				$strBuffer .= $arrCache[$strTag];
 			}
+
+			$arrBuffer[$_rit+1] = $arrCache[$strTag] ?? '';
 		}
 
-		return StringUtil::restoreBasicEntities($strBuffer);
+		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
+
+		return implode('', $arrBuffer);
 	}
 
 	/**
