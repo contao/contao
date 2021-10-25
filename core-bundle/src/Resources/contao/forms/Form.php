@@ -117,6 +117,7 @@ class Form extends Hybrid
 
 		// Get all form fields
 		$arrFields = array();
+		$arrWidgets = array();
 		$objFields = FormFieldModel::findPublishedByPid($this->id);
 
 		if ($objFields !== null)
@@ -203,10 +204,13 @@ class Form extends Hybrid
 					}
 				}
 
+				$arrWidgets[] = $objWidget;
+
 				// Validate the input
 				if (Input::post('FORM_SUBMIT') == $formId)
 				{
-					$objWidget->validate();
+					// Do not finalize widget during validation (#1185)
+					$objWidget->validate(false);
 
 					// HOOK: validate form field callback
 					if (isset($GLOBALS['TL_HOOKS']['validateFormField']) && \is_array($GLOBALS['TL_HOOKS']['validateFormField']))
@@ -257,6 +261,15 @@ class Form extends Hybrid
 		// Process the form data
 		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $formId)
 		{
+			// Finalize form widgets (#1185)
+			foreach ($arrWidgets as $objWidget)
+			{
+				if ($objWidget instanceof FinalizableWidget)
+				{
+					$objWidget->finalize();
+				}
+			}
+
 			$this->processFormData($arrSubmitted, $arrLabels, $arrFields);
 		}
 

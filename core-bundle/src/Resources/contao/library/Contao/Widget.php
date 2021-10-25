@@ -730,8 +730,10 @@ abstract class Widget extends Controller
 
 	/**
 	 * Validate the user input and set the value
+	 *
+	 * @param bool $blnFinalize Whether to finalize a finalizable widget during validate
 	 */
-	public function validate()
+	public function validate(/* $blnFinalize = true */)
 	{
 		$varValue = $this->validator($this->getPost($this->strName));
 
@@ -741,6 +743,23 @@ abstract class Widget extends Controller
 		}
 
 		$this->varValue = $varValue;
+
+		$blnFinalize = true;
+
+		if (\func_num_args() > 0)
+		{
+			$blnFinalize = func_get_arg(0);
+		}
+
+		if ($blnFinalize)
+		{
+			@trigger_error('Finalizing a widget during Widget::validate() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+
+			if ($this instanceof FinalizableWidget)
+			{
+				$this->finalize();
+			}
+		}
 	}
 
 	/**

@@ -26,7 +26,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
  *
  * @todo Rename to FormUpload in Contao 5.0
  */
-class FormFileUpload extends Widget implements UploadableWidgetInterface
+class FormFileUpload extends Widget implements UploadableWidgetInterface, FinalizableWidget
 {
 	/**
 	 * Template
@@ -91,9 +91,13 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 	}
 
 	/**
-	 * Validate the input and set the value
+	 * Recursively validate an input variable
+	 *
+	 * @param mixed $varValue The user input
+	 *
+	 * @return mixed The original or modified user input
 	 */
-	public function validate()
+	public function validator($varValue)
 	{
 		// No file specified
 		if (!isset($_FILES[$this->strName]) || empty($_FILES[$this->strName]['name']))
@@ -110,7 +114,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 				}
 			}
 
-			return;
+			return null;
 		}
 
 		$file = $_FILES[$this->strName];
@@ -126,7 +130,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
 
-			return;
+			return null;
 		}
 
 		// Invalid file name
@@ -134,7 +138,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['filename']);
 
-			return;
+			return null;
 		}
 
 		// File was not uploaded
@@ -155,7 +159,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 
 			unset($_FILES[$this->strName]);
 
-			return;
+			return null;
 		}
 
 		// File is too big
@@ -164,7 +168,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			unset($_FILES[$this->strName]);
 
-			return;
+			return null;
 		}
 
 		$objFile = new File($file['name']);
@@ -176,7 +180,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 			unset($_FILES[$this->strName]);
 
-			return;
+			return null;
 		}
 
 		if ($arrImageSize = @getimagesize($file['tmp_name']))
@@ -200,109 +204,19 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], Config::get('imageHeight')));
 				unset($_FILES[$this->strName]);
 
-				return;
+				return null;
 			}
 		}
 
-		// Store file in the session and optionally on the server
-		if (!$this->hasErrors())
-		{
-			$_SESSION['FILES'][$this->strName] = $_FILES[$this->strName];
+		return null;
+	}
 
-			if ($this->storeFile)
-			{
-				$intUploadFolder = $this->uploadFolder;
-
-				// Overwrite the upload folder with user's home directory
-				if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-				{
-					$this->import(FrontendUser::class, 'User');
-
-					if ($this->User->assignDir && $this->User->homeDir)
-					{
-						$intUploadFolder = $this->User->homeDir;
-					}
-				}
-
-				$objUploadFolder = FilesModel::findByUuid($intUploadFolder);
-
-				// The upload folder could not be found
-				if ($objUploadFolder === null)
-				{
-					throw new \Exception("Invalid upload folder ID $intUploadFolder");
-				}
-
-				$strUploadFolder = $objUploadFolder->path;
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-				// Store the file if the upload folder exists
-				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
-				{
-					$this->import(Files::class, 'Files');
-
-					// Do not overwrite existing files
-					if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $file['name']))
-					{
-						$offset = 1;
-
-						$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder);
-						$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
-
-						foreach ($arrFiles as $strFile)
-						{
-							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
-							{
-								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = (int) substr($strFile, (strrpos($strFile, '_') + 1));
-
-								$offset = max($offset, $intValue);
-							}
-						}
-
-						$file['name'] = str_replace($objFile->filename, $objFile->filename . '__' . ++$offset, $file['name']);
-					}
-
-					// Move the file to its destination
-					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
-
-					$strUuid = null;
-					$strFile = $strUploadFolder . '/' . $file['name'];
-
-					// Generate the DB entries
-					if (Dbafs::shouldBeSynchronized($strFile))
-					{
-						$objModel = FilesModel::findByPath($strFile);
-
-						if ($objModel === null)
-						{
-							$objModel = Dbafs::addResource($strFile);
-						}
-
-						$strUuid = StringUtil::binToUuid($objModel->uuid);
-
-						// Update the hash of the target folder
-						Dbafs::updateFolderHashes($strUploadFolder);
-					}
-
-					// Add the session entry (see #6986)
-					$_SESSION['FILES'][$this->strName] = array
-					(
-						'name'     => $file['name'],
-						'type'     => $file['type'],
-						'tmp_name' => $projectDir . '/' . $strFile,
-						'error'    => $file['error'],
-						'size'     => $file['size'],
-						'uploaded' => true,
-						'uuid'     => $strUuid
-					);
-
-					// Add a log entry
-					$this->log('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded', __METHOD__, ContaoContext::FILES);
-				}
-			}
-		}
-
+	/**
+	 * Finalize the widget after all widgets are validated.
+	 */
+	public function finalize(): void
+	{
+		$this->processUpload();
 		unset($_FILES[$this->strName]);
 	}
 
@@ -336,6 +250,119 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 		}
 
 		return FileUpload::getMaxUploadSize();
+	}
+
+	/**
+	 * Store file in the session and optionally on the server.
+	 */
+	protected function processUpload()
+	{
+		if (!isset($_FILES[$this->strName]) || empty($_FILES[$this->strName]['name']) || $this->hasErrors())
+		{
+			return;
+		}
+
+		$_SESSION['FILES'][$this->strName] = $_FILES[$this->strName];
+
+		if (!$this->storeFile)
+		{
+			return;
+		}
+
+		$file = $_FILES[$this->strName];
+		$objFile = new File($file['name']);
+
+		$intUploadFolder = $this->uploadFolder;
+
+		// Overwrite the upload folder with user's home directory
+		if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
+		{
+			$this->import(FrontendUser::class, 'User');
+
+			if ($this->User->assignDir && $this->User->homeDir)
+			{
+				$intUploadFolder = $this->User->homeDir;
+			}
+		}
+
+		$objUploadFolder = FilesModel::findByUuid($intUploadFolder);
+
+		// The upload folder could not be found
+		if ($objUploadFolder === null)
+		{
+			throw new \Exception("Invalid upload folder ID $intUploadFolder");
+		}
+
+		$strUploadFolder = $objUploadFolder->path;
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		// Store the file if the upload folder exists
+		if (!$strUploadFolder || !is_dir($projectDir . '/' . $strUploadFolder))
+		{
+			return;
+		}
+
+		$this->import(Files::class, 'Files');
+
+		// Do not overwrite existing files
+		if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $file['name']))
+		{
+			$offset = 1;
+
+			$arrAll = scan($projectDir . '/' . $strUploadFolder);
+			$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
+
+			foreach ($arrFiles as $strFile)
+			{
+				if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
+				{
+					$strFile = str_replace('.' . $objFile->extension, '', $strFile);
+					$intValue = (int) substr($strFile, (strrpos($strFile, '_') + 1));
+
+					$offset = max($offset, $intValue);
+				}
+			}
+
+			$file['name'] = str_replace($objFile->filename, $objFile->filename . '__' . ++$offset, $file['name']);
+		}
+
+		// Move the file to its destination
+		$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
+		$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
+
+		$strUuid = null;
+		$strFile = $strUploadFolder . '/' . $file['name'];
+
+		// Generate the DB entries
+		if (Dbafs::shouldBeSynchronized($strFile))
+		{
+			$objModel = FilesModel::findByPath($strFile);
+
+			if ($objModel === null)
+			{
+				$objModel = Dbafs::addResource($strFile);
+			}
+
+			$strUuid = StringUtil::binToUuid($objModel->uuid);
+
+			// Update the hash of the target folder
+			Dbafs::updateFolderHashes($strUploadFolder);
+		}
+
+		// Add the session entry (see #6986)
+		$_SESSION['FILES'][$this->strName] = array
+		(
+			'name'     => $file['name'],
+			'type'     => $file['type'],
+			'tmp_name' => $projectDir . '/' . $strFile,
+			'error'    => $file['error'],
+			'size'     => $file['size'],
+			'uploaded' => true,
+			'uuid'     => $strUuid
+		);
+
+		// Add a log entry
+		$this->log('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded', __METHOD__, TL_FILES);
 	}
 }
 

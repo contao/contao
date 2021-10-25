@@ -156,8 +156,8 @@ class WidgetTest extends TestCase
 
         $widget
             ->setInputCallback()
-            ->validate() // getPost() should be called once here
-;
+            ->validate(false) // getPost() should be called once here
+        ;
     }
 
     /**
