@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 
@@ -679,7 +680,7 @@ class Versions extends Controller
 		while ($objVersions->next())
 		{
 			// Hide profile changes if the user does not have access to the "user" module (see #1309)
-			if (!$objUser->isAdmin && $objVersions->fromTable == 'tl_user' && !$objUser->hasAccess('user', 'modules'))
+			if (!$objUser->isAdmin && $objVersions->fromTable == 'tl_user' && !System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
 			{
 				continue;
 			}

@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Idna;
@@ -392,7 +393,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_newsletter_recipients::active', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
 		{
 			return '';
 		}
@@ -445,7 +446,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_newsletter_recipients::active', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish newsletter recipient ID ' . $intId . '.');
 		}

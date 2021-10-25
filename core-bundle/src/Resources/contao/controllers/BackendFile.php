@@ -163,7 +163,7 @@ class BackendFile extends Backend
 			$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';
 		}
 
-		if (Input::get('switch') && $this->User->hasAccess('page', 'modules'))
+		if (Input::get('switch') && System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['pagePicker'];
 			$objTemplate->switchHref = str_replace('contao/file?', 'contao/page?', StringUtil::ampersand(Environment::get('request')));

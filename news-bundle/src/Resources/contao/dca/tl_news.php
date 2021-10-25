@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Image;
@@ -843,19 +844,19 @@ class tl_news extends Backend
 		$arrOptions = array('default');
 
 		// Add the "internal" option
-		if ($this->User->hasAccess('tl_news::jumpTo', 'alexf'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::jumpTo'))
 		{
 			$arrOptions[] = 'internal';
 		}
 
 		// Add the "article" option
-		if ($this->User->hasAccess('tl_news::articleId', 'alexf'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::articleId'))
 		{
 			$arrOptions[] = 'article';
 		}
 
 		// Add the "external" option
-		if ($this->User->hasAccess('tl_news::url', 'alexf'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::url'))
 		{
 			$arrOptions[] = 'external';
 		}
@@ -975,7 +976,7 @@ class tl_news extends Backend
 		}
 
 		// Check permissions AFTER checking the fid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_news::featured', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::featured'))
 		{
 			return '';
 		}
@@ -1028,7 +1029,7 @@ class tl_news extends Backend
 		}
 
 		// Check permissions to feature
-		if (!$this->User->hasAccess('tl_news::featured', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::featured'))
 		{
 			throw new AccessDeniedException('Not enough permissions to feature/unfeature news item ID ' . $intId . '.');
 		}
@@ -1126,7 +1127,7 @@ class tl_news extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_news::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::published'))
 		{
 			return '';
 		}
@@ -1177,7 +1178,7 @@ class tl_news extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_news::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish news item ID ' . $intId . '.');
 		}

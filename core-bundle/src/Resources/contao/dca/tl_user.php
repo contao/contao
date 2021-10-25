@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Intl\Locales;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Image;
@@ -967,7 +968,7 @@ class tl_user extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_user::disable'))
 		{
 			return '';
 		}
@@ -1032,7 +1033,7 @@ class tl_user extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_user::disable'))
 		{
 			throw new AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
 		}

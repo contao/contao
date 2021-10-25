@@ -267,7 +267,7 @@ class tl_newsletter_channel extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !System::isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channel ID ' . Input::get('id') . '.');
 				}

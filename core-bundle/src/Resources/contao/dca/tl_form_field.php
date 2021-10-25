@@ -735,7 +735,7 @@ class tl_form_field extends Backend
 
 		foreach ($GLOBALS['TL_FFL'] as $k=>$v)
 		{
-			if ($this->User->hasAccess($k, 'fields'))
+			if (System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $k))
 			{
 				$fields[] = $k;
 			}
@@ -791,7 +791,7 @@ class tl_form_field extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -815,7 +815,7 @@ class tl_form_field extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_form_field::invisible'))
 		{
 			return '';
 		}
@@ -872,7 +872,7 @@ class tl_form_field extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_form_field::invisible'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish form field ID ' . $intId . '.');
 		}

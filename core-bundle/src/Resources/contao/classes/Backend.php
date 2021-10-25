@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -319,7 +320,7 @@ abstract class Backend extends Controller
 		unset($arrGroup);
 
 		$this->import(BackendUser::class, 'User');
-		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $this->User->hasAccess($module, 'modules');
+		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
@@ -390,7 +391,7 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if (($v['exclude'] ?? null) && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+					if (($v['exclude'] ?? null) && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $k))
 					{
 						if ($strTable == 'tl_user_group')
 						{
@@ -1075,7 +1076,7 @@ abstract class Backend extends Controller
 		}
 
 		// Check whether the node is mounted
-		if (!$objUser->hasAccess($strNode, 'filemounts'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strNode))
 		{
 			$objSession->set($strKey, '');
 

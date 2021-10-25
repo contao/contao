@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Cache;
+use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
@@ -431,7 +432,7 @@ class tl_comments extends Backend
 											 ->execute($intParent);
 
 				// Do not check the access to the news module (see #5174)
-				if ($objArchive->numRows > 0 && $this->User->hasAccess($objArchive->pid, 'news'))
+				if ($objArchive->numRows > 0 && System::isGranted(\Contao\NewsBundle\Security\ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
 				{
 					Cache::set($strKey, true);
 				}
@@ -443,7 +444,7 @@ class tl_comments extends Backend
 											  ->execute($intParent);
 
 				// Do not check the access to the calendar module (see #5174)
-				if ($objCalendar->numRows > 0 && $this->User->hasAccess($objCalendar->pid, 'calendars'))
+				if ($objCalendar->numRows > 0 && System::isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
 				{
 					Cache::set($strKey, true);
 				}
@@ -639,7 +640,7 @@ class tl_comments extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
 		{
 			return '';
 		}
@@ -697,7 +698,7 @@ class tl_comments extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
 		}

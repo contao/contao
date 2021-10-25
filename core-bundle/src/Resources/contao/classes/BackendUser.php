@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -520,7 +521,7 @@ class BackendUser extends User
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
 					// Check access
-					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $this->hasAccess($strModuleName, 'modules');
+					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
 					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
 
 					if ($blnAccess && !$blnHide)
@@ -633,7 +634,7 @@ class BackendUser extends User
 			return;
 		}
 
-		list($this->admin, $this->amg, $parent) = array_values($data);
+		[$this->admin, $this->amg, $parent] = array_values($data);
 
 		parent::__unserialize($parent);
 	}

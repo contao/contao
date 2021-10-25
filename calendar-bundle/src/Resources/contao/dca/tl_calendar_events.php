@@ -15,6 +15,7 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Events;
@@ -935,19 +936,19 @@ class tl_calendar_events extends Backend
 		$arrOptions = array('default');
 
 		// Add the "internal" option
-		if ($this->User->hasAccess('tl_calendar_events::jumpTo', 'alexf'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::jumpTo'))
 		{
 			$arrOptions[] = 'internal';
 		}
 
 		// Add the "article" option
-		if ($this->User->hasAccess('tl_calendar_events::articleId', 'alexf'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::articleId'))
 		{
 			$arrOptions[] = 'article';
 		}
 
 		// Add the "external" option
-		if ($this->User->hasAccess('tl_calendar_events::url', 'alexf'))
+		if (System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::url'))
 		{
 			$arrOptions[] = 'external';
 		}
@@ -1120,7 +1121,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Check permissions AFTER checking the fid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_calendar_events::featured', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::featured'))
 		{
 			return '';
 		}
@@ -1173,7 +1174,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Check permissions to feature
-		if (!$this->User->hasAccess('tl_calendar_events::featured', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::featured'))
 		{
 			throw new AccessDeniedException('Not enough permissions to feature/unfeature event ID ' . $intId . '.');
 		}
@@ -1271,7 +1272,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_calendar_events::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::published'))
 		{
 			return '';
 		}
@@ -1324,7 +1325,7 @@ class tl_calendar_events extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_calendar_events::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_calendar_events::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish event ID ' . $intId . '.');
 		}

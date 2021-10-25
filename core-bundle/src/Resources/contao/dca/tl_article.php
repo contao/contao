@@ -813,7 +813,7 @@ class tl_article extends Backend
 	 */
 	public function addAliasButton($arrButtons)
 	{
-		if (!$this->User->hasAccess('tl_article::alias', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::alias'))
 		{
 			return $arrButtons;
 		}
@@ -886,7 +886,7 @@ class tl_article extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_article::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::published'))
 		{
 			return '';
 		}
@@ -951,7 +951,7 @@ class tl_article extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_article::published', 'alexf'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish article ID "' . $intId . '".');
 		}

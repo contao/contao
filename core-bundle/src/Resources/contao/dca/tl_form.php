@@ -357,7 +357,7 @@ class tl_form extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'formp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !System::isGranted(ContaoCorePermissions::USER_CAN_DELETE_FORMS)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form ID ' . Input::get('id') . '.');
 				}
