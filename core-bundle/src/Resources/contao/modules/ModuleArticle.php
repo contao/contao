@@ -206,6 +206,7 @@ class ModuleArticle extends Module
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
+		// Backwards compatibility
 		if ($this->keywords)
 		{
 			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
