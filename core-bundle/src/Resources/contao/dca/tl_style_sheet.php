@@ -235,7 +235,7 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_CSS_EDITOR))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_STYLE_SHEETS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}

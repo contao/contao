@@ -387,7 +387,7 @@ class tl_theme extends Backend
 	 */
 	public function editCss($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_CSS_EDITOR) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_STYLE_SHEETS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

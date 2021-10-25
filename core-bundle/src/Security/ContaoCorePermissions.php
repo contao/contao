@@ -134,7 +134,7 @@ final class ContaoCorePermissions
     /**
      * Access is granted if the current user can access the css editor in themes.
      */
-    public const USER_CAN_ACCESS_CSS_EDITOR = 'contao_user.themes.css';
+    public const USER_CAN_ACCESS_STYLE_SHEETS = 'contao_user.themes.css';
 
     /**
      * Access is granted if the current user can import themes.
