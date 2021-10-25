@@ -20,6 +20,8 @@ use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class PageRegistryTest extends TestCase
 {
@@ -360,6 +362,42 @@ class PageRegistryTest extends TestCase
 
         $registry->getUrlSuffixes();
         $registry->supportsContentComposition($pageModel);
+    }
+
+    /**
+     * @dataProvider errorPageTypeProvider
+     */
+    public function testDoesNotGenerateRoutesForErrorPages(string $type): void
+    {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'type' => $type,
+            ]
+        );
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry->add($type, new RouteConfig());
+
+        $this->expectException(RouteNotFoundException::class);
+
+        $registry->getRoute($pageModel);
+    }
+
+    public function errorPageTypeProvider(): \Generator
+    {
+        yield 'Does not generate route for error_401' => [
+            'error_401',
+        ];
+
+        yield 'Does not generate route for error_403' => [
+            'error_403',
+        ];
+
+        yield 'Does not generate route for error_404' => [
+            'error_404',
+        ];
     }
 
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection
