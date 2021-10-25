@@ -30,6 +30,7 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Webmozart\PathUtil\Path;
 
@@ -126,8 +127,7 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'insert_tag',
-                [InsertTagRuntime::class, 'replace'],
-                ['is_safe' => ['html']]
+                [InsertTagRuntime::class, 'renderInsertTag'],
             ),
             new TwigFunction(
                 'add_schema_org',
@@ -147,6 +147,20 @@ final class ContaoExtension extends AbstractExtension
                 'render_contao_backend_template',
                 [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
                 ['is_safe' => ['html']]
+            ),
+        ];
+    }
+
+    public function getFilters()
+    {
+        return [
+            new TwigFilter(
+                'insert_tag',
+                [InsertTagRuntime::class, 'replaceInsertTags']
+            ),
+            new TwigFilter(
+                'insert_tag_raw',
+                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
             ),
         ];
     }

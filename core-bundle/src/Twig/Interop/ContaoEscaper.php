@@ -40,6 +40,17 @@ final class ContaoEscaper
             throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
         }
 
+        if ($string instanceof ChunkedText) {
+            $parts = [];
+
+            foreach ($string as [$type, $chunk]) {
+                $parts[] = ChunkedText::TYPE_TEXT === $type ?
+                    $this->escapeHtml($environment, $chunk, $charset) : $chunk;
+            }
+
+            return implode('', $parts);
+        }
+
         $string = (string) $string;
 
         // Handle uppercase entities

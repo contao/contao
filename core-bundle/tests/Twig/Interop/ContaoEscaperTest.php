@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\System;
 use Twig\Environment;
@@ -65,6 +66,11 @@ class ContaoEscaperTest extends TestCase
         yield 'string with uppercase entities' => [
             '&AMP; &QUOT; &LT; &GT;',
             '&amp; &quot; &lt; &gt;',
+        ];
+
+        yield 'chunked text' => [
+            new ChunkedText(['<br>', '<br>', '<br>', '<br>']),
+            '<br>&lt;br&gt;<br>&lt;br&gt;',
         ];
     }
 
