@@ -146,11 +146,8 @@ class SitemapController extends AbstractController
                     && !$pageModel->requireItem
                     && 'noindex,nofollow' !== $pageModel->robots
                     && $this->pageRegistry->supportsContentComposition($pageModel)
+                    && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
                 ) {
-                    $route = $this->pageRegistry->getRoute($pageModel);
-
-                    dump($route->getRequirement('_format'));
-
                     $urls = [$pageModel->getAbsoluteUrl()];
 
                     // Get articles with teaser
