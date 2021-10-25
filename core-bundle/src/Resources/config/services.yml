@@ -896,9 +896,6 @@ services:
         public: true
 
     Contao\CoreBundle\String\HtmlDecoder:
-        arguments:
-            - '@contao.framework'
-        # TODO: remove this once the deprecated StringUtil methods have been removed
         public: true
 
     contao.token_generator:

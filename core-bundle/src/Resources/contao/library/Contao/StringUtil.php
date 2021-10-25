@@ -52,7 +52,6 @@ class StringUtil
 		$intCharCount = 0;
 		$arrWords = array();
 		$arrChunks = preg_split('/\s+/', $strString);
-		$blnAddEllipsis = false;
 
 		foreach ($arrChunks as $strChunk)
 		{
@@ -71,23 +70,23 @@ class StringUtil
 				$arrWords[] = mb_substr($strChunk, 0, $intNumberOfChars);
 			}
 
-			if ($strEllipsis !== false)
-			{
-				$blnAddEllipsis = true;
-			}
-
 			break;
+		}
+
+		if ($strEllipsis === false)
+		{
+			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "false" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass an empty string instead.');
+			$strEllipsis = '';
 		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strEllipsis === true)
 		{
 			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.');
-
 			$strEllipsis = ' …';
 		}
 
-		return implode(' ', $arrWords) . ($blnAddEllipsis ? $strEllipsis : '');
+		return implode(' ', $arrWords) . $strEllipsis;
 	}
 
 	/**
