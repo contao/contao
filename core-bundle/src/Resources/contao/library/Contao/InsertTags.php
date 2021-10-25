@@ -87,8 +87,10 @@ class InsertTags extends Controller
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$container = System::getContainer();
+
 		// Preserve insert tags
-		if (Config::get('disableInsertTags'))
+		if (Config::get('disableInsertTags') || !$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
 			return StringUtil::restoreBasicEntities($strBuffer);
 		}
@@ -104,8 +106,12 @@ class InsertTags extends Controller
 		}
 
 		$strBuffer = '';
-		$container = System::getContainer();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
+
+		$allowedTagsRegex = '(' . implode('|', array_map(static function ($allowedTag)
+		{
+			return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
+		}, $container->getParameter('contao.insert_tags.allowed_tags'))) . ')';
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -129,6 +135,12 @@ class InsertTags extends Controller
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
 				$strBuffer .= $arrCache[$strTag];
+				continue;
+			}
+
+			if (preg_match($allowedTagsRegex, $elements[0]) !== 1)
+			{
+				$strBuffer .= '{{' . $strTag . '}}';
 				continue;
 			}
 
