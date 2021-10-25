@@ -52,13 +52,13 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
         $currentToken = $this->tokenStorage->getToken();
 
         if ($currentToken instanceof TwoFactorTokenInterface) {
-            $authCode = $request->request->get('verify');
+            $authCode = $request->request->all()['verify'] ?? '';
 
             return $this->authenticationManager->authenticate($currentToken->createWithCredentials($authCode));
         }
 
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
+        $username = $request->request->all()['username'] ?? null;
+        $password = $request->request->all()['password'] ?? null;
 
         if (!\is_string($username)) {
             throw new BadRequestHttpException(sprintf('The key "username" must be a string, "%s" given.', \gettype($username)));
