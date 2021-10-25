@@ -1213,7 +1213,7 @@ class tl_content extends Backend
 		}
 
 		// Return if the user cannot access the layout module (see #6190)
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'themes') || !System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME, 'layout'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'themes') || !System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			return;
 		}

@@ -666,7 +666,7 @@ class tl_module extends Backend
 			return;
 		}
 
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME, 'modules'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
 		}

@@ -117,6 +117,36 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_THEME = 'contao_user.themes';
 
     /**
+     * Access is granted if the current user can access layouts in themes.
+     */
+    public const USER_CAN_ACCESS_LAYOUTS = 'contao_user.themes.layout';
+
+    /**
+     * Access is granted if the current user can access image sizes in themes.
+     */
+    public const USER_CAN_ACCESS_IMAGE_SIZES = 'contao_user.themes.image_sizes';
+
+    /**
+     * Access is granted if the current user can access front end modules in themes.
+     */
+    public const USER_CAN_ACCESS_FRONTEND_MODULES = 'contao_user.themes.modules';
+
+    /**
+     * Access is granted if the current user can access the css editor in themes.
+     */
+    public const USER_CAN_ACCESS_CSS_EDITOR = 'contao_user.themes.css';
+
+    /**
+     * Access is granted if the current user can import themes.
+     */
+    public const USER_CAN_IMPORT_THEMES = 'contao_user.themes.theme_import';
+
+    /**
+     * Access is granted if the current user can export themes.
+     */
+    public const USER_CAN_EXPORT_THEMES = 'contao_user.themes.theme_export';
+
+    /**
      * Access is granted if the current user can access the page type.
      * Subject must be a page type as string (e.g. "regular").
      */

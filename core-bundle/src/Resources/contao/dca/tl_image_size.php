@@ -252,7 +252,7 @@ class tl_image_size extends Backend
 			return;
 		}
 
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_THEME, 'image_sizes'))
+		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
