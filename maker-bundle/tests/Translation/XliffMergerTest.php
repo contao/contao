@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\MakerBundle\Tests\Translation;
 
 use Contao\MakerBundle\Translation\XliffMerger;
@@ -12,10 +20,10 @@ class XliffMergerTest extends TestCase
     public function testReturnsRootNodeIfNoBodyTagIsFound(): void
     {
         $root = new \DOMDocument();
-        $root->load(__DIR__ . '/../Fixtures/translations/test-no-body/no-body-tag.xlf');
+        $root->load(__DIR__.'/../Fixtures/translations/test-no-body/no-body-tag.xlf');
 
         $document = new \DOMDocument();
-        $document->load(__DIR__ . '/../Fixtures/translations/test-no-body/empty.xlf');
+        $document->load(__DIR__.'/../Fixtures/translations/test-no-body/empty.xlf');
 
         $merger = new XliffMerger();
         $mergedDocument = $merger->merge($root, $document);
@@ -26,13 +34,13 @@ class XliffMergerTest extends TestCase
     public function testReturnsExpectedMergedDocument(): void
     {
         $root = new \DOMDocument();
-        $root->load(__DIR__ . '/../Fixtures/translations/test-merge/root.xlf');
+        $root->load(__DIR__.'/../Fixtures/translations/test-merge/root.xlf');
 
         $document = new \DOMDocument();
-        $document->load(__DIR__ . '/../Fixtures/translations/test-merge/document.xlf');
+        $document->load(__DIR__.'/../Fixtures/translations/test-merge/document.xlf');
 
         $expectation = new \DOMDocument();
-        $expectation->load(__DIR__ . '/../Fixtures/translations/test-merge/merged.xlf');
+        $expectation->load(__DIR__.'/../Fixtures/translations/test-merge/merged.xlf');
 
         $merger = new XliffMerger();
         $mergedDocument = $merger->merge($root, $document);
@@ -43,13 +51,13 @@ class XliffMergerTest extends TestCase
     public function testDoesNotOverwriteDuplicates(): void
     {
         $root = new \DOMDocument();
-        $root->load(__DIR__ . '/../Fixtures/translations/test-duplicates/root.xlf');
+        $root->load(__DIR__.'/../Fixtures/translations/test-duplicates/root.xlf');
 
         $document = new \DOMDocument();
-        $document->load(__DIR__ . '/../Fixtures/translations/test-duplicates/document.xlf');
+        $document->load(__DIR__.'/../Fixtures/translations/test-duplicates/document.xlf');
 
         $expectation = new \DOMDocument();
-        $expectation->load(__DIR__ . '/../Fixtures/translations/test-duplicates/merged.xlf');
+        $expectation->load(__DIR__.'/../Fixtures/translations/test-duplicates/merged.xlf');
 
         $merger = new XliffMerger();
         $mergedDocument = $merger->merge($root, $document);
@@ -66,7 +74,7 @@ class XliffMergerTest extends TestCase
         $method->setAccessible(true);
 
         $document = new \DOMDocument();
-        $document->load(__DIR__ . '/../Fixtures/translations/test-get-import-nodes/empty.xlf');
+        $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/empty.xlf');
 
         $nodes = $method->invoke($merger, $document);
 
@@ -83,7 +91,7 @@ class XliffMergerTest extends TestCase
         $method->setAccessible(true);
 
         $document = new \DOMDocument();
-        $document->load(__DIR__ . '/../Fixtures/translations/test-get-import-nodes/single-element.xlf');
+        $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/single-element.xlf');
 
         $nodes = $method->invoke($merger, $document);
 
@@ -101,7 +109,7 @@ class XliffMergerTest extends TestCase
         $method->setAccessible(true);
 
         $document = new \DOMDocument();
-        $document->load(__DIR__ . '/../Fixtures/translations/test-get-import-nodes/multiple-elements.xlf');
+        $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/multiple-elements.xlf');
 
         $nodes = $method->invoke($merger, $document);
 
