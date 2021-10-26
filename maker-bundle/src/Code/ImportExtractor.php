@@ -47,6 +47,9 @@ class ImportExtractor
             }
         }
 
-        return array_unique($objectTypeHints);
+        $objectTypeHints = array_unique($objectTypeHints);
+        sort($objectTypeHints);
+
+        return $objectTypeHints;
     }
 }
