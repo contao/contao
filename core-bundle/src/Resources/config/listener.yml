@@ -376,7 +376,7 @@ services:
     contao.listener.subrequest_cache:
         class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
         arguments:
-            - '@Contao\CoreBundle\Http\CacheResponseStrategyManager'
+            - '@Contao\CoreBundle\Fragment\FragmentResponseStack'
         tags:
             - kernel.event_subscriber
 

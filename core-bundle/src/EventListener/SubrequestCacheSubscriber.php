@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Http\CacheResponseStrategyManager;
+use Contao\CoreBundle\Fragment\FragmentResponseStack;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -40,13 +40,16 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class SubrequestCacheSubscriber implements EventSubscriberInterface
 {
-    public const MERGE_CACHE_HEADER = CacheResponseStrategyManager::MERGE_CACHE_HEADER;
+    /**
+     * @deprecated Deprecated since Contao 4.13 and will be removed in Contao 5.0. Use FragmentResponseStack::MERGE_CACHE_HEADER instead.
+     */
+    public const MERGE_CACHE_HEADER = FragmentResponseStack::MERGE_CACHE_HEADER;
 
-    private CacheResponseStrategyManager $strategy;
+    private FragmentResponseStack $fragmentResponses;
 
-    public function __construct(CacheResponseStrategyManager $strategy)
+    public function __construct(FragmentResponseStack $fragmentResponses)
     {
-        $this->strategy = $strategy;
+        $this->fragmentResponses = $fragmentResponses;
     }
 
     public function onKernelRequest(RequestEvent $event): void
@@ -55,15 +58,15 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->strategy->init();
+        $this->fragmentResponses->init();
     }
 
     public function onKernelResponse(ResponseEvent $event): void
     {
         if (!$event->isMainRequest()) {
-            $this->strategy->add($event->getResponse());
+            $this->fragmentResponses->add($event->getResponse());
         } else {
-            $this->strategy->update($event->getResponse());
+            $this->fragmentResponses->finalize($event->getResponse());
         }
     }
 
