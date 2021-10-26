@@ -21,7 +21,7 @@ class ChunkedText implements \IteratorAggregate
     public const TYPE_RAW = 1;
 
     /**
-     * @var array<int, array{0:int, 1:string}>
+     * @var array<int, string>
      */
     private $chunks;
 

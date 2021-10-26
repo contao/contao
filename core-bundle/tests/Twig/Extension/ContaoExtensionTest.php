@@ -93,6 +93,7 @@ class ContaoExtensionTest extends TestCase
 
         $this->assertCount(2, $filters);
 
+        /** @var array<string,mixed> $expectedFilters */
         $expectedFilters = [
             'insert_tag' => null,
             'insert_tag_raw' => null,
