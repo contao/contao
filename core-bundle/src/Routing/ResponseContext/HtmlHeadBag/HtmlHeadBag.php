@@ -19,6 +19,7 @@ final class HtmlHeadBag
     private string $title = '';
     private string $metaDescription = '';
     private string $metaRobots = 'index,follow';
+    private string $canonicalUri = '';
     private array $keepParamsForCanonical = [];
 
     public function getTitle(): string
@@ -76,8 +77,19 @@ final class HtmlHeadBag
         return $this;
     }
 
+    public function setCanonicalUri(string $canonicalUri): self
+    {
+        $this->canonicalUri = $canonicalUri;
+
+        return $this;
+    }
+
     public function getCanonicalUri(Request $request): string
     {
+        if ($this->canonicalUri) {
+            return $this->canonicalUri;
+        }
+
         return Request::create(
             $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
             $request->getMethod(),
