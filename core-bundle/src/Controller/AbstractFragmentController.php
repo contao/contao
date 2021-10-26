@@ -98,11 +98,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
             }
         }
 
-        // Current request is the main request, which means this must be an ESI fragment
+        // Current request is the main request (e.g. ESI fragment), so we have to replace
+        // insert tags etc. on the template output.
         if ($request === $mainRequest) {
             $templateClass = FrontendTemplate::class;
         }
 
+        /** @var Template $template */
         $template = $this->get('contao.framework')->createInstance($templateClass, [$templateName]);
         $template->setData($model->row());
 

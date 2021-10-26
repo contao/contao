@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\ModuleModel;
 use Contao\System;
@@ -152,6 +153,31 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($container);
 
         $controller(new Request(), $model, 'main');
+    }
+
+    public function testUsesFragmentTemplateForSubrequests(): void
+    {
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(FragmentTemplate::class, ['mod_test'])
+            ->willReturn(new FragmentTemplate('mod_test'))
+        ;
+
+        $this->container->set('contao.framework', $framework);
+        $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+
+        $currentRequest = new Request([], [], ['_scope' => 'frontend']);
+        $requestStack = $this->container->get('request_stack');
+
+        $requestStack->push(new Request()); // Main request
+        $requestStack->push($currentRequest); // Sub request
+
+        $controller = new TestController();
+        $controller->setContainer($this->container);
+
+        $controller($currentRequest, $this->getModuleModel(), 'main');
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder

@@ -16,6 +16,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
@@ -237,6 +238,31 @@ class ContentElementControllerTest extends TestCase
         $response = $controller(new Request(), $this->getContentModel(), 'main');
 
         $this->assertNull($response->getMaxAge());
+    }
+
+    public function testUsesFragmentTemplateForSubrequests(): void
+    {
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(FragmentTemplate::class, ['ce_test'])
+            ->willReturn(new FragmentTemplate('ce_test'))
+        ;
+
+        $this->container->set('contao.framework', $framework);
+        $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+
+        $currentRequest = new Request([], [], ['_scope' => 'frontend']);
+        $requestStack = $this->container->get('request_stack');
+
+        $requestStack->push(new Request()); // Main request
+        $requestStack->push($currentRequest); // Sub request
+
+        $controller = new TestController();
+        $controller->setContainer($this->container);
+
+        $controller(new Request(), $this->getContentModel(), 'main');
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
