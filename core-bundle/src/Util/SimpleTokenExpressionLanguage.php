@@ -13,23 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Util;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
-class SimpleTokenExpressionLanguage extends ExpressionLanguage
+/**
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+ *             the Contao\CoreBundle\String\SimpleTokenExpressionLanguage class instead
+ */
+class SimpleTokenExpressionLanguage extends \Contao\CoreBundle\String\SimpleTokenExpressionLanguage
 {
     public function __construct(CacheItemPoolInterface $cache = null, \IteratorAggregate $taggedProviders = null)
     {
-        $providers = null !== $taggedProviders ? iterator_to_array($taggedProviders->getIterator()) : [];
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\CoreBundle\Util\SimpleTokenExpressionLanguage" class has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\SimpleTokenExpressionLanguage" class instead.');
 
-        parent::__construct($cache, $providers);
-
-        // Disable `constant()` function for security reasons.
-        $this->register(
-            'constant',
-            static fn () => "throw new \\InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');",
-            static function (): void {
-                throw new \InvalidArgumentException('Cannot use the constant() function in the expression for security reasons.');
-            }
-        );
+        parent::__construct($cache, $taggedProviders);
     }
 }

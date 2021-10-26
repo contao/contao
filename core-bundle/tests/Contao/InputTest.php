@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;

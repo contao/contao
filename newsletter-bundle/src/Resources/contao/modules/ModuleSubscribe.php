@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
  * Front end module "newsletter subscribe".

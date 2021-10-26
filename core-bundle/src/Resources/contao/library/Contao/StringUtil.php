@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Webmozart\PathUtil\Path;
 
 /**
