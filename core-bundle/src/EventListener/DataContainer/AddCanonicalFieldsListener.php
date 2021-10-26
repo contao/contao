@@ -41,8 +41,8 @@ class AddCanonicalFieldsListener
         }
 
         PaletteManipulator::create()
-            ->addField('canonicalLink', 'serpPreview')
             ->addField('canonicalKeepParams', 'serpPreview')
+            ->addField('canonicalLink', 'serpPreview')
             ->applyToPalette('regular', 'tl_page')
         ;
     }
