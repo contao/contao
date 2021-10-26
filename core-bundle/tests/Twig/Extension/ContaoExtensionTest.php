@@ -93,22 +93,16 @@ class ContaoExtensionTest extends TestCase
 
         $this->assertCount(4, $filters);
 
-        /** @var array<string,mixed> $expectedFilters */
         $expectedFilters = [
-            'escape' => ['html'],
-            'e' => ['html'],
-            'insert_tag' => null,
-            'insert_tag_raw' => null,
+            'escape',
+            'e',
+            'insert_tag',
+            'insert_tag_raw',
         ];
-
-        $node = $this->createMock(Node::class);
 
         foreach ($filters as $filter) {
             $this->assertInstanceOf(TwigFilter::class, $filter);
-
-            $name = $filter->getName();
-            $this->assertArrayHasKey($name, $expectedFilters);
-            $this->assertSame($expectedFilters[$name], $filter->getSafe($node), $name);
+            $this->assertContains($filter->getName(), $expectedFilters);
         }
     }
 
