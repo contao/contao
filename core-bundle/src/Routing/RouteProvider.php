@@ -178,11 +178,10 @@ class RouteProvider extends AbstractPageRouteProvider
             return;
         }
 
-        try {
-            $route = $this->pageRegistry->getRoute($page);
+        $route = $this->pageRegistry->getRoute($page);
+
+        if ($route->isRoutable()) {
             $routes['tl_page.'.$page->id] = $route;
-        } catch (RouteNotFoundException $e) {
-            // Do not add route for not routable pages (#3415)
         }
 
         $this->addRoutesForRootPage($page, $routes);

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\CoreBundle\Routing\Page\UnroutablePageRouteCompiler;
 use Contao\FrontendIndex;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -96,9 +97,15 @@ class RegisterPagesPass implements CompilerPassInterface
         $path = $attributes['path'] ?? null;
         $pathRegex = null;
 
-        if (null !== $path && 0 === strncmp($path, '/', 1)) {
+        if (\is_string($path) && 0 === strncmp($path, '/', 1)) {
             $compiledRoute = (new Route($path))->compile();
             $pathRegex = $compiledRoute->getRegex();
+        }
+
+        if (false === $path) {
+            $attributes['options'] = array_merge([
+                'compiler_class' => UnroutablePageRouteCompiler::class,
+            ], $attributes['options'] ?? []);
         }
 
         return new Definition(

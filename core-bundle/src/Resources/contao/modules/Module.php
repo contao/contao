@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Parent class for front end modules.
@@ -365,6 +366,10 @@ abstract class Module extends Frontend
 						{
 							$href = $objNext->getFrontendUrl();
 						}
+						catch (RouteNotFoundException $exception)
+						{
+							// Ignore
+						}
 						catch (ExceptionInterface $exception)
 						{
 							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
@@ -377,6 +382,10 @@ abstract class Module extends Frontend
 						try
 						{
 							$href = $objSubpage->getFrontendUrl();
+						}
+						catch (RouteNotFoundException $exception)
+						{
+							// Ignore
 						}
 						catch (ExceptionInterface $exception)
 						{

@@ -27,7 +27,10 @@ final class Page implements ServiceTagInterface
 {
     private ?string $type = null;
     private bool $contentComposition = true;
-    private ?string $path = null;
+    /**
+     * @var string|bool|null
+     */
+    private $path;
     private ?string $urlSuffix = null;
     private array $requirements = [];
     private array $options = [];
@@ -106,7 +109,10 @@ final class Page implements ServiceTagInterface
         $this->contentComposition = $contentComposition;
     }
 
-    public function setPath(?string $path): void
+    /**
+     * @param string|bool|null $path
+     */
+    public function setPath($path): void
     {
         $this->path = $path;
     }

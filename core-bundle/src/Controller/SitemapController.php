@@ -22,7 +22,6 @@ use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * @Route(defaults={"_scope" = "frontend"})
@@ -140,27 +139,24 @@ class SitemapController extends AbstractController
 
             $isPublished = $pageModel->published && (!$pageModel->start || $pageModel->start <= time()) && (!$pageModel->stop || $pageModel->stop > time());
 
-            try {
-                if (
-                    $isPublished
-                    && !$pageModel->requireItem
-                    && 'noindex,nofollow' !== $pageModel->robots
-                    && $this->pageRegistry->supportsContentComposition($pageModel)
-                    && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
-                ) {
-                    $urls = [$pageModel->getAbsoluteUrl()];
+            if (
+                $isPublished
+                && !$pageModel->requireItem
+                && 'noindex,nofollow' !== $pageModel->robots
+                && $this->pageRegistry->supportsContentComposition($pageModel)
+                && $this->pageRegistry->getRoute($pageModel)->isRoutable()
+                && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
+            ) {
+                $urls = [$pageModel->getAbsoluteUrl()];
 
-                    // Get articles with teaser
-                    if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
-                        foreach ($articleModels as $articleModel) {
-                            $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
-                        }
+                // Get articles with teaser
+                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
+                    foreach ($articleModels as $articleModel) {
+                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
                     }
-
-                    $result[] = $urls;
                 }
-            } catch (RouteNotFoundException $e) {
-                // Do not add unroutable pages to sitemap (#3415)
+
+                $result[] = $urls;
             }
 
             $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);

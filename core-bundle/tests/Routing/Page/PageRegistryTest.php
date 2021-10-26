@@ -21,7 +21,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class PageRegistryTest extends TestCase
 {
@@ -367,22 +366,21 @@ class PageRegistryTest extends TestCase
     /**
      * @dataProvider errorPageTypeProvider
      */
-    public function testDoesNotGenerateRoutesForErrorPages(string $type): void
+    public function testDoesNotGenerateRoutableRoutesForErrorPages(string $type): void
     {
         /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
             [
                 'type' => $type,
+                'rootLanguage' => 'en',
             ]
         );
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add($type, new RouteConfig());
 
-        $this->expectException(RouteNotFoundException::class);
-
-        $registry->getRoute($pageModel);
+        $this->assertFalse($registry->getRoute($pageModel)->isRoutable());
     }
 
     public function errorPageTypeProvider(): \Generator
