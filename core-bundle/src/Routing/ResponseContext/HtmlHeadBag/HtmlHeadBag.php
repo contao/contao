@@ -12,11 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
+use Symfony\Component\HttpFoundation\Request;
+
 final class HtmlHeadBag
 {
     private string $title = '';
     private string $metaDescription = '';
     private string $metaRobots = 'index,follow';
+    private array $keepParamsForCanonical = [];
 
     public function getTitle(): string
     {
@@ -52,5 +55,33 @@ final class HtmlHeadBag
         $this->metaRobots = $metaRobots;
 
         return $this;
+    }
+
+    public function setKeepParamsForCanonical(array $keepParamsForCanonical): self
+    {
+        $this->keepParamsForCanonical = $keepParamsForCanonical;
+
+        return $this;
+    }
+
+    public function getKeepParamsForCanonical(): array
+    {
+        return $this->keepParamsForCanonical;
+    }
+
+    public function addKeepParamsForCanonical(string $param): self
+    {
+        $this->keepParamsForCanonical[] = $param;
+
+        return $this;
+    }
+
+    public function getCanonicalUri(Request $request): string
+    {
+        return Request::create(
+            $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
+            $request->getMethod(),
+            array_intersect_key($request->query->all(), array_flip($this->getKeepParamsForCanonical()))
+        )->getUri();
     }
 }
