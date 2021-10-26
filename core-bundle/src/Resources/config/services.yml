@@ -336,6 +336,10 @@ services:
         tags:
             - { name: kernel.reset, method: reset }
 
+    Contao\CoreBundle\Http\CacheResponseStrategyManager:
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:

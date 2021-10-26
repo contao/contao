@@ -375,9 +375,10 @@ services:
 
     contao.listener.subrequest_cache:
         class: Contao\CoreBundle\EventListener\SubrequestCacheSubscriber
+        arguments:
+            - '@Contao\CoreBundle\Http\CacheResponseStrategyManager'
         tags:
             - kernel.event_subscriber
-            - { name: kernel.reset, method: reset }
 
     contao.listener.switch_user:
         class: Contao\CoreBundle\EventListener\SwitchUserListener
