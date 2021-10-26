@@ -237,7 +237,7 @@ class ContaoExtensionTest extends TestCase
 
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
-            ['B' => "root before B\n[[TL_PARENT]]root after B"],
+            ['B' => "root before B\n[[TL_PARENT_]]root after B"],
             ['foo' => 'bar']
         );
 

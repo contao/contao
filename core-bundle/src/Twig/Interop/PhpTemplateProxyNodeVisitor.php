@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Twig\Environment;
 use Twig\Node\BlockNode;
@@ -67,7 +68,9 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
                 continue;
             }
 
-            $blockNodes[$name] = new BlockNode($name, new TextNode('[[TL_PARENT]]', 0), 0);
+            $nonce = ContaoFramework::getNonce();
+
+            $blockNodes[$name] = new BlockNode($name, new TextNode("[[TL_PARENT_$nonce]]", 0), 0);
         }
 
         $node->setNode('blocks', new Node($blockNodes));

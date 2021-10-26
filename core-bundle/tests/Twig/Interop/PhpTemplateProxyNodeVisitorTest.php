@@ -57,8 +57,8 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
         $this->assertSame('a', $blocks['a']->getAttribute('name'));
         $this->assertSame('b', $blocks['b']->getAttribute('name'));
 
-        $this->assertSame('[[TL_PARENT]]', $blocks['a']->getNode('body')->getAttribute('data'));
-        $this->assertSame('[[TL_PARENT]]', $blocks['b']->getNode('body')->getAttribute('data'));
+        $this->assertSame('[[TL_PARENT_]]', $blocks['a']->getNode('body')->getAttribute('data'));
+        $this->assertSame('[[TL_PARENT_]]', $blocks['b']->getNode('body')->getAttribute('data'));
 
         $this->assertInstanceOf(PhpTemplateProxyNode::class, $module->getNode('body'));
     }
