@@ -71,7 +71,9 @@ class InsertTags extends Controller
 		// Preserve insert tags
 		if (Config::get('disableInsertTags'))
 		{
-			return StringUtil::restoreBasicEntities($strBuffer);
+			$return = StringUtil::restoreBasicEntities($strBuffer);
+
+			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
 		}
 
 		$strBuffer = self::encodeHtmlAttributes($strBuffer);
@@ -92,7 +94,9 @@ class InsertTags extends Controller
 
 		if (\count($tags) < 2)
 		{
-			return StringUtil::restoreBasicEntities($strBuffer);
+			$return = StringUtil::restoreBasicEntities($strBuffer);
+
+			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
 		}
 
 		$arrBuffer = array();

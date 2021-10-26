@@ -12,21 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\InsertTags;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class InsertTagRuntime implements RuntimeExtensionInterface
 {
-    private ContaoFramework $framework;
+    private InsertTags $insertTags;
 
     /**
      * @internal
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(InsertTags $insertTags = null)
     {
-        $this->framework = $framework;
+        $this->insertTags = $insertTags ?? new InsertTags();
     }
 
     public function renderInsertTag(string $insertTag): string
@@ -36,17 +35,11 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
 
     public function replaceInsertTags(string $text): string
     {
-        /** @var InsertTags $insertTags */
-        $insertTags = $this->framework->getAdapter(InsertTags::class);
-
-        return $insertTags->replace($text, false);
+        return $this->insertTags->replace($text, false);
     }
 
     public function replaceInsertTagsChunkedRaw(string $text): ChunkedText
     {
-        /** @var InsertTags $insertTags */
-        $insertTags = $this->framework->getAdapter(InsertTags::class);
-
-        return $insertTags->replace($text, false, true);
+        return $this->insertTags->replace($text, false, true);
     }
 }

@@ -91,10 +91,12 @@ class ContaoExtensionTest extends TestCase
     {
         $filters = $this->getContaoExtension()->getFilters();
 
-        $this->assertCount(2, $filters);
+        $this->assertCount(4, $filters);
 
         /** @var array<string,mixed> $expectedFilters */
         $expectedFilters = [
+            'escape' => ['html'],
+            'e' => ['html'],
             'insert_tag' => null,
             'insert_tag_raw' => null,
         ];

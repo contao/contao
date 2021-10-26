@@ -16,6 +16,7 @@ use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -153,7 +154,34 @@ final class ContaoExtension extends AbstractExtension
 
     public function getFilters()
     {
+        $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
+            if ($string instanceof ChunkedText) {
+                $parts = [];
+
+                foreach ($string as [$type, $chunk]) {
+                    $parts[] = ChunkedText::TYPE_RAW === $type ?
+                        $chunk : twig_escape_filter($env, $chunk, $strategy, $charset);
+                }
+
+                return implode('', $parts);
+            }
+
+            return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+        };
+
         return [
+            // Overwrite the 'escape'/'e' filter to additionally support
+            // chunked text.
+            new TwigFilter(
+                'escape',
+                $escaperFilter,
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+            ),
+            new TwigFilter(
+                'e',
+                $escaperFilter,
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+            ),
             new TwigFilter(
                 'insert_tag',
                 [InsertTagRuntime::class, 'replaceInsertTags']
