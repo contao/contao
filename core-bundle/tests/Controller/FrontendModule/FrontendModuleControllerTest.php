@@ -172,9 +172,6 @@ class FrontendModuleControllerTest extends TestCase
 
     private function getModuleModel(): ModuleModel
     {
-        /** @var ModuleModel $model */
-        $model = (new \ReflectionClass(ModuleModel::class))->newInstanceWithoutConstructor();
-
-        return $model;
+        return (new \ReflectionClass(ModuleModel::class))->newInstanceWithoutConstructor();
     }
 }

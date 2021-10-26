@@ -256,9 +256,6 @@ class ContentElementControllerTest extends TestCase
 
     private function getContentModel(): ContentModel
     {
-        /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
-
-        return $model;
+        return (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
     }
 }
