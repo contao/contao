@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -46,6 +47,9 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
             new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5')
         );
 
+        $framework = new \ReflectionClass(ContaoFramework::class);
+        $framework->setStaticPropertyValue('nonce', '<nonce>');
+
         $environment = $this->createMock(Environment::class);
         (new NodeTraverser($environment, [$visitor]))->traverse($module);
 
@@ -57,8 +61,8 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
         $this->assertSame('a', $blocks['a']->getAttribute('name'));
         $this->assertSame('b', $blocks['b']->getAttribute('name'));
 
-        $this->assertSame('[[TL_PARENT_]]', $blocks['a']->getNode('body')->getAttribute('data'));
-        $this->assertSame('[[TL_PARENT_]]', $blocks['b']->getNode('body')->getAttribute('data'));
+        $this->assertSame('[[TL_PARENT_<nonce>]]', $blocks['a']->getNode('body')->getAttribute('data'));
+        $this->assertSame('[[TL_PARENT_<nonce>]]', $blocks['b']->getNode('body')->getAttribute('data'));
 
         $this->assertInstanceOf(PhpTemplateProxyNode::class, $module->getNode('body'));
     }
