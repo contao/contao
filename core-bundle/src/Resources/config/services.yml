@@ -962,9 +962,7 @@ services:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\FigureRenderer'
 
-    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
-        arguments:
-            - '@contao.framework'
+    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime: ~
 
     Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:

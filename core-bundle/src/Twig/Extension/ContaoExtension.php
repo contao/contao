@@ -16,6 +16,7 @@ use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -30,6 +31,7 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Webmozart\PathUtil\Path;
 
@@ -126,8 +128,7 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'insert_tag',
-                [InsertTagRuntime::class, 'replace'],
-                ['is_safe' => ['html']]
+                [InsertTagRuntime::class, 'renderInsertTag'],
             ),
             new TwigFunction(
                 'add_schema_org',
@@ -147,6 +148,46 @@ final class ContaoExtension extends AbstractExtension
                 'render_contao_backend_template',
                 [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
                 ['is_safe' => ['html']]
+            ),
+        ];
+    }
+
+    public function getFilters(): array
+    {
+        $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
+            if ($string instanceof ChunkedText) {
+                $parts = [];
+
+                foreach ($string as [$type, $chunk]) {
+                    $parts[] = ChunkedText::TYPE_RAW === $type ?
+                        $chunk : twig_escape_filter($env, $chunk, $strategy, $charset);
+                }
+
+                return implode('', $parts);
+            }
+
+            return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+        };
+
+        return [
+            // Overwrite the 'escape'/'e' filter to additionally support chunked text
+            new TwigFilter(
+                'escape',
+                $escaperFilter,
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+            ),
+            new TwigFilter(
+                'e',
+                $escaperFilter,
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+            ),
+            new TwigFilter(
+                'insert_tag',
+                [InsertTagRuntime::class, 'replaceInsertTags']
+            ),
+            new TwigFilter(
+                'insert_tag_raw',
+                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
             ),
         ];
     }
