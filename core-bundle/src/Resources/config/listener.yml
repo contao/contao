@@ -19,6 +19,10 @@ services:
         tags:
             - { name: kernel.event_listener }
 
+    Contao\CoreBundle\EventListener\DataContainer\AddCanonicalFieldsListener:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         arguments:
             - '@contao.framework'

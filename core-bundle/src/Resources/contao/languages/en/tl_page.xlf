@@ -26,6 +26,24 @@
       <trans-unit id="tl_page.pageTitle.1">
         <source>Please enter the page title.</source>
       </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel="canonical" support</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>You can disable built-in rel="canonical" support and take control over it yourself.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Manual rel="canonical" selection</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>You can manually select the desired target page for rel="canonical" support.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters to keep for rel="canonical"</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao points to itself for rel="canonical". You may add a comma-separated list of query parameters which should be kept. Use "*" as wildcard.</source>
+      </trans-unit>
       <trans-unit id="tl_page.language.0">
         <source>Language</source>
       </trans-unit>

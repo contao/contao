@@ -84,6 +84,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|integer         $stop
  * @property string|boolean         $enforceTwoFactor
  * @property string|integer         $twoFactorJumpTo
+ * @property string|integer         $enableCanonical
+ * @property string                 $canonicalLink
+ * @property string                 $canonicalKeepParams
  *
  * @property array          $trail
  * @property string         $mainAlias
@@ -172,6 +175,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByStop($val, array $opt=array())
  * @method static PageModel|null findOneByEnforceTwoFactor($val, array $opt=array())
  * @method static PageModel|null findOneByTwoFactorJumpTo($val, array $opt=array())
+ * @method static PageModel|null findOneByEnableCanonical($val, array $opt=array())
+ * @method static PageModel|null findOneByCanonicalLink($val, array $opt=array())
+ * @method static PageModel|null findOneByCanonicalKeepParams($val, array $opt=array())
  *
  * @method static Collection|PageModel[]|PageModel|null findByPid($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySorting($val, array $opt=array())
@@ -228,6 +234,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByStop($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByEnforceTwoFactor($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTwoFactorJumpTo($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByEnableCanonical($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCanonicalLink($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCanonicalKeepParams($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findAll(array $opt=array())
@@ -288,6 +297,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
+ * @method static integer countByEnableCanonical($val, array $opt=array())
+ * @method static integer countByCanonicalLink($val, array $opt=array())
+ * @method static integer countByCanonicalKeepParams($val, array $opt=array())
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -1157,6 +1169,7 @@ class PageModel extends Model
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
 			$this->mailerTransport = $objParentPage->mailerTransport;
+			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->useAutoItem = Config::get('useAutoItem');
 
 			// Store whether the root page has been published
