@@ -105,7 +105,7 @@ class LanguageDependentModuleListener
                     $types = $fieldConfig['eval']['modules'];
                 }
 
-                $fieldConfig['options'] = $this->getModules($types);
+                $fieldConfig['options'] = $this->getFrontendModules($types);
             }
 
             if (!\array_key_exists('languages', $fieldConfig['eval'])) {
@@ -205,7 +205,7 @@ class LanguageDependentModuleListener
         return $languages;
     }
 
-    private function getModules(array $types = []): array
+    private function getFrontendModules(array $types = []): array
     {
         $statement = $this->connection->executeQuery("
             SELECT m.id, m.name
