@@ -63,21 +63,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         yield 'no authentication with invalid form submit' => [true, 'tl_foobar', false];
     }
 
-    public function testThrowsExceptionIfUsernameIsNotAString(): void
-    {
-        $request = $this->mockRequest();
-        $request->request->set('FORM_SUBMIT', 'tl_login');
-        $request->request->set('username', ['foo']);
-        $request->request->set('password', 'foobar');
-
-        $authenticationManager = $this->mockAuthenticationManager(null);
-        $listener = $this->createListener($authenticationManager);
-
-        $this->expectException(BadRequestHttpException::class);
-
-        $listener($this->mockRequestEvent($request));
-    }
-
     public function testTrimsTheUsername(): void
     {
         $request = $this->mockRequest();
