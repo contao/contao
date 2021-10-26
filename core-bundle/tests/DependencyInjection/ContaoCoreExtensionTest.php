@@ -19,7 +19,6 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Security\Authentication\AccessDecisionManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -432,9 +431,10 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
         $this->assertSame(AccessDecisionManager::class, $definition->getClass());
         $this->assertEquals(new Reference('.inner'), $definition->getArgument(0));
-        $this->assertEquals(new TaggedIteratorArgument('security.voter'), $definition->getArgument(1));
-        $this->assertEquals(new Reference('contao.routing.scope_matcher'), $definition->getArgument(2));
-        $this->assertEquals(new Reference('request_stack'), $definition->getArgument(3));
+        $this->assertEquals(new Reference('contao.security.access_decision_manager.backend'), $definition->getArgument(1));
+        $this->assertEquals(new Reference('contao.security.access_decision_manager.frontend'), $definition->getArgument(2));
+        $this->assertEquals(new Reference('contao.routing.scope_matcher'), $definition->getArgument(3));
+        $this->assertEquals(new Reference('request_stack'), $definition->getArgument(4));
     }
 
     /**

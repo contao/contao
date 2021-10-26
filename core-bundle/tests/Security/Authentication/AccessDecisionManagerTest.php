@@ -17,25 +17,22 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManager as SymfonyAccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AccessDecisionManagerTest extends TestCase
 {
     public function testLeavesOriginalConfigurationUntouchedIfNoRequestAvailable(): void
     {
-        $inner = $this->createMock(SymfonyAccessDecisionManager::class);
-        $inner
-            ->expects($this->once())
-            ->method('decide')
-        ;
+        $inner = $this->createAccessDecisionManager(true);
+        $backend = $this->createAccessDecisionManager(false);
+        $frontend = $this->createAccessDecisionManager(false);
 
         $requestStack = new RequestStack();
 
         $accessDecisionManager = new AccessDecisionManager(
             $inner,
-            [],
+            $backend,
+            $frontend,
             $this->mockScopeMatcher(),
             $requestStack
         );
@@ -45,18 +42,17 @@ class AccessDecisionManagerTest extends TestCase
 
     public function testLeavesOriginalConfigurationUntouchedIfNotContaoScope(): void
     {
-        $inner = $this->createMock(AccessDecisionManagerInterface::class);
-        $inner
-            ->expects($this->once())
-            ->method('decide')
-        ;
+        $inner = $this->createAccessDecisionManager(true);
+        $backend = $this->createAccessDecisionManager(false);
+        $frontend = $this->createAccessDecisionManager(false);
 
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
         $accessDecisionManager = new AccessDecisionManager(
             $inner,
-            [],
+            $backend,
+            $frontend,
             $this->mockScopeMatcher(),
             $requestStack
         );
@@ -64,106 +60,54 @@ class AccessDecisionManagerTest extends TestCase
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    /**
-     * @dataProvider correctDecisionProvider
-     */
-    public function testCorrectDecisionForContao(string $scope, array $voters, bool $expectedDecision): void
+    public function testCorrectManagerForContaoBackend(): void
     {
-        $inner = $this->createMock(AccessDecisionManagerInterface::class);
-        $inner
-            ->expects($this->never())
-            ->method('decide')
-        ;
+        $inner = $this->createAccessDecisionManager(false);
+        $backend = $this->createAccessDecisionManager(true);
+        $frontend = $this->createAccessDecisionManager(false);
 
         $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => $scope]));
+        $requestStack->push(new Request([], [], ['_scope' => 'backend']));
 
         $accessDecisionManager = new AccessDecisionManager(
             $inner,
-            $voters,
+            $backend,
+            $frontend,
             $this->mockScopeMatcher(),
             $requestStack
         );
 
-        $decision = $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
-        $this->assertSame($expectedDecision, $decision);
+        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    public function correctDecisionProvider(): \Generator
+    public function testCorrectManagerForContaoFrontend(): void
     {
-        yield 'Backend scope: Access granted' => [
-            'backend',
-            [
-                $this->createCalledVoter(VoterInterface::ACCESS_GRANTED),
-                $this->createNonCalledVoter(),
-            ],
-            true,
-        ];
+        $inner = $this->createAccessDecisionManager(false);
+        $backend = $this->createAccessDecisionManager(false);
+        $frontend = $this->createAccessDecisionManager(true);
 
-        yield 'Backend scope: Access denied' => [
-            'backend',
-            [
-                $this->createCalledVoter(VoterInterface::ACCESS_DENIED),
-                $this->createNonCalledVoter(),
-            ],
-            false,
-        ];
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
 
-        yield 'Backend scope: Must be allowed if all abstain' => [
-            'backend',
-            [
-                $this->createCalledVoter(VoterInterface::ACCESS_ABSTAIN),
-            ],
-            true,
-        ];
+        $accessDecisionManager = new AccessDecisionManager(
+            $inner,
+            $backend,
+            $frontend,
+            $this->mockScopeMatcher(),
+            $requestStack
+        );
 
-        yield 'Frontend scope: Access granted' => [
-            'frontend',
-            [
-                $this->createCalledVoter(VoterInterface::ACCESS_GRANTED),
-                $this->createNonCalledVoter(),
-            ],
-            true,
-        ];
-
-        yield 'Frontend scope: Access denied' => [
-            'frontend',
-            [
-                $this->createCalledVoter(VoterInterface::ACCESS_DENIED),
-                $this->createNonCalledVoter(),
-            ],
-            false,
-        ];
-
-        yield 'Frontend scope: Must be denied if all abstain' => [
-            'frontend',
-            [
-                $this->createCalledVoter(VoterInterface::ACCESS_ABSTAIN),
-            ],
-            false,
-        ];
+        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    private function createNonCalledVoter()
+    private function createAccessDecisionManager(bool $shouldBeCalled)
     {
-        $voter = $this->createMock(VoterInterface::class);
-        $voter
-            ->expects($this->never())
-            ->method('vote')
+        $manager = $this->createMock(AccessDecisionManagerInterface::class);
+        $manager
+            ->expects($shouldBeCalled ? $this->once() : $this->never())
+            ->method('decide')
         ;
 
-        return $voter;
-    }
-
-    private function createCalledVoter(int $returnValue)
-    {
-        $voter = $this->createMock(VoterInterface::class);
-        $voter
-            ->expects($this->once())
-            ->method('vote')
-            ->willReturn($returnValue)
-        ;
-
-        return $voter;
+        return $manager;
     }
 }

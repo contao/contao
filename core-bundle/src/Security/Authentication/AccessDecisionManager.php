@@ -16,25 +16,21 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManager as SymfonyAccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
     private AccessDecisionManagerInterface $inner;
-    private iterable $voters;
+    private AccessDecisionManagerInterface $backendDecisionManager;
+    private AccessDecisionManagerInterface $frontendDecisionManager;
     private ScopeMatcher $scopeMatcher;
     private RequestStack $requestStack;
 
-    /**
-     * @var array<SymfonyAccessDecisionManager>
-     */
-    private array $cache = [];
-
-    public function __construct(AccessDecisionManagerInterface $inner, iterable $voters, ScopeMatcher $scopeMatcher, RequestStack $requestStack)
+    public function __construct(AccessDecisionManagerInterface $inner, AccessDecisionManagerInterface $backendDecisionManager, AccessDecisionManagerInterface $frontendDecisionManager, ScopeMatcher $scopeMatcher, RequestStack $requestStack)
     {
         $this->inner = $inner;
-        $this->voters = $voters;
+        $this->backendDecisionManager = $backendDecisionManager;
+        $this->frontendDecisionManager = $frontendDecisionManager;
         $this->scopeMatcher = $scopeMatcher;
         $this->requestStack = $requestStack;
     }
@@ -50,21 +46,12 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         return $this->getAccessDecisionManager($request)->decide($token, $attributes, $object);
     }
 
-    private function getAccessDecisionManager(Request $request): SymfonyAccessDecisionManager
+    private function getAccessDecisionManager(Request $request): AccessDecisionManagerInterface
     {
-        $cacheKey = $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE';
-
-        if (isset($this->cache[$cacheKey])) {
-            return $this->cache[$cacheKey];
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            return $this->backendDecisionManager;
         }
 
-        // Back end is allowed by default, front end is the opposite
-        $allowIfAllAbstain = 'BE' === $cacheKey;
-
-        return $this->cache[$cacheKey] = new SymfonyAccessDecisionManager(
-            $this->voters,
-            SymfonyAccessDecisionManager::STRATEGY_PRIORITY,
-            $allowIfAllAbstain
-        );
+        return $this->frontendDecisionManager;
     }
 }
