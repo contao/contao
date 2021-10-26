@@ -702,6 +702,7 @@ services:
             - '@Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor'
             - '@event_dispatcher'
             - '@contao.security.token_checker'
+            - '@contao.framework'
         public: true
 
     contao.search.indexer.default:

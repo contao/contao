@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -80,7 +79,8 @@ class PageRegular extends Frontend
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
 
 		$container = System::getContainer();
-		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$request->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
 
 		$this->responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
@@ -223,6 +223,12 @@ class PageRegular extends Frontend
 
 		// Meta robots tag
 		$this->Template->robots = $this->responseContext->get(HtmlHeadBag::class)->getMetaRobots();
+
+		// Canonical
+		if ($objPage->enableCanonical)
+		{
+			$this->Template->canonical = $this->responseContext->get(HtmlHeadBag::class)->getCanonicalUri($request);
+		}
 
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)

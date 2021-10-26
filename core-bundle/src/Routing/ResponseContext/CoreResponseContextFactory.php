@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\Environment;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Spatie\SchemaOrg\WebPage;
@@ -26,12 +29,14 @@ class CoreResponseContextFactory
     private ResponseContextAccessor $responseContextAccessor;
     private EventDispatcherInterface $eventDispatcher;
     private TokenChecker $tokenChecker;
+    private ContaoFramework $contaoFramework;
 
-    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker)
+    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, ContaoFramework $contaoFramework)
     {
         $this->responseContextAccessor = $responseContextAccessor;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenChecker = $tokenChecker;
+        $this->contaoFramework = $contaoFramework;
     }
 
     public function createResponseContext(): ResponseContext
@@ -81,6 +86,20 @@ class CoreResponseContextFactory
 
         if ($pageModel->robots) {
             $htmlHeadBag->setMetaRobots($pageModel->robots);
+        }
+
+        if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
+            $url = $this->contaoFramework->getAdapter(Controller::class)->replaceInsertTags($pageModel->canonicalLink, false);
+
+            // Ensure absolute links (FIXME: Remove once we remove support for relative urls)
+            if (!preg_match('#^https?://#', $url)) {
+                $url = $this->contaoFramework->getAdapter(Environment::class)->get('base').$url;
+            }
+            $htmlHeadBag->setCanonicalUri($url);
+        }
+
+        if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {
+            $htmlHeadBag->setKeepParamsForCanonical(array_map('trim', explode(',', (string) $pageModel->canonicalKeepParams)));
         }
 
         $jsonLdManager
