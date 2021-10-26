@@ -736,6 +736,15 @@ services:
         tags:
             - { name: monolog.logger, channel: security }
 
+    contao.security.access_decision_manager:
+        decorates: 'security.access.decision_manager'
+        class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
+        arguments:
+            - '@.inner'
+            - !tagged_iterator security.voter
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+
     contao.security.authentication_provider:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
         abstract: true
