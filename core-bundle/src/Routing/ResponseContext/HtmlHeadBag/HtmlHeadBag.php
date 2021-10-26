@@ -90,10 +90,22 @@ final class HtmlHeadBag
             return $this->canonicalUri;
         }
 
+        $params = [];
+
+        foreach ($request->query->all() as $originalParam => $value) {
+            foreach ($this->getKeepParamsForCanonical() as $param) {
+                $regex = sprintf('/^%s$/', str_replace('*', '.*', $param));
+
+                if (preg_match($regex, $originalParam)) {
+                    $params[$originalParam] = $value;
+                }
+            }
+        }
+
         return Request::create(
             $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
             $request->getMethod(),
-            array_intersect_key($request->query->all(), array_flip($this->getKeepParamsForCanonical()))
+            $params
         )->getUri();
     }
 }

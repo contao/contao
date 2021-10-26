@@ -51,4 +51,13 @@ class HtmlHeadBagTest extends TestCase
         $manager->setCanonicalUri('https://example.com/i-decided-myself');
         $this->assertSame('https://example.com/i-decided-myself', $manager->getCanonicalUri($request));
     }
+
+    public function testCanonicalWithWildCards(): void
+    {
+        $manager = new HtmlHeadBag();
+        $manager->setKeepParamsForCanonical(['foo', 'page_*']);
+
+        $request = Request::create('https://contao.org/foobar/page?query=test&foo=bar&baz=bak&page_42=12');
+        $this->assertSame('https://contao.org/foobar/page?foo=bar&page_42=12', $manager->getCanonicalUri($request));
+    }
 }
