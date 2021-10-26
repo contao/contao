@@ -12,15 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -38,6 +42,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $responseContext = $factory->createResponseContext();
@@ -57,6 +62,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -93,16 +99,40 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             ->method('setResponseContext')
         ;
 
+        $controllerAdapter = $this->mockAdapter(['replaceInsertTags']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('replaceInsertTags')
+            ->with('{{link_url::42}}')
+            ->willReturn('de/foobar.html')
+        ;
+
+        $environmentAdapter = $this->mockAdapter(['get']);
+        $environmentAdapter
+            ->expects($this->once())
+            ->method('get')
+            ->with('base')
+            ->willReturn('https://example.com/')
+        ;
+
+        $contaoFramework = $this->mockContaoFramework([
+            Controller::class => $controllerAdapter,
+            Environment::class => $environmentAdapter,
+        ]);
+
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
+        $pageModel->enableCanonical = true;
+        $pageModel->canonicalLink = '{{link_url::42}}';
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
+            $contaoFramework
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -111,6 +141,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $this->assertSame('My title', $responseContext->get(HtmlHeadBag::class)->getTitle());
         $this->assertSame('My description', $responseContext->get(HtmlHeadBag::class)->getMetaDescription());
         $this->assertSame('noindex,nofollow', $responseContext->get(HtmlHeadBag::class)->getMetaRobots());
+        $this->assertSame('https://example.com/de/foobar.html', $responseContext->get(HtmlHeadBag::class)->getCanonicalUri(new Request()));
 
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
@@ -146,6 +177,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(ResponseContextAccessor::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
