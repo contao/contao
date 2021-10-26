@@ -83,6 +83,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         Input::resetUnusedGet();
         InsertTags::reset();
         Registry::getInstance()->reset();
+
+        self::$nonce = '';
     }
 
     public function isInitialized(): bool
