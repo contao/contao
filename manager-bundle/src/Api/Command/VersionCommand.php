@@ -23,10 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class VersionCommand extends Command
 {
-    /**
-     * @var Application
-     */
-    private $application;
+    private Application $application;
 
     public function __construct(Application $application)
     {

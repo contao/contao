@@ -33,6 +33,7 @@ use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Source;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Webmozart\PathUtil\Path;
 
@@ -68,7 +69,7 @@ class ContaoExtensionTest extends TestCase
             'include' => ['all'],
             'contao_figure' => ['html'],
             'picture_config' => [],
-            'insert_tag' => ['html'],
+            'insert_tag' => [],
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
@@ -83,6 +84,25 @@ class ContaoExtensionTest extends TestCase
             $name = $function->getName();
             $this->assertArrayHasKey($name, $expectedFunctions);
             $this->assertSame($expectedFunctions[$name], $function->getSafe($node), $name);
+        }
+    }
+
+    public function testAddsTheFilters(): void
+    {
+        $filters = $this->getContaoExtension()->getFilters();
+
+        $this->assertCount(4, $filters);
+
+        $expectedFilters = [
+            'escape',
+            'e',
+            'insert_tag',
+            'insert_tag_raw',
+        ];
+
+        foreach ($filters as $filter) {
+            $this->assertInstanceOf(TwigFilter::class, $filter);
+            $this->assertContains($filter->getName(), $expectedFilters);
         }
     }
 

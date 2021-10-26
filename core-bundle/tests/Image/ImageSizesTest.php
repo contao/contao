@@ -25,6 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizesTest extends TestCase
 {
+    private ImageSizes $imageSizes;
+
     /**
      * @var Connection&MockObject
      */
@@ -34,11 +36,6 @@ class ImageSizesTest extends TestCase
      * @var EventDispatcherInterface&MockObject
      */
     private $eventDispatcher;
-
-    /**
-     * @var ImageSizes
-     */
-    private $imageSizes;
 
     protected function setUp(): void
     {

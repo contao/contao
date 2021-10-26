@@ -244,9 +244,9 @@ class StringUtil
 	/**
 	 * Restore basic entities
 	 *
-	 * @param string $strBuffer The string with the tags to be replaced
+	 * @param string|array $strBuffer The string with the tags to be replaced
 	 *
-	 * @return string The string with the original entities
+	 * @return string|array The string with the original entities
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
