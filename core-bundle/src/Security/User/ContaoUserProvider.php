@@ -49,8 +49,13 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         $this->logger = $logger;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     */
     public function loadUserByUsername($username): User
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using "ContaoUserProvider::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use ContaoUserProvider::loadUserByIdentifier() instead.');
+
         return $this->loadUserByIdentifier($username);
     }
 
