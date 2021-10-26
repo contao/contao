@@ -32,7 +32,7 @@ class ChunkedText implements \IteratorAggregate
 
     public function __toString(): string
     {
-        return implode('', $this->chunks, );
+        return implode('', $this->chunks);
     }
 
     /**
@@ -40,14 +40,12 @@ class ChunkedText implements \IteratorAggregate
      */
     public function getIterator(): \Generator
     {
-        for ($i = 0; $i < \count($this->chunks); $i += 2) {
-            if ('' !== ($raw = $this->chunks[$i + 1])) {
-                yield [self::TYPE_RAW, $raw];
+        foreach ($this->chunks as $index => $chunk) {
+            if ('' === $chunk) {
+                continue;
             }
 
-            if ('' !== ($text = $this->chunks[$i])) {
-                yield [self::TYPE_TEXT, $text];
-            }
+            yield [$index % 2 ? self::TYPE_RAW : self::TYPE_TEXT, $chunk];
         }
     }
 }

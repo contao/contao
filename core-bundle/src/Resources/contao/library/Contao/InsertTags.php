@@ -14,6 +14,7 @@ use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -56,10 +57,11 @@ class InsertTags extends Controller
 	/**
 	 * Recursively replace insert tags with their values
 	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
+	 * @param string  $strBuffer   The text with the tags to be replaced
+	 * @param boolean $blnCache    If false, non-cacheable tags will be replaced
+	 * @param boolean $blnAsChunks If true a ChunkedText object is returned instead of the string
 	 *
-	 * @return string The text with the replaced tags
+	 * @return string|ChunkedText The text with the replaced tags
 	 */
 	public function replace($strBuffer, $blnCache=true, $blnAsChunks=false)
 	{
@@ -120,7 +122,7 @@ class InsertTags extends Controller
 			// Load the value from cache
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
-				$arrBuffer[$_rit+1] = $arrCache[$strTag];
+				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
 				continue;
 			}
 
@@ -1163,10 +1165,15 @@ class InsertTags extends Controller
 				$arrCache[$strTag] = $this->replace($arrCache[$strTag], $blnCache);
 			}
 
-			$arrBuffer[$_rit+1] = $arrCache[$strTag] ?? '';
+			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
 		}
 
 		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
+
+		if ($blnAsChunks)
+		{
+			return new ChunkedText($arrBuffer);
+		}
 
 		return implode('', $arrBuffer);
 	}

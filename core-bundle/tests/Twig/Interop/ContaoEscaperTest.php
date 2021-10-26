@@ -69,8 +69,8 @@ class ContaoEscaperTest extends TestCase
         ];
 
         yield 'chunked text' => [
-            new ChunkedText(['<br>', '<br>', '<br>', '<br>']),
-            '<br>&lt;br&gt;<br>&lt;br&gt;',
+            new ChunkedText([0 => '<br>', 1 => '<br>', 2 => '<br>', 15 => '<br>', 16 => '<br>', 17 => '<br>']),
+            '&lt;br&gt;<br>&lt;br&gt;<br>&lt;br&gt;<br>',
         ];
     }
 

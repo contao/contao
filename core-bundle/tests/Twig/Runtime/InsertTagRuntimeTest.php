@@ -58,12 +58,12 @@ class InsertTagRuntimeTest extends TestCase
             ->expects($this->once())
             ->method('replace')
             ->with('{{tag}} foo', false, true)
-            ->willReturn(new ChunkedText(['<replaced-tag>', 'foo']))
+            ->willReturn(new ChunkedText(['', '<replaced-tag>', ' foo']))
         ;
 
         $framework = $this->mockContaoFramework([InsertTags::class => $insertTags]);
         $runtime = new InsertTagRuntime($framework);
 
-        $this->assertSame('<replaced-tag>', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo'));
+        $this->assertSame('<replaced-tag> foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo'));
     }
 }

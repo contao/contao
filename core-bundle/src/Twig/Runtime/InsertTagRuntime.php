@@ -47,6 +47,6 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
         /** @var InsertTags $insertTags */
         $insertTags = $this->framework->getAdapter(InsertTags::class);
 
-        return new ChunkedText($insertTags->replace($text, false, true));
+        return $insertTags->replace($text, false, true);
     }
 }
