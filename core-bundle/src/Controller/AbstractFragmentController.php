@@ -159,12 +159,14 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
-        $response = parent::render($view, $parameters, $response);
+        if (null === $response) {
+            $response = new Response();
 
-        // Mark this response to affect the caching of the current page but remove any default cache headers
-        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
-        $response->headers->remove('Cache-Control');
+            // Mark this response to affect the caching of the current page but remove any default cache headers
+            $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+            $response->headers->remove('Cache-Control');
+        }
 
-        return $response;
+        return parent::render($view, $parameters, $response);
     }
 }
