@@ -71,6 +71,12 @@ class DefaultIndexerTest extends ContaoTestCase
             'Cannot index empty response.',
         ];
 
+        yield 'Test does not index if rel="canonical" does not match current page' => [
+            new Document(new Uri('https://example.com/page'), 200, [], '<html><head><link rel="canonical" href="https://example.com/other-page" /></head><body></body></html>'),
+            null,
+            'Ignored because canonical URI "https://example.com/other-page" does not match document URI.',
+        ];
+
         yield 'Test does not index if page ID could not be determined' => [
             new Document(new Uri('https://example.com/no-page-id'), 200, [], '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>'),
             null,
@@ -156,6 +162,33 @@ class DefaultIndexerTest extends ContaoTestCase
             [
                 'url' => 'https://example.com/valid',
                 'content' => '<html lang="de"><head><title>HTML page title</title></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
+                'protected' => '1',
+                'groups' => [42],
+                'pid' => 2,
+                'title' => 'JSON-LD page title',
+                'language' => 'de',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/Page',
+                        'https://schema.contao.org/title' => 'JSON-LD page title',
+                        'https://schema.contao.org/pageId' => 2,
+                        'https://schema.contao.org/noSearch' => false,
+                        'https://schema.contao.org/protected' => true,
+                        'https://schema.contao.org/groups' => [42],
+                        'https://schema.contao.org/fePreview' => false,
+                    ],
+                ],
+            ],
+            null,
+            true,
+        ];
+
+        yield 'Test valid index with self-referencing rel="canonical"' => [
+            new Document(new Uri('https://example.com/valid'), 200, [], '<html lang="de"><head><title>HTML page title</title><link rel="canonical" href="https://example.com/valid" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>'),
+            [
+                'url' => 'https://example.com/valid',
+                'content' => '<html lang="de"><head><title>HTML page title</title><link rel="canonical" href="https://example.com/valid" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2,"contao:noSearch":false,"contao:protected":true,"contao:groups":[42],"contao:fePreview":false}</script></body></html>',
                 'protected' => '1',
                 'groups' => [42],
                 'pid' => 2,
