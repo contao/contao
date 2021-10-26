@@ -27,7 +27,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
     private RequestStack $requestStack;
 
     /**
-     * @var array<AccessDecisionManager>
+     * @var array<SymfonyAccessDecisionManager>
      */
     private array $cache = [];
 

@@ -737,7 +737,7 @@ services:
             - { name: monolog.logger, channel: security }
 
     contao.security.access_decision_manager:
-        decorates: 'security.access.decision_manager'
+        decorates: security.access.decision_manager
         class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
         arguments:
             - '@.inner'
