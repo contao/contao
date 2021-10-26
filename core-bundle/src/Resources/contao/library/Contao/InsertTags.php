@@ -12,9 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -62,8 +62,21 @@ class InsertTags extends Controller
 	 * @param boolean $blnAsChunks If true a ChunkedText object is returned instead of the string
 	 *
 	 * @return string|ChunkedText The text with the replaced tags
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the InsertTagParser service instead.
 	 */
 	public function replace($strBuffer, $blnCache=true, $blnAsChunks=false)
+	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
+
+		return $this->replaceInternal((string) $strBuffer, (bool) $blnCache, (bool) $blnAsChunks);
+	}
+
+	/**
+	 * @internal
+	 */
+	public function replaceInternal(string $strBuffer, bool $blnCache, bool $blnAsChunks)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -117,7 +130,7 @@ class InsertTags extends Controller
 				break;
 			}
 
-			$tags[$_rit+1] = $this->replace($tags[$_rit+1], $blnCache);
+			$tags[$_rit+1] = $this->replaceInternal($tags[$_rit+1], $blnCache, false);
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -1167,7 +1180,7 @@ class InsertTags extends Controller
 
 			if (isset($arrCache[$strTag]))
 			{
-				$arrCache[$strTag] = $this->replace($arrCache[$strTag], $blnCache);
+				$arrCache[$strTag] = $this->replaceInternal($arrCache[$strTag], $blnCache, false);
 			}
 
 			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');

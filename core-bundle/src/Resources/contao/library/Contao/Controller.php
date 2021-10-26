@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -797,12 +798,21 @@ abstract class Controller extends System
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
 	 *
 	 * @return string The text with the replaced tags
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the InsertTagParser service instead.
 	 */
 	public static function replaceInsertTags($strBuffer, $blnCache=true)
 	{
-		$objIt = new InsertTags();
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		return $objIt->replace($strBuffer, $blnCache);
+		$parser = System::getContainer()->get(InsertTagParser::class);
+
+		if ($blnCache) {
+			return $parser->replace($strBuffer);
+		}
+
+		return $parser->replaceInline($strBuffer);
 	}
 
 	/**

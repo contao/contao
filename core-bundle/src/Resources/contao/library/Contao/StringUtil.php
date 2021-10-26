@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Util\SimpleTokenParser;
 use Webmozart\PathUtil\Path;
 
@@ -1108,7 +1109,7 @@ class StringUtil
 		}
 		else
 		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
+			$strValue = System::getContainer()->get(InsertTagParser::class)->replaceInline($strValue);
 		}
 
 		$strValue = strip_tags($strValue);
@@ -1133,7 +1134,7 @@ class StringUtil
 	{
 		if (!$blnRemoveInsertTags)
 		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
+			$strValue = System::getContainer()->get(InsertTagParser::class)->replaceInline($strValue);
 		}
 
 		// Add new lines before and after block level elements

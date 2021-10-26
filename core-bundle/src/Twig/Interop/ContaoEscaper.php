@@ -66,10 +66,6 @@ final class ContaoEscaper
 
         $string = (string) $string;
 
-        // Replace insert tags before '{' and '}' get encoded
-        $string = Controller::replaceInsertTags($string, false);
-        $string = StringUtil::decodeEntities($string);
-
         // Original logic
         if (!preg_match('//u', $string)) {
             throw new RuntimeError('The string to escape is not a valid UTF-8 string.');

@@ -18,6 +18,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
@@ -164,8 +165,14 @@ class ControllerTest extends TestCase
         ;
 
         // Prepare environment
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser->method('replaceInline')->willReturnArgument(0);
+        $insertTagParser->method('replace')->willReturnArgument(0);
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set(Studio::class, $studio);
+        $container->set(InsertTagParser::class, $insertTagParser);
+        $container->setParameter('contao.resources_paths', $this->getTempDir());
         System::setContainer($container);
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['caption' => null];
 
@@ -317,8 +324,13 @@ class ControllerTest extends TestCase
         $template = new \stdClass();
 
         // Prepare environment
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser->method('replaceInline')->willReturnArgument(0);
+        $insertTagParser->method('replace')->willReturnArgument(0);
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set(Studio::class, $studio);
+        $container->set(InsertTagParser::class, $insertTagParser);
         $container->set('monolog.logger.contao', $logger);
         System::setContainer($container);
 

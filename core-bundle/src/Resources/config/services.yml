@@ -413,6 +413,10 @@ services:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
 
+    Contao\CoreBundle\InsertTag\InsertTagParser:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\Intl\Countries:
         arguments:
             - '@translator'
@@ -962,7 +966,9 @@ services:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\FigureRenderer'
 
-    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime: ~
+    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
+        arguments:
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
 
     Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:

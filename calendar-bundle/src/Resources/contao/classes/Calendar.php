@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+
 /**
  * Provide methods regarding calendars.
  *
@@ -268,7 +270,7 @@ class Calendar extends Frontend
 						$strDescription = $event['teaser'];
 					}
 
-					$strDescription = $this->replaceInsertTags($strDescription, false);
+					$strDescription = System::getContainer()->get(InsertTagParser::class)->replaceInline($strDescription);
 					$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 					if (\is_array($event['media:content']))
@@ -302,7 +304,7 @@ class Calendar extends Frontend
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get(InsertTagParser::class)->replaceInline($objFeed->$strType()));
 	}
 
 	/**

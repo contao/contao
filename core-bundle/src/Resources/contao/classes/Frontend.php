@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -581,7 +582,7 @@ abstract class Frontend extends Controller
 	{
 		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use Contao\StringUtil::htmlToPlainText() instead.');
 
-		$strText = $this->replaceInsertTags($strText, false);
+		$strText = System::getContainer()->get(InsertTagParser::class)->replaceInline($strText);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);
 		$strText = StringUtil::substr($strText, 320);

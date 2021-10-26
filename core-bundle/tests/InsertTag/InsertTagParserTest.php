@@ -10,15 +10,15 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Intl;
+namespace Contao\CoreBundle\Tests\InsertTag;
 
-use Contao\CoreBundle\InsertTags\Parser;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\System;
 
-class ParserTest extends TestCase
+class InsertTagParserTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -33,16 +33,24 @@ class ParserTest extends TestCase
 
     public function testReplace(): void
     {
-        $this->assertSame('<br>', (new Parser())->replace('{{br}}'));
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $this->assertSame('<br>', $parser->replace('{{br}}'));
 
         $this->assertSame(
             [[ChunkedText::TYPE_RAW, '<br>']],
-            iterator_to_array((new Parser())->replaceChunked('{{br}}'))
+            iterator_to_array($parser->replaceChunked('{{br}}'))
         );
     }
 
     public function testRender(): void
     {
-        $this->assertSame('<br>', (new Parser())->render('br'));
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $this->assertSame('<br>', $parser->render('br'));
+
+        $this->expectException('Rendering a single insert tag has to return a single raw chunk');
+
+        $parser->render('br}}foo{{br');
     }
 }
