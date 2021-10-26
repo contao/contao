@@ -165,7 +165,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @internal
      */
-    public static function getNonce(): string {
+    public static function getNonce(): string
+    {
         return self::$nonce;
     }
 
