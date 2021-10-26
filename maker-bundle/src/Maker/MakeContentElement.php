@@ -41,7 +41,7 @@ class MakeContentElement extends AbstractFragmentMaker
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
-        $defaultName = Str::asClassName(Str::getRandomTerm().'Controller');
+        $defaultName = Str::asClassName(Str::getRandomTerm());
 
         $argument = $command->getDefinition()->getArgument('element');
         $question = new Question($argument->getDescription(), $defaultName);
