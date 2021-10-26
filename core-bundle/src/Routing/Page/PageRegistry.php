@@ -68,6 +68,7 @@ class PageRegistry
 
         $options = $config->getOptions();
 
+        // Register custom compiler for non-routable error pages (#3415)
         if (\in_array($type, self::DISABLE_ROUTING, true)) {
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         }
