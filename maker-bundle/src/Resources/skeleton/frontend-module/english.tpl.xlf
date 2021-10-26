@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file>
+        <body>
+            <trans-unit id="FMD.<?= $element ?>.0">
+                <source><?= $translatedName ?></source>
+            </trans-unit>
+            <trans-unit id="FMD.<?= $element ?>.1">
+                <source><?= $translatedDescription ?></source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

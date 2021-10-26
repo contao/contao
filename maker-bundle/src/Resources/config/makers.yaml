@@ -1,0 +1,53 @@
+services:
+    contao_maker.maker.content_element:
+        class: Contao\MakerBundle\Maker\MakeContentElement
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.template'
+            - '@contao_maker.generator.class'
+            - '@contao_maker.generator.dca'
+            - '@contao_maker.generator.language_file'
+            - '@contao_maker.contao_directory_locator'
+        tags:
+            - { name: maker.command }
+
+    contao_maker.maker.frontend_module:
+        class: Contao\MakerBundle\Maker\MakeFrontendModule
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.template'
+            - '@contao_maker.generator.class'
+            - '@contao_maker.generator.dca'
+            - '@contao_maker.generator.language_file'
+            - '@contao_maker.contao_directory_locator'
+        tags:
+            - { name: maker.command }
+
+    contao_maker.maker.hook:
+        class: Contao\MakerBundle\Maker\MakeHook
+        arguments:
+            - '@contao_maker.generator.class'
+            - '@contao_maker.code.signature_generator'
+            - '@contao_maker.code.import_extractor'
+        tags:
+            - { name: maker.command }
+
+    contao_maker.maker.event-listener:
+        class: Contao\MakerBundle\Maker\MakeEventListener
+        arguments:
+            - '@contao_maker.generator.class'
+            - '@contao_maker.code.signature_generator'
+            - '@contao_maker.code.import_extractor'
+        tags:
+            - { name: maker.command }
+
+    contao_maker.maker.dca-callback:
+        class: Contao\MakerBundle\Maker\MakeDcaCallback
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.class'
+            - '@contao.resource_finder'
+            - '@contao_maker.code.signature_generator'
+            - '@contao_maker.code.import_extractor'
+        tags:
+            - { name: maker.command }

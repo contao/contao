@@ -1,0 +1,4 @@
+<?= '<?'; ?>php $this->extend('block_searchable'); ?>
+
+<?= '<?'; ?>php $this->block('content'); ?>
+<?= '<?'; ?>php $this->endblock(); ?>
