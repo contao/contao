@@ -224,20 +224,6 @@ class PageRegular extends Frontend
 		// Meta robots tag
 		$this->Template->robots = $this->responseContext->get(HtmlHeadBag::class)->getMetaRobots();
 
-		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
-		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
-		{
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
-
-			if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
-			{
-				/** @var ContaoPageSchema $schema */
-				$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-				$schema->setNoSearch(true);
-			}
-		}
-
 		// Fall back to the default title tag
 		if (!$objLayout->titleTag)
 		{
