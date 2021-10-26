@@ -25,11 +25,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
+    /**
+     * @var ContainerBuilder
+     */
+    private $container;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $this->container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($this->container);
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void
@@ -37,7 +43,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $controller(new Request(), new ContentModel(), 'main');
+        $controller(new Request(), $this->getContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTypeFragmentOptions(): void
@@ -46,7 +52,7 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_foo'));
         $controller->setFragmentOptions(['type' => 'foo']);
 
-        $controller(new Request(), new ContentModel(), 'main');
+        $controller(new Request(), $this->getContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
@@ -55,12 +61,12 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_bar'));
         $controller->setFragmentOptions(['template' => 'ce_bar']);
 
-        $controller(new Request(), new ContentModel(), 'main');
+        $controller(new Request(), $this->getContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->customTpl = 'ce_bar';
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_bar');
@@ -77,7 +83,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testDoesNotCreateTheTemplateFromACustomTplInTheBackend(): void
     {
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->customTpl = 'ce_bar';
 
         $request = new Request([], [], ['_scope' => 'backend']);
@@ -103,7 +109,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), new ContentModel(), 'main');
+        $response = $controller(new Request(), $this->getContentModel(), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('', $template['cssID']);
@@ -112,7 +118,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testSetsTheHeadlineFromTheModel(): void
     {
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->headline = serialize(['unit' => 'h6', 'value' => 'foobar']);
 
         $controller = new TestController();
@@ -127,7 +133,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testSetsTheCssIdAndClassFromTheModel(): void
     {
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->cssID = serialize(['foo', 'bar']);
 
         $controller = new TestController();
@@ -145,7 +151,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), new ContentModel(), 'left');
+        $response = $controller(new Request(), $this->getContentModel(), 'left');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('left', $template['inColumn']);
@@ -156,7 +162,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), new ContentModel(), 'main', ['first', 'last']);
+        $response = $controller(new Request(), $this->getContentModel(), 'main', ['first', 'last']);
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('ce_test first last', $template['class']);
@@ -164,7 +170,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testAddsTheCacheTags(): void
     {
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->id = 42;
 
         $responseTagger = $this->createMock(ResponseTagger::class);
@@ -189,7 +195,7 @@ class ContentElementControllerTest extends TestCase
         $start = strtotime('+2 weeks', $time);
         $expires = $start - $time;
 
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->start = (string) $start;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
@@ -208,7 +214,7 @@ class ContentElementControllerTest extends TestCase
         $stop = strtotime('+2 weeks', $time);
         $expires = $stop - $time;
 
-        $model = new ContentModel();
+        $model = $this->getContentModel();
         $model->stop = (string) $stop;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
@@ -228,7 +234,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestSharedMaxAgeController();
         $controller->setContainer($container);
 
-        $response = $controller(new Request(), new ContentModel(), 'main');
+        $response = $controller(new Request(), $this->getContentModel(), 'main');
 
         $this->assertNull($response->getMaxAge());
     }
@@ -243,9 +249,16 @@ class ContentElementControllerTest extends TestCase
             ->willReturn(new FrontendTemplate($templateName))
         ;
 
-        $container = new ContainerBuilder();
-        $container->set('contao.framework', $framework);
+        $this->container->set('contao.framework', $framework);
 
-        return $container;
+        return $this->container;
+    }
+
+    private function getContentModel(): ContentModel
+    {
+        /** @var ContentModel $model */
+        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+
+        return $model;
     }
 }
