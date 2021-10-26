@@ -76,13 +76,14 @@ class InsertTags extends Controller
 			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
 		}
 
-		$strBuffer = self::encodeHtmlAttributes($strBuffer);
+		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
 
 		$strRegExpStart = '{{'           // Starts with two opening curly braces
-			. '('                         // Match the contents fo the tag
-				. '[a-zA-Z0-9\x80-\xFF]'  // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-				. '(?:[^{}]|'             // Match any character not curly brace or a nested insert tag
+			. '('                        // Match the contents fo the tag
+				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
+				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
 		;
+
 		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
 
 		$tags = preg_split(

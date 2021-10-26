@@ -152,7 +152,7 @@ final class ContaoExtension extends AbstractExtension
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
             if ($string instanceof ChunkedText) {
@@ -170,8 +170,7 @@ final class ContaoExtension extends AbstractExtension
         };
 
         return [
-            // Overwrite the 'escape'/'e' filter to additionally support
-            // chunked text.
+            // Overwrite the 'escape'/'e' filter to additionally support chunked text
             new TwigFilter(
                 'escape',
                 $escaperFilter,

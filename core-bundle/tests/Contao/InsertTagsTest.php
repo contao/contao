@@ -28,7 +28,6 @@ class InsertTagsTest extends TestCase
         $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceInsertTagsHook'];
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
         System::setContainer($container);
