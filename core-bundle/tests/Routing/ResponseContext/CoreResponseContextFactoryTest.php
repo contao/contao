@@ -141,7 +141,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $this->assertSame('My title', $responseContext->get(HtmlHeadBag::class)->getTitle());
         $this->assertSame('My description', $responseContext->get(HtmlHeadBag::class)->getMetaDescription());
         $this->assertSame('noindex,nofollow', $responseContext->get(HtmlHeadBag::class)->getMetaRobots());
-        $this->assertSame('https://example.com/de/foobar.html', $responseContext->get(HtmlHeadBag::class)->getCanonicalUri(new Request()));
+        $this->assertSame('https://example.com/de/foobar.html', $responseContext->get(HtmlHeadBag::class)->getCanonicalUriForRequest(new Request()));
 
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
