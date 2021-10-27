@@ -94,7 +94,7 @@ final class HtmlHeadBag
 
         foreach ($request->query->all() as $originalParam => $value) {
             foreach ($this->getKeepParamsForCanonical() as $param) {
-                $regex = sprintf('/^%s$/', str_replace('*', '.*', $param));
+                $regex = sprintf('/^%s$/', str_replace('\*', '.*', preg_quote($param, '/')));
 
                 if (preg_match($regex, $originalParam)) {
                     $params[$originalParam] = $value;
