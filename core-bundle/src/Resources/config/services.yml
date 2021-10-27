@@ -111,6 +111,10 @@ services:
         tags:
             - { name: contao.content_element, category: texts }
 
+    Contao\CoreBundle\Controller\ContentElement\TemplateController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
