@@ -14,9 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\TemplateController;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\FrontendTemplate;
-use Contao\Input;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
