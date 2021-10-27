@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
@@ -93,6 +94,12 @@ class ModuleLogin extends Module
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$exception = null;
 		$lastUsername = '';
+
+		$this->Template->requestToken = $container
+			->get(ContaoCsrfTokenManager::class)
+			->getToken($container->getParameter('contao.csrf_token_name'))
+			->getValue()
+		;
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
 		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))

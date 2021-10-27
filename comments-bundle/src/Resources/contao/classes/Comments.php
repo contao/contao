@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
@@ -147,6 +148,11 @@ class Comments extends Frontend
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
 		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
+		$objTemplate->requestToken = System::getContainer()
+			->get(ContaoCsrfTokenManager::class)
+			->getToken(System::getContainer()->getParameter('contao.csrf_token_name'))
+			->getValue()
+		;
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);

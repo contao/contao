@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+
 /**
  * Front end module "newsletter subscribe".
  *
@@ -156,6 +158,11 @@ class ModuleSubscribe extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->text = $this->nl_text;
+		$this->Template->requestToken = System::getContainer()
+			->get(ContaoCsrfTokenManager::class)
+			->getToken(System::getContainer()->getParameter('contao.csrf_token_name'))
+			->getValue()
+		;
 	}
 
 	/**

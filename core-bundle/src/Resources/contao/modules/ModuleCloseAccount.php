@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 
 /**
  * Front end module "close account".
@@ -64,6 +65,8 @@ class ModuleCloseAccount extends Module
 		$this->import(FrontendUser::class, 'User');
 		$this->loadDataContainer('tl_member');
 
+		$container = System::getContainer();
+
 		// Initialize the password widget
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
 		$arrField['name'] = 'password';
@@ -79,7 +82,7 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
-			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
+			$encoder = $container->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 			// Validate the password
 			if (!$objWidget->hasErrors() && !$encoder->isPasswordValid($this->User->password, $objWidget->value, null))
@@ -124,8 +127,6 @@ class ModuleCloseAccount extends Module
 					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, ContaoContext::ACCESS);
 				}
 
-				$container = System::getContainer();
-
 				// Log out the user (see #93)
 				$container->get('security.token_storage')->setToken();
 				$container->get('session')->invalidate();
@@ -145,6 +146,11 @@ class ModuleCloseAccount extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
 		$this->Template->rowLast = 'row_1 row_last odd';
+		$this->Template->requestToken = $container
+			->get(ContaoCsrfTokenManager::class)
+			->getToken($container->getParameter('contao.csrf_token_name'))
+			->getValue()
+		;
 	}
 }
 

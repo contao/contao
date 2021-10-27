@@ -714,6 +714,8 @@ class InsertTags extends Controller
 
 				// Request token
 				case 'request_token':
+					trigger_deprecation('contao/core-bundle', '4.13', 'Using the request_token insert tag has been deprecated and will no longer work in Contao 5.0.');
+
 					$arrCache[$strTag] = REQUEST_TOKEN;
 					break;
 

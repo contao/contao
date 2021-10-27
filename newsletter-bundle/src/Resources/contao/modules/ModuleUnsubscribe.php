@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+
 /**
  * Front end module "newsletter unsubscribe".
  *
@@ -147,6 +149,11 @@ class ModuleUnsubscribe extends Module
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
+		$this->Template->requestToken = System::getContainer()
+			->get(ContaoCsrfTokenManager::class)
+			->getToken(System::getContainer()->getParameter('contao.csrf_token_name'))
+			->getValue()
+		;
 	}
 
 	/**

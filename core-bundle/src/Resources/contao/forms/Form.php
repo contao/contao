@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 
 /**
  * Provide methods to handle front end forms.
@@ -110,6 +111,11 @@ class Form extends Hybrid
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
+		$this->Template->requestToken = System::getContainer()
+			->get(ContaoCsrfTokenManager::class)
+			->getToken(System::getContainer()->getParameter('contao.csrf_token_name'))
+			->getValue()
+		;
 
 		$this->initializeSession($formId);
 		$arrLabels = array();
