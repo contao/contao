@@ -42,12 +42,11 @@ class FailTolerantProxyCacheWarmer extends ProxyCacheWarmer
 
     public function warmUp($cacheDir): void
     {
-        // If there are no DB credentials yet (install tool), we have to skip
-        // the ORM warmup to prevent a DBAL exception
+        // If there are no DB credentials yet (install tool) and the
+        // server_version was not configured, we have to skip the ORM warmup to
+        // prevent a DBAL exception during the automatic version detection
         try {
-            $this->connection->connect();
-            $this->connection->query('SHOW TABLES');
-            $this->connection->close();
+            $this->connection->getDatabasePlatform();
         } catch (DoctrineDbalException | DoctrineDbalDbalException | \mysqli_sql_exception $e) {
             return;
         }
