@@ -14,9 +14,9 @@
     <?php $this->endblock(); ?>
 
     <?php $this->block('canonical'); ?>
-    <?php if ($this->canonical): ?>
-    <link rel="canonical" href="<?= $this->canonical; ?>">
-    <?php endif; ?>
+      <?php if ($this->canonical): ?>
+        <link rel="canonical" href="<?= $this->canonical; ?>">
+      <?php endif; ?>
     <?php $this->endblock(); ?>
 
     <?= $this->viewport ?>
