@@ -17,7 +17,7 @@ use Contao\Template;
 /**
  * @experimental
  */
-final class ContextTransformer
+final class ContextFactory
 {
     /**
      * Create a template context from a @Template object that can be used in Twig.

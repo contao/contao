@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Twig\Interop\ContextTransformer;
+use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -376,11 +376,11 @@ trait TemplateInheritance
 			return null;
 		}
 
-		$contextTransformer = $container->get(ContextTransformer::class);
+		$contextFactory = $container->get(ContextFactory::class);
 
 		$context = $this instanceof Template ?
-			$contextTransformer->fromContaoTemplate($this) :
-			$contextTransformer->fromClass($this)
+			$contextFactory->fromContaoTemplate($this) :
+			$contextFactory->fromClass($this)
 		;
 
 		return $twig->render($templateCandidate, $context);

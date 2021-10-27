@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Interop\ContextTransformer;
+use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Template;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -83,7 +83,7 @@ class ContextFactoryTest extends TestCase
 
         $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render(
             'test.html.twig',
-            (new ContextTransformer())->fromContaoTemplate($template)
+            (new ContextFactory())->fromContaoTemplate($template)
         );
 
         $this->assertSame($expectedOutput, $output);
@@ -145,7 +145,7 @@ class ContextFactoryTest extends TestCase
             }
         };
 
-        $context = (new ContextTransformer())->fromClass($object);
+        $context = (new ContextFactory())->fromClass($object);
 
         $expectedFields = [
             'PRIVATE_CONSTANT' => 1,
@@ -203,7 +203,7 @@ class ContextFactoryTest extends TestCase
 
         $content = '{{ lazy }}';
         $environment = (new Environment(new ArrayLoader(['test.html.twig' => $content])));
-        $context = (new ContextTransformer())->fromContaoTemplate($template);
+        $context = (new ContextFactory())->fromContaoTemplate($template);
 
         $this->expectException(RuntimeError::class);
         $this->expectExceptionMessage(
