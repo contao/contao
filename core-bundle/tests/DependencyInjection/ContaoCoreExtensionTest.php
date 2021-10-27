@@ -149,6 +149,7 @@ use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\ModuleProxy;
 use Knp\Menu\Matcher\Matcher;
 use Knp\Menu\Renderer\ListRenderer;
+use Psr\Container\ContainerInterface as PsrContainerInterface;
 use Symfony\Cmf\Component\Routing\DynamicRouter;
 use Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
@@ -447,9 +448,9 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
+                new Reference(PsrContainerInterface::class),
                 new Reference('contao.framework'),
                 new Reference('database_connection'),
-                new Reference(Cron::class),
                 new Reference('%fragment.path%'),
             ],
             $definition->getArguments()

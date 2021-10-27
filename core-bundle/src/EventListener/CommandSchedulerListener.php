@@ -17,14 +17,21 @@ use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * @internal
  */
-class CommandSchedulerListener
+class CommandSchedulerListener implements ServiceSubscriberInterface
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $locator;
+
     /**
      * @var ContaoFramework
      */
@@ -40,16 +47,11 @@ class CommandSchedulerListener
      */
     private $fragmentPath;
 
-    /**
-     * @var Cron
-     */
-    private $cron;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, Cron $cron, string $fragmentPath = '_fragment')
+    public function __construct(ContainerInterface $locator, ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
     {
+        $this->locator = $locator;
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->cron = $cron;
         $this->fragmentPath = $fragmentPath;
     }
 
@@ -59,8 +61,13 @@ class CommandSchedulerListener
     public function __invoke(TerminateEvent $event): void
     {
         if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->cron->run(Cron::SCOPE_WEB);
+            $this->locator->get(Cron::class)->run(Cron::SCOPE_WEB);
         }
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [Cron::class];
     }
 
     private function canRunCron(Request $request): bool

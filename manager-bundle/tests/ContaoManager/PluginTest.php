@@ -23,7 +23,6 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -432,7 +431,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('mysqli://root:foobar@localhost:3306/contao_test', $bag['env(DATABASE_URL)']);
     }
 
-    public function testAddsTheDefaultServerVersionAndPdoOptions(): void
+    public function testAddsThePdoOptions(): void
     {
         $extensionConfigs = [
             [
@@ -449,15 +448,6 @@ class PluginTest extends ContaoTestCase
         $expect = array_merge(
             $extensionConfigs,
             [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'server_version' => '5.5',
-                            ],
-                        ],
-                    ],
-                ],
                 [
                     'dbal' => [
                         'connections' => [
@@ -493,23 +483,10 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]]
-        );
-
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotAddDefaultPdoOptionsIfUrlIsMysqli(): void
@@ -528,19 +505,6 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]]
-        );
-
         // Adjust the error reporting to suppress mysqli warnings
         $er = error_reporting();
         error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
@@ -550,7 +514,7 @@ class PluginTest extends ContaoTestCase
 
         error_reporting($er);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotOverrideThePdoMultiStatementsOption(): void
@@ -570,23 +534,10 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]]
-        );
-
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testUpdatesTheMailerTransport(): void
@@ -700,53 +651,6 @@ class PluginTest extends ContaoTestCase
             'tls',
             'smtp://127.0.0.1:587?username=foo%%40bar.com&password=foobar&encryption=tls',
         ];
-    }
-
-    public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
-    {
-        $pluginLoader = $this->createMock(PluginLoader::class);
-        $container = new PluginContainerBuilder($pluginLoader, []);
-
-        $extensionConfigs = [
-            [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'url' => '%env(DATABASE_URL)%',
-                            'password' => '@foobar',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('connect')
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('close')
-        ;
-
-        $dbalConnectionFactory = function ($params) use ($connection) {
-            $this->assertSame(
-                [
-                    'url' => 'mysql://root:%%40foobar@localhost:3306/database',
-                    'password' => '@foobar',
-                ],
-                $params
-            );
-
-            return $connection;
-        };
-
-        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
-
-        $plugin = new Plugin($dbalConnectionFactory);
-        $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
     }
 
     private function getContainer(): PluginContainerBuilder
