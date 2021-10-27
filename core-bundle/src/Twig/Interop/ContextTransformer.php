@@ -42,7 +42,63 @@ final class ContextTransformer
         return $context;
     }
 
-    private static function getCallableWrapper(callable $callable, string $name): object
+    /**
+     * Transform an object into a template context that can be used in Twig.
+     * This also includes private/protected methods, (static) properties and
+     * constants.
+     */
+    public function fromClass(object $object): array
+    {
+        $class = new \ReflectionClass($object);
+
+        $context = array_merge(
+            $class->getConstants(),
+            $class->getStaticProperties(),
+            iterator_to_array($this->getAllMembers($object)),
+        );
+
+        foreach ($class->getMethods() as $method) {
+            $name = $method->getName();
+
+            if ($method->isAbstract() || 0 === strpos($name, '__')) {
+                continue;
+            }
+
+            $context[$name] = $this->getCallableWrapper($method->getClosure($object), $name);
+        }
+
+        return $context;
+    }
+
+    /**
+     * Find all members including those that were dynamically set ($this->foo = 'bar').
+     */
+    private function getAllMembers(object $object): \Generator
+    {
+        // See https://externals.io/message/105697#105697
+        $mangledObjectVars = \function_exists('get_mangled_object_vars') ?
+            get_mangled_object_vars($object) : (array) $object;
+
+        foreach ($mangledObjectVars as $key => $value) {
+            if (preg_match('/^\x0(\S+)\x0(\S+)$/', $key, $matches)) {
+                // Protected or private member
+                if ('*' === $matches[1] || \get_class($object) === $matches[1]) {
+                    yield $matches[2] => $value;
+                    continue;
+                }
+
+                throw new \InvalidArgumentException('Could not identify prepended key.');
+            }
+
+            // Public member
+            yield $key => $value;
+        }
+    }
+
+    /**
+     * Wrap a callable into an object so that it can be evaluated in a Twig template.
+     */
+    private function getCallableWrapper(callable $callable, string $name): object
     {
         return new class($callable, $name) {
             /**
