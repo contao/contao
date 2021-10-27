@@ -921,6 +921,8 @@ services:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
         public: true
 
+    Contao\CoreBundle\Twig\Interop\ContextFactory: ~
+
     Contao\CoreBundle\Twig\Loader\ThemeNamespace: ~
 
     Contao\CoreBundle\Twig\Loader\TemplateLocator:

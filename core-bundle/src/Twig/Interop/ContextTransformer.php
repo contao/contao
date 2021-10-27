@@ -17,20 +17,20 @@ use Contao\Template;
 /**
  * @experimental
  */
-final class ContextHelper
+final class ContextTransformer
 {
     /**
-     * Adjust Contao template data to seamlessly work as a Twig context.
+     * Create a template context from a @Template object that can be used in Twig.
      */
-    public static function fromContaoTemplate(Template $template): array
+    public function fromContaoTemplate(Template $template): array
     {
         $context = $template->getData();
 
         array_walk_recursive(
             $context,
-            static function (&$value, $key): void {
+            function (&$value, $key): void {
                 if ($value instanceof \Closure) {
-                    $value = self::getCallableWrapper($value, (string) $key);
+                    $value = $this->getCallableWrapper($value, (string) $key);
                 }
             }
         );
