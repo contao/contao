@@ -92,7 +92,8 @@ final class HtmlHeadBag
     public function getCanonicalUriForRequest(Request $request): string
     {
         if ($this->canonicalUri) {
-            return $this->canonicalUri;
+            // Make sure the custom URI is normalized as well
+            return Request::create($this->canonicalUri)->getUri();
         }
 
         $params = [];

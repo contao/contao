@@ -50,7 +50,7 @@ class HtmlHeadBagTest extends TestCase
 
         $manager->setCanonicalUri('https://example.com/i-decided-myself?page=23&foo=bar');
         $this->assertSame('https://example.com/i-decided-myself?page=23&foo=bar', $manager->getCanonicalUri());
-        $this->assertSame('https://example.com/i-decided-myself?page=23&foo=bar', $manager->getCanonicalUriForRequest($request));
+        $this->assertSame('https://example.com/i-decided-myself?foo=bar&page=23', $manager->getCanonicalUriForRequest($request));
     }
 
     public function testCanonicalWithWildCards(): void
