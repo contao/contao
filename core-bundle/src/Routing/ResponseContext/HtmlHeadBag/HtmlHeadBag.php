@@ -84,7 +84,12 @@ final class HtmlHeadBag
         return $this;
     }
 
-    public function getCanonicalUri(Request $request): string
+    public function getCanonicalUri(): string
+    {
+        return $this->canonicalUri;
+    }
+
+    public function getCanonicalUriForRequest(Request $request): string
     {
         if ($this->canonicalUri) {
             return $this->canonicalUri;

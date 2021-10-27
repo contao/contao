@@ -46,10 +46,11 @@ class HtmlHeadBagTest extends TestCase
         $this->assertSame(['foo', 'page'], $manager->getKeepParamsForCanonical());
 
         $request = Request::create('https://contao.org/foobar/page?query=test&foo=bar&baz=bak&page=12');
-        $this->assertSame('https://contao.org/foobar/page?foo=bar&page=12', $manager->getCanonicalUri($request));
+        $this->assertSame('https://contao.org/foobar/page?foo=bar&page=12', $manager->getCanonicalUriForRequest($request));
 
-        $manager->setCanonicalUri('https://example.com/i-decided-myself');
-        $this->assertSame('https://example.com/i-decided-myself', $manager->getCanonicalUri($request));
+        $manager->setCanonicalUri('https://example.com/i-decided-myself?page=23&foo=bar');
+        $this->assertSame('https://example.com/i-decided-myself?page=23&foo=bar', $manager->getCanonicalUri());
+        $this->assertSame('https://example.com/i-decided-myself?page=23&foo=bar', $manager->getCanonicalUriForRequest($request));
     }
 
     public function testCanonicalWithWildCards(): void
@@ -58,6 +59,6 @@ class HtmlHeadBagTest extends TestCase
         $manager->setKeepParamsForCanonical(['foo', 'page_*']);
 
         $request = Request::create('https://contao.org/foobar/page?query=test&foo=bar&baz=bak&page_42=12');
-        $this->assertSame('https://contao.org/foobar/page?foo=bar&page_42=12', $manager->getCanonicalUri($request));
+        $this->assertSame('https://contao.org/foobar/page?foo=bar&page_42=12', $manager->getCanonicalUriForRequest($request));
     }
 }

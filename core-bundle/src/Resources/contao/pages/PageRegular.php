@@ -227,7 +227,7 @@ class PageRegular extends Frontend
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = $this->responseContext->get(HtmlHeadBag::class)->getCanonicalUri($request);
+			$this->Template->canonical = $this->responseContext->get(HtmlHeadBag::class)->getCanonicalUriForRequest($request);
 		}
 
 		// Fall back to the default title tag
