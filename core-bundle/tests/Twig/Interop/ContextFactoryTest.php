@@ -136,6 +136,7 @@ class ContextFactoryTest extends TestCase
 
             public function __construct()
             {
+                /** @phpstan-ignore-next-line */
                 $this->dynamic = 'd';
             }
 
