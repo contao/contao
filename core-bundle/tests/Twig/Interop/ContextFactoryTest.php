@@ -170,7 +170,10 @@ class ContextFactoryTest extends TestCase
             'publicStaticDo',
         ];
 
-        $this->assertCount(\count($expectedFields) + \count($expectedFunctions), $context);
+        $this->assertCount(\count($expectedFields) + \count($expectedFunctions) + 1, $context);
+
+        $this->assertArrayHasKey('data', $context);
+        $this->assertSame($object, $context['data']);
 
         foreach ($expectedFields as $field => $value) {
             $this->assertArrayHasKey($field, $context);
