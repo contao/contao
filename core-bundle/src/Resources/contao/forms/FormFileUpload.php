@@ -181,7 +181,7 @@ class FormFileUpload extends Widget implements \uploadable
 
 		if ($arrImageSize = @getimagesize($file['tmp_name']))
 		{
-			$intImageWidth = $this->getMaximumImageWidth();
+			$intImageWidth = $this->maxImageWidth ?: Config::get('imageWidth');
 
 			// Image exceeds maximum image width
 			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
