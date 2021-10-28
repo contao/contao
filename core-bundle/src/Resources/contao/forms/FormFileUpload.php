@@ -192,7 +192,7 @@ class FormFileUpload extends Widget implements \uploadable
 				return;
 			}
 
-			$intImageHeight = $this->getMaximumImageHeight();
+			$intImageHeight = $this->maxImageHeight ?: Config::get('imageHeight');
 
 			// Image exceeds maximum image height
 			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
@@ -336,36 +336,6 @@ class FormFileUpload extends Widget implements \uploadable
 		}
 
 		return FileUpload::getMaxUploadSize();
-	}
-
-	/**
-	 * Return the maximum image width
-	 *
-	 * @return integer
-	 */
-	protected function getMaximumImageWidth()
-	{
-		if ($this->maxImageWidth > 0)
-		{
-			return $this->maxImageWidth;
-		}
-
-		return Config::get('imageWidth');
-	}
-
-	/**
-	 * Return the maximum image height
-	 *
-	 * @return integer
-	 */
-	protected function getMaximumImageHeight()
-	{
-		if ($this->maxImageHeight > 0)
-		{
-			return $this->maxImageHeight;
-		}
-
-		return Config::get('imageHeight');
 	}
 }
 
