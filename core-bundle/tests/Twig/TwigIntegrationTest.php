@@ -55,7 +55,7 @@ class TwigIntegrationTest extends TestCase
 
     public function testRendersWidgets(): void
     {
-        $content = "{{ strLabel }}\n {{ getErrorAsString }}";
+        $content = "{{ strClass }}\n{{ strLabel }} {{ data.label }}\n {{ getErrorAsString }}";
 
         // Setup legacy framework and environment
         (new Filesystem())->touch(Path::join($this->getTempDir(), 'templates/form_textfield.html5'));
@@ -73,11 +73,11 @@ class TwigIntegrationTest extends TestCase
         System::setContainer($container);
 
         // Render widget
-        $textField = new FormTextField(['label' => 'foo']);
+        $textField = new FormTextField(['class' => 'my_class', 'label' => 'foo']);
         $textField->addError('bar');
 
         $this->assertSame(
-            "foo\n bar",
+            "my_class error\nfoo foo\n bar",
             $textField->parse()
         );
     }
