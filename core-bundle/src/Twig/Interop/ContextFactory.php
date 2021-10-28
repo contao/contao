@@ -60,11 +60,15 @@ final class ContextFactory
         foreach ($class->getMethods() as $method) {
             $name = $method->getName();
 
-            if ($method->isAbstract() || 0 === strpos($name, '__')) {
+            if (0 === strpos($name, '__')) {
                 continue;
             }
 
             $context[$name] = $this->getCallableWrapper($method->getClosure($object), $name);
+        }
+
+        if (!isset($context['data'])) {
+            $context['data'] = $object;
         }
 
         return $context;
