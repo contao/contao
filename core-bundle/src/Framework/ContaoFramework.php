@@ -118,7 +118,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             $this->throwOnLegacyRoutingHooks();
         }
 
-        self::$nonce = random_bytes(6);
+        self::$nonce = bin2hex(random_bytes(16));
     }
 
     public function setHookListeners(array $hookListeners): void
