@@ -20,7 +20,7 @@ use Contao\Template;
 final class ContextFactory
 {
     /**
-     * Create a template context from a @Template object that can be used in Twig.
+     * Create a Twig template context from a @see Template object.
      */
     public function fromContaoTemplate(Template $template): array
     {
@@ -43,9 +43,8 @@ final class ContextFactory
     }
 
     /**
-     * Transform an object into a template context that can be used in Twig.
-     * This also includes private/protected methods, (static) properties and
-     * constants.
+     * Create a Twig template context from an arbitrary object. This will also
+     * make private or protected methods/properties/constants accessible.
      */
     public function fromClass(object $object): array
     {
