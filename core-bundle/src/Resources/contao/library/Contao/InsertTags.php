@@ -38,6 +38,11 @@ class InsertTags extends Controller
 	protected static $arrItCache = array();
 
 	/**
+	 * @var ?string
+	 */
+	protected static $strAllowedTagsRegex;
+
+	/**
 	 * Make the constructor public
 	 */
 	public function __construct()
@@ -72,6 +77,7 @@ class InsertTags extends Controller
 	public static function reset()
 	{
 		static::$arrItCache = array();
+		static::$strAllowedTagsRegex = null;
 	}
 
 	/**
@@ -108,10 +114,13 @@ class InsertTags extends Controller
 		$strBuffer = '';
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 
-		$allowedTagsRegex = '(' . implode('|', array_map(static function ($allowedTag)
+		if (static::$strAllowedTagsRegex === null)
 		{
-			return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
-		}, $container->getParameter('contao.insert_tags.allowed_tags'))) . ')';
+			static::$strAllowedTagsRegex = '(' . implode('|', array_map(static function ($allowedTag)
+			{
+				return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
+			}, $container->getParameter('contao.insert_tags.allowed_tags'))) . ')';
+		}
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -138,7 +147,7 @@ class InsertTags extends Controller
 				continue;
 			}
 
-			if (preg_match($allowedTagsRegex, $elements[0]) !== 1)
+			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
 			{
 				$strBuffer .= '{{' . $strTag . '}}';
 				continue;
