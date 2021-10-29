@@ -36,5 +36,3 @@ class FragmentTemplate extends FrontendTemplate
 		$this->strBuffer = $this->parse();
 	}
 }
-
-class_alias(FragmentTemplate::class, 'FragmentTemplate');
