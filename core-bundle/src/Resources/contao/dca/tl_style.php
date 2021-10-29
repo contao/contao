@@ -185,42 +185,42 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'width' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_auto_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'height' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_auto_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minwidth' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minheight' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'maxwidth' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit_none', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'maxheight' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit_none', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -233,7 +233,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'trbl' => array
 		(
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_auto_inherit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -281,14 +281,14 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'margin' => array
 		(
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_auto_inherit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'padding' => array
 		(
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -357,7 +357,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'shadowsize' => array
 		(
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -388,7 +388,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'borderwidth' => array
 		(
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -408,7 +408,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'borderradius' => array
 		(
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -422,7 +422,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'borderspacing' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -441,7 +441,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'fontsize' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -454,7 +454,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'lineheight' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_normal_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -477,21 +477,21 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'textindent' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'letterspacing' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_normal_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'wordspacing' => array
 		(
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? [],
+			'options'                 => $GLOBALS['TL_CSS_UNITS'] ?? array(),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit_normal_inherit', 'maxlength' => 20, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
