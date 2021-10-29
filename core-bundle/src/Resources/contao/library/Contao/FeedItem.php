@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Image\DeferredImageInterface;
+
 /**
  * Creates items to be appended to RSS or Atom feeds
  *
@@ -101,9 +103,11 @@ class FeedItem
 	 * @param string $strUrl   The base URL
 	 * @param string $strMedia The media type
 	 */
-	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure')
+	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $imageSize = null)
 	{
-		if (!$strFile || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFile))
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		if (!$strFile || !file_exists($rootDir . '/' . $strFile))
 		{
 			return;
 		}
@@ -113,12 +117,29 @@ class FeedItem
 			$strUrl = Environment::get('base');
 		}
 
+		$fileUrl = $strUrl . System::urlEncode($strFile);
 		$objFile = new File($strFile);
+
+		$imageSize = StringUtil::deserialize($imageSize, true);
+
+		if ($imageSize && $objFile->isImage)
+		{
+			$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $strFile, $imageSize);
+
+			if ($image instanceof DeferredImageInterface)
+			{
+				System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
+			}
+
+			$fileUrl = $strUrl . System::urlEncode($image->getUrl($rootDir));
+			$relativeFilePath = str_replace($rootDir . '/', '', $image->getPath());
+			$objFile = new File($relativeFilePath);
+		}
 
 		$this->arrData['enclosure'][] = array
 		(
 			'media' => $strMedia,
-			'url' => $strUrl . System::urlEncode($strFile),
+			'url' => $fileUrl,
 			'length' => $objFile->size,
 			'type' => $objFile->mime
 		);

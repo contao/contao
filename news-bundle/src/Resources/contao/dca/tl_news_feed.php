@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description'
+		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description,imageSize'
 	),
 
 	// Fields
@@ -211,7 +211,19 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
-		)
+		),
+		'imageSize' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'imageSize',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'options_callback' => static function ()
+			{
+				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+			},
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 	)
 );
 
