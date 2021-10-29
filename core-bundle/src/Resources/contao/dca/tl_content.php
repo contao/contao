@@ -759,8 +759,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'data' => array
 		(
-			'inputType'               => 'keyValueWizard',
 			'exclude'                 => true,
+			'inputType'               => 'keyValueWizard',
 			'sql'                     => "text NULL"
 		),
 		'cteAlias' => array
