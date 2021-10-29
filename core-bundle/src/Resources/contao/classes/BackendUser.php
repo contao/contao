@@ -36,31 +36,37 @@ class BackendUser extends User
 {
 	/**
 	 * Edit page flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_PAGE.
 	 */
 	const CAN_EDIT_PAGE = 1;
 
 	/**
 	 * Edit page hierarchy flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY.
 	 */
 	const CAN_EDIT_PAGE_HIERARCHY = 2;
 
 	/**
 	 * Delete page flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_DELETE_PAGE.
 	 */
 	const CAN_DELETE_PAGE = 3;
 
 	/**
 	 * Edit articles flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_ARTICLES.
 	 */
 	const CAN_EDIT_ARTICLES = 4;
 
 	/**
 	 * Edit article hierarchy flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY.
 	 */
 	const CAN_EDIT_ARTICLE_HIERARCHY = 5;
 
 	/**
 	 * Delete articles flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_DELETE_ARTICLES.
 	 */
 	const CAN_DELETE_ARTICLES = 6;
 
@@ -283,9 +289,13 @@ class BackendUser extends User
 	 * @param array   $row
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions constants instead.
 	 */
 	public function isAllowed($int, $row)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated. Use Symfony security and ContaoCorePermissions constants instead.');
+
 		if ($this->isAdmin)
 		{
 			return true;
@@ -354,9 +364,13 @@ class BackendUser extends User
 	 * @param string $table
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated since Contao 4.13, use Symfony security and isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE)
 	 */
 	public function canEditFieldsOf($table)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::canEditFieldsOfTable()" has been deprecated. Use Symfony security and isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE) instead.');
+
 		if ($this->isAdmin)
 		{
 			return true;

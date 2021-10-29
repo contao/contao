@@ -16,37 +16,37 @@ final class ContaoCorePermissions
 {
     /**
      * Access is granted if the current user can edit the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_PAGE = 'contao_user.can_edit_page';
 
     /**
      * Access is granted if the current user can change the hierarchy of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_PAGE_HIERARCHY = 'contao_user.can_edit_page_hierarchy';
 
     /**
      * Access is granted if the current user can can delete the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_DELETE_PAGE = 'contao_user.can_delete_page';
 
     /**
      * Access is granted if the current user can edit articles of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_ARTICLES = 'contao_user.can_edit_articles';
 
     /**
      * Access is granted if the current user can change the hierarchy of articles of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_ARTICLE_HIERARCHY = 'contao_user.can_edit_article_hierarchy';
 
     /**
      * Access is granted if the current user can delete articles of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_DELETE_ARTICLES = 'contao_user.can_delete_articles';
 
