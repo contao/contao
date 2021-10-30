@@ -122,6 +122,8 @@ services:
             - '%contao.csrf_cookie_prefix%'
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
+            - ~
+            - '%contao.csrf_token_name%'
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage

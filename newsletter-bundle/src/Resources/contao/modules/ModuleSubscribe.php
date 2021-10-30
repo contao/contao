@@ -158,11 +158,7 @@ class ModuleSubscribe extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->text = $this->nl_text;
-		$this->Template->requestToken = System::getContainer()
-			->get(ContaoCsrfTokenManager::class)
-			->getToken(System::getContainer()->getParameter('contao.csrf_token_name'))
-			->getValue()
-		;
+		$this->Template->requestToken = System::getContainer()->get(ContaoCsrfTokenManager::class)->getFrontendTokenValue();
 	}
 
 	/**

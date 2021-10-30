@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Cron\Cron;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\LogoutException;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class FrontendControllerTest extends TestCase
 {
@@ -47,26 +45,14 @@ class FrontendControllerTest extends TestCase
 
     public function testRequestTokenScriptAction(): void
     {
-        $bag = new ParameterBag();
-        $bag->set('contao.csrf_token_name', 'csrf_token');
-
-        $token = $this->createMock(CsrfToken::class);
-        $token
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
             ->expects($this->once())
-            ->method('getValue')
+            ->method('getFrontendTokenValue')
             ->willReturn('tokenValue')
         ;
 
-        $tokenManager = $this->createMock(CsrfTokenManagerInterface::class);
-        $tokenManager
-            ->expects($this->once())
-            ->method('getToken')
-            ->with('csrf_token')
-            ->willReturn($token)
-        ;
-
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('parameter_bag', $bag);
         $container->set('contao.csrf.token_manager', $tokenManager);
 
         $controller = new FrontendController();

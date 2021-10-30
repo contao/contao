@@ -111,11 +111,7 @@ class Form extends Hybrid
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
-		$this->Template->requestToken = System::getContainer()
-			->get(ContaoCsrfTokenManager::class)
-			->getToken(System::getContainer()->getParameter('contao.csrf_token_name'))
-			->getValue()
-		;
+		$this->Template->requestToken = System::getContainer()->get(ContaoCsrfTokenManager::class)->getFrontendTokenValue();
 
 		$this->initializeSession($formId);
 		$arrLabels = array();
