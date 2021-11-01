@@ -139,10 +139,6 @@ services:
         tags:
             - { name: contao.frontend_module, category: miscellaneous }
 
-    Contao\CoreBundle\Controller\FrontendModule\LanguageDependentModuleController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
-
     Contao\CoreBundle\Controller\ImagesController:
         arguments:
             - '@contao.image.image_factory'

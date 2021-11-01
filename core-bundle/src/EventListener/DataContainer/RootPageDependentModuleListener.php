@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class LanguageDependentModuleListener
+class RootPageDependentModuleListener
 {
     private Connection $connection;
     private TranslatorInterface $translator;
@@ -55,7 +55,7 @@ class LanguageDependentModuleListener
 
         if (
             !\is_array($fields) ||
-            !\in_array('languageDependentModule', array_column($fields, 'inputType'), true)
+            !\in_array('rootPageDependentModule', array_column($fields, 'inputType'), true)
         ) {
             return;
         }
@@ -68,7 +68,7 @@ class LanguageDependentModuleListener
 
         $affectedFields = array_keys(
             array_column($fields, 'inputType'),
-            'languageDependentModule',
+            'rootPageDependentModule',
             true
         );
 
@@ -108,8 +108,8 @@ class LanguageDependentModuleListener
                 $fieldConfig['options'] = $this->getFrontendModules($types);
             }
 
-            if (!\array_key_exists('languages', $fieldConfig['eval'])) {
-                $fieldConfig['eval']['languages'] = $this->getLanguages();
+            if (!\array_key_exists('rootPages', $fieldConfig['eval'])) {
+                $fieldConfig['eval']['rootPages'] = $this->getRootPages();
             }
 
             if (!\array_key_exists('blankOptionLabel', $fieldConfig['eval'])) {
@@ -146,10 +146,10 @@ class LanguageDependentModuleListener
         }
 
         $newValues = [];
-        $availableLanguages = array_keys($this->getLanguages());
+        $availableRootPages = array_keys($this->getRootPages());
 
         foreach ($values as $v) {
-            $newValues[array_shift($availableLanguages)] = $v;
+            $newValues[array_shift($availableRootPages)] = $v;
         }
 
         return serialize($newValues);
@@ -166,14 +166,14 @@ class LanguageDependentModuleListener
 
         System::loadLanguageFile('tl_content');
 
-        foreach ($values as $language => $id) {
+        foreach ($values as $rootPage => $id) {
             if ('' === $id) {
                 continue;
             }
 
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
 
-            $wizards[$language] = ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$id.'&amp;popup=1&amp;nb=1&amp;rt='.$this->csrfTokenManager->getToken($this->csrfTokenName)->getValue().'"
+            $wizards[$rootPage] = ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$id.'&amp;popup=1&amp;nb=1&amp;rt='.$this->csrfTokenManager->getToken($this->csrfTokenName)->getValue().'"
                     title="'.StringUtil::specialchars($title).'"
                     onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $title)).'\',\'url\':this.href});return false">'.Image::getHtml('alias.svg', $title).'</a>';
         }
@@ -181,10 +181,10 @@ class LanguageDependentModuleListener
         return serialize($wizards);
     }
 
-    private function getLanguages(): array
+    private function getRootPages(): array
     {
         $statement = $this->connection->prepare('
-            SELECT p.*
+            SELECT p.id, p.title, p.language
             FROM tl_page p
             WHERE p.pid = 0
             ORDER BY p.sorting ASC
@@ -192,17 +192,13 @@ class LanguageDependentModuleListener
 
         $rootPages = $statement->executeQuery()->fetchAllAssociative();
 
-        $languages = [];
+        $pages = [];
 
         foreach ($rootPages as $rootPage) {
-            $languages[$rootPage['language']] = $this->translator->trans(
-                sprintf('LNG.%s', $rootPage['language']),
-                [],
-                'contao_languages'
-            );
+            $pages[$rootPage['id']] = sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
         }
 
-        return $languages;
+        return $pages;
     }
 
     private function getFrontendModules(array $types = []): array
@@ -210,7 +206,7 @@ class LanguageDependentModuleListener
         $statement = $this->connection->executeQuery("
             SELECT m.id, m.name
             FROM tl_module m
-            WHERE m.type <> 'language_dependent_module'
+            WHERE m.type <> 'root_page_dependent_module'
             ORDER BY m.name
         ");
 
@@ -218,7 +214,7 @@ class LanguageDependentModuleListener
             $statement = $this->connection->executeQuery(
                 "SELECT m.id, m.name
                     FROM tl_module m
-                    WHERE m.type IN (?) AND m.type <> 'language_dependent_module'
+                    WHERE m.type IN (?) AND m.type <> 'root_page_dependent_module'
                     ORDER BY m.name",
                 [$types],
                 [Connection::PARAM_STR_ARRAY]

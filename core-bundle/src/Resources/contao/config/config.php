@@ -39,7 +39,6 @@ use Contao\ContentToplink;
 use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
-use Contao\CoreBundle\Widget\LanguageDependentModule;
 use Contao\Crawl;
 use Contao\FileSelector;
 use Contao\FilesModel;
@@ -115,6 +114,7 @@ use Contao\Picker;
 use Contao\PurgeData;
 use Contao\RadioButton;
 use Contao\RadioTable;
+use Contao\RootPageDependentModule;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
@@ -333,35 +333,35 @@ $GLOBALS['TL_CTE'] = array
 // Back end form fields
 $GLOBALS['BE_FFL'] = array
 (
-	'text'           => TextField::class,
-	'password'       => Password::class,
-	'textStore'      => TextStore::class,
-	'textarea'       => TextArea::class,
-	'select'         => SelectMenu::class,
-	'checkbox'       => CheckBox::class,
-	'checkboxWizard' => CheckBoxWizard::class,
-	'radio'          => RadioButton::class,
-	'radioTable'     => RadioTable::class,
-	'inputUnit'      => InputUnit::class,
-	'trbl'           => TrblField::class,
-	'chmod'          => ChmodTable::class,
-	'picker'         => Picker::class,
-	'pageTree'       => PageTree::class,
-	'pageSelector'   => PageSelector::class,
-	'fileTree'       => FileTree::class,
-	'fileSelector'   => FileSelector::class,
-	'fileUpload'     => Upload::class,
-	'tableWizard'    => TableWizard::class,
-	'listWizard'     => ListWizard::class,
-	'optionWizard'   => OptionWizard::class,
-	'moduleWizard'   => ModuleWizard::class,
-	'keyValueWizard' => KeyValueWizard::class,
-	'imageSize'      => ImageSize::class,
-	'timePeriod'     => TimePeriod::class,
-	'metaWizard'     => MetaWizard::class,
-	'sectionWizard'  => SectionWizard::class,
-	'serpPreview'    => SerpPreview::class,
-	'languageDependentModule' => LanguageDependentModule::class
+	'text'                    => TextField::class,
+	'password'                => Password::class,
+	'textStore'               => TextStore::class,
+	'textarea'                => TextArea::class,
+	'select'                  => SelectMenu::class,
+	'checkbox'                => CheckBox::class,
+	'checkboxWizard'          => CheckBoxWizard::class,
+	'radio'                   => RadioButton::class,
+	'radioTable'              => RadioTable::class,
+	'inputUnit'               => InputUnit::class,
+	'trbl'                    => TrblField::class,
+	'chmod'                   => ChmodTable::class,
+	'picker'                  => Picker::class,
+	'pageTree'                => PageTree::class,
+	'pageSelector'            => PageSelector::class,
+	'fileTree'                => FileTree::class,
+	'fileSelector'            => FileSelector::class,
+	'fileUpload'              => Upload::class,
+	'tableWizard'             => TableWizard::class,
+	'listWizard'              => ListWizard::class,
+	'optionWizard'            => OptionWizard::class,
+	'moduleWizard'            => ModuleWizard::class,
+	'keyValueWizard'          => KeyValueWizard::class,
+	'imageSize'               => ImageSize::class,
+	'timePeriod'              => TimePeriod::class,
+	'metaWizard'              => MetaWizard::class,
+	'sectionWizard'           => SectionWizard::class,
+	'serpPreview'             => SerpPreview::class,
+	'rootPageDependentModule' => RootPageDependentModule::class
 );
 
 // Front end form fields
