@@ -107,6 +107,54 @@ class BackupManager
      */
     public function create(CreateConfig $config): void
     {
+        $this->executeTransactional(
+            function () use ($config): void {
+                $this->doCreate($config);
+            }
+        );
+    }
+
+    /**
+     * @throws BackupManagerException
+     */
+    public function restore(RestoreConfig $config): void
+    {
+        $this->executeTransactional(
+            function () use ($config): void {
+                $this->doRestore($config);
+            }
+        );
+    }
+
+    /**
+     * @throws BackupManagerException
+     */
+    private function executeTransactional(\Closure $func): void
+    {
+        $isAutoCommit = $this->connection->isAutoCommit();
+
+        if ($isAutoCommit) {
+            $this->connection->setAutoCommit(false);
+        }
+
+        try {
+            $this->connection->transactional($func);
+        } catch (BackupManagerException $e) {
+            throw $e;
+        } catch (\Throwable $t) {
+            throw new BackupManagerException($t->getMessage(), 0, $t);
+        }
+
+        if ($isAutoCommit) {
+            $this->connection->setAutoCommit(true);
+        }
+    }
+
+    /**
+     * @throws BackupManagerException
+     */
+    private function doCreate(CreateConfig $config): void
+    {
         $backup = $config->getBackup();
 
         // Ensure the target file exists and is empty
@@ -138,7 +186,7 @@ class BackupManager
     /**
      * @throws BackupManagerException
      */
-    public function restore(RestoreConfig $config): void
+    private function doRestore(RestoreConfig $config): void
     {
         $backup = $config->getBackup();
 
