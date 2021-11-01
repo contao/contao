@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
+use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentModuleListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
@@ -640,7 +641,16 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'rootPageDependentModule',
-			'eval'                    => array('submitOnChange' => true, 'tl_class' => 'w50'),
+			'options_callback'        => array(RootPageDependentModuleListener::class, 'onOptionsCallback'),
+			'save_callback'           => array
+			(
+				array(RootPageDependentModuleListener::class, 'onSaveCallback')
+			),
+			'wizard'                  => array
+			(
+				array(RootPageDependentModuleListener::class, 'onEditModule')
+			),
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true),
 			'sql'                     => 'blob NULL'
 		),
 	)

@@ -487,7 +487,7 @@ If you did not request this e-mail, please contact the website administrator.
         <source>Delete module ID %s</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Please choose your module for root page %s</source>
+        <source>Please choose your module for %s</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.0">
         <source>Module</source>

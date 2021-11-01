@@ -82,31 +82,6 @@ class RootPageDependentModuleListener
             $key = $keys[0];
             $fieldConfig = $GLOBALS['TL_DCA'][$table]['fields'][$key];
 
-            if (!\array_key_exists('eval', $fieldConfig)) {
-                $fieldConfig['eval'] = [];
-            }
-
-            if (!\array_key_exists('save_callback', $fieldConfig)) {
-                $fieldConfig['save_callback'] = [];
-            }
-
-            if (!\array_key_exists('wizard', $fieldConfig)) {
-                $fieldConfig['wizard'] = [];
-            }
-
-            if (
-                !\array_key_exists('options', $fieldConfig) &&
-                !\array_key_exists('options_callback', $fieldConfig)
-            ) {
-                $types = [];
-
-                if (\array_key_exists('modules', $fieldConfig['eval'])) {
-                    $types = $fieldConfig['eval']['modules'];
-                }
-
-                $fieldConfig['options'] = $this->getFrontendModules($types);
-            }
-
             if (!\array_key_exists('rootPages', $fieldConfig['eval'])) {
                 $fieldConfig['eval']['rootPages'] = $this->getRootPages();
             }
@@ -119,21 +94,45 @@ class RootPageDependentModuleListener
                 );
             }
 
-            $fieldConfig['eval']['includeBlankOption'] = true;
-
-            $fieldConfig['save_callback'][] = [
-                static::class,
-                'onSaveCallback',
-            ];
-
-            $fieldConfig['wizard'][] = [
-                static::class,
-                'onEditModule',
-            ];
-
             // Save modified configuration back to global DCA
             $GLOBALS['TL_DCA'][$table]['fields'][$key] = $fieldConfig;
         }
+    }
+
+    public function onOptionsCallback(DataContainer $dc): array
+    {
+        $options = [];
+        $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
+
+        $statement = $this->connection->executeQuery(
+            "SELECT m.id, m.name
+            FROM tl_module m
+            WHERE m.type <> 'root_page_dependent_module' AND 
+                  m.pid = ?
+            ORDER BY m.name",
+            [$dc->activeRecord->pid]
+        );
+
+        if (\count($types)) {
+            $statement = $this->connection->executeQuery(
+                "SELECT m.id, m.name
+                    FROM tl_module m
+                    WHERE m.type IN (?) AND
+                          m.type <> 'root_page_dependent_module' AND 
+                          m.pid = ?
+                    ORDER BY m.name",
+                [$types, $dc->activeRecord->pid],
+                [Connection::PARAM_STR_ARRAY]
+            );
+        }
+
+        $modules = $statement->fetchAllAssociative();
+
+        foreach ($modules as $module) {
+            $options[$module['id']] = $module['name'];
+        }
+
+        return $options;
     }
 
     public function onSaveCallback($value, DataContainer $dataContainer)
@@ -196,36 +195,5 @@ class RootPageDependentModuleListener
         }
 
         return $pages;
-    }
-
-    private function getFrontendModules(array $types = []): array
-    {
-        $statement = $this->connection->executeQuery("
-            SELECT m.id, m.name
-            FROM tl_module m
-            WHERE m.type <> 'root_page_dependent_module'
-            ORDER BY m.name
-        ");
-
-        if (\count($types)) {
-            $statement = $this->connection->executeQuery(
-                "SELECT m.id, m.name
-                    FROM tl_module m
-                    WHERE m.type IN (?) AND m.type <> 'root_page_dependent_module'
-                    ORDER BY m.name",
-                [$types],
-                [Connection::PARAM_STR_ARRAY]
-            );
-        }
-
-        $modules = $statement->fetchAllAssociative();
-
-        $list = [];
-
-        foreach ($modules as $module) {
-            $list[$module['id']] = $module['name'];
-        }
-
-        return $list;
     }
 }
