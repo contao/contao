@@ -16,7 +16,6 @@ use Contao\CoreBundle\Doctrine\Backup\Config\AbstractConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
@@ -171,7 +170,7 @@ class BackupManager
             $dumptask = new DumpTask($this->connection, $this->createSlimDumpConfig($config), true, true, $config->getBufferSize(), $output);
             $dumptask->dump();
         } catch (\Exception $e) {
-            throw new BackupManagerException($e->getMessage());
+            throw new BackupManagerException($e->getMessage(), 0, $e);
         }
 
         if ($deflateContext) {
@@ -275,8 +274,8 @@ class BackupManager
     {
         try {
             $this->connection->executeQuery($query);
-        } catch (Exception $e) {
-            throw new BackupManagerException($e->getMessage());
+        } catch (\Exception $e) {
+            throw new BackupManagerException($e->getMessage(), 0, $e);
         }
     }
 
