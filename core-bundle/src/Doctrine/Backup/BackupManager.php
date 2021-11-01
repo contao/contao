@@ -215,14 +215,13 @@ class BackupManager
                 continue;
             }
 
+            $currentQuery .= $line;
+
             // Current query ends
             if (';' === substr($currentQuery, -1)) {
                 $this->executeWrappedQuery($currentQuery);
                 $currentQuery = '';
-                continue;
             }
-
-            $currentQuery .= $line;
         }
 
         if ('' !== $currentQuery) {
