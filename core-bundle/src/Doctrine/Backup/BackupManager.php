@@ -194,14 +194,10 @@ class BackupManager
             throw new BackupManagerException(sprintf('Dump does not exist at "%s".', $backup->getFilepath()));
         }
 
-        if ($config->dropTables()) {
-            $this->dropTables($config);
-        }
-
         $handle = $config->isGzCompressionEnabled() ? gzopen($backup->getFilepath(), 'r') : fopen($backup->getFilePath(), 'r');
 
         $currentQuery = '';
-        $checkedForHeader = false;
+        $checkedForHeader = $config->ignoreOriginCheck();
 
         while ($line = $config->isGzCompressionEnabled() ? gzgets($handle) : fgets($handle)) {
             $line = trim($line);
@@ -271,22 +267,6 @@ class BackupManager
         $doc->appendChild($slimDump);
 
         return ConfigBuilder::createFromXmlString($doc->saveXML());
-    }
-
-    /**
-     * @throws BackupManagerException
-     */
-    private function dropTables(RestoreConfig $config): void
-    {
-        $tables = $this->connection->getSchemaManager()->listTableNames();
-
-        foreach ($tables as $table) {
-            if (\in_array($table, $config->getTablesToIgnore(), true)) {
-                continue;
-            }
-
-            $this->executeWrappedQuery('DROP TABLE '.$this->connection->quoteIdentifier($table));
-        }
     }
 
     /**

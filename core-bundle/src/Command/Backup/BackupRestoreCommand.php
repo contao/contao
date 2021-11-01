@@ -30,7 +30,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
         parent::configure();
 
         $this
-            ->addOption('no-delete', null, InputOption::VALUE_NONE, 'Do not delete existing tables')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command checks whether the backup has been generated with Contao too. Use --force to disable this check.')
             ->setDescription('Restores a backup.')
         ;
     }
@@ -42,8 +42,8 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $config = $this->backupManager->createRestoreConfig();
         $config = $this->handleCommonConfig($input, $config);
 
-        if ($input->getOption('no-delete')) {
-            $config = $config->withDropTables(false);
+        if ($input->getOption('force')) {
+            $config = $config->withIgnoreOriginCheck(true);
         }
 
         try {

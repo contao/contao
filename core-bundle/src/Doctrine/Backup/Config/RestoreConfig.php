@@ -14,25 +14,11 @@ namespace Contao\CoreBundle\Doctrine\Backup\Config;
 
 class RestoreConfig extends AbstractConfig
 {
-    private bool $dropTables = true;
     private bool $ignoreOriginCheck = false;
-
-    public function dropTables(): bool
-    {
-        return $this->dropTables;
-    }
 
     public function ignoreOriginCheck(): bool
     {
         return $this->ignoreOriginCheck;
-    }
-
-    public function withDropTables(bool $truncate): self
-    {
-        $new = clone $this;
-        $new->dropTables = $truncate;
-
-        return $new;
     }
 
     public function withIgnoreOriginCheck(bool $ignoreOriginCheck): self
