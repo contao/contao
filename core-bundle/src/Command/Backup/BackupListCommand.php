@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -27,6 +28,7 @@ class BackupListCommand extends AbstractBackupCommand
     protected function configure(): void
     {
         $this
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
             ->setDescription('Lists all backups.')
         ;
     }
@@ -34,6 +36,12 @@ class BackupListCommand extends AbstractBackupCommand
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($this->isJson($input)) {
+            $io->writeln($this->formatForJson($this->backupManager->listBackups()));
+
+            return 0;
+        }
 
         $io->table(['Created', 'Size', 'Path'], $this->formatForTable($this->backupManager->listBackups()));
 
@@ -56,5 +64,19 @@ class BackupListCommand extends AbstractBackupCommand
         }
 
         return $formatted;
+    }
+
+    /**
+     * @param array<Backup> $backups
+     */
+    private function formatForJson(array $backups): string
+    {
+        $json = [];
+
+        foreach ($backups as $backup) {
+            $json[] = $backup->toArray();
+        }
+
+        return json_encode($json);
     }
 }

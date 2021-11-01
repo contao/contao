@@ -35,6 +35,7 @@ abstract class AbstractBackupCommand extends Command
         $this
             ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump to process.')
             ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables).')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
         ;
     }
 
@@ -49,5 +50,16 @@ abstract class AbstractBackupCommand extends Command
         }
 
         return $config;
+    }
+
+    protected function isJson(InputInterface $input): bool
+    {
+        $format = $input->getOption('format');
+
+        if (!\in_array($format, ['json', 'txt'], true)) {
+            throw new \InvalidArgumentException('This command only supports the "txt" and "json" formats.');
+        }
+
+        return 'json' === $format;
     }
 }

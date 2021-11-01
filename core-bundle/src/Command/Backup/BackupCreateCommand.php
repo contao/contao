@@ -50,9 +50,19 @@ class BackupCreateCommand extends AbstractBackupCommand
         try {
             $this->backupManager->create($config);
         } catch (BackupManagerException $e) {
-            $io->error($e->getMessage());
+            if ($this->isJson($input)) {
+                $io->writeln(json_encode(['error' => $e->getMessage()]));
+            } else {
+                $io->error($e->getMessage());
+            }
 
             return 1;
+        }
+
+        if ($this->isJson($input)) {
+            $io->writeln(json_encode($config->getBackup()->toArray()));
+
+            return 0;
         }
 
         $io->success(

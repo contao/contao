@@ -64,6 +64,16 @@ class Backup
         return new self($filepath);
     }
 
+    public function toArray(): array
+    {
+        return [
+            'createdAt' => $this->getCreatedAt()->format(\DateTimeInterface::ISO8601),
+            'size' => $this->getSize(),
+            'humanReadableSize' => $this->getHumanReadableSize(),
+            'path' => $this->getFilepath(),
+        ];
+    }
+
     /**
      * @throws BackupManagerException
      */
