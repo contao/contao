@@ -166,6 +166,11 @@ class BackupManager
                 continue;
             }
 
+            // Ignore comments
+            if ('--' === substr($line, 0, 2)) {
+                continue;
+            }
+
             // Current query ends
             if (';' === substr($currentQuery, -1)) {
                 $this->executeWrappedQuery($currentQuery);
