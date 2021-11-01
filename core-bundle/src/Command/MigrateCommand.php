@@ -70,7 +70,7 @@ class MigrateCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         if (!$input->getOption('no-backup')) {
-            $this->backup();
+            $this->backup($input);
         }
 
         if ('ndjson' !== $input->getOption('format')) {
@@ -92,14 +92,33 @@ class MigrateCommand extends Command
         return 1;
     }
 
-    private function backup(): void
+    private function backup(InputInterface $input): void
     {
+        $asJson = 'ndjson' === $input->getOption('format');
         $config = $this->backupManager->createCreateConfig();
-        $this->io->info(sprintf(
-            'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-            $config->getBackup()->getFilepath()
-        ));
-        $this->backupManager->create($config);
+
+        if (!$asJson) {
+            $this->io->info(sprintf(
+                'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
+                $config->getBackup()->getFilepath()
+            ));
+        }
+
+        try {
+            $this->backupManager->create($config);
+        } catch (\Throwable $exception) {
+            if ($asJson) {
+                $this->writeNdjson('error', [
+                    'message' => $exception->getMessage(),
+                    'code' => $exception->getCode(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTraceAsString(),
+                ]);
+            } else {
+                $this->io->error($exception->getMessage());
+            }
+        }
     }
 
     private function executeCommand(InputInterface $input): int

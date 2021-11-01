@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\MigrateCommand;
+use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -403,11 +404,18 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$duplicatedRunonceFiles)
         ;
 
+        $backupManager = $this->createMock(BackupManager::class);
+        $backupManager
+            ->expects($this->once())
+            ->method('create')
+        ;
+
         return new MigrateCommand(
             $migrations,
             $fileLocator,
             $this->getTempDir(),
             $this->createMock(ContaoFramework::class),
+            $backupManager,
             $installer ?? $this->createMock(Installer::class)
         );
     }
