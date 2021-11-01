@@ -271,9 +271,9 @@ services:
     Contao\CoreBundle\Doctrine\Backup\BackupManager:
         arguments:
             - '@database_connection'
-            - '' # Set by extension
-            - [] # Set by extension
-            - 0 # Set by extension
+            - '%kernel.project_dir%/var/backups' # Set by extension
+            - ['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'] # Set by extension
+            - 5 # Set by extension
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
