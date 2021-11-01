@@ -164,8 +164,6 @@ class RootPageDependentModuleListener
             return '';
         }
 
-        System::loadLanguageFile('tl_content');
-
         foreach ($values as $rootPage => $id) {
             if ('' === $id) {
                 continue;
