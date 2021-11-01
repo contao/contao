@@ -86,9 +86,9 @@ class Backup
             throw new BackupManagerException('Invalid backup filename!');
         }
 
-        try {
-            $datetime = \DateTime::createFromFormat(self::DATETIME_FORMAT, $chunks[1], new \DateTimeZone('UTC'));
-        } catch (\Exception $e) {
+        $datetime = \DateTime::createFromFormat(self::DATETIME_FORMAT, $chunks[1], new \DateTimeZone('UTC'));
+
+        if (!$datetime) {
             throw new BackupManagerException('Invalid datetime format on backup filename!');
         }
 

@@ -36,9 +36,9 @@ class BackupManager
     private const DUMP_VERSION = 'v1';
 
     private Connection $connection;
-    private string $backupDir;
-    private array $tablesToIgnore;
-    private int $keepMax;
+    private string $backupDir = '';
+    private array $tablesToIgnore = [];
+    private int $keepMax = 0;
 
     public function __construct(Connection $connection, string $backupDir, array $tablesToIgnore, int $keepMax)
     {

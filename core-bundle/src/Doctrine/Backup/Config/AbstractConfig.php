@@ -62,7 +62,7 @@ abstract class AbstractConfig
     public function withFilePath(string $filePath): self
     {
         $new = clone $this;
-        $new->filePath = $filePath;
+        $new->backup = new Backup($filePath);
 
         return $new;
     }

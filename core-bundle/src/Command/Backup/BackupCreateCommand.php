@@ -65,13 +65,10 @@ class BackupCreateCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(
-            sprintf(
-                'Successfully created an SQL dump at "%s" while ignoring following tables: %s.',
-                $config->getBackup()->getFilepath(),
-                implode(', ', $config->getTablesToIgnore())
-            )
-        );
+        $io->success(sprintf(
+            'Successfully created an SQL dump at "%s".',
+            $config->getBackup()->getFilepath(),
+        ));
 
         return 0;
     }
