@@ -268,11 +268,12 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
-    Contao\CoreBundle\Doctrine\Dumper\Dumper:
+    Contao\CoreBundle\Doctrine\Backup\BackupManager:
         arguments:
             - '@database_connection'
-            - '%kernel.project_dir%'
+            - '' # Set by extension
             - [] # Set by extension
+            - 0 # Set by extension
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider

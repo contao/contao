@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Doctrine\Dumper\Config;
+namespace Contao\CoreBundle\Doctrine\Backup\Config;
 
-class DumpConfig extends AbstractConfig
+class CreateConfig extends AbstractConfig
 {
     private int $bufferSize = 104857600; // 100 MB
 

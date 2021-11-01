@@ -116,7 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
-                ->append($this->addDatabaseNode())
+                ->append($this->addBackupNode())
             ->end()
         ;
 
@@ -566,22 +566,25 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function addDatabaseNode(): NodeDefinition
+    private function addBackupNode(): NodeDefinition
     {
-        return (new TreeBuilder('database'))
+        return (new TreeBuilder('backup'))
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
-                ->arrayNode('dump')
-                    ->addDefaultsIfNotSet()
-                        ->children()
-                            ->arrayNode('ignore_tables')
-                                ->info('These tables are ignored by default when running the contao:database:dump command without any options.')
-                                ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
-                                ->scalarPrototype()->end()
-                            ->end()
-                        ->end()
-                    ->end()
+                ->scalarNode('backup_dir')
+                    ->info('The directory the backups are being managed.')
+                    ->defaultValue('%kernel.project_dir%/var/backups')
+                ->end()
+                ->arrayNode('ignore_tables')
+                    ->info('These tables are ignored by default when creating and restoring backups.')
+                    ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->integerNode('keep_max')
+                    ->info('Maximum number of backups to keep.')
+                    ->defaultValue(5)
+                ->end()
             ->end()
         ;
     }

@@ -10,22 +10,20 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Command;
+namespace Contao\CoreBundle\Command\Backup;
 
-use Contao\CoreBundle\Doctrine\Dumper\DumperException;
+use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Dumps the database.
- *
  * @internal
  */
-class DatabaseDumpCommand extends AbstractDatabaseCommand
+class BackupCreateCommand extends AbstractBackupCommand
 {
-    protected static $defaultName = 'contao:database:dump';
+    protected static $defaultName = 'contao:backup:create';
 
     protected function configure(): void
     {
@@ -33,7 +31,7 @@ class DatabaseDumpCommand extends AbstractDatabaseCommand
 
         $this
             ->addOption('buffer-size', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
-            ->setDescription('Dumps an database to a given target file.')
+            ->setDescription('Creates a new backup.')
         ;
     }
 
@@ -41,7 +39,7 @@ class DatabaseDumpCommand extends AbstractDatabaseCommand
     {
         $io = new SymfonyStyle($input, $output);
 
-        $config = $this->databaseDumper->createDefaultImportConfig();
+        $config = $this->backupManager->createCreateConfig();
         $config = $this->handleCommonConfig($input, $config);
 
         if ($bufferSize = $input->getOption('buffer-size')) {
@@ -50,8 +48,8 @@ class DatabaseDumpCommand extends AbstractDatabaseCommand
         }
 
         try {
-            $this->databaseDumper->dump($config);
-        } catch (DumperException $e) {
+            $this->backupManager->create($config);
+        } catch (BackupManagerException $e) {
             $io->error($e->getMessage());
 
             return 1;
@@ -60,7 +58,7 @@ class DatabaseDumpCommand extends AbstractDatabaseCommand
         $io->success(
             sprintf(
                 'Successfully created an SQL dump at "%s" while ignoring following tables: %s.',
-                $config->getFilePath(),
+                $config->getBackup()->getFilepath(),
                 implode(', ', $config->getTablesToIgnore())
             )
         );

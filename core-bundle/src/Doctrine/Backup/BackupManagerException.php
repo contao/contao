@@ -10,8 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Doctrine\Dumper;
+namespace Contao\CoreBundle\Doctrine\Backup;
 
-class DumperException extends \RuntimeException
+class BackupManagerException extends \RuntimeException
 {
 }

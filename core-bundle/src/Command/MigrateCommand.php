@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Doctrine\Dumper\Dumper;
+use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -36,17 +36,17 @@ class MigrateCommand extends Command
     private FileLocator $fileLocator;
     private string $projectDir;
     private ContaoFramework $framework;
-    private Dumper $databaseDumper;
+    private BackupManager $backupManager;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Dumper $databaseDumper, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
         $this->projectDir = $projectDir;
         $this->framework = $framework;
-        $this->databaseDumper = $databaseDumper;
+        $this->backupManager = $backupManager;
         $this->installer = $installer;
 
         parent::__construct();
@@ -70,7 +70,7 @@ class MigrateCommand extends Command
         $this->io = new SymfonyStyle($input, $output);
 
         if (!$input->getOption('no-backup')) {
-            $this->backup($input);
+            $this->backup();
         }
 
         if ('ndjson' !== $input->getOption('format')) {
@@ -94,12 +94,12 @@ class MigrateCommand extends Command
 
     private function backup(): void
     {
-        $config = $this->databaseDumper->createDefaultDumpConfig();
+        $config = $this->backupManager->createCreateConfig();
         $this->io->info(sprintf(
             'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-            $config->getFilePath()
+            $config->getBackup()->getFilepath()
         ));
-        $this->databaseDumper->dump($config);
+        $this->backupManager->create($config);
     }
 
     private function executeCommand(InputInterface $input): int

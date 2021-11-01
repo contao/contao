@@ -10,22 +10,22 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Command;
+namespace Contao\CoreBundle\Command\Backup;
 
-use Contao\CoreBundle\Doctrine\Dumper\Config\AbstractConfig;
-use Contao\CoreBundle\Doctrine\Dumper\Dumper;
+use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\Doctrine\Backup\Config\AbstractConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class AbstractDatabaseCommand extends Command
+abstract class AbstractBackupCommand extends Command
 {
-    protected Dumper $databaseDumper;
+    protected BackupManager $backupManager;
 
-    public function __construct(Dumper $databaseDumper)
+    public function __construct(BackupManager $backupManager)
     {
-        $this->databaseDumper = $databaseDumper;
+        $this->backupManager = $backupManager;
 
         parent::__construct();
     }
@@ -33,8 +33,8 @@ abstract class AbstractDatabaseCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump.')
-            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the Contao configuration (contao.db.dump.ignoreTables).')
+            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump to process.')
+            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables).')
         ;
     }
 

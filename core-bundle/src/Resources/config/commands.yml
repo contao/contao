@@ -22,13 +22,17 @@ services:
         arguments:
             - '@Contao\CoreBundle\Cron\Cron'
 
-    Contao\CoreBundle\Command\DatabaseImportCommand:
+    Contao\CoreBundle\Command\Backup\BackupCreateCommand:
         arguments:
-            - '@Contao\CoreBundle\Doctrine\Dumper\Dumper'
+            - '@Contao\CoreBundle\Doctrine\Backup\BackupManager'
 
-    Contao\CoreBundle\Command\DatabaseDumpCommand:
+    Contao\CoreBundle\Command\Backup\BackupRestoreCommand:
         arguments:
-            - '@Contao\CoreBundle\Doctrine\Dumper\Dumper'
+            - '@Contao\CoreBundle\Doctrine\Backup\BackupManager'
+
+    Contao\CoreBundle\Command\Backup\BackupListCommand:
+        arguments:
+            - '@Contao\CoreBundle\Doctrine\Backup\BackupManager'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
@@ -67,7 +71,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
-            - '@Contao\CoreBundle\Doctrine\Dumper\Dumper'
+            - '@Contao\CoreBundle\Doctrine\Backup\BackupManager'
             - '@?contao.installer'
 
     contao.command.resize_images:

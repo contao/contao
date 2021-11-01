@@ -10,20 +10,22 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Doctrine\Dumper\Config;
+namespace Contao\CoreBundle\Doctrine\Backup\Config;
+
+use Contao\CoreBundle\Doctrine\Backup\Backup;
 
 abstract class AbstractConfig
 {
+    private Backup $backup;
     private array $tablesToIgnore = [];
-    private string $filePath;
     private bool $gzCompression;
 
-    public function __construct(string $filePath)
+    public function __construct(Backup $backup)
     {
-        $this->filePath = $filePath;
+        $this->backup = $backup;
 
         // Enable gz compression by default if path ends on .gz
-        $this->gzCompression = 0 === strcasecmp(substr($filePath, -3), '.gz');
+        $this->gzCompression = 0 === strcasecmp(substr($backup->getFilepath(), -3), '.gz');
     }
 
     public function getTablesToIgnore(): array
@@ -31,9 +33,9 @@ abstract class AbstractConfig
         return $this->tablesToIgnore;
     }
 
-    public function getFilePath(): string
+    public function getBackup(): Backup
     {
-        return $this->filePath;
+        return $this->backup;
     }
 
     public function isGzCompressionEnabled(): bool
