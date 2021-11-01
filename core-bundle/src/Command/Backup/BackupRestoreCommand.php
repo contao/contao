@@ -49,12 +49,25 @@ class BackupRestoreCommand extends AbstractBackupCommand
         try {
             $this->backupManager->restore($config);
         } catch (BackupManagerException $e) {
-            $io->error($e->getMessage());
+            if ($this->isJson($input)) {
+                $io->writeln(json_encode(['error' => $e->getMessage()]));
+            } else {
+                $io->error($e->getMessage());
+            }
 
             return 1;
         }
 
-        $io->success('Successfully restored backup.');
+        if ($this->isJson($input)) {
+            $io->writeln(json_encode($config->getBackup()->toArray()));
+
+            return 0;
+        }
+
+        $io->success(sprintf(
+            'Successfully restored backup from "%s".',
+            $config->getBackup()->getFilepath(),
+        ));
 
         return 0;
     }
