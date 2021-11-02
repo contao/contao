@@ -86,10 +86,10 @@ class BackupManager
 
         $backups = [];
         $files = Finder::create()
-            ->files() // TODO: depth == 0?
+            ->files()
             ->in($this->backupDir)
-            ->ignoreDotFiles(true)
-            ->ignoreVCS(true)
+            ->depth('== 0')
+            ->name(Backup::VALID_BACKUP_NAME_REGEX)
         ;
 
         foreach ($files as $file) {
@@ -98,7 +98,7 @@ class BackupManager
 
         uasort($backups, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
 
-        return $backups;
+        return array_values($backups);
     }
 
     /**
