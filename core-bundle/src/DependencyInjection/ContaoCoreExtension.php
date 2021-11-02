@@ -309,7 +309,7 @@ class ContaoCoreExtension extends Extension
         }
 
         $dbDumper = $container->getDefinition(BackupManager::class);
-        $dbDumper->replaceArgument(1, $config['backup']['backup_dir']);
+        $dbDumper->replaceArgument(1, $config['backup']['directory']);
         $dbDumper->replaceArgument(2, $config['backup']['ignore_tables']);
         $dbDumper->replaceArgument(3, $config['backup']['keep_max']);
     }

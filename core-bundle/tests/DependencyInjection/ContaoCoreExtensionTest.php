@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -320,6 +321,41 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
         $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+    }
+
+    public function testConfiguresTheBackupManagerCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
+        $definition = $container->getDefinition(BackupManager::class);
+
+        $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
+        $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(1));
+        $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(2));
+        $this->assertSame(5, $definition->getArgument(3));
+
+        $extension->load(
+            [
+                'contao' => [
+                    'backup' => [
+                        'directory' => 'somewhere/else',
+                        'ignore_tables' => ['foobar'],
+                        'keep_max' => 10,
+                    ],
+                ],
+            ],
+            $container
+        );
+
+        $definition = $container->getDefinition(BackupManager::class);
+
+        $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
+        $this->assertSame('somewhere/else', $definition->getArgument(1));
+        $this->assertSame(['foobar'], $definition->getArgument(2));
+        $this->assertSame(10, $definition->getArgument(3));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void
