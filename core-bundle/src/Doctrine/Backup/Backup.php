@@ -79,6 +79,7 @@ class Backup
      */
     private static function extractDatetime(string $filepath): \DateTimeInterface
     {
+        $filepath = basename($filepath);
         $chunks = explode('.', $filepath, 2); // Drops all extensions
         $chunks = explode('__', $chunks[0], 2);
 
