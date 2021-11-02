@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Backup;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
@@ -38,7 +39,7 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testCreateCreateConfig(): void
     {
-        $manager = new BackupManager($this->createMock(Connection::class), $this->getBackupDir(), ['foobar'], 5);
+        $manager = $this->getBackupManager();
 
         $config = $manager->createCreateConfig();
 
@@ -50,14 +51,14 @@ class BackupManagerTest extends ContaoTestCase
         $this->expectException(BackupManagerException::class);
         $this->expectExceptionMessage('No backups found.');
 
-        $manager = new BackupManager($this->createMock(Connection::class), $this->getBackupDir(), ['foobar'], 5);
+        $manager = $this->getBackupManager();
 
         $manager->createRestoreConfig();
     }
 
     public function testCreateRestoreConfig(): void
     {
-        $manager = new BackupManager($this->createMock(Connection::class), $this->getBackupDir(), ['foobar'], 5);
+        $manager = $this->getBackupManager();
 
         $backup = Backup::createNewAtPath($this->getBackupDir());
 
@@ -71,7 +72,7 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testListBackupsInCorrectOrder(): void
     {
-        $manager = new BackupManager($this->createMock(Connection::class), $this->getBackupDir(), ['foobar'], 5);
+        $manager = $this->getBackupManager();
 
         $backupPastWeek = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
         $backupNow = Backup::createNewAtPath($this->getBackupDir());
@@ -91,7 +92,7 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testIgnoresFilesThatAreNoBackups(): void
     {
-        $manager = new BackupManager($this->createMock(Connection::class), $this->getBackupDir(), ['foobar'], 5);
+        $manager = $this->getBackupManager();
 
         // Wrong file extension
         (new Filesystem())->dumpFile($this->getBackupDir().'/backup__20211101141254.zip', '');
@@ -105,5 +106,16 @@ class BackupManagerTest extends ContaoTestCase
     private function getBackupDir(): string
     {
         return Path::join($this->getTempDir(), 'backups');
+    }
+
+    private function getBackupManager(): BackupManager
+    {
+        return new BackupManager(
+            $this->createMock(Connection::class),
+            $this->createMock(DumperInterface::class),
+            $this->getBackupDir(),
+            ['foobar'],
+            5,
+        );
     }
 }

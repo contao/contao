@@ -309,9 +309,9 @@ class ContaoCoreExtension extends Extension
         }
 
         $dbDumper = $container->getDefinition(BackupManager::class);
-        $dbDumper->replaceArgument(1, $config['backup']['directory']);
-        $dbDumper->replaceArgument(2, $config['backup']['ignore_tables']);
-        $dbDumper->replaceArgument(3, $config['backup']['keep_max']);
+        $dbDumper->replaceArgument(2, $config['backup']['directory']);
+        $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
+        $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

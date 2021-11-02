@@ -268,9 +268,12 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+    Contao\CoreBundle\Doctrine\Backup\SlimDumpDumper: ~
+
     Contao\CoreBundle\Doctrine\Backup\BackupManager:
         arguments:
             - '@database_connection'
+            - '@Contao\CoreBundle\Doctrine\Backup\SlimDumpDumper'
             - '%kernel.project_dir%/var/backups' # Set by extension
             - ['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'] # Set by extension
             - 5 # Set by extension

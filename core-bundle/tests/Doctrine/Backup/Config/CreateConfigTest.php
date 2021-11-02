@@ -23,6 +23,7 @@ class CreateConfigTest extends TestCase
         $config = new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql'));
 
         $this->assertInstanceOf(Backup::class, $config->getBackup());
+        $this->assertSame(CreateConfig::DEFAULT_DUMP_HEADER, $config->getDumpHeader());
         $this->assertSame(104857600, $config->getBufferSize());
         $this->assertSame([], $config->getTablesToIgnore());
         $this->assertFalse($config->isGzCompressionEnabled());
