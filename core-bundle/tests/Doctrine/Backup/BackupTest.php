@@ -59,12 +59,26 @@ class BackupTest extends ContaoTestCase
         (new Filesystem())->remove($backup->getFilepath());
     }
 
-    public function testInvalidDatetimeFormat(): void
+    /**
+     * @dataProvider invalidFileNameProvider
+     */
+    public function testInvalidFileName(string $filepath): void
     {
         $this->expectException(BackupManagerException::class);
-        $this->expectExceptionMessage('Invalid datetime format on backup filename!');
+        $this->expectExceptionMessage(sprintf(
+            'The filepath "%s" does not match "%s"',
+            $filepath,
+            Backup::VALID_BACKUP_NAME_REGEX
+        ));
 
-        new Backup('valid_backup_filename__foobar.sql');
+        new Backup($filepath);
+    }
+
+    public function invalidFileNameProvider(): \Generator
+    {
+        yield 'Invalid file extension' => ['foobar__20211101141254.gif'];
+        yield 'Missing __' => ['foobar20211101141254.sql.gz'];
+        yield 'Error in datetime' => ['foobar__2021110114125.sql.gz'];
     }
 
     private function getValidBackupPath(): string

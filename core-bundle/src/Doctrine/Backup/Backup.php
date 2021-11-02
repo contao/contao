@@ -17,13 +17,14 @@ use Symfony\Component\Filesystem\Filesystem;
 class Backup
 {
     public const DATETIME_FORMAT = 'YmdHis';
+    public const VALID_BACKUP_NAME_REGEX = '@^.*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
 
     private string $filepath;
     private \DateTimeInterface $createdAt;
 
     public function __construct(string $filepath)
     {
-        $this->filepath = $filepath;
+        $this->filepath = self::validateFilePath($filepath);
         $this->createdAt = self::extractDatetime($filepath);
     }
 
@@ -53,10 +54,11 @@ class Backup
         return $this->createdAt;
     }
 
-    public static function createNewAtPath(string $targetPath): self
+    public static function createNewAtPath(string $targetPath, \DateTimeInterface $dateTime = null): self
     {
         $targetPath = rtrim($targetPath, '/');
-        $now = new \DateTime('now', new \DateTimeZone('UTC'));
+        $now = $dateTime ?? new \DateTime('now');
+        $now->setTimezone(new \DateTimeZone('UTC'));
         $filepath = sprintf('%s/backup__%s.sql.gz', $targetPath, $now->format(self::DATETIME_FORMAT));
 
         (new Filesystem())->dumpFile($filepath, '');
@@ -79,20 +81,19 @@ class Backup
      */
     private static function extractDatetime(string $filepath): \DateTimeInterface
     {
-        $filepath = basename($filepath);
-        $chunks = explode('.', $filepath, 2); // Drops all extensions
-        $chunks = explode('__', $chunks[0], 2);
+        preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);
 
-        if (2 !== \count($chunks)) {
-            throw new BackupManagerException('Invalid backup filename!');
+        // No need to check for false here because the regex does not allow a format that does not work
+        // PHP will even turn month 42 into a valid datetime
+        return \DateTime::createFromFormat(self::DATETIME_FORMAT, $matches[1], new \DateTimeZone('UTC'));
+    }
+
+    private static function validateFilePath(string $filepath): string
+    {
+        if (!preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath)) {
+            throw new BackupManagerException(sprintf('The filepath "%s" does not match "%s"', $filepath, self::VALID_BACKUP_NAME_REGEX));
         }
 
-        $datetime = \DateTime::createFromFormat(self::DATETIME_FORMAT, $chunks[1], new \DateTimeZone('UTC'));
-
-        if (!$datetime) {
-            throw new BackupManagerException('Invalid datetime format on backup filename!');
-        }
-
-        return $datetime;
+        return $filepath;
     }
 }
