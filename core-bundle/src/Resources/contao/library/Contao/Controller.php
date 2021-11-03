@@ -808,7 +808,8 @@ abstract class Controller extends System
 
 		$parser = System::getContainer()->get(InsertTagParser::class);
 
-		if ($blnCache) {
+		if ($blnCache)
+		{
 			return $parser->replace($strBuffer);
 		}
 
@@ -1577,7 +1578,7 @@ abstract class Controller extends System
 			return new Metadata(array(
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+				Metadata::VALUE_URL => System::getContainer()->get(InsertTagParser::class)->replaceInline($rowData['imageUrl'] ?? ''),
 				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
 			));
 		};

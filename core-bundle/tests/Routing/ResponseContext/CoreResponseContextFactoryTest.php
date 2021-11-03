@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
@@ -85,7 +87,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testContaoWebpageResponseContext(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+        System::setContainer($container);
 
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
@@ -135,7 +139,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+        System::setContainer($container);
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);

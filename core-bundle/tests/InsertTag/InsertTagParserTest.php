@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\InsertTag;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -49,7 +50,7 @@ class InsertTagParserTest extends TestCase
 
         $this->assertSame('<br>', $parser->render('br'));
 
-        $this->expectException('Rendering a single insert tag has to return a single raw chunk');
+        $this->expectExceptionMessage('Rendering a single insert tag has to return a single raw chunk');
 
         $parser->render('br}}foo{{br');
     }

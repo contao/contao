@@ -166,8 +166,14 @@ class ControllerTest extends TestCase
 
         // Prepare environment
         $insertTagParser = $this->createMock(InsertTagParser::class);
-        $insertTagParser->method('replaceInline')->willReturnArgument(0);
-        $insertTagParser->method('replace')->willReturnArgument(0);
+        $insertTagParser
+            ->method('replaceInline')
+            ->willReturnArgument(0)
+        ;
+        $insertTagParser
+            ->method('replace')
+            ->willReturnArgument(0)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set(Studio::class, $studio);
@@ -325,8 +331,14 @@ class ControllerTest extends TestCase
 
         // Prepare environment
         $insertTagParser = $this->createMock(InsertTagParser::class);
-        $insertTagParser->method('replaceInline')->willReturnArgument(0);
-        $insertTagParser->method('replace')->willReturnArgument(0);
+        $insertTagParser
+            ->method('replaceInline')
+            ->willReturnArgument(0)
+        ;
+        $insertTagParser
+            ->method('replace')
+            ->willReturnArgument(0)
+        ;
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set(Studio::class, $studio);

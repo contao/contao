@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\InsertTags;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class InsertTagRuntime implements RuntimeExtensionInterface
