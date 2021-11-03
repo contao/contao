@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
@@ -100,7 +101,15 @@ class Route404Provider implements RouteProviderInterface
 
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
-        $page->loadDetails();
+        try {
+            $page->loadDetails();
+
+            if (!$page->rootId) {
+                return;
+            }
+        } catch (NoRootPageFoundException $e) {
+            return;
+        }
 
         $defaults = [
             '_token_check' => true,
