@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 1,
+			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
 			'flag'                    => 1,
 			'panelLayout'             => 'filter;search,limit'

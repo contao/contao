@@ -330,10 +330,9 @@ abstract class Template extends Controller
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType);
 		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
-		$response->headers->set('Permissions-Policy', 'interest-cohort=()');
 
 		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
 		$response->headers->remove('Cache-Control');
 
 		return $response;
@@ -482,8 +481,21 @@ abstract class Template extends Controller
 	{
 		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
 
+		$basePath = '/';
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+		if ($request !== null)
+		{
+			$basePath = $request->getBasePath() . '/';
+		}
+
+		if (0 === strncmp($url, $basePath, \strlen($basePath)))
+		{
+			return substr($url, \strlen($basePath));
+		}
+
 		// Contao paths are relative to the <base> tag, so remove leading slashes
-		return ltrim($url, '/');
+		return $url;
 	}
 
 	/**
