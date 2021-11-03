@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Provides methodes to handle articles.
@@ -171,13 +172,15 @@ class ModuleArticle extends Module
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
+				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($this->title ?? ''));
 
 				if ($this->teaser)
 				{
-					$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($this->teaser));
+					$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($this->teaser));
 				}
 			}
 		}

@@ -15,6 +15,7 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -408,7 +409,7 @@ abstract class Template extends Controller
 	 */
 	public function rawPlainText(string $value, bool $removeInsertTags = false): string
 	{
-		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
+		return System::getContainer()->get(HtmlDecoder::class)->inputEncodedToPlainText($value, $removeInsertTags);
 	}
 
 	/**
@@ -423,7 +424,7 @@ abstract class Template extends Controller
 	 */
 	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
 	{
-		return StringUtil::htmlToPlainText($value, $removeInsertTags);
+		return System::getContainer()->get(HtmlDecoder::class)->htmlToPlainText($value, $removeInsertTags);
 	}
 
 	/**
