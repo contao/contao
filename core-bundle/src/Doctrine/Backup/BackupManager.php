@@ -151,9 +151,14 @@ class BackupManager
         // Ensure the target file exists and is empty
         (new Filesystem())->dumpFile($backup->getFilepath(), '');
 
-        $this->dumper->dump($this->connection, $config);
+        try {
+            $this->dumper->dump($this->connection, $config);
+            $this->tidyDirectory();
+        } catch (BackupManagerException $exception) {
+            (new Filesystem())->remove($backup->getFilepath());
 
-        $this->tidyDirectory();
+            throw $exception;
+        }
     }
 
     /**

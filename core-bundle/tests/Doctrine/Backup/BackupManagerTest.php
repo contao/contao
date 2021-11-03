@@ -141,6 +141,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $dumper = $this->createMock(DumperInterface::class);
         $dumper
+            ->expects($this->once())
             ->method('dump')
             ->with(
                 $connection,
@@ -153,6 +154,55 @@ class BackupManagerTest extends ContaoTestCase
         $config = $manager->createCreateConfig();
 
         $manager->create($config);
+    }
+
+    public function testDirectoryIsCleanedUpAfterSuccessfulCreate(): void
+    {
+        $dumper = $this->createMock(DumperInterface::class);
+        $dumper
+            ->expects($this->once())
+            ->method('dump')
+        ;
+        $manager = $this->getBackupManager($this->getConnection(true), $dumper);
+        $config = $manager->createCreateConfig();
+
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 days'));
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-3 days'));
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-4 days'));
+        $oldest = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
+
+        $manager->create($config);
+
+        $this->assertCount(5, $manager->listBackups());
+        $this->assertNotSame($oldest->getFilepath(), $manager->listBackups()[4]->getFilepath());
+    }
+
+    public function testDirectoryIsNotCleanedUpAfterUnsuccessfulCreate(): void
+    {
+        $dumper = $this->createMock(DumperInterface::class);
+        $dumper
+            ->expects($this->once())
+            ->method('dump')
+            ->willThrowException(new BackupManagerException('Error!'))
+        ;
+        $manager = $this->getBackupManager($this->getConnection(true), $dumper);
+        $config = $manager->createCreateConfig();
+
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 days'));
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-3 days'));
+        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-4 days'));
+        $oldest = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
+
+        try {
+            $manager->create($config);
+        } catch (BackupManagerException $exception) {
+            // irrelevant for this test
+        }
+
+        $this->assertCount(5, $manager->listBackups());
+        $this->assertSame($oldest->getFilepath(), $manager->listBackups()[4]->getFilepath());
     }
 
     private function getConnection(bool $autoCommitEnabled): Connection
