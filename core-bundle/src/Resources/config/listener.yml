@@ -158,9 +158,9 @@ services:
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
+            - '@Psr\Container\ContainerInterface'
             - '@contao.framework'
             - '@database_connection'
-            - '@Contao\CoreBundle\Cron\Cron'
             - '%fragment.path%'
         tags:
             - kernel.event_listener
@@ -194,6 +194,12 @@ services:
             - Contao\ContentProxy
         tags:
             - { name: contao.callback, table: tl_content, target: fields.customTpl.options }
+
+    Contao\CoreBundle\EventListener\InterestCohortListener:
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_listener
 
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
