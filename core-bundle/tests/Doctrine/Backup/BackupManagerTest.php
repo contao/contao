@@ -137,7 +137,7 @@ class BackupManagerTest extends ContaoTestCase
         $this->expectException(BackupManagerException::class);
         $this->expectExceptionMessage('Error!');
 
-        $connection = $this->getConnection(true);
+        $connection = $this->getConnection($autoCommitEnabled);
 
         $dumper = $this->createMock(DumperInterface::class);
         $dumper
