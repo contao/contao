@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,alias,language;{calendars_legend},calendars;{config_legend},format,source,maxItems,feedBase,description'
+		'default'                     => '{title_legend},title,alias,language;{calendars_legend},calendars;{config_legend},format,source,maxItems,feedBase,description,imgSize'
 	),
 
 	// Fields
@@ -212,7 +212,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
-		'imageSize' => array
+		'imgSize' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',

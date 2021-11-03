@@ -275,7 +275,7 @@ class Calendar extends Frontend
 					{
 						foreach ($event['media:content'] as $enclosure)
 						{
-							$objItem->addEnclosure($enclosure, $strLink, 'media:content', $arrFeed['imageSize']);
+							$objItem->addEnclosure($enclosure, $strLink, 'media:content', $arrFeed['imgSize']);
 						}
 					}
 
