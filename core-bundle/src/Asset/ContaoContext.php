@@ -52,14 +52,12 @@ class ContaoContext implements ContextInterface
 
     public function getBasePath(): string
     {
-        if ($this->debug) {
+        if (null === ($request = $this->requestStack->getMasterRequest())) {
             return '';
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request || '' === ($staticUrl = $this->getFieldValue($this->getPageModel()))) {
-            return '';
+        if ($this->debug || '' === ($staticUrl = $this->getFieldValue($this->getPageModel()))) {
+            return $request->getBasePath();
         }
 
         $protocol = $this->isSecure() ? 'https' : 'http';
@@ -76,7 +74,7 @@ class ContaoContext implements ContextInterface
             return (bool) $page->loadDetails()->rootUseSSL;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMasterRequest();
 
         if (null === $request) {
             return false;
@@ -99,7 +97,7 @@ class ContaoContext implements ContextInterface
 
     private function getPageModel(): ?PageModel
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMasterRequest();
 
         if (null === $request || !$request->attributes->has('pageModel')) {
             if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
