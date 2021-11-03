@@ -15,7 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
-use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
  * Front end module "newsletter reader".

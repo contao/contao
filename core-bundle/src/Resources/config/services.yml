@@ -904,6 +904,16 @@ services:
     Contao\CoreBundle\String\HtmlDecoder:
         public: true
 
+    Contao\CoreBundle\String\SimpleTokenExpressionLanguage:
+        arguments:
+            - ~
+            - !tagged_iterator contao.simple_token_extension
+
+    Contao\CoreBundle\String\SimpleTokenParser:
+        arguments:
+            - '@Contao\CoreBundle\String\SimpleTokenExpressionLanguage'
+        public: true
+
     contao.token_generator:
         class: Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator
         arguments:
@@ -990,8 +1000,16 @@ services:
         arguments:
             - ~
             - !tagged_iterator contao.simple_token_extension
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%service_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\String\SimpleTokenExpressionLanguage" instead.
 
     Contao\CoreBundle\Util\SimpleTokenParser:
         arguments:
             - '@Contao\CoreBundle\Util\SimpleTokenExpressionLanguage'
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%service_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\String\SimpleTokenParser" instead.
         public: true

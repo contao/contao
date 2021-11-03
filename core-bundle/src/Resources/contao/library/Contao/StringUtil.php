@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\String\HtmlDecoder;
-use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Webmozart\PathUtil\Path;
 
 /**
