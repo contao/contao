@@ -36,6 +36,7 @@ class ContentElementControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
+
         System::setContainer($this->container);
     }
 
@@ -254,8 +255,8 @@ class ContentElementControllerTest extends TestCase
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
 
         $currentRequest = new Request([], [], ['_scope' => 'frontend']);
-        $requestStack = $this->container->get('request_stack');
 
+        $requestStack = $this->container->get('request_stack');
         $requestStack->push(new Request()); // Main request
         $requestStack->push($currentRequest); // Sub request
 

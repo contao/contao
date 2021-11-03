@@ -86,8 +86,6 @@ abstract class AbstractFragmentController extends AbstractController implements 
     protected function createTemplate(Model $model, string $templateName): Template
     {
         $request = $this->get('request_stack')->getCurrentRequest();
-        $mainRequest = $this->get('request_stack')->getMasterRequest();
-        $templateClass = FragmentTemplate::class;
 
         if (isset($this->options['template'])) {
             $templateName = $this->options['template'];
@@ -100,9 +98,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
             }
         }
 
+        $templateClass = FragmentTemplate::class;
+
         // Current request is the main request (e.g. ESI fragment), so we have to replace
-        // insert tags etc. on the template output.
-        if ($request === $mainRequest) {
+        // insert tags etc. on the template output
+        if ($request === $this->get('request_stack')->getMasterRequest()) {
             $templateClass = FrontendTemplate::class;
         }
 
