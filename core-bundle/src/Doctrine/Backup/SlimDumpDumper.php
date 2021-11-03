@@ -34,8 +34,8 @@ class SlimDumpDumper implements DumperInterface
         $output->writeln('-- Generated at '.$backup->getCreatedAt()->format(\DateTimeInterface::ISO8601));
 
         try {
-            $dumptask = new DumpTask($connection, $this->createSlimDumpConfig($connection, $config), true, true, $config->getBufferSize(), $output);
-            $dumptask->dump();
+            $slimDumpConfig = $this->createSlimDumpConfig($connection, $config);
+            $this->doDump($connection, $slimDumpConfig, $config->getBufferSize(), $output);
         } catch (\Exception $e) {
             throw new BackupManagerException($e->getMessage(), 0, $e);
         }
@@ -45,6 +45,18 @@ class SlimDumpDumper implements DumperInterface
         }
 
         fclose($handle);
+    }
+
+    /**
+     * This is here and protected, so it can be easily mocked in unit tests as we don't want to test the outcome of
+     * the dump. That's the library's responsibility. We only need to check if the configuration is correct.
+     *
+     * @throws \Exception
+     */
+    protected function doDump(Connection $connection, Config $slimDumpConfig, int $bufferSize, OutputInterface $output): void
+    {
+        $dumpTask = new DumpTask($connection, $slimDumpConfig, true, true, $bufferSize, $output);
+        $dumpTask->dump();
     }
 
     private function createSlimDumpConfig(Connection $connection, CreateConfig $config): Config
