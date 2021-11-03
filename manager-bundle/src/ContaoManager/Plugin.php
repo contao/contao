@@ -31,9 +31,6 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\DBAL\DBALException as DoctrineDbalDbalException;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception as DoctrineDbalException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -63,16 +60,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      * @var string|null
      */
     private static $autoloadModules;
-
-    /**
-     * @var callable
-     */
-    private $dbalConnectionFactory;
-
-    public function __construct(callable $dbalConnectionFactory = null)
-    {
-        $this->dbalConnectionFactory = $dbalConnectionFactory ?: [DriverManager::class, 'getConnection'];
-    }
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -247,8 +234,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container, $extensionConfigs));
                 }
 
-                $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
-
                 return $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
 
             case 'swiftmailer':
@@ -286,53 +271,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'prepend_locale' => '%prepend_locale%',
         ];
-
-        return $extensionConfigs;
-    }
-
-    /**
-     * Adds the database server version to the Doctrine DBAL configuration.
-     *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
-     */
-    private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
-    {
-        $params = [];
-
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['dbal']['connections']['default'])) {
-                $params[] = $extensionConfig['dbal']['connections']['default'];
-            }
-        }
-
-        if (!empty($params)) {
-            $params = array_merge(...$params);
-        }
-
-        $parameterBag = $container->getParameterBag();
-
-        foreach ($params as $key => $value) {
-            $params[$key] = $parameterBag->unescapeValue($container->resolveEnvPlaceholders($value, true));
-        }
-
-        // If there are no DB credentials yet (install tool), we have to set
-        // the server version to prevent a DBAL exception (see #1422)
-        try {
-            $connection = \call_user_func($this->dbalConnectionFactory, $params);
-            $connection->connect();
-            $connection->query('SHOW TABLES');
-            $connection->close();
-        } catch (DoctrineDbalException | DoctrineDbalDbalException | \mysqli_sql_exception $e) {
-            $extensionConfigs[] = [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ];
-        }
 
         return $extensionConfigs;
     }
