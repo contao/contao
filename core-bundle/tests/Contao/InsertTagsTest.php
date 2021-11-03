@@ -248,6 +248,21 @@ class InsertTagsTest extends TestCase
             '<span title="" &quot;>',
         ];
 
+        yield 'Link URL back backwards compatibility' => [
+            '<a href="{{link_url::back}}">',
+            '<a href="javascript:history.go(-1)">',
+        ];
+
+        yield 'Trick link URL back' => [
+            '<a href="{{link_url::back}},alert(1)">',
+            '<a href="javascript%3Ahistory.go(-1),alert(1)">',
+        ];
+
+        yield 'Trick link URL back without quotes' => [
+            '<a href={{link_url::back}}>',
+            '<a href=javascript%3Ahistory.go(-1)>',
+        ];
+
         yield 'Trick tag detection' => [
             '<span title=">" class=\'{{plain::"}}\'>',
             '<span title=">" class=\'&quot;\'>',

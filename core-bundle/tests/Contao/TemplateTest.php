@@ -20,6 +20,8 @@ use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\VarDumper\VarDumper;
 use Webmozart\PathUtil\Path;
 
@@ -214,7 +216,7 @@ class TemplateTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    public function testLoadsTheAssetsPackages(): void
+    public function testStripsLeadingSlashFromAssetUrl(): void
     {
         $packages = $this->createMock(Packages::class);
         $packages
@@ -226,11 +228,73 @@ class TemplateTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('assets.packages', $packages);
+        $container->set('request_stack', new RequestStack());
 
         System::setContainer($container);
 
         $template = new FrontendTemplate();
-        $template->asset('/path/to/asset', 'package_name');
+        $url = $template->asset('/path/to/asset', 'package_name');
+
+        $this->assertSame('path/to/asset', $url);
+    }
+
+    public function testStripsTheBasePathFromAssetUrl(): void
+    {
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->expects($this->once())
+            ->method('getUrl')
+            ->with('/path/to/asset', 'package_name')
+            ->willReturn('/foo/path/to/asset')
+        ;
+
+        $request = Request::create(
+            'https://example.com/foo/index.php',
+            'GET',
+            [],
+            [],
+            [],
+            [
+                'SCRIPT_FILENAME' => '/foo/index.php',
+                'SCRIPT_NAME' => '/foo/index.php',
+            ]
+        );
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('assets.packages', $packages);
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
+
+        $template = new FrontendTemplate();
+        $url = $template->asset('/path/to/asset', 'package_name');
+
+        $this->assertSame('path/to/asset', $url);
+    }
+
+    public function testDoesNotModifyAbsoluteAssetUrl(): void
+    {
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->expects($this->once())
+            ->method('getUrl')
+            ->with('/path/to/asset', 'package_name')
+            ->willReturn('https://cdn.example.com/path/to/asset')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('assets.packages', $packages);
+        $container->set('request_stack', new RequestStack());
+
+        System::setContainer($container);
+
+        $template = new FrontendTemplate();
+        $url = $template->asset('/path/to/asset', 'package_name');
+
+        $this->assertSame('https://cdn.example.com/path/to/asset', $url);
     }
 
     public function testCanDumpTemplateVars(): void

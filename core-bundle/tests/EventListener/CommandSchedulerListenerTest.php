@@ -22,6 +22,7 @@ use Doctrine\DBAL\Driver\Mysqli\MysqliException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -38,7 +39,14 @@ class CommandSchedulerListenerTest extends TestCase
             ->with(Cron::SCOPE_WEB)
         ;
 
-        $listener = new CommandSchedulerListener($this->mockContaoFramework(), $this->mockConnection(), $cron);
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->method('get')
+            ->with(Cron::class)
+            ->willReturn($cron)
+        ;
+
+        $listener = new CommandSchedulerListener($locator, $this->mockContaoFramework(), $this->mockConnection());
         $listener($this->getTerminateEvent('contao_frontend'));
     }
 
@@ -55,7 +63,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('getAdapter')
         ;
 
-        $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
+        $listener = new CommandSchedulerListener($this->createMock(ContainerInterface::class), $framework, $this->mockConnection());
         $listener($this->getTerminateEvent('contao_backend'));
     }
 
@@ -78,7 +86,7 @@ class CommandSchedulerListenerTest extends TestCase
 
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
-        $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
+        $listener = new CommandSchedulerListener($this->createMock(ContainerInterface::class), $framework, $this->mockConnection());
         $listener($event);
     }
 
@@ -101,7 +109,7 @@ class CommandSchedulerListenerTest extends TestCase
 
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
 
-        $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
+        $listener = new CommandSchedulerListener($this->createMock(ContainerInterface::class), $framework, $this->mockConnection());
         $listener($event);
     }
 
@@ -124,7 +132,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
+        $listener = new CommandSchedulerListener($this->createMock(ContainerInterface::class), $framework, $this->mockConnection());
         $listener($this->getTerminateEvent('contao_backend'));
     }
 
@@ -148,7 +156,7 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $listener = new CommandSchedulerListener($framework, $this->mockConnection(), $this->createMock(Cron::class));
+        $listener = new CommandSchedulerListener($this->createMock(ContainerInterface::class), $framework, $this->mockConnection());
         $listener($this->getTerminateEvent('contao_frontend'));
     }
 
@@ -166,13 +174,20 @@ class CommandSchedulerListenerTest extends TestCase
             ->method('run')
         ;
 
+        $locator = $this->createMock(ContainerInterface::class);
+        $locator
+            ->method('get')
+            ->with(Cron::class)
+            ->willReturn($cron)
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('isConnected')
             ->willThrowException(new DriverException('Could not connect', new MysqliException('Invalid password')))
         ;
 
-        $listener = new CommandSchedulerListener($framework, $connection, $cron);
+        $listener = new CommandSchedulerListener($locator, $framework, $connection);
         $listener($this->getTerminateEvent('contao_backend'));
     }
 

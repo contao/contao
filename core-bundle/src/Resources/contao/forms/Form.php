@@ -402,7 +402,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = $this->replaceInsertTags($this->subject, false);
+				$email->subject = html_entity_decode($this->replaceInsertTags($this->subject, false), ENT_QUOTES, 'UTF-8');
 			}
 
 			// Send copy to sender
@@ -511,6 +511,9 @@ class Form extends Hybrid
 					$arrSet = $this->{$callback[0]}->{$callback[1]}($arrSet, $this);
 				}
 			}
+
+			// Load DataContainer of target table before trying to determine empty value (see #3499)
+			Controller::loadDataContainer($this->targetTable);
 
 			// Set the correct empty value (see #6284, #6373)
 			foreach ($arrSet as $k=>$v)

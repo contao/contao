@@ -2,6 +2,40 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.3] (2021-10-20)
+
+**Fixed issues:**
+
+- [#3560] Harden the template locator against failing DB connections ([m-vo])
+- [#3583] Fix the regex for the static URL fields ([leofeyer])
+- [#3576] Do not boot the Contao framework during cache warmup ([m-vo])
+- [#3559] Do not throw an exception if a theme path contains an underscore ([m-vo])
+- [#3577] Handle invalid accept-language headers ([leofeyer])
+- [#3574] Correctly format the locale for legacy requests ([aschempp])
+- [#3552] Always set the _locale attribute from the page language ([aschempp])
+
+## [4.12.2] (2021-10-05)
+
+**Fixed issues:**
+
+- [#3544] Only add regular pages to the sitemap ([leofeyer])
+- [#3536] Fix the Figure BC layer for the link title attribute ([m-vo])
+- [#3537] Harden more time-sensitive tests ([m-vo])
+- [#3520] Remove incomplete translations ([leofeyer])
+- [#3509] Unset the noComments field if the comments bundle is not installed ([leofeyer])
+- [#3456] Set memory limit for sub-processes when running contao-setup ([m-vo])
+- [#3478] Hide the captcha legend in the registration module ([leofeyer])
+- [#3414] Improve the Twig theme path handling ([m-vo])
+- [#3446] Fix user permissions for custom page controllers ([aschempp])
+- [#3449] Handle invalid array access in tl_page ([m-vo])
+- [#3440] Convert languages outside the sorting callback ([aschempp])
+- [#3432] Make the "guests only" deprecation messages more clear ([leofeyer])
+- [#3408] Handle another illegal array access on empty labels ([m-vo])
+- [#3410] Use PHP functions to modify query strings ([leofeyer])
+- [#3406] Remove the "generateSitemap" cronjob ([fritzmg])
+- [#3396] Evaluate robots setting for sitemap ([fritzmg])
+- [#3404] Fix simple token parsing in HTML ([ausi])
+
 ## [4.12.1] (2021-08-25)
 
 **Fixed issues:**
@@ -133,6 +167,8 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.3]: https://github.com/contao/contao/releases/tag/4.12.3
+[4.12.2]: https://github.com/contao/contao/releases/tag/4.12.2
 [4.12.1]: https://github.com/contao/contao/releases/tag/4.12.1
 [4.12.0]: https://github.com/contao/contao/releases/tag/4.12.0
 [4.12.0-RC3]: https://github.com/contao/contao/releases/tag/4.12.0-RC3
@@ -151,6 +187,30 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [qzminski]: https://github.com/qzminski
 [Toflar]: https://github.com/Toflar
+[#3560]: https://github.com/contao/contao/pull/3560
+[#3583]: https://github.com/contao/contao/pull/3583
+[#3576]: https://github.com/contao/contao/pull/3576
+[#3559]: https://github.com/contao/contao/pull/3559
+[#3577]: https://github.com/contao/contao/pull/3577
+[#3574]: https://github.com/contao/contao/pull/3574
+[#3552]: https://github.com/contao/contao/pull/3552
+[#3544]: https://github.com/contao/contao/pull/3544
+[#3536]: https://github.com/contao/contao/pull/3536
+[#3537]: https://github.com/contao/contao/pull/3537
+[#3520]: https://github.com/contao/contao/pull/3520
+[#3509]: https://github.com/contao/contao/pull/3509
+[#3456]: https://github.com/contao/contao/pull/3456
+[#3478]: https://github.com/contao/contao/pull/3478
+[#3414]: https://github.com/contao/contao/pull/3414
+[#3446]: https://github.com/contao/contao/pull/3446
+[#3449]: https://github.com/contao/contao/pull/3449
+[#3440]: https://github.com/contao/contao/pull/3440
+[#3432]: https://github.com/contao/contao/pull/3432
+[#3408]: https://github.com/contao/contao/pull/3408
+[#3410]: https://github.com/contao/contao/pull/3410
+[#3406]: https://github.com/contao/contao/pull/3406
+[#3396]: https://github.com/contao/contao/pull/3396
+[#3404]: https://github.com/contao/contao/pull/3404
 [#3362]: https://github.com/contao/contao/pull/3362
 [#3380]: https://github.com/contao/contao/pull/3380
 [#3378]: https://github.com/contao/contao/pull/3378

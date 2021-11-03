@@ -419,7 +419,7 @@ class tl_image_size extends Backend
 			return $formats;
 		}
 
-		return array_merge($formats, array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif'));
+		return array_merge($formats, array('png:webp,png', 'jpg:webp,jpg;jpeg:webp,jpeg', 'gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg'));
 	}
 
 	/**

@@ -382,7 +382,6 @@ class ModuleEventlist extends Events
 						$figure = $figureBuilder
 							->setLinkHref($event['href'])
 							->setLinkAttribute('title', $objTemplate->readMore)
-							->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
 							->build();
 					}
 

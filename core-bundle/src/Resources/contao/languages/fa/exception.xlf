@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="XPT.errorFixOne">
         <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>پرونده لاگ فعلی را در دایرکتوری &lt;code&gt;var/logs&lt;/code&gt; را باز کنید و پیغام خطای مربوطه را پیدا کنید (معمولا آخرین مورد).</target>
       </trans-unit>
       <trans-unit id="XPT.errorExplain">
         <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>اجرای اسکریپت متوقف شد، زیرا به درستی کار نمی‌کند. پیغام خطای واقعی با این یاداشت برای دلایل امنیتی پنهان شده است و می‌توان آن را در پرونده لاگ جاری (بالا را ببینید) مشاهده کرد. اگر نمی‌توانید پیغام خطا را درک کنید و یا نمی‌دانید چطور مشکل را رفع کنید، &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;سوالات متداول کنتائو&lt;/a&gt; را جستجو کنید یا &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;برگه پشتیبانی کنتائو&lt;/a&gt; را ببینید.</target>
       </trans-unit>
       <trans-unit id="XPT.requestToken">
         <source>Invalid request token</source>
@@ -49,6 +51,7 @@
       </trans-unit>
       <trans-unit id="XPT.tokenExplainTwo">
         <source>For more information, search the &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; or visit the &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>برای اطلاعات بیشتر &lt;a href=&quot;https://contao.org/en/frequently-asked.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao FAQs&lt;/a&gt; را جستجو کنید و یا &lt;a href=&quot;https://contao.org/en/support.html&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;برگه پشتیبانی کنتائو&lt;/a&gt; را ببینید.</target>
       </trans-unit>
       <trans-unit id="XPT.unavailable">
         <source>Service unavailable</source>
@@ -64,12 +67,15 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.matter">
         <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>نشانی URL نمی‌تواند تولید شود، زیرا مسیر پارامترهای اجباری دارد که داده نشده‌اند. اطلاعات بیشتر (مانند نام مستعر خبر) باید فراهم شود.</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.explain">
         <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>مسیرهای Symfony می‌تواند پارامترهای متغیری داشته باشد که با استفاده از عبارات باقاعده تایید می‌شوند. تنظیمات ذیل نمی‌توانند حل شوند:</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.path">
         <source>Route path</source>
+        <target>تعیین کردن مسیر</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterName">
         <source>Name</source>

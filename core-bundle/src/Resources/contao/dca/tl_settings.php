@@ -121,11 +121,32 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 				static function ($strValue)
 				{
 					$arrValue = StringUtil::deserialize($strValue, true);
+					$arrAllowedAttributes = array();
 
 					foreach ($arrValue as $intIndex => $arrRow)
 					{
-						$arrValue[$intIndex]['key'] = strtolower($arrRow['key']);
-						$arrValue[$intIndex]['value'] = strtolower($arrRow['value']);
+						foreach (StringUtil::trimsplit(',', strtolower($arrRow['key'])) as $strKey)
+						{
+							$arrAllowedAttributes[$strKey] = array_merge(
+								$arrAllowedAttributes[$strKey] ?? array(),
+								StringUtil::trimsplit(',', strtolower($arrRow['value']))
+							);
+
+							$arrAllowedAttributes[$strKey] = array_filter(array_unique($arrAllowedAttributes[$strKey]));
+							sort($arrAllowedAttributes[$strKey]);
+						}
+					}
+
+					ksort($arrAllowedAttributes);
+					$arrValue = array();
+
+					foreach ($arrAllowedAttributes as $strTag => $arrAttributes)
+					{
+						$arrValue[] = array
+						(
+							'key' => $strTag,
+							'value' => implode(',', $arrAttributes),
+						);
 					}
 
 					return serialize($arrValue);

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\Matcher;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
@@ -75,7 +76,7 @@ class LegacyMatcher implements RequestMatcherInterface
         try {
             $match = $this->requestMatcher->matchRequest($request);
             $fragments = $this->createFragmentsFromMatch($match);
-            $locale = $match['_locale'] ?? null;
+            $locale = isset($match['_locale']) ? LocaleUtil::formatAsLanguageTag($match['_locale']) : null;
         } catch (ResourceNotFoundException $e) {
             // continue and parse fragments from path
         }

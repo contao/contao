@@ -268,6 +268,12 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+    Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer:
+        decorates: doctrine.orm.proxy_cache_warmer
+        arguments:
+            - '@Contao\CoreBundle\Doctrine\ORM\FailTolerantProxyCacheWarmer.inner'
+            - '@database_connection'
+
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
         arguments:
@@ -929,7 +935,7 @@ services:
             - '%kernel.bundles%'
             - '%kernel.bundles_metadata%'
             - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
-            - '@contao.framework'
+            - '@database_connection'
 
     Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
         arguments:

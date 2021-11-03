@@ -775,7 +775,7 @@ abstract class Widget extends Controller
 		}
 
 		// Support arrays (thanks to Andreas Schempp)
-		$arrParts = explode('[', str_replace(']', '', $strKey));
+		$arrParts = explode('[', str_replace(']', '', (string) $strKey));
 		$varValue = Input::$strMethod(array_shift($arrParts), $this->decodeEntities);
 
 		foreach ($arrParts as $part)
@@ -1294,7 +1294,16 @@ abstract class Widget extends Controller
 			}
 		}
 
-		$arrAttributes['allowHtml'] = (($arrData['eval']['allowHtml'] ?? null) || ($arrData['eval']['rte'] ?? null) || ($arrData['eval']['preserveTags'] ?? null));
+		if (!empty($arrData['eval']['preserveTags']))
+		{
+			$arrAttributes['allowHtml'] = true;
+		}
+
+		if (!isset($arrAttributes['allowHtml']))
+		{
+			$rte = $arrData['eval']['rte'] ?? '';
+			$arrAttributes['allowHtml'] = 'ace|html' === $rte || 0 === strpos($rte, 'tiny');
+		}
 
 		// Decode entities if HTML is allowed
 		if ($arrAttributes['allowHtml'] || ($arrData['inputType'] ?? null) == 'fileTree')

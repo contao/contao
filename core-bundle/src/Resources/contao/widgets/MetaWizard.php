@@ -138,12 +138,11 @@ class MetaWizard extends Widget
 			return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';
 		}
 
-		$languages = System::getContainer()->get(Locales::class)->getDisplayNames(array_keys($this->varValue));
-
 		// Add the existing entries
 		if (!empty($this->varValue))
 		{
 			$return = '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">';
+			$languages = System::getContainer()->get(Locales::class)->getDisplayNames(array_keys($this->varValue));
 
 			// Add the input fields
 			foreach ($this->varValue as $lang=>$meta)
