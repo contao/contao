@@ -65,6 +65,12 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
         }
     }
 
+    /**
+     * Lazy-load services to prevent issues with MySQL server_version.
+     * @see https://github.com/contao/contao/pull/3623
+     *
+     * @return string[]
+     */
     public static function getSubscribedServices(): array
     {
         return [Cron::class];
