@@ -172,12 +172,12 @@ class BackupManager
             throw new BackupManagerException(sprintf('Dump does not exist at "%s".', $backup->getFilepath()));
         }
 
-        $handle = $config->isGzCompressionEnabled() ? gzopen($backup->getFilepath(), 'r') : fopen($backup->getFilePath(), 'r');
+        $handle = gzopen($backup->getFilepath(), 'r');
 
         $currentQuery = '';
         $checkedForHeader = $config->ignoreOriginCheck();
 
-        while ($line = $config->isGzCompressionEnabled() ? gzgets($handle) : fgets($handle)) {
+        while ($line = gzgets($handle)) {
             $line = trim($line);
 
             if (!$checkedForHeader) {
