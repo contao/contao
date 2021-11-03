@@ -30,28 +30,16 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
     /**
      * @var ContainerInterface
      */
-    private $locator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private $container;
 
     /**
      * @var string
      */
     private $fragmentPath;
 
-    public function __construct(ContainerInterface $locator, ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
+    public function __construct(ContainerInterface $container, string $fragmentPath = '_fragment')
     {
-        $this->locator = $locator;
-        $this->framework = $framework;
-        $this->connection = $connection;
+        $this->container = $container;
         $this->fragmentPath = $fragmentPath;
     }
 
@@ -60,14 +48,24 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
      */
     public function __invoke(TerminateEvent $event): void
     {
-        if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->locator->get(Cron::class)->run(Cron::SCOPE_WEB);
+        if ($this->container->get(ContaoFramework::class)->isInitialized() && $this->canRunCron($event->getRequest())) {
+            $this->container->get(Cron::class)->run(Cron::SCOPE_WEB);
         }
     }
 
+    /**
+     * Lazy-load services to prevent issues with MySQL server_version.
+     * @see https://github.com/contao/contao/pull/3623
+     *
+     * @return string[]
+     */
     public static function getSubscribedServices(): array
     {
-        return [Cron::class];
+        return [
+            ContaoFramework::class,
+            Connection::class,
+            Cron::class
+        ];
     }
 
     private function canRunCron(Request $request): bool
@@ -80,7 +78,7 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
         }
 
         /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
+        $config = $this->container->get(ContaoFramework::class)->getAdapter(Config::class);
 
         return $config->isComplete() && !$config->get('disableCron') && $this->canRunDbQuery();
     }
@@ -91,8 +89,8 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
     private function canRunDbQuery(): bool
     {
         try {
-            return $this->connection->isConnected()
-                && $this->connection->getSchemaManager()->tablesExist(['tl_cron_job']);
+            return $this->container->get(Connection::class)->isConnected()
+                && $this->container->get(Connection::class)->getSchemaManager()->tablesExist(['tl_cron_job']);
         } catch (DriverException $e) {
             return false;
         }

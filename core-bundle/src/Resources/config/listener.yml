@@ -85,8 +85,6 @@ services:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - '@Psr\Container\ContainerInterface'
-            - '@contao.framework'
-            - '@database_connection'
             - '%fragment.path%'
         tags:
             - kernel.event_listener
