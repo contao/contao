@@ -288,6 +288,13 @@ class PluginTest extends ContaoTestCase
         $this->assertSame(
             [
                 'dot-env' => [
+                    'APP_SECRET',
+                    'APP_ENV',
+                    'COOKIE_WHITELIST',
+                    'DATABASE_URL',
+                    'DISABLE_HTTP_CACHE',
+                    'MAILER_URL',
+                    'TRACE_LEVEL',
                     'TRUSTED_PROXIES',
                     'TRUSTED_HOSTS',
                 ],
