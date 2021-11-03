@@ -145,14 +145,7 @@ class BackendTemplate extends Template
 		// MooTools scripts (added at the page bottom)
 		if (!empty($GLOBALS['TL_MOOTOOLS']) && \is_array($GLOBALS['TL_MOOTOOLS']))
 		{
-			$strMootools = '';
-
-			foreach (array_unique($GLOBALS['TL_MOOTOOLS']) as $script)
-			{
-				$strMootools .= $script;
-			}
-
-			$this->mootools .= $strMootools;
+			$this->mootools .= implode('', array_unique($GLOBALS['TL_MOOTOOLS']));
 		}
 
 		$strBuffer = $this->parse();

@@ -31,7 +31,7 @@ class HtmlDecoder
         if ($removeInsertTags) {
             $val = StringUtil::stripInsertTags($val);
         } else {
-            $val = (new InsertTags())->replace($val, false);
+            $val = (string) (new InsertTags())->replace($val, false);
         }
 
         $val = strip_tags($val);
@@ -52,7 +52,7 @@ class HtmlDecoder
     public function htmlToPlainText(string $val, bool $removeInsertTags = false): string
     {
         if (!$removeInsertTags) {
-            $val = (new InsertTags())->replace($val, false);
+            $val = (string) (new InsertTags())->replace($val, false);
         }
 
         // Add new lines before and after block level elements
