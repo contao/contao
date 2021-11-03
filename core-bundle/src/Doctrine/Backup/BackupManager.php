@@ -134,10 +134,10 @@ class BackupManager
             throw $e;
         } catch (\Throwable $t) {
             throw new BackupManagerException($t->getMessage(), 0, $t);
-        }
-
-        if ($isAutoCommit) {
-            $this->connection->setAutoCommit(true);
+        } finally {
+            if ($isAutoCommit) {
+                $this->connection->setAutoCommit(true);
+            }
         }
     }
 

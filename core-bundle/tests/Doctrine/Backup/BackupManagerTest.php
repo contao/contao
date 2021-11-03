@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Doctrine\Backup;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
@@ -103,16 +104,102 @@ class BackupManagerTest extends ContaoTestCase
         $this->assertCount(0, $manager->listBackups());
     }
 
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testSuccessfulCreate(bool $autoCommitEnabled): void
+    {
+        $connection = $this->getConnection($autoCommitEnabled);
+
+        $dumper = $this->createMock(DumperInterface::class);
+        $dumper
+            ->expects($this->once())
+            ->method('dump')
+            ->with(
+                $connection,
+                $this->isInstanceOf(CreateConfig::class)
+            )
+        ;
+
+        $manager = $this->getBackupManager($connection, $dumper);
+        $config = $manager->createCreateConfig();
+
+        $manager->create($config);
+    }
+
+    /**
+     * @testWith [true]
+     *           [false]
+     */
+    public function testUnsuccessfulCreate(bool $autoCommitEnabled): void
+    {
+        $this->expectException(BackupManagerException::class);
+        $this->expectExceptionMessage('Error!');
+
+        $connection = $this->getConnection(true);
+
+        $dumper = $this->createMock(DumperInterface::class);
+        $dumper
+            ->method('dump')
+            ->with(
+                $connection,
+                $this->isInstanceOf(CreateConfig::class)
+            )
+            ->willThrowException(new BackupManagerException('Error!'))
+        ;
+
+        $manager = $this->getBackupManager($connection, $dumper);
+        $config = $manager->createCreateConfig();
+
+        $manager->create($config);
+    }
+
+    private function getConnection(bool $autoCommitEnabled): Connection
+    {
+        $connection = $this->getMockBuilder(Connection::class);
+        $connection = $connection
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->setMethodsExcept(['transactional'])
+            ->getMock()
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('isAutoCommit')
+            ->willReturn($autoCommitEnabled)
+        ;
+
+        if ($autoCommitEnabled) {
+            $connection
+                ->expects($this->exactly(2))
+                ->method('setAutoCommit')
+                ->withConsecutive(
+                    [false],
+                    [true],
+                )
+            ;
+        }
+
+        return $connection;
+    }
+
     private function getBackupDir(): string
     {
         return Path::join($this->getTempDir(), 'backups');
     }
 
-    private function getBackupManager(): BackupManager
+    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null): BackupManager
     {
+        $connection = $connection ?? $this->createMock(Connection::class);
+        $dumper = $dumper ?? $this->createMock(DumperInterface::class);
+
         return new BackupManager(
-            $this->createMock(Connection::class),
-            $this->createMock(DumperInterface::class),
+            $connection,
+            $dumper,
             $this->getBackupDir(),
             ['foobar'],
             5,
