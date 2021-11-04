@@ -354,7 +354,7 @@ abstract class Events extends Module
 			};
 		}
 
-		// Get todays start and end timestamp
+		// Get today's start and end timestamp
 		if ($this->intTodayBegin === null)
 		{
 			$this->intTodayBegin = strtotime('00:00:00');

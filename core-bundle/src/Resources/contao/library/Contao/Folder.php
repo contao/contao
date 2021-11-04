@@ -556,8 +556,6 @@ class Folder extends System
 	 */
 	public static function scan($strFolder, $blnUncached=false): array
 	{
-		static::$arrScanCache;
-
 		// Add a trailing slash
 		if (substr($strFolder, -1, 1) != '/')
 		{
@@ -565,9 +563,9 @@ class Folder extends System
 		}
 
 		// Load from cache
-		if (!$blnUncached && isset($arrScanCache[$strFolder]))
+		if (!$blnUncached && isset(self::$arrScanCache[$strFolder]))
 		{
-			return $arrScanCache[$strFolder];
+			return self::$arrScanCache[$strFolder];
 		}
 
 		$arrReturn = array();
@@ -586,7 +584,7 @@ class Folder extends System
 		// Cache the result
 		if (!$blnUncached)
 		{
-			$arrScanCache[$strFolder] = $arrReturn;
+			self::$arrScanCache[$strFolder] = $arrReturn;
 		}
 
 		return $arrReturn;

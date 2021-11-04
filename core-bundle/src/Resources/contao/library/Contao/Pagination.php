@@ -11,7 +11,7 @@
 namespace Contao;
 
 /**
- * Provide methodes to render a pagination menu.
+ * Provide methods to render a pagination menu.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -96,7 +96,7 @@ class Pagination
 	protected $strUrl = '';
 
 	/**
-	 * Page paramenter
+	 * Page parameter
 	 * @var string
 	 */
 	protected $strParameter = 'page';

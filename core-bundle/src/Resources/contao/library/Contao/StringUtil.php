@@ -112,7 +112,7 @@ class StringUtil
 		$strString = strip_tags($strString, Config::get('allowedTags'));
 		$strString = preg_replace('/ +/', ' ', $strString);
 
-		// Seperate tags and text
+		// Separate tags and text
 		$arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		for ($i=0, $c=\count($arrChunks); $i<$c; $i++)

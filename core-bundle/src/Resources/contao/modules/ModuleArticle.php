@@ -15,7 +15,7 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
- * Provides methodes to handle articles.
+ * Provides methods to handle articles.
  *
  * @property integer $tstamp
  * @property string  $title
