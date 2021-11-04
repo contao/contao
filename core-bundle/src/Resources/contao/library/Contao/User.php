@@ -455,10 +455,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * @return User
 	 *
 	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use Contao\User::loadUserByIdentifier() instead.
 	 */
 	public static function loadUserByUsername($username)
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use Contao\User::loadUserByIdentifier() instead.');
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::loadUserByIdentifier()" instead.');
 
 		return self::loadUserByIdentifier($username);
 	}
@@ -507,10 +508,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * {@inheritdoc}
 	 *
 	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use Contao\User::getUserIdentifier() instead.
 	 */
 	public function getUsername()
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::getUsername()" has been deprecated and will no longer work in Contao 5.0. Use Contao\User::getUserIdentifier() instead.');
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::getUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::getUserIdentifier()" instead.');
 
 		return $this->getUserIdentifier();
 	}
