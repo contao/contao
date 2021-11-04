@@ -4398,7 +4398,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$return .= '
 
-	<ul id="ul_' . CURRENT_ID . '">';
+<ul id="ul_' . CURRENT_ID . '">';
 				}
 
 				for ($i=0, $c=\count($row); $i<$c; $i++)
@@ -4420,7 +4420,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($blnHasSorting)
 					{
 						$return .= '
-	<li id="li_' . $row[$i]['id'] . '">';
+<li id="li_' . $row[$i]['id'] . '">';
 					}
 
 					// Add the group header
@@ -4450,8 +4450,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					$return .= '
-	<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
-	<div class="tl_content_right">';
+<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
+<div class="tl_content_right">';
 
 					// Opening wrappers
 					if ($blnWrapperStart && ++$intWrapLevel > 0)
@@ -4532,7 +4532,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($blnHasSorting)
 					{
 						$return .= '
-	</li>';
+</li>';
 					}
 				}
 		}
