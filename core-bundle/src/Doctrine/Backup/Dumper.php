@@ -27,7 +27,7 @@ class Dumper implements DumperInterface
     private $fileHandle;
 
     /**
-     * @var resource|null
+     * @var \DeflateContext|false|null
      */
     private $deflateContext;
 
