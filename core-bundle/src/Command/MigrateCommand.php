@@ -121,7 +121,7 @@ class MigrateCommand extends Command
             return 1;
         }
 
-        if (!$dryRun && !$this->executeMigrations($dryRun, $asJson)) {
+        if (!$dryRun && !$this->executeMigrations(false, $asJson)) {
             return 1;
         }
 
