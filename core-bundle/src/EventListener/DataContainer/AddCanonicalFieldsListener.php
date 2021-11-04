@@ -32,6 +32,10 @@ class AddCanonicalFieldsListener
 
     public function __invoke(DataContainer $dc): void
     {
+        if (!$dc->id) {
+            return;
+        }
+
         /** @var PageModel $pageModel */
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
         $page = $pageModel->findWithDetails($dc->id);
@@ -41,8 +45,9 @@ class AddCanonicalFieldsListener
         }
 
         PaletteManipulator::create()
-            ->addField('canonicalKeepParams', 'serpPreview')
-            ->addField('canonicalLink', 'serpPreview')
+            ->addLegend('canonical_legend', 'meta_legend', PaletteManipulator::POSITION_AFTER, true)
+            ->addField('canonicalLink', 'canonical_legend', PaletteManipulator::POSITION_APPEND)
+            ->addField('canonicalKeepParams', 'canonical_legend', PaletteManipulator::POSITION_APPEND)
             ->applyToPalette('regular', 'tl_page')
         ;
     }

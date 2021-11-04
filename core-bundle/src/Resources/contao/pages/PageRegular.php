@@ -79,9 +79,10 @@ class PageRegular extends Frontend
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
 
 		$container = System::getContainer();
+		$container->get('translator')->setLocale($locale);
+
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
-		$container->get('translator')->setLocale($locale);
 
 		$this->responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
@@ -213,21 +214,23 @@ class PageRegular extends Frontend
 			}
 		}
 
+		$headBag = $this->responseContext->get(HtmlHeadBag::class);
+
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($this->responseContext->get(HtmlHeadBag::class)->getTitle());
+		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle());
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $this->responseContext->get(HtmlHeadBag::class)->getMetaRobots();
+		$this->Template->robots = $headBag->getMetaRobots();
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = $this->responseContext->get(HtmlHeadBag::class)->getCanonicalUriForRequest($request);
+			$this->Template->canonical = $headBag->getCanonicalUriForRequest($request);
 		}
 
 		// Fall back to the default title tag
@@ -238,7 +241,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($this->responseContext->get(HtmlHeadBag::class)->getMetaDescription());
+		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);

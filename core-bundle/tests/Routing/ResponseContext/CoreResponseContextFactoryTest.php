@@ -43,8 +43,8 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            $this->createMock(ContaoFramework::class),
-            new HtmlDecoder()
+            new HtmlDecoder(),
+            $this->createMock(ContaoFramework::class)
         );
 
         $responseContext = $factory->createResponseContext();
@@ -64,8 +64,8 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            $this->createMock(ContaoFramework::class),
-            new HtmlDecoder()
+            new HtmlDecoder(),
+            $this->createMock(ContaoFramework::class)
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -135,8 +135,8 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            $contaoFramework,
-            new HtmlDecoder()
+            new HtmlDecoder(),
+            $contaoFramework
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -181,8 +181,8 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(ResponseContextAccessor::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            $this->createMock(ContaoFramework::class),
-            new HtmlDecoder()
+            new HtmlDecoder(),
+            $this->createMock(ContaoFramework::class)
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);

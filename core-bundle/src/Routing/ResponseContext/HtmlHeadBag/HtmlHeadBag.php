@@ -108,10 +108,12 @@ final class HtmlHeadBag
             }
         }
 
-        return Request::create(
+        $request = Request::create(
             $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
             $request->getMethod(),
             $params
-        )->getUri();
+        );
+
+        return $request->getUri();
     }
 }

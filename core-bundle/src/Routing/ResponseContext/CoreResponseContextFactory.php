@@ -29,16 +29,16 @@ class CoreResponseContextFactory
     private ResponseContextAccessor $responseContextAccessor;
     private EventDispatcherInterface $eventDispatcher;
     private TokenChecker $tokenChecker;
-    private ContaoFramework $contaoFramework;
     private HtmlDecoder $htmlDecoder;
+    private ContaoFramework $contaoFramework;
 
-    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, ContaoFramework $contaoFramework, HtmlDecoder $htmlDecoder)
+    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, HtmlDecoder $htmlDecoder, ContaoFramework $contaoFramework)
     {
         $this->responseContextAccessor = $responseContextAccessor;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenChecker = $tokenChecker;
-        $this->contaoFramework = $contaoFramework;
         $this->htmlDecoder = $htmlDecoder;
+        $this->contaoFramework = $contaoFramework;
     }
 
     public function createResponseContext(): ResponseContext
@@ -91,17 +91,23 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
-            $url = $this->contaoFramework->getAdapter(Controller::class)->replaceInsertTags($pageModel->canonicalLink, false);
+            // TODO: Replace this with the insert tags service once #3638 has been merged
+            /** @var Controller $controller */
+            $controller = $this->contaoFramework->getAdapter(Controller::class);
+            $url = $controller->replaceInsertTags($pageModel->canonicalLink, false);
 
-            // Ensure absolute links (FIXME: Remove once we remove support for relative urls)
+            // Ensure absolute links
             if (!preg_match('#^https?://#', $url)) {
-                $url = $this->contaoFramework->getAdapter(Environment::class)->get('base').$url;
+                /** @var Environment $environment */
+                $environment = $this->contaoFramework->getAdapter(Environment::class);
+                $url = $environment->get('base').$url;
             }
+
             $htmlHeadBag->setCanonicalUri($url);
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {
-            $htmlHeadBag->setKeepParamsForCanonical(array_map('trim', explode(',', (string) $pageModel->canonicalKeepParams)));
+            $htmlHeadBag->setKeepParamsForCanonical(array_map('trim', explode(',', $pageModel->canonicalKeepParams)));
         }
 
         $jsonLdManager
