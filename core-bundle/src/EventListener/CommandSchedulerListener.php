@@ -70,7 +70,7 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
      *
      * @see https://github.com/contao/contao/pull/3623
      *
-     * @return string[]
+     * @return array<string>
      */
     public static function getSubscribedServices(): array
     {
