@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Doctrine\Backup;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class Backup
 {
@@ -94,6 +95,6 @@ class Backup
             throw new BackupManagerException(sprintf('The filepath "%s" does not match "%s"', $filepath, self::VALID_BACKUP_NAME_REGEX));
         }
 
-        return $filepath;
+        return Path::normalize($filepath);
     }
 }

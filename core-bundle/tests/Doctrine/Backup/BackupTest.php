@@ -16,6 +16,7 @@ use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class BackupTest extends ContaoTestCase
 {
@@ -83,6 +84,6 @@ class BackupTest extends ContaoTestCase
 
     private function getValidBackupPath(): string
     {
-        return $this->getTempDir().'/valid_backup_filename__20211101141254.sql';
+        return Path::join($this->getTempDir(), 'valid_backup_filename__20211101141254.sql');
     }
 }

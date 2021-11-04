@@ -61,7 +61,7 @@ class DumperTest extends ContaoTestCase
 
         $dumper->dump($connection, $config);
 
-        $this->assertSame($expectedDump, file_get_contents($backup->getFilepath()));
+        $this->assertSame($expectedDump, preg_replace('~\R~u', "\n", file_get_contents($backup->getFilepath())));
     }
 
     public function testIsGzipEncodedIfEnabled(): void
