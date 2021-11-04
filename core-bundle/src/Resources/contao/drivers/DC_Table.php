@@ -3838,7 +3838,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	{
 		// Must be either visible in the root trail or allowed by permissions (or their children)
 		// In the extended tree view (mode 6) we have to check on the parent table only
-		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) !== 6 || $table !== $this->strTable;
+		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 || $table !== $this->strTable;
 
 		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
