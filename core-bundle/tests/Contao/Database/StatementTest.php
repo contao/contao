@@ -82,6 +82,7 @@ class StatementTest extends TestCase
 
         $container = new Container();
         $container->set('database_connection', $connection);
+
         System::setContainer($container);
 
         $connection
@@ -146,11 +147,7 @@ class StatementTest extends TestCase
                                 return "'".str_replace("'", "''", $param)."'";
                             }
 
-                            if (null === $param) {
-                                return 'NULL';
-                            }
-
-                            return $param;
+                            return $param ?? 'NULL';
                         },
                         $params
                     );
@@ -181,6 +178,7 @@ class StatementTest extends TestCase
 
         $container = new Container();
         $container->set('database_connection', $connection);
+
         System::setContainer($container);
 
         $statement = (new Statement($connection));
@@ -203,76 +201,6 @@ class StatementTest extends TestCase
 
         $statement->execute($params ?? []);
     }
-
-    /**
-     * @dataProvider getQueriesWithParametersAndSets
-     */
-    /*
-    public function testOldImplementationReplacesParametersAndSets(string $query, string $expected, array $params = null, array $set = null): void
-    {
-        $doctrineResult = $this->createMock(Result::class);
-        $doctrineResult
-            ->method('columnCount')
-            ->willReturn(1)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->exactly(2))
-            ->method('executeQuery')
-            ->with($expected)
-            ->willReturn($doctrineResult)
-        ;
-
-        $connection
-            ->method('quote')
-            ->willReturnCallback(
-                function ($string, $type = ParameterType::STRING) {
-                    $this->assertSame(ParameterType::STRING, $type);
-                    $this->assertIsString($string);
-
-                    return "'".str_replace("'", "''", $string)."'";
-                }
-            )
-        ;
-
-        $connection
-            ->method('quoteIdentifier')
-            ->willReturnArgument(0)
-        ;
-
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn($this->createMock(AbstractPlatform::class))
-        ;
-
-        $container = new Container();
-        $container->set('database_connection', $connection);
-        System::setContainer($container);
-
-        $statement = (new Statement($connection));
-        $statement->prepare($query);
-
-        if ($set) {
-            $statement->set($set);
-        }
-
-        $contaoResult = $statement->execute($params ?? []);
-
-        $this->assertSame($expected, $contaoResult->query);
-
-        $statement = (new Statement($connection));
-        $statement->prepare($query);
-
-        if ($set) {
-            $statement->set($set);
-        }
-
-        $contaoResult = $statement->execute(...($params ?? []));
-
-        $this->assertSame($expected, $contaoResult->query);
-    }
-    */
 
     public function getQueriesWithParametersAndSets(): \Generator
     {

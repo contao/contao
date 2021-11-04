@@ -143,10 +143,8 @@ class Statement
 	 */
 	public function set($arrParams)
 	{
-		if (
-			substr_count($this->strQuery, '%s') !== 1
-			|| !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true)
-		) {
+		if (substr_count($this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
+		{
 			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder. This will throw an exception in Contao 5.0.', __METHOD__);
 
 			return $this;
@@ -154,15 +152,18 @@ class Statement
 
 		$this->arrSetParams = array_values($arrParams);
 
-		$arrParamNames = array_map(static function ($strName)
-		{
-			if (!preg_match('/^[A-Za-z0-9_$]+$/', $strName))
+		$arrParamNames = array_map(
+			static function ($strName)
 			{
-				throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
-			}
+				if (!preg_match('/^[A-Za-z0-9_$]+$/', $strName))
+				{
+					throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
+				}
 
-			return Database::quoteIdentifier($strName);
-		}, array_keys($arrParams));
+				return Database::quoteIdentifier($strName);
+			},
+			array_keys($arrParams)
+		);
 
 		// INSERT
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
@@ -266,13 +267,8 @@ class Statement
 		$arrParams = array_map(
 			static function ($varParam)
 			{
-				if (
-					\is_string($varParam)
-					|| \is_bool($varParam)
-					|| \is_float($varParam)
-					|| \is_int($varParam)
-					|| $varParam === null
-				) {
+				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+				{
 					return $varParam;
 				}
 
@@ -283,9 +279,9 @@ class Statement
 
 		$this->arrLastUsedParams = $arrParams;
 
+		// Execute the query
 		try
 		{
-			// Execute the query
 			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 		}
 		catch (DriverException $exception)
@@ -318,6 +314,8 @@ class Statement
 	 * @param array $arrValues The values array
 	 *
 	 * @throws \Exception If $arrValues has too few values to replace the wildcards in the query string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function replaceWildcards($arrValues)
 	{
@@ -339,6 +337,8 @@ class Statement
 	 * @param array $arrValues The values array
 	 *
 	 * @return array The array with the escaped values
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function escapeParams($arrValues)
 	{
@@ -374,6 +374,8 @@ class Statement
 	 * Explain the current query
 	 *
 	 * @return string The explanation string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public function explain()
 	{
