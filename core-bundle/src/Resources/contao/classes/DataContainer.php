@@ -36,6 +36,101 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 abstract class DataContainer extends Backend
 {
 	/**
+	 * Records are not sorted
+	 */
+	public const MODE_UNSORTED = 0;
+
+	/**
+	 * Records are sorted by a fixed field
+	 */
+	public const MODE_SORTED = 1;
+
+	/**
+	 * Records are sorted by a switchable field
+	 */
+	public const MODE_SORTABLE = 2;
+
+	/**
+	 * Records are sorted by the parent table
+	 */
+	public const MODE_SORTED_PARENT = 3;
+
+	/**
+	 * Displays the child records of a parent record (see content elements)
+	 */
+	public const MODE_PARENT = 4;
+
+	/**
+	 * Records are displayed as tree (see site structure)
+	 */
+	public const MODE_TREE = 5;
+
+	/**
+	 * Displays the child records within a tree structure (see articles module)
+	 */
+	public const MODE_TREE_EXTENDED = 6;
+
+	/**
+	 * Sort by initial letter ascending
+	 */
+	public const SORT_INITIAL_LETTER_ASC = 1;
+
+	/**
+	 * Sort by initial letter descending
+	 */
+	public const SORT_INITIAL_LETTER_DESC = 2;
+
+	/**
+	 * Sort by initial two letters ascending
+	 */
+	public const SORT_INITIAL_LETTERS_ASC = 3;
+
+	/**
+	 * Sort by initial two letters descending
+	 */
+	public const SORT_INITIAL_LETTERS_DESC = 4;
+
+	/**
+	 * Sort by day ascending
+	 */
+	public const SORT_DAY_ASC = 5;
+
+	/**
+	 * Sort by day descending
+	 */
+	public const SORT_DAY_DESC = 6;
+
+	/**
+	 * Sort by month ascending
+	 */
+	public const SORT_MONTH_ASC = 7;
+
+	/**
+	 * Sort by month descending
+	 */
+	public const SORT_MONTH_DESC = 8;
+
+	/**
+	 * Sort by year ascending
+	 */
+	public const SORT_YEAR_ASC = 9;
+
+	/**
+	 * Sort by year descending
+	 */
+	public const SORT_YEAR_DESC = 10;
+
+	/**
+	 * Sort ascending
+	 */
+	public const SORT_ASC = 11;
+
+	/**
+	 * Sort descending
+	 */
+	public const SORT_DESC = 12;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */

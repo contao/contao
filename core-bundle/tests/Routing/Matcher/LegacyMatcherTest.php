@@ -651,9 +651,7 @@ class LegacyMatcherTest extends TestCase
         $configAdapter = $this->mockAdapter(['get']);
         $configAdapter
             ->method('get')
-            ->willReturnCallback(
-                static fn ($param) => $config[$param] ?? null
-            )
+            ->willReturnCallback(static fn ($param) => $config[$param] ?? null)
         ;
 
         return $configAdapter;

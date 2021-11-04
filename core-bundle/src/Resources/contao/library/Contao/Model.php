@@ -444,7 +444,7 @@ abstract class Model
 
 			$arrSet = $this->preSave($arrSet);
 
-			// No modified fiels
+			// No modified fields
 			if (empty($arrSet))
 			{
 				return $this;
@@ -483,7 +483,7 @@ abstract class Model
 
 			$arrSet = $this->preSave($arrSet);
 
-			// No modified fiels
+			// No modified fields
 			if (empty($arrSet))
 			{
 				return $this;

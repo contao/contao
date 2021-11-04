@@ -723,7 +723,7 @@ function utf8_strlen($str)
 }
 
 /**
- * Find the position of the first occurence of a string in another string
+ * Find the position of the first occurrence of a string in another string
  *
  * @param string  $haystack
  * @param string  $needle

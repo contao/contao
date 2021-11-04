@@ -14,6 +14,7 @@ use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -46,27 +47,6 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * Recursively replace insert tags with their values
-	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
-	 */
-	public function replace($strBuffer, $blnCache=true)
-	{
-		$strBuffer = $this->doReplace($strBuffer, $blnCache);
-
-		// Run the replacement recursively (see #8172)
-		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
-		{
-			$strBuffer = $strTmp;
-		}
-
-		return $strBuffer;
-	}
-
-	/**
 	 * Reset the insert tag cache
 	 */
 	public static function reset()
@@ -75,14 +55,15 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * Replace insert tags with their values
+	 * Recursively replace insert tags with their values
 	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
+	 * @param string  $strBuffer   The text with the tags to be replaced
+	 * @param boolean $blnCache    If false, non-cacheable tags will be replaced
+	 * @param boolean $blnAsChunks If true a ChunkedText object is returned instead of the string
 	 *
-	 * @return string The text with the replaced tags
+	 * @return string|ChunkedText The text with the replaced tags
 	 */
-	protected function doReplace($strBuffer, $blnCache)
+	public function replace($strBuffer, $blnCache=true, $blnAsChunks=false)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -90,20 +71,36 @@ class InsertTags extends Controller
 		// Preserve insert tags
 		if (Config::get('disableInsertTags'))
 		{
-			return StringUtil::restoreBasicEntities($strBuffer);
+			$return = StringUtil::restoreBasicEntities($strBuffer);
+
+			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
 		}
 
-		$strBuffer = self::encodeHtmlAttributes($strBuffer);
+		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
 
-		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-		$tags = preg_split('~{{([a-zA-Z0-9\x80-\xFF][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$strRegExpStart = '{{'           // Starts with two opening curly braces
+			. '('                        // Match the contents fo the tag
+				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
+				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
+		;
+
+		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
+
+		$tags = preg_split(
+			'(' . $strRegExpStart . str_repeat('{{(?:' . substr($strRegExpStart, 3), 9) . str_repeat($strRegExpEnd, 10) . ')',
+			$strBuffer,
+			-1,
+			PREG_SPLIT_DELIM_CAPTURE
+		);
 
 		if (\count($tags) < 2)
 		{
-			return StringUtil::restoreBasicEntities($strBuffer);
+			$return = StringUtil::restoreBasicEntities($strBuffer);
+
+			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
 		}
 
-		$strBuffer = '';
+		$arrBuffer = array();
 		$container = System::getContainer();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 
@@ -112,13 +109,15 @@ class InsertTags extends Controller
 
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
-			$strBuffer .= $tags[$_rit];
+			$arrBuffer[$_rit] = $tags[$_rit];
 
 			// Skip empty tags
-			if (empty($tags[$_rit+1]))
+			if (!isset($tags[$_rit+1]))
 			{
-				continue;
+				break;
 			}
+
+			$tags[$_rit+1] = $this->replace($tags[$_rit+1], $blnCache);
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -128,7 +127,7 @@ class InsertTags extends Controller
 			// Load the value from cache
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
-				$strBuffer .= $arrCache[$strTag];
+				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
 				continue;
 			}
 
@@ -150,7 +149,7 @@ class InsertTags extends Controller
 						$attributes['_scope'] = $scope;
 					}
 
-					$strBuffer .= $fragmentHandler->render(
+					$arrBuffer[$_rit+1] = $fragmentHandler->render(
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,
@@ -650,6 +649,7 @@ class InsertTags extends Controller
 
 					// Does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
+					$arrBuffer[$_rit+1] = '';
 					continue 2;
 
 				// Environment
@@ -1165,10 +1165,22 @@ class InsertTags extends Controller
 				}
 			}
 
-			$strBuffer .= $arrCache[$strTag] ?? '';
+			if (isset($arrCache[$strTag]))
+			{
+				$arrCache[$strTag] = $this->replace($arrCache[$strTag], $blnCache);
+			}
+
+			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
 		}
 
-		return StringUtil::restoreBasicEntities($strBuffer);
+		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
+
+		if ($blnAsChunks)
+		{
+			return new ChunkedText($arrBuffer);
+		}
+
+		return implode('', $arrBuffer);
 	}
 
 	/**
@@ -1176,8 +1188,8 @@ class InsertTags extends Controller
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
-		// Restore [&]
-		$url = str_replace('[&]', '&', $url);
+		// Restore [&] and &amp;
+		$url = str_replace(array('[&]', '&amp;'), '&', $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';

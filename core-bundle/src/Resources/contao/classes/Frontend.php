@@ -574,12 +574,12 @@ abstract class Frontend extends Controller
 	 *
 	 * @return string
 	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
-	 *             Use StringUtil::htmlToPlainText() instead.
+	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
+	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
 	 */
 	protected function prepareMetaDescription($strText)
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use Contao\StringUtil::htmlToPlainText() instead.');
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
 		$strText = $this->replaceInsertTags($strText, false);
 		$strText = strip_tags($strText);
