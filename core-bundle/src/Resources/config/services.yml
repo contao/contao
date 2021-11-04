@@ -111,6 +111,10 @@ services:
         tags:
             - { name: contao.content_element, category: texts }
 
+    Contao\CoreBundle\Controller\ContentElement\TemplateController:
+        tags:
+            - { name: contao.content_element, category: includes }
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
@@ -122,6 +126,10 @@ services:
     Contao\CoreBundle\Controller\FrontendController:
         tags:
             - controller.service_arguments
+
+    Contao\CoreBundle\Controller\FrontendModule\TemplateController:
+        tags:
+            - { name: contao.frontend_module, category: miscellaneous }
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
