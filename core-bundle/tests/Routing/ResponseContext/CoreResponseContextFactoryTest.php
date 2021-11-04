@@ -21,11 +21,11 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
-use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -44,6 +44,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder(),
+            $this->createMock(RequestStack::class),
             $this->createMock(ContaoFramework::class)
         );
 
@@ -65,6 +66,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder(),
+            $this->createMock(RequestStack::class),
             $this->createMock(ContaoFramework::class)
         );
 
@@ -110,18 +112,12 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             ->willReturn('de/foobar.html')
         ;
 
-        $environmentAdapter = $this->mockAdapter(['get']);
-        $environmentAdapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('base')
-            ->willReturn('https://example.com/')
-        ;
-
         $contaoFramework = $this->mockContaoFramework([
             Controller::class => $controllerAdapter,
-            Environment::class => $environmentAdapter,
         ]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/'));
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
@@ -136,6 +132,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder(),
+            $requestStack,
             $contaoFramework
         );
 
@@ -182,6 +179,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             new HtmlDecoder(),
+            $this->createMock(RequestStack::class),
             $this->createMock(ContaoFramework::class)
         );
 
