@@ -107,7 +107,6 @@
         "twig/twig": "^3.0",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
-        "webfactory/slimdump": "dev-dbal-3 as 1.13.0",
         "webmozart/path-util": "^2.2",
         "wikimedia/less.php": "^1.7"
     },
@@ -169,11 +168,5 @@
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/core-bundle",
         "docs": "https://docs.contao.org"
-    },
-    "repositories": {
-        "webfactory/slimdump": {
-            "type": "vcs",
-            "url": "https://github.com/Toflar/slimdump"
-        }
     }
 }
