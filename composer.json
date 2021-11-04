@@ -248,6 +248,7 @@
         "manager-bundle/bin/contao-setup"
     ],
     "scripts": {
+        "post-update-cmd": "composer bin all up",
         "all": [
             "@unit-tests",
             "@functional-tests",

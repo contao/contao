@@ -651,9 +651,16 @@ class Versions extends Controller
 		$objUser = BackendUser::getInstance();
 		$objDatabase = Database::getInstance();
 
+		$params = array();
+
+		if (!$objUser->isAdmin)
+		{
+			$params[] = $objUser->id;
+		}
+
 		// Get the total number of versions
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
-								->execute($objUser->id);
+								->execute(...$params);
 
 		$intLast   = ceil($objTotal->count / 30);
 		$intPage   = Input::get('vp') ?? 1;
@@ -672,7 +679,7 @@ class Versions extends Controller
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
 								   ->limit(30, $intOffset)
-								   ->execute($objUser->id);
+								   ->execute(...$params);
 
 		while ($objVersions->next())
 		{
