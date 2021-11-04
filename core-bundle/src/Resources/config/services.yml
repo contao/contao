@@ -113,7 +113,7 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController:
         tags:
-            - { name: contao.content_element, category: texts }
+            - { name: contao.content_element, category: includes }
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:

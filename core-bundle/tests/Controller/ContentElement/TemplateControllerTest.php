@@ -30,6 +30,7 @@ class TemplateControllerTest extends ContaoTestCase
             ['key' => 'Key 1', 'value' => 'Value 1'],
             ['key' => 'Key 1', 'value' => 'Value 1'],
         ];
+
         $container = $this->mockContainer($data, 'ce_template');
 
         /** @var ContentModel&MockObject $contentModel */
@@ -38,6 +39,7 @@ class TemplateControllerTest extends ContaoTestCase
 
         $controller = new TemplateController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
     }
 
@@ -51,6 +53,7 @@ class TemplateControllerTest extends ContaoTestCase
 
         $controller = new TemplateController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
     }
 
@@ -60,6 +63,7 @@ class TemplateControllerTest extends ContaoTestCase
             ['key' => 'Key 1', 'value' => 'Value 1'],
             ['key' => 'Key 1', 'value' => 'Value 1'],
         ];
+
         $container = $this->mockContainer($data, 'ce_template_custom1');
 
         /** @var ContentModel&MockObject $contentModel */
@@ -69,6 +73,7 @@ class TemplateControllerTest extends ContaoTestCase
 
         $controller = new TemplateController();
         $controller->setContainer($container);
+
         $controller(new Request(), $contentModel, 'main');
     }
 

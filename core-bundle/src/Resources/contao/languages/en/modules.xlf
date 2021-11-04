@@ -291,10 +291,10 @@
         <source>Allows you to add custom HTML code</source>
       </trans-unit>
       <trans-unit id="FMD.template.0">
-        <source>Custom Template</source>
+        <source>Custom template</source>
       </trans-unit>
       <trans-unit id="FMD.template.1">
-        <source>Generates an element to be used with a custom template.</source>
+        <source>Generates a module to insert a custom template.</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
