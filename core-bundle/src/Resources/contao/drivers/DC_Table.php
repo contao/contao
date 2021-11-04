@@ -4388,153 +4388,153 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Render the child records
-			$strGroup = '';
-			$blnIndent = false;
-			$intWrapLevel = 0;
-			$row = $objOrderBy->fetchAllAssoc();
-
-			// Make items sortable
-			if ($blnHasSorting)
-			{
-				$return .= '
-
-<ul id="ul_' . CURRENT_ID . '">';
-			}
-
-			for ($i=0, $c=\count($row); $i<$c; $i++)
-			{
-				$this->current[] = $row[$i]['id'];
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
-				$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
-
-				// Decrypt encrypted value
-				foreach ($row[$i] as $k=>$v)
-				{
-					if ($GLOBALS['TL_DCA'][$table]['fields'][$k]['eval']['encrypt'] ?? null)
-					{
-						$row[$i][$k] = Encryption::decrypt(StringUtil::deserialize($v));
-					}
-				}
+				$strGroup = '';
+				$blnIndent = false;
+				$intWrapLevel = 0;
+				$row = $objOrderBy->fetchAllAssoc();
 
 				// Make items sortable
 				if ($blnHasSorting)
 				{
 					$return .= '
-<li id="li_' . $row[$i]['id'] . '">';
+
+	<ul id="ul_' . CURRENT_ID . '">';
 				}
 
-				// Add the group header
-				if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
+				for ($i=0, $c=\count($row); $i<$c; $i++)
 				{
-					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
-					$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
-					$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
+					$this->current[] = $row[$i]['id'];
+					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
+					$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
 
-					if ($group != $strGroup)
+					// Decrypt encrypted value
+					foreach ($row[$i] as $k=>$v)
 					{
-						$return .= "\n\n" . '<div class="tl_content_header">' . $group . '</div>';
-						$strGroup = $group;
+						if ($GLOBALS['TL_DCA'][$table]['fields'][$k]['eval']['encrypt'] ?? null)
+						{
+							$row[$i][$k] = Encryption::decrypt(StringUtil::deserialize($v));
+						}
 					}
-				}
 
-				$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-				$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
-				$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-				$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-				$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-
-				// Closing wrappers
-				if ($blnWrapperStop && --$intWrapLevel < 1)
-				{
-					$blnIndent = false;
-				}
-
-				$return .= '
-<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
-<div class="tl_content_right">';
-
-				// Opening wrappers
-				if ($blnWrapperStart && ++$intWrapLevel > 0)
-				{
-					$blnIndent = true;
-				}
-
-				// Edit multiple
-				if (Input::get('act') == 'select')
-				{
-					$return .= '<input type="checkbox" name="IDS[]" id="ids_' . $row[$i]['id'] . '" class="tl_tree_checkbox" value="' . $row[$i]['id'] . '">';
-				}
-
-				// Regular buttons
-				else
-				{
-					$return .= $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
-
-					// Sortable table
+					// Make items sortable
 					if ($blnHasSorting)
 					{
-						// Create new button
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
-						{
-							$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
-						}
-
-						// Prevent circular references
-						if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
-						{
-							$return .= ' ' . Image::getHtml('pasteafter_.svg');
-						}
-
-						// Copy/move multiple
-						elseif ($blnMultiboard)
-						{
-							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
-						}
-
-						// Paste buttons
-						elseif ($blnClipboard)
-						{
-							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
-						}
-
-						// Drag handle
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
-						{
-							$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
-						}
+						$return .= '
+	<li id="li_' . $row[$i]['id'] . '">';
 					}
 
-					// Picker
-					if ($this->strPickerFieldType)
+					// Add the group header
+					if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 					{
-						$return .= $this->getPickerInputField($row[$i]['id']);
+						$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+						$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
+						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
+
+						if ($group != $strGroup)
+						{
+							$return .= "\n\n" . '<div class="tl_content_header">' . $group . '</div>';
+							$strGroup = $group;
+						}
+					}
+
+					$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
+					$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
+					$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+					$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
+
+					// Closing wrappers
+					if ($blnWrapperStop && --$intWrapLevel < 1)
+					{
+						$blnIndent = false;
+					}
+
+					$return .= '
+	<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
+	<div class="tl_content_right">';
+
+					// Opening wrappers
+					if ($blnWrapperStart && ++$intWrapLevel > 0)
+					{
+						$blnIndent = true;
+					}
+
+					// Edit multiple
+					if (Input::get('act') == 'select')
+					{
+						$return .= '<input type="checkbox" name="IDS[]" id="ids_' . $row[$i]['id'] . '" class="tl_tree_checkbox" value="' . $row[$i]['id'] . '">';
+					}
+
+					// Regular buttons
+					else
+					{
+						$return .= $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
+
+						// Sortable table
+						if ($blnHasSorting)
+						{
+							// Create new button
+							if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
+							{
+								$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
+							}
+
+							// Prevent circular references
+							if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
+							{
+								$return .= ' ' . Image::getHtml('pasteafter_.svg');
+							}
+
+							// Copy/move multiple
+							elseif ($blnMultiboard)
+							{
+								$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+							}
+
+							// Paste buttons
+							elseif ($blnClipboard)
+							{
+								$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+							}
+
+							// Drag handle
+							if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
+							{
+								$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+							}
+						}
+
+						// Picker
+						if ($this->strPickerFieldType)
+						{
+							$return .= $this->getPickerInputField($row[$i]['id']);
+						}
+					}
+
+					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
+					{
+						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
+						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
+
+						$this->import($strClass);
+						$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
+					}
+					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
+					{
+						$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+					}
+					else
+					{
+						$return .= '</div><div class="tl_content_left">' . $this->getLabel($row[$i]) . '</div></div>';
+					}
+
+					// Make items sortable
+					if ($blnHasSorting)
+					{
+						$return .= '
+	</li>';
 					}
 				}
-
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
-				{
-					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
-					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
-
-					$this->import($strClass);
-					$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
-				}
-				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
-				{
-					$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
-				}
-				else
-				{
-					$return .= '</div><div class="tl_content_left">' . $this->getLabel($row[$i]) . '</div></div>';
-				}
-
-				// Make items sortable
-				if ($blnHasSorting)
-				{
-					$return .= '
-</li>';
-				}
-			}
 		}
 
 		// Make items sortable
