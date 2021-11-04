@@ -6293,9 +6293,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Shorten the label it if it is too long
+		// Render the label
 		$label = vsprintf($GLOBALS['TL_DCA'][$table]['list']['label']['format'] ?? '%s', $args);
 
+		// Shorten the label it if it is too long
 		if (($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < \strlen(strip_tags($label)))
 		{
 			$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
