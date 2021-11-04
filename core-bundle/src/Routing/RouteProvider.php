@@ -301,7 +301,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $rootPages = $pages->getModels();
         }
 
-        $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
+        $pages = $pageModel->findAll(['column' => ["tl_page.alias='index' OR tl_page.alias='/'"]]);
 
         if ($pages instanceof Collection) {
             /** @var array<PageModel> $indexPages */

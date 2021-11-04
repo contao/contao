@@ -270,5 +270,23 @@ class StatementTest extends TestCase
             "SELECT id FROM tl_content WHERE headline = '%%%-special' and type = ' BOBBY TABLES -- a'",
             [' BOBBY TABLES -- a', 'b'],
         ];
+
+        yield [
+            'SELECT id FROM tl_content WHERE type = ?',
+            "SELECT id FROM tl_content WHERE type = 'a'",
+            ['a', 'b'],
+        ];
+
+        yield [
+            'SELECT id FROM tl_content',
+            'SELECT id FROM tl_content',
+            ['a'],
+        ];
+
+        yield [
+            'SELECT id FROM tl_content',
+            'SELECT id FROM tl_content',
+            [null],
+        ];
     }
 }

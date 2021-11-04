@@ -466,11 +466,11 @@ class RouteProviderTest extends TestCase
      */
     public function testSortsTheRootRoutes(array $pages, array $languages, array $expectedNames): void
     {
-        $pageAdapter = $this->mockAdapter(['findBy']);
+        $pageAdapter = $this->mockAdapter(['findBy', 'findAll']);
         $pageAdapter
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('findBy')
-            ->willReturnOnConsecutiveCalls(new Collection(array_values($pages), 'tl_page'), null)
+            ->willReturn(new Collection(array_values($pages), 'tl_page'))
         ;
 
         $framework = $this->mockFramework($pageAdapter);

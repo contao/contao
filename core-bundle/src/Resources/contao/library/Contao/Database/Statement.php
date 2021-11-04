@@ -284,18 +284,19 @@ class Statement
 		{
 			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 		}
-		catch (DriverException $exception)
+		catch (DriverException|\ArgumentCountError $exception)
 		{
-			if ($arrParams !== array(null))
+			if (!$arrParams || \count($arrParams) <= ($intTokenCount = $this->countQueryTokens()))
 			{
 				throw $exception;
 			}
 
-			// Backwards compatibility for calling Statement::execute(null)
-			$this->statement = $this->resConnection->executeQuery($this->strQuery);
+			$arrParams = \array_slice($arrParams, 0, $intTokenCount);
+
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 
 			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Use "%s::execute() instead."', __CLASS__, __CLASS__);
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" or passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.', __CLASS__);
 		}
 
 		// No result set available
@@ -306,6 +307,15 @@ class Statement
 
 		// Instantiate a result object
 		return new Result($this->statement, $this->strQuery);
+	}
+
+	/**
+	 * @return int
+	 */
+	private function countQueryTokens()
+	{
+		// Backwards compatibility
+		return substr_count(preg_replace("/('[^']*')/", '', $this->strQuery), '?');
 	}
 
 	/**
