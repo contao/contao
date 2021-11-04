@@ -20,6 +20,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
@@ -43,6 +44,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoFramework::class),
+            new HtmlDecoder()
         );
 
         $responseContext = $factory->createResponseContext();
@@ -63,6 +65,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoFramework::class),
+            new HtmlDecoder()
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -132,7 +135,8 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            $contaoFramework
+            $contaoFramework,
+            new HtmlDecoder()
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -178,6 +182,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoFramework::class),
+            new HtmlDecoder()
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);

@@ -18,9 +18,9 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Environment;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -30,13 +30,15 @@ class CoreResponseContextFactory
     private EventDispatcherInterface $eventDispatcher;
     private TokenChecker $tokenChecker;
     private ContaoFramework $contaoFramework;
+    private HtmlDecoder $htmlDecoder;
 
-    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, ContaoFramework $contaoFramework)
+    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, ContaoFramework $contaoFramework, HtmlDecoder $htmlDecoder)
     {
         $this->responseContextAccessor = $responseContextAccessor;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenChecker = $tokenChecker;
         $this->contaoFramework = $contaoFramework;
+        $this->htmlDecoder = $htmlDecoder;
     }
 
     public function createResponseContext(): ResponseContext
@@ -77,11 +79,11 @@ class CoreResponseContextFactory
         /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
 
-        $title = StringUtil::inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
+        $title = $this->htmlDecoder->inputEncodedToPlainText($pageModel->pageTitle ?: $pageModel->title ?: '');
 
         $htmlHeadBag
             ->setTitle($title ?: '')
-            ->setMetaDescription(StringUtil::inputEncodedToPlainText($pageModel->description ?: ''))
+            ->setMetaDescription($this->htmlDecoder->inputEncodedToPlainText($pageModel->description ?: ''))
         ;
 
         if ($pageModel->robots) {

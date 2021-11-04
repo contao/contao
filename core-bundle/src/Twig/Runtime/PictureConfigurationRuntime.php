@@ -109,10 +109,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 
         // Prepend prefix
         if (null !== $prefix) {
-            $keys = array_map(
-                static fn (string $v): string => "$prefix.$v",
-                $keys
-            );
+            $keys = array_map(static fn (string $v): string => "$prefix.$v", $keys);
         }
 
         throw new \InvalidArgumentException(sprintf('Could not map picture configuration key(s) "%s".', implode('", "', $keys)));

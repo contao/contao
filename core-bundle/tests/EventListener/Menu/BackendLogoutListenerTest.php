@@ -212,9 +212,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnCallback(
-                static fn (string $id): string => $id
-            )
+            ->willReturnCallback(static fn (string $id): string => $id)
         ;
 
         return $translator;

@@ -123,7 +123,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 					$arrValue = StringUtil::deserialize($strValue, true);
 					$arrAllowedAttributes = array();
 
-					foreach ($arrValue as $intIndex => $arrRow)
+					foreach ($arrValue as $arrRow)
 					{
 						foreach (StringUtil::trimsplit(',', strtolower($arrRow['key'])) as $strKey)
 						{

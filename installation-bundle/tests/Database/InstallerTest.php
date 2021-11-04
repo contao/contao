@@ -16,7 +16,7 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -546,7 +546,7 @@ class InstallerTest extends TestCase
 
         $connection
             ->method('getDatabasePlatform')
-            ->willReturn(new MySqlPlatform())
+            ->willReturn(new MySQLPlatform())
         ;
 
         $connection

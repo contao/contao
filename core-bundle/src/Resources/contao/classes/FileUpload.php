@@ -175,7 +175,7 @@ class FileUpload extends Backend
 					$this->import(Files::class, 'Files');
 					$strNewFile = $strTarget . '/' . $file['name'];
 
-					// Set CHMOD and resize if neccessary
+					// Set CHMOD and resize if necessary
 					if ($this->Files->move_uploaded_file($file['tmp_name'], $strNewFile))
 					{
 						$this->Files->chmod($strNewFile, 0666 & ~umask());
@@ -279,7 +279,7 @@ class FileUpload extends Backend
 	}
 
 	/**
-	 * Resize an uploaded image if neccessary
+	 * Resize an uploaded image if necessary
 	 *
 	 * @param string $strImage
 	 *

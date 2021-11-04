@@ -30,7 +30,7 @@ class FrontendTemplate extends Template
 	use FrontendTemplateTrait;
 
 	/**
-	 * Unsued $_GET check
+	 * Unused $_GET check
 	 * @var boolean
 	 */
 	protected $blnCheckRequest = false;
