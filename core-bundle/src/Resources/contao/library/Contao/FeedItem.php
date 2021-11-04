@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Image\DeferredImageInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Creates items to be appended to RSS or Atom feeds
@@ -132,7 +133,7 @@ class FeedItem
 			}
 
 			$fileUrl = $strUrl . System::urlEncode($image->getUrl($rootDir));
-			$relativeFilePath = str_replace($rootDir . '/', '', $image->getPath());
+			$relativeFilePath = Path::makeRelative($image->getPath(), $rootDir);
 			$objFile = new File($relativeFilePath);
 		}
 
