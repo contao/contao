@@ -31,8 +31,9 @@ class BackupCreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+        $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
 
-        $this->assertStringContainsString($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertStringContainsString($expectedOutput, $normalizedOutput);
         $this->assertSame(0, $code);
     }
 
@@ -52,8 +53,9 @@ class BackupCreateCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
+        $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
 
-        $this->assertStringContainsString($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertStringContainsString($expectedOutput, $normalizedOutput);
         $this->assertSame(1, $code);
     }
 
