@@ -44,7 +44,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'headerFields'            => array('name', 'author', 'tstamp'),
@@ -121,6 +121,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'articlelist'                 => '{title_legend},name,headline,type;{config_legend},skipFirst,inColumn;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests',
+		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 	),
@@ -156,7 +157,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -175,7 +176,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options_callback'        => array('tl_module', 'getModules'),
@@ -594,6 +595,12 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			(
 				array('tl_module', 'getPasswordDefault')
 			),
+			'sql'                     => "text NULL"
+		),
+		'data' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'keyValueWizard',
 			'sql'                     => "text NULL"
 		),
 		'protected' => array

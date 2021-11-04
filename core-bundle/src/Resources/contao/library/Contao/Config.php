@@ -54,7 +54,7 @@ class Config
 	protected $blnIsModified = false;
 
 	/**
-	 * Local file existance
+	 * Local file existence
 	 * @var boolean
 	 */
 	protected static $blnHasLcf;

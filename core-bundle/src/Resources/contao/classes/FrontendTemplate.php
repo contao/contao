@@ -30,7 +30,7 @@ class FrontendTemplate extends Template
 	use FrontendTemplateTrait;
 
 	/**
-	 * Unsued $_GET check
+	 * Unused $_GET check
 	 * @var boolean
 	 */
 	protected $blnCheckRequest = false;
@@ -104,6 +104,8 @@ class FrontendTemplate extends Template
 	protected function compile()
 	{
 		$this->keywords = '';
+
+		// Backwards compatibility
 		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS'] ?? '');
 
 		// Add the meta keywords

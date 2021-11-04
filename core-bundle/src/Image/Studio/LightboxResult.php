@@ -25,11 +25,7 @@ class LightboxResult
     private ContainerInterface $locator;
     private ?string $url;
     private ?string $groupIdentifier;
-
-    /**
-     * @var ImageResult|null
-     */
-    private $image;
+    private ?ImageResult $image = null;
 
     /**
      * @param string|ImageInterface|null                 $filePathOrImage
