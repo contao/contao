@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,6 +41,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $io = new SymfonyStyle($input, $output);
 
         $config = $this->backupManager->createRestoreConfig();
+        /** @var RestoreConfig $config */
         $config = $this->handleCommonConfig($input, $config);
 
         if ($input->getOption('force')) {

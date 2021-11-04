@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,6 +41,7 @@ class BackupCreateCommand extends AbstractBackupCommand
         $io = new SymfonyStyle($input, $output);
 
         $config = $this->backupManager->createCreateConfig();
+        /** @var CreateConfig $config */
         $config = $this->handleCommonConfig($input, $config);
 
         if ($bufferSize = $input->getOption('buffer-size')) {
@@ -73,7 +75,10 @@ class BackupCreateCommand extends AbstractBackupCommand
         return 0;
     }
 
-    private function parseBufferSize(string $bufferSize): ?int
+    /**
+     * @throws \InvalidArgumentException
+     */
+    private function parseBufferSize(string $bufferSize): int
     {
         $match = preg_match('/^(\d+)(KB|MB|GB)?$/', $bufferSize, $matches);
 

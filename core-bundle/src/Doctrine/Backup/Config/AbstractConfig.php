@@ -51,7 +51,10 @@ abstract class AbstractConfig
         return $this->dumpHeader;
     }
 
-    public function withGzCompression(bool $enable): self
+    /**
+     * @return static
+     */
+    public function withGzCompression(bool $enable)
     {
         $new = clone $this;
         $new->gzCompression = $enable;
@@ -59,7 +62,10 @@ abstract class AbstractConfig
         return $new;
     }
 
-    public function withTablesToIgnore(array $tablesToIgnore): self
+    /**
+     * @return static
+     */
+    public function withTablesToIgnore(array $tablesToIgnore)
     {
         $new = clone $this;
         $new->tablesToIgnore = $tablesToIgnore;
@@ -67,7 +73,10 @@ abstract class AbstractConfig
         return $new;
     }
 
-    public function withFilePath(string $filePath): self
+    /**
+     * @return static
+     */
+    public function withFilePath(string $filePath)
     {
         $new = clone $this;
         $new->backup = new Backup($filePath);
@@ -75,7 +84,10 @@ abstract class AbstractConfig
         return $new;
     }
 
-    public function withDumpHeader(string $dumpHeader): self
+    /**
+     * @return static
+     */
+    public function withDumpHeader(string $dumpHeader)
     {
         $new = clone $this;
         $new->dumpHeader = $dumpHeader;

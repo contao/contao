@@ -54,7 +54,7 @@ class Backup
         return $this->createdAt;
     }
 
-    public static function createNewAtPath(string $targetPath, \DateTimeInterface $dateTime = null): self
+    public static function createNewAtPath(string $targetPath, \DateTime $dateTime = null): self
     {
         $targetPath = rtrim($targetPath, '/');
         $now = $dateTime ?? new \DateTime('now');

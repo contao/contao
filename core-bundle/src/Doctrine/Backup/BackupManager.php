@@ -168,7 +168,7 @@ class BackupManager
     {
         $backup = $config->getBackup();
 
-        if (!file_exists($backup->getFilepath())) {
+        if (!(new Filesystem())->exists($backup->getFilepath())) {
             throw new BackupManagerException(sprintf('Dump does not exist at "%s".', $backup->getFilepath()));
         }
 
