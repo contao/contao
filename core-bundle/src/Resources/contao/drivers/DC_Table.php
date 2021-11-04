@@ -3837,7 +3837,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
 		// Must be either visible in the root trail or allowed by permissions (or their children)
-		if (!\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		// In the extended tree view (mode 6) we have to check on the parent table only
+		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 || $table !== $this->strTable;
+
+		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
 			return '';
 		}

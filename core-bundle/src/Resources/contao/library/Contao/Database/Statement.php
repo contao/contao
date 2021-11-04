@@ -12,7 +12,8 @@ namespace Contao\Database;
 
 use Contao\Database;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Driver\Result as DoctrineResult;
+use Doctrine\DBAL\Exception\DriverException;
 
 /**
  * Create and execute queries
@@ -44,7 +45,7 @@ class Statement
 
 	/**
 	 * Database statement
-	 * @var ResultStatement
+	 * @var DoctrineResult
 	 */
 	protected $statement;
 
@@ -55,27 +56,23 @@ class Statement
 	protected $strQuery;
 
 	/**
-	 * Autocommit indicator
-	 * @var boolean
-	 */
-	protected $blnDisableAutocommit = false;
-
-	/**
-	 * Result cache
 	 * @var array
 	 */
-	protected static $arrCache = array();
+	private $arrSetParams = array();
+
+	/**
+	 * @var array
+	 */
+	private $arrLastUsedParams = array();
 
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param Connection $resConnection        The connection resource
-	 * @param boolean    $blnDisableAutocommit Optionally disable autocommitting
+	 * @param Connection $resConnection The connection resource
 	 */
-	public function __construct(Connection $resConnection, $blnDisableAutocommit=false)
+	public function __construct(Connection $resConnection)
 	{
 		$this->resConnection = $resConnection;
-		$this->blnDisableAutocommit = $blnDisableAutocommit;
 	}
 
 	/**
@@ -124,27 +121,7 @@ class Statement
 		}
 
 		$this->strQuery = trim($strQuery);
-
-		// Auto-generate the SET/VALUES subpart
-		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0 || strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
-		{
-			$this->strQuery = str_replace('%s', '%p', $this->strQuery);
-		}
-
-		// Replace wildcards
-		$arrChunks = preg_split("/('[^']*')/", $this->strQuery, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-
-		foreach ($arrChunks as $k=>$v)
-		{
-			if (0 === strncmp($v, "'", 1))
-			{
-				continue;
-			}
-
-			$arrChunks[$k] = str_replace('?', '%s', $v);
-		}
-
-		$this->strQuery = implode('', $arrChunks);
+		$this->arrLastUsedParams = array();
 
 		return $this;
 	}
@@ -166,33 +143,50 @@ class Statement
 	 */
 	public function set($arrParams)
 	{
-		$strQuery = '';
-		$arrParams = $this->escapeParams($arrParams);
+		if (substr_count($this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder. This will throw an exception in Contao 5.0.', __METHOD__);
+
+			return $this;
+		}
+
+		$this->arrSetParams = array_values($arrParams);
+
+		$arrParamNames = array_map(
+			static function ($strName)
+			{
+				if (!preg_match('/^[A-Za-z0-9_$]+$/', $strName))
+				{
+					throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
+				}
+
+				return Database::quoteIdentifier($strName);
+			},
+			array_keys($arrParams)
+		);
 
 		// INSERT
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
 		{
 			$strQuery = sprintf(
 				'(%s) VALUES (%s)',
-				implode(', ', array_map('Database::quoteIdentifier', array_keys($arrParams))),
-				str_replace('%', '%%', implode(', ', $arrParams))
+				implode(', ', $arrParamNames),
+				implode(', ', array_fill(0, \count($arrParams), '?'))
 			);
 		}
 
 		// UPDATE
-		elseif (strncasecmp($this->strQuery, 'UPDATE', 6) === 0)
+		else
 		{
-			$arrSet = array();
-
-			foreach ($arrParams as $k=>$v)
+			if (!$arrParamNames)
 			{
-				$arrSet[] = Database::quoteIdentifier($k) . '=' . $v;
+				throw new \InvalidArgumentException('Set array must not be empty for UPDATE queries');
 			}
 
-			$strQuery = 'SET ' . str_replace('%', '%%', implode(', ', $arrSet));
+			$strQuery = 'SET ' . implode('=?, ', $arrParamNames) . '=?';
 		}
 
-		$this->strQuery = str_replace('%p', $strQuery, $this->strQuery);
+		$this->strQuery = str_replace('%s', $strQuery, $this->strQuery);
 
 		return $this;
 	}
@@ -238,14 +232,14 @@ class Statement
 	{
 		$arrParams = \func_get_args();
 
-		if (!empty($arrParams) && \is_array($arrParams[0]))
+		if (\count($arrParams) === 1 && \is_array($arrParams[0]))
 		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" with an array parameter has been deprecated and will no longer work in Contao 5.0. Use argument unpacking via ... instead."', __METHOD__);
+
 			$arrParams = array_values($arrParams[0]);
 		}
 
-		$this->replaceWildcards($arrParams);
-
-		return $this->query();
+		return $this->query('', array_merge($this->arrSetParams, $arrParams));
 	}
 
 	/**
@@ -257,7 +251,7 @@ class Statement
 	 *
 	 * @throws \Exception If the query string is empty
 	 */
-	public function query($strQuery='')
+	public function query($strQuery='', array $arrParams = array())
 	{
 		if (!empty($strQuery))
 		{
@@ -270,8 +264,39 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
+		$arrParams = array_map(
+			static function ($varParam)
+			{
+				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+				{
+					return $varParam;
+				}
+
+				return serialize($varParam);
+			},
+			$arrParams
+		);
+
+		$this->arrLastUsedParams = $arrParams;
+
 		// Execute the query
-		$this->statement = $this->resConnection->executeQuery($this->strQuery);
+		try
+		{
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
+		}
+		catch (DriverException $exception)
+		{
+			if ($arrParams !== array(null))
+			{
+				throw $exception;
+			}
+
+			// Backwards compatibility for calling Statement::execute(null)
+			$this->statement = $this->resConnection->executeQuery($this->strQuery);
+
+			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Use "%s::execute() instead."', __CLASS__, __CLASS__);
+		}
 
 		// No result set available
 		if ($this->statement->columnCount() < 1)
@@ -289,9 +314,13 @@ class Statement
 	 * @param array $arrValues The values array
 	 *
 	 * @throws \Exception If $arrValues has too few values to replace the wildcards in the query string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function replaceWildcards($arrValues)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
 		$arrValues = $this->escapeParams($arrValues);
 		$this->strQuery = preg_replace('/(?<!%)%([^bcdufosxX%])/', '%%$1', $this->strQuery);
 
@@ -308,9 +337,13 @@ class Statement
 	 * @param array $arrValues The values array
 	 *
 	 * @return array The array with the escaped values
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function escapeParams($arrValues)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
 		foreach ($arrValues as $k=>$v)
 		{
 			switch (\gettype($v))
@@ -341,10 +374,14 @@ class Statement
 	 * Explain the current query
 	 *
 	 * @return string The explanation string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public function explain()
 	{
-		return $this->resConnection->fetchAssociative('EXPLAIN ' . $this->strQuery);
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
+		return $this->resConnection->fetchAssociative('EXPLAIN ' . $this->strQuery, $this->arrLastUsedParams);
 	}
 
 	/**
