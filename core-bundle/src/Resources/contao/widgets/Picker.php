@@ -273,9 +273,9 @@ class Picker extends Widget
 
 	protected function renderLabel(array $arrRow, DataContainer $dc)
 	{
-		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? 1;
+		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
-		if ($mode === 4)
+		if ($mode === DataContainer::MODE_PARENT)
 		{
 			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
@@ -308,7 +308,7 @@ class Picker extends Widget
 
 				$labelValues[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(5, 6, 7, 8, 9, 10)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC)))
 			{
 				if ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'date')
 				{
