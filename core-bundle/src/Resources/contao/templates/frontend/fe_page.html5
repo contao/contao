@@ -13,11 +13,9 @@
       <meta name="generator" content="Contao Open Source CMS">
     <?php $this->endblock(); ?>
 
-    <?php $this->block('canonical'); ?>
-      <?php if ($this->canonical): ?>
-        <link rel="canonical" href="<?= $this->canonical; ?>">
-      <?php endif; ?>
-    <?php $this->endblock(); ?>
+    <?php if ($this->canonical): ?>
+      <link rel="canonical" href="<?= $this->canonical ?>">
+    <?php endif; ?>
 
     <?= $this->viewport ?>
     <?= $this->framework ?>
