@@ -19,10 +19,6 @@ services:
         tags:
             - { name: kernel.event_listener }
 
-    Contao\CoreBundle\EventListener\DataContainer\AddCanonicalFieldsListener:
-        arguments:
-            - '@contao.framework'
-
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         arguments:
             - '@contao.framework'
@@ -32,6 +28,8 @@ services:
             - '@database_connection'
             - '@request_stack'
         public: true
+
+    Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener: ~
 
     Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener:
         arguments:
