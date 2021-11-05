@@ -3262,7 +3262,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 
-		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 		{
 			$ptable = $this->strTable;
 		}
@@ -3838,7 +3838,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 	{
 		// Must be either visible in the root trail or allowed by permissions (or their children)
 		// In the extended tree view (mode 6) we have to check on the parent table only
-		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5 || $table !== $this->strTable;
+		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
 
 		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
@@ -5625,7 +5625,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					// Sort by month
-					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(7, 8)))
+					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 					{
 						if (!$session['filter'][$filter][$field])
 						{
@@ -5786,7 +5786,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 				{
-					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 6 ? rsort($options) : sort($options);
+					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == self::SORT_DAY_DESC ? rsort($options) : sort($options);
 
 					foreach ($options as $k=>$v)
 					{
@@ -5806,7 +5806,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 				{
-					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 8 ? rsort($options) : sort($options);
+					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == self::SORT_MONTH_DESC ? rsort($options) : sort($options);
 
 					foreach ($options as $k=>$v)
 					{

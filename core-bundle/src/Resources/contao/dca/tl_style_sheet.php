@@ -151,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
