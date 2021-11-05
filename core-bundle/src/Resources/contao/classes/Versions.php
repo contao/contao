@@ -649,14 +649,9 @@ class Versions extends Controller
 		$arrVersions = array();
 
 		$objUser = BackendUser::getInstance();
+		$params = $objUser->isAdmin ? array() : array($objUser->id);
+
 		$objDatabase = Database::getInstance();
-
-		$params = array();
-
-		if (!$objUser->isAdmin)
-		{
-			$params[] = $objUser->id;
-		}
 
 		// Get the total number of versions
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
