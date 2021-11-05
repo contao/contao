@@ -66,5 +66,7 @@ class StatementTest extends FunctionalTestCase
         $this->assertNull(PageModel::findOneBy('id', null));
         $this->assertNull(PageModel::findBy('id', null));
         $this->assertNull(PageModel::findAll(['column' => 'id', 'value' => null]));
+
+        unset($GLOBALS['TL_MODELS']);
     }
 }
