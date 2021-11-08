@@ -113,22 +113,7 @@ class BackupManagerTest extends ContaoTestCase
     public function testSuccessfulCreate(bool $autoCommitEnabled): void
     {
         $connection = $this->getConnection($autoCommitEnabled);
-
-        $dumper = $this->createMock(DumperInterface::class);
-        $dumper
-            ->expects($this->once())
-            ->method('dump')
-            ->with(
-                $connection,
-                $this->isInstanceOf(CreateConfig::class)
-            )
-            ->willReturnCallback(
-                static function () {
-                    yield 'Dumper content line one';
-                    yield 'Dumper content line two';
-                }
-            )
-        ;
+        $dumper = $this->mockDumper($connection);
 
         $manager = $this->getBackupManager($connection, $dumper);
 
@@ -153,12 +138,7 @@ class BackupManagerTest extends ContaoTestCase
     public function testIsGzipEncodedIfEnabled(): void
     {
         $connection = $this->getConnection(true);
-
-        $dumper = $this->createMock(DumperInterface::class);
-        $dumper
-            ->expects($this->once())
-            ->method('dump')
-        ;
+        $dumper = $this->mockDumper($connection);
 
         $manager = $this->getBackupManager($connection, $dumper);
         $config = $manager->createCreateConfig();
@@ -384,6 +364,30 @@ class BackupManagerTest extends ContaoTestCase
                 ['DROP TABLE IF EXISTS `tl_article`;'],
             ],
         ];
+    }
+
+    /**
+     * @return DumperInterface|MockObject
+     */
+    private function mockDumper(Connection $connection)
+    {
+        $dumper = $this->createMock(DumperInterface::class);
+        $dumper
+            ->expects($this->once())
+            ->method('dump')
+            ->with(
+                $connection,
+                $this->isInstanceOf(CreateConfig::class)
+            )
+            ->willReturnCallback(
+                static function () {
+                    yield 'Dumper content line one';
+                    yield 'Dumper content line two';
+                }
+            )
+        ;
+
+        return $dumper;
     }
 
     /**
