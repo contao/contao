@@ -263,15 +263,9 @@ class AbstractPageRouteProviderTest extends TestCase
             $pageLanguages
         );
 
-        usort(
-            $routes,
-            static fn ($a, $b) => $method->invoke($instance, $a, $b, $preferredLanguages)
-        );
+        usort($routes, static fn ($a, $b) => $method->invoke($instance, $a, $b, $preferredLanguages));
 
-        $result = array_map(
-            static fn (Route $route) => $route->getDefault('pageModel')->rootLanguage,
-            $routes
-        );
+        $result = array_map(static fn (Route $route) => $route->getDefault('pageModel')->rootLanguage, $routes);
 
         $this->assertSame($expected, $result);
     }

@@ -21,8 +21,8 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
@@ -840,10 +840,7 @@ abstract class Controller extends System
 		// Add the internal jQuery scripts
 		if (!empty($GLOBALS['TL_JQUERY']) && \is_array($GLOBALS['TL_JQUERY']))
 		{
-			foreach (array_unique($GLOBALS['TL_JQUERY']) as $script)
-			{
-				$strScripts .= $script;
-			}
+			$strScripts .= implode('', array_unique($GLOBALS['TL_JQUERY']));
 		}
 
 		$arrReplace['[[TL_JQUERY]]'] = $strScripts;
@@ -852,10 +849,7 @@ abstract class Controller extends System
 		// Add the internal MooTools scripts
 		if (!empty($GLOBALS['TL_MOOTOOLS']) && \is_array($GLOBALS['TL_MOOTOOLS']))
 		{
-			foreach (array_unique($GLOBALS['TL_MOOTOOLS']) as $script)
-			{
-				$strScripts .= $script;
-			}
+			$strScripts .= implode('', array_unique($GLOBALS['TL_MOOTOOLS']));
 		}
 
 		$arrReplace['[[TL_MOOTOOLS]]'] = $strScripts;
@@ -864,17 +858,14 @@ abstract class Controller extends System
 		// Add the internal <body> tags
 		if (!empty($GLOBALS['TL_BODY']) && \is_array($GLOBALS['TL_BODY']))
 		{
-			foreach (array_unique($GLOBALS['TL_BODY']) as $script)
-			{
-				$strScripts .= $script;
-			}
+			$strScripts .= implode('', array_unique($GLOBALS['TL_BODY']));
 		}
 
 		/** @var PageModel|null $objPage */
 		global $objPage;
 
 		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
-		$blnCombineScripts = ($objLayout === null) ? false : $objLayout->combineScripts;
+		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
 		$arrReplace['[[TL_BODY]]'] = $strScripts;
 		$strScripts = '';

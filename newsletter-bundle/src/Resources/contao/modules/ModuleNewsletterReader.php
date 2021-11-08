@@ -15,7 +15,8 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\CoreBundle\String\HtmlDecoder;
+use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
  * Front end module "newsletter reader".
@@ -98,9 +99,11 @@ class ModuleNewsletterReader extends Module
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
+				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objNewsletter->subject));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objNewsletter->subject));
 			}
 		}
 

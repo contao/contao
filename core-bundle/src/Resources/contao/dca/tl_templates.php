@@ -419,7 +419,7 @@ class tl_templates extends Backend
 		}
 		else
 		{
-			// Try to find the base template by strippig suffixes
+			// Try to find the base template by stripping suffixes
 			while (strpos($strName, '_') !== false)
 			{
 				$strName = substr($strName, 0, strrpos($strName, '_'));

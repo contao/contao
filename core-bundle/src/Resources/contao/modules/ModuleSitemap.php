@@ -64,7 +64,7 @@ class ModuleSitemap extends Module
 			$this->rootPage = $objPage->rootId;
 		}
 
-		// Overwrite the domain and language if the reference page belongs to a differnt root page (see #3765)
+		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
 		else
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);

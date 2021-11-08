@@ -93,11 +93,7 @@ class Factory
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue(
-                $this->connection,
-                static fn (): string => Uuid::uuid4()->toString(),
-                'tl_crawl_queue'
-            )
+            new DoctrineQueue($this->connection, static fn (): string => Uuid::uuid4()->toString(), 'tl_crawl_queue')
         );
     }
 

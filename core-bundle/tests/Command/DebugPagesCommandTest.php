@@ -65,9 +65,7 @@ class DebugPagesCommandTest extends ContaoTestCase
 
         $pageRegistry
             ->method('supportsContentComposition')
-            ->willReturnCallback(
-                static fn (PageModel $pageModel): bool => 'regular' === $pageModel->type
-            )
+            ->willReturnCallback(static fn (PageModel $pageModel): bool => 'regular' === $pageModel->type)
         ;
 
         $command = new DebugPagesCommand($this->mockContaoFramework(), $pageRegistry);

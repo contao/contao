@@ -144,9 +144,7 @@ class PluginTest extends ContaoTestCase
         $parser
             ->expects($this->atLeastOnce())
             ->method('parse')
-            ->willReturnCallback(
-                static fn ($resource): array => [$resource]
-            )
+            ->willReturnCallback(static fn ($resource): array => [$resource])
         ;
 
         $plugin = new Plugin();
@@ -863,10 +861,7 @@ class PluginTest extends ContaoTestCase
 
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
     {
-        $plugin = new Plugin(
-            fn () => $this->createMock(Connection::class)
-        );
-
+        $plugin = new Plugin();
         $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
 
         // Ignore the DBAL entry
@@ -931,9 +926,7 @@ class PluginTest extends ContaoTestCase
             );
         }
 
-        $plugin = new Plugin(
-            fn () => $this->createMock(Connection::class)
-        );
+        $plugin = new Plugin();
 
         $container = $this->getContainer();
         $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');

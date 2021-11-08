@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\Util\SimpleTokenParser;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mime\Exception\RfcComplianceException;

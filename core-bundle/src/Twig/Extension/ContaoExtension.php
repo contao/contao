@@ -208,10 +208,7 @@ final class ContaoExtension extends AbstractExtension
 
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = array_map(
-                    static fn ($block) => \is_array($block) ? $block : [$block],
-                    $blocks
-                );
+                $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
             }
 
             public function parse(): string
