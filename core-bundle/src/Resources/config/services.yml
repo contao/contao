@@ -430,6 +430,7 @@ services:
     Contao\CoreBundle\InsertTag\InsertTagParser:
         arguments:
             - '@contao.framework'
+        public: true
 
     Contao\CoreBundle\Intl\Countries:
         arguments:
