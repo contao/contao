@@ -25,7 +25,7 @@ set_time_limit(0);
 if (file_exists(__DIR__.'/../autoload.php')) {
     $projectDir = \dirname(__DIR__, 2);
 } elseif (file_exists(__DIR__.'/../../../../autoload.php')) {
-    $projectDir = \dirname(__DIR__, 5);
+    $projectDir = \dirname(__DIR__, 7);
 } elseif (false !== ($cwd = getcwd()) && file_exists($cwd.'/vendor/autoload.php')) {
     $projectDir = $cwd;
 } else {
