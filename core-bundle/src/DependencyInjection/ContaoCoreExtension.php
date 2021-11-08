@@ -83,7 +83,10 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
-        $container->setParameter('contao.backend', $config['backend']);
+        $container->setParameter('contao.backend.attributes', $config['backend']['attributes']);
+        $container->setParameter('contao.backend.custom_css', $config['backend']['custom_css']);
+        $container->setParameter('contao.backend.custom_js', $config['backend']['custom_js']);
+        $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
