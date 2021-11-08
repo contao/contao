@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\BinaryType;
@@ -48,24 +50,36 @@ class Dumper implements DumperInterface
     {
         $this->init($config);
         $this->writeln('SET FOREIGN_KEY_CHECKS = 0;');
+        $schemaManager = $connection->createSchemaManager();
+        $platform = $connection->getDatabasePlatform();
 
-        foreach ($this->getTablesToDump($connection, $config) as $table) {
-            $this->dumpSchema($connection, $config, $table);
+        foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
+            $this->dumpSchema($platform, $table);
             $this->dumpData($connection, $config, $table);
         }
 
-        // Views and triggers are currently not supported (contributions welcome!)
+        $this->dumpViews($schemaManager, $platform);
+
+        // Triggers are currently not supported (contributions welcome!)
 
         $this->writeln('SET FOREIGN_KEY_CHECKS = 1;');
         $this->finish();
     }
 
-    private function dumpSchema(Connection $connection, CreateConfig $config, Table $table): void
+    private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): void
+    {
+        foreach ($schemaManager->listViews() as $view) {
+            $this->writeln(sprintf('-- BEGIN VIEW %s', $view->getName()));
+            $this->writeln($platform->getCreateViewSQL($view->getQuotedName($platform), $view->getSql()).';');
+        }
+    }
+
+    private function dumpSchema(AbstractPlatform $platform, Table $table): void
     {
         $this->writeln(sprintf('-- BEGIN STRUCTURE %s', $table->getName()));
         $this->writeln(sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName()));
 
-        foreach ($connection->getDatabasePlatform()->getCreateTableSQL($table) as $statement) {
+        foreach ($platform->getCreateTableSQL($table) as $statement) {
             $this->writeln($statement.';');
         }
     }
@@ -121,9 +135,9 @@ class Dumper implements DumperInterface
      *
      * @return array<Table>
      */
-    private function getTablesToDump(Connection $connection, CreateConfig $config): array
+    private function getTablesToDump(AbstractSchemaManager $schemaManager, CreateConfig $config): array
     {
-        $allTables = $connection->createSchemaManager()->listTables();
+        $allTables = $schemaManager->listTables();
         $filteredTables = [];
 
         foreach ($allTables as $table) {
