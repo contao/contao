@@ -94,8 +94,6 @@ class Dumper implements DumperInterface
                 $insertValues[] = $this->formatValueForDump($value, $table->getColumn($columnName), $connection);
             }
 
-            // TODO: Add support for $config->getBufferSize()
-
             $this->writeln(sprintf(
                 'INSERT INTO `%s` (%s) VALUES (%s);',
                 $table->getName(),

@@ -24,7 +24,6 @@ class CreateConfigTest extends TestCase
 
         $this->assertInstanceOf(Backup::class, $config->getBackup());
         $this->assertSame(CreateConfig::DEFAULT_DUMP_HEADER, $config->getDumpHeader());
-        $this->assertSame(104857600, $config->getBufferSize());
         $this->assertSame([], $config->getTablesToIgnore());
         $this->assertFalse($config->isGzCompressionEnabled());
     }
@@ -41,10 +40,8 @@ class CreateConfigTest extends TestCase
 
         $config = $config->withFilePath('other_name__20211101141254.sql.gz');
         $config = $config->withTablesToIgnore(['foobar']);
-        $config = $config->withBufferSize(500);
 
         $this->assertSame('other_name__20211101141254.sql.gz', $config->getBackup()->getFilepath());
-        $this->assertSame(500, $config->getBufferSize());
         $this->assertSame(['foobar'], $config->getTablesToIgnore());
 
         // Important, this should not automatically be enabled when changing the path!

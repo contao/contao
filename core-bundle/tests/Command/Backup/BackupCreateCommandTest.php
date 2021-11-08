@@ -77,19 +77,6 @@ class BackupCreateCommandTest extends TestCase
         yield 'Default arguments' => [
             [],
             function (CreateConfig $config) {
-                $this->assertSame(104857600, $config->getBufferSize()); // 100 MB
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
-
-                return true;
-            },
-            '[OK] Successfully created an SQL dump at "test__20211101141254.sql.gz".',
-        ];
-
-        yield 'Different buffer size' => [
-            ['--buffer-size' => '30MB'],
-            function (CreateConfig $config) {
-                $this->assertSame(31457280, $config->getBufferSize()); // 30 MB
                 $this->assertSame([], $config->getTablesToIgnore());
                 $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
 
@@ -99,9 +86,8 @@ class BackupCreateCommandTest extends TestCase
         ];
 
         yield 'Different tables to ignore' => [
-            ['--ignore-tables' => 'foo,bar', '--buffer-size' => '2GB'],
+            ['--ignore-tables' => 'foo,bar'],
             function (CreateConfig $config) {
-                $this->assertSame(2147483648, $config->getBufferSize()); // 2 GB
                 $this->assertSame(['foo', 'bar'], $config->getTablesToIgnore());
                 $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
 
@@ -113,7 +99,6 @@ class BackupCreateCommandTest extends TestCase
         yield 'Different target file' => [
             ['file' => 'somewhere/else/file__20211101141254.sql'],
             function (CreateConfig $config) {
-                $this->assertSame(104857600, $config->getBufferSize()); // 2 GB
                 $this->assertSame([], $config->getTablesToIgnore());
                 $this->assertSame('somewhere/else/file__20211101141254.sql', $config->getBackup()->getFilepath());
 
@@ -125,7 +110,6 @@ class BackupCreateCommandTest extends TestCase
         yield 'JSON format' => [
             ['--format' => 'json'],
             function (CreateConfig $config) {
-                $this->assertSame(104857600, $config->getBufferSize()); // 100 MB
                 $this->assertSame([], $config->getTablesToIgnore());
                 $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
 

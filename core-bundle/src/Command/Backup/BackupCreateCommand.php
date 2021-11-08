@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Command\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -31,7 +30,6 @@ class BackupCreateCommand extends AbstractBackupCommand
         parent::configure();
 
         $this
-            ->addOption('buffer-size', 'b', InputOption::VALUE_OPTIONAL, 'Maximum length of a single SQL statement generated. Requires said amount of RAM. Defaults to "100MB".')
             ->setDescription('Creates a new backup.')
         ;
     }
@@ -43,11 +41,6 @@ class BackupCreateCommand extends AbstractBackupCommand
         $config = $this->backupManager->createCreateConfig();
         /** @var CreateConfig $config */
         $config = $this->handleCommonConfig($input, $config);
-
-        if ($bufferSize = $input->getOption('buffer-size')) {
-            $bufferSize = $this->parseBufferSize($bufferSize);
-            $config = $config->withBufferSize($bufferSize);
-        }
 
         try {
             $this->backupManager->create($config);
@@ -73,32 +66,5 @@ class BackupCreateCommand extends AbstractBackupCommand
         ));
 
         return 0;
-    }
-
-    /**
-     * @throws \InvalidArgumentException
-     */
-    private function parseBufferSize(string $bufferSize): int
-    {
-        $match = preg_match('/^(\d+)(KB|MB|GB)?$/', $bufferSize, $matches);
-
-        if (false === $match || 0 === $match) {
-            throw new \InvalidArgumentException('The buffer size must be an unsigned integer, optionally ending with KB, MB or GB.');
-        }
-        $bufferSize = (int) $matches[1];
-        $bufferFactor = 1;
-
-        switch ($matches[2]) {
-            case 'GB':
-                $bufferFactor *= 1024;
-            // no break
-            case 'MB':
-                $bufferFactor *= 1024;
-            // no break
-            case 'KB':
-                $bufferFactor *= 1024;
-        }
-
-        return $bufferSize * $bufferFactor;
     }
 }
