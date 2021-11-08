@@ -187,12 +187,9 @@ class BackupManagerTest extends ContaoTestCase
 
     public function testDirectoryIsCleanedUpAfterSuccessfulCreate(): void
     {
-        $dumper = $this->createMock(DumperInterface::class);
-        $dumper
-            ->expects($this->once())
-            ->method('dump')
-        ;
-        $manager = $this->getBackupManager($this->getConnection(true), $dumper);
+        $connection = $this->getConnection(true);
+        $dumper = $this->mockDumper($connection);
+        $manager = $this->getBackupManager($connection, $dumper);
         $config = $manager->createCreateConfig();
 
         Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
