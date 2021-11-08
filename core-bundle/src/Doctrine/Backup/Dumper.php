@@ -83,8 +83,6 @@ class Dumper implements DumperInterface
             }
         }
 
-        // TODO: disable mysql buffering if enabled would probably speed up things here
-
         $rows = $connection->executeQuery(sprintf('SELECT %s FROM `%s`', implode(', ', $values), $table->getName()));
 
         foreach ($rows->fetchAllAssociative() as $row) {
