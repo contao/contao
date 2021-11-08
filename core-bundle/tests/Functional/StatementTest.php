@@ -39,7 +39,7 @@ class StatementTest extends FunctionalTestCase
     {
         $db = Database::getInstance();
 
-        $this->expectDeprecation('%spassing more parameters than "?" tokens has been deprecated%s');
+        $this->expectDeprecation('%sPassing more parameters than "?" tokens has been deprecated%s');
 
         $this->assertSame('1', (string) $db->prepare('SELECT 1')->execute(2)->first()->fetchField());
         $this->assertSame('1', (string) $db->prepare('SELECT 1')->execute([2])->first()->fetchField());

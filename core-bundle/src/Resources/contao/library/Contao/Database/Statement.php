@@ -284,6 +284,10 @@ class Statement
 		{
 			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 		}
+		// Executing the query with the wrong number of params causes a
+		// DriverException in PDO and an ArgumentCountError in mysqli. For
+		// backwards compatibility we catch them and fix the number of arguments
+		// if possible.
 		catch (DriverException|\ArgumentCountError $exception)
 		{
 			if (!$arrParams || \count($arrParams) <= ($intTokenCount = $this->countQueryTokens()))
@@ -296,7 +300,14 @@ class Statement
 			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 
 			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" or passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.', __CLASS__);
+			if ($this->arrLastUsedParams === array(null))
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Omit the NULL parameters instead.', __CLASS__);
+			}
+			else
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.', __CLASS__);
+			}
 		}
 
 		// No result set available
