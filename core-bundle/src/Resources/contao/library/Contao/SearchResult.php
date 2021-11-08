@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Stores result from the Search::query() method
  *
@@ -91,7 +89,7 @@ class SearchResult
 		foreach ($arrResults as $k=>$v)
 		{
 			$arrHighlight = array();
-			$arrWords = Search::splitIntoWords(Utf8::strtolower($v['text']), $v['language']);
+			$arrWords = Search::splitIntoWords(mb_strtolower($v['text']), $v['language']);
 
 			foreach ($this->arrKeywords as $strKeyword)
 			{

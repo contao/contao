@@ -63,15 +63,19 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.title">
         <source>Unable to generate front end URL</source>
+        <target>Nešlo vytvořit frontendovou URL</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.matter">
         <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>Nešlo vytvořit URL, protože má cesta povinné parametry, které nejsou zadány. Další informace (např. aliase novinky) se musí poskytnout.</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.explain">
         <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Cesty Symfony mohou mít rozličné parametry, které jsou platné použitím regulérních výrazů. Následující nastavení nešlo vyřešit:</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.path">
         <source>Route path</source>
+        <target>Cesta</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterName">
         <source>Name</source>
@@ -79,6 +83,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
         <source>Requirement (Regex)</source>
+        <target>Požadavek (Regex)</target>
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterDefault">
         <source>Default value</source>
@@ -86,6 +91,7 @@
       </trans-unit>
       <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
         <source>empty</source>
+        <target>prázdný</target>
       </trans-unit>
     </body>
   </file>

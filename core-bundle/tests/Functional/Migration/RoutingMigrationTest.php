@@ -80,7 +80,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $connection = static::$container->get('database_connection');
         $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
-        $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
+        $columns = $connection->createSchemaManager()->listTableColumns('tl_page');
 
         $this->assertFalse(isset($columns['urlPrefix']));
         $this->assertFalse(isset($columns['urlsuffix']));
@@ -94,7 +94,7 @@ class RoutingMigrationTest extends FunctionalTestCase
 
         $this->assertTrue($result->isSuccessful());
 
-        $columns = $connection->getSchemaManager()->listTableColumns('tl_page');
+        $columns = $connection->createSchemaManager()->listTableColumns('tl_page');
 
         $this->assertTrue(isset($columns['urlprefix']));
         $this->assertTrue(isset($columns['urlsuffix']));

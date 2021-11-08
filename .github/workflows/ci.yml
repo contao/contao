@@ -4,11 +4,11 @@ on:
     pull_request: ~
     push:
         branches:
-            - 4.12
+            - 4.x
         tags:
-            - 4.12.*
+            - '*'
     schedule:
-        - cron: 0 13 * * MON,TUE
+        - cron: 0 13 * * MON,THU
 
 jobs:
     coverage:
@@ -34,9 +34,9 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v2
               with:
-                  file: ./clover.xml
+                  files: ./clover.xml
                   fail_ci_if_error: true
 
     ecs:

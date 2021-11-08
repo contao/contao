@@ -107,7 +107,7 @@ class Installer
         $order = [];
 
         // Create the from and to schema
-        $fromSchema = $this->connection->getSchemaManager()->createSchema();
+        $fromSchema = $this->connection->createSchemaManager()->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());

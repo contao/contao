@@ -19,10 +19,10 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
+use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -58,6 +58,14 @@ class PluginTest extends ContaoTestCase
         parent::setUp();
 
         unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
+    }
+
+    public function testDependsOnCoreBundlePlugin(): void
+    {
+        $plugin = new Plugin();
+
+        $this->assertInstanceOf(DependentPluginInterface::class, $plugin);
+        $this->assertSame(['contao/core-bundle'], $plugin->getPackageDependencies());
     }
 
     public function testReturnsTheBundles(): void
@@ -136,9 +144,7 @@ class PluginTest extends ContaoTestCase
         $parser
             ->expects($this->atLeastOnce())
             ->method('parse')
-            ->willReturnCallback(
-                static fn ($resource): array => [$resource]
-            )
+            ->willReturnCallback(static fn ($resource): array => [$resource])
         ;
 
         $plugin = new Plugin();
@@ -281,6 +287,14 @@ class PluginTest extends ContaoTestCase
         $this->assertSame(
             [
                 'dot-env' => [
+                    'APP_SECRET',
+                    'APP_ENV',
+                    'COOKIE_WHITELIST',
+                    'DATABASE_URL',
+                    'DISABLE_HTTP_CACHE',
+                    'MAILER_URL',
+                    'MAILER_DSN',
+                    'TRACE_LEVEL',
                     'TRUSTED_PROXIES',
                     'TRUSTED_HOSTS',
                 ],
@@ -360,46 +374,72 @@ class PluginTest extends ContaoTestCase
             null,
             null,
             null,
-            'mysql://localhost:3306',
+            'pdo-mysql://localhost:3306',
         ];
 
         yield [
             null,
             null,
             'contao_test',
-            'mysql://localhost:3306/contao_test',
+            'pdo-mysql://localhost:3306/contao_test',
         ];
 
         yield [
             null,
             'foobar',
             'contao_test',
-            'mysql://localhost:3306/contao_test',
+            'pdo-mysql://localhost:3306/contao_test',
         ];
 
         yield [
             'root',
             null,
             'contao_test',
-            'mysql://root@localhost:3306/contao_test',
+            'pdo-mysql://root@localhost:3306/contao_test',
         ];
 
         yield [
             'root',
             'foobar',
             'contao_test',
-            'mysql://root:foobar@localhost:3306/contao_test',
+            'pdo-mysql://root:foobar@localhost:3306/contao_test',
         ];
 
         yield [
             'root',
             'aA&3yuA?123-2ABC',
             'contao_test',
-            'mysql://root:aA%%263yuA%%3F123-2ABC@localhost:3306/contao_test',
+            'pdo-mysql://root:aA%%263yuA%%3F123-2ABC@localhost:3306/contao_test',
         ];
     }
 
-    public function testAddsTheDefaultServerVersionAndPdoOptions(): void
+    public function testSetsTheDatabaseDriverUrl(): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('database_user', 'root');
+        $container->setParameter('database_password', 'foobar');
+        $container->setParameter('database_name', 'contao_test');
+
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => 'mysqli',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame('mysqli://root:foobar@localhost:3306/contao_test', $bag['env(DATABASE_URL)']);
+    }
+
+    public function testAddsThePdoOptions(): void
     {
         $extensionConfigs = [
             [
@@ -416,15 +456,6 @@ class PluginTest extends ContaoTestCase
         $expect = array_merge(
             $extensionConfigs,
             [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'server_version' => '5.5',
-                            ],
-                        ],
-                    ],
-                ],
                 [
                     'dbal' => [
                         'connections' => [
@@ -460,26 +491,41 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = [
-            ...$extensionConfigs,
-            ...[[
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
+    }
+
+    public function testDoesNotAddDefaultPdoOptionsIfUrlIsMysqli(): void
+    {
+        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysqli://root:%%40foobar@localhost:3306/database';
+
+        $extensionConfigs = [
+            [
                 'dbal' => [
                     'connections' => [
                         'default' => [
-                            'server_version' => '5.5',
+                            'url' => '%env(DATABASE_URL)%',
                         ],
                     ],
                 ],
-            ]],
+            ],
         ];
+
+        // Adjust the error reporting to suppress mysqli warnings
+        $er = error_reporting();
+        error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
-        $this->assertSame($expect, $extensionConfig);
+        error_reporting($er);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
-    public function testDoesNotAddDefaultPdoOptionsIfCustomOptionsPresent(): void
+    public function testDoesNotOverrideThePdoMultiStatementsOption(): void
     {
         $extensionConfigs = [
             [
@@ -487,30 +533,19 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
-                            'options' => null,
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                            ],
                         ],
                     ],
                 ],
             ],
         ];
 
-        $expect = [
-            ...$extensionConfigs,
-            ...[[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]],
-        ];
-
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testUpdatesTheMailerTransport(): void
@@ -824,59 +859,9 @@ class PluginTest extends ContaoTestCase
         yield['foo://localhost'];
     }
 
-    public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
-    {
-        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
-        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
-
-        $extensionConfigs = [
-            [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'url' => '%env(DATABASE_URL)%',
-                            'password' => '@foobar',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('connect')
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('close')
-        ;
-
-        $dbalConnectionFactory = function ($params) use ($connection) {
-            $this->assertSame(
-                [
-                    'url' => 'mysql://root:%%40foobar@localhost:3306/database',
-                    'password' => '@foobar',
-                ],
-                $params
-            );
-
-            return $connection;
-        };
-
-        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
-
-        $plugin = new Plugin($dbalConnectionFactory);
-        $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
-    }
-
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
     {
-        $plugin = new Plugin(
-            fn () => $this->createMock(Connection::class)
-        );
-
+        $plugin = new Plugin();
         $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
 
         // Ignore the DBAL entry
@@ -941,9 +926,7 @@ class PluginTest extends ContaoTestCase
             );
         }
 
-        $plugin = new Plugin(
-            fn () => $this->createMock(Connection::class)
-        );
+        $plugin = new Plugin();
 
         $container = $this->getContainer();
         $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');

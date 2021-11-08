@@ -50,7 +50,7 @@ class OrderFieldMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         foreach (self::ORDER_FIELDS as $table => $fields) {
             if (!$schemaManager->tablesExist($table)) {
@@ -71,7 +71,7 @@ class OrderFieldMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         foreach (self::ORDER_FIELDS as $table => $fields) {
             if (!$schemaManager->tablesExist($table)) {

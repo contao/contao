@@ -14,8 +14,8 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
+use Contao\CoreBundle\String\HtmlDecoder;
+use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
  * Front end module "newsletter reader".
@@ -44,7 +44,7 @@ class ModuleNewsletterReader extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['newsletterreader'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['newsletterreader'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -98,9 +98,11 @@ class ModuleNewsletterReader extends Module
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
+				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objNewsletter->subject));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objNewsletter->subject));
 			}
 		}
 

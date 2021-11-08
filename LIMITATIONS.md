@@ -1,12 +1,18 @@
 # Known limitations
 
+## Cache blocks scheduled publishing
+
+If elements are to be published time-controlled and the shared cache is active,
+they will only be shown on the website after the cache has been purged.
+
+More information: https://github.com/contao/contao/issues/3101
+
 ## Importing style sheets with a media query
 
 Although the internal style sheet editor will add an existing media query when
 exporting a style sheet, the media query will not be re-imported.
 
-More information: https://github.com/contao/contao/issues/273 
-
+More information: https://github.com/contao/contao/issues/273
 
 ## Models and database connections
 

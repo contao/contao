@@ -63,7 +63,7 @@ class InsertTagsListener
             return '';
         }
 
-        return $this->generateReplacement($faq, $key, $url);
+        return $this->generateReplacement($faq, $key, $url, \in_array('blank', \array_slice($elements, 2), true));
     }
 
     /**
@@ -89,22 +89,24 @@ class InsertTagsListener
     /**
      * @return string|false
      */
-    private function generateReplacement(FaqModel $faq, string $key, string $url)
+    private function generateReplacement(FaqModel $faq, string $key, string $url, bool $blank)
     {
         switch ($key) {
             case 'faq':
                 return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
+                    '<a href="%s" title="%s"%s>%s</a>',
                     $url ?: './',
                     StringUtil::specialcharsAttribute($faq->question),
+                    $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $faq->question
                 );
 
             case 'faq_open':
                 return sprintf(
-                    '<a href="%s" title="%s">',
+                    '<a href="%s" title="%s"%s>',
                     $url ?: './',
-                    StringUtil::specialcharsAttribute($faq->question)
+                    StringUtil::specialcharsAttribute($faq->question),
+                    $blank ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
             case 'faq_url':

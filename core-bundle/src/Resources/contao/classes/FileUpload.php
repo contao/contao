@@ -149,7 +149,7 @@ class FileUpload extends Backend
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
 
 				// Image is too big
-				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp')) && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
+				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl')) && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
 				{
 					$arrImageSize = getimagesize($file['tmp_name']);
 
@@ -175,7 +175,7 @@ class FileUpload extends Backend
 					$this->import(Files::class, 'Files');
 					$strNewFile = $strTarget . '/' . $file['name'];
 
-					// Set CHMOD and resize if neccessary
+					// Set CHMOD and resize if necessary
 					if ($this->Files->move_uploaded_file($file['tmp_name'], $strNewFile))
 					{
 						$this->Files->chmod($strNewFile, 0666 & ~umask());
@@ -279,7 +279,7 @@ class FileUpload extends Backend
 	}
 
 	/**
-	 * Resize an uploaded image if neccessary
+	 * Resize an uploaded image if necessary
 	 *
 	 * @param string $strImage
 	 *

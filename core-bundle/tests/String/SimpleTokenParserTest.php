@@ -10,12 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Util;
+namespace Contao\CoreBundle\Tests\String;
 
+use Contao\CoreBundle\String\SimpleTokenExpressionLanguage;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\Fixtures\IteratorAggregateStub;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\SimpleTokenExpressionLanguage;
-use Contao\CoreBundle\Util\SimpleTokenParser;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;

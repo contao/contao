@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Provide methods to handle front end forms.
  *
@@ -72,7 +70,7 @@ class Form extends Hybrid
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['CTE']['form'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['form'][0] . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
 			$objTemplate->href = 'contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $this->id;
@@ -402,7 +400,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = $this->replaceInsertTags($this->subject, false);
+				$email->subject = html_entity_decode($this->replaceInsertTags($this->subject, false), ENT_QUOTES, 'UTF-8');
 			}
 
 			// Send copy to sender
@@ -511,6 +509,9 @@ class Form extends Hybrid
 					$arrSet = $this->{$callback[0]}->{$callback[1]}($arrSet, $this);
 				}
 			}
+
+			// Load DataContainer of target table before trying to determine empty value (see #3499)
+			Controller::loadDataContainer($this->targetTable);
 
 			// Set the correct empty value (see #6284, #6373)
 			foreach ($arrSet as $k=>$v)

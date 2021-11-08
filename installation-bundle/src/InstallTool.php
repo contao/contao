@@ -128,7 +128,7 @@ class InstallTool
 
     public function hasTable(string $name): bool
     {
-        return $this->connection->getSchemaManager()->tablesExist([$name]);
+        return $this->connection->createSchemaManager()->tablesExist([$name]);
     }
 
     public function isFreshInstallation(): bool
@@ -319,7 +319,7 @@ class InstallTool
     public function importTemplate(string $template, bool $preserveData = false): void
     {
         if (!$preserveData) {
-            $tables = $this->connection->getSchemaManager()->listTableNames();
+            $tables = $this->connection->createSchemaManager()->listTableNames();
 
             foreach ($tables as $table) {
                 if (0 === strncmp($table, 'tl_', 3)) {

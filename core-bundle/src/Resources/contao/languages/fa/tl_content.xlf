@@ -63,7 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_content.alt.1">
         <source>Here you can enter an alternate text for the image (&lt;em&gt;alt&lt;/em&gt; attribute).</source>
-        <target>اینجا می‌توانید متن جایگزین را برای تصویر وارد نمایید (خصوصیت &lt;em&gt;alt&lt;/em&gt;).</target>
+        <target>اینجا می‌توانید متن جایگزین را برای تصویر وارد نمایید (ویژگی &lt;em&gt;alt&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.0">
         <source>Image title</source>
@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
-        <target>اینجا می‌توانید عنوان تصویر را وارد کنید (خصوصیت &lt;em&gt;title&lt;/em&gt;).</target>
+        <target>اینجا می‌توانید عنوان تصویر را وارد کنید (ویژگی &lt;em&gt;title&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.size.0">
         <source>Image size</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_content.titleText.1">
         <source>The link title is added as &lt;em&gt;title&lt;/em&gt; attribute in the HTML markup.</source>
-        <target>عنوان پیوند به صورت خصوصیت &lt;em&gt;title&lt;/em&gt; در نشانه‌گذاری HTML اضافه می‌شود.</target>
+        <target>عنوان پیوند به صورت ویژگی &lt;em&gt;title&lt;/em&gt; در نشانه‌گذاری HTML اضافه می‌شود.</target>
       </trans-unit>
       <trans-unit id="tl_content.embed.0">
         <source>Embed the link</source>
@@ -335,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
         <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
+        <target>برای فعال کردن lightbox یک ویژگی &lt;em&gt;data-lightbox&lt;/em&gt; وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -358,6 +359,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>استفاده از دایرکتوری خانه به عنوان منبع پرونده اگر عضوی وارد شده باشد.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>
@@ -389,6 +391,7 @@
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
         <source>Do not show files without metadata matching the page language.</source>
+        <target>پرونده‌های بدون فراداده که با زبان برگه مطابقت ندارد نمایش ندهید.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
@@ -396,13 +399,15 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select a gallery template.</source>
+        <target>اینجا می‌توانید قالب گالری را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
-        <target>قابل المنت محتوایی</target>
+        <target>قابل المان محتوایی</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>
+        <target>اینجا می‌توانید قالب المان محتوا را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -426,6 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
+        <target>لطفا یک شناسه‌ی ویدیو Vimeo (مثلا &lt;em&gt;275028611&lt;/em&gt;) وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -457,6 +463,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.1">
         <source>Here you can suggest how the browser shall preload the video.</source>
+        <target>اینجا می‌توانید نحوه‌ی پیش‌بارگذاری ویدیو را برای مرور مشخص کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
@@ -464,6 +471,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerStart.1">
         <source>Start playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>پخش ویدیو را از ثانیه‌ی داده شده شروع کنید. برای غیرفعال شدن 0 وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerStop.0">
         <source>Stop at</source>
@@ -471,6 +479,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
+        <target>پخش ویدیو را در ثانیه‌ی داده شده متوقف کنید. برای غیرفعال شدن 0 وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -478,6 +487,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.1">
         <source>Here you can enter a caption.</source>
+        <target>اینجا می‌توانید یک عنوان وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>
@@ -485,6 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.1">
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+        <target>اینجا می‌توانید نسبت ابعادی ویدیو را برای اینکه واکنش‌گرا باشد انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.splashImage.0">
         <source>Use a splash image</source>
@@ -492,6 +503,7 @@
       </trans-unit>
       <trans-unit id="tl_content.splashImage.1">
         <source>Only load the video after the user has clicked on the splash image.</source>
+        <target>فقط بعد از اینکه کاربر روی تصویر ویدیو کلیک کرد ویدیو بارگذاری شود.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerColor.0">
         <source>Controls color</source>
@@ -499,6 +511,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
+        <target>اینجا می‌توانید رنگ در مبنای هگزادسیمال (مثلا ff0000) را برای کنترل‌های ویدیو وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -626,6 +639,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>اگر می‌خواهید از نمایش المان در وب‌سایت بعد از تاریخ/ساعت مشخصی جلوگیری کنید، می‌توانید اینجا وارد کنید. در غیر این صورت خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -765,6 +779,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_muted">
         <source>Mute the audio output</source>
+        <target>بی‌صدا کردن خروجی صدا</target>
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
@@ -772,6 +787,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>خودکار (پیش‌بارگذاری کل ویدیو)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -811,9 +827,11 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
+        <target>محدود کردن ویدیوهای مرتبط به همان کانال</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
+        <target>استفاده از دامنه youtube-nocookie.com</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
@@ -869,7 +887,7 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
-        <target>پنهان/آشکار کردن المنت شناسه‌ی %s</target>
+        <target>پنهان/آشکار کردن المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -881,9 +899,11 @@
       </trans-unit>
       <trans-unit id="tl_content.pastenew.0">
         <source>Create a new content element at the top</source>
+        <target>ایجاد یک المان محتوای در بالا</target>
       </trans-unit>
       <trans-unit id="tl_content.pastenew.1">
         <source>Create a new content element after content element ID %s</source>
+        <target>ایجاد یک المان محتوایی بعد از المان محتوایی شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>

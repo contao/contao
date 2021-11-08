@@ -444,7 +444,7 @@ abstract class Model
 
 			$arrSet = $this->preSave($arrSet);
 
-			// No modified fiels
+			// No modified fields
 			if (empty($arrSet))
 			{
 				return $this;
@@ -483,7 +483,7 @@ abstract class Model
 
 			$arrSet = $this->preSave($arrSet);
 
-			// No modified fiels
+			// No modified fields
 			if (empty($arrSet))
 			{
 				return $this;
@@ -1072,7 +1072,7 @@ abstract class Model
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute($arrOptions['value'] ?? null);
+		$objResult = $objStatement->execute(...(array) ($arrOptions['value'] ?? array()));
 
 		if ($objResult->numRows < 1)
 		{
@@ -1155,7 +1155,7 @@ abstract class Model
 
 		$strQuery = static::buildCountQuery($arrOptions);
 
-		return (int) Database::getInstance()->prepare($strQuery)->execute($arrOptions['value'])->count;
+		return (int) Database::getInstance()->prepare($strQuery)->execute(...(array) ($arrOptions['value'] ?? array()))->count;
 	}
 
 	/**

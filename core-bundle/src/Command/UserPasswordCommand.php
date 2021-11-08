@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
-use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -93,7 +92,7 @@ class UserPasswordCommand extends Command
         $config = $this->framework->getAdapter(Config::class);
         $minLength = $config->get('minPasswordLength') ?: 8;
 
-        if (Utf8::strlen($input->getOption('password')) < $minLength) {
+        if (mb_strlen($input->getOption('password')) < $minLength) {
             throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
         }
 

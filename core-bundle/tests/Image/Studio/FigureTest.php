@@ -422,6 +422,15 @@ class FigureTest extends TestCase
             },
         ];
 
+        yield 'with link title attribute' => [
+            [$metadataWithLink, ['title' => 'foo', 'bar' => 'baz'], null, null],
+            [true, null, null],
+            function (array $data): void {
+                $this->assertSame('foo', $data['linkTitle']);
+                $this->assertSame(' bar="baz"', $data['attributes'], 'must not contain link attribute');
+            },
+        ];
+
         yield 'with metadata containing HTML' => [
             [$metadataWithHtml, null, null, null],
             [true, null, null],

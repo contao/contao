@@ -100,7 +100,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunMediaelement(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
@@ -216,7 +216,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunSkipIfDimensionsMatch(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_image_size'])) {
             return false;
@@ -247,7 +247,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunImportantPart(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_files'])) {
             return false;
@@ -289,7 +289,7 @@ class Version480Update extends AbstractMigration
         $compareValue = 1;
 
         // If the columns are of type integer, we can safely convert all images even if they are only set to 1
-        if ($this->connection->getSchemaManager()->listTableColumns('tl_files')['importantpartx']->getType() instanceof IntegerType) {
+        if ($this->connection->createSchemaManager()->listTableColumns('tl_files')['importantpartx']->getType() instanceof IntegerType) {
             $compareValue = 0;
         }
 
@@ -392,7 +392,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunMinKeywordLength(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_module'])) {
             return false;
@@ -425,7 +425,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunContextLength(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_module'])) {
             return false;
@@ -480,7 +480,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunDefaultImageDensities(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout', 'tl_theme'])) {
             return false;
@@ -512,7 +512,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunRememberMe(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_remember_me'])) {
             return false;
@@ -528,7 +528,7 @@ class Version480Update extends AbstractMigration
         // Since rememberme is broken in Contao 4.7 and there are no valid
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
-        if ($this->connection->getSchemaManager()->tablesExist(['tl_remember_me'])) {
+        if ($this->connection->createSchemaManager()->tablesExist(['tl_remember_me'])) {
             $this->connection->executeStatement('DROP TABLE tl_remember_me');
         }
     }

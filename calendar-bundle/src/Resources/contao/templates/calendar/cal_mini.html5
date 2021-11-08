@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <?php foreach ($this->days as $day): ?>
-      <th class="label<?= $day['class'] ?>"><?= Patchwork\Utf8::substr($day['name'], 0, $this->substr) ?><span class="invisible"><?= Patchwork\Utf8::substr($day['name'], $this->substr) ?></span></th>
+      <th class="label<?= $day['class'] ?>"><?= mb_substr($day['name'], 0, $this->substr) ?><span><?= mb_substr($day['name'], $this->substr) ?></span></th>
     <?php endforeach; ?>
   </tr>
 </thead>

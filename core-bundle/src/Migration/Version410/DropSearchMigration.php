@@ -30,7 +30,7 @@ class DropSearchMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (
             !$schemaManager->tablesExist('tl_search_index')

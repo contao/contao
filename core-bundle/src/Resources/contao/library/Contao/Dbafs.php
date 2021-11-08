@@ -775,7 +775,7 @@ class Dbafs
 	}
 
 	/**
-	 * Get the folder hash from the databse by combining the hashes of all children
+	 * Get the folder hash from the database by combining the hashes of all children
 	 *
 	 * @param string $strPath The relative path
 	 *

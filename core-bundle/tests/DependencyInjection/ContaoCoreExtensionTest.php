@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
@@ -448,6 +449,43 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame(Path::normalize($this->getTempDir()).'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+    }
+
+    /**
+     * @dataProvider provideComposerJsonContent
+     */
+    public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+                'kernel.charset' => 'UTF-8',
+            ])
+        );
+
+        $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
+
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($composerJsonFilePath, json_encode($composerJson, JSON_THROW_ON_ERROR));
+
+        (new ContaoCoreExtension())->load([], $container);
+
+        $filesystem->remove($composerJsonFilePath);
+
+        $this->assertSame(Path::join($this->getTempDir(), $expectedWebDir), $container->getParameter('contao.web_dir'));
+    }
+
+    public function provideComposerJsonContent(): \Generator
+    {
+        yield 'extra.public-dir key not present' => [
+            [],
+            'public',
+        ];
+
+        yield 'extra.public-dir configured' => [
+            ['extra' => ['public-dir' => 'foo']],
+            'foo',
+        ];
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder

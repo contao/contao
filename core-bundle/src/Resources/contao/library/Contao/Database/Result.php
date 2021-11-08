@@ -10,7 +10,7 @@
 
 namespace Contao\Database;
 
-use Doctrine\DBAL\Driver\ResultStatement;
+use Doctrine\DBAL\Result as DoctrineResult;
 
 /**
  * Lazy load the result set rows
@@ -37,7 +37,7 @@ class Result
 {
 	/**
 	 * Database result
-	 * @var ResultStatement
+	 * @var DoctrineResult
 	 */
 	protected $resResult;
 
@@ -74,12 +74,12 @@ class Result
 	/**
 	 * Validate the connection resource and store the query string
 	 *
-	 * @param ResultStatement|array $statement The database statement
-	 * @param string                $strQuery  The query string
+	 * @param DoctrineResult|array $statement The database statement
+	 * @param string               $strQuery  The query string
 	 */
 	public function __construct($statement, $strQuery)
 	{
-		if ($statement instanceof ResultStatement)
+		if ($statement instanceof DoctrineResult)
 		{
 			$this->resResult = $statement;
 		}

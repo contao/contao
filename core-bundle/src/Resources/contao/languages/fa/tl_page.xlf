@@ -191,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_page.useFolderUrl.1">
         <source>Generate folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
+        <target>اسم مستعار برگه شبیه فولدر مانند &lt;em&gt;docs/install/download.html&lt;/em&gt; به جای &lt;em&gt;docs-install-download.html&lt;/em&gt; تولید کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.0">
         <source>URL prefix</source>
@@ -198,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
+        <target>یک پیشوند URL (مثل زبان) وارد کنید که به اول اسم مستعار برای این برگه ریشه اضافه خواهد شد.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -205,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.1">
         <source>The URL suffix will be added to the URI string to simulate static documents.</source>
+        <target>پسوند URL به رشته‌ی URI اضافه خواهد شد تا اسناد ایستا را شبیه‌سازی کند.</target>
       </trans-unit>
       <trans-unit id="tl_page.useSSL.0">
         <source>Protocol</source>
@@ -276,6 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysLoadFromCache.1">
         <source>Always load this page from the shared cache, even if a member is logged in. Note that you can no longer personalize the page for logged in members in this case!</source>
+        <target>همین این برگه را از نهان‌گاه مشترک بارگذاری کن، حتی اگر کاربر عضو وارد شده باشد. توجه داشته باشید که دیگر نمی‌توانید برگه را برای کاربران وارد شده شخصی‌سازی نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Private cache timeout</source>
@@ -283,6 +287,7 @@
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>دوره‌ای که بعد از آن برگه نباید توسط نهان‌گاه خصوصی تازه تلقی گردد.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -306,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
         <source>Please select a user group as the owner of the page.</source>
+        <target>لطفا یک گروه کاربری به عنوان مالک برگه انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>
@@ -329,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>اگر URL برگه شامل اسم مستعار آیتم نبود، ارور 404 را نمایش می‌دهد.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -344,6 +351,7 @@
       </trans-unit>
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
+        <target>اینجا می‌توانید نحوه‌ی نمایش برگه در نقسه سایت HTML را تعریف کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide in navigation</source>
@@ -359,6 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>برگه را اگر کاربر عضو وارد شده باشد مخفی کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -406,6 +415,7 @@
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.1">
         <source>Enforce two-factor authentication for all members.</source>
+        <target>همه اعضاء برای احراز هویت دو مرحله ای وادار کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
@@ -413,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>لطفا برگه‌ای را که کاربران برای تنظیم احراز هویت دو مرحله‌ای بازگردانی خواهند شد را انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -560,6 +571,7 @@
       </trans-unit>
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
+        <target>حالت مسیریابی قدیمی را برای فعال کردن این پیکربندی، غیرفعال کنید.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

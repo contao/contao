@@ -311,9 +311,7 @@ class FigureBuilderTest extends TestCase
         $validatorAdapter = $this->mockAdapter(['isUuid']);
         $validatorAdapter
             ->method('isUuid')
-            ->willReturnCallback(
-                static fn ($value): bool => '1d902bf1-2683-406e-b004-f0b59095e5a1' === $value
-            )
+            ->willReturnCallback(static fn ($value): bool => '1d902bf1-2683-406e-b004-f0b59095e5a1' === $value)
         ;
 
         $framework = $this->mockContaoFramework([

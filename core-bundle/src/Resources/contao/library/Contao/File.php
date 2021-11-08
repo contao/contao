@@ -13,9 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Image\DeferredImageInterface;
 use Contao\Image\ImageDimensions;
-use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Creates, reads, writes and deletes files
@@ -269,6 +269,9 @@ class File extends System
 									'jpeg' => IMAGETYPE_JPEG,
 									'png' => IMAGETYPE_PNG,
 									'webp' => IMAGETYPE_WEBP,
+									'avif' => \defined('IMAGETYPE_AVIF') ? IMAGETYPE_AVIF : 19,
+									'heic' => IMAGETYPE_UNKNOWN, // TODO: replace with IMAGETYPE_HEIC once available
+									'jxl' => IMAGETYPE_UNKNOWN, // TODO: replace with IMAGETYPE_JXL once available
 								);
 
 								$this->arrImageSize = array
@@ -346,13 +349,13 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				// Store in variable as empty() calls __isset() which is not implemented and thus always true
 				$imageViewSize = $this->imageViewSize;
 
 				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
-				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				// Store in variable as empty() calls __isset() which is not implemented and thus always true
 				$imageViewSize = $this->imageViewSize;
 
 				return !empty($imageViewSize) ? $imageViewSize[1] : null;
@@ -361,7 +364,7 @@ class File extends System
 				return $this->isGdImage || $this->isSvgImage;
 
 			case 'isGdImage':
-				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png', 'webp'));
+				return \in_array($this->extension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl'));
 
 			case 'isSvgImage':
 				return \in_array($this->extension, array('svg', 'svgz'));
@@ -785,7 +788,7 @@ class File extends System
 		(
 			$inline ? ResponseHeaderBag::DISPOSITION_INLINE : ResponseHeaderBag::DISPOSITION_ATTACHMENT,
 			$filename,
-			Utf8::toAscii($this->basename)
+			(new UnicodeString($this->basename))->ascii()->toString()
 		);
 
 		$response->headers->addCacheControlDirective('must-revalidate');

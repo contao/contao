@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Patchwork\Utf8;
+use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Front end module "event reader".
@@ -50,7 +50,7 @@ class ModuleEventReader extends Events
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['eventreader'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -136,6 +136,7 @@ class ModuleEventReader extends Events
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
 
 			if ($objEvent->pageTitle)
 			{
@@ -143,16 +144,16 @@ class ModuleEventReader extends Events
 			}
 			elseif ($objEvent->title)
 			{
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)
@@ -248,6 +249,7 @@ class ModuleEventReader extends Events
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
