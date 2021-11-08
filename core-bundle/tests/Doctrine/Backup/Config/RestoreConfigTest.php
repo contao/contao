@@ -23,7 +23,6 @@ class RestoreConfigTest extends TestCase
         $config = new RestoreConfig(new Backup('valid_backup_filename__20211101141254.sql'));
 
         $this->assertInstanceOf(Backup::class, $config->getBackup());
-        $this->assertSame(RestoreConfig::DEFAULT_DUMP_HEADER, $config->getDumpHeader());
         $this->assertFalse($config->ignoreOriginCheck());
         $this->assertSame([], $config->getTablesToIgnore());
         $this->assertFalse($config->isGzCompressionEnabled());

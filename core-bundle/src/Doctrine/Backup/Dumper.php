@@ -23,20 +23,10 @@ use Doctrine\DBAL\Types\BinaryType;
 
 class Dumper implements DumperInterface
 {
-    /**
-     * @var resource
-     */
-    private $fileHandle;
-
-    /**
-     * @var \DeflateContext|false|null
-     */
-    private $deflateContext;
-
-    public function dump(Connection $connection, CreateConfig $config): void
+    public function dump(Connection $connection, CreateConfig $config): \Generator
     {
         try {
-            $this->doDump($connection, $config);
+            yield from $this->doDump($connection, $config);
         } catch (\Exception $exception) {
             if ($exception instanceof BackupManagerException) {
                 throw $exception;
@@ -46,47 +36,45 @@ class Dumper implements DumperInterface
         }
     }
 
-    public function doDump(Connection $connection, CreateConfig $config): void
+    public function doDump(Connection $connection, CreateConfig $config): \Generator
     {
-        $this->init($config);
-        $this->writeln('SET FOREIGN_KEY_CHECKS = 0;');
+        yield 'SET FOREIGN_KEY_CHECKS = 0;';
         $schemaManager = $connection->createSchemaManager();
         $platform = $connection->getDatabasePlatform();
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
-            $this->dumpSchema($platform, $table);
-            $this->dumpData($connection, $config, $table);
+            yield from $this->dumpSchema($platform, $table);
+            yield from $this->dumpData($connection, $table);
         }
 
-        $this->dumpViews($schemaManager, $platform);
+        yield from $this->dumpViews($schemaManager, $platform);
 
         // Triggers are currently not supported (contributions welcome!)
 
-        $this->writeln('SET FOREIGN_KEY_CHECKS = 1;');
-        $this->finish();
+        yield 'SET FOREIGN_KEY_CHECKS = 1;';
     }
 
-    private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): void
+    private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
         foreach ($schemaManager->listViews() as $view) {
-            $this->writeln(sprintf('-- BEGIN VIEW %s', $view->getName()));
-            $this->writeln($platform->getCreateViewSQL($view->getQuotedName($platform), $view->getSql()).';');
+            yield sprintf('-- BEGIN VIEW %s', $view->getName());
+            yield $platform->getCreateViewSQL($view->getQuotedName($platform), $view->getSql()).';';
         }
     }
 
-    private function dumpSchema(AbstractPlatform $platform, Table $table): void
+    private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        $this->writeln(sprintf('-- BEGIN STRUCTURE %s', $table->getName()));
-        $this->writeln(sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName()));
+        yield sprintf('-- BEGIN STRUCTURE %s', $table->getName());
+        yield sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
-            $this->writeln($statement.';');
+            yield $statement.';';
         }
     }
 
-    private function dumpData(Connection $connection, CreateConfig $config, Table $table): void
+    private function dumpData(Connection $connection, Table $table): \Generator
     {
-        $this->writeln(sprintf('-- BEGIN DATA %s', $table->getName()));
+        yield sprintf('-- BEGIN DATA %s', $table->getName());
         $values = [];
 
         foreach ($table->getColumns() as $column) {
@@ -108,12 +96,12 @@ class Dumper implements DumperInterface
                 $insertValues[] = $this->formatValueForDump($value, $table->getColumn($columnName), $connection);
             }
 
-            $this->writeln(sprintf(
+            yield sprintf(
                 'INSERT INTO `%s` (%s) VALUES (%s);',
                 $table->getName(),
                 implode(', ', $insertColumns),
                 implode(', ', $insertValues)
-            ));
+            );
         }
     }
 
@@ -149,41 +137,5 @@ class Dumper implements DumperInterface
         }
 
         return $filteredTables;
-    }
-
-    private function init(CreateConfig $config): void
-    {
-        $this->fileHandle = fopen($config->getBackup()->getFilepath(), 'w');
-        $this->deflateContext = $config->isGzCompressionEnabled() ? deflate_init(ZLIB_ENCODING_GZIP, ['level' => 9]) : null;
-
-        // Header lines
-        $this->writeln($config->getDumpHeader());
-        $this->writeln('-- Generated at '.$config->getBackup()->getCreatedAt()->format(\DateTimeInterface::ISO8601));
-        $this->writeln('SET NAMES utf8;');
-    }
-
-    private function finish(): void
-    {
-        if ($this->deflateContext) {
-            fwrite($this->fileHandle, deflate_add($this->deflateContext, '', ZLIB_FINISH));
-        }
-
-        fclose($this->fileHandle);
-    }
-
-    private function writeln(string $line): void
-    {
-        $line .= \PHP_EOL;
-        $this->write($line);
-    }
-
-    private function write(string $line): void
-    {
-        if ($this->deflateContext) {
-            $line = deflate_add($this->deflateContext, $line, ZLIB_NO_FLUSH);
-        }
-
-        @fwrite($this->fileHandle, $line);
-        fflush($this->fileHandle);
     }
 }
