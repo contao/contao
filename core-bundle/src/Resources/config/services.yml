@@ -722,7 +722,7 @@ services:
             - '@contao.security.token_checker'
             - '@Contao\CoreBundle\String\HtmlDecoder'
             - '@request_stack'
-            - '@contao.framework'
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
         public: true
 
     contao.search.indexer.default:

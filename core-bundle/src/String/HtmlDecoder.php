@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\String;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\InsertTags;
 use Contao\StringUtil;
 
 class HtmlDecoder

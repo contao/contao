@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Webmozart\PathUtil\Path;
