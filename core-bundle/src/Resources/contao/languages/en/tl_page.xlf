@@ -110,6 +110,24 @@
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
       </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel="canonical"</source>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel="canonical" tags to the website.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query paramters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use "*" as a wildcard.</source>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
       </trans-unit>
@@ -325,6 +343,9 @@
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>

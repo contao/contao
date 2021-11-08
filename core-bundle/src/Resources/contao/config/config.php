@@ -518,9 +518,6 @@ $GLOBALS['TL_HOOKS'] = array
 // Register the auto_item keywords
 $GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
 
-// Do not index a page if one of the following parameters is set
-$GLOBALS['TL_NOINDEX_KEYS'] = array('id', 'file', 'token', 'day', 'month', 'year', 'page', 'page_.*', 'keywords', 'PHPSESSID');
-
 // Register the supported CSS units
 $GLOBALS['TL_CSS_UNITS'] = array('px', '%', 'em', 'rem', 'vw', 'vh', 'vmin', 'vmax', 'ex', 'pt', 'pc', 'in', 'cm', 'mm');
 
