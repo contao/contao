@@ -173,43 +173,54 @@ class BackendTemplate extends Template
 	{
 		$container = System::getContainer();
 
-		if (!$container->hasParameter('contao.backend'))
+		if ($container->hasParameter('contao.backend.attributes'))
 		{
-			return;
-		}
+			$attributes = $container->getParameter('contao.backend.attributes');
 
-		$backendConfig = $container->getParameter('contao.backend');
-
-		if (!empty($backendConfig['attributes']) && \is_array($backendConfig['attributes']))
-		{
-			$this->attributes = ' ' . implode(' ', array_map(
-				static function ($v, $k) { return sprintf('data-%s="%s"', $k, $v); },
-				$backendConfig['attributes'],
-				array_keys($backendConfig['attributes'])
-			));
-		}
-
-		if (!empty($backendConfig['custom_css']) && \is_array($backendConfig['custom_css']))
-		{
-			if (!\is_array($GLOBALS['TL_CSS']))
+			if (!empty($attributes) && \is_array($attributes))
 			{
-				$GLOBALS['TL_CSS'] = array();
+				$this->attributes = ' ' . implode(' ', array_map(
+					static function ($v, $k) { return sprintf('data-%s="%s"', $k, $v); },
+					$attributes,
+					array_keys($attributes)
+				));
 			}
-
-			$GLOBALS['TL_CSS'] = array_merge($GLOBALS['TL_CSS'], $backendConfig['custom_css']);
 		}
 
-		if (!empty($backendConfig['custom_js']) && \is_array($backendConfig['custom_js']))
+		if ($container->hasParameter('contao.backend.custom_css'))
 		{
-			if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
-			{
-				$GLOBALS['TL_JAVASCRIPT'] = array();
-			}
+			$css = $container->getParameter('contao.backend.custom_css');
 
-			$GLOBALS['TL_JAVASCRIPT'] = array_merge($GLOBALS['TL_JAVASCRIPT'], $backendConfig['custom_js']);
+			if (!empty($css) && \is_array($css))
+			{
+				if (!\is_array($GLOBALS['TL_CSS']))
+				{
+					$GLOBALS['TL_CSS'] = array();
+				}
+
+				$GLOBALS['TL_CSS'] = array_merge($GLOBALS['TL_CSS'], $css);
+			}
 		}
 
-		$this->badgeTitle = $backendConfig['badge_title'];
+		if ($container->hasParameter('contao.backend.custom_js'))
+		{
+			$js = $container->getParameter('contao.backend.custom_js');
+
+			if (!empty($js) && \is_array($js))
+			{
+				if (!\is_array($GLOBALS['TL_JAVASCRIPT']))
+				{
+					$GLOBALS['TL_JAVASCRIPT'] = array();
+				}
+
+				$GLOBALS['TL_JAVASCRIPT'] = array_merge($GLOBALS['TL_JAVASCRIPT'], $js);
+			}
+		}
+
+		if ($container->hasParameter('contao.backend.badge_title'))
+		{
+			$this->badgeTitle = $container->getParameter('contao.backend.badge_title');
+		}
 	}
 }
 
