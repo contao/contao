@@ -33,6 +33,13 @@ use Webmozart\PathUtil\Path;
  */
 class InsertTags extends Controller
 {
+	private const MAX_NESTING_LEVEL = 100;
+
+	/**
+	 * @var int
+	 */
+	private static $intRecursionCount = 0;
+
 	/**
 	 * @var array
 	 */
@@ -77,6 +84,28 @@ class InsertTags extends Controller
 	 * @internal
 	 */
 	public function replaceInternal(string $strBuffer, bool $blnCache, bool $blnAsChunks)
+	{
+		if (self::$intRecursionCount > self::MAX_NESTING_LEVEL)
+		{
+			throw new \RuntimeException(sprintf('Maximum insert tag nesting level of %s reached', self::MAX_NESTING_LEVEL));
+		}
+
+		++self::$intRecursionCount;
+
+		try
+		{
+			return $this->executeReplace($strBuffer, $blnCache, $blnAsChunks);
+		}
+		finally
+		{
+			--self::$intRecursionCount;
+		}
+	}
+
+	/**
+	 * @internal
+	 */
+	private function executeReplace(string $strBuffer, bool $blnCache, bool $blnAsChunks)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
