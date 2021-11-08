@@ -936,6 +936,13 @@ abstract class Model
 		if (\count($arrColumn) == 1 && ($arrColumn[0] === static::getPk() || \in_array($arrColumn[0], static::getUniqueFields())))
 		{
 			$blnModel = true;
+
+			if ($varValue === null && $arrColumn[0] === static::getPk())
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::findBy(\'%s\', null)" has been deprecated and will no longer work in Contao 5.0.', __CLASS__, $arrColumn[0]);
+
+				return null;
+			}
 		}
 
 		$arrOptions = array_merge
