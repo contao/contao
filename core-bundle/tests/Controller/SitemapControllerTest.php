@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\ArticleModel;
+use Contao\CoreBundle\Cache\EntityTagger;
 use Contao\CoreBundle\Controller\SitemapController;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -768,11 +769,18 @@ class SitemapControllerTest extends TestCase
             ])
         ;
 
+        $entityTagger = $this->createMock(EntityTagger::class);
+        $entityTagger
+            ->method('getTags')
+            ->willReturnArgument(0)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
+        $container->set(EntityTagger::class, $entityTagger);
 
         return $container;
     }

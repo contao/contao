@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
+use Contao\CoreBundle\Cache\EntityTagger;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FragmentTemplate;
@@ -145,8 +146,15 @@ class FrontendModuleControllerTest extends TestCase
             ->with(['contao.db.tl_module.42'])
         ;
 
+        $entityTagger = $this->createMock(EntityTagger::class);
+        $entityTagger
+            ->method('getTags')
+            ->willReturnArgument(0)
+        ;
+
         $container = $this->mockContainerWithFrameworkTemplate('mod_test');
         $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
+        $container->set(EntityTagger::class, $entityTagger);
 
         $controller = new TestController();
         $controller->setContainer($container);

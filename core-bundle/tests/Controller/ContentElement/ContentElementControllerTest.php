@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\Cache\EntityTagger;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Tests\TestCase;
@@ -180,8 +181,15 @@ class ContentElementControllerTest extends TestCase
             ->with(['contao.db.tl_content.42'])
         ;
 
+        $entityTagger = $this->createMock(EntityTagger::class);
+        $entityTagger
+            ->method('getTags')
+            ->willReturnArgument(0)
+        ;
+
         $container = $this->mockContainerWithFrameworkTemplate('ce_test');
         $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
+        $container->set(EntityTagger::class, $entityTagger);
 
         $controller = new TestController();
         $controller->setContainer($container);
