@@ -437,7 +437,7 @@ class tl_article extends Backend
 			$session['CLIPBOARD']['tl_article']['id'] = $clipboard;
 		}
 
-		$permission = 0;
+		$permission = null;
 
 		// Overwrite the session
 		$objSession->replace($session);
@@ -457,11 +457,11 @@ class tl_article extends Backend
 			{
 				case 'edit':
 				case 'toggle':
-					$permission = BackendUser::CAN_EDIT_ARTICLES;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLES;
 					break;
 
 				case 'move':
-					$permission = BackendUser::CAN_EDIT_ARTICLE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
 					$ids[] = Input::get('sid');
 					break;
 
@@ -471,7 +471,7 @@ class tl_article extends Backend
 				case 'copyAll':
 				case 'cut':
 				case 'cutAll':
-					$permission = BackendUser::CAN_EDIT_ARTICLE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
 
 					// Insert into a page
 					if (Input::get('mode') == 2)
@@ -500,7 +500,7 @@ class tl_article extends Backend
 					break;
 
 				case 'delete':
-					$permission = BackendUser::CAN_DELETE_ARTICLES;
+					$permission = ContaoCorePermissions::USER_CAN_DELETE_ARTICLES;
 					break;
 			}
 
@@ -534,10 +534,8 @@ class tl_article extends Backend
 					continue;
 				}
 
-				$objPage = PageModel::findById($id);
-
 				// Check whether the current user has permission for the current page
-				if ($objPage !== null && !$this->User->isAllowed($permission, $objPage->row()))
+				if ($permission === null || !System::isGranted($permission, $id))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (Input::get('id') ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
 				}

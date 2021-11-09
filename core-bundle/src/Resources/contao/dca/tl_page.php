@@ -873,7 +873,7 @@ class tl_page extends Backend
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')
 		{
-			$permission = 0;
+			$permission = null;
 			$cid = CURRENT_ID ?: Input::get('id');
 			$ids = $cid ? array($cid) : array();
 
@@ -882,11 +882,11 @@ class tl_page extends Backend
 			{
 				case 'edit':
 				case 'toggle':
-					$permission = BackendUser::CAN_EDIT_PAGE;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE;
 					break;
 
 				case 'move':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
 					$ids[] = Input::get('sid');
 					break;
 
@@ -895,7 +895,7 @@ class tl_page extends Backend
 				case 'copyAll':
 				case 'cut':
 				case 'cutAll':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
 
 					// Check the parent page in "paste into" mode
 					if (Input::get('mode') == 2)
@@ -914,7 +914,7 @@ class tl_page extends Backend
 					break;
 
 				case 'delete':
-					$permission = BackendUser::CAN_DELETE_PAGE;
+					$permission = ContaoCorePermissions::USER_CAN_DELETE_PAGE;
 					break;
 			}
 
@@ -967,7 +967,7 @@ class tl_page extends Backend
 				}
 
 				// Check whether the current user is allowed to access the current page
-				if (Input::get('act') != 'show' && !$this->User->isAllowed($permission, $objPage->row()))
+				if (Input::get('act') != 'show' && ($permission === null || !System::isGranted($permission, $objPage->row())))
 				{
 					$error = true;
 					break;
