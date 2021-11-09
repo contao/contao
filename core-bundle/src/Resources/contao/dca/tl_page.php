@@ -1013,12 +1013,10 @@ class tl_page extends Contao\Backend
 			return '';
 		}
 
-		global $objPage;
+		// Set the global page object, so we can replace the insert tags
+		$GLOBALS['objPage'] = $model;
 
-		// Set the global page object so we can replace the insert tags
-		$objPage = $model;
-
-		return implode(
+		$parsed = implode(
 			'%s',
 			array_map(
 				static function ($strVal)
@@ -1028,6 +1026,10 @@ class tl_page extends Contao\Backend
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
 		);
+
+		unset($GLOBALS['objPage']);
+
+		return $parsed;
 	}
 
 	/**
