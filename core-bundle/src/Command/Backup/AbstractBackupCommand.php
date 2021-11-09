@@ -34,7 +34,7 @@ abstract class AbstractBackupCommand extends Command
     {
         $this
             ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump to process.')
-            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables).')
+            ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables). You can use the prefixes "+" and "-" to modify the existing configuration (e.g. "+tl_user" would add "tl_user" to the existing list).')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
         ;
     }

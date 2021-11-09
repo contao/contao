@@ -88,7 +88,7 @@ class BackupCreateCommandTest extends TestCase
         yield 'Different tables to ignore' => [
             ['--ignore-tables' => 'foo,bar'],
             function (CreateConfig $config) {
-                $this->assertSame(['foo', 'bar'], $config->getTablesToIgnore());
+                $this->assertSame(['bar', 'foo'], $config->getTablesToIgnore());
                 $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
 
                 return true;

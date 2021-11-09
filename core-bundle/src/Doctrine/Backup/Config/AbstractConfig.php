@@ -60,7 +60,7 @@ abstract class AbstractConfig
     public function withTablesToIgnore(array $tablesToIgnore)
     {
         $new = clone $this;
-        $new->tablesToIgnore = $tablesToIgnore;
+        $new->tablesToIgnore = $this->filterTablesToIgnore($new->tablesToIgnore, $tablesToIgnore);
 
         return $new;
     }
@@ -74,5 +74,32 @@ abstract class AbstractConfig
         $new->backup = new Backup($filePath);
 
         return $new;
+    }
+
+    private function filterTablesToIgnore(array $currentTables, array $newTables): array
+    {
+        $newList = array_filter(
+            $newTables,
+            static fn ($table) => !\in_array($table[0], ['-', '+'], true)
+        );
+
+        if ($newList) {
+            $currentTables = $newList;
+        }
+
+        foreach ($newTables as $newTable) {
+            $prefix = $newTable[0];
+            $table = substr($newTable, 1);
+
+            if ('-' === $prefix && \in_array($table, $currentTables, true)) {
+                unset($currentTables[array_search($table, $currentTables, true)]);
+            } elseif ('+' === $prefix && !\in_array($table, $currentTables, true)) {
+                $currentTables[] = $table;
+            }
+        }
+
+        sort($currentTables);
+
+        return $currentTables;
     }
 }

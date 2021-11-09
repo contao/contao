@@ -49,4 +49,24 @@ class CreateConfigTest extends TestCase
         $config = $config->withGzCompression(true);
         $this->assertTrue($config->isGzCompressionEnabled());
     }
+
+    public function testAddingAndRemovingFromExistingTablesToIgnoreList(): void
+    {
+        $config = new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql'));
+        $config = $config->withTablesToIgnore(['table1', 'table2', 'table3', 'table4']);
+
+        $this->assertSame(['table1', 'table2', 'table3', 'table4'], $config->getTablesToIgnore());
+
+        $config = $config->withTablesToIgnore(['-table2']);
+        $this->assertSame(['table1', 'table3', 'table4'], $config->getTablesToIgnore());
+
+        $config = $config->withTablesToIgnore(['+table2']);
+        $this->assertSame(['table1', 'table2', 'table3', 'table4'], $config->getTablesToIgnore());
+
+        $config = $config->withTablesToIgnore(['-i-do-not-exist']);
+        $this->assertSame(['table1', 'table2', 'table3', 'table4'], $config->getTablesToIgnore());
+
+        $config = $config->withTablesToIgnore(['completely', 'new', 'list']);
+        $this->assertSame(['completely', 'list', 'new'], $config->getTablesToIgnore());
+    }
 }
