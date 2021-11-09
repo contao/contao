@@ -752,7 +752,7 @@ abstract class Model
 	{
 		if ($varValue === null)
 		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::findByPk(null)" has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
 
 			return null;
 		}
@@ -939,7 +939,7 @@ abstract class Model
 
 			if ($varValue === null && $arrColumn[0] === static::getPk())
 			{
-				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::findBy(\'%s\', null)" has been deprecated and will no longer work in Contao 5.0.', __CLASS__, $arrColumn[0]);
+				trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
 
 				return null;
 			}

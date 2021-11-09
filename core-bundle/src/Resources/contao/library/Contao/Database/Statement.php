@@ -280,34 +280,37 @@ class Statement
 		$this->arrLastUsedParams = $arrParams;
 
 		// Execute the query
+		// TODO: remove the try/catch block in Contao 5.0
 		try
 		{
 			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 		}
-		// Executing the query with the wrong number of params causes a
-		// DriverException in PDO and an ArgumentCountError in mysqli. For
-		// backwards compatibility we catch them and fix the number of arguments
-		// if possible.
 		catch (DriverException|\ArgumentCountError $exception)
 		{
-			if (!$arrParams || \count($arrParams) <= ($intTokenCount = $this->countQueryTokens()))
+			if (!$arrParams)
 			{
 				throw $exception;
 			}
 
-			$arrParams = \array_slice($arrParams, 0, $intTokenCount);
+			$intTokenCount = substr_count(preg_replace("/('[^']*')/", '', $this->strQuery), '?');
 
-			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
+			if (\count($arrParams) <= $intTokenCount)
+			{
+				throw $exception;
+			}
 
-			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
+			// If we get here, there are more parameters than tokens
 			if ($this->arrLastUsedParams === array(null))
 			{
 				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Omit the NULL parameters instead.', __CLASS__);
 			}
 			else
 			{
-				trigger_deprecation('contao/core-bundle', '4.13', 'Passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.', __CLASS__);
+				trigger_deprecation('contao/core-bundle', '4.13', 'Passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.');
 			}
+
+			// Slice the array and try to execute the query again (backwards compatibility)
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, \array_slice($arrParams, 0, $intTokenCount));
 		}
 
 		// No result set available
@@ -318,15 +321,6 @@ class Statement
 
 		// Instantiate a result object
 		return new Result($this->statement, $this->strQuery);
-	}
-
-	/**
-	 * @return int
-	 */
-	private function countQueryTokens()
-	{
-		// Backwards compatibility
-		return substr_count(preg_replace("/('[^']*')/", '', $this->strQuery), '?');
 	}
 
 	/**
