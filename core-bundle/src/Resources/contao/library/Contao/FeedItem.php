@@ -104,7 +104,7 @@ class FeedItem
 	 * @param string $strUrl   The base URL
 	 * @param string $strMedia The media type
 	 */
-	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $imageSize = null)
+	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $size = null)
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -121,11 +121,11 @@ class FeedItem
 		$fileUrl = $strUrl . System::urlEncode($strFile);
 		$objFile = new File($strFile);
 
-		$imageSize = StringUtil::deserialize($imageSize, true);
+		$size = StringUtil::deserialize($size, true);
 
-		if ($imageSize && $objFile->isImage)
+		if ($size && $objFile->isImage)
 		{
-			$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $strFile, $imageSize);
+			$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $strFile, $size);
 
 			if ($image instanceof DeferredImageInterface)
 			{
