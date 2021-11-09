@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
