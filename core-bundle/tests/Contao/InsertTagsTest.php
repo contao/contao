@@ -54,12 +54,12 @@ class InsertTagsTest extends TestCase
         }
 
         if ('infinite-recursion' === $tagParts[0]) {
-            return (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, false);
+            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false);
         }
 
         if ('infinite-try-catch' === $tagParts[0]) {
             try {
-                return (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, false);
+                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false);
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 100 reached', $exception->getMessage());
 
@@ -69,12 +69,12 @@ class InsertTagsTest extends TestCase
 
         if ('infinite-retry' === $tagParts[0]) {
             try {
-                return (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, false);
+                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
             } catch (\RuntimeException $exception) {
                 $this->assertSame('Maximum insert tag nesting level of 100 reached', $exception->getMessage());
 
                 if ((int) $tagParts[1] >= 100) {
-                    return (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, false);
+                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
                 }
 
                 throw $exception;

@@ -64,26 +64,25 @@ class InsertTags extends Controller
 	/**
 	 * Recursively replace insert tags with their values
 	 *
-	 * @param string  $strBuffer   The text with the tags to be replaced
-	 * @param boolean $blnCache    If false, non-cacheable tags will be replaced
-	 * @param boolean $blnAsChunks If true a ChunkedText object is returned instead of the string
+	 * @param string  $strBuffer The text with the tags to be replaced
+	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
 	 *
-	 * @return string|ChunkedText The text with the replaced tags
+	 * @return string The text with the replaced tags
 	 *
 	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 *             Use the InsertTagParser service instead.
 	 */
-	public function replace($strBuffer, $blnCache=true, $blnAsChunks=false)
+	public function replace($strBuffer, $blnCache=true)
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		return $this->replaceInternal((string) $strBuffer, (bool) $blnCache, (bool) $blnAsChunks);
+		return (string) $this->replaceInternal((string) $strBuffer, (bool) $blnCache);
 	}
 
 	/**
 	 * @internal
 	 */
-	public function replaceInternal(string $strBuffer, bool $blnCache, bool $blnAsChunks)
+	public function replaceInternal(string $strBuffer, bool $blnCache): ChunkedText
 	{
 		if (self::$intRecursionCount > self::MAX_NESTING_LEVEL)
 		{
@@ -94,7 +93,7 @@ class InsertTags extends Controller
 
 		try
 		{
-			return $this->executeReplace($strBuffer, $blnCache, $blnAsChunks);
+			return $this->executeReplace($strBuffer, $blnCache);
 		}
 		finally
 		{
@@ -105,7 +104,7 @@ class InsertTags extends Controller
 	/**
 	 * @internal
 	 */
-	private function executeReplace(string $strBuffer, bool $blnCache, bool $blnAsChunks)
+	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -115,7 +114,7 @@ class InsertTags extends Controller
 		{
 			$return = StringUtil::restoreBasicEntities($strBuffer);
 
-			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
+			return new ChunkedText(array($return));
 		}
 
 		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
@@ -139,7 +138,7 @@ class InsertTags extends Controller
 		{
 			$return = StringUtil::restoreBasicEntities($strBuffer);
 
-			return $blnAsChunks ? new ChunkedText(array($return)) : $return;
+			return new ChunkedText(array($return));
 		}
 
 		$arrBuffer = array();
@@ -159,7 +158,7 @@ class InsertTags extends Controller
 				break;
 			}
 
-			$tags[$_rit+1] = $this->replaceInternal($tags[$_rit+1], $blnCache, false);
+			$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -1209,7 +1208,7 @@ class InsertTags extends Controller
 
 			if (isset($arrCache[$strTag]))
 			{
-				$arrCache[$strTag] = $this->replaceInternal($arrCache[$strTag], $blnCache, false);
+				$arrCache[$strTag] = (string) $this->replaceInternal($arrCache[$strTag], $blnCache);
 			}
 
 			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
@@ -1217,12 +1216,7 @@ class InsertTags extends Controller
 
 		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
 
-		if ($blnAsChunks)
-		{
-			return new ChunkedText($arrBuffer);
-		}
-
-		return implode('', $arrBuffer);
+		return new ChunkedText($arrBuffer);
 	}
 
 	/**

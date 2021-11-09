@@ -70,6 +70,6 @@ class InsertTagParser implements ResetInterface
             $this->insertTags = new InsertTags();
         }
 
-        return $this->insertTags->replaceInternal($input, $allowEsiTags, true);
+        return $this->insertTags->replaceInternal($input, $allowEsiTags);
     }
 }
