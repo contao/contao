@@ -1634,31 +1634,23 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter = $this->mockAdapter(['findByPk', 'findWithDetails', 'findByPid']);
         $pageAdapter
             ->method('findByPk')
-            ->willReturnCallback(
-                static fn (int $id) => $pagesById[$id] ?? null
-            )
+            ->willReturnCallback(static fn (int $id) => $pagesById[$id] ?? null)
         ;
 
         $pageAdapter
             ->method('findWithDetails')
-            ->willReturnCallback(
-                static fn (int $id) => $pagesById[$id] ?? null
-            )
+            ->willReturnCallback(static fn (int $id) => $pagesById[$id] ?? null)
         ;
 
         $pageAdapter
             ->method('findByPid')
-            ->willReturnCallback(
-                static fn (int $pid) => $pagesByPid[$pid] ?? null
-            )
+            ->willReturnCallback(static fn (int $pid) => $pagesByPid[$pid] ?? null)
         ;
 
         $inputAdapter = $this->mockAdapter(['post']);
         $inputAdapter
             ->method('post')
-            ->willReturnCallback(
-                static fn ($key) => $inputData[$key] ?? null
-            )
+            ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)
         ;
 
         return $this->mockContaoFramework(

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -23,7 +24,7 @@ use Symfony\Component\Console\Output\NullOutput;
 class Automator extends System
 {
 	/**
-	 * Make the constuctor public
+	 * Make the constructor public
 	 */
 	public function __construct()
 	{
@@ -173,7 +174,7 @@ class Automator extends System
 		/** @var CacheManager $cacheManager */
 		$cacheManager = $container->get('fos_http_cache.cache_manager');
 
-		if (!$cacheManager->supports(CacheManager::CLEAR))
+		if (!$cacheManager->supports(CacheInvalidator::CLEAR))
 		{
 			$this->log('Cannot purge the shared cache; invalid reverse proxy configuration', __METHOD__, TL_ERROR);
 

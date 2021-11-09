@@ -414,9 +414,6 @@ class MigrateCommandTest extends TestCase
 
     private function jsonArrayFromNdjson(string $ndjson): array
     {
-        return array_map(
-            static fn (string $line) => json_decode($line, true),
-            explode("\n", trim($ndjson))
-        );
+        return array_map(static fn (string $line) => json_decode($line, true), explode("\n", trim($ndjson)));
     }
 }

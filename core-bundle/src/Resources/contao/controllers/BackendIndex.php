@@ -18,7 +18,7 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
@@ -71,7 +71,7 @@ class BackendIndex extends Backend
 		}
 
 		$router = $container->get('router');
-		$targetPath = $router->generate('contao_backend', array(), Router::ABSOLUTE_URL);
+		$targetPath = $router->generate('contao_backend', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if ($request && $request->query->has('redirect'))

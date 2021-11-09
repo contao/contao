@@ -143,18 +143,14 @@ class WidgetTest extends TestCase
         ;
 
         $widget
-            ->setInputCallback(
-                static fn (): string => 'foobar'
-            )
+            ->setInputCallback(static fn (): string => 'foobar')
             ->validate()
         ;
 
         $this->assertSame('foobar', $widget->value);
 
         $widget
-            ->setInputCallback(
-                static fn () => null
-            )
+            ->setInputCallback(static fn () => null)
             ->validate()
         ;
 

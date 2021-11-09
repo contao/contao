@@ -30,7 +30,7 @@ class FrontendTemplate extends Template
 	use FrontendTemplateTrait;
 
 	/**
-	 * Unsued $_GET check
+	 * Unused $_GET check
 	 * @var boolean
 	 */
 	protected $blnCheckRequest = false;
@@ -127,8 +127,6 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		// Replace insert tags
-		$this->strBuffer = $this->replaceInsertTags($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)
