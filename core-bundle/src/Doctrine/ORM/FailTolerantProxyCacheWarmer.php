@@ -15,12 +15,12 @@ namespace Contao\CoreBundle\Doctrine\ORM;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException as DoctrineDbalDbalException;
 use Doctrine\DBAL\Exception as DoctrineDbalException;
-use Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer;
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-class FailTolerantProxyCacheWarmer extends ProxyCacheWarmer
+class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
 {
     /**
-     * @var ProxyCacheWarmer
+     * @var CacheWarmerInterface
      */
     private $inner;
 
@@ -29,7 +29,7 @@ class FailTolerantProxyCacheWarmer extends ProxyCacheWarmer
      */
     private $connection;
 
-    public function __construct(ProxyCacheWarmer $inner, Connection $connection)
+    public function __construct(CacheWarmerInterface $inner, Connection $connection)
     {
         $this->inner = $inner;
         $this->connection = $connection;
