@@ -126,7 +126,7 @@
         <source>Query parameters</source>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.1">
-        <source>By default, Contao strips the query paramters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use "*" as a wildcard.</source>
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use "*" as a wildcard.</source>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
