@@ -561,6 +561,15 @@ class Configuration implements ConfigurationInterface
                     ->example('develop')
                     ->defaultValue('')
                 ->end()
+                ->scalarNode('route_prefix')
+                    ->info('Defines the path of the Contao backend.')
+                    ->validate()
+                        ->ifTrue(static fn (string $prefix) => 1 !== preg_match('/^\/\S*[^\/]$/', $prefix))
+                        ->thenInvalid('The backend path must begin but not end with a slash. Invalid path configured: %s')
+                    ->end()
+                    ->example('/admin')
+                    ->defaultValue('/contao')
+                ->end()
             ->end()
         ;
     }

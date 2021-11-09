@@ -280,22 +280,37 @@ class Statement
 		$this->arrLastUsedParams = $arrParams;
 
 		// Execute the query
+		// TODO: remove the try/catch block in Contao 5.0
 		try
 		{
 			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
 		}
-		catch (DriverException $exception)
+		catch (DriverException|\ArgumentCountError $exception)
 		{
-			if ($arrParams !== array(null))
+			if (!$arrParams)
 			{
 				throw $exception;
 			}
 
-			// Backwards compatibility for calling Statement::execute(null)
-			$this->statement = $this->resConnection->executeQuery($this->strQuery);
+			$intTokenCount = substr_count(preg_replace("/('[^']*')/", '', $this->strQuery), '?');
+
+			if (\count($arrParams) <= $intTokenCount)
+			{
+				throw $exception;
+			}
+
+			// If we get here, there are more parameters than tokens, so we slice the array and try to execute the query again
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, \array_slice($arrParams, 0, $intTokenCount));
 
 			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Use "%s::execute() instead."', __CLASS__, __CLASS__);
+			if ($this->arrLastUsedParams === array(null))
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Omit the NULL parameters instead.', __CLASS__);
+			}
+			else
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.');
+			}
 		}
 
 		// No result set available

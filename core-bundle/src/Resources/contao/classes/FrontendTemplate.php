@@ -128,8 +128,6 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		// Replace insert tags
-		$this->strBuffer = System::getContainer()->get(InsertTagParser::class)->replace($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)
