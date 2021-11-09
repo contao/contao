@@ -159,6 +159,9 @@ trait TemplateInheritance
 			}
 		}
 
+		// Replace insert tags
+		$strBuffer = Controller::replaceInsertTags($strBuffer);
+
 		// Add start and end markers in debug mode
 		if ($blnDebug)
 		{
