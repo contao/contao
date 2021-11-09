@@ -12,10 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
-/**
- * @experimental
- */
-class ChunkedText implements \IteratorAggregate
+final class ChunkedText implements \IteratorAggregate
 {
     public const TYPE_TEXT = 0;
     public const TYPE_RAW = 1;
