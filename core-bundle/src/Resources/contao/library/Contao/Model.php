@@ -750,6 +750,13 @@ abstract class Model
 	 */
 	public static function findByPk($varValue, array $arrOptions=array())
 	{
+		if ($varValue === null)
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
+
+			return null;
+		}
+
 		// Try to load from the registry
 		if (empty($arrOptions))
 		{
@@ -858,7 +865,6 @@ abstract class Model
 				array
 				(
 					'column' => array("$t.id IN(" . implode(',', array_map('\intval', $arrUnregistered)) . ")"),
-					'value'  => null,
 					'order'  => Database::getInstance()->findInSet("$t.id", $arrIds),
 					'return' => 'Collection'
 				),
@@ -930,6 +936,13 @@ abstract class Model
 		if (\count($arrColumn) == 1 && ($arrColumn[0] === static::getPk() || \in_array($arrColumn[0], static::getUniqueFields())))
 		{
 			$blnModel = true;
+
+			if ($varValue === null && $arrColumn[0] === static::getPk())
+			{
+				trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
+
+				return null;
+			}
 		}
 
 		$arrOptions = array_merge
@@ -1038,7 +1051,7 @@ abstract class Model
 
 				if ($arrColumn[0] == static::$strPk || \in_array($arrColumn[0], static::getUniqueFields()))
 				{
-					$varKey = \is_array($arrOptions['value']) ? $arrOptions['value'][0] : $arrOptions['value'];
+					$varKey = \is_array($arrOptions['value'] ?? null) ? $arrOptions['value'][0] : ($arrOptions['value'] ?? null);
 					$objModel = Registry::getInstance()->fetch(static::$strTable, $varKey, $arrColumn[0]);
 
 					if ($objModel !== null)
@@ -1071,8 +1084,13 @@ abstract class Model
 			$objStatement->limit($arrOptions['limit'], $arrOptions['offset']);
 		}
 
+		if (!\array_key_exists('value', $arrOptions))
+		{
+			$arrOptions['value'] = array();
+		}
+
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(array) ($arrOptions['value'] ?? array()));
+		$objResult = $objStatement->execute(...(\is_array($arrOptions['value']) ? $arrOptions['value'] : array($arrOptions['value'])));
 
 		if ($objResult->numRows < 1)
 		{
