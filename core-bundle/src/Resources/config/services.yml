@@ -717,6 +717,8 @@ services:
             - '@event_dispatcher'
             - '@contao.security.token_checker'
             - '@Contao\CoreBundle\String\HtmlDecoder'
+            - '@request_stack'
+            - '@contao.framework'
         public: true
 
     contao.search.indexer.default:

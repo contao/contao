@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
 		),
