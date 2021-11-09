@@ -29,7 +29,9 @@ services:
             - '@request_stack'
         public: true
 
-    Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener: ~
+    Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener:
+        arguments:
+            - '@contao.framework'
 
     Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener:
         arguments:
