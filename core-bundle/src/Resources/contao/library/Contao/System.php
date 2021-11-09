@@ -1232,7 +1232,7 @@ abstract class System
 
 	public static function isGranted($attributes, $subject = null)
 	{
-		return System::getContainer()->get('security.helper')->isGranted($attributes, $subject);
+		return self::getContainer()->get('security.helper')->isGranted($attributes, $subject);
 	}
 }
 
