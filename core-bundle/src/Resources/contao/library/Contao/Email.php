@@ -433,7 +433,15 @@ class Email
 		// Add the administrator e-mail as default sender
 		if (!$this->strSender)
 		{
-			list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
+			if (!empty($GLOBALS['TL_ADMIN_EMAIL']))
+			{
+				$this->strSender = $GLOBALS['TL_ADMIN_EMAIL'];
+				$this->strSenderName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
+			}
+			else
+			{
+				list($this->strSenderName, $this->strSender) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
+			}
 		}
 
 		// Sender
