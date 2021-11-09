@@ -365,7 +365,7 @@ class BackendUser extends User
 	 *
 	 * @return boolean
 	 *
-	 * @deprecated since Contao 4.13, use Symfony security and isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE)
+	 * @deprecated since Contao 4.13. Use Symfony security and isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE)
 	 */
 	public function canEditFieldsOf($table)
 	{

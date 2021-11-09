@@ -108,7 +108,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
         }
 
         if (!\is_array($subject)) {
-            $page = $this->framework->getAdapter(PageModel::class)->findById($subject);
+            $page = $this->framework->getAdapter(PageModel::class)->findByPk($subject);
 
             if (!$page instanceof PageModel) {
                 return false;
@@ -119,7 +119,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         [$cuser, $cgroup, $chmod] = $this->getPagePermissions($subject);
 
-        $permission = array('w' . $flag);
+        $permission = ['w' . $flag];
 
         if (\in_array($cgroup, $user->groups, false)) {
             $permission[] = 'g'.$flag;
@@ -141,7 +141,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return false;
         }
 
-        return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $user->alexf)) > 0;
+        return \count(preg_grep('/^'.preg_quote($table, '/').'::/', $user->alexf)) > 0;
     }
 
     private function getPagePermissions(array $row): array
