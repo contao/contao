@@ -119,7 +119,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         [$cuser, $cgroup, $chmod] = $this->getPagePermissions($subject);
 
-        $permission = ['w' . $flag];
+        $permission = ['w'.$flag];
 
         if (\in_array($cgroup, $user->groups, false)) {
             $permission[] = 'g'.$flag;

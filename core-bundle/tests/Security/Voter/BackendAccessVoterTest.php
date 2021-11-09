@@ -21,7 +21,6 @@ use Contao\PageModel;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
 
 class BackendAccessVoterTest extends TestCase
 {
@@ -128,7 +127,6 @@ class BackendAccessVoterTest extends TestCase
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, 'foo', ['contao_user.alexf']));
     }
-
 
     public function testDeniesAccessIfUserCannotEditFieldsOfTable(): void
     {
@@ -445,7 +443,7 @@ class BackendAccessVoterTest extends TestCase
             [],
             0,
             0,
-            VoterInterface::ACCESS_DENIED
+            VoterInterface::ACCESS_DENIED,
         ];
 
         yield 'Grants access if page can be edited by anyone (w = world, 1 = edit page)' => [
@@ -453,7 +451,7 @@ class BackendAccessVoterTest extends TestCase
             ['w1'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page can be edited by user (u = user, 1 = edit page)' => [
@@ -461,7 +459,7 @@ class BackendAccessVoterTest extends TestCase
             ['u1'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page can be edited by user (g = group, 1 = edit page)' => [
@@ -469,7 +467,7 @@ class BackendAccessVoterTest extends TestCase
             ['g1'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page hierarchy can be changed by anyone (w = world, 2 = page hierarchy)' => [
@@ -477,7 +475,7 @@ class BackendAccessVoterTest extends TestCase
             ['w2'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page hierarchy can be changed by user (u = user, 2 = page hierarchy)' => [
@@ -485,7 +483,7 @@ class BackendAccessVoterTest extends TestCase
             ['u2'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page hierarchy can be changed by user (g = group, 2 = page hierarchy)' => [
@@ -493,7 +491,7 @@ class BackendAccessVoterTest extends TestCase
             ['g2'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page can be deleted by anyone (w = world, 3 = delete page)' => [
@@ -501,7 +499,7 @@ class BackendAccessVoterTest extends TestCase
             ['w3'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page can be deleted by user (u = user, 3 = delete page)' => [
@@ -509,7 +507,7 @@ class BackendAccessVoterTest extends TestCase
             ['u3'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if page can be deleted by user (g = group, 3 = delete page)' => [
@@ -517,7 +515,7 @@ class BackendAccessVoterTest extends TestCase
             ['g3'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if articles can be edited by anyone (w = world, 4 = edit articles)' => [
@@ -525,7 +523,7 @@ class BackendAccessVoterTest extends TestCase
             ['w4'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if articles can be edited by user (u = user, 4 = edit articles)' => [
@@ -533,7 +531,7 @@ class BackendAccessVoterTest extends TestCase
             ['u4'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if articles can be edited by user (g = group, 4 = edit articles)' => [
@@ -541,17 +539,15 @@ class BackendAccessVoterTest extends TestCase
             ['g4'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
-
-
 
         yield 'Grants access if article hierarchy can be changed by anyone (w = world, 5 = article hierarchy)' => [
             ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY,
             ['w5'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if article hierarchy can be changed by user (u = user, 5 = article hierarchy)' => [
@@ -559,7 +555,7 @@ class BackendAccessVoterTest extends TestCase
             ['u5'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if article hierarchy can be changed by user (g = group, 5 = article hierarchy)' => [
@@ -567,7 +563,7 @@ class BackendAccessVoterTest extends TestCase
             ['g5'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if articles can be deleted by anyone (w = world, 5 = delete articles)' => [
@@ -575,7 +571,7 @@ class BackendAccessVoterTest extends TestCase
             ['w6'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if 5 can be deleted by user (u = user, 5 = delete articles)' => [
@@ -583,7 +579,7 @@ class BackendAccessVoterTest extends TestCase
             ['u6'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
 
         yield 'Grants access if 5 can be deleted by user (g = group, 5 = delete 5)' => [
@@ -591,7 +587,7 @@ class BackendAccessVoterTest extends TestCase
             ['g6'],
             1,
             1,
-            VoterInterface::ACCESS_GRANTED
+            VoterInterface::ACCESS_GRANTED,
         ];
     }
 }

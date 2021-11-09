@@ -302,7 +302,7 @@ class tl_news_archive extends Backend
 		$GLOBALS['TL_DCA']['tl_news_archive']['list']['sorting']['root'] = $root;
 
 		// Check permissions to add archives
-		if (!System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES)
+		if (!System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
 		{
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCreatable'] = true;
@@ -310,7 +310,7 @@ class tl_news_archive extends Backend
 		}
 
 		// Check permissions to delete calendars
-		if (!System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES)
+		if (!System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
 		{
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notDeletable'] = true;
 		}
