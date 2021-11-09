@@ -141,6 +141,9 @@ trait TemplateInheritance
 			$blnDebug = System::getContainer()->getParameter('kernel.debug');
 		}
 
+		// Replace insert tags
+		$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+
 		// Add start and end markers in debug mode
 		if ($blnDebug)
 		{
