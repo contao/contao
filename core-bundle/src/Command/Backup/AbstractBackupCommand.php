@@ -19,6 +19,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * @internal
+ */
 abstract class AbstractBackupCommand extends Command
 {
     protected BackupManager $backupManager;
