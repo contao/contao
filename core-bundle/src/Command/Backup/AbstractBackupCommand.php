@@ -39,6 +39,11 @@ abstract class AbstractBackupCommand extends Command
         ;
     }
 
+    /**
+     * @template T of AbstractConfig
+     * @psalm-param T $config
+     * @psalm-return T
+     */
     protected function handleCommonConfig(InputInterface $input, AbstractConfig $config): AbstractConfig
     {
         if ($file = $input->getArgument('file')) {

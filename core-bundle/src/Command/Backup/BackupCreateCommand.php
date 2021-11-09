@@ -39,7 +39,6 @@ class BackupCreateCommand extends AbstractBackupCommand
         $io = new SymfonyStyle($input, $output);
 
         $config = $this->backupManager->createCreateConfig();
-        /** @var CreateConfig $config */
         $config = $this->handleCommonConfig($input, $config);
 
         try {

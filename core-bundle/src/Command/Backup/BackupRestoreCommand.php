@@ -41,7 +41,6 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $io = new SymfonyStyle($input, $output);
 
         $config = $this->backupManager->createRestoreConfig();
-        /** @var RestoreConfig $config */
         $config = $this->handleCommonConfig($input, $config);
 
         if ($input->getOption('force')) {
