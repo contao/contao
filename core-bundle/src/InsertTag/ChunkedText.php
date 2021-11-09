@@ -22,6 +22,9 @@ final class ChunkedText implements \IteratorAggregate
      */
     private $chunks;
 
+    /**
+     * @internal
+     */
     public function __construct(array $chunks)
     {
         $this->chunks = $chunks;
