@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -217,11 +218,7 @@ class FrontendTemplate extends Template
 			}
 
 			// Tag the page (see #2137)
-			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-			{
-				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
-			}
+			System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($objPage);
 		}
 
 		return $response;

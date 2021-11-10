@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
@@ -483,6 +484,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('security.authentication_utils', $authenticationUtils);
         $container->set(BackupCodeManager::class, $this->createMock(BackupCodeManager::class));
         $container->set('security.helper', $security);
+        $container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         System::setContainer($container);
 

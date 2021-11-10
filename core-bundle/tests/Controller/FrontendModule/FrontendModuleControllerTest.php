@@ -12,14 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
-use Contao\CoreBundle\Cache\EntityTagger;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\ModuleModel;
 use Contao\System;
-use FOS\HttpCache\ResponseTagger;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,22 +138,15 @@ class FrontendModuleControllerTest extends TestCase
         $model = $this->getModuleModel();
         $model->id = 42;
 
-        $responseTagger = $this->createMock(ResponseTagger::class);
-        $responseTagger
+        $entityCacheTags = $this->createMock(EntityCacheTags::class);
+        $entityCacheTags
             ->expects($this->once())
-            ->method('addTags')
-            ->with(['contao.db.tl_module.42'])
-        ;
-
-        $entityTagger = $this->createMock(EntityTagger::class);
-        $entityTagger
-            ->method('getTags')
-            ->willReturnArgument(0)
+            ->method('tagWith')
+            ->with($model)
         ;
 
         $container = $this->mockContainerWithFrameworkTemplate('mod_test');
-        $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
-        $container->set(EntityTagger::class, $entityTagger);
+        $container->set(EntityCacheTags::class, $entityCacheTags);
 
         $controller = new TestController();
         $controller->setContainer($container);
@@ -199,6 +191,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
+        $$this->container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         return $this->container;
     }

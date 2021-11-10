@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
@@ -137,6 +138,7 @@ class MarkdownControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
+        $container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         return $container;
     }

@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
 use Contao\PageModel;
-use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,13 +31,13 @@ class FaviconController
 {
     private ContaoFramework $framework;
     private string $projectDir;
-    private ?ResponseTagger $responseTagger;
+    private EntityCacheTags $entityCacheTags;
 
-    public function __construct(ContaoFramework $framework, string $projectDir, ResponseTagger $responseTagger = null)
+    public function __construct(ContaoFramework $framework, string $projectDir, EntityCacheTags $entityCacheTags)
     {
         $this->framework = $framework;
         $this->projectDir = $projectDir;
-        $this->responseTagger = $responseTagger;
+        $this->entityCacheTags = $entityCacheTags;
     }
 
     /**
@@ -79,9 +79,7 @@ class FaviconController
                 break;
         }
 
-        if (null !== $this->responseTagger) {
-            $this->responseTagger->addTags(['contao.db.tl_page.'.$rootPage->id]);
-        }
+        $this->entityCacheTags->tagWithModelInstance($rootPage);
 
         return $response;
     }

@@ -65,9 +65,11 @@ services:
             - '@Contao\CoreBundle\Intl\Locales'
         public: true
 
-    Contao\CoreBundle\Cache\EntityTagger:
+    Contao\CoreBundle\Cache\EntityCacheTags:
         arguments:
             - '@doctrine.orm.default_entity_manager'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@?fos_http_cache.cache_manager'
 
     Contao\CoreBundle\Controller\BackendController: ~
 
@@ -123,7 +125,7 @@ services:
         arguments:
             - '@contao.framework'
             - '%kernel.project_dir%'
-            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@Contao\CoreBundle\Cache\EntityCacheTags'
         tags:
             - controller.service_arguments
 
