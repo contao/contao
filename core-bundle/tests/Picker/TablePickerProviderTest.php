@@ -501,7 +501,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($expectedItems)))
             ->method('createItem')
             ->withConsecutive(...$expectedItems)
-            ->willReturn($menu ?? $this->createMock(ItemInterface::class))
+            ->willReturn($menu)
         ;
 
         return new TablePickerProvider(
