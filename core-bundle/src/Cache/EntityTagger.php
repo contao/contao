@@ -36,7 +36,7 @@ class EntityTagger
      */
     public function getTags($target): array
     {
-        if (empty($target)) {
+        if (!$target) {
             return [];
         }
 
