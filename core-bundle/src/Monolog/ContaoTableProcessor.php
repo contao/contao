@@ -46,7 +46,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
-        $level = $record['level'] ?? 0;
+        $level = $record['level'];
 
         $this->updateAction($context, $level);
         $this->updateBrowser($context, $request);
