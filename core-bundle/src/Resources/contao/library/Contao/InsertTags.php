@@ -68,8 +68,9 @@ class InsertTags extends Controller
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		// Backwards compatibility
 		// Preserve insert tags
-		if (Config::get('disableInsertTags'))
+		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']))
 		{
 			$return = StringUtil::restoreBasicEntities($strBuffer);
 

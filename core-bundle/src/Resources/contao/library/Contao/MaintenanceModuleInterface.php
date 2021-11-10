@@ -16,3 +16,5 @@ interface MaintenanceModuleInterface
 
 	public function isActive();
 }
+
+class_alias(MaintenanceModuleInterface::class, 'executable');

@@ -24,7 +24,7 @@ namespace Contao;
  *
  * @todo Rename to FormUpload in Contao 5.0
  */
-class FormFileUpload extends Widget implements \uploadable
+class FormFileUpload extends Widget implements UploadableWidgetInterface
 {
 	/**
 	 * Template

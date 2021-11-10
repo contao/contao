@@ -8,34 +8,32 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
- *             Use the Contao\MaintenanceModuleInterface instead.
- */
-interface listable extends Contao\ListableDataContainerInterface
-{
-}
+use Contao\EditableDataContainerInterface;
+use Contao\ListableDataContainerInterface;
+use Contao\MaintenanceModuleInterface;
+use Contao\UploadableWidgetInterface;
 
-/**
- * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
- *             Use the Contao\MaintenanceModuleInterface instead.
- */
-interface editable extends Contao\EditableDataContainerInterface
-{
-}
+// Register aliases in the global namespace for backwards compatibility
+class_exists(ListableDataContainerInterface::class);
+class_exists(EditableDataContainerInterface::class);
+class_exists(MaintenanceModuleInterface::class);
+class_exists(UploadableWidgetInterface::class);
 
-/**
- * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
- *             Use the Contao\MaintenanceModuleInterface instead.
- */
-interface executable extends Contao\MaintenanceModuleInterface
+// Let composer find the deprecated interfaces for backwards compatibility
+if (!interface_exists('listable', false))
 {
-}
+	interface listable
+	{
+	}
 
-/**
- * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
- *             Use the Contao\UploadableWidgetInterface instead.
- */
-interface uploadable extends Contao\UploadableWidgetInterface
-{
+	interface editable
+	{
+	}
+
+	interface executable
+	{
+	}
+	interface uploadable
+	{
+	}
 }

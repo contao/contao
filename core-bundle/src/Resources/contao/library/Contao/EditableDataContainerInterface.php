@@ -22,3 +22,5 @@ interface EditableDataContainerInterface
 
 	public function edit();
 }
+
+class_alias(EditableDataContainerInterface::class, 'editable');

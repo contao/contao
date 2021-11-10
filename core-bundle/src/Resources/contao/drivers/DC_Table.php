@@ -30,7 +30,7 @@ use Symfony\Component\String\UnicodeString;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DC_Table extends DataContainer implements \listable, \editable
+class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
 	 * Name of the parent table

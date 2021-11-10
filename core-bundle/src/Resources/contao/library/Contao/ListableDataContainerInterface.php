@@ -20,3 +20,5 @@ interface ListableDataContainerInterface
 
 	public function undo();
 }
+
+class_alias(ListableDataContainerInterface::class, 'listable');

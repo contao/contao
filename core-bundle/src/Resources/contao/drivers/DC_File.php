@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DC_File extends DataContainer implements \editable
+class DC_File extends DataContainer implements EditableDataContainerInterface
 {
 	/**
 	 * Initialize the object

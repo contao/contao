@@ -42,6 +42,7 @@ class ImageSizesTest extends TestCase
         parent::setUp();
 
         $GLOBALS['TL_CROP'] = [
+            'image_sizes' => [],
             'relative' => [
                 'proportional', 'box',
             ],

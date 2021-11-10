@@ -38,7 +38,7 @@ use Webmozart\PathUtil\Path;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DC_Folder extends DataContainer implements \listable, \editable
+class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
 	 * Current path

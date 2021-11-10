@@ -13,3 +13,5 @@ namespace Contao;
 interface UploadableWidgetInterface
 {
 }
+
+class_alias(UploadableWidgetInterface::class, 'uploadable');
