@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -80,8 +79,10 @@ class PageRegular extends Frontend
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
 
 		$container = System::getContainer();
-		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
 		$container->get('translator')->setLocale($locale);
+
+		$request = $container->get('request_stack')->getCurrentRequest();
+		$request->setLocale($locale);
 
 		$this->responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
 
@@ -213,29 +214,23 @@ class PageRegular extends Frontend
 			}
 		}
 
+		$headBag = $this->responseContext->get(HtmlHeadBag::class);
+
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($this->responseContext->get(HtmlHeadBag::class)->getTitle());
+		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle());
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $this->responseContext->get(HtmlHeadBag::class)->getMetaRobots();
+		$this->Template->robots = $headBag->getMetaRobots();
 
-		// Do not search the page if the query has a key that is in TL_NOINDEX_KEYS
-		if (preg_grep('/^(' . implode('|', $GLOBALS['TL_NOINDEX_KEYS']) . ')$/', array_keys($_GET)))
+		// Canonical
+		if ($objPage->enableCanonical)
 		{
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
-
-			if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
-			{
-				/** @var ContaoPageSchema $schema */
-				$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-				$schema->setNoSearch(true);
-			}
+			$this->Template->canonical = $headBag->getCanonicalUriForRequest($request);
 		}
 
 		// Fall back to the default title tag
@@ -246,7 +241,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($this->responseContext->get(HtmlHeadBag::class)->getMetaDescription());
+		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);

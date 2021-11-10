@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\Message;
@@ -58,7 +59,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;search,limit',
 			'headerFields'            => array('name', 'author', 'tstamp'),
@@ -150,7 +151,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'alnum', 'maxlength'=>64, 'spaceToUnderscore'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(

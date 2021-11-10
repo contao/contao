@@ -205,7 +205,7 @@ class ModuleNewsMenu extends ModuleNews
 	}
 
 	/**
-	 * Generate the dayil menu
+	 * Generate the daily menu
 	 */
 	protected function compileDailyMenu()
 	{

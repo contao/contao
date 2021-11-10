@@ -661,7 +661,7 @@ class Comments extends Frontend
 
 			while ($objNotify->next())
 			{
-				// Don't notify the commentor about his own comment
+				// Don't notify the commenter about his own comment
 				if ($objNotify->email == $objComment->email)
 				{
 					continue;
