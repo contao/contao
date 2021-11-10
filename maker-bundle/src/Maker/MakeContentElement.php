@@ -71,7 +71,7 @@ class MakeContentElement extends AbstractFragmentMaker
         ]);
 
         $this->templateGenerator->generate([
-            'source' => 'content-element/content_element.tpl.html5',
+            'source' => 'content-element/content_element.tpl.php',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
 
@@ -91,7 +91,7 @@ class MakeContentElement extends AbstractFragmentMaker
 
             $this->languageFileGenerator->generate([
                 'domain' => 'default',
-                'source' => 'content-element/source.tpl.xlf',
+                'source' => 'content-element/source.tpl.php',
                 'language' => $language,
                 'io' => $io,
                 'variables' => [
@@ -116,7 +116,7 @@ class MakeContentElement extends AbstractFragmentMaker
 
                 $this->languageFileGenerator->generate([
                     'domain' => 'default',
-                    'source' => 'content-element/target.tpl.xlf',
+                    'source' => 'content-element/target.tpl.php',
                     'language' => $language,
                     'io' => $io,
                     'variables' => [

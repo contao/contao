@@ -12,10 +12,10 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 /**
  * @ServiceTag("kernel.event_listener", event=<?= $event ?>)
  */
-class <?= $className . "\n" ?>
+class <?= $className."\n" ?>
 {
-    <?= $signature . "\n" ?>
+    <?= $signature."\n" ?>
     {
-        <?= $body . "\n" ?>
+        <?= $body."\n" ?>
     }
 }

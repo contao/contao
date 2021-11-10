@@ -12,10 +12,10 @@ use <?= $use ?>;
 /**
  * @Callback(table="<?= $table ?>", target="<?= $target ?>")
  */
-class <?= $className . "\n" ?>
+class <?= $className."\n" ?>
 {
-    <?= $signature . "\n" ?>
+    <?= $signature."\n" ?>
     {
-        <?= $body . "\n" ?>
+        <?= $body."\n" ?>
     }
 }

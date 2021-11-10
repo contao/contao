@@ -12,10 +12,10 @@ use <?= $use ?>;
 /**
  * @Hook("<?= $hook ?>")
  */
-class <?= $className . "\n" ?>
+class <?= $className."\n" ?>
 {
-    <?= $signature . "\n" ?>
+    <?= $signature."\n" ?>
     {
-        <?= $body . "\n" ?>
+        <?= $body."\n" ?>
     }
 }

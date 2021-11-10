@@ -76,7 +76,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
         ]);
 
         $this->templateGenerator->generate([
-            'source' => 'frontend-module/frontend_module.tpl.html5',
+            'source' => 'frontend-module/frontend_module.tpl.php',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
 
@@ -96,7 +96,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
             $this->languageFileGenerator->generate([
                 'domain' => 'default',
-                'source' => 'frontend-module/source.tpl.xlf',
+                'source' => 'frontend-module/source.tpl.php',
                 'language' => $language,
                 'io' => $io,
                 'variables' => [
@@ -121,7 +121,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
                 $this->languageFileGenerator->generate([
                     'domain' => 'default',
-                    'source' => 'frontend-module/target.tpl.xlf',
+                    'source' => 'frontend-module/target.tpl.php',
                     'language' => $language,
                     'io' => $io,
                     'variables' => [
