@@ -28,6 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\Container;
+use Webmozart\PathUtil\Path;
 
 abstract class AbstractFragmentMaker extends AbstractMaker
 {
@@ -145,7 +146,11 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
     protected function getTemplateName(string $className): string
     {
-        return sprintf('%s/templates/%s_%s.html5', $this->contaoDirectoryLocator->getConfigDirectory(), $this->getTemplatePrefix(), Container::underscore($className));
+        return Path::join(
+            $this->contaoDirectoryLocator->getConfigDirectory(),
+            'templates',
+            sprintf('%s_%s.html5', $this->getTemplatePrefix(), Container::underscore($className))
+        );
     }
 
     /**

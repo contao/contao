@@ -13,21 +13,22 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Filesystem;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ContaoDirectoryLocator
 {
     private Filesystem $filesystem;
-    private string $projectDirectory;
+    private string $projectDir;
 
-    public function __construct(Filesystem $filesystem, string $projectDirectory)
+    public function __construct(Filesystem $filesystem, string $projectDir)
     {
         $this->filesystem = $filesystem;
-        $this->projectDirectory = $projectDirectory;
+        $this->projectDir = $projectDir;
     }
 
     public function getConfigDirectory(): string
     {
-        $directory = sprintf('%s/contao', $this->projectDirectory);
+        $directory = Path::join($this->projectDir, 'contao');
 
         // Make sure the directory exists
         $this->filesystem->mkdir($directory);

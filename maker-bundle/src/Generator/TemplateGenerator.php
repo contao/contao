@@ -14,6 +14,7 @@ namespace Contao\MakerBundle\Generator;
 
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Webmozart\PathUtil\Path;
 
 class TemplateGenerator implements GeneratorInterface
 {
@@ -54,6 +55,6 @@ class TemplateGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return sprintf('%s/../Resources/skeleton/%s', __DIR__, ltrim($path, '/'));
+        return Path::join(__DIR__, '../Resources/skeleton', $path);
     }
 }

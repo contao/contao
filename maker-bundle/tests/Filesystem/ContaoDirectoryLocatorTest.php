@@ -15,21 +15,22 @@ namespace Contao\MakerBundle\Tests\Filesystem;
 use Contao\MakerBundle\Filesystem\ContaoDirectoryLocator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ContaoDirectoryLocatorTest extends TestCase
 {
     public function testReturnsTheConfigDirectory(): void
     {
-        $projectDirectory = '/foo/bar';
+        $projectDir = '/foo/bar';
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
             ->expects($this->once())
             ->method('mkdir')
-            ->with(sprintf('%s/contao', $projectDirectory))
+            ->with(Path::join($projectDir, 'contao'))
         ;
 
-        $directoryLocator = new ContaoDirectoryLocator($filesystem, $projectDirectory);
+        $directoryLocator = new ContaoDirectoryLocator($filesystem, $projectDir);
 
         $this->assertSame('/foo/bar/contao', $directoryLocator->getConfigDirectory());
     }

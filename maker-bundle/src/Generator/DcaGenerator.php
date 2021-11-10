@@ -17,6 +17,7 @@ use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Webmozart\PathUtil\Path;
 
 class DcaGenerator implements GeneratorInterface
 {
@@ -39,7 +40,7 @@ class DcaGenerator implements GeneratorInterface
         $options = $resolver->resolve($options);
 
         $source = $this->getSourcePath($options['source']);
-        $target = sprintf('%s/dca/%s.php', $this->directoryLocator->getConfigDirectory(), ltrim($options['domain'], '/'));
+        $target = Path::join($this->directoryLocator->getConfigDirectory(), 'dca', $options['domain'].'.php');
 
         $fileExists = $this->filesystem->exists($target);
 
@@ -97,6 +98,6 @@ class DcaGenerator implements GeneratorInterface
 
     private function getSourcePath(string $path): string
     {
-        return sprintf('%s/../Resources/skeleton/%s', __DIR__, ltrim($path, '/'));
+        return Path::join(__DIR__, '../Resources/skeleton', $path);
     }
 }
