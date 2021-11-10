@@ -112,10 +112,7 @@ class MakeDcaCallback extends AbstractMaker
 
         if (\count($callbackDependencies) > 0) {
             foreach ($callbackDependencies as $callbackDependency) {
-                $command
-                    ->addArgument($callbackDependency, InputArgument::REQUIRED, sprintf('Please choose a value for "%s"', $callbackDependency))
-                ;
-
+                $command->addArgument($callbackDependency, InputArgument::REQUIRED, sprintf('Please choose a value for "%s"', $callbackDependency));
                 $argument = $definition->getArgument($callbackDependency);
 
                 $question = new Question($argument->getDescription());

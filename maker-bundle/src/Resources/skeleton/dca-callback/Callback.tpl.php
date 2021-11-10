@@ -1,4 +1,4 @@
-<?= "<?php\n"; ?>
+<?= "<?php\n" ?>
 
 declare(strict_types=1);
 
@@ -10,11 +10,11 @@ use <?= $use ?>;
 <?php endforeach; ?>
 
 /**
- * @Callback(table="<?= $table; ?>", target="<?= $target; ?>")
+ * @Callback(table="<?= $table ?>", target="<?= $target ?>")
  */
-class <?= $className . "\n"; ?>
+class <?= $className . "\n" ?>
 {
-    <?= $signature . "\n"; ?>
+    <?= $signature . "\n" ?>
     {
         // Do something …
     }

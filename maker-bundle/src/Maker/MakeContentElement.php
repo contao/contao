@@ -68,11 +68,7 @@ class MakeContentElement extends AbstractFragmentMaker
         $this->classGenerator->generate([
             'source' => 'content-element/ContentElement.tpl.php',
             'fqcn' => $elementDetails->getFullName(),
-            'variables' => [
-                'className' => $className,
-                'elementName' => $elementName,
-                'category' => $category,
-            ],
+            'variables' => compact('className', 'elementName', 'category'),
         ]);
 
         $this->templateGenerator->generate([

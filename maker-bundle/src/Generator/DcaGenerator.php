@@ -60,7 +60,7 @@ class DcaGenerator implements GeneratorInterface
             $targetContent = file_get_contents($target);
             $targetContent = rtrim($targetContent);
 
-            $contents = sprintf("%s\n\n%s", $targetContent, $contents);
+            $contents = $targetContent."\n\n".$contents;
         }
 
         $this->filesystem->dumpFile($target, $contents);

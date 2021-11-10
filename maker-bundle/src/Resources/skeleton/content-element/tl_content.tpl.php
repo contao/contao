@@ -1,11 +1,11 @@
 <?php if (!$append): ?>
-<?= '<?php'; ?>
+<?= '<?php' ?>
 
 
 declare(strict_types=1);
 <?php endif; ?>
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['<?= $element_name; ?>'] = '
+$GLOBALS['TL_DCA']['tl_content']['palettes']['<?= $element_name ?>'] = '
     {type_legend},type,headline;
     {template_legend:hide},customTpl;
     {protected_legend:hide},protected;
