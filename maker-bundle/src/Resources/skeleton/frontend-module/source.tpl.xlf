@@ -3,10 +3,10 @@
     <file>
         <body>
             <trans-unit id="FMD.<?= $element ?>.0">
-                <source><?= $translatedName ?></source>
+                <source><?= $sourceName ?></source>
             </trans-unit>
             <trans-unit id="FMD.<?= $element ?>.1">
-                <source><?= $translatedDescription ?></source>
+                <source><?= $sourceDescription ?></source>
             </trans-unit>
         </body>
     </file>

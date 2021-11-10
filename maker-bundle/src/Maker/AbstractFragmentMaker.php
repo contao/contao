@@ -61,17 +61,16 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
         $definition = $command->getDefinition();
 
-        // Ask whether an empty dca palette should be created
+        // Ask whether an empty DCA palette should be created
         $command->addArgument('addEmptyDcaPalette', InputArgument::OPTIONAL);
         $question = new ConfirmationQuestion('Do you want to add an empty DCA palette?', true);
         $input->setArgument('addEmptyDcaPalette', $io->askQuestion($question));
 
         $command->addArgument('category', InputArgument::OPTIONAL, 'Choose a category');
         $argument = $definition->getArgument('category');
-
         $categories = $this->getExistingCategories();
 
-        $io->writeln(' <fg=green>Suggested Categories:</>');
+        $io->writeln(' <fg=green>Suggested categories:</>');
         $io->listing($categories);
 
         $question = new Question($argument->getDescription());
@@ -87,12 +86,11 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
         if ($input->getArgument('addTranslation')) {
             $command
-                ->addArgument('translatedName', InputArgument::OPTIONAL, 'Choose an english name for this element')
-                ->addArgument('translatedDescription', InputArgument::OPTIONAL, 'Choose an english description for this element')
-                // FIXME: ->addArgument('languages', InputArgument::OPTIONAL, 'What languages do you want the element name translate to? (e.g. <fg=yellow>en, fr</>)')
+                ->addArgument('sourceName', InputArgument::OPTIONAL, 'Enter the English element name')
+                ->addArgument('sourceDescription', InputArgument::OPTIONAL, 'Enter the English element description')
             ;
 
-            foreach (['translatedName', 'translatedDescription'] as $field) {
+            foreach (['sourceName', 'sourceDescription'] as $field) {
                 $argument = $definition->getArgument($field);
 
                 $question = new Question($argument->getDescription());
@@ -104,18 +102,18 @@ abstract class AbstractFragmentMaker extends AbstractMaker
             $i = 0;
 
             while (true) {
-                $command->addArgument('addAnotherTranslation_'.$i, InputArgument::OPTIONAL);
+                $command->addArgument('addTranslation_'.$i, InputArgument::OPTIONAL);
                 $question = new ConfirmationQuestion('Do you want to add another translation?', false);
-                $input->setArgument('addAnotherTranslation_'.$i, $io->askQuestion($question));
+                $input->setArgument('addTranslation_'.$i, $io->askQuestion($question));
 
-                if (!$input->getArgument('addAnotherTranslation_'.$i)) {
+                if (!$input->getArgument('addTranslation_'.$i)) {
                     break;
                 }
 
                 $command
-                    ->addArgument('language_'.$i, InputArgument::OPTIONAL, 'What language do you want the element name translate to? (e.g. <fg=yellow>de</>)')
-                    ->addArgument('translatedName_'.$i, InputArgument::OPTIONAL, 'Choose a translated name for this element')
-                    ->addArgument('translatedDescription_'.$i, InputArgument::OPTIONAL, 'Choose a translated description for this element')
+                    ->addArgument('language_'.$i, InputArgument::OPTIONAL, 'Which language do you want to add? (e.g. <fg=yellow>de</>)')
+                    ->addArgument('translatedName_'.$i, InputArgument::OPTIONAL, 'Enter the translated element name')
+                    ->addArgument('translatedDescription_'.$i, InputArgument::OPTIONAL, 'Enter the translated element description')
                 ;
 
                 $argument = $definition->getArgument('language_'.$i);

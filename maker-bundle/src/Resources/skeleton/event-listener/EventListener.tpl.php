@@ -16,6 +16,6 @@ class <?= $className . "\n" ?>
 {
     <?= $signature . "\n" ?>
     {
-        // Do something …
+        <?= $body . "\n" ?>
     }
 }

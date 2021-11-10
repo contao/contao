@@ -33,8 +33,8 @@ class MakeFrontendModule extends AbstractFragmentMaker
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->setDescription('Creates an empty frontend module')
-            ->addArgument('module', InputArgument::REQUIRED, 'Choose a class name for your frontend module')
+            ->setDescription('Creates an empty front end module')
+            ->addArgument('module', InputArgument::REQUIRED, 'Enter a class name for the front end module')
         ;
 
         $inputConfig->setArgumentAsNonInteractive('module');
@@ -92,27 +92,27 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
         if ($addTranslations) {
             $language = 'en';
-            $translatedName = $input->getArgument('translatedName');
-            $translatedDescription = $input->getArgument('translatedDescription');
+            $sourceName = $input->getArgument('sourceName');
+            $sourceDescription = $input->getArgument('sourceDescription');
 
             $this->languageFileGenerator->generate([
                 'domain' => 'default',
-                'source' => 'frontend-module/english.tpl.xlf',
+                'source' => 'frontend-module/source.tpl.xlf',
                 'language' => $language,
                 'io' => $io,
                 'variables' => [
                     'element' => $elementName,
-                    'translatedName' => $translatedName,
-                    'translatedDescription' => $translatedDescription,
+                    'sourceName' => $sourceName,
+                    'sourceDescription' => $sourceDescription,
                 ],
             ]);
 
             $i = 0;
 
             while (true) {
-                $hasNext = $input->hasArgument('addAnotherTranslation_'.$i);
+                $hasNext = $input->hasArgument('addTranslation_'.$i);
 
-                if (!$hasNext || false === $input->getArgument('addAnotherTranslation_'.$i)) {
+                if (!$hasNext || false === $input->getArgument('addTranslation_'.$i)) {
                     break;
                 }
 
@@ -122,11 +122,13 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
                 $this->languageFileGenerator->generate([
                     'domain' => 'default',
-                    'source' => 'frontend-module/default.tpl.xlf',
+                    'source' => 'frontend-module/target.tpl.xlf',
                     'language' => $language,
                     'io' => $io,
                     'variables' => [
                         'element' => $elementName,
+                        'sourceName' => $sourceName,
+                        'sourceDescription' => $sourceDescription,
                         'translatedName' => $translatedName,
                         'translatedDescription' => $translatedDescription,
                     ],

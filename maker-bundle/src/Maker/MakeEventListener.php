@@ -56,7 +56,7 @@ class MakeEventListener extends AbstractMaker
     {
         $command
             ->setDescription('Creates an event listener for a Contao event')
-            ->addArgument('className', InputArgument::OPTIONAL, 'Choose a class name for your event listener')
+            ->addArgument('className', InputArgument::OPTIONAL, 'Enter a class name for the event listener')
         ;
     }
 
@@ -64,9 +64,8 @@ class MakeEventListener extends AbstractMaker
     {
         $definition = $command->getDefinition();
 
-        $command->addArgument('event', InputArgument::OPTIONAL, 'Choose an event to create a listener for.');
+        $command->addArgument('event', InputArgument::OPTIONAL, 'Choose an event to listen for');
         $argument = $definition->getArgument('event');
-
         $events = $this->getAvailableEvents();
 
         $io->writeln(' <fg=green>Suggested Events:</>');
@@ -96,10 +95,8 @@ class MakeEventListener extends AbstractMaker
 
         /** @var MethodDefinition $definition */
         $definition = $availableEvents[$event];
-
         $signature = $this->signatureGenerator->generate($definition, '__invoke');
         $uses = $this->importExtractor->extract($definition);
-
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 
         $this->classGenerator->generate([
@@ -110,6 +107,7 @@ class MakeEventListener extends AbstractMaker
                 'event' => $event,
                 'signature' => $signature,
                 'uses' => $uses,
+                'body' => $definition->getBody(),
             ],
         ]);
 
@@ -124,30 +122,38 @@ class MakeEventListener extends AbstractMaker
     private function getAvailableEvents(): array
     {
         $availableEvents = [
-            'contao.backend_menu_build' => new MethodDefinition('void', [
-                'event' => MenuEvent::class,
-            ]),
-            'contao.generate_symlinks' => new MethodDefinition('void', [
-                'event' => GenerateSymlinksEvent::class,
-            ]),
-            'contao.image_sizes_all' => new MethodDefinition('void', [
-                'event' => ImageSizesEvent::class,
-            ]),
-            'contao.image_sizes_user' => new MethodDefinition('void', [
-                'event' => ImageSizesEvent::class,
-            ]),
-            'contao.preview_url_create' => new MethodDefinition('void', [
-                'event' => PreviewUrlCreateEvent::class,
-            ]),
-            'contao.preview_url_convert' => new MethodDefinition('void', [
-                'event' => PreviewUrlConvertEvent::class,
-            ]),
-            'contao.robots_txt' => new MethodDefinition('void', [
-                'event' => RobotsTxtEvent::class,
-            ]),
-            'contao.slug_valid_characters' => new MethodDefinition('void', [
-                'event' => SlugValidCharactersEvent::class,
-            ]),
+            'contao.backend_menu_build' => new MethodDefinition(
+                'void',
+                ['event' => MenuEvent::class]
+            ),
+            'contao.generate_symlinks' => new MethodDefinition(
+                'void',
+                ['event' => GenerateSymlinksEvent::class]
+            ),
+            'contao.image_sizes_all' => new MethodDefinition(
+                'void',
+                ['event' => ImageSizesEvent::class]
+            ),
+            'contao.image_sizes_user' => new MethodDefinition(
+                'void',
+                ['event' => ImageSizesEvent::class]
+            ),
+            'contao.preview_url_create' => new MethodDefinition(
+                'void',
+                ['event' => PreviewUrlCreateEvent::class]
+            ),
+            'contao.preview_url_convert' => new MethodDefinition(
+                'void',
+                ['event' => PreviewUrlConvertEvent::class]
+            ),
+            'contao.robots_txt' => new MethodDefinition(
+                'void',
+                ['event' => RobotsTxtEvent::class]
+            ),
+            'contao.slug_valid_characters' => new MethodDefinition(
+                'void',
+                ['event' => SlugValidCharactersEvent::class]
+            ),
         ];
 
         $eventsByClassName = [
@@ -161,9 +167,7 @@ class MakeEventListener extends AbstractMaker
             }
 
             // Map a default MethodDefinition to every remaining entry
-            $availableEvents[$className] = new MethodDefinition('void', [
-                'event' => $className,
-            ]);
+            $availableEvents[$className] = new MethodDefinition('void', ['event' => $className]);
         }
 
         return $availableEvents;

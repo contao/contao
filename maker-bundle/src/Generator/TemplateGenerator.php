@@ -27,10 +27,7 @@ class TemplateGenerator implements GeneratorInterface
 
     public function generate(array $options): string
     {
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-
-        $options = $resolver->resolve($options);
+        $options = $this->getOptionsResolver()->resolve($options);
 
         $this->generator->generateFile(
             $options['target'],
@@ -41,16 +38,13 @@ class TemplateGenerator implements GeneratorInterface
         return $options['target'];
     }
 
-    protected function configureOptions(OptionsResolver $resolver): void
+    private function getOptionsResolver(): OptionsResolver
     {
-        $resolver->setRequired([
-            'target',
-            'source',
-        ]);
+        $resolver = new OptionsResolver();
+        $resolver->setRequired(['target', 'source']);
+        $resolver->setDefaults(['variables' => []]);
 
-        $resolver->setDefaults([
-            'variables' => [],
-        ]);
+        return $resolver;
     }
 
     private function getSourcePath(string $path): string

@@ -1,6 +1,5 @@
 <?php if (!$append): ?>
-<?= '<?php' ?>
-
+<?= "<?php\n" ?>
 
 declare(strict_types=1);
 <?php endif; ?>

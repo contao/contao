@@ -42,4 +42,24 @@ class MethodDefinition
     {
         return $this->parameters;
     }
+
+    public function getBody(): string
+    {
+        switch ($this->returnType) {
+            case 'string':
+                return "return '';";
+
+            case '?string':
+                return "return null;";
+
+            case 'array':
+                return 'return [];';
+
+            case 'bool':
+                return 'return true;';
+
+            default:
+                return '// Do something';
+        }
+    }
 }

@@ -26,11 +26,12 @@ them all with the following command:
 ```
 php bin/console list make:contao
 
-make:contao:content-element  Creates an empty content element
-make:contao:dca-callback     Creates a dca callback
-make:contao:event-listener   Creates an event listener for a Contao event
-make:contao:frontend-module  Creates an empty frontend module
-make:contao:hook             Creates a hook
+Available commands for the "make:contao" namespace:
+  make:contao:content-element  Creates an empty content element
+  make:contao:dca-callback     Creates a dca callback
+  make:contao:event-listener   Creates an event listener for a Contao event
+  make:contao:frontend-module  Creates an empty front end module
+  make:contao:hook             Creates a hook
 ```
 
 ## License

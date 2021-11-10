@@ -34,14 +34,10 @@ class DcaGenerator implements GeneratorInterface
 
     public function generate(array $options): string
     {
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-
-        $options = $resolver->resolve($options);
+        $options = $this->getOptionsResolver()->resolve($options);
 
         $source = $this->getSourcePath($options['source']);
         $target = Path::join($this->directoryLocator->getConfigDirectory(), 'dca', $options['domain'].'.php');
-
         $fileExists = $this->filesystem->exists($target);
 
         $variables = array_merge(
@@ -56,11 +52,7 @@ class DcaGenerator implements GeneratorInterface
         $contents = ltrim($contents);
 
         if ($fileExists) {
-            /** @var string $targetContent */
-            $targetContent = file_get_contents($target);
-            $targetContent = rtrim($targetContent);
-
-            $contents = $targetContent."\n\n".$contents;
+            $contents = file_get_contents($target)."\n".rtrim($contents);
         }
 
         $this->filesystem->dumpFile($target, $contents);
@@ -71,23 +63,17 @@ class DcaGenerator implements GeneratorInterface
         return $target;
     }
 
-    protected function configureOptions(OptionsResolver $resolver): void
+    private function getOptionsResolver(): OptionsResolver
     {
-        $resolver->setRequired([
-            'domain',
-            'source',
-            'element',
-            'io',
-        ]);
-
-        $resolver->setDefaults([
-            'variables' => [],
-        ]);
-
+        $resolver = new OptionsResolver();
+        $resolver->setRequired(['domain', 'source', 'element', 'io']);
+        $resolver->setDefaults(['variables' => []]);
         $resolver->setAllowedTypes('io', [ConsoleStyle::class]);
+
+        return $resolver;
     }
 
-    protected function addCommentLine(ConsoleStyle $io, string $action, string $target): void
+    private function addCommentLine(ConsoleStyle $io, string $action, string $target): void
     {
         $io->comment(sprintf(
             '%s: %s',

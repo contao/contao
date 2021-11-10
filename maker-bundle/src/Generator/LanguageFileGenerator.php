@@ -37,14 +37,10 @@ class LanguageFileGenerator implements GeneratorInterface
 
     public function generate(array $options): string
     {
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-
-        $options = $resolver->resolve($options);
+        $options = $this->getOptionsResolver()->resolve($options);
 
         $source = $this->getSourcePath($options['source']);
         $target = Path::join($this->directoryLocator->getConfigDirectory(), 'languages', $options['language'], $options['domain'].'.xlf');
-
         $fileExists = $this->filesystem->exists($target);
         $contents = $this->fileManager->parseTemplate($source, $options['variables']);
 
@@ -67,21 +63,17 @@ class LanguageFileGenerator implements GeneratorInterface
         return $target;
     }
 
-    protected function configureOptions(OptionsResolver $resolver): void
+    private function getOptionsResolver(): OptionsResolver
     {
-        $resolver->setRequired([
-            'domain',
-            'source',
-            'language',
-            'variables',
-            'io',
-        ]);
-
+        $resolver = new OptionsResolver();
+        $resolver->setRequired(['domain', 'source', 'language', 'variables', 'io']);
         $resolver->setAllowedTypes('io', [ConsoleStyle::class]);
         $resolver->setAllowedTypes('variables', ['array']);
+
+        return $resolver;
     }
 
-    protected function addCommentLine(ConsoleStyle $io, string $action, string $target): void
+    private function addCommentLine(ConsoleStyle $io, string $action, string $target): void
     {
         $io->comment(sprintf(
             '%s: %s',

@@ -33,7 +33,7 @@ class MakeContentElement extends AbstractFragmentMaker
     {
         $command
             ->setDescription('Creates an empty content element')
-            ->addArgument('element', InputArgument::REQUIRED, 'Choose a class name for your content element')
+            ->addArgument('element', InputArgument::REQUIRED, 'Enter a class name for the content element')
         ;
 
         $inputConfig->setArgumentAsNonInteractive('element');
@@ -59,7 +59,7 @@ class MakeContentElement extends AbstractFragmentMaker
         $addTranslations = $input->getArgument('addTranslation');
         $addEmptyDcaPalette = $input->getArgument('addEmptyDcaPalette');
 
-        $elementDetails = $generator->createClassNameDetails($name, 'Controller\\ContentElement\\');
+        $elementDetails = $generator->createClassNameDetails($name, 'Controller\ContentElement\\');
 
         $className = Str::asClassName($name);
         $classNameWithoutSuffix = $this->getClassNameWithoutSuffix($className);
@@ -87,27 +87,27 @@ class MakeContentElement extends AbstractFragmentMaker
 
         if ($addTranslations) {
             $language = 'en';
-            $translatedName = $input->getArgument('translatedName');
-            $translatedDescription = $input->getArgument('translatedDescription');
+            $sourceName = $input->getArgument('sourceName');
+            $sourceDescription = $input->getArgument('sourceDescription');
 
             $this->languageFileGenerator->generate([
                 'domain' => 'default',
-                'source' => 'content-element/english.tpl.xlf',
+                'source' => 'content-element/source.tpl.xlf',
                 'language' => $language,
                 'io' => $io,
                 'variables' => [
                     'element' => $elementName,
-                    'translatedName' => $translatedName,
-                    'translatedDescription' => $translatedDescription,
+                    'sourceName' => $sourceName,
+                    'sourceDescription' => $sourceDescription,
                 ],
             ]);
 
             $i = 0;
 
             while (true) {
-                $hasNext = $input->hasArgument('addAnotherTranslation_'.$i);
+                $hasNext = $input->hasArgument('addTranslation_'.$i);
 
-                if (!$hasNext || false === $input->getArgument('addAnotherTranslation_'.$i)) {
+                if (!$hasNext || false === $input->getArgument('addTranslation_'.$i)) {
                     break;
                 }
 
@@ -117,11 +117,13 @@ class MakeContentElement extends AbstractFragmentMaker
 
                 $this->languageFileGenerator->generate([
                     'domain' => 'default',
-                    'source' => 'content-element/default.tpl.xlf',
+                    'source' => 'content-element/target.tpl.xlf',
                     'language' => $language,
                     'io' => $io,
                     'variables' => [
                         'element' => $elementName,
+                        'sourceName' => $sourceName,
+                        'sourceDescription' => $sourceDescription,
                         'translatedName' => $translatedName,
                         'translatedDescription' => $translatedDescription,
                     ],
