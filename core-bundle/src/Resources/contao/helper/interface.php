@@ -19,7 +19,7 @@ class_exists(EditableDataContainerInterface::class);
 class_exists(MaintenanceModuleInterface::class);
 class_exists(UploadableWidgetInterface::class);
 
-// Let composer find the deprecated interfaces for backwards compatibility
+// Let composer find the deprecated interfaces for autoload backwards compatibility
 if (!interface_exists('listable', false))
 {
 	interface listable

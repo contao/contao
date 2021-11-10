@@ -24,6 +24,7 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Fixtures\Exception\DerivedPageNotFoundException;
+use Contao\UnusedArgumentsException;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -193,6 +194,19 @@ class ExceptionConverterListenerTest extends TestCase
     }
 
     public function testConvertsUnusedArgumentsExceptions(): void
+    {
+        $event = $this->getResponseEvent(new UnusedArgumentsException());
+
+        $listener = new ExceptionConverterListener();
+        $listener($event);
+
+        $exception = $event->getThrowable();
+
+        $this->assertInstanceOf(NotFoundHttpException::class, $exception);
+        $this->assertInstanceOf(UnusedArgumentsException::class, $exception->getPrevious());
+    }
+
+    public function testConvertsUnusedArgumentsExceptionsDeprecated(): void
     {
         $event = $this->getResponseEvent(new \UnusedArgumentsException());
 

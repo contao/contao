@@ -316,7 +316,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Render the error page (see #5570)
-		catch (\UnusedArgumentsException $e)
+		catch (UnusedArgumentsException $e)
 		{
 			// Restore the globals (see #7659)
 			$GLOBALS['TL_HEAD'] = $arrHead;
