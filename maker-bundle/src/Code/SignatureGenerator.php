@@ -26,7 +26,6 @@ class SignatureGenerator
         }
 
         $returnType = $returnType ? ': '.$returnType : '';
-
         $parameterTemplates = [];
 
         foreach ($method->getParameters() as $name => $type) {

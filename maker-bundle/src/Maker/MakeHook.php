@@ -521,7 +521,8 @@ class MakeHook extends AbstractMaker
                     'table' => 'string',
                 ]
             ),
-            'loadFormField' => new MethodDefinition(Widget::class,
+            'loadFormField' => new MethodDefinition(
+                Widget::class,
                 [
                     'widget' => Widget::class,
                     'formId' => 'string',

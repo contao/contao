@@ -43,7 +43,7 @@ class XliffMerger
             $body->appendChild($importedNode);
         }
 
-        // Properly format the output xml
+        // Properly format the output XML
         $toFormat = (string) $root->saveHTML($root);
 
         $root->preserveWhiteSpace = false;

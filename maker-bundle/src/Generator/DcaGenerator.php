@@ -38,6 +38,7 @@ class DcaGenerator implements GeneratorInterface
 
         $source = $this->getSourcePath($options['source']);
         $target = Path::join($this->directoryLocator->getConfigDirectory(), 'dca', $options['domain'].'.php');
+
         $fileExists = $this->filesystem->exists($target);
 
         $variables = array_merge(

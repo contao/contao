@@ -55,7 +55,6 @@ class MakeContentElement extends AbstractFragmentMaker
     {
         $name = $input->getArgument('element');
         $category = $input->getArgument('category');
-
         $addTranslations = $input->getArgument('addTranslation');
         $addEmptyDcaPalette = $input->getArgument('addEmptyDcaPalette');
 

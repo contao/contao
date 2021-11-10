@@ -86,8 +86,8 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
         if ($input->getArgument('addTranslation')) {
             $command
-                ->addArgument('sourceName', InputArgument::OPTIONAL, 'Enter the English element name')
-                ->addArgument('sourceDescription', InputArgument::OPTIONAL, 'Enter the English element description')
+                ->addArgument('sourceName', InputArgument::OPTIONAL, 'Enter the English name')
+                ->addArgument('sourceDescription', InputArgument::OPTIONAL, 'Enter the English description')
             ;
 
             foreach (['sourceName', 'sourceDescription'] as $field) {
@@ -112,8 +112,8 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
                 $command
                     ->addArgument('language_'.$i, InputArgument::OPTIONAL, 'Which language do you want to add? (e.g. <fg=yellow>de</>)')
-                    ->addArgument('translatedName_'.$i, InputArgument::OPTIONAL, 'Enter the translated element name')
-                    ->addArgument('translatedDescription_'.$i, InputArgument::OPTIONAL, 'Enter the translated element description')
+                    ->addArgument('translatedName_'.$i, InputArgument::OPTIONAL, 'Enter the translated name')
+                    ->addArgument('translatedDescription_'.$i, InputArgument::OPTIONAL, 'Enter the translated description')
                 ;
 
                 $argument = $definition->getArgument('language_'.$i);

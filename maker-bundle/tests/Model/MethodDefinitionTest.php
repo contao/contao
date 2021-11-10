@@ -17,27 +17,25 @@ use PHPUnit\Framework\TestCase;
 
 class MethodDefinitionTest extends TestCase
 {
-    public function testCreationWithReturnValue(): void
+    /**
+     * @dataProvider getReturnValues
+     */
+    public function testSetsTheCorrectMethodBody(?string $returnType, string $body): void
     {
-        $returnType = 'string';
-
-        $parameters = [
-            'name' => 'type',
-        ];
-
-        $hookDefinition = new MethodDefinition($returnType, $parameters);
+        $hookDefinition = new MethodDefinition($returnType, []);
 
         $this->assertSame($returnType, $hookDefinition->getReturnType());
-        $this->assertSame($parameters, $hookDefinition->getParameters());
+        $this->assertSame([], $hookDefinition->getParameters());
+        $this->assertSame($body, $hookDefinition->getBody());
     }
 
-    public function testCreationWithoutReturnValue(): void
+    public function getReturnValues(): \Generator
     {
-        $returnType = null;
-        $parameters = [];
-        $hookDefinition = new MethodDefinition($returnType, $parameters);
-
-        $this->assertNull($hookDefinition->getReturnType());
-        $this->assertSame($parameters, $hookDefinition->getParameters());
+        yield ['string', "return '';"];
+        yield ['?string', 'return null;'];
+        yield ['array', 'return [];'];
+        yield ['bool', 'return true;'];
+        yield [null, '// Do something'];
+        yield ['Foo\Bar\Class', '// Do something'];
     }
 }

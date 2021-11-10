@@ -56,7 +56,6 @@ class MakeFrontendModule extends AbstractFragmentMaker
     {
         $name = $input->getArgument('module');
         $category = $input->getArgument('category');
-
         $addTranslations = $input->getArgument('addTranslation');
         $addEmptyDcaPalette = $input->getArgument('addEmptyDcaPalette');
 

@@ -29,70 +29,71 @@ class ImportExtractorTest extends TestCase
         $this->assertSame($uses, (new ImportExtractor())->extract($method));
     }
 
-    /**
-     * @return array<array>
-     */
-    public function methodProvider(): array
+    public function methodProvider(): \Generator
     {
-        return [
-            // Empty return type and parameter list
-            [
-                [],
-                new MethodDefinition('void', []),
-            ],
+        yield 'empty return type and parameter list' => [
+            [],
+            new MethodDefinition('void', []),
+        ];
 
-            // Single class in return type
+        yield 'single class in return type' => [
             [
-                [
-                    ClassOne::class,
-                ],
-                new MethodDefinition(ClassOne::class, []),
+                ClassOne::class,
             ],
+            new MethodDefinition(ClassOne::class, []),
+        ];
 
-            // Single return type, single parameter
+        yield 'single return type, single parameter' => [
             [
+                ClassOne::class,
+                ClassTwo::class,
+            ],
+            new MethodDefinition(
+                ClassOne::class,
                 [
-                    ClassOne::class,
-                    ClassTwo::class,
-                ],
-                new MethodDefinition(ClassOne::class, [
                     'arg1' => ClassTwo::class,
-                ]),
-            ],
+                ]
+            ),
+        ];
 
-            // Multiple parameters
+        yield 'multiple parameters' => [
             [
+                ClassOne::class,
+                ClassThree::class,
+                ClassTwo::class,
+            ],
+            new MethodDefinition(
+                ClassOne::class,
                 [
-                    ClassOne::class,
-                    ClassThree::class,
-                    ClassTwo::class,
-                ],
-                new MethodDefinition(ClassOne::class, [
                     'arg1' => ClassTwo::class,
                     'arg2' => ClassThree::class,
-                ]),
-            ],
+                ]
+            ),
+        ];
 
-            // Multiple parameters with the same type
+        yield 'multiple parameters with the same type' => [
             [
+                ClassOne::class,
+            ],
+            new MethodDefinition(
+                'void',
                 [
-                    ClassOne::class,
-                ],
-                new MethodDefinition('void', [
                     'arg1' => ClassOne::class,
                     'arg2' => ClassOne::class,
-                ]),
-            ],
+                ]
+            ),
+        ];
 
-            // Same return type and parameter
+        yield 'same return type and parameter' => [
             [
-                [
-                    ClassOne::class,
-                ],
-                new MethodDefinition(ClassOne::class, [
-                    'arg1' => ClassOne::class,
-                ]),
+                ClassOne::class,
             ],
+            new MethodDefinition(
+                ClassOne::class,
+                [
+                    'arg1' => ClassOne::class,
+                ]
+            ),
         ];
     }
 }

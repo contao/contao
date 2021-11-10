@@ -3,7 +3,7 @@
   <file>
     <body>
       <trans-unit id="0">
-        <target>0</target>
+        <source>Zero</source>
       </trans-unit>
     </body>
   </file>

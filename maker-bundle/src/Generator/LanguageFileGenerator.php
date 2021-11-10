@@ -41,8 +41,9 @@ class LanguageFileGenerator implements GeneratorInterface
 
         $source = $this->getSourcePath($options['source']);
         $target = Path::join($this->directoryLocator->getConfigDirectory(), 'languages', $options['language'], $options['domain'].'.xlf');
-        $fileExists = $this->filesystem->exists($target);
         $contents = $this->fileManager->parseTemplate($source, $options['variables']);
+
+        $fileExists = $this->filesystem->exists($target);
 
         if ($fileExists) {
             $root = new \DOMDocument();

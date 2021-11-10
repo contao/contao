@@ -50,7 +50,7 @@ class MethodDefinition
                 return "return '';";
 
             case '?string':
-                return "return null;";
+                return 'return null;';
 
             case 'array':
                 return 'return [];';

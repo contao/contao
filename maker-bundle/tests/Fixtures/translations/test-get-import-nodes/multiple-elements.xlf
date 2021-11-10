@@ -3,16 +3,16 @@
   <file>
     <body>
       <trans-unit id="foo.0">
-        <target>Foo</target>
+        <source>Foo</source>
       </trans-unit>
       <trans-unit id="foo.1">
-        <target>Foo (long)</target>
+        <source>Foo (long)</source>
       </trans-unit>
       <trans-unit id="bar.0">
-        <target>Bar</target>
+        <source>Bar</source>
       </trans-unit>
       <trans-unit id="bar.1">
-        <target>Bar (long)</target>
+        <source>Bar (long)</source>
       </trans-unit>
     </body>
   </file>

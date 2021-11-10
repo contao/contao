@@ -3,7 +3,8 @@
   <file>
     <body>
       <trans-unit id="1">
-        <target>1</target>
+        <source>One</source>
+        <target>Eins</target>
       </trans-unit>
     </body>
   </file>

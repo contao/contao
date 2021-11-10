@@ -31,7 +31,7 @@ class XliffMergerTest extends TestCase
         $this->assertSame($root, $mergedDocument);
     }
 
-    public function testReturnsExpectedMergedDocument(): void
+    public function testReturnsMergedDocument(): void
     {
         $root = new \DOMDocument();
         $root->load(__DIR__.'/../Fixtures/translations/test-merge/root.xlf');
@@ -67,8 +67,6 @@ class XliffMergerTest extends TestCase
 
     public function testGetImportNodesForEmptyDocument(): void
     {
-        $merger = new XliffMerger();
-
         $class = new \ReflectionClass(XliffMerger::class);
         $method = $class->getMethod('getImportNodes');
         $method->setAccessible(true);
@@ -76,6 +74,7 @@ class XliffMergerTest extends TestCase
         $document = new \DOMDocument();
         $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/empty.xlf');
 
+        $merger = new XliffMerger();
         $nodes = $method->invoke($merger, $document);
 
         $this->assertIsArray($nodes);
@@ -84,8 +83,6 @@ class XliffMergerTest extends TestCase
 
     public function testGetImportNodesForSingleNodeDocument(): void
     {
-        $merger = new XliffMerger();
-
         $class = new \ReflectionClass(XliffMerger::class);
         $method = $class->getMethod('getImportNodes');
         $method->setAccessible(true);
@@ -93,6 +90,7 @@ class XliffMergerTest extends TestCase
         $document = new \DOMDocument();
         $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/single-element.xlf');
 
+        $merger = new XliffMerger();
         $nodes = $method->invoke($merger, $document);
 
         $this->assertIsArray($nodes);
@@ -102,8 +100,6 @@ class XliffMergerTest extends TestCase
 
     public function testGetImportNodesForMultipleNodeDocument(): void
     {
-        $merger = new XliffMerger();
-
         $class = new \ReflectionClass(XliffMerger::class);
         $method = $class->getMethod('getImportNodes');
         $method->setAccessible(true);
@@ -111,6 +107,7 @@ class XliffMergerTest extends TestCase
         $document = new \DOMDocument();
         $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/multiple-elements.xlf');
 
+        $merger = new XliffMerger();
         $nodes = $method->invoke($merger, $document);
 
         $this->assertIsArray($nodes);

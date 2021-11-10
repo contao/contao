@@ -21,9 +21,9 @@ use PHPUnit\Framework\TestCase;
 class SignatureGeneratorTest extends TestCase
 {
     /**
-     * @dataProvider methodProvider
-     *
      * @param array<array> $parameters
+     *
+     * @dataProvider methodProvider
      */
     public function testSignatureCreation(string $signature, ?string $returnType, array $parameters): void
     {
@@ -33,84 +33,76 @@ class SignatureGeneratorTest extends TestCase
         $this->assertSame($signature, $generator->generate($method, '__invoke'));
     }
 
-    /**
-     * @return array<array>
-     */
-    public function methodProvider(): array
+    public function methodProvider(): \Generator
     {
-        return [
+        yield [
+            'public function __invoke(array $events, array $calendars, int $timeStart, int $timeEnd, Module $module): array',
+            'array',
             [
-                'public function __invoke(array $events, array $calendars, int $timeStart, int $timeEnd, Module $module): array',
-                'array',
-                [
-                    'events' => 'array',
-                    'calendars' => 'array',
-                    'timeStart' => 'int',
-                    'timeEnd' => 'int',
-                    'module' => Module::class,
-                ],
+                'events' => 'array',
+                'calendars' => 'array',
+                'timeStart' => 'int',
+                'timeEnd' => 'int',
+                'module' => Module::class,
             ],
-            [
-                'public function __invoke(array $fragments): array',
-                'array',
-                [
-                    'fragments' => 'array',
-                ],
-            ],
-            [
-                'public function __invoke(string $key, string $value, string $definition, array &$dataSet): ?array',
-                '?array',
-                [
-                    'key' => 'string',
-                    'value' => 'string',
-                    'definition' => 'string',
-                    '&dataSet' => 'array',
-                ],
-            ],
+        ];
 
-            // Empty parameters
+        yield [
+            'public function __invoke(array $fragments): array',
+            'array',
             [
-                'public function __invoke(): void',
-                'void',
-                [],
+                'fragments' => 'array',
             ],
+        ];
 
-            // No return type given
+        yield [
+            'public function __invoke(string $key, string $value, string $definition, array &$dataSet): ?array',
+            '?array',
             [
-                'public function __invoke()',
-                null,
-                [],
+                'key' => 'string',
+                'value' => 'string',
+                'definition' => 'string',
+                '&dataSet' => 'array',
             ],
+        ];
 
-            // Untyped parameters
+        yield 'empty parameters' => [
+            'public function __invoke(): void',
+            'void',
+            [],
+        ];
+
+        yield 'no return type given' => [
+            'public function __invoke()',
+            null,
+            [],
+        ];
+
+        yield 'untyped parameters' => [
+            'public function __invoke($key, $value)',
+            null,
             [
-                'public function __invoke($key, $value)',
-                null,
-                [
-                    'key' => null,
-                    'value' => null,
-                ],
+                'key' => null,
+                'value' => null,
             ],
+        ];
 
-            // Default values
+        yield 'default values' => [
+            'public function __invoke(array $pages, int $rootId = null, bool $isSitemap = false, string $language = null): array',
+            'array',
             [
-                'public function __invoke(array $pages, int $rootId = null, bool $isSitemap = false, string $language = null): array',
-                'array',
-                [
-                    'pages' => 'array',
-                    'rootId' => ['int', 'null'],
-                    'isSitemap' => ['bool', 'false'],
-                    'language' => ['string', 'null'],
-                ],
+                'pages' => 'array',
+                'rootId' => ['int', 'null'],
+                'isSitemap' => ['bool', 'false'],
+                'language' => ['string', 'null'],
             ],
+        ];
 
-            // Class parameters/class return types
+        yield 'class parameters/class return types' => [
+            'public function __invoke(Widget $widget): Widget',
+            Widget::class,
             [
-                'public function __invoke(Widget $widget): Widget',
-                Widget::class,
-                [
-                    'widget' => Widget::class,
-                ],
+                'widget' => Widget::class,
             ],
         ];
     }
