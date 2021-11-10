@@ -484,7 +484,7 @@ abstract class Backend extends Controller
 
 			if (!$act || $act == 'paste' || $act == 'select')
 			{
-				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
+				$act = ($dc instanceof ListableDataContainerInterface) ? 'showAll' : 'edit';
 			}
 
 			switch ($act)
@@ -493,7 +493,7 @@ abstract class Backend extends Controller
 				case 'show':
 				case 'showAll':
 				case 'undo':
-					if (!$dc instanceof \listable)
+					if (!$dc instanceof ListableDataContainerInterface)
 					{
 						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not listable', E_USER_ERROR);
@@ -507,7 +507,7 @@ abstract class Backend extends Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
-					if (!$dc instanceof \editable)
+					if (!$dc instanceof EditableDataContainerInterface)
 					{
 						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
 						trigger_error('The current data container is not editable', E_USER_ERROR);

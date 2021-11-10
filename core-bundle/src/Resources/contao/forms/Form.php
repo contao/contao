@@ -229,7 +229,7 @@ class Form extends Hybrid
 					}
 				}
 
-				if ($objWidget instanceof \uploadable)
+				if ($objWidget instanceof UploadableWidgetInterface)
 				{
 					$hasUpload = true;
 				}

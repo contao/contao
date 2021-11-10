@@ -646,7 +646,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Set correct form enctype
-		if ($objWidget instanceof \uploadable)
+		if ($objWidget instanceof UploadableWidgetInterface)
 		{
 			$this->blnUploadable = true;
 		}

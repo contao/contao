@@ -9,56 +9,33 @@
  */
 
 /**
- * Interface listable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
+ *             Use the Contao\MaintenanceModuleInterface instead.
  */
-interface listable
+interface listable extends Contao\ListableDataContainerInterface
 {
-	public function delete();
-
-	public function show();
-
-	public function showAll();
-
-	public function undo();
 }
 
 /**
- * Interface editable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
+ *             Use the Contao\MaintenanceModuleInterface instead.
  */
-interface editable
+interface editable extends Contao\EditableDataContainerInterface
 {
-	public function create();
-
-	public function cut();
-
-	public function copy();
-
-	public function move();
-
-	public function edit();
 }
 
 /**
- * Interface executable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
+ *             Use the Contao\MaintenanceModuleInterface instead.
  */
-interface executable
+interface executable extends Contao\MaintenanceModuleInterface
 {
-	public function run();
-
-	public function isActive();
 }
 
 /**
- * Interface uploadable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 4.13 to be removed in 5.0.
+ *             Use the Contao\UploadableWidgetInterface instead.
  */
-interface uploadable
+interface uploadable extends Contao\UploadableWidgetInterface
 {
 }
