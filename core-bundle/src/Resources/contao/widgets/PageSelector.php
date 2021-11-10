@@ -13,6 +13,8 @@ namespace Contao;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\PageSelector" class has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
+
 /**
  * Provide methods to handle input field "page tree".
  *
@@ -20,6 +22,9 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string $fieldType
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the picker instead.
  */
 class PageSelector extends Widget
 {
