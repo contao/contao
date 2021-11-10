@@ -31,12 +31,16 @@ class TablePickerProviderTest extends ContaoTestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
+
         $GLOBALS['TL_DCA'] = [];
         $GLOBALS['BE_MOD'] = [];
     }
 
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
