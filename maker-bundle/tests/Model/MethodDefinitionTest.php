@@ -20,6 +20,7 @@ class MethodDefinitionTest extends TestCase
     public function testCreationWithReturnValue(): void
     {
         $returnType = 'string';
+
         $parameters = [
             'name' => 'type',
         ];
@@ -34,7 +35,6 @@ class MethodDefinitionTest extends TestCase
     {
         $returnType = null;
         $parameters = [];
-
         $hookDefinition = new MethodDefinition($returnType, $parameters);
 
         $this->assertNull($hookDefinition->getReturnType());

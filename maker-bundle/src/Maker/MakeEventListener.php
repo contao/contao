@@ -13,6 +13,13 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Maker;
 
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
+use Contao\CoreBundle\Event\GenerateSymlinksEvent;
+use Contao\CoreBundle\Event\ImageSizesEvent;
+use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
+use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
+use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\MakerBundle\Code\ImportExtractor;
 use Contao\MakerBundle\Code\SignatureGenerator;
 use Contao\MakerBundle\Generator\ClassGenerator;
@@ -118,28 +125,28 @@ class MakeEventListener extends AbstractMaker
     {
         $availableEvents = [
             'contao.backend_menu_build' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\MenuEvent',
+                'event' => MenuEvent::class,
             ]),
             'contao.generate_symlinks' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\GenerateSymlinksEvent',
+                'event' => GenerateSymlinksEvent::class,
             ]),
             'contao.image_sizes_all' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\ImageSizesEvent',
+                'event' => ImageSizesEvent::class,
             ]),
             'contao.image_sizes_user' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\ImageSizesEvent',
+                'event' => ImageSizesEvent::class,
             ]),
             'contao.preview_url_create' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\PreviewUrlCreateEvent',
+                'event' => PreviewUrlCreateEvent::class,
             ]),
             'contao.preview_url_convert' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\PreviewUrlConvertEvent',
+                'event' => PreviewUrlConvertEvent::class,
             ]),
             'contao.robots_txt' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\RobotsTxtEvent',
+                'event' => RobotsTxtEvent::class,
             ]),
             'contao.slug_valid_characters' => new MethodDefinition('void', [
-                'event' => 'Contao\CoreBundle\Event\SlugValidCharactersEvent',
+                'event' => SlugValidCharactersEvent::class,
             ]),
         ];
 

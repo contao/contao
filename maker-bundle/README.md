@@ -1,14 +1,18 @@
-# The Contao Maker Bundle
+# Contao 4 maker bundle
 
-![CI](https://github.com/1up-lab/contao-maker-bundle/workflows/CI/badge.svg)
-[![Total Downloads](https://poser.pugx.org/contao/maker-bundle/d/total.png)](https://packagist.org/packages/contao/maker-bundle)
+[![](https://img.shields.io/packagist/v/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
+[![](https://img.shields.io/packagist/dt/contao/maker-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/maker-bundle)
 
-The Contao Maker bundle allows you to generate Content Elements, Frontend Modules and
-Hooks using interactive commands.
+The maker bundle allows you to generate content elements, front end modules,
+event listener, callbacks and hooks using interactive commands.
+
+Contao is an Open Source PHP Content Management System for people who want a
+professional website that is easy to maintain. Visit the [project website][1]
+for more information.
 
 ## Installation
 
-Run this command to install and enable this bundle in your application:
+Run this command to install and enable the bundle in your application:
 
 ```
 composer require contao/maker-bundle --dev
@@ -16,18 +20,17 @@ composer require contao/maker-bundle --dev
 
 ## Usage
 
-This bundle provides several commands under the `make:` namespace.
-List them all executing this command:
+This bundle provides several commands under the `make:` namespace. You can list
+them all with the following command:
 
 ```
-⇢ php bin/console list make:contao
-  [...]
+php bin/console list make:contao
 
-  make:contao:content-element  Creates an empty content element
-  make:contao:dca-callback     Creates a dca callback
-  make:contao:event-listener   Creates an event listener for a Contao event
-  make:contao:frontend-module  Creates an empty frontend module
-  make:contao:hook             Creates a hook
+make:contao:content-element  Creates an empty content element
+make:contao:dca-callback     Creates a dca callback
+make:contao:event-listener   Creates an event listener for a Contao event
+make:contao:frontend-module  Creates an empty frontend module
+make:contao:hook             Creates a hook
 ```
 
 ## License

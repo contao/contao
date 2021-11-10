@@ -22,7 +22,6 @@ class CallbackDefinitionTest extends TestCase
     {
         $dependencies = [];
         $methodDefinition = new MethodDefinition(null, []);
-
         $callbackDefinition = new CallbackDefinition($methodDefinition, $dependencies);
 
         $this->assertSame([], $callbackDefinition->getDependencies());

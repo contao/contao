@@ -45,7 +45,6 @@ class LanguageFileGenerator implements GeneratorInterface
         $target = sprintf('%s/languages/%s/%s.xlf', $this->directoryLocator->getConfigDirectory(), $options['language'], ltrim($options['domain'], '/'));
 
         $fileExists = $this->filesystem->exists($target);
-
         $contents = $this->fileManager->parseTemplate($source, $options['variables']);
 
         if ($fileExists) {
@@ -56,7 +55,6 @@ class LanguageFileGenerator implements GeneratorInterface
             $document->loadXML($contents);
 
             $mergedDocument = $this->xliffMerger->merge($root, $document);
-
             $contents = (string) $mergedDocument->saveXML();
         }
 
@@ -78,13 +76,8 @@ class LanguageFileGenerator implements GeneratorInterface
             'io',
         ]);
 
-        $resolver->setAllowedTypes('io', [
-            ConsoleStyle::class,
-        ]);
-
-        $resolver->setAllowedTypes('variables', [
-            'array',
-        ]);
+        $resolver->setAllowedTypes('io', [ConsoleStyle::class]);
+        $resolver->setAllowedTypes('variables', ['array']);
     }
 
     protected function addCommentLine(ConsoleStyle $io, string $action, string $target): void

@@ -87,7 +87,8 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         if ($input->getArgument('addTranslation')) {
             $command
                 ->addArgument('translatedName', InputArgument::OPTIONAL, 'Choose an english name for this element')
-                ->addArgument('translatedDescription', InputArgument::OPTIONAL, 'Choose an english description for this element')// ->addArgument('languages', InputArgument::OPTIONAL, 'What languages do you want the element name translate to? (e.g. <fg=yellow>en, fr</>)')
+                ->addArgument('translatedDescription', InputArgument::OPTIONAL, 'Choose an english description for this element')
+                // FIXME: ->addArgument('languages', InputArgument::OPTIONAL, 'What languages do you want the element name translate to? (e.g. <fg=yellow>en, fr</>)')
             ;
 
             foreach (['translatedName', 'translatedDescription'] as $field) {

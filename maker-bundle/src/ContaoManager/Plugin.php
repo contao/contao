@@ -18,16 +18,16 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Symfony\Bundle\MakerBundle\MakerBundle;
 
+/**
+ * @internal
+ */
 class Plugin implements BundlePluginInterface
 {
     public function getBundles(ParserInterface $parser): array
     {
         return [
             BundleConfig::create(MakerBundle::class),
-            BundleConfig::create(ContaoMakerBundle::class)
-                ->setLoadAfter([
-                    MakerBundle::class,
-                ]),
+            BundleConfig::create(ContaoMakerBundle::class)->setLoadAfter([MakerBundle::class]),
         ];
     }
 }

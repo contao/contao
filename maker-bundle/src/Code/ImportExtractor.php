@@ -39,12 +39,9 @@ class ImportExtractor
 
         $returnType = $method->getReturnType();
 
-        // If a return type is set, check if class exists
-        // and if so, add it to our imports
-        if (null !== $returnType) {
-            if (class_exists($returnType, true)) {
-                $objectTypeHints[] = $returnType;
-            }
+        // If a return type is set, check if the class exists and if so, add it to our imports
+        if (null !== $returnType && class_exists($returnType, true)) {
+            $objectTypeHints[] = $returnType;
         }
 
         $objectTypeHints = array_unique($objectTypeHints);

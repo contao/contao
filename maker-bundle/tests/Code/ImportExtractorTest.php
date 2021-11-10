@@ -26,8 +26,7 @@ class ImportExtractorTest extends TestCase
      */
     public function testExtraction(array $uses, MethodDefinition $method): void
     {
-        $extractor = new ImportExtractor();
-        $this->assertSame($uses, $extractor->extract($method));
+        $this->assertSame($uses, (new ImportExtractor())->extract($method));
     }
 
     /**

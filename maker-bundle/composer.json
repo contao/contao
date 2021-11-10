@@ -1,7 +1,7 @@
 {
     "name": "contao/maker-bundle",
     "type": "contao-bundle",
-    "description": "The Contao Maker Bundle helps you create empty content elements, modules, hooks and more.",
+    "description": "Allows you to create content elements, modules, hooks and more",
     "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
     "authors": [
@@ -37,7 +37,7 @@
     "autoload": {
         "psr-4": {
             "Contao\\MakerBundle\\": "src/"
-        },
+        }
     },
     "autoload-dev": {
         "psr-4": {
@@ -47,7 +47,7 @@
     "support": {
         "issues": "https://github.com/contao/contao/issues",
         "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/calendar-bundle",
+        "source": "https://github.com/contao/maker-bundle",
         "docs": "https://docs.contao.org"
     }
 }

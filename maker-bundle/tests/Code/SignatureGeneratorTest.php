@@ -14,6 +14,8 @@ namespace Contao\MakerBundle\Tests\Code;
 
 use Contao\MakerBundle\Code\SignatureGenerator;
 use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\Module;
+use Contao\Widget;
 use PHPUnit\Framework\TestCase;
 
 class SignatureGeneratorTest extends TestCase
@@ -45,7 +47,7 @@ class SignatureGeneratorTest extends TestCase
                     'calendars' => 'array',
                     'timeStart' => 'int',
                     'timeEnd' => 'int',
-                    'module' => 'Contao\Module',
+                    'module' => Module::class,
                 ],
             ],
             [
@@ -105,9 +107,9 @@ class SignatureGeneratorTest extends TestCase
             // Class parameters/class return types
             [
                 'public function __invoke(Widget $widget): Widget',
-                'Contao\Widget',
+                Widget::class,
                 [
-                    'widget' => 'Contao\Widget',
+                    'widget' => Widget::class,
                 ],
             ],
         ];

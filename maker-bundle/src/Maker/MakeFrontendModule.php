@@ -46,6 +46,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
         $argument = $command->getDefinition()->getArgument('module');
         $question = new Question($argument->getDescription(), $defaultName);
+
         $input->setArgument('module', $io->askQuestion($question));
 
         parent::interact($input, $io, $command);

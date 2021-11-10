@@ -21,6 +21,7 @@ class ContaoDirectoryLocatorTest extends TestCase
     public function testReturnsTheConfigDirectory(): void
     {
         $projectDirectory = '/foo/bar';
+
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
             ->expects($this->once())

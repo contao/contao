@@ -19,14 +19,10 @@ class SignatureGenerator
 {
     public function generate(MethodDefinition $method, string $methodName): string
     {
-        $template = 'public function %s(%s)%s';
-
         $returnType = $method->getReturnType();
 
-        if (null !== $returnType) {
-            if (class_exists($returnType, true)) {
-                $returnType = Str::getShortClassName($returnType);
-            }
+        if (null !== $returnType && class_exists($returnType, true)) {
+            $returnType = Str::getShortClassName($returnType);
         }
 
         $returnType = $returnType ? ': '.$returnType : '';
@@ -40,8 +36,6 @@ class SignatureGenerator
                 [$type, $defaultValue] = $type;
             }
 
-            $parameterTemplate = '%s %s$%s';
-
             $paramName = str_replace('&', '', $name);
             [$paramType] = \is_array($type) ? $type : [$type, null];
 
@@ -50,7 +44,7 @@ class SignatureGenerator
             }
 
             $paramReference = 0 === strpos($name, '&');
-            $parameterTemplate = sprintf($parameterTemplate, $paramType, $paramReference ? '&' : '', $paramName);
+            $parameterTemplate = sprintf('%s %s$%s', $paramType, $paramReference ? '&' : '', $paramName);
 
             if (null !== $defaultValue) {
                 $parameterTemplate = sprintf('%s = %s', $parameterTemplate, $defaultValue);
@@ -60,6 +54,6 @@ class SignatureGenerator
             $parameterTemplates[] = $parameterTemplate;
         }
 
-        return sprintf($template, $methodName, implode(', ', $parameterTemplates), $returnType);
+        return sprintf('public function %s(%s)%s', $methodName, implode(', ', $parameterTemplates), $returnType);
     }
 }

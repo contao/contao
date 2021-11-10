@@ -43,10 +43,13 @@ class DcaGenerator implements GeneratorInterface
 
         $fileExists = $this->filesystem->exists($target);
 
-        $variables = array_merge([
-            'append' => $fileExists,
-            'element_name' => $options['element'],
-        ], $options['variables']);
+        $variables = array_merge(
+            [
+                'append' => $fileExists,
+                'element_name' => $options['element'],
+            ],
+            $options['variables']
+        );
 
         $contents = $this->fileManager->parseTemplate($source, $variables);
         $contents = ltrim($contents);
@@ -80,9 +83,7 @@ class DcaGenerator implements GeneratorInterface
             'variables' => [],
         ]);
 
-        $resolver->setAllowedTypes('io', [
-            ConsoleStyle::class,
-        ]);
+        $resolver->setAllowedTypes('io', [ConsoleStyle::class]);
     }
 
     protected function addCommentLine(ConsoleStyle $io, string $action, string $target): void
