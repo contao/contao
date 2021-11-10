@@ -102,6 +102,8 @@ class EntityTagger
             }
         };
 
-        return $this->classMetadata[$className] ?? ($this->classMetadata[$className] = $getMetadata($className));
+        $this->classMetadata[$className] ??= $getMetadata($className);
+
+        return $this->classMetadata[$className];
     }
 }
