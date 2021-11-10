@@ -61,7 +61,7 @@ repositories:
             a06d4de66922982fcadc9ee4a2b6d71a21171753: 51c69f1089e0f39fb6bfd7fb71cf2430ef5bde01
 
     maker-bundle:
-        url: https://github.com/contao/manager-bundle.git
+        url: https://github.com/contao/maker-bundle.git
 
     manager-bundle:
         url: https://github.com/contao/manager-bundle.git
