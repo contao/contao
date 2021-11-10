@@ -41,6 +41,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Contao\\MakerBundle\\Fixtures\\": "tests/Fixtures/src/",
             "Contao\\MakerBundle\\Tests\\": "tests/"
         }
     },
