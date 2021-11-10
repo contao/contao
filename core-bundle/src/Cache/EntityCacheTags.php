@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cache;
 
 use Contao\Model;
+use Contao\Model\Collection as ModelCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -106,6 +107,7 @@ class EntityCacheTags
      *   - entity collection (@see Collection)
      *   - model class-string
      *   - model instance
+     *   - model collection (@see ModelCollection)
      *   - cache tag as a string
      *
      * You can safely pass empty collections or null.
@@ -117,7 +119,7 @@ class EntityCacheTags
      *   getTagsFor(PageModel::class); // ['contao.db.tl_page']
      *   getTagsFor([$objPage, null, 'foo']); // ['contao.db.tl_page.42', 'foo']
      *
-     * @param array|Collection|string|object|null $target
+     * @param array|Collection|ModelCollection|string|object|null $target
      *
      * @return array<int, string>
      */
@@ -143,7 +145,7 @@ class EntityCacheTags
             return [$target];
         }
 
-        if (\is_array($target) || $target instanceof Collection) {
+        if (\is_array($target) || $target instanceof Collection || $target instanceof ModelCollection) {
             $tags = [];
 
             foreach ($target as $part) {
@@ -214,7 +216,7 @@ class EntityCacheTags
      *
      * See getTagsFor() method for the allowed parameters.
      *
-     * @param array|Collection|string|object|null $target
+     * @param array|Collection|ModelCollection|string|object|null $target
      */
     public function tagWith($target): void
     {
@@ -278,7 +280,7 @@ class EntityCacheTags
      *
      * See getTagsFor() method for the allowed parameters.
      *
-     * @param array|Collection|string|object|null $target
+     * @param array|Collection|ModelCollection|string|object|null $target
      */
     public function invalidateTagsFor($target): void
     {

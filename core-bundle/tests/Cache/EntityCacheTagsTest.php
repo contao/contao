@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\Fixtures\Entity\Author;
 use Contao\CoreBundle\Tests\Fixtures\Entity\BlogPost;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Comment;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Tag;
+use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\HttpCache\CacheInvalidator;
@@ -146,9 +147,15 @@ class EntityCacheTagsTest extends DoctrineTestCase
             ->setTags(new ArrayCollection([$tag]))
         ;
 
-        /** @var PageModel $page */
-        $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
-        $page->id = 5;
+        /** @var PageModel $page1 */
+        $page1 = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
+        $page1->id = 5;
+
+        /** @var PageModel $page2 */
+        $page2 = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
+        $page2->id = 6;
+
+        $modelCollection = new Collection([$page1, $page2], 'tl_page');
 
         yield 'specific tag for entity instance' => [
             $post,
@@ -156,12 +163,12 @@ class EntityCacheTagsTest extends DoctrineTestCase
         ];
 
         yield 'specific tag for model instance' => [
-            $page,
+            $page1,
             ['contao.db.tl_page.5'],
         ];
 
         yield 'mixed' => [
-            [$post, $post->getAuthor(), $post->getComments(), $post->getTags(), $page, ArticleModel::class, 'foo'],
+            [$post, $post->getAuthor(), $post->getComments(), $post->getTags(), $modelCollection, ArticleModel::class, 'foo'],
             [
                 'contao.db.tl_blog_post.5',
                 'contao.db.tl_author.100',
@@ -169,6 +176,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
                 'contao.db.tl_comment.12',
                 'contao.db.tl_tag.42',
                 'contao.db.tl_page.5',
+                'contao.db.tl_page.6',
                 'contao.db.tl_article',
                 'foo',
             ],

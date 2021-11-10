@@ -16,6 +16,7 @@ use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Model\Collection as ModelCollection;
 use Doctrine\Common\Collections\Collection;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
@@ -58,7 +59,7 @@ abstract class AbstractController extends SymfonyAbstractController
     }
 
     /**
-     * @param array|Collection|string|object|null $tags
+     * @param array|Collection|ModelCollection|string|object|null $tags
      */
     protected function tagResponse($tags): void
     {
