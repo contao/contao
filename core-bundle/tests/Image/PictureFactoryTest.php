@@ -395,9 +395,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->with(
-                $this->callback(
-                    static fn (): bool => true
-                ),
+                $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (PictureConfiguration $config): bool {
                         $this->assertSame($config->getSizeItems(), []);
@@ -411,9 +409,7 @@ class PictureFactoryTest extends TestCase
                         return true;
                     }
                 ),
-                $this->callback(
-                    static fn (): bool => true
-                )
+                $this->callback(static fn (): bool => true)
             )
             ->willReturn($pictureMock)
         ;
@@ -436,9 +432,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('getImportantPartFromLegacyMode')
             ->with(
-                $this->callback(
-                    static fn (): bool => true
-                ),
+                $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (string $mode): bool {
                         $this->assertSame('left_top', $mode);

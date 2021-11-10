@@ -54,9 +54,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(
-                    static fn ($arguments) => 'my_type' === $arguments[0]
-                )
+                $this->callback(static fn ($arguments) => 'my_type' === $arguments[0])
             )
         ;
 
@@ -79,9 +77,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(
-                    static fn ($arguments) => 'contao_core_bundle' === $arguments[0]
-                )
+                $this->callback(static fn ($arguments) => 'contao_core_bundle' === $arguments[0])
             )
         ;
 
@@ -104,9 +100,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(
-                    static fn ($arguments) => 'two_factor' === $arguments[0]
-                )
+                $this->callback(static fn ($arguments) => 'two_factor' === $arguments[0])
             )
         ;
 
@@ -129,9 +123,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(
-                    static fn ($arguments) => 'test' === $arguments[0]
-                )
+                $this->callback(static fn ($arguments) => 'test' === $arguments[0])
             )
         ;
 
@@ -258,9 +250,7 @@ class RegisterPagesPassTest extends TestCase
             ->expects($this->once())
             ->method('addMethodCall')
             ->with(
-                $this->callback(
-                    static fn ($method) => 'setContainer' === $method
-                ),
+                $this->callback(static fn ($method) => 'setContainer' === $method),
                 $this->callback(
                     static fn (array $arguments) => 1 === \count($arguments)
                         && $arguments[0] instanceof Reference

@@ -15,6 +15,7 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -330,10 +331,9 @@ abstract class Template extends Controller
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType);
 		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
-		$response->headers->set('Permissions-Policy', 'interest-cohort=()');
 
 		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
 		$response->headers->remove('Cache-Control');
 
 		return $response;
@@ -409,7 +409,7 @@ abstract class Template extends Controller
 	 */
 	public function rawPlainText(string $value, bool $removeInsertTags = false): string
 	{
-		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
+		return System::getContainer()->get(HtmlDecoder::class)->inputEncodedToPlainText($value, $removeInsertTags);
 	}
 
 	/**
@@ -424,7 +424,7 @@ abstract class Template extends Controller
 	 */
 	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
 	{
-		return StringUtil::htmlToPlainText($value, $removeInsertTags);
+		return System::getContainer()->get(HtmlDecoder::class)->htmlToPlainText($value, $removeInsertTags);
 	}
 
 	/**
@@ -482,8 +482,21 @@ abstract class Template extends Controller
 	{
 		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
 
+		$basePath = '/';
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+		if ($request !== null)
+		{
+			$basePath = $request->getBasePath() . '/';
+		}
+
+		if (0 === strncmp($url, $basePath, \strlen($basePath)))
+		{
+			return substr($url, \strlen($basePath));
+		}
+
 		// Contao paths are relative to the <base> tag, so remove leading slashes
-		return ltrim($url, '/');
+		return $url;
 	}
 
 	/**

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing;
 
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -167,7 +168,15 @@ class RouteProvider extends AbstractPageRouteProvider
 
     private function addRoutesForPage(PageModel $page, array &$routes): void
     {
-        $page->loadDetails();
+        try {
+            $page->loadDetails();
+
+            if (!$page->rootId) {
+                return;
+            }
+        } catch (NoRootPageFoundException $e) {
+            return;
+        }
 
         $route = $this->pageRegistry->getRoute($page);
         $routes['tl_page.'.$page->id] = $route;
@@ -292,7 +301,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $rootPages = $pages->getModels();
         }
 
-        $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
+        $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
 
         if ($pages instanceof Collection) {
             /** @var array<PageModel> $indexPages */
