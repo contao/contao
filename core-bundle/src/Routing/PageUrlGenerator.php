@@ -38,6 +38,9 @@ class PageUrlGenerator extends SymfonyUrlGenerator
         $this->pageRegistry = $pageRegistry;
     }
 
+    /**
+     * @throws RouteParametersException
+     */
     public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         if (
