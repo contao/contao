@@ -70,6 +70,7 @@ services:
             - '@doctrine.orm.default_entity_manager'
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
+        public: true
 
     Contao\CoreBundle\Controller\BackendController: ~
 
