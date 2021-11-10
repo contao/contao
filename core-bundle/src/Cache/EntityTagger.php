@@ -41,7 +41,7 @@ class EntityTagger
         }
 
         if (\is_string($target)) {
-            if (class_exists($target, false)) {
+            if (preg_match('/^(?:[a-z_\x80-\xff][a-z0-9_\x80-\xff]*\\\\?)+(?<!\\\\)$/i', $target)) {
                 try {
                     return [$this->getTagForEntityClass($target)];
                 } catch (\InvalidArgumentException $e) {
