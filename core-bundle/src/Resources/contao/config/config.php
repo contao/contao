@@ -517,11 +517,9 @@ $GLOBALS['TL_HOOKS'] = array
 	)
 );
 
-// Backwards compatibility
 // Register the auto_item keywords
 $GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
 
-// Backwards compatibility
 // Register the supported CSS units
 $GLOBALS['TL_CSS_UNITS'] = array('px', '%', 'em', 'rem', 'vw', 'vh', 'vmin', 'vmax', 'ex', 'pt', 'pc', 'in', 'cm', 'mm');
 
