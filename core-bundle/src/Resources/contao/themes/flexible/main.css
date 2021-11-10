@@ -466,6 +466,7 @@ h2.sub_headline {
 .tl_filter .tl_select {
 	max-width:14.65%;
 	margin-left:3px;
+	text-align:left;
 }
 .tl_submit_panel + .tl_filter {
 	width:86%;
@@ -484,6 +485,7 @@ h2.sub_headline {
 	width:38%;
 	margin-left:3px;
 	margin-right:1%;
+	text-align:left;
 }
 .tl_search .tl_text {
 	width:30%;

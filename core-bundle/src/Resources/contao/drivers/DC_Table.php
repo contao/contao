@@ -5298,7 +5298,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+<select name="tl_field" class="tl_select tl_chosen' . ($active ? ' active' : '') . '">
 ' . implode("\n", $options_sorter) . '
 </select>
 <span>=</span>
@@ -5775,7 +5775,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
+<select name="' . $field . '" id="' . $field . '" class="tl_select tl_chosen' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
   <option value="tl_' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</option>
   <option value="tl_' . $field . '">---</option>';
 
