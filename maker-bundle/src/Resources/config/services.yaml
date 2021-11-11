@@ -15,7 +15,6 @@ services:
     contao_maker.generator.dca:
         class: Contao\MakerBundle\Generator\DcaGenerator
         arguments:
-            - '@filesystem'
             - '@maker.file_manager'
             - '%kernel.project_dir%'
 
@@ -23,7 +22,6 @@ services:
         class: Contao\MakerBundle\Generator\LanguageFileGenerator
         arguments:
             - '@maker.file_manager'
-            - '@filesystem'
             - '@contao_maker.config.xliff_merger'
             - '%kernel.project_dir%'
 

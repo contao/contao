@@ -13,23 +13,19 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Generator;
 
 use Contao\MakerBundle\Config\XliffMerger;
-use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\FileManager;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Webmozart\PathUtil\Path;
 
 class LanguageFileGenerator implements GeneratorInterface
 {
     private FileManager $fileManager;
-    private Filesystem $filesystem;
     private XliffMerger $xliffMerger;
     private string $projectDir;
 
-    public function __construct(FileManager $fileManager, Filesystem $filesystem, XliffMerger $xliffMerger, string $projectDir)
+    public function __construct(FileManager $fileManager, XliffMerger $xliffMerger, string $projectDir)
     {
         $this->fileManager = $fileManager;
-        $this->filesystem = $filesystem;
         $this->xliffMerger = $xliffMerger;
         $this->projectDir = $projectDir;
     }
@@ -41,7 +37,7 @@ class LanguageFileGenerator implements GeneratorInterface
         $source = $this->getSourcePath($options['source']);
         $target = Path::join($this->projectDir, 'contao/languages', $options['language'], $options['domain'].'.xlf');
         $contents = $this->fileManager->parseTemplate($source, $options['variables']);
-        $fileExists = $this->filesystem->exists($target);
+        $fileExists = $this->fileManager->fileExists($target);
 
         if ($fileExists) {
             $root = new \DOMDocument();
@@ -54,31 +50,18 @@ class LanguageFileGenerator implements GeneratorInterface
             $contents = (string) $mergedDocument->saveXML();
         }
 
-        $this->filesystem->dumpFile($target, $contents);
+        $this->fileManager->dumpFile($target, $contents);
 
-        $comment = !$fileExists ? '<fg=blue>created</>' : '<fg=yellow>updated</>';
-        $this->addCommentLine($options['io'], $comment, $target);
-
-        return $target;
+        return Path::join('contao/languages', $options['language'], $options['domain'].'.xlf');
     }
 
     private function getOptionsResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired(['domain', 'source', 'language', 'variables', 'io']);
-        $resolver->setAllowedTypes('io', [ConsoleStyle::class]);
+        $resolver->setRequired(['domain', 'source', 'language', 'variables']);
         $resolver->setAllowedTypes('variables', ['array']);
 
         return $resolver;
-    }
-
-    private function addCommentLine(ConsoleStyle $io, string $action, string $target): void
-    {
-        $io->comment(sprintf(
-            '%s: %s',
-            $action,
-            $this->fileManager->relativizePath($target)
-        ));
     }
 
     private function getSourcePath(string $path): string

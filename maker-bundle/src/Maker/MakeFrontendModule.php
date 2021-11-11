@@ -73,7 +73,6 @@ class MakeFrontendModule extends AbstractFragmentMaker
                 'source' => 'frontend-module/tl_module.tpl.php',
                 'domain' => 'tl_module',
                 'element' => $elementName,
-                'io' => $io,
             ]);
         }
 
@@ -82,7 +81,6 @@ class MakeFrontendModule extends AbstractFragmentMaker
                 'source' => 'frontend-module/source.tpl.php',
                 'domain' => 'default',
                 'language' => 'en',
-                'io' => $io,
                 'variables' => [
                     'element' => $elementName,
                     'sourceName' => $input->getArgument('source-name'),
@@ -103,7 +101,6 @@ class MakeFrontendModule extends AbstractFragmentMaker
                     'source' => 'frontend-module/target.tpl.php',
                     'domain' => 'default',
                     'language' => $input->getArgument('language-'.$i),
-                    'io' => $io,
                     'variables' => [
                         'element' => $elementName,
                         'sourceName' => $input->getArgument('source-name'),

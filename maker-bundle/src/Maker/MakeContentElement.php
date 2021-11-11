@@ -72,7 +72,6 @@ class MakeContentElement extends AbstractFragmentMaker
                 'source' => 'content-element/tl_content.tpl.php',
                 'domain' => 'tl_content',
                 'element' => $elementName,
-                'io' => $io,
             ]);
         }
 
@@ -81,7 +80,6 @@ class MakeContentElement extends AbstractFragmentMaker
                 'source' => 'content-element/source.tpl.php',
                 'domain' => 'default',
                 'language' => 'en',
-                'io' => $io,
                 'variables' => [
                     'element' => $elementName,
                     'sourceName' => $input->getArgument('source-name'),
@@ -102,7 +100,6 @@ class MakeContentElement extends AbstractFragmentMaker
                     'source' => 'content-element/target.tpl.php',
                     'domain' => 'default',
                     'language' => $input->getArgument('language-'.$i),
-                    'io' => $io,
                     'variables' => [
                         'element' => $elementName,
                         'sourceName' => $input->getArgument('source-name'),
