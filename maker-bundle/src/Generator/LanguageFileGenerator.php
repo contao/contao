@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Generator;
 
-use Contao\MakerBundle\Translation\XliffMerger;
+use Contao\MakerBundle\Config\XliffMerger;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Filesystem\Filesystem;

@@ -1,4 +1,7 @@
 services:
+    contao_maker.config.xliff_merger:
+        class: Contao\MakerBundle\Config\XliffMerger
+
     contao_maker.generator.template:
         class: Contao\MakerBundle\Generator\TemplateGenerator
         arguments:
@@ -21,14 +24,11 @@ services:
         arguments:
             - '@maker.file_manager'
             - '@filesystem'
-            - '@contao_maker.translation.xliff_merger'
+            - '@contao_maker.config.xliff_merger'
             - '%kernel.project_dir%'
 
-    contao_maker.import_extractor:
-        class: Contao\MakerBundle\ImportExtractor
+    contao_maker.reflection.import_extractor:
+        class: Contao\MakerBundle\Reflection\ImportExtractor
 
-    contao_maker.signature_generator:
-        class: Contao\MakerBundle\SignatureGenerator
-
-    contao_maker.translation.xliff_merger:
-        class: Contao\MakerBundle\Translation\XliffMerger
+    contao_maker.reflection.signature_generator:
+        class: Contao\MakerBundle\Reflection\SignatureGenerator

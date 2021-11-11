@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\MakerBundle\Tests\Translation;
+namespace Contao\MakerBundle\Tests\Config;
 
-use Contao\MakerBundle\Translation\XliffMerger;
+use Contao\MakerBundle\Config\XliffMerger;
 use PHPUnit\Framework\TestCase;
 
 class XliffMergerTest extends TestCase

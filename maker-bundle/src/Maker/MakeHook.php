@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Maker;
 
 use Contao\MakerBundle\Generator\ClassGenerator;
-use Contao\MakerBundle\ImportExtractor;
-use Contao\MakerBundle\MethodDefinition;
-use Contao\MakerBundle\SignatureGenerator;
+use Contao\MakerBundle\Reflection\ImportExtractor;
+use Contao\MakerBundle\Reflection\MethodDefinition;
+use Contao\MakerBundle\Reflection\SignatureGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
