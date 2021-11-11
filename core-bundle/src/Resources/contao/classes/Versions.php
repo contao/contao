@@ -459,6 +459,7 @@ class Versions extends Controller
 
 						if (\is_array($arrFields[$k]))
 						{
+							// Detect binary fields using Doctrine's built-in types (see #3665)
 							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB), true);
 						}
 						else
