@@ -12,12 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-trigger_deprecation('contao/core-bundle', '4.1', 'Using the "Contao\CoreBundle\Exception\ServiceUnavailableException" class has been deprecated and will no longer work in Contao 5.0. Use the "Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException" class instead.');
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
-/**
- * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.0; use the
- *             Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException instead
- */
-class ServiceUnavailableException extends \RuntimeException
+class ServiceUnavailableException extends ServiceUnavailableHttpException
 {
 }

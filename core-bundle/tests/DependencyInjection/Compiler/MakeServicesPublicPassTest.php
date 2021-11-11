@@ -26,7 +26,6 @@ class MakeServicesPublicPassTest extends TestCase
         // Definitions
         $container->setDefinition('assets.packages', (new Definition())->setPublic(false));
         $container->setDefinition('fragment.handler', (new Definition())->setPublic(false));
-        $container->setDefinition('lexik_maintenance.driver.factory', (new Definition())->setPublic(false));
         $container->setDefinition('monolog.logger.contao', (new Definition())->setPublic(false));
         $container->setDefinition('security.authentication_utils', (new Definition())->setPublic(false));
         $container->setDefinition('security.authentication.trust_resolver', (new Definition())->setPublic(false));
@@ -49,7 +48,6 @@ class MakeServicesPublicPassTest extends TestCase
         // Definitions
         $this->assertTrue($container->getDefinition('assets.packages')->isPublic());
         $this->assertTrue($container->getDefinition('fragment.handler')->isPublic());
-        $this->assertTrue($container->getDefinition('lexik_maintenance.driver.factory')->isPublic());
         $this->assertTrue($container->getDefinition('monolog.logger.contao')->isPublic());
         $this->assertTrue($container->getDefinition('security.authentication_utils')->isPublic());
         $this->assertTrue($container->getDefinition('security.authentication.trust_resolver')->isPublic());

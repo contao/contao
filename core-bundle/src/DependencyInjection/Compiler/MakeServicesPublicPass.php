@@ -26,7 +26,6 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'assets.packages',
         'debug.stopwatch',
         'fragment.handler',
-        'lexik_maintenance.driver.factory',
         'monolog.logger.contao',
         'security.authentication_utils',
         'security.authentication.trust_resolver',

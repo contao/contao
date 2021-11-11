@@ -32,7 +32,6 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
-use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -82,7 +81,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(TwigExtraBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(LexikMaintenanceBundle::class),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
