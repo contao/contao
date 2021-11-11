@@ -20,7 +20,6 @@ use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\Container;
 
 class MakeFrontendModule extends AbstractFragmentMaker
@@ -34,22 +33,8 @@ class MakeFrontendModule extends AbstractFragmentMaker
     {
         $command
             ->setDescription('Creates an empty front end module')
-            ->addArgument('module', InputArgument::REQUIRED, 'Enter a class name for the front end module')
+            ->addArgument('module', InputArgument::REQUIRED, 'Enter a class name for the front end module (e.g. <fg=yellow>FooController</>)')
         ;
-
-        $inputConfig->setArgumentAsNonInteractive('module');
-    }
-
-    public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
-    {
-        $defaultName = Str::asClassName(Str::getRandomTerm());
-
-        $argument = $command->getDefinition()->getArgument('module');
-        $question = new Question($argument->getDescription(), $defaultName);
-
-        $input->setArgument('module', $io->askQuestion($question));
-
-        parent::interact($input, $io, $command);
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void

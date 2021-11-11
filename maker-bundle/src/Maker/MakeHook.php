@@ -49,7 +49,7 @@ class MakeHook extends AbstractMaker
     {
         $command
             ->setDescription('Creates a hook')
-            ->addArgument('className', InputArgument::OPTIONAL, 'Enter a class name for the hook')
+            ->addArgument('className', InputArgument::OPTIONAL, 'Enter a class name for the hook (e.g. <fg=yellow>FooListener</>)')
         ;
     }
 

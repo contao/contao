@@ -1,10 +1,4 @@
 services:
-    contao_maker.contao_directory_locator:
-        class: Contao\MakerBundle\Filesystem\ContaoDirectoryLocator
-        arguments:
-            - '@filesystem'
-            - '%kernel.project_dir%'
-
     contao_maker.generator.template:
         class: Contao\MakerBundle\Generator\TemplateGenerator
         arguments:
@@ -20,7 +14,7 @@ services:
         arguments:
             - '@filesystem'
             - '@maker.file_manager'
-            - '@contao_maker.contao_directory_locator'
+            - '%kernel.project_dir%'
 
     contao_maker.generator.language_file:
         class: Contao\MakerBundle\Generator\LanguageFileGenerator
@@ -28,7 +22,7 @@ services:
             - '@maker.file_manager'
             - '@filesystem'
             - '@contao_maker.translation.xliff_merger'
-            - '@contao_maker.contao_directory_locator'
+            - '%kernel.project_dir%'
 
     contao_maker.import_extractor:
         class: Contao\MakerBundle\ImportExtractor

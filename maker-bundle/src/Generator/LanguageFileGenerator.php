@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Generator;
 
-use Contao\MakerBundle\Filesystem\ContaoDirectoryLocator;
 use Contao\MakerBundle\Translation\XliffMerger;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\FileManager;
@@ -25,14 +24,14 @@ class LanguageFileGenerator implements GeneratorInterface
     private FileManager $fileManager;
     private Filesystem $filesystem;
     private XliffMerger $xliffMerger;
-    private ContaoDirectoryLocator $directoryLocator;
+    private string $projectDir;
 
-    public function __construct(FileManager $fileManager, Filesystem $filesystem, XliffMerger $xliffMerger, ContaoDirectoryLocator $directoryLocator)
+    public function __construct(FileManager $fileManager, Filesystem $filesystem, XliffMerger $xliffMerger, string $projectDir)
     {
         $this->fileManager = $fileManager;
         $this->filesystem = $filesystem;
         $this->xliffMerger = $xliffMerger;
-        $this->directoryLocator = $directoryLocator;
+        $this->projectDir = $projectDir;
     }
 
     public function generate(array $options): string
@@ -40,7 +39,7 @@ class LanguageFileGenerator implements GeneratorInterface
         $options = $this->getOptionsResolver()->resolve($options);
 
         $source = $this->getSourcePath($options['source']);
-        $target = Path::join($this->directoryLocator->getConfigDirectory(), 'languages', $options['language'], $options['domain'].'.xlf');
+        $target = Path::join($this->projectDir, 'contao/languages', $options['language'], $options['domain'].'.xlf');
         $contents = $this->fileManager->parseTemplate($source, $options['variables']);
         $fileExists = $this->filesystem->exists($target);
 

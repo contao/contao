@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Generator;
 
-use Contao\MakerBundle\Filesystem\ContaoDirectoryLocator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,13 +22,13 @@ class DcaGenerator implements GeneratorInterface
 {
     private Filesystem $filesystem;
     private FileManager $fileManager;
-    private ContaoDirectoryLocator $directoryLocator;
+    private string $projectDir;
 
-    public function __construct(Filesystem $filesystem, FileManager $fileManager, ContaoDirectoryLocator $directoryLocator)
+    public function __construct(Filesystem $filesystem, FileManager $fileManager, string $projectDir)
     {
         $this->filesystem = $filesystem;
         $this->fileManager = $fileManager;
-        $this->directoryLocator = $directoryLocator;
+        $this->projectDir = $projectDir;
     }
 
     public function generate(array $options): string
@@ -37,7 +36,7 @@ class DcaGenerator implements GeneratorInterface
         $options = $this->getOptionsResolver()->resolve($options);
 
         $source = $this->getSourcePath($options['source']);
-        $target = Path::join($this->directoryLocator->getConfigDirectory(), 'dca', $options['domain'].'.php');
+        $target = Path::join($this->projectDir, 'contao/dca', $options['domain'].'.php');
         $fileExists = $this->filesystem->exists($target);
 
         $variables = array_merge(

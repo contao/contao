@@ -31,11 +31,7 @@ class XliffMerger
             $duplicatesPath = new \DOMXPath($root);
             $duplicates = $duplicatesPath->query('//trans-unit[@id=\''.$id.'\']');
 
-            if (false === $duplicates) {
-                continue;
-            }
-
-            if ($duplicates->length > 0) {
+            if (false === $duplicates || $duplicates->length > 0) {
                 continue;
             }
 
@@ -44,7 +40,7 @@ class XliffMerger
         }
 
         // Properly format the output XML
-        $toFormat = (string) $root->saveHTML($root);
+        $toFormat = (string) $root->saveXML($root);
 
         $root->preserveWhiteSpace = false;
         $root->formatOutput = true;

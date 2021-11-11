@@ -19,7 +19,6 @@ use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\Container;
 
 class MakeContentElement extends AbstractFragmentMaker
@@ -33,22 +32,8 @@ class MakeContentElement extends AbstractFragmentMaker
     {
         $command
             ->setDescription('Creates an empty content element')
-            ->addArgument('element', InputArgument::REQUIRED, 'Enter a class name for the content element')
+            ->addArgument('element', InputArgument::REQUIRED, 'Enter a class name for the content element (e.g. <fg=yellow>FooController</>)')
         ;
-
-        $inputConfig->setArgumentAsNonInteractive('element');
-    }
-
-    public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
-    {
-        $defaultName = Str::asClassName(Str::getRandomTerm());
-
-        $argument = $command->getDefinition()->getArgument('element');
-        $question = new Question($argument->getDescription(), $defaultName);
-
-        $input->setArgument('element', $io->askQuestion($question));
-
-        parent::interact($input, $io, $command);
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void

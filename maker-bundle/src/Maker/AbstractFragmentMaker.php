@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Maker;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\MakerBundle\Filesystem\ContaoDirectoryLocator;
 use Contao\MakerBundle\Generator\ClassGenerator;
 use Contao\MakerBundle\Generator\DcaGenerator;
 use Contao\MakerBundle\Generator\LanguageFileGenerator;
@@ -37,16 +36,16 @@ abstract class AbstractFragmentMaker extends AbstractMaker
     protected ClassGenerator $classGenerator;
     protected DcaGenerator $dcaGenerator;
     protected LanguageFileGenerator $languageFileGenerator;
-    protected ContaoDirectoryLocator $contaoDirectoryLocator;
+    protected string $projectDir;
 
-    public function __construct(ContaoFramework $framework, TemplateGenerator $templateGenerator, ClassGenerator $classGenerator, DcaGenerator $dcaGenerator, LanguageFileGenerator $languageFileGenerator, ContaoDirectoryLocator $contaoDirectoryLocator)
+    public function __construct(ContaoFramework $framework, TemplateGenerator $templateGenerator, ClassGenerator $classGenerator, DcaGenerator $dcaGenerator, LanguageFileGenerator $languageFileGenerator, string $projectDir)
     {
         $this->framework = $framework;
         $this->templateGenerator = $templateGenerator;
         $this->classGenerator = $classGenerator;
         $this->dcaGenerator = $dcaGenerator;
         $this->languageFileGenerator = $languageFileGenerator;
-        $this->contaoDirectoryLocator = $contaoDirectoryLocator;
+        $this->projectDir = $projectDir;
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
@@ -145,8 +144,8 @@ abstract class AbstractFragmentMaker extends AbstractMaker
     protected function getTemplateName(string $className): string
     {
         return Path::join(
-            $this->contaoDirectoryLocator->getConfigDirectory(),
-            'templates',
+            $this->projectDir,
+            'contao/templates',
             sprintf('%s_%s.html5', $this->getTemplatePrefix(), Container::underscore($className))
         );
     }

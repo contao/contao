@@ -57,7 +57,7 @@ class MakeDcaCallback extends AbstractMaker
     {
         $command
             ->setDescription('Creates a DCA callback')
-            ->addArgument('className', InputArgument::REQUIRED, 'Enter a class name for the callback')
+            ->addArgument('className', InputArgument::REQUIRED, 'Enter a class name for the callback (e.g. <fg=yellow>FooListener</>)')
         ;
     }
 
