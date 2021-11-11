@@ -17,6 +17,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
  *
  * @see \Symfony\Component\Routing\Annotation\Route
  */
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsPage
 {
     public function __construct(
