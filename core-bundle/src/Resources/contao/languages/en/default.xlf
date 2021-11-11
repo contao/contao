@@ -338,6 +338,12 @@
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a markdown text.</source>
       </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
       </trans-unit>

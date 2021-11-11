@@ -471,7 +471,7 @@ class FileSelector extends Widget
 			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || \count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
 			$return .= "\n    " . '<li class="' . $folderClass . ' toggle_select hover-div"><div class="tl_left" style="padding-left:' . $intMargin . 'px">';
 
-			// Add a toggle button if there are childs
+			// Add a toggle button if there are children
 			if ($countFiles > 0)
 			{
 				$folderAttribute = '';
