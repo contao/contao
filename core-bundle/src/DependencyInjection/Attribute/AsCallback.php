@@ -18,11 +18,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsCallback
 {
-    public function __construct(
-        public string $table,
-        public string $target,
-        public ?string $method = null,
-        public ?int $priority = null,
-    ) {
+    public function __construct(public string $table, public string $target, public ?string $method = null, public ?int $priority = null)
+    {
     }
 }

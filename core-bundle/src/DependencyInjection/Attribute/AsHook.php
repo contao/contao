@@ -18,10 +18,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsHook
 {
-    public function __construct(
-        public string $hook,
-        public ?string $method = null,
-        public ?int $priority = null,
-    ) {
+    public function __construct(public string $hook, public ?string $method = null, public ?int $priority = null)
+    {
     }
 }

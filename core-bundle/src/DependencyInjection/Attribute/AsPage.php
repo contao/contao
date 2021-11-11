@@ -20,15 +20,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsPage
 {
-    public function __construct(
-        public ?string $type = null,
-        public bool $contentComposition = true,
-        public ?string $path = null,
-        public ?string $urlSuffix = null,
-        public array $requirements = [],
-        public array $options = [],
-        public array $defaults = [],
-        public array $methods = [],
-    ) {
+    public function __construct(public ?string $type = null, public bool $contentComposition = true, public ?string $path = null, public ?string $urlSuffix = null, public array $requirements = [], public array $options = [], public array $defaults = [], public array $methods = [])
+    {
     }
 }

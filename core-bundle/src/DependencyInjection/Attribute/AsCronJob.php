@@ -18,9 +18,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsCronJob
 {
-    public function __construct(
-        public string $interval,
-        public ?string $method = null,
-    ) {
+    public function __construct(public string $interval, public ?string $method = null)
+    {
     }
 }
