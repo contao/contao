@@ -28,31 +28,38 @@ class MakeContentElement extends AbstractFragmentMaker
         return 'make:contao:content-element';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new content element';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->setDescription('Creates an empty content element')
-            ->addArgument('element', InputArgument::REQUIRED, 'Enter a class name for the content element (e.g. <fg=yellow>FooController</>)')
+            ->addArgument('element-class', InputArgument::REQUIRED, sprintf('Enter a class name for the element controller (e.g. <fg=yellow>%sController</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        $name = $input->getArgument('element');
         $category = $input->getArgument('category');
-        $addTranslations = $input->getArgument('addTranslation');
-        $addEmptyDcaPalette = $input->getArgument('addEmptyDcaPalette');
-
-        $elementDetails = $generator->createClassNameDetails($name, 'Controller\ContentElement\\');
+        $addPalette = $input->getArgument('add-palette');
+        $addTranslation = $input->getArgument('add-translation');
+        $name = $input->getArgument('element-class');
 
         $className = Str::asClassName($name);
         $classNameWithoutSuffix = $this->getClassNameWithoutSuffix($className);
         $elementName = Container::underscore($classNameWithoutSuffix);
+        $elementDetails = $generator->createClassNameDetails($name, 'Controller\ContentElement\\');
 
         $this->classGenerator->generate([
             'source' => 'content-element/ContentElement.tpl.php',
             'fqcn' => $elementDetails->getFullName(),
-            'variables' => compact('className', 'elementName', 'category'),
+            'variables' => [
+                'className' => $elementDetails->getShortName(),
+                'elementName' => $elementName,
+                'category' => $category,
+            ],
         ]);
 
         $this->templateGenerator->generate([
@@ -60,56 +67,48 @@ class MakeContentElement extends AbstractFragmentMaker
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
 
-        if ($addEmptyDcaPalette) {
+        if ($addPalette) {
             $this->dcaGenerator->generate([
-                'domain' => 'tl_content',
                 'source' => 'content-element/tl_content.tpl.php',
+                'domain' => 'tl_content',
                 'element' => $elementName,
                 'io' => $io,
             ]);
         }
 
-        if ($addTranslations) {
-            $language = 'en';
-            $sourceName = $input->getArgument('sourceName');
-            $sourceDescription = $input->getArgument('sourceDescription');
-
+        if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'domain' => 'default',
                 'source' => 'content-element/source.tpl.php',
-                'language' => $language,
+                'domain' => 'default',
+                'language' => 'en',
                 'io' => $io,
                 'variables' => [
                     'element' => $elementName,
-                    'sourceName' => $sourceName,
-                    'sourceDescription' => $sourceDescription,
+                    'sourceName' => $input->getArgument('source-name'),
+                    'sourceDescription' => $input->getArgument('source-description'),
                 ],
             ]);
 
             $i = 0;
 
             while (true) {
-                $hasNext = $input->hasArgument('addTranslation_'.$i);
+                $hasNext = $input->hasArgument('add-translation-'.$i);
 
-                if (!$hasNext || false === $input->getArgument('addTranslation_'.$i)) {
+                if (!$hasNext || false === $input->getArgument('add-translation-'.$i)) {
                     break;
                 }
 
-                $language = $input->getArgument('language_'.$i);
-                $translatedName = $input->getArgument('translatedName_'.$i);
-                $translatedDescription = $input->getArgument('translatedDescription_'.$i);
-
                 $this->languageFileGenerator->generate([
-                    'domain' => 'default',
                     'source' => 'content-element/target.tpl.php',
-                    'language' => $language,
+                    'domain' => 'default',
+                    'language' => $input->getArgument('language-'.$i),
                     'io' => $io,
                     'variables' => [
                         'element' => $elementName,
-                        'sourceName' => $sourceName,
-                        'sourceDescription' => $sourceDescription,
-                        'translatedName' => $translatedName,
-                        'translatedDescription' => $translatedDescription,
+                        'sourceName' => $input->getArgument('source-name'),
+                        'sourceDescription' => $input->getArgument('source-description'),
+                        'translatedName' => $input->getArgument('target-name-'.$i),
+                        'translatedDescription' => $input->getArgument('target-description-'.$i),
                     ],
                 ]);
 

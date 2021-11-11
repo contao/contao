@@ -51,7 +51,7 @@ class DcaGenerator implements GeneratorInterface
         $contents = ltrim($contents);
 
         if ($fileExists) {
-            $contents = file_get_contents($target)."\n".rtrim($contents);
+            $contents = file_get_contents($target)."\n".rtrim($contents)."\n";
         }
 
         $this->filesystem->dumpFile($target, $contents);

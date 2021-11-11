@@ -29,26 +29,29 @@ class MakeFrontendModule extends AbstractFragmentMaker
         return 'make:contao:frontend-module';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new front end module';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->setDescription('Creates an empty front end module')
-            ->addArgument('module', InputArgument::REQUIRED, 'Enter a class name for the front end module (e.g. <fg=yellow>FooController</>)')
+            ->addArgument('module-class', InputArgument::REQUIRED, sprintf('Enter a class name for the module controller (e.g. <fg=yellow>%sController</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        $name = $input->getArgument('module');
         $category = $input->getArgument('category');
-        $addTranslations = $input->getArgument('addTranslation');
-        $addEmptyDcaPalette = $input->getArgument('addEmptyDcaPalette');
-
-        $elementDetails = $generator->createClassNameDetails($name, 'Controller\\FrontendModule\\');
+        $addPalette = $input->getArgument('add-palette');
+        $addTranslation = $input->getArgument('add-translation');
+        $name = $input->getArgument('module-class');
 
         $className = Str::asClassName($name);
         $classNameWithoutSuffix = $this->getClassNameWithoutSuffix($className);
         $elementName = Container::underscore($classNameWithoutSuffix);
+        $elementDetails = $generator->createClassNameDetails($name, 'Controller\\FrontendModule\\');
 
         $this->classGenerator->generate([
             'source' => 'frontend-module/FrontendModule.tpl.php',
@@ -65,56 +68,48 @@ class MakeFrontendModule extends AbstractFragmentMaker
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
 
-        if ($addEmptyDcaPalette) {
+        if ($addPalette) {
             $this->dcaGenerator->generate([
-                'domain' => 'tl_module',
                 'source' => 'frontend-module/tl_module.tpl.php',
+                'domain' => 'tl_module',
                 'element' => $elementName,
                 'io' => $io,
             ]);
         }
 
-        if ($addTranslations) {
-            $language = 'en';
-            $sourceName = $input->getArgument('sourceName');
-            $sourceDescription = $input->getArgument('sourceDescription');
-
+        if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'domain' => 'default',
                 'source' => 'frontend-module/source.tpl.php',
-                'language' => $language,
+                'domain' => 'default',
+                'language' => 'en',
                 'io' => $io,
                 'variables' => [
                     'element' => $elementName,
-                    'sourceName' => $sourceName,
-                    'sourceDescription' => $sourceDescription,
+                    'sourceName' => $input->getArgument('source-name'),
+                    'sourceDescription' => $input->getArgument('source-description'),
                 ],
             ]);
 
             $i = 0;
 
             while (true) {
-                $hasNext = $input->hasArgument('addTranslation_'.$i);
+                $hasNext = $input->hasArgument('add-translation-'.$i);
 
-                if (!$hasNext || false === $input->getArgument('addTranslation_'.$i)) {
+                if (!$hasNext || false === $input->getArgument('add-translation-'.$i)) {
                     break;
                 }
 
-                $language = $input->getArgument('language_'.$i);
-                $translatedName = $input->getArgument('translatedName_'.$i);
-                $translatedDescription = $input->getArgument('translatedDescription_'.$i);
-
                 $this->languageFileGenerator->generate([
-                    'domain' => 'default',
                     'source' => 'frontend-module/target.tpl.php',
-                    'language' => $language,
+                    'domain' => 'default',
+                    'language' => $input->getArgument('language-'.$i),
                     'io' => $io,
                     'variables' => [
                         'element' => $elementName,
-                        'sourceName' => $sourceName,
-                        'sourceDescription' => $sourceDescription,
-                        'translatedName' => $translatedName,
-                        'translatedDescription' => $translatedDescription,
+                        'sourceName' => $input->getArgument('source-name'),
+                        'sourceDescription' => $input->getArgument('source-description'),
+                        'translatedName' => $input->getArgument('target-name-'.$i),
+                        'translatedDescription' => $input->getArgument('target-description-'.$i),
                     ],
                 ]);
 

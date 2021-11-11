@@ -19,8 +19,8 @@ use Contao\MakerBundle\Generator\LanguageFileGenerator;
 use Contao\MakerBundle\Generator\TemplateGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
-use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
+use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -50,83 +50,26 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
-        $requiredValidator = static function ($input) {
-            if (null === $input || '' === $input) {
-                throw new RuntimeCommandException('This value cannot be blank');
-            }
+        $this->askForCategory($input, $io, $command);
+        $this->askForDcaPalette($input, $io, $command);
+        $this->askForTranslation($input, $io, $command);
 
-            return $input;
-        };
-
-        $definition = $command->getDefinition();
-
-        // Ask whether an empty DCA palette should be created
-        $command->addArgument('addEmptyDcaPalette', InputArgument::OPTIONAL);
-        $question = new ConfirmationQuestion('Do you want to add an empty DCA palette?', true);
-        $input->setArgument('addEmptyDcaPalette', $io->askQuestion($question));
-
-        $command->addArgument('category', InputArgument::OPTIONAL, 'Choose a category');
-        $argument = $definition->getArgument('category');
-        $categories = $this->getExistingCategories();
-
-        $io->writeln(' <fg=green>Suggested categories:</>');
-        $io->listing($categories);
-
-        $question = new Question($argument->getDescription());
-        $question->setValidator($requiredValidator);
-        $question->setAutocompleterValues($categories);
-
-        $input->setArgument('category', $io->askQuestion($question));
-
-        // Ask whether language files should be generated
-        $command->addArgument('addTranslation', InputArgument::OPTIONAL);
-        $question = new ConfirmationQuestion('Do you want to add translations?', true);
-        $input->setArgument('addTranslation', $io->askQuestion($question));
-
-        if ($input->getArgument('addTranslation')) {
-            $command
-                ->addArgument('sourceName', InputArgument::OPTIONAL, 'Enter the English name')
-                ->addArgument('sourceDescription', InputArgument::OPTIONAL, 'Enter the English description')
-            ;
-
-            foreach (['sourceName', 'sourceDescription'] as $field) {
-                $argument = $definition->getArgument($field);
-
-                $question = new Question($argument->getDescription());
-                $question->setValidator($requiredValidator);
-
-                $input->setArgument($field, $io->askQuestion($question));
-            }
+        if ($input->getArgument('add-translation')) {
+            $this->askForSourceName($input, $io, $command);
+            $this->askForSourceDescription($input, $io, $command);
 
             $i = 0;
 
             while (true) {
-                $command->addArgument('addTranslation_'.$i, InputArgument::OPTIONAL);
-                $question = new ConfirmationQuestion('Do you want to add another translation?', false);
-                $input->setArgument('addTranslation_'.$i, $io->askQuestion($question));
+                $this->askForAdditionalTranslation($input, $io, $command, $i);
 
-                if (!$input->getArgument('addTranslation_'.$i)) {
+                if (!$input->getArgument('add-translation-'.$i)) {
                     break;
                 }
 
-                $command
-                    ->addArgument('language_'.$i, InputArgument::OPTIONAL, 'Which language do you want to add? (e.g. <fg=yellow>de</>)')
-                    ->addArgument('translatedName_'.$i, InputArgument::OPTIONAL, 'Enter the translated name')
-                    ->addArgument('translatedDescription_'.$i, InputArgument::OPTIONAL, 'Enter the translated description')
-                ;
-
-                $argument = $definition->getArgument('language_'.$i);
-                $question = new Question($argument->getDescription());
-                $input->setArgument('language_'.$i, $io->askQuestion($question));
-
-                foreach (['translatedName_'.$i, 'translatedDescription_'.$i] as $field) {
-                    $argument = $definition->getArgument($field);
-
-                    $question = new Question($argument->getDescription());
-                    $question->setValidator($requiredValidator);
-
-                    $input->setArgument($field, $io->askQuestion($question));
-                }
+                $this->askForLanguage($input, $io, $command, $i);
+                $this->askForTargetName($input, $io, $command, $i);
+                $this->askForTargetDescription($input, $io, $command, $i);
 
                 ++$i;
             }
@@ -153,7 +96,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
     /**
      * @return array<int, string>
      */
-    protected function getExistingCategories(): array
+    protected function getCategories(): array
     {
         $this->framework->initialize();
 
@@ -167,5 +110,98 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         }
 
         return $className;
+    }
+
+    private function askForCategory(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('category', InputArgument::REQUIRED);
+
+        $categories = $this->getCategories();
+
+        $io->writeln(' <fg=green>Suggested categories:</>');
+        $io->listing($categories);
+
+        $question = new Question('Choose a category');
+        $question->setAutocompleterValues($categories);
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('category', $io->askQuestion($question));
+    }
+
+    private function askForDcaPalette(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('add-palette', InputArgument::REQUIRED);
+
+        $question = new ConfirmationQuestion('Do you want to add a palette?');
+
+        $input->setArgument('add-palette', $io->askQuestion($question));
+    }
+
+    private function askForTranslation(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('add-translation', InputArgument::REQUIRED);
+
+        $question = new ConfirmationQuestion('Do you want to add a translation?');
+
+        $input->setArgument('add-translation', $io->askQuestion($question));
+    }
+
+    private function askForSourceName(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('source-name', InputArgument::OPTIONAL);
+
+        $question = new Question('Enter the English name');
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('source-name', $io->askQuestion($question));
+    }
+
+    private function askForSourceDescription(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('source-description', InputArgument::OPTIONAL);
+
+        $question = new Question('Enter the English description');
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('source-description', $io->askQuestion($question));
+    }
+
+    private function askForAdditionalTranslation(InputInterface $input, ConsoleStyle $io, Command $command, int $count): void
+    {
+        $command->addArgument('add-translation-'.$count, InputArgument::OPTIONAL);
+
+        $question = new ConfirmationQuestion('Do you want to add another translation?', false);
+
+        $input->setArgument('add-translation-'.$count, $io->askQuestion($question));
+    }
+
+    private function askForLanguage(InputInterface $input, ConsoleStyle $io, Command $command, int $count): void
+    {
+        $command->addArgument('language-'.$count, InputArgument::OPTIONAL);
+
+        $question = new Question('Which language do you want to add? (e.g. <fg=yellow>de</>)');
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('language-'.$count, $io->askQuestion($question));
+    }
+
+    private function askForTargetName(InputInterface $input, ConsoleStyle $io, Command $command, int $count): void
+    {
+        $command->addArgument('target-name-'.$count, InputArgument::OPTIONAL);
+
+        $question = new Question('Enter the translated name');
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('target-name-'.$count, $io->askQuestion($question));
+    }
+
+    private function askForTargetDescription(InputInterface $input, ConsoleStyle $io, Command $command, int $count): void
+    {
+        $command->addArgument('target-description-'.$count, InputArgument::OPTIONAL);
+
+        $question = new Question('Enter the translated description');
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('target-description-'.$count, $io->askQuestion($question));
     }
 }

@@ -21,6 +21,8 @@ use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
+use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,27 +47,30 @@ class MakeHook extends AbstractMaker
         return 'make:contao:hook';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new hook listener';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->setDescription('Creates a hook')
-            ->addArgument('className', InputArgument::OPTIONAL, 'Enter a class name for the hook (e.g. <fg=yellow>FooListener</>)')
+            ->addArgument('hook-class', InputArgument::REQUIRED, sprintf('Enter a class name for the listener (e.g. <fg=yellow>%sListener</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
-        $definition = $command->getDefinition();
+        $command->addArgument('hook', InputArgument::REQUIRED);
 
-        $command->addArgument('hook', InputArgument::OPTIONAL, 'Choose a hook to implement');
-        $argument = $definition->getArgument('hook');
         $hooks = $this->getAvailableHooks();
 
-        $io->writeln(' <fg=green>Suggested hooks:</>');
+        $io->writeln(' <fg=green>Available hooks:</>');
         $io->listing(array_keys($hooks));
 
-        $question = new Question($argument->getDescription());
+        $question = new Question('Choose the hook to listen for');
         $question->setAutocompleterValues(array_keys($hooks));
+        $question->setValidator([Validator::class, 'notBlank']);
 
         $input->setArgument('hook', $io->askQuestion($question));
     }
@@ -76,31 +81,28 @@ class MakeHook extends AbstractMaker
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        $availableHooks = $this->getAvailableHooks();
         $hook = $input->getArgument('hook');
-        $name = $input->getArgument('className');
+        $name = $input->getArgument('hook-class');
+        $hooks = $this->getAvailableHooks();
 
-        if (!\array_key_exists($hook, $availableHooks)) {
-            $io->error(sprintf('Hook definition "%s" not found.', $hook));
+        if (!\array_key_exists($hook, $hooks)) {
+            $io->error('Invalid hook name: '.$hook);
 
             return;
         }
 
         /** @var MethodDefinition $definition */
-        $definition = $availableHooks[$hook];
-
-        $signature = $this->signatureGenerator->generate($definition, '__invoke');
-        $uses = $this->importExtractor->extract($definition);
+        $definition = $hooks[$hook];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 
         $this->classGenerator->generate([
             'source' => 'hook/Hook.tpl.php',
             'fqcn' => $elementDetails->getFullName(),
             'variables' => [
-                'className' => $elementDetails->getShortName(),
+                'uses' => $this->importExtractor->extract($definition),
                 'hook' => $hook,
-                'signature' => $signature,
-                'uses' => $uses,
+                'className' => $elementDetails->getShortName(),
+                'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
             ],
         ]);

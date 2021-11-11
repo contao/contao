@@ -20,10 +20,11 @@ use Contao\MakerBundle\Reflection\MethodDefinition;
 use Contao\MakerBundle\Reflection\SignatureGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
-use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
+use Symfony\Bundle\MakerBundle\Str;
+use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,75 +54,22 @@ class MakeDcaCallback extends AbstractMaker
         return 'make:contao:dca-callback';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new DCA callback listener';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->setDescription('Creates a DCA callback')
-            ->addArgument('className', InputArgument::REQUIRED, 'Enter a class name for the callback (e.g. <fg=yellow>FooListener</>)')
+            ->addArgument('callback-class', InputArgument::REQUIRED, sprintf('Enter a class name for the callback (e.g. <fg=yellow>%sListener</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
-        $requiredValidator = static function ($input) {
-            if (null === $input || '' === $input) {
-                throw new RuntimeCommandException('This value cannot be blank');
-            }
-
-            return $input;
-        };
-
-        $definition = $command->getDefinition();
-
-        // Tables
-        $command->addArgument('table', InputArgument::REQUIRED, 'Enter a table for the callback');
-        $argument = $definition->getArgument('table');
-        $tables = $this->getTables();
-
-        $io->writeln(' <fg=green>Suggested tables:</>');
-        $io->listing($tables);
-
-        $question = new Question($argument->getDescription());
-        $question->setAutocompleterValues($tables);
-        $input->setArgument('table', $io->askQuestion($question));
-
-        // Targets
-        $command->addArgument('target', InputArgument::REQUIRED, 'Enter a target for the callback');
-        $argument = $definition->getArgument('target');
-        $targets = $this->getTargets();
-
-        $io->writeln(' <fg=green>Suggested targets:</>');
-        $io->listing(array_keys($targets));
-
-        $question = new Question($argument->getDescription());
-        $question->setAutocompleterValues(array_keys($targets));
-        $input->setArgument('target', $io->askQuestion($question));
-
-        $target = $input->getArgument('target');
-
-        // Dynamic targets
-        if (false !== strpos($target, '{')) {
-            $chunks = explode('.', $target);
-
-            foreach ($chunks as $chunk) {
-                if ('{' !== $chunk[0]) {
-                    continue;
-                }
-
-                $command->addArgument(
-                    $chunk,
-                    InputArgument::REQUIRED,
-                    sprintf('Please enter a value for "%s"', $chunk)
-                );
-
-                $argument = $definition->getArgument($chunk);
-
-                $question = new Question($argument->getDescription());
-                $question->setValidator($requiredValidator);
-
-                $input->setArgument($chunk, $io->askQuestion($question));
-            }
-        }
+        $this->askForTable($input, $io, $command);
+        $this->askForTarget($input, $io, $command);
     }
 
     public function configureDependencies(DependencyBuilder $dependencies): void
@@ -130,26 +78,81 @@ class MakeDcaCallback extends AbstractMaker
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        $availableTargets = $this->getTargets();
-
-        $target = $input->getArgument('target');
         $table = $input->getArgument('table');
-        $name = $input->getArgument('className');
+        $target = $input->getArgument('target');
+        $name = $input->getArgument('callback-class');
 
-        if (!\array_key_exists($target, $availableTargets)) {
-            $io->error(sprintf('Callback definition "%s" not found.', $target));
+        $targets = $this->getTargets();
+
+        if (!\array_key_exists($target, $targets)) {
+            $io->error('Invalid DCA callback: '.$target);
 
             return;
         }
 
         /** @var MethodDefinition $definition */
-        $definition = $availableTargets[$target];
+        $definition = $targets[$target];
+        $elementDetails = $generator->createClassNameDetails($name, 'EventListener\DataContainer\\');
 
-        $signature = $this->signatureGenerator->generate($definition, '__invoke');
-        $uses = $this->importExtractor->extract($definition);
-        $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
+        if (false !== strpos($target, '{')) {
+            $chunks = explode('.', $target);
 
-        // Dynamic targets
+            foreach ($chunks as $chunk) {
+                if ('{' === $chunk[0]) {
+                    $target = str_replace($chunk, $input->getArgument($chunk), $target);
+                }
+            }
+        }
+
+        $this->classGenerator->generate([
+            'source' => 'dca-callback/Callback.tpl.php',
+            'fqcn' => $elementDetails->getFullName(),
+            'variables' => [
+                'uses' => $this->importExtractor->extract($definition),
+                'table' => $table,
+                'target' => $target,
+                'className' => $elementDetails->getShortName(),
+                'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
+                'body' => $definition->getBody(),
+            ],
+        ]);
+
+        $generator->writeChanges();
+
+        $this->writeSuccessMessage($io);
+    }
+
+    private function askForTable(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('table', InputArgument::REQUIRED);
+
+        $tables = $this->getTables();
+
+        $io->writeln(' <fg=green>Suggested tables:</>');
+        $io->listing($tables);
+
+        $question = new Question('Enter a table for the callback');
+        $question->setAutocompleterValues($tables);
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $input->setArgument('table', $io->askQuestion($question));
+    }
+
+    private function askForTarget(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        $command->addArgument('target', InputArgument::REQUIRED);
+
+        $targets = $this->getTargets();
+
+        $io->writeln(' <fg=green>Suggested targets:</>');
+        $io->listing(array_keys($targets));
+
+        $question = new Question('Enter a target for the callback');
+        $question->setAutocompleterValues(array_keys($targets));
+        $question->setValidator([Validator::class, 'notBlank']);
+
+        $target = $io->askQuestion($question);
+
         if (false !== strpos($target, '{')) {
             $chunks = explode('.', $target);
 
@@ -158,26 +161,16 @@ class MakeDcaCallback extends AbstractMaker
                     continue;
                 }
 
-                $target = str_replace($chunk, $input->getArgument($chunk), $target);
+                $command->addArgument($chunk, InputArgument::OPTIONAL);
+
+                $question = new Question(sprintf('Please enter a value for "%s"', $chunk));
+                $question->setValidator([Validator::class, 'notBlank']);
+
+                $input->setArgument($chunk, $io->askQuestion($question));
             }
         }
 
-        $this->classGenerator->generate([
-            'source' => 'dca-callback/Callback.tpl.php',
-            'fqcn' => $elementDetails->getFullName(),
-            'variables' => [
-                'className' => $elementDetails->getShortName(),
-                'target' => $target,
-                'table' => $table,
-                'signature' => $signature,
-                'uses' => $uses,
-                'body' => $definition->getBody(),
-            ],
-        ]);
-
-        $generator->writeChanges();
-
-        $this->writeSuccessMessage($io);
+        $input->setArgument('target', $target);
     }
 
     /**

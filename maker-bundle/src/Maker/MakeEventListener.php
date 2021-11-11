@@ -21,6 +21,7 @@ use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
+use Symfony\Bundle\MakerBundle\Str;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,26 +46,28 @@ class MakeEventListener extends AbstractMaker
         return 'make:contao:event-listener';
     }
 
+    public static function getCommandDescription(): string
+    {
+        return 'Creates a new event listener';
+    }
+
     public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
-            ->setDescription('Creates an event listener for a Contao event')
-            ->addArgument('className', InputArgument::OPTIONAL, 'Enter a class name for the event listener (e.g. <fg=yellow>FooListener</>)')
+            ->addArgument('event-class', InputArgument::OPTIONAL, sprintf('Enter a class name for the listener (e.g. <fg=yellow>%sListener</>)', Str::asClassName(Str::getRandomTerm())))
         ;
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
-        $definition = $command->getDefinition();
+        $command->addArgument('event', InputArgument::OPTIONAL);
 
-        $command->addArgument('event', InputArgument::OPTIONAL, 'Choose an event to listen for');
-        $argument = $definition->getArgument('event');
         $events = $this->getAvailableEvents();
 
-        $io->writeln(' <fg=green>Suggested events:</>');
+        $io->writeln(' <fg=green>Available events:</>');
         $io->listing(array_keys($events));
 
-        $question = new Question($argument->getDescription());
+        $question = new Question('Choose the event to listen for');
         $question->setAutocompleterValues(array_keys($events));
 
         $input->setArgument('event', $io->askQuestion($question));
@@ -76,30 +79,28 @@ class MakeEventListener extends AbstractMaker
 
     public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
-        $availableEvents = $this->getAvailableEvents();
         $event = $input->getArgument('event');
-        $name = $input->getArgument('className');
+        $name = $input->getArgument('event-class');
+        $events = $this->getAvailableEvents();
 
-        if (!\array_key_exists($event, $availableEvents)) {
-            $io->error(sprintf('Event definition "%s" not found.', $event));
+        if (!\array_key_exists($event, $events)) {
+            $io->error('Invalid event name: '.$event);
 
             return;
         }
 
         /** @var MethodDefinition $definition */
-        $definition = $availableEvents[$event];
-        $signature = $this->signatureGenerator->generate($definition, '__invoke');
-        $uses = $this->importExtractor->extract($definition);
+        $definition = $events[$event];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 
         $this->classGenerator->generate([
             'source' => 'event-listener/EventListener.tpl.php',
             'fqcn' => $elementDetails->getFullName(),
             'variables' => [
-                'className' => $elementDetails->getShortName(),
+                'uses' => $this->importExtractor->extract($definition),
                 'event' => $event,
-                'signature' => $signature,
-                'uses' => $uses,
+                'className' => $elementDetails->getShortName(),
+                'signature' => $this->signatureGenerator->generate($definition, '__invoke'),
                 'body' => $definition->getBody(),
             ],
         ]);
