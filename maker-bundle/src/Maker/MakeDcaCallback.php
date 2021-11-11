@@ -15,11 +15,10 @@ namespace Contao\MakerBundle\Maker;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
-use Contao\MakerBundle\Code\ImportExtractor;
-use Contao\MakerBundle\Code\SignatureGenerator;
 use Contao\MakerBundle\Generator\ClassGenerator;
-use Contao\MakerBundle\Model\CallbackDefinition;
-use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\MakerBundle\ImportExtractor;
+use Contao\MakerBundle\MethodDefinition;
+use Contao\MakerBundle\SignatureGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Exception\RuntimeCommandException;
@@ -79,12 +78,11 @@ class MakeDcaCallback extends AbstractMaker
         $argument = $definition->getArgument('table');
         $tables = $this->getTables();
 
-        $io->writeln(' <fg=green>Suggested Tables:</>');
+        $io->writeln(' <fg=green>Suggested tables:</>');
         $io->listing($tables);
 
         $question = new Question($argument->getDescription());
         $question->setAutocompleterValues($tables);
-
         $input->setArgument('table', $io->askQuestion($question));
 
         // Targets
@@ -92,35 +90,36 @@ class MakeDcaCallback extends AbstractMaker
         $argument = $definition->getArgument('target');
         $targets = $this->getTargets();
 
-        $io->writeln(' <fg=green>Suggested Targets:</>');
+        $io->writeln(' <fg=green>Suggested targets:</>');
         $io->listing(array_keys($targets));
 
         $question = new Question($argument->getDescription());
         $question->setAutocompleterValues(array_keys($targets));
-
         $input->setArgument('target', $io->askQuestion($question));
 
-        // Dependencies
         $target = $input->getArgument('target');
 
-        /** @var CallbackDefinition $callback */
-        $callback = $targets[$target];
-        $callbackDependencies = $callback->getDependencies();
+        // Dynamic targets
+        if (false !== strpos($target, '{')) {
+            $chunks = explode('.', $target);
 
-        if (\count($callbackDependencies) > 0) {
-            foreach ($callbackDependencies as $callbackDependency) {
+            foreach ($chunks as $chunk) {
+                if ('{' !== $chunk[0]) {
+                    continue;
+                }
+
                 $command->addArgument(
-                    $callbackDependency,
+                    $chunk,
                     InputArgument::REQUIRED,
-                    sprintf('Please enter a value for "%s"', $callbackDependency)
+                    sprintf('Please enter a value for "%s"', $chunk)
                 );
 
-                $argument = $definition->getArgument($callbackDependency);
+                $argument = $definition->getArgument($chunk);
 
                 $question = new Question($argument->getDescription());
                 $question->setValidator($requiredValidator);
 
-                $input->setArgument($callbackDependency, $io->askQuestion($question));
+                $input->setArgument($chunk, $io->askQuestion($question));
             }
         }
     }
@@ -143,16 +142,24 @@ class MakeDcaCallback extends AbstractMaker
             return;
         }
 
-        /** @var CallbackDefinition $callback */
-        $callback = $availableTargets[$target];
-        $definition = $callback->getMethodDefinition();
+        /** @var MethodDefinition $definition */
+        $definition = $availableTargets[$target];
 
         $signature = $this->signatureGenerator->generate($definition, '__invoke');
         $uses = $this->importExtractor->extract($definition);
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\\');
 
-        foreach ($callback->getDependencies() as $dependencyName) {
-            $target = str_replace('{'.$dependencyName.'}', $input->getArgument($dependencyName), $target);
+        // Dynamic targets
+        if (false !== strpos($target, '{')) {
+            $chunks = explode('.', $target);
+
+            foreach ($chunks as $chunk) {
+                if ('{' !== $chunk[0]) {
+                    continue;
+                }
+
+                $target = str_replace($chunk, $input->getArgument($chunk), $target);
+            }
         }
 
         $this->classGenerator->generate([
@@ -193,272 +200,214 @@ class MakeDcaCallback extends AbstractMaker
     }
 
     /**
-     * @return array<string, CallbackDefinition>
+     * @return array<string, MethodDefinition>
      */
     private function getTargets(): array
     {
         return [
-            'config.onload' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
+            'config.onload' => new MethodDefinition(
+                'void',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
-            'config.oncreate' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'table' => 'string',
-                        'insertId' => 'int',
-                        'fields' => 'array',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
+            'config.oncreate' => new MethodDefinition(
+                'void',
+                [
+                    'table' => 'string',
+                    'insertId' => 'int',
+                    'fields' => 'array',
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
-            'config.onsubmit' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
+            'config.onsubmit' => new MethodDefinition(
+                'void',
+                // Since there are multiple parameters for multiple calls, we cannot
+                // safely assume the correct parameter names and types
+                []
+            ),
+            'config.ondelete' => new MethodDefinition(
+                'void',
+                [
+                    'dataContainer' => DataContainer::class,
+                    'id' => 'int',
+                ]
+            ),
+            'config.oncut' => new MethodDefinition(
+                'void',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'config.oncopy' => new MethodDefinition(
+                'void',
+                [
+                    'id' => 'int',
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'config.oncreate_version' => new MethodDefinition(
+                'void',
+                [
+                    'table' => 'string',
+                    'pid' => 'int',
+                    'versionNumber' => 'int',
+                    'recordData' => 'array',
+                ]
+            ),
+            'config.onrestore_version' => new MethodDefinition(
+                'void',
+                [
+                    'table' => 'string',
+                    'pid' => 'int',
+                    'versionNumber' => 'int',
+                    'recordData' => 'array',
+                ]
+            ),
+            'config.onundo' => new MethodDefinition(
+                'void',
+                [
+                    'table' => 'string',
+                    'recordData' => 'array',
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'config.oninvalidate_cache_tags' => new MethodDefinition(
+                'array',
+                [
+                    'dataContainer' => DataContainer::class,
+                    'tags' => 'array',
+                ]
+            ),
+            'config.onshow' => new MethodDefinition(
+                'array',
+                [
+                    'modalData' => 'array',
+                    'recordData' => 'array',
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'list.sorting.paste_button' => new MethodDefinition(
+                'string',
+                [
+                    'dataContainer' => DataContainer::class,
+                    'recordData' => 'array',
+                    'table' => 'string',
+                    'isCircularReference' => 'bool',
+                    'clipboardData' => 'array',
+                    'children' => 'array',
+                    'previousLabel' => 'string',
+                    'nextLabel' => 'string',
+                ]
+            ),
+            'list.sorting.child_record' => new MethodDefinition(
+                'string',
+                [
+                    'recordData' => 'array',
+                ]
+            ),
+            'list.sorting.header' => new MethodDefinition(
+                'array',
+                [
+                    'currentHeaderLabels' => 'array',
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'list.sorting.panel_callback.subpanel' => new MethodDefinition(
+                'string',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'list.label.group' => new MethodDefinition(
+                'string',
+                [
+                    'group' => 'string',
+                    'mode' => 'string',
+                    'field' => 'string',
+                    'recordData' => 'array',
+                    'dataContainer' => DataContainer::class,
+                ]
+            ),
+            'list.label.label' => new MethodDefinition(
+                'array',
+                [
+                    'recordData' => 'array',
+                    'currentLabel' => 'string',
+                    'dataContainer' => DataContainer::class,
                     // Since there are multiple parameters for multiple calls, we cannot
-                    // safely assume the correct parameter names and types
-                    []
-                )
+                    // safely assume the following correct parameter names and types
+                ]
             ),
-            'config.ondelete' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'dataContainer' => DataContainer::class,
-                        'id' => 'int',
-                    ]
-                )
+            'list.global_operations.{operation}.button' => new MethodDefinition(
+                'string',
+                [
+                    'buttonHref' => '?string',
+                    'label' => 'string',
+                    'title' => 'string',
+                    'className' => 'string',
+                    'htmlAttributes' => 'string',
+                    'table' => 'string',
+                    'rootRecordIds' => 'array',
+                ]
             ),
-            'config.oncut' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
+            'list.operations.{operation}.button' => new MethodDefinition(
+                'string',
+                [
+                    'recordData' => 'array',
+                    'buttonHref' => '?string',
+                    'label' => 'string',
+                    'title' => 'string',
+                    'icon' => '?string',
+                    'htmlAttributes' => 'string',
+                    'table' => 'string',
+                    'rootRecordIds' => 'array',
+                    'childRecordIds' => 'array',
+                    'isCircularReference' => 'bool',
+                    'previousLabel' => 'string',
+                    'nextLabel' => 'string',
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
-            'config.oncopy' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'id' => 'int',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
+            'fields.{field}.options' => new MethodDefinition(
+                'array',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
-            'config.oncreate_version' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'table' => 'string',
-                        'pid' => 'int',
-                        'versionNumber' => 'int',
-                        'recordData' => 'array',
-                    ]
-                )
+            'fields.{field}.input_field' => new MethodDefinition(
+                'string',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
-            'config.onrestore_version' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'table' => 'string',
-                        'pid' => 'int',
-                        'versionNumber' => 'int',
-                        'recordData' => 'array',
-                    ]
-                )
+            'fields.{field}.load' => new MethodDefinition(
+                null,
+                [
+                    'currentValue' => null,
+                    // Since there are multiple parameters for multiple calls, we cannot
+                    // safely assume the following correct parameter names and types
+                ]
             ),
-            'config.onundo' => new CallbackDefinition(
-                new MethodDefinition(
-                    'void',
-                    [
-                        'table' => 'string',
-                        'recordData' => 'array',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
+            'fields.{field}.save' => new MethodDefinition(
+                null,
+                [
+                    'currentValue' => null,
+                    // Since there are multiple parameters for multiple calls, we cannot
+                    // safely assume the following correct parameter names and types
+                ]
             ),
-            'config.oninvalidate_cache_tags' => new CallbackDefinition(
-                new MethodDefinition(
-                    'array',
-                    [
-                        'dataContainer' => DataContainer::class,
-                        'tags' => 'array',
-                    ]
-                )
+            'fields.{field}.wizard' => new MethodDefinition(
+                'string',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
-            'config.onshow' => new CallbackDefinition(
-                new MethodDefinition(
-                    'array',
-                    [
-                        'modalData' => 'array',
-                        'recordData' => 'array',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
-            ),
-            'list.sorting.paste_button' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'dataContainer' => DataContainer::class,
-                        'recordData' => 'array',
-                        'table' => 'string',
-                        'isCircularReference' => 'bool',
-                        'clipboardData' => 'array',
-                        'children' => 'array',
-                        'previousLabel' => 'string',
-                        'nextLabel' => 'string',
-                    ]
-                )
-            ),
-            'list.sorting.child_record' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'recordData' => 'array',
-                    ]
-                )
-            ),
-            'list.sorting.header' => new CallbackDefinition(
-                new MethodDefinition(
-                    'array',
-                    [
-                        'currentHeaderLabels' => 'array',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
-            ),
-            'list.sorting.panel_callback.subpanel' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
-            ),
-            'list.label.group' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'group' => 'string',
-                        'mode' => 'string',
-                        'field' => 'string',
-                        'recordData' => 'array',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                )
-            ),
-            'list.label.label' => new CallbackDefinition(
-                new MethodDefinition(
-                    'array',
-                    [
-                        'recordData' => 'array',
-                        'currentLabel' => 'string',
-                        'dataContainer' => DataContainer::class,
-                        // Since there are multiple parameters for multiple calls, we cannot
-                        // safely assume the following correct parameter names and types
-                    ]
-                )
-            ),
-            'list.global_operations.{operation}.button' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'buttonHref' => '?string',
-                        'label' => 'string',
-                        'title' => 'string',
-                        'className' => 'string',
-                        'htmlAttributes' => 'string',
-                        'table' => 'string',
-                        'rootRecordIds' => 'array',
-                    ]
-                ),
-                ['operation']
-            ),
-            'list.operations.{operation}.button' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'recordData' => 'array',
-                        'buttonHref' => '?string',
-                        'label' => 'string',
-                        'title' => 'string',
-                        'icon' => '?string',
-                        'htmlAttributes' => 'string',
-                        'table' => 'string',
-                        'rootRecordIds' => 'array',
-                        'childRecordIds' => 'array',
-                        'isCircularReference' => 'bool',
-                        'previousLabel' => 'string',
-                        'nextLabel' => 'string',
-                        'dataContainer' => DataContainer::class,
-                    ]
-                ),
-                ['operation']
-            ),
-            'fields.{field}.options' => new CallbackDefinition(
-                new MethodDefinition(
-                    'array',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                ),
-                ['field']
-            ),
-            'fields.{field}.input_field' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                ),
-                ['field']
-            ),
-            'fields.{field}.load' => new CallbackDefinition(
-                new MethodDefinition(
-                    null,
-                    [
-                        'currentValue' => null,
-                        // Since there are multiple parameters for multiple calls, we cannot
-                        // safely assume the following correct parameter names and types
-                    ]
-                ),
-                ['field']
-            ),
-            'fields.{field}.save' => new CallbackDefinition(
-                new MethodDefinition(
-                    null,
-                    [
-                        'currentValue' => null,
-                        // Since there are multiple parameters for multiple calls, we cannot
-                        // safely assume the following correct parameter names and types
-                    ]
-                ),
-                ['field']
-            ),
-            'fields.{field}.wizard' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                ),
-                ['field']
-            ),
-            'fields.{field}.xlabel' => new CallbackDefinition(
-                new MethodDefinition(
-                    'string',
-                    [
-                        'dataContainer' => DataContainer::class,
-                    ]
-                ),
-                ['field']
+            'fields.{field}.xlabel' => new MethodDefinition(
+                'string',
+                [
+                    'dataContainer' => DataContainer::class,
+                ]
             ),
         ];
     }

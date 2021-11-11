@@ -10,22 +10,14 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\MakerBundle\Code;
+namespace Contao\MakerBundle;
 
-use Contao\MakerBundle\Model\MethodDefinition;
 use Symfony\Bundle\MakerBundle\Str;
 
 class SignatureGenerator
 {
     public function generate(MethodDefinition $method, string $methodName): string
     {
-        $returnType = $method->getReturnType();
-
-        if (null !== $returnType && class_exists($returnType, true)) {
-            $returnType = Str::getShortClassName($returnType);
-        }
-
-        $returnType = $returnType ? ': '.$returnType : '';
         $parameterTemplates = [];
 
         foreach ($method->getParameters() as $name => $type) {
@@ -53,6 +45,22 @@ class SignatureGenerator
             $parameterTemplates[] = $parameterTemplate;
         }
 
-        return sprintf('public function %s(%s)%s', $methodName, implode(', ', $parameterTemplates), $returnType);
+        return sprintf(
+            'public function %s(%s)%s',
+            $methodName,
+            implode(', ', $parameterTemplates),
+            $this->getReturnType($method)
+        );
+    }
+
+    private function getReturnType(MethodDefinition $method): string
+    {
+        $returnType = $method->getReturnType();
+
+        if (null !== $returnType && class_exists($returnType, true)) {
+            $returnType = Str::getShortClassName($returnType);
+        }
+
+        return $returnType ? ': '.$returnType : '';
     }
 }

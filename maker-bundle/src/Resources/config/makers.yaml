@@ -11,6 +11,26 @@ services:
         tags:
             - { name: maker.command }
 
+    contao_maker.maker.dca-callback:
+        class: Contao\MakerBundle\Maker\MakeDcaCallback
+        arguments:
+            - '@contao.framework'
+            - '@contao_maker.generator.class'
+            - '@contao.resource_finder'
+            - '@contao_maker.signature_generator'
+            - '@contao_maker.import_extractor'
+        tags:
+            - { name: maker.command }
+
+    contao_maker.maker.event-listener:
+        class: Contao\MakerBundle\Maker\MakeEventListener
+        arguments:
+            - '@contao_maker.generator.class'
+            - '@contao_maker.signature_generator'
+            - '@contao_maker.import_extractor'
+        tags:
+            - { name: maker.command }
+
     contao_maker.maker.frontend_module:
         class: Contao\MakerBundle\Maker\MakeFrontendModule
         arguments:
@@ -27,27 +47,7 @@ services:
         class: Contao\MakerBundle\Maker\MakeHook
         arguments:
             - '@contao_maker.generator.class'
-            - '@contao_maker.code.signature_generator'
-            - '@contao_maker.code.import_extractor'
-        tags:
-            - { name: maker.command }
-
-    contao_maker.maker.event-listener:
-        class: Contao\MakerBundle\Maker\MakeEventListener
-        arguments:
-            - '@contao_maker.generator.class'
-            - '@contao_maker.code.signature_generator'
-            - '@contao_maker.code.import_extractor'
-        tags:
-            - { name: maker.command }
-
-    contao_maker.maker.dca-callback:
-        class: Contao\MakerBundle\Maker\MakeDcaCallback
-        arguments:
-            - '@contao.framework'
-            - '@contao_maker.generator.class'
-            - '@contao.resource_finder'
-            - '@contao_maker.code.signature_generator'
-            - '@contao_maker.code.import_extractor'
+            - '@contao_maker.signature_generator'
+            - '@contao_maker.import_extractor'
         tags:
             - { name: maker.command }

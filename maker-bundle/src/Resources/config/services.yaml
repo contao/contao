@@ -1,4 +1,10 @@
 services:
+    contao_maker.contao_directory_locator:
+        class: Contao\MakerBundle\Filesystem\ContaoDirectoryLocator
+        arguments:
+            - '@filesystem'
+            - '%kernel.project_dir%'
+
     contao_maker.generator.template:
         class: Contao\MakerBundle\Generator\TemplateGenerator
         arguments:
@@ -24,17 +30,11 @@ services:
             - '@contao_maker.translation.xliff_merger'
             - '@contao_maker.contao_directory_locator'
 
+    contao_maker.import_extractor:
+        class: Contao\MakerBundle\ImportExtractor
+
+    contao_maker.signature_generator:
+        class: Contao\MakerBundle\SignatureGenerator
+
     contao_maker.translation.xliff_merger:
         class: Contao\MakerBundle\Translation\XliffMerger
-
-    contao_maker.contao_directory_locator:
-        class: Contao\MakerBundle\Filesystem\ContaoDirectoryLocator
-        arguments:
-            - '@filesystem'
-            - '%kernel.project_dir%'
-
-    contao_maker.code.import_extractor:
-        class: Contao\MakerBundle\Code\ImportExtractor
-
-    contao_maker.code.signature_generator:
-        class: Contao\MakerBundle\Code\SignatureGenerator

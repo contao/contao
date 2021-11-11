@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\MakerBundle\Tests\Code;
+namespace Contao\MakerBundle\Tests\Generator;
 
-use Contao\MakerBundle\Code\SignatureGenerator;
-use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\MakerBundle\MethodDefinition;
+use Contao\MakerBundle\SignatureGenerator;
 use Contao\Module;
 use Contao\Widget;
 use PHPUnit\Framework\TestCase;

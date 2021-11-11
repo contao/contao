@@ -20,10 +20,10 @@ use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
-use Contao\MakerBundle\Code\ImportExtractor;
-use Contao\MakerBundle\Code\SignatureGenerator;
 use Contao\MakerBundle\Generator\ClassGenerator;
-use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\MakerBundle\ImportExtractor;
+use Contao\MakerBundle\MethodDefinition;
+use Contao\MakerBundle\SignatureGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
@@ -68,7 +68,7 @@ class MakeEventListener extends AbstractMaker
         $argument = $definition->getArgument('event');
         $events = $this->getAvailableEvents();
 
-        $io->writeln(' <fg=green>Suggested Events:</>');
+        $io->writeln(' <fg=green>Suggested events:</>');
         $io->listing(array_keys($events));
 
         $question = new Question($argument->getDescription());

@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\MakerBundle\Tests\Model;
+namespace Contao\MakerBundle\Tests;
 
-use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\MakerBundle\MethodDefinition;
 use PHPUnit\Framework\TestCase;
 
 class MethodDefinitionTest extends TestCase

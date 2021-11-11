@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\MakerBundle\Tests\Code;
+namespace Contao\MakerBundle\Tests;
 
-use Contao\MakerBundle\Code\ImportExtractor;
 use Contao\MakerBundle\Fixtures\ClassOne;
 use Contao\MakerBundle\Fixtures\ClassThree;
 use Contao\MakerBundle\Fixtures\ClassTwo;
-use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\MakerBundle\ImportExtractor;
+use Contao\MakerBundle\MethodDefinition;
 use PHPUnit\Framework\TestCase;
 
 class ImportExtractorTest extends TestCase

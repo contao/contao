@@ -26,10 +26,10 @@ use Contao\FrontendTemplate;
 use Contao\FrontendUser;
 use Contao\Image;
 use Contao\LayoutModel;
-use Contao\MakerBundle\Code\ImportExtractor;
-use Contao\MakerBundle\Code\SignatureGenerator;
 use Contao\MakerBundle\Generator\ClassGenerator;
-use Contao\MakerBundle\Model\MethodDefinition;
+use Contao\MakerBundle\ImportExtractor;
+use Contao\MakerBundle\MethodDefinition;
+use Contao\MakerBundle\SignatureGenerator;
 use Contao\MemberModel;
 use Contao\Model;
 use Contao\Module;
@@ -86,7 +86,7 @@ class MakeHook extends AbstractMaker
         $argument = $definition->getArgument('hook');
         $hooks = $this->getAvailableHooks();
 
-        $io->writeln(' <fg=green>Suggested Hooks:</>');
+        $io->writeln(' <fg=green>Suggested hooks:</>');
         $io->listing(array_keys($hooks));
 
         $question = new Question($argument->getDescription());

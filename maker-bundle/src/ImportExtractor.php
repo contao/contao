@@ -10,9 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\MakerBundle\Code;
-
-use Contao\MakerBundle\Model\MethodDefinition;
+namespace Contao\MakerBundle;
 
 class ImportExtractor
 {
