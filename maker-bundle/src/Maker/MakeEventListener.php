@@ -12,14 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Maker;
 
-use Contao\CoreBundle\Event\FilterPageTypeEvent;
-use Contao\CoreBundle\Event\GenerateSymlinksEvent;
-use Contao\CoreBundle\Event\ImageSizesEvent;
-use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Event\RobotsTxtEvent;
-use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\MakerBundle\Generator\ClassGenerator;
 use Contao\MakerBundle\ImportExtractor;
 use Contao\MakerBundle\MethodDefinition;
@@ -33,6 +25,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Yaml\Yaml;
 
 class MakeEventListener extends AbstractMaker
 {
@@ -121,55 +114,13 @@ class MakeEventListener extends AbstractMaker
      */
     private function getAvailableEvents(): array
     {
-        $availableEvents = [
-            'contao.backend_menu_build' => new MethodDefinition(
-                'void',
-                ['event' => MenuEvent::class]
-            ),
-            'contao.generate_symlinks' => new MethodDefinition(
-                'void',
-                ['event' => GenerateSymlinksEvent::class]
-            ),
-            'contao.image_sizes_all' => new MethodDefinition(
-                'void',
-                ['event' => ImageSizesEvent::class]
-            ),
-            'contao.image_sizes_user' => new MethodDefinition(
-                'void',
-                ['event' => ImageSizesEvent::class]
-            ),
-            'contao.preview_url_create' => new MethodDefinition(
-                'void',
-                ['event' => PreviewUrlCreateEvent::class]
-            ),
-            'contao.preview_url_convert' => new MethodDefinition(
-                'void',
-                ['event' => PreviewUrlConvertEvent::class]
-            ),
-            'contao.robots_txt' => new MethodDefinition(
-                'void',
-                ['event' => RobotsTxtEvent::class]
-            ),
-            'contao.slug_valid_characters' => new MethodDefinition(
-                'void',
-                ['event' => SlugValidCharactersEvent::class]
-            ),
-        ];
+        $yaml = Yaml::parseFile(__DIR__.'/../Resources/config/events.yaml');
+        $events = [];
 
-        $eventsByClassName = [
-            FilterPageTypeEvent::class,
-        ];
-
-        foreach ($eventsByClassName as $className) {
-            // Reduce array so only existing event classes are provided
-            if (!class_exists($className, true)) {
-                continue;
-            }
-
-            // Map a default MethodDefinition to every remaining entry
-            $availableEvents[$className] = new MethodDefinition('void', ['event' => $className]);
+        foreach ($yaml['events'] as $key => $config) {
+            $events[$key] = new MethodDefinition($config['return_type'], $config['arguments']);
         }
 
-        return $availableEvents;
+        return $events;
     }
 }
