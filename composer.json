@@ -151,7 +151,7 @@
         "ext-fileinfo": "*",
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^2.0",
-        "contao/test-case": "^4.4",
+        "contao/test-case": "^4.5",
         "phpunit/phpunit": "^8.5",
         "symfony/browser-kit": "^5.3",
         "symfony/phpunit-bridge": "^5.3"

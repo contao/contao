@@ -128,6 +128,8 @@ class OptInToken implements OptInTokenInterface
         $email = $this->framework->createInstance(Email::class);
         $email->subject = $this->model->emailSubject;
         $email->text = $this->model->emailText;
+        $email->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+        $email->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
         $email->sendTo($this->model->email);
     }
 
