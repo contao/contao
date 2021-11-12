@@ -160,6 +160,12 @@ abstract class ContaoTestCase extends TestCase
 
     /**
      * Mocks a class with magic properties.
+     *
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T&MockObject
      */
     protected function mockClassWithProperties(string $class, array $properties = []): MockObject
     {
