@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
@@ -541,6 +542,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('security.helper', $security);
         $container->set('contao.resource_finder', $finder);
         $container->set('parameter_bag', $parameterBag);
+        $container->set('request_stack', new RequestStack());
 
         $pass = new AddResourcesPathsPass();
         $pass->process($container);
