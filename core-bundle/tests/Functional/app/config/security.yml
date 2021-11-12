@@ -6,9 +6,8 @@ security:
         contao.security.frontend_user_provider:
             id: contao.security.frontend_user_provider
 
-    encoders:
-        Contao\User:
-            algorithm: auto
+    password_hashers:
+        Contao\User: auto
 
     firewalls:
         dev:
