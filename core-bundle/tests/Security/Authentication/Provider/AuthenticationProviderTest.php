@@ -19,7 +19,6 @@ use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContext;
@@ -84,7 +83,6 @@ class AuthenticationProviderTest extends TestCase
      */
     public function testLocksUserOnInvalidTwoFactorCode(int $initialAttempts, int $lockedSeconds): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->username = 'foo';
         $user->loginAttempts = $initialAttempts;
@@ -170,7 +168,6 @@ class AuthenticationProviderTest extends TestCase
 
     public function testIgnoresAnyExceptionButInvalidTwoFactor(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->username = 'foo';
         $user->loginAttempts = 0;
@@ -257,7 +254,6 @@ class AuthenticationProviderTest extends TestCase
 
     public function testHandlesContaoUsers(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginAttempts = 0;
@@ -377,7 +373,6 @@ class AuthenticationProviderTest extends TestCase
 
     public function testLocksAUserAfterAFailedLoginAttempt(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->locked = 0;
@@ -450,7 +445,6 @@ class AuthenticationProviderTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "checkCredentials" hook has been deprecated %s.');
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getPassword', 'save']);
         $user->username = 'foo';
         $user->loginAttempts = 0;

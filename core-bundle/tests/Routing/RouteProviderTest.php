@@ -21,7 +21,6 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -39,7 +38,6 @@ class RouteProviderTest extends TestCase
 
     public function testGetsARouteByName(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
@@ -99,7 +97,6 @@ class RouteProviderTest extends TestCase
 
     public function testGetsMultipleRoutesByNames(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
         $page1->rootId = 1;
@@ -108,7 +105,6 @@ class RouteProviderTest extends TestCase
         $page1->language = 'en';
         $page1->rootLanguage = 'en';
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
         $page2->rootId = 1;
@@ -141,7 +137,6 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
@@ -175,7 +170,6 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
@@ -649,7 +643,6 @@ class RouteProviderTest extends TestCase
 
     public function testIgnoresRoutesWithoutRootId(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->createPage('de', 'foo');
         $page->rootId = null;
 
@@ -676,7 +669,6 @@ class RouteProviderTest extends TestCase
 
     public function testIgnoresPagesWithNoRootPageFoundException(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->createPage('de', 'foo');
         $page
             ->expects($this->once())
@@ -700,10 +692,7 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
+    private function mockRequestWithPath(string $path, array $languages = ['en'])
     {
         $request = $this->createMock(Request::class);
         $request
@@ -724,22 +713,15 @@ class RouteProviderTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFramework(Adapter $pageAdapter = null): ContaoFramework
+    private function mockFramework(Adapter $pageAdapter = null)
     {
         return $this->mockContaoFramework([PageModel::class => $pageAdapter]);
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null, string $urlSuffix = '.html'): PageModel
+    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null, string $urlSuffix = '.html')
     {
         mt_srand(++$this->pageModelAutoIncrement);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = $this->pageModelAutoIncrement;
         $page->rootId = 1;
@@ -756,12 +738,8 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function createRootPage(string $language, string $alias, bool $fallback = true): PageModel
+    private function createRootPage(string $language, string $alias, bool $fallback = true)
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = ++$this->pageModelAutoIncrement;
         $page->rootId = 1;

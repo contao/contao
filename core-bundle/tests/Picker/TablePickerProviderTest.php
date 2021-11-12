@@ -23,7 +23,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -460,9 +459,6 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @param ItemInterface&MockObject $menu
-     */
     private function createMenuTableProvider(array $modules, string $current, ItemInterface $menu = null): TablePickerProvider
     {
         $expectedItems = [];
@@ -509,10 +505,7 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @return PickerConfig&MockObject
-     */
-    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array $expectedCurrent = null): PickerConfig
+    private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array $expectedCurrent = null)
     {
         if (!$expectedCurrent && '' !== $current) {
             $expectedCurrent = [[$current]];
@@ -552,10 +545,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $config;
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithDcaLoader(string $table): ContaoFramework
+    private function mockFrameworkWithDcaLoader(string $table)
     {
         $dcaLoader = $this->createMock(DcaLoader::class);
         $dcaLoader
@@ -574,10 +564,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $framework;
     }
 
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouterWithExpectedParams(array ...$consecutive): RouterInterface
+    private function mockRouterWithExpectedParams(array ...$consecutive)
     {
         $expected = [];
 
@@ -596,10 +583,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $router;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockUnusedConnection(): Connection
+    private function mockUnusedConnection()
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -610,10 +594,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $connection;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnectionForQuery(string $table, int $id, $data, bool $dynamicPtable = false): Connection
+    private function mockConnectionForQuery(string $table, int $id, $data, bool $dynamicPtable = false)
     {
         $expr = $this->createMock(ExpressionBuilder::class);
         $expr
@@ -681,10 +662,7 @@ class TablePickerProviderTest extends ContaoTestCase
         return $connection;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslatorWithExpectedCalls(array $modules): TranslatorInterface
+    private function mockTranslatorWithExpectedCalls(array $modules)
     {
         $expected = [];
 

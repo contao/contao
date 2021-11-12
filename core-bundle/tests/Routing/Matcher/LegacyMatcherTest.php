@@ -14,13 +14,11 @@ namespace Contao\CoreBundle\Tests\Routing\Matcher;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -365,7 +363,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'bar';
 
@@ -423,7 +420,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -484,7 +480,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -567,10 +562,7 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest(Request::create('foo.html'));
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
+    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = [])
     {
         $classes = [];
         $callbacks = [];
@@ -618,10 +610,7 @@ class LegacyMatcherTest extends TestCase
         return $framework;
     }
 
-    /**
-     * @return RequestMatcherInterface&MockObject
-     */
-    private function mockRequestMatcher(string $pathInfo = null, array $match = []): RequestMatcherInterface
+    private function mockRequestMatcher(string $pathInfo = null, array $match = [])
     {
         $expectCalls = null === $pathInfo ? 1 : 2;
 

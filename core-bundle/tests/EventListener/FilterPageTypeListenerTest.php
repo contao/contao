@@ -17,7 +17,6 @@ use Contao\CoreBundle\EventListener\FilterPageTypeListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class FilterPageTypeListenerTest extends TestCase
 {
@@ -119,14 +118,10 @@ class FilterPageTypeListenerTest extends TestCase
         $this->assertSame(['foo', 'error_404'], $event->getOptions());
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(?int $pid, int $id = null): DataContainer
+    private function mockDataContainer(?int $pid, int $id = null)
     {
         $activeRecord = array_filter(compact('id', 'pid'), static fn ($v): bool => null !== $v);
 
-        /** @var DataContainer&MockObject */
         return $this->mockClassWithProperties(
             DataContainer::class,
             ['activeRecord' => empty($activeRecord) ? null : (object) $activeRecord]

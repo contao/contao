@@ -29,7 +29,6 @@ use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\RequestToken;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -115,14 +114,6 @@ class ContaoFrameworkTest extends TestCase
     {
         $framework = $this->mockFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        /** @var Config&MockObject $config */
-        $config = $framework->getAdapter(Config::class);
-        $config
-            ->expects($this->once())
-            ->method('preload')
-        ;
-
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -150,14 +141,6 @@ class ContaoFrameworkTest extends TestCase
     {
         $framework = $this->mockFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        /** @var Config&MockObject $config */
-        $config = $framework->getAdapter(Config::class);
-        $config
-            ->expects($this->once())
-            ->method('preload')
-        ;
-
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -189,14 +172,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = $this->mockFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        /** @var Config&MockObject $config */
-        $config = $framework->getAdapter(Config::class);
-        $config
-            ->expects($this->once())
-            ->method('preload')
-        ;
-
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -672,7 +647,6 @@ class ContaoFrameworkTest extends TestCase
         Environment::set('scriptFilename', 'bar');
         Input::setUnusedGet('foo', 'bar');
 
-        /** @var PageModel&MockObject $model */
         $model = $this
             ->getMockBuilder(PageModel::class)
             ->disableOriginalConstructor()
@@ -696,9 +670,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    /**
-     * @param TokenChecker&MockObject $tokenChecker
-     */
     private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
         $requestStack = new RequestStack();

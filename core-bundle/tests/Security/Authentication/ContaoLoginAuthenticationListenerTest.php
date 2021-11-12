@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -169,10 +168,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         );
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequest(bool $isPost = true, SessionInterface $session = null): Request
+    private function mockRequest(bool $isPost = true, SessionInterface $session = null)
     {
         if (null === $session) {
             $session = $this->createMock(SessionInterface::class);

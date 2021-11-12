@@ -42,7 +42,6 @@ class ImageResultTest extends TestCase
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $sizeConfiguration = [100, 200, 'crop'];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
         $locator = $this->getLocatorMock($pictureFactory);
@@ -123,7 +122,6 @@ class ImageResultTest extends TestCase
         $sources = ['sources result'];
         $img = ['img result'];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -157,7 +155,6 @@ class ImageResultTest extends TestCase
 
         $img = ['src' => 'https://static.url/foo/bar/foobar.png', 'other' => 'bar'];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -195,7 +192,6 @@ class ImageResultTest extends TestCase
             ),
         ];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -216,7 +212,6 @@ class ImageResultTest extends TestCase
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $dimensions = $this->createMock(ImageDimensions::class);
 
-        /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $image
             ->expects($this->once())
@@ -224,7 +219,6 @@ class ImageResultTest extends TestCase
             ->willReturn($dimensions)
         ;
 
-        /** @var ImageFactoryInterface&MockObject $imageFactory */
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
             ->expects($this->once())
@@ -233,7 +227,6 @@ class ImageResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
@@ -254,7 +247,6 @@ class ImageResultTest extends TestCase
     {
         $dimensions = $this->createMock(ImageDimensions::class);
 
-        /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $image
             ->expects($this->once())
@@ -285,7 +277,6 @@ class ImageResultTest extends TestCase
         $projectDir = 'project/dir';
         $filePath = 'project/dir/file/path';
 
-        /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $image
             ->expects($this->exactly(2))
@@ -512,9 +503,6 @@ class ImageResultTest extends TestCase
         $imageResult->createIfDeferred();
     }
 
-    /**
-     * @return PictureFactoryInterface&MockObject
-     */
     private function getPictureFactoryMock($filePathOrImage, $sizeConfiguration, PictureInterface $picture)
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
@@ -528,9 +516,6 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    /**
-     * @return ContainerInterface&MockObject
-     */
     private function getLocatorMock(PictureFactoryInterface $pictureFactory = null, string $staticUrl = null)
     {
         $locator = $this->createMock(ContainerInterface::class);

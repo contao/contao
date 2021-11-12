@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing\Page;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PageRouteTest extends TestCase
 {
@@ -108,12 +107,8 @@ class PageRouteTest extends TestCase
         $this->assertSame(['https'], $route->getSchemes());
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
     private function mockPageModel(array $properties = []): PageModel
     {
-        /** @var PageModel&MockObject */
         return $this->mockClassWithProperties(
             PageModel::class,
             array_merge(

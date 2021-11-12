@@ -17,7 +17,6 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -248,12 +247,8 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance($defaults, Request::create('/'));
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
     private function mockPageModel(string $language, string $urlPrefix): PageModel
     {
-        /** @var PageModel&MockObject */
         return $this->mockClassWithProperties(
             PageModel::class,
             [

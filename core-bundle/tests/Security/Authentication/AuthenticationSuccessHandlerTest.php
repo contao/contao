@@ -19,7 +19,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
@@ -52,7 +51,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
@@ -84,7 +82,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
@@ -151,7 +148,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['save']);
         $user->username = 'foobar';
         $user->lastLogin = time() - 3600;
@@ -215,7 +211,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
@@ -257,7 +252,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
@@ -297,7 +291,6 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
         $request = new Request([], $parameters);
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user->lastLogin = time() - 3600;
         $user->currentLogin = time() - 1800;
@@ -329,14 +322,12 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn('http://localhost/failure')
         ;
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
         $user
             ->expects($this->once())
             ->method('save')
         ;
 
-        /** @var TwoFactorToken&MockObject $token */
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())
@@ -385,10 +376,8 @@ class AuthenticationSuccessHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['save']);
 
-        /** @var TwoFactorToken&MockObject $token */
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())

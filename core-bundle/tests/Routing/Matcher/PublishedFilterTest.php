@@ -16,7 +16,6 @@ use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -63,7 +62,6 @@ class PublishedFilterTest extends TestCase
 
     public function testRemovesARouteIfThePageHasNotBeenPublished(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->isPublic = false;
         $pageModel->rootIsPublic = true;
@@ -95,7 +93,6 @@ class PublishedFilterTest extends TestCase
 
     public function testRemovesARouteIfTheRootPageHasNotBeenPublished(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->isPublic = true;
         $pageModel->rootIsPublic = false;
@@ -127,7 +124,6 @@ class PublishedFilterTest extends TestCase
 
     public function testDoesNotRemoveARouteIfThePageHasBeenPublished(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->isPublic = true;
         $pageModel->rootIsPublic = true;
@@ -156,10 +152,7 @@ class PublishedFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    /**
-     * @return TokenChecker&MockObject
-     */
-    private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
+    private function mockTokenChecker(bool $isPreviewMode = false)
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker

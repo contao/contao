@@ -18,7 +18,6 @@ use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInt
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +32,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private const SECRET = 'foobar';
 
     private ExpiringTokenBasedRememberMeServices $listener;
+    private $repository;
 
     private static array $options = [
         'name' => 'REMEMBERME',
@@ -45,11 +45,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         'always_remember_me' => false,
         'remember_me_parameter' => 'autologin',
     ];
-
-    /**
-     * @var RememberMeRepository&MockObject
-     */
-    private $repository;
 
     protected function setUp(): void
     {
@@ -253,10 +248,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return RememberMe&MockObject
-     */
-    private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null): RememberMe
+    private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null)
     {
         $entity = $this->createMock(RememberMe::class);
 

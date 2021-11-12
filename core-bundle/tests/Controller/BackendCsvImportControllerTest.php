@@ -22,7 +22,6 @@ use Contao\FileUpload;
 use Contao\Message;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -361,12 +360,8 @@ class BackendCsvImportControllerTest extends TestCase
         );
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(): DataContainer
+    private function mockDataContainer()
     {
-        /** @var DataContainer&MockObject $mock */
         $mock = $this->mockClassWithProperties(DataContainer::class);
         $mock->id = 1;
         $mock->table = 'tl_content';
@@ -376,10 +371,8 @@ class BackendCsvImportControllerTest extends TestCase
 
     /**
      * Mocks a Contao framework with a file uploader.
-     *
-     * @return ContaoFramework&MockObject
      */
-    private function mockContaoFrameworkWithUploader(): ContaoFramework
+    private function mockContaoFrameworkWithUploader()
     {
         $uploader = $this->createMock(FileUpload::class);
         $uploader

@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -306,10 +304,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @return Request&MockObject
-     */
-    protected function getRequestMock(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request
+    private function getRequestMock(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true)
     {
         $request = $this->createMock(Request::class);
         $request->headers = new HeaderBag();
@@ -341,24 +336,7 @@ class PreviewToolbarListenerTest extends TestCase
         return $request;
     }
 
-    /**
-     * @return ScopeMatcher&MockObject
-     */
-    protected function mockScopeMatcher(): ScopeMatcher
-    {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->method('isFrontendMainRequest')
-            ->willReturn(true)
-        ;
-
-        return $scopeMatcher;
-    }
-
-    /**
-     * @return Environment&MockObject
-     */
-    private function getTwigMock(): Environment
+    private function getTwigMock()
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -369,10 +347,7 @@ class PreviewToolbarListenerTest extends TestCase
         return $twig;
     }
 
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouterWithContext(): RouterInterface
+    private function mockRouterWithContext()
     {
         $router = $this->createMock(RouterInterface::class);
         $router

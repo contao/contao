@@ -17,7 +17,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Statement;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -157,10 +156,7 @@ class WebsiteRootsConfigProviderTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(Statement $statement): Connection
+    private function mockConnection(Statement $statement)
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager

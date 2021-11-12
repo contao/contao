@@ -16,12 +16,10 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
 use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityTokenInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 class SwitchUserListenerTest extends TestCase
@@ -54,10 +52,7 @@ class SwitchUserListenerTest extends TestCase
         $listener($event);
     }
 
-    /**
-     * @return LoggerInterface&MockObject
-     */
-    private function mockLogger(string $message = null): LoggerInterface
+    private function mockLogger(string $message = null)
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -82,10 +77,7 @@ class SwitchUserListenerTest extends TestCase
         return $logger;
     }
 
-    /**
-     * @return TokenStorageInterface&MockObject
-     */
-    private function mockTokenStorage(string $username = null): TokenStorageInterface
+    private function mockTokenStorage(string $username = null)
     {
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
@@ -109,7 +101,6 @@ class SwitchUserListenerTest extends TestCase
 
     private function mockSwitchUserEvent(string $username = null): SwitchUserEvent
     {
-        /** @var UserInterface&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['getUserIdentifier']);
 
         if (null !== $username) {

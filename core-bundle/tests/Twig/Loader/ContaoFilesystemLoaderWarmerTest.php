@@ -16,7 +16,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ContaoFilesystemLoaderWarmerTest extends TestCase
@@ -161,9 +160,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         $warmer->onKernelRequest($this->createMock(RequestEvent::class));
     }
 
-    /**
-     * @return TemplateLocator&MockObject
-     */
     private function getTemplateLocatorMock(array $themeDirectories = [], array $resourcesPaths = [])
     {
         $locator = $this->createMock(TemplateLocator::class);

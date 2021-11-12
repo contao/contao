@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Config\Dumper;
 use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -49,10 +48,7 @@ class CombinedFileDumperTest extends TestCase
         $dumper->setHeader('No opening PHP tag');
     }
 
-    /**
-     * @return Filesystem&MockObject
-     */
-    private function mockFilesystem($expects): Filesystem
+    private function mockFilesystem($expects)
     {
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
@@ -64,10 +60,7 @@ class CombinedFileDumperTest extends TestCase
         return $filesystem;
     }
 
-    /**
-     * @return PhpFileLoader&MockObject
-     */
-    private function mockLoader(): PhpFileLoader
+    private function mockLoader()
     {
         $loader = $this->createMock(PhpFileLoader::class);
         $loader

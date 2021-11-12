@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -141,10 +140,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(json_encode([]), $response->getContent());
     }
 
-    /**
-     * @return RouterInterface&MockObject
-     */
-    private function mockRouter(): RouterInterface
+    private function mockRouter()
     {
         $router = $this->createMock(RouterInterface::class);
         $router
@@ -156,10 +152,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $router;
     }
 
-    /**
-     * @return TokenChecker&MockObject
-     */
-    private function mockTokenChecker(string $frontendUsername = null, bool $previewMode = true): TokenChecker
+    private function mockTokenChecker(string $frontendUsername = null, bool $previewMode = true)
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
@@ -175,10 +168,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $tokenChecker;
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurity(): Security
+    private function mockSecurity()
     {
         $user = $this->createMock(BackendUser::class);
 
@@ -191,10 +181,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $security;
     }
 
-    /**
-     * @return Environment&MockObject
-     */
-    private function getTwigMock(): Environment
+    private function getTwigMock()
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -205,10 +192,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         return $twig;
     }
 
-    /**
-     * @return CsrfTokenManagerInterface&MockObject
-     */
-    private function mockTokenManager(): CsrfTokenManagerInterface
+    private function mockTokenManager()
     {
         $twig = $this->createMock(CsrfTokenManagerInterface::class);
         $twig

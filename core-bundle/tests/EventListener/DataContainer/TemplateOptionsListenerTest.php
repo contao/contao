@@ -17,12 +17,10 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
 use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
 use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -148,10 +146,7 @@ class TemplateOptionsListenerTest extends TestCase
         $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function getFramework(): ContaoFramework
+    private function getFramework()
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
         $controllerAdapter
@@ -171,12 +166,8 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
-    /**
-     * @return DataContainer&MockObject
-     */
-    private function mockDataContainer(string $table, array $activeRecord = []): DataContainer
+    private function mockDataContainer(string $table, array $activeRecord = [])
     {
-        /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;
 

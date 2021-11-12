@@ -317,7 +317,7 @@ class TokenCheckerTest extends TestCase
         $this->assertNull($tokenChecker->getFrontendUsername());
     }
 
-    private function mockUser(string $class): User
+    private function mockUser(string $class)
     {
         /** @var User&MockObject $user */
         $user = $this->createPartialMock($class, []);
@@ -327,10 +327,7 @@ class TokenCheckerTest extends TestCase
         return $user;
     }
 
-    /**
-     * @return RequestStack&MockObject
-     */
-    private function mockRequestStack(Request $request = null): RequestStack
+    private function mockRequestStack(Request $request = null)
     {
         if (null === $request) {
             $request = $this->createMock(Request::class);
@@ -345,10 +342,7 @@ class TokenCheckerTest extends TestCase
         return $requestStack;
     }
 
-    /**
-     * @return FirewallMap&MockObject
-     */
-    private function mockFirewallMapWithConfigContext(string $context): FirewallMap
+    private function mockFirewallMapWithConfigContext(string $context)
     {
         $config = new FirewallConfig('', '', null, true, false, null, $context);
 
@@ -361,10 +355,7 @@ class TokenCheckerTest extends TestCase
         return $map;
     }
 
-    /**
-     * @return SessionInterface&MockObject
-     */
-    private function mockSessionWithToken(TokenInterface $token): SessionInterface
+    private function mockSessionWithToken(TokenInterface $token)
     {
         $session = $this->createMock(SessionInterface::class);
         $session

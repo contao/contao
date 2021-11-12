@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\CrawlCommand;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Nyholm\Psr7\Uri;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -109,10 +108,7 @@ class CrawlCommandTest extends TestCase
         return new BaseUriCollection([new Uri('https://contao.org')]);
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function createEscargotFactory(BaseUriCollection $baseUriCollection = null): Factory
+    private function createEscargotFactory(BaseUriCollection $baseUriCollection = null)
     {
         if (null === $baseUriCollection) {
             $baseUriCollection = $this->createBaseUriCollection();
@@ -128,10 +124,7 @@ class CrawlCommandTest extends TestCase
         return $escargotFactory;
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function createValidEscargotFactory(Escargot $escargot, BaseUriCollection $baseUriCollection = null): Factory
+    private function createValidEscargotFactory(Escargot $escargot, BaseUriCollection $baseUriCollection = null)
     {
         $escargotFactory = $this->createEscargotFactory($baseUriCollection);
         $escargotFactory
@@ -148,10 +141,7 @@ class CrawlCommandTest extends TestCase
         return $escargotFactory;
     }
 
-    /**
-     * @return Factory&MockObject
-     */
-    private function createInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false): Factory
+    private function createInvalidEscargotFactory(\Exception $exception, bool $withExistingJobId = false)
     {
         $escargotFactory = $this->createEscargotFactory();
 

@@ -23,7 +23,6 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -87,7 +86,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsAResponseIfTheUserIsAFrontendUser(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -113,7 +111,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyDisabled(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -140,7 +137,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testRedirectsAfterTwoFactorHasBeenDisabled(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -186,7 +182,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyEnabled(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -218,7 +213,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testFailsIfTheTwoFactorCodeIsInvalid(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -249,7 +243,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testDoesNotRedirectIfTheTwoFactorCodeIsInvalid(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -282,7 +275,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -322,7 +314,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testShowsTheBackupCodes(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -350,7 +341,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testGeneratesTheBackupCodes(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -361,7 +351,6 @@ class TwoFactorControllerTest extends TestCase
             $this->mockSecurityHelper($user, true)
         );
 
-        /** @var BackupCodeManager&MockObject $backupCodeManager */
         $backupCodeManager = $container->get(BackupCodeManager::class);
         $backupCodeManager
             ->expects($this->once())
@@ -396,10 +385,7 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('translator', $services);
     }
 
-    /**
-     * @return Authenticator&MockObject
-     */
-    private function mockAuthenticator(FrontendUser $user = null, bool $return = null): Authenticator
+    private function mockAuthenticator(FrontendUser $user = null, bool $return = null)
     {
         $authenticator = $this->createMock(Authenticator::class);
 
@@ -415,10 +401,7 @@ class TwoFactorControllerTest extends TestCase
         return $authenticator;
     }
 
-    /**
-     * @return AuthenticationUtils&MockObject
-     */
-    private function mockAuthenticationUtils(AuthenticationException $authenticationException = null): AuthenticationUtils
+    private function mockAuthenticationUtils(AuthenticationException $authenticationException = null)
     {
         $authenticationUtils = $this->createMock(AuthenticationUtils::class);
 
@@ -433,10 +416,7 @@ class TwoFactorControllerTest extends TestCase
         return $authenticationUtils;
     }
 
-    /**
-     * @return Security&MockObject
-     */
-    private function mockSecurityHelper(UserInterface $user = null, bool $isFullyAuthenticated = false): Security
+    private function mockSecurityHelper(UserInterface $user = null, bool $isFullyAuthenticated = false)
     {
         $security = $this->createMock(Security::class);
         $security
@@ -453,12 +433,8 @@ class TwoFactorControllerTest extends TestCase
         return $security;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(): PageModel
+    private function mockPageModel()
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->enforceTwoFactor = '';
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -22,7 +21,6 @@ use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageUrlListenerTest extends TestCase
@@ -32,7 +30,6 @@ class PageUrlListenerTest extends TestCase
      */
     public function testGeneratesAlias(array $activeRecord, string $expectedAlias): void
     {
-        /** @var MockObject&PageModel $page */
         $page = $this->mockClassWithProperties(PageModel::class, $activeRecord);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails']);
@@ -53,7 +50,6 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($page->alias)
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -143,7 +139,6 @@ class PageUrlListenerTest extends TestCase
             [$aliasIds]
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -182,7 +177,6 @@ class PageUrlListenerTest extends TestCase
             [$aliasIds]
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -713,7 +707,6 @@ class PageUrlListenerTest extends TestCase
 
     public function testPreventsNumericAliases(): void
     {
-        /** @var MockObject&PageModel $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails']);
@@ -740,7 +733,6 @@ class PageUrlListenerTest extends TestCase
             ->willReturn('Numeric aliases are not supported!')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
 
         $listener = new PageUrlListener(
@@ -773,7 +765,6 @@ class PageUrlListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -808,7 +799,6 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -846,7 +836,6 @@ class PageUrlListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -878,7 +867,6 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -974,13 +962,8 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var DataContainer&MockObject $dc1 */
         $dc1 = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
-
-        /** @var DataContainer&MockObject $dc2 */
         $dc2 = $this->mockClassWithProperties(DataContainer::class, ['id' => 2]);
-
-        /** @var DataContainer&MockObject $dc3 */
         $dc3 = $this->mockClassWithProperties(DataContainer::class, ['id' => 3]);
 
         $listener->generateAlias('foo', $dc1);
@@ -1030,7 +1013,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1064,7 +1046,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1152,7 +1133,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1232,7 +1212,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1261,7 +1240,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1293,7 +1271,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1327,7 +1304,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1382,7 +1358,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1463,7 +1438,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1492,7 +1466,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1524,7 +1497,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1558,7 +1530,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1574,10 +1545,7 @@ class PageUrlListenerTest extends TestCase
         $listener->validateUrlPrefix('.html', $dc);
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false): Connection
+    private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false)
     {
         $connection = $this->createMock(Connection::class);
 
@@ -1614,10 +1582,7 @@ class PageUrlListenerTest extends TestCase
         return $connection;
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithPages(array $inputData, array ...$data): ContaoFramework
+    private function mockFrameworkWithPages(array $inputData, array ...$data)
     {
         $pagesById = [];
         $pagesByPid = [];
@@ -1661,10 +1626,7 @@ class PageUrlListenerTest extends TestCase
         );
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function mockTranslator(string $messageKey = null, string $argument = null): TranslatorInterface
+    private function mockTranslator(string $messageKey = null, string $argument = null)
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -1690,10 +1652,7 @@ class PageUrlListenerTest extends TestCase
         return $translator;
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function mockConnectionWithStatement(): Connection
+    private function mockConnectionWithStatement()
     {
         $statement = $this->createMock(Result::class);
         $statement

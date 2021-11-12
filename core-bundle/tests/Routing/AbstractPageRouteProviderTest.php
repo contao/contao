@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\Routing\AbstractPageRouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Route;
 
 class AbstractPageRouteProviderTest extends TestCase
@@ -406,12 +405,8 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): PageModel
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128)
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->type = $root ? 'root' : 'regular';
         $pageModel->rootLanguage = $language;

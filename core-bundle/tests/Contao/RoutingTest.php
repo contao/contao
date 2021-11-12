@@ -14,14 +14,12 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\Frontend;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -425,7 +423,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->domain = '';
         $page->rootLanguage = 'en';
@@ -480,7 +477,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->domain = 'domain.com';
         $page->rootLanguage = 'en';
@@ -545,7 +541,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->domain = 'domain.de';
         $page->rootLanguage = 'de';
@@ -579,10 +574,7 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    /**
-     * @return ContaoFramework&MockObject
-     */
-    private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null): ContaoFramework
+    private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null)
     {
         if (null === $pageAdapter) {
             $pageAdapter = $this->mockAdapter(['findByAliases']);

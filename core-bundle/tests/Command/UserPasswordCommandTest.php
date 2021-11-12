@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -142,7 +141,6 @@ class UserPasswordCommandTest extends TestCase
 
     public function testFailsIfTheUsernameIsUnknown(): void
     {
-        /** @var Connection&MockObject $connection */
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -168,7 +166,6 @@ class UserPasswordCommandTest extends TestCase
      */
     public function testResetsPassword(string $username, string $password): void
     {
-        /** @var Connection&MockObject $connection */
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
