@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener\Security;
 
-use Contao\CoreBundle\EventListener\TwoFactorFrontendListener;
+use Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendUser;

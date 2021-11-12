@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
+/**
+ * @deprecated using this success handler is deprecated, register a listener on the "Symfony\Component\Security\Http\Event\LogoutEvent" event instead
+ */
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
     private ScopeMatcher $scopeMatcher;

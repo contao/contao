@@ -32,7 +32,6 @@ security:
                 path: contao_backend_logout
                 handlers:
                     - contao.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
@@ -52,7 +51,6 @@ security:
                 path: contao_frontend_logout
                 handlers:
                     - contao.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
     access_control:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

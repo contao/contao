@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\PhpunitExtension;
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
-use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
 use Contao\GdImage;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
@@ -36,12 +35,6 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 
         if (class_exists(LegacyLogoutHandlerListener::class)) {
             $deprecations[LogoutHandler::class] = ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'];
-
-            $deprecations[LogoutSuccessHandler::class] = [
-                '%sThe "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" class is deprecated%s',
-                '%sclass extends "Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler" that is deprecated%s',
-                '%sThe "Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface" interface is deprecated%s',
-            ];
         }
 
         if (!class_exists(Event::class)) {

@@ -29,7 +29,6 @@ security:
                 handlers:
                     - contao.security.logout_handler
                     - contao_manager.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
@@ -49,7 +48,6 @@ security:
                 path: contao_frontend_logout
                 handlers:
                     - contao.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
     # Backwards compatibility
     access_control:
