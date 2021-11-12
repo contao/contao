@@ -19,6 +19,7 @@ use Contao\FrontendTemplate;
 use Contao\ModuleModel;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -197,8 +198,11 @@ class FrontendModuleControllerTest extends TestCase
         return $this->container;
     }
 
+    /**
+     * @return ModuleModel&MockObject
+     */
     private function getModuleModel(): ModuleModel
     {
-        return (new \ReflectionClass(ModuleModel::class))->newInstanceWithoutConstructor();
+        return $this->mockClassWithProperties(ModuleModel::class);
     }
 }

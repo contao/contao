@@ -20,6 +20,7 @@ use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -263,7 +264,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->container);
 
-        $controller(new Request(), $this->getContentModel(), 'main');
+        $controller($currentRequest, $this->getContentModel(), 'main');
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
@@ -281,8 +282,11 @@ class ContentElementControllerTest extends TestCase
         return $this->container;
     }
 
+    /**
+     * @return ContentModel&MockObject
+     */
     private function getContentModel(): ContentModel
     {
-        return (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+        return $this->mockClassWithProperties(ContentModel::class);
     }
 }

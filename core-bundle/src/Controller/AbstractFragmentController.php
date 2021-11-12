@@ -85,11 +85,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
      */
     protected function createTemplate(Model $model, string $templateName): Template
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
-
         if (isset($this->options['template'])) {
             $templateName = $this->options['template'];
         }
+
+        $request = $this->get('request_stack')->getCurrentRequest();
 
         if ($model->customTpl) {
             // Use the custom template unless it is a back end request
