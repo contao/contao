@@ -999,26 +999,26 @@ class tl_page extends Contao\Backend
 	/**
 	 * Return the title tag from the associated page layout
 	 *
-	 * @param Contao\PageModel $model
+	 * @param Contao\PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getTitleTag(Contao\PageModel $model)
+	public function getTitleTag(Contao\PageModel $page)
 	{
-		$model->loadDetails();
+		$page->loadDetails();
 
 		/** @var Contao\LayoutModel $layout */
-		if (!$layout = $model->getRelated('layout'))
+		if (!$layout = $page->getRelated('layout'))
 		{
 			return '';
 		}
 
-		global $objPage;
+		$origObjPage = $GLOBALS['objPage'] ?? null;
 
-		// Set the global page object so we can replace the insert tags
-		$objPage = $model;
+		// Override the global page object, so we can replace the insert tags
+		$GLOBALS['objPage'] = $page;
 
-		return implode(
+		$title = implode(
 			'%s',
 			array_map(
 				static function ($strVal)
@@ -1028,6 +1028,10 @@ class tl_page extends Contao\Backend
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
 		);
+
+		$GLOBALS['objPage'] = $origObjPage;
+
+		return $title;
 	}
 
 	/**
