@@ -19,8 +19,8 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
 /**
- * @deprecated using this success handler is deprecated;
- *             register a listener on the "Symfony\Component\Security\Http\Event\LogoutEvent" event instead
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+ *             the Symfony\Component\Security\Http\Event\LogoutEvent event instead
  */
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {

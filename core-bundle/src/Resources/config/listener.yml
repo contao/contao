@@ -380,15 +380,34 @@ services:
             - { name: kernel.reset, method: reset }
 
     contao.listener.switch_user:
-        class: Contao\CoreBundle\EventListener\Security\SwitchUserListener
+        alias: Contao\CoreBundle\EventListener\Security\SwitchUserListener
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\EventListener\Security\SwitchUserListener" instead.
+
+    contao.listener.two_factor.frontend:
+        alias: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener" instead.
+
+    Contao\CoreBundle\EventListener\Security\LogoutSuccessListener:
+        arguments:
+            - '@security.http_utils'
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_listener
+
+    Contao\CoreBundle\EventListener\Security\SwitchUserListener:
         arguments:
             - '@security.token_storage'
             - '@logger'
         tags:
             - kernel.event_listener
 
-    contao.listener.two_factor.frontend:
-        class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
+    Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
@@ -404,12 +423,5 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
-        tags:
-            - kernel.event_listener
-
-    Contao\CoreBundle\EventListener\Security\LogoutSuccessListener:
-        arguments:
-            - '@security.http_utils'
-            - '@contao.routing.scope_matcher'
         tags:
             - kernel.event_listener
