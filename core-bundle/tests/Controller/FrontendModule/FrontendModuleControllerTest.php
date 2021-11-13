@@ -33,6 +33,7 @@ class FrontendModuleControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
+        $this->container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         System::setContainer($this->container);
     }
@@ -191,7 +192,6 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
-        $$this->container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         return $this->container;
     }
