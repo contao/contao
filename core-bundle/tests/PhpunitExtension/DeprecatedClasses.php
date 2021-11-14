@@ -33,8 +33,12 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
             PaletteNotFoundException::class => ['%sUsing the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
             PalettePositionException::class => ['%sUsing the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
             PictureFactoryWithoutResizeOptionsStub::class => ['%s\PictureFactoryWithoutResizeOptionsStub::create()" method will require a new "ResizeOptions|null $options" argument in the next major version%s'],
-            ContaoLoginAuthenticationListener::class => ['%sclass extends "Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener"%s'],
-            AuthenticationProvider::class => ['%sclass extends "Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider"%s'],
+            ContaoLoginAuthenticationListener::class => ['%s"Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener" class is deprecated%s'],
+            AuthenticationProvider::class => [
+                '%s"Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider" class is deprecated%s',
+                '%s"Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider" class is deprecated%s',
+                '%s"Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface" interface is deprecated%s',
+            ],
         ];
 
         if (class_exists(LegacyLogoutHandlerListener::class)) {
