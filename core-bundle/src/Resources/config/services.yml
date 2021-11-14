@@ -67,6 +67,13 @@ services:
 
     Contao\CoreBundle\Controller\BackendController: ~
 
+    Contao\CoreBundle\Controller\BackendDashboard\WelcomeScreenController:
+        tags:
+            - { name: contao.dashboard_widget, priority: 100 }
+        arguments: ['@contao.framework', '@translator']
+
+    Contao\CoreBundle\Controller\BackendModule\BackendModuleController: ~
+
     Contao\CoreBundle\Controller\BackendCsvImportController:
         arguments:
             - '@contao.framework'
@@ -296,6 +303,7 @@ services:
     contao.fragment.handler:
         class: Contao\CoreBundle\Fragment\FragmentHandler
         decorates: fragment.handler
+        public: true
         arguments:
             - ~ # fragment renderer locator
             - '@contao.fragment.handler.inner'
@@ -311,6 +319,7 @@ services:
 
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
+        public: true
 
     contao.fragment.renderer.forward:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
