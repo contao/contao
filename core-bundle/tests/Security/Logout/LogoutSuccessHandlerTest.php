@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Logout;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -25,7 +24,6 @@ use Symfony\Component\Security\Http\HttpUtils;
  */
 class LogoutSuccessHandlerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
 
     public function testRedirectsToAGivenUrl(): void
     {
@@ -46,8 +44,6 @@ class LogoutSuccessHandlerTest extends TestCase
             ->method('isBackendRequest')
             ->willReturn(false)
         ;
-
-        $this->expectDeprecation('Since symfony/security-http 5.1: The "%s" class is deprecated, use "Symfony\Component\Security\Http\EventListener\DefaultLogoutListener" instead.');
 
         $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
 

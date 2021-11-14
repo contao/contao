@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
+use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
+use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
 use Contao\GdImage;
@@ -31,6 +33,8 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
             PaletteNotFoundException::class => ['%sUsing the "Contao\CoreBundle\Exception\PaletteNotFoundException" class has been deprecated %s.'],
             PalettePositionException::class => ['%sUsing the "Contao\CoreBundle\Exception\PalettePositionException" class has been deprecated %s.'],
             PictureFactoryWithoutResizeOptionsStub::class => ['%s\PictureFactoryWithoutResizeOptionsStub::create()" method will require a new "ResizeOptions|null $options" argument in the next major version%s'],
+            ContaoLoginAuthenticationListener::class => ['%sclass extends "Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener"%s'],
+            AuthenticationProvider::class => ['%sclass extends "Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider"%s'],
         ];
 
         if (class_exists(LegacyLogoutHandlerListener::class)) {
