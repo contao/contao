@@ -150,6 +150,12 @@ class CheckBox extends Widget
 			}
 		}
 
+		$arrCheckboxGroupConfig = array_merge(array(
+			'collapseInactive' => false,
+			'overwriteSession' => false,
+			'fallbackToFirst' => false
+		), $this->checkboxGroup ?? array());
+
 		foreach ($arrAllOptions as $i=>$arrOption)
 		{
 			// Single dimension array
@@ -164,10 +170,37 @@ class CheckBox extends Widget
 			$img = 'folPlus.svg';
 			$display = 'none';
 
-			if (!isset($state[$id]) || !empty($state[$id]))
+			if ($arrCheckboxGroupConfig['overwriteSession'] || !isset($state[$id]) || !empty($state[$id]))
 			{
-				$img = 'folMinus.svg';
-				$display = 'block';
+				$blnIsOpen = !$arrCheckboxGroupConfig['collapseInactive'] && !isset($state[$id]) || !empty($state[$id]);
+
+				if ($arrCheckboxGroupConfig['overwriteSession'] && $arrCheckboxGroupConfig['collapseInactive'])
+				{
+					$blnIsOpen = false;
+				}
+
+				if ($arrCheckboxGroupConfig['fallbackToFirst'] && !$blnIsOpen && $blnFirst && empty($this->varValue))
+				{
+					$blnIsOpen = true;
+				}
+
+				if (!$blnIsOpen && $arrCheckboxGroupConfig['collapseInactive'])
+				{
+					foreach ($arrOption as $v)
+					{
+						if ($this->isChecked($v))
+						{
+							$blnIsOpen = true;
+							break;
+						}
+					}
+				}
+
+				if ($blnIsOpen)
+				{
+					$img = 'folMinus.svg';
+					$display = 'block';
+				}
 			}
 
 			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');Backend.getScrollOffset();return false">' . Image::getHtml($img) . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
