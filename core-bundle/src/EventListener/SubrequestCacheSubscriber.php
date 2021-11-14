@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Fragment\FragmentResponseStack;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategy;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * The Symfony HttpCache ships with a ResponseCacheStrategy, which is used to
@@ -40,53 +38,36 @@ use Symfony\Contracts\Service\ResetInterface;
  *
  * @internal
  */
-class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterface
+class SubrequestCacheSubscriber implements EventSubscriberInterface
 {
-    public const MERGE_CACHE_HEADER = 'Contao-Merge-Cache-Control';
-
-    private ?ResponseCacheStrategy $currentStrategy = null;
-
     /**
-     * @var array<ResponseCacheStrategy>
+     * @deprecated Deprecated since Contao 4.13 and will be removed in Contao 5.0. Use FragmentResponseStack::MERGE_CACHE_HEADER instead.
      */
-    private array $strategyStack = [];
+    public const MERGE_CACHE_HEADER = FragmentResponseStack::MERGE_CACHE_HEADER;
+
+    private FragmentResponseStack $fragmentResponses;
+
+    public function __construct(FragmentResponseStack $fragmentResponses)
+    {
+        $this->fragmentResponses = $fragmentResponses;
+    }
 
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (HttpKernelInterface::MAIN_REQUEST !== $event->getRequestType()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        if ($this->currentStrategy) {
-            $this->strategyStack[] = $this->currentStrategy;
-        }
-
-        $this->currentStrategy = new ResponseCacheStrategy();
+        $this->fragmentResponses->init();
     }
 
     public function onKernelResponse(ResponseEvent $event): void
     {
-        $response = $event->getResponse();
-        $isMainRequest = HttpKernelInterface::MAIN_REQUEST === $event->getRequestType();
-
-        if ($this->currentStrategy && $response->headers->has(self::MERGE_CACHE_HEADER)) {
-            if ($isMainRequest) {
-                $this->currentStrategy->update($response);
-            } elseif ($response->headers->has('Cache-Control')) {
-                $this->currentStrategy->add($response);
-            }
+        if (!$event->isMainRequest()) {
+            $this->fragmentResponses->add($event->getResponse());
+        } else {
+            $this->fragmentResponses->finalize($event->getResponse());
         }
-
-        if ($isMainRequest) {
-            $this->currentStrategy = array_pop($this->strategyStack);
-            $response->headers->remove(self::MERGE_CACHE_HEADER);
-        }
-    }
-
-    public function reset(): void
-    {
-        $this->currentStrategy = null;
-        $this->strategyStack = [];
     }
 
     public static function getSubscribedEvents(): array

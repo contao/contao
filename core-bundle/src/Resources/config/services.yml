@@ -312,6 +312,10 @@ services:
     contao.fragment.registry:
         class: Contao\CoreBundle\Fragment\FragmentRegistry
 
+    Contao\CoreBundle\Fragment\FragmentResponseStack:
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.fragment.renderer.forward:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
