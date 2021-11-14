@@ -24,7 +24,6 @@ use Symfony\Component\Security\Http\HttpUtils;
  */
 class LogoutSuccessHandlerTest extends TestCase
 {
-
     public function testRedirectsToAGivenUrl(): void
     {
         $request = new Request();
