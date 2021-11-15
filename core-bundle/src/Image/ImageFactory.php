@@ -198,7 +198,6 @@ class ImageFactory implements ImageFactoryInterface
         if (isset($size[2])) {
             // Database record
             if (is_numeric($size[2])) {
-                /** @var ImageSizeModel $imageModel */
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
@@ -274,7 +273,6 @@ class ImageFactory implements ImageFactoryInterface
             throw new \RuntimeException('Contao framework was not initialized');
         }
 
-        /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 

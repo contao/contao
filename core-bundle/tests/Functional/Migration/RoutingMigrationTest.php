@@ -117,7 +117,6 @@ class RoutingMigrationTest extends FunctionalTestCase
         /** @var ContaoFramework $framework */
         $framework = static::getContainer()->get('contao.framework');
 
-        /** @var Config $config */
         $config = $framework->getAdapter(Config::class);
         $config->set('folderUrl', $folderUrl);
 

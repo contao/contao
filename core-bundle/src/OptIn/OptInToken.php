@@ -63,7 +63,6 @@ class OptInToken implements OptInTokenInterface
             return;
         }
 
-        /** @var OptInModel $adapter */
         $adapter = $this->framework->getAdapter(OptInModel::class);
         $prefix = strtok($this->getIdentifier(), '-');
 

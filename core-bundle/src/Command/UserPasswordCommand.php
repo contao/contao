@@ -88,7 +88,6 @@ class UserPasswordCommand extends Command
 
         $this->framework->initialize();
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $minLength = $config->get('minPasswordLength') ?: 8;
 

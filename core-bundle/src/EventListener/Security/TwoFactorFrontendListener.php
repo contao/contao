@@ -75,7 +75,6 @@ class TwoFactorFrontendListener
             return;
         }
 
-        /** @var PageModel $adapter */
         $adapter = $this->framework->getAdapter(PageModel::class);
 
         // Check if user has two-factor disabled but is enforced

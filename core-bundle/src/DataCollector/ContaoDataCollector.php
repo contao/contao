@@ -244,9 +244,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         /** @var PageModel $objPage */
         $objPage = $GLOBALS['objPage'];
 
-        /** @var LayoutModel $layout */
-        $layout = $this->framework->getAdapter(LayoutModel::class);
-
-        return $layout->findByPk($objPage->layoutId);
+        return $this->framework->getAdapter(LayoutModel::class)->findByPk($objPage->layoutId);
     }
 }

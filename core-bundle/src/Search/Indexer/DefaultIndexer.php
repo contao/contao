@@ -89,7 +89,6 @@ class DefaultIndexer implements IndexerInterface
 
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
         try {
@@ -112,7 +111,6 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
         $search->removeEntry((string) $document->getUri());
     }
