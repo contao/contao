@@ -368,7 +368,7 @@ abstract class Module extends Frontend
 						}
 						catch (RouteNotFoundException $exception)
 						{
-							// Ignore
+							$href = null;
 						}
 						catch (ExceptionInterface $exception)
 						{
@@ -385,7 +385,7 @@ abstract class Module extends Frontend
 						}
 						catch (RouteNotFoundException $exception)
 						{
-							// Ignore
+							$href = null;
 						}
 						catch (ExceptionInterface $exception)
 						{

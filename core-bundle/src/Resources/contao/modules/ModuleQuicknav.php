@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Front end module "quick navigation".
@@ -142,11 +143,20 @@ class ModuleQuicknav extends Module
 				// Check hidden pages
 				if (!$objSubpage->hide || $this->showHidden)
 				{
+					try
+					{
+						$href = $objSubpage->getFrontendUrl();
+					}
+					catch (RouteNotFoundException $e)
+					{
+						$href = null;
+					}
+
 					$arrPages[] = array
 					(
 						'level' => ($level - 2),
 						'title' => StringUtil::specialchars(StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
-						'href' => $objSubpage->getFrontendUrl(),
+						'href' => $href,
 						'link' => StringUtil::stripInsertTags($objSubpage->title),
 						'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 					);
