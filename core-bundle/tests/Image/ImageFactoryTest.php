@@ -36,7 +36,6 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
@@ -110,7 +109,6 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
@@ -164,7 +162,6 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
@@ -252,7 +249,6 @@ class ImageFactoryTest extends TestCase
             'zoom' => 50,
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -261,7 +257,6 @@ class ImageFactoryTest extends TestCase
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = 0.5;
         $filesModel->importantPartY = 0.5;
@@ -465,7 +460,6 @@ class ImageFactoryTest extends TestCase
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
         $imageMock = $this->createMock(ImageInterface::class);
 
-        /** @var Filesystem&MockObject $filesystem */
         $filesystem = $this
             ->getMockBuilder(Filesystem::class)
             ->onlyMethods(['exists'])
@@ -515,10 +509,7 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imagine = $this->createMock(ImagineInterface::class);
-
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
@@ -539,7 +530,6 @@ class ImageFactoryTest extends TestCase
 
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = $invalid[0];
         $filesModel->importantPartY = $invalid[1];

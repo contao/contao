@@ -19,7 +19,6 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
@@ -27,7 +26,6 @@ class StudioTest extends TestCase
 {
     public function testImplementsServiceSubscriberInterface(): void
     {
-        /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $studio = new Studio($locator, '/project/dir', 'files', ['jpg']);
 

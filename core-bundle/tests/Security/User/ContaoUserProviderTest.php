@@ -19,7 +19,6 @@ use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -59,7 +58,6 @@ class ContaoUserProviderTest extends TestCase
 
     public function testRefreshesTheUser(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -73,7 +71,6 @@ class ContaoUserProviderTest extends TestCase
 
     public function testValidatesTheSessionLifetime(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -127,7 +124,6 @@ class ContaoUserProviderTest extends TestCase
 
     public function testLogsOutUsersWhoHaveBeenInactiveForTooLong(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -212,7 +208,6 @@ class ContaoUserProviderTest extends TestCase
 
     public function testUpgradesPasswords(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
         $user->password = 'superhash';
@@ -250,7 +245,6 @@ class ContaoUserProviderTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postAuthenticate" hook has been deprecated %s.');
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 

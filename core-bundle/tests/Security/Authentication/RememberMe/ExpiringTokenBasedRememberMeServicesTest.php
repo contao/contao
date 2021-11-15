@@ -33,6 +33,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private const SECRET = 'foobar';
 
     private ExpiringTokenBasedRememberMeServices $listener;
+    private $repository;
 
     private static array $options = [
         'name' => 'REMEMBERME',
@@ -45,11 +46,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         'always_remember_me' => false,
         'remember_me_parameter' => 'autologin',
     ];
-
-    /**
-     * @var RememberMeRepository&MockObject
-     */
-    private $repository;
 
     protected function setUp(): void
     {
@@ -259,7 +255,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null): RememberMe
     {
         $entity = $this->createMock(RememberMe::class);
-
         $entity
             ->method('getValue')
             ->willReturn($value)

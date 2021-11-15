@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
@@ -27,7 +26,6 @@ class AuthenticatorTest extends TestCase
         $secret = $this->generateSecret(1);
         $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
@@ -45,7 +43,6 @@ class AuthenticatorTest extends TestCase
 
         $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
@@ -60,7 +57,6 @@ class AuthenticatorTest extends TestCase
     {
         $secret = $this->generateSecret(3);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
@@ -103,7 +99,6 @@ class AuthenticatorTest extends TestCase
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="180" height="180" viewBox="0 0 180 180"><rect x="0" y="0" width="180" height="180" fill="#fefefe"/>
             SVG;
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = 'foobar';
 

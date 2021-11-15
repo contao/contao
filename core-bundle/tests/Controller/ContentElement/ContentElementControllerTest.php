@@ -43,7 +43,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $controller(new Request(), $this->getContentModel(), 'main');
+        $controller(new Request(), $this->mockContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTypeFragmentOptions(): void
@@ -52,7 +52,7 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_foo'));
         $controller->setFragmentOptions(['type' => 'foo']);
 
-        $controller(new Request(), $this->getContentModel(), 'main');
+        $controller(new Request(), $this->mockContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
@@ -61,12 +61,12 @@ class ContentElementControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_bar'));
         $controller->setFragmentOptions(['template' => 'ce_bar']);
 
-        $controller(new Request(), $this->getContentModel(), 'main');
+        $controller(new Request(), $this->mockContentModel(), 'main');
     }
 
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->customTpl = 'ce_bar';
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_bar');
@@ -83,7 +83,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testDoesNotCreateTheTemplateFromACustomTplInTheBackend(): void
     {
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->customTpl = 'ce_bar';
 
         $request = new Request([], [], ['_scope' => 'backend']);
@@ -109,7 +109,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), $this->getContentModel(), 'main');
+        $response = $controller(new Request(), $this->mockContentModel(), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('', $template['cssID']);
@@ -118,7 +118,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testSetsTheHeadlineFromTheModel(): void
     {
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->headline = serialize(['unit' => 'h6', 'value' => 'foobar']);
 
         $controller = new TestController();
@@ -133,7 +133,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testSetsTheCssIdAndClassFromTheModel(): void
     {
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->cssID = serialize(['foo', 'bar']);
 
         $controller = new TestController();
@@ -151,7 +151,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), $this->getContentModel(), 'left');
+        $response = $controller(new Request(), $this->mockContentModel(), 'left');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('left', $template['inColumn']);
@@ -162,7 +162,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), $this->getContentModel(), 'main', ['first', 'last']);
+        $response = $controller(new Request(), $this->mockContentModel(), 'main', ['first', 'last']);
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('ce_test first last', $template['class']);
@@ -170,7 +170,7 @@ class ContentElementControllerTest extends TestCase
 
     public function testAddsTheCacheTags(): void
     {
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->id = 42;
 
         $responseTagger = $this->createMock(ResponseTagger::class);
@@ -195,7 +195,7 @@ class ContentElementControllerTest extends TestCase
         $start = strtotime('+2 weeks', $time);
         $expires = $start - $time;
 
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->start = (string) $start;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
@@ -214,7 +214,7 @@ class ContentElementControllerTest extends TestCase
         $stop = strtotime('+2 weeks', $time);
         $expires = $stop - $time;
 
-        $model = $this->getContentModel();
+        $model = $this->mockContentModel();
         $model->stop = (string) $stop;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test_shared_max_age');
@@ -234,7 +234,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestSharedMaxAgeController();
         $controller->setContainer($container);
 
-        $response = $controller(new Request(), $this->getContentModel(), 'main');
+        $response = $controller(new Request(), $this->mockContentModel(), 'main');
 
         $this->assertNull($response->getMaxAge());
     }
@@ -261,7 +261,7 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->container);
 
-        $controller($currentRequest, $this->getContentModel(), 'main');
+        $controller($currentRequest, $this->mockContentModel(), 'main');
     }
 
     private function mockContainerWithFrameworkTemplate(string $templateName): ContainerBuilder
@@ -282,7 +282,7 @@ class ContentElementControllerTest extends TestCase
     /**
      * @return ContentModel&MockObject
      */
-    private function getContentModel(): ContentModel
+    private function mockContentModel(): ContentModel
     {
         return $this->mockClassWithProperties(ContentModel::class);
     }

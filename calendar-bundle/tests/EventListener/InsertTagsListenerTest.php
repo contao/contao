@@ -17,13 +17,11 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\Events;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheCalendarFeedTag(): void
     {
-        /** @var CalendarFeedModel&MockObject $feedModel */
         $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);
         $feedModel->feedBase = 'http://localhost/';
         $feedModel->alias = 'events';
@@ -42,7 +40,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReplacesTheEventTags(): void
     {
-        /** @var CalendarEventsModel&MockObject $eventModel */
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';
@@ -131,7 +128,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testHandlesEmptyUrls(): void
     {
-        /** @var CalendarEventsModel&MockObject $eventModel */
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';

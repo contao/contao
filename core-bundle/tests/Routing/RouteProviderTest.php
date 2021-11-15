@@ -39,7 +39,6 @@ class RouteProviderTest extends TestCase
 
     public function testGetsARouteByName(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
@@ -99,7 +98,6 @@ class RouteProviderTest extends TestCase
 
     public function testGetsMultipleRoutesByNames(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class);
         $page1->id = 17;
         $page1->rootId = 1;
@@ -108,7 +106,6 @@ class RouteProviderTest extends TestCase
         $page1->language = 'en';
         $page1->rootLanguage = 'en';
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class);
         $page2->id = 21;
         $page2->rootId = 1;
@@ -141,7 +138,6 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomain(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
@@ -175,7 +171,6 @@ class RouteProviderTest extends TestCase
 
     public function testHandlesRoutesWithDomainAndPort(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->rootId = 1;
@@ -322,140 +317,140 @@ class RouteProviderTest extends TestCase
     {
         yield 'Sorts host first (1)' => [
             [
-                1 => $this->createPage('en', 'foo'),
-                0 => $this->createPage('en', 'foo', true, 'example.com'),
+                1 => $this->mockPage('en', 'foo'),
+                0 => $this->mockPage('en', 'foo', true, 'example.com'),
             ],
             ['en'],
         ];
 
         yield 'Sorts host first (2)' => [
             [
-                0 => $this->createPage('fr', 'foo', true, 'example.com'),
-                1 => $this->createPage('it', 'foo'),
+                0 => $this->mockPage('fr', 'foo', true, 'example.com'),
+                1 => $this->mockPage('it', 'foo'),
             ],
             ['en'],
         ];
 
         yield 'Sorts by language priority (1)' => [
             [
-                1 => $this->createPage('en', 'foo'),
-                0 => $this->createPage('de', 'foo'),
+                1 => $this->mockPage('en', 'foo'),
+                0 => $this->mockPage('de', 'foo'),
             ],
             ['de', 'en'],
         ];
 
         yield 'Sorts by language priority (2)' => [
             [
-                1 => $this->createPage('fr', 'foo'),
-                0 => $this->createPage('de', 'foo'),
+                1 => $this->mockPage('fr', 'foo'),
+                0 => $this->mockPage('de', 'foo'),
             ],
             ['en', 'de', 'fr'],
         ];
 
         yield 'Sorts by language match (1)' => [
             [
-                1 => $this->createPage('de', 'foo'),
-                0 => $this->createPage('fr', 'foo'),
+                1 => $this->mockPage('de', 'foo'),
+                0 => $this->mockPage('fr', 'foo'),
             ],
             ['fr'],
         ];
 
         yield 'Sorts by language match (2)' => [
             [
-                0 => $this->createPage('it', 'foo'),
-                1 => $this->createPage('de', 'foo'),
+                0 => $this->mockPage('it', 'foo'),
+                1 => $this->mockPage('de', 'foo'),
             ],
             ['it'],
         ];
 
         yield 'Sorts by fallback without language' => [
             [
-                1 => $this->createPage('de', 'foo', false),
-                0 => $this->createPage('fr', 'foo'),
+                1 => $this->mockPage('de', 'foo', false),
+                0 => $this->mockPage('fr', 'foo'),
             ],
             ['en', 'it'],
         ];
 
         yield 'Sorts by folder alias' => [
             [
-                1 => $this->createPage('de', 'foo/bar'),
-                0 => $this->createPage('de', 'foo/bar/baz'),
-                2 => $this->createPage('de', 'foo'),
+                1 => $this->mockPage('de', 'foo/bar'),
+                0 => $this->mockPage('de', 'foo/bar/baz'),
+                2 => $this->mockPage('de', 'foo'),
             ],
             ['en'],
         ];
 
         yield 'Sorts fallback root first' => [
             [
-                2 => $this->createPage('de', 'foo', false),
-                4 => $this->createPage('en', 'foo', false),
-                1 => $this->createPage('de', 'foo/bar', false),
-                0 => $this->createPage('en', 'foo', true, 'example.com'),
-                3 => $this->createPage('en', 'foo/bar', false),
+                2 => $this->mockPage('de', 'foo', false),
+                4 => $this->mockPage('en', 'foo', false),
+                1 => $this->mockPage('de', 'foo/bar', false),
+                0 => $this->mockPage('en', 'foo', true, 'example.com'),
+                3 => $this->mockPage('en', 'foo/bar', false),
             ],
             ['de', 'fr'],
         ];
 
         yield 'Sorts by alias if all of the languages are fallback' => [
             [
-                1 => $this->createPage('en', 'foo'),
-                2 => $this->createPage('ru', 'foo'),
-                3 => $this->createPage('fr', 'foo'),
-                0 => $this->createPage('en', 'foo/bar'),
+                1 => $this->mockPage('en', 'foo'),
+                2 => $this->mockPage('ru', 'foo'),
+                3 => $this->mockPage('fr', 'foo'),
+                0 => $this->mockPage('en', 'foo/bar'),
             ],
             ['de'],
         ];
 
         yield 'Sorts by alias if none of the languages is fallback' => [
             [
-                1 => $this->createPage('en', 'foo', false),
-                2 => $this->createPage('ru', 'foo', false),
-                3 => $this->createPage('fr', 'foo', false),
-                0 => $this->createPage('en', 'foo/bar', false),
+                1 => $this->mockPage('en', 'foo', false),
+                2 => $this->mockPage('ru', 'foo', false),
+                3 => $this->mockPage('fr', 'foo', false),
+                0 => $this->mockPage('en', 'foo/bar', false),
             ],
             ['de'],
         ];
 
         yield 'Sorts by "de" if "de_CH" is accepted' => [
             [
-                1 => $this->createPage('en', 'foo'),
-                0 => $this->createPage('de', 'foo', false),
+                1 => $this->mockPage('en', 'foo'),
+                0 => $this->mockPage('de', 'foo', false),
             ],
             ['de_CH'],
         ];
 
         yield 'Converts "de_CH" to "de-CH"' => [
             [
-                1 => $this->createPage('en', 'foo'),
-                0 => $this->createPage('de-CH', 'foo', false),
+                1 => $this->mockPage('en', 'foo'),
+                0 => $this->mockPage('de-CH', 'foo', false),
             ],
             ['de_CH'],
         ];
 
         yield 'Appends "de" in case "de_CH" is accepted and "de" is not' => [
             [
-                3 => $this->createPage('fr', 'foo', false),
-                0 => $this->createPage('de', 'foo', false),
-                1 => $this->createPage('en', 'foo', false),
-                2 => $this->createPage('it', 'foo'),
+                3 => $this->mockPage('fr', 'foo', false),
+                0 => $this->mockPage('de', 'foo', false),
+                1 => $this->mockPage('en', 'foo', false),
+                2 => $this->mockPage('it', 'foo'),
             ],
             ['de_CH', 'en'],
         ];
 
         yield 'Sorts with parameters' => [
             [
-                1 => $this->createPage('de', 'foo/bar{!parameters}'),
-                0 => $this->createPage('de', 'foo/bar/baz{!parameters}'),
-                2 => $this->createPage('de', 'foo{!parameters}'),
+                1 => $this->mockPage('de', 'foo/bar{!parameters}'),
+                0 => $this->mockPage('de', 'foo/bar/baz{!parameters}'),
+                2 => $this->mockPage('de', 'foo{!parameters}'),
             ],
             ['en'],
         ];
 
         yield 'Sorts with absolute path' => [
             [
-                1 => $this->createPage('de', 'foo/bar{!parameters}'),
-                0 => $this->createPage('de', 'foo/{category}/{alias}'),
-                2 => $this->createPage('de', 'foo{!parameters}'),
+                1 => $this->mockPage('de', 'foo/bar{!parameters}'),
+                0 => $this->mockPage('de', 'foo/{category}/{alias}'),
+                2 => $this->mockPage('de', 'foo{!parameters}'),
             ],
             ['en'],
         ];
@@ -536,9 +531,9 @@ class RouteProviderTest extends TestCase
     public function getRootRoutes(): \Generator
     {
         $pages = [
-            2 => $this->createRootPage('en', 'english-root'),
-            1 => $this->createPage('en', 'index'),
-            0 => $this->createRootPage('de', 'german-root', false),
+            2 => $this->mockRootPage('en', 'english-root'),
+            1 => $this->mockPage('en', 'index'),
+            0 => $this->mockRootPage('de', 'german-root', false),
         ];
 
         $routeNames = [
@@ -554,9 +549,9 @@ class RouteProviderTest extends TestCase
         ];
 
         $pages = [
-            2 => $this->createRootPage('en', 'english-root'),
-            1 => $this->createPage('en', 'index'),
-            0 => $this->createRootPage('de', 'german-root', false),
+            2 => $this->mockRootPage('en', 'english-root'),
+            1 => $this->mockPage('en', 'index'),
+            0 => $this->mockRootPage('de', 'german-root', false),
         ];
 
         $pages[0]->urlPrefix = 'en';
@@ -584,7 +579,7 @@ class RouteProviderTest extends TestCase
      */
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
     {
-        $pageModel = $this->createPage($language, $alias, true, $domain, $scheme, $urlSuffix);
+        $pageModel = $this->mockPage($language, $alias, true, $domain, $scheme, $urlSuffix);
         $pageModel->urlPrefix = $prependLocale ? $language : '';
 
         $pageModel
@@ -649,8 +644,7 @@ class RouteProviderTest extends TestCase
 
     public function testIgnoresRoutesWithoutRootId(): void
     {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
+        $page = $this->mockPage('de', 'foo');
         $page->rootId = null;
 
         $page
@@ -676,8 +670,7 @@ class RouteProviderTest extends TestCase
 
     public function testIgnoresPagesWithNoRootPageFoundException(): void
     {
-        /** @var PageModel&MockObject $page */
-        $page = $this->createPage('de', 'foo');
+        $page = $this->mockPage('de', 'foo');
         $page
             ->expects($this->once())
             ->method('loadDetails')
@@ -735,11 +728,10 @@ class RouteProviderTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function createPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null, string $urlSuffix = '.html'): PageModel
+    private function mockPage(string $language, string $alias, bool $fallback = true, string $domain = '', string $scheme = null, string $urlSuffix = '.html'): PageModel
     {
         mt_srand(++$this->pageModelAutoIncrement);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = $this->pageModelAutoIncrement;
         $page->rootId = 1;
@@ -759,9 +751,8 @@ class RouteProviderTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function createRootPage(string $language, string $alias, bool $fallback = true): PageModel
+    private function mockRootPage(string $language, string $alias, bool $fallback = true): PageModel
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = ++$this->pageModelAutoIncrement;
         $page->rootId = 1;

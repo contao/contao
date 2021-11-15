@@ -72,7 +72,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock($themePaths, $resourcesPaths),
+            $this->mockTemplateLocator($themePaths, $resourcesPaths),
             $projectDir,
             'prod'
         );
@@ -107,7 +107,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock(),
+            $this->mockTemplateLocator(),
             'project/dir',
             'any'
         );
@@ -130,7 +130,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock(),
+            $this->mockTemplateLocator(),
             'project/dir',
             'dev'
         );
@@ -153,7 +153,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock(),
+            $this->mockTemplateLocator(),
             'project/dir',
             'prod'
         );
@@ -164,7 +164,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
     /**
      * @return TemplateLocator&MockObject
      */
-    private function getTemplateLocatorMock(array $themeDirectories = [], array $resourcesPaths = [])
+    private function mockTemplateLocator(array $themeDirectories = [], array $resourcesPaths = []): TemplateLocator
     {
         $locator = $this->createMock(TemplateLocator::class);
         $locator

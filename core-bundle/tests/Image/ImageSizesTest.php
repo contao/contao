@@ -18,7 +18,6 @@ use Contao\CoreBundle\Event\ImageSizesEvent;
 use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -26,15 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ImageSizesTest extends TestCase
 {
     private ImageSizes $imageSizes;
-
-    /**
-     * @var Connection&MockObject
-     */
     private $connection;
-
-    /**
-     * @var EventDispatcherInterface&MockObject
-     */
     private $eventDispatcher;
 
     protected function setUp(): void
@@ -98,7 +89,6 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = true;
 
@@ -114,7 +104,6 @@ class ImageSizesTest extends TestCase
         $this->expectEvent(ContaoCoreEvents::IMAGE_SIZES_USER);
         $this->expectExampleImageSizes();
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 
@@ -128,7 +117,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayHasKey('My theme', $options);
         $this->assertArrayHasKey('42', $options['My theme']);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 
@@ -141,7 +129,6 @@ class ImageSizesTest extends TestCase
         $this->assertArrayNotHasKey('exact', $options);
         $this->assertArrayNotHasKey('My theme', $options);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->isAdmin = false;
 

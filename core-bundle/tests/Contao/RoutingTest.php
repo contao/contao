@@ -425,7 +425,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->domain = '';
         $page->rootLanguage = 'en';
@@ -480,7 +479,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->domain = 'domain.com';
         $page->rootLanguage = 'en';
@@ -545,7 +543,6 @@ class RoutingTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->domain = 'domain.de';
         $page->rootLanguage = 'de';

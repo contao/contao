@@ -18,7 +18,6 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\UserGroupModel;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -118,7 +117,6 @@ class UserCreateCommandTest extends TestCase
      */
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $name, string $email, string $password): void
     {
-        /** @var Connection&MockObject $connection */
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -145,9 +143,6 @@ class UserCreateCommandTest extends TestCase
         yield ['k.jones', 'Kevin Jones', 'k.jones@example.org', 'kevinjones'];
     }
 
-    /**
-     * @param Connection&MockObject $connection
-     */
     private function getCommand(Connection $connection = null, string $password = null): UserCreateCommand
     {
         if (null === $connection) {

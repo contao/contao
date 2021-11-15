@@ -17,7 +17,6 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Widget;
 use Doctrine\Common\Annotations\AnnotationReader;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CustomRgxpListenerTest extends TestCase
@@ -77,7 +76,6 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        /** @var Widget&MockObject $widget */
         $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->once())
@@ -99,7 +97,6 @@ class CustomRgxpListenerTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        /** @var Widget&MockObject $widget */
         $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^foo/i']);
         $widget
             ->expects($this->never())
