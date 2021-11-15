@@ -26,10 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class FrontendModuleControllerTest extends TestCase
 {
-    /**
-     * @var ContainerBuilder
-     */
-    private $container;
+    private ContainerBuilder $container;
 
     protected function setUp(): void
     {

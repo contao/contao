@@ -29,14 +29,14 @@ class RoutingMigrationTest extends FunctionalTestCase
         static::resetDatabaseSchema();
 
         /** @var Connection $connection */
-        $connection = static::$container->get('database_connection');
+        $connection = static::getContainer()->get('database_connection');
 
         foreach ($dropFields as $field) {
             $connection->executeStatement('ALTER TABLE tl_page DROP '.$field);
         }
 
         /** @var ContaoFramework $framework */
-        $framework = static::$container->get('contao.framework');
+        $framework = static::getContainer()->get('contao.framework');
 
         $migration = new RoutingMigration($connection, $framework);
 
@@ -77,7 +77,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         static::resetDatabaseSchema();
 
         /** @var Connection $connection */
-        $connection = static::$container->get('database_connection');
+        $connection = static::getContainer()->get('database_connection');
         $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
         $columns = $connection->createSchemaManager()->listTableColumns('tl_page');
@@ -87,7 +87,7 @@ class RoutingMigrationTest extends FunctionalTestCase
         $this->assertFalse(isset($columns['usefolderurl']));
 
         /** @var ContaoFramework $framework */
-        $framework = static::$container->get('contao.framework');
+        $framework = static::getContainer()->get('contao.framework');
 
         $migration = new RoutingMigration($connection, $framework);
         $result = $migration->run();
@@ -111,11 +111,11 @@ class RoutingMigrationTest extends FunctionalTestCase
         static::loadFixtures([__DIR__.'/../../Fixtures/Functional/Migration/routing.yml'], false);
 
         /** @var Connection $connection */
-        $connection = static::$container->get('database_connection');
+        $connection = static::getContainer()->get('database_connection');
         $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
         /** @var ContaoFramework $framework */
-        $framework = static::$container->get('contao.framework');
+        $framework = static::getContainer()->get('contao.framework');
 
         /** @var Config $config */
         $config = $framework->getAdapter(Config::class);

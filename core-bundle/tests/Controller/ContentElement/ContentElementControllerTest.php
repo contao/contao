@@ -27,10 +27,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
-    /**
-     * @var ContainerBuilder
-     */
-    private $container;
+    private ContainerBuilder $container;
 
     protected function setUp(): void
     {
