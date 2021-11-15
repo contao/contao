@@ -121,6 +121,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->hookListeners = $hookListeners;
     }
 
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     *
+     * @phpstan-return object
+     */
     public function createInstance($class, $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
@@ -137,7 +146,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @param class-string<T> $class
      *
-     * @return Adapter<T>
+     * @return T
+     *
+     * @phpstan-return Adapter<T>
      */
     public function getAdapter($class): Adapter
     {

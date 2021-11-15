@@ -127,7 +127,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @psalm-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
+     * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
      */
     private function createConfig($size): array
     {
