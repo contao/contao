@@ -30,8 +30,8 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterfa
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @deprecated since Contao 4.13, to be removed in Contao 5.0.
- *             Use the new authenticator system instead
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the new authenticator system instead.
  */
 class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 {
