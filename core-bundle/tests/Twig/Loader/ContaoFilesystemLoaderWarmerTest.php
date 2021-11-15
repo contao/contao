@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class ContaoFilesystemLoaderWarmerTest extends TestCase
@@ -71,7 +72,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock($themePaths, $resourcesPaths),
+            $this->mockTemplateLocator($themePaths, $resourcesPaths),
             $projectDir,
             'prod'
         );
@@ -106,7 +107,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock(),
+            $this->mockTemplateLocator(),
             'project/dir',
             'any'
         );
@@ -129,7 +130,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock(),
+            $this->mockTemplateLocator(),
             'project/dir',
             'dev'
         );
@@ -152,7 +153,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
 
         $warmer = new ContaoFilesystemLoaderWarmer(
             $loader,
-            $this->getTemplateLocatorMock(),
+            $this->mockTemplateLocator(),
             'project/dir',
             'prod'
         );
@@ -160,7 +161,10 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         $warmer->onKernelRequest($this->createMock(RequestEvent::class));
     }
 
-    private function getTemplateLocatorMock(array $themeDirectories = [], array $resourcesPaths = [])
+    /**
+     * @return TemplateLocator&MockObject
+     */
+    private function mockTemplateLocator(array $themeDirectories = [], array $resourcesPaths = []): TemplateLocator
     {
         $locator = $this->createMock(TemplateLocator::class);
         $locator

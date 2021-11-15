@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\Matcher\PublishedFilter;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -152,7 +153,10 @@ class PublishedFilterTest extends TestCase
         $filter->filter($collection, $this->createMock(Request::class));
     }
 
-    private function mockTokenChecker(bool $isPreviewMode = false)
+    /**
+     * @return TokenChecker&MockObject
+     */
+    private function mockTokenChecker(bool $isPreviewMode = false): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker

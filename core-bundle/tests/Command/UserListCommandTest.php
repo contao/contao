@@ -16,6 +16,7 @@ use Contao\CoreBundle\Command\UserListCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\UserModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -118,6 +119,9 @@ class UserListCommandTest extends TestCase
         return $command;
     }
 
+    /**
+     * @return UserModel&MockObject
+     */
     private function mockContaoUser(): UserModel
     {
         $userModel = $this->mockClassWithProperties(UserModel::class);
@@ -133,6 +137,9 @@ class UserListCommandTest extends TestCase
         return $userModel;
     }
 
+    /**
+     * @return UserModel&MockObject
+     */
     private function mockAdminUser(): UserModel
     {
         $userModel = $this->mockClassWithProperties(UserModel::class);

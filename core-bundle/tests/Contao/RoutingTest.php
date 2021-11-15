@@ -14,12 +14,14 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\Frontend;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -574,7 +576,10 @@ class RoutingTest extends ContaoTestCase
         $this->assertEmpty($_GET);
     }
 
-    private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null)
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null): ContaoFramework
     {
         if (null === $pageAdapter) {
             $pageAdapter = $this->mockAdapter(['findByAliases']);

@@ -43,8 +43,8 @@ class ImageResultTest extends TestCase
         $sizeConfiguration = [100, 200, 'crop'];
 
         $picture = $this->createMock(PictureInterface::class);
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory);
         $imageResult = new ImageResult($locator, '/project/dir', $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($picture, $imageResult->getPicture());
@@ -78,7 +78,7 @@ class ImageResultTest extends TestCase
         ;
 
         $imageResult = new ImageResult(
-            $this->getLocatorMock($pictureFactory),
+            $this->mockLocator($pictureFactory),
             'any/project/dir',
             'foo/bar/foobar.png',
             [100, 200, 'crop'],
@@ -137,8 +137,8 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory, $staticUrl);
         $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($sources, $imageResult->getSources());
@@ -163,8 +163,8 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory, $staticUrl);
         $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame('https://static.url/foo/bar/foobar.png', $imageResult->getImageSrc());
@@ -200,8 +200,8 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory, $staticUrl);
         $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame('foo/bar/foobar.png', $imageResult->getImageSrc(true));
@@ -254,7 +254,7 @@ class ImageResultTest extends TestCase
             ->willReturn($dimensions)
         ;
 
-        $locator = $this->getLocatorMock();
+        $locator = $this->mockLocator();
         $imageResult = new ImageResult($locator, 'any/project/dir', $image);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
@@ -265,7 +265,7 @@ class ImageResultTest extends TestCase
         $projectDir = 'project/dir';
         $filePath = 'project/dir/file/path';
 
-        $locator = $this->getLocatorMock();
+        $locator = $this->mockLocator();
         $imageResult = new ImageResult($locator, $projectDir, $filePath);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
@@ -284,7 +284,7 @@ class ImageResultTest extends TestCase
             ->willReturn($filePath)
         ;
 
-        $locator = $this->getLocatorMock();
+        $locator = $this->mockLocator();
         $imageResult = new ImageResult($locator, $projectDir, $image);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
@@ -503,7 +503,10 @@ class ImageResultTest extends TestCase
         $imageResult->createIfDeferred();
     }
 
-    private function getPictureFactoryMock($filePathOrImage, $sizeConfiguration, PictureInterface $picture)
+    /**
+     * @return PictureFactoryInterface&MockObject
+     */
+    private function mockPictureFactory($filePathOrImage, $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory
@@ -516,7 +519,10 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    private function getLocatorMock(PictureFactoryInterface $pictureFactory = null, string $staticUrl = null)
+    /**
+     * @return ContainerInterface&MockObject
+     */
+    private function mockLocator(PictureFactoryInterface $pictureFactory = null, string $staticUrl = null): ContainerInterface
     {
         $locator = $this->createMock(ContainerInterface::class);
         $context = null;

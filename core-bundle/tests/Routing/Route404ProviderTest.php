@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\Candidates;
 use Symfony\Component\HttpFoundation\Request;
@@ -456,7 +457,10 @@ class Route404ProviderTest extends TestCase
         $this->assertEmpty($routes);
     }
 
-    private function mockRequestWithPath(string $path, array $languages = ['en'])
+    /**
+     * @return Request&MockObject
+     */
+    private function mockRequestWithPath(string $path, array $languages = ['en']): Request
     {
         $request = $this->createMock(Request::class);
         $request

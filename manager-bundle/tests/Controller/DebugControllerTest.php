@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\Tests\Controller;
 use Contao\ManagerBundle\Controller\DebugController;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -84,7 +85,10 @@ class DebugControllerTest extends ContaoTestCase
         $listener->enableAction();
     }
 
-    private function mockSecurityHelper(bool $isAdmin = true)
+    /**
+     * @return Security&MockObject
+     */
+    private function mockSecurityHelper(bool $isAdmin = true): Security
     {
         $security = $this->createMock(Security::class);
         $security
@@ -96,7 +100,10 @@ class DebugControllerTest extends ContaoTestCase
         return $security;
     }
 
-    private function mockRequestStack(string $path = '', string $referer = null)
+    /**
+     * @return RequestStack&MockObject
+     */
+    private function mockRequestStack(string $path = '', string $referer = null): RequestStack
     {
         $request = Request::create($path);
 
@@ -114,7 +121,10 @@ class DebugControllerTest extends ContaoTestCase
         return $requestStack;
     }
 
-    private function mockJwtManager(bool $expectAddsCookie, bool $debug = null)
+    /**
+     * @return JwtManager&MockObject
+     */
+    private function mockJwtManager(bool $expectAddsCookie, bool $debug = null): JwtManager
     {
         $jwtManager = $this->createMock(JwtManager::class);
         $jwtManager

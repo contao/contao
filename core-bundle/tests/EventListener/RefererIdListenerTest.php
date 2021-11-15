@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\RefererIdListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -86,7 +87,10 @@ class RefererIdListenerTest extends TestCase
         $this->assertSame('testValue', $request->attributes->get('_contao_referer_id'));
     }
 
-    private function mockTokenGenerator()
+    /**
+     * @return TokenGeneratorInterface&MockObject
+     */
+    private function mockTokenGenerator(): TokenGeneratorInterface
     {
         $tokenGenerator = $this->createMock(TokenGeneratorInterface::class);
         $tokenGenerator

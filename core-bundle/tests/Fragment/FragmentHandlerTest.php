@@ -22,6 +22,7 @@ use Contao\CoreBundle\Fragment\UnknownFragmentException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -229,7 +230,10 @@ class FragmentHandlerTest extends TestCase
         return new FragmentHandler($renderers, $fragmentHandler, $requestStack, $registry, $preHandlers, true);
     }
 
-    private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null)
+    /**
+     * @return ServiceLocator&MockObject
+     */
+    private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
     {
         $renderer = $this->createMock(FragmentRendererInterface::class);
         $renderer
@@ -255,7 +259,10 @@ class FragmentHandlerTest extends TestCase
         return $this->mockServiceLocator($name, $renderer);
     }
 
-    private function mockServiceLocator(string $name, object $service)
+    /**
+     * @return ServiceLocator&MockObject
+     */
+    private function mockServiceLocator(string $name, object $service): ServiceLocator
     {
         $serviceLocator = $this->createMock(ServiceLocator::class);
         $serviceLocator

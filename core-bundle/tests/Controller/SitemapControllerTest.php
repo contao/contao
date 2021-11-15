@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
 use FOS\HttpCache\ResponseTagger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -85,7 +86,7 @@ class SitemapControllerTest extends TestCase
         ;
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -134,7 +135,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -191,7 +192,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -243,7 +244,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -295,7 +296,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -343,7 +344,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -392,7 +393,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->mockContainer($framework, [44 => false]);
+        $container = $this->getContainer($framework, [44 => false]);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -433,7 +434,7 @@ class SitemapControllerTest extends TestCase
         ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -469,7 +470,7 @@ class SitemapControllerTest extends TestCase
         ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -519,7 +520,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -596,7 +597,7 @@ class SitemapControllerTest extends TestCase
         );
 
         $controller = new SitemapController($this->mockPageRegistry());
-        $controller->setContainer($this->mockContainer($framework));
+        $controller->setContainer($this->getContainer($framework));
 
         $this->expectDeprecation('Since contao/core-bundle 4.11: Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
 
@@ -622,7 +623,10 @@ class SitemapControllerTest extends TestCase
         return $result;
     }
 
-    private function mockPageRegistry()
+    /**
+     * @return PageRegistry&MockObject
+     */
+    private function mockPageRegistry(): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -635,7 +639,10 @@ class SitemapControllerTest extends TestCase
         return $pageRegistry;
     }
 
-    private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null)
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
     {
         /** @var PageModel $rootPage1 */
         $rootPage1 = $this->mockClassWithProperties(PageModel::class);
@@ -719,7 +726,7 @@ class SitemapControllerTest extends TestCase
     /**
      * @param array<bool> $isGranted
      */
-    private function mockContainer(ContaoFramework $framework, array $isGranted = null): ContainerBuilder
+    private function getContainer(ContaoFramework $framework, array $isGranted = null): ContainerBuilder
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher

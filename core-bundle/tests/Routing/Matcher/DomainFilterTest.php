@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Routing\Matcher;
 
 use Contao\CoreBundle\Routing\Matcher\DomainFilter;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -74,7 +75,10 @@ class DomainFilterTest extends TestCase
         $filter->filter($collection, $request);
     }
 
-    private function mockRouteWithHost(string $host)
+    /**
+     * @return Route&MockObject
+     */
+    private function mockRouteWithHost(string $host): Route
     {
         $route = $this->createMock(Route::class);
         $route

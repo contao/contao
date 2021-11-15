@@ -23,6 +23,7 @@ use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -385,7 +386,10 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('translator', $services);
     }
 
-    private function mockAuthenticator(FrontendUser $user = null, bool $return = null)
+    /**
+     * @return Authenticator&MockObject
+     */
+    private function mockAuthenticator(FrontendUser $user = null, bool $return = null): Authenticator
     {
         $authenticator = $this->createMock(Authenticator::class);
 
@@ -401,7 +405,10 @@ class TwoFactorControllerTest extends TestCase
         return $authenticator;
     }
 
-    private function mockAuthenticationUtils(AuthenticationException $authenticationException = null)
+    /**
+     * @return AuthenticationUtils&MockObject
+     */
+    private function mockAuthenticationUtils(AuthenticationException $authenticationException = null): AuthenticationUtils
     {
         $authenticationUtils = $this->createMock(AuthenticationUtils::class);
 
@@ -416,7 +423,10 @@ class TwoFactorControllerTest extends TestCase
         return $authenticationUtils;
     }
 
-    private function mockSecurityHelper(UserInterface $user = null, bool $isFullyAuthenticated = false)
+    /**
+     * @return Security&MockObject
+     */
+    private function mockSecurityHelper(UserInterface $user = null, bool $isFullyAuthenticated = false): Security
     {
         $security = $this->createMock(Security::class);
         $security
@@ -433,7 +443,10 @@ class TwoFactorControllerTest extends TestCase
         return $security;
     }
 
-    private function mockPageModel()
+    /**
+     * @return PageModel&MockObject
+     */
+    private function mockPageModel(): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->enforceTwoFactor = '';

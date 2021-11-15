@@ -14,11 +14,13 @@ namespace Contao\CoreBundle\Tests\Routing\Matcher;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Matcher\LegacyMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -562,7 +564,10 @@ class LegacyMatcherTest extends TestCase
         $matcher->matchRequest(Request::create('foo.html'));
     }
 
-    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = [])
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
     {
         $classes = [];
         $callbacks = [];
@@ -610,7 +615,10 @@ class LegacyMatcherTest extends TestCase
         return $framework;
     }
 
-    private function mockRequestMatcher(string $pathInfo = null, array $match = [])
+    /**
+     * @return RequestMatcherInterface&MockObject
+     */
+    private function mockRequestMatcher(string $pathInfo = null, array $match = []): RequestMatcherInterface
     {
         $expectCalls = null === $pathInfo ? 1 : 2;
 

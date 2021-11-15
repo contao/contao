@@ -17,10 +17,12 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener;
 use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
 use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -55,7 +57,7 @@ class TemplateOptionsListenerTest extends TestCase
     public function testReturnsTheDefaultElementTemplate(): void
     {
         $callback = new TemplateOptionsListener(
-            $this->getFramework(),
+            $this->mockFramework(),
             new RequestStack(),
             'ce_',
             ContentProxy::class
@@ -70,7 +72,7 @@ class TemplateOptionsListenerTest extends TestCase
     public function testReturnsTheDefaultModuleTemplate(): void
     {
         $callback = new TemplateOptionsListener(
-            $this->getFramework(),
+            $this->mockFramework(),
             new RequestStack(),
             'mod_',
             ModuleProxy::class
@@ -85,7 +87,7 @@ class TemplateOptionsListenerTest extends TestCase
     public function testReturnsTheCustomElementTemplate(): void
     {
         $callback = new TemplateOptionsListener(
-            $this->getFramework(),
+            $this->mockFramework(),
             new RequestStack(),
             'ce_',
             ContentProxy::class
@@ -107,7 +109,7 @@ class TemplateOptionsListenerTest extends TestCase
     public function testReturnsTheCustomModuleTemplate(): void
     {
         $callback = new TemplateOptionsListener(
-            $this->getFramework(),
+            $this->mockFramework(),
             new RequestStack(),
             'mod_',
             ModuleProxy::class
@@ -131,7 +133,7 @@ class TemplateOptionsListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['act' => 'overrideAll']));
 
-        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, 'ce_', ContentProxy::class);
+        $callback = new TemplateOptionsListener($this->mockFramework(), $requestStack, 'ce_', ContentProxy::class);
 
         $this->assertSame(['' => '-', 'ce_all' => 'ce_all'], $callback($this->mockDataContainer('tl_content')));
     }
@@ -141,12 +143,15 @@ class TemplateOptionsListenerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request(['act' => 'overrideAll']));
 
-        $callback = new TemplateOptionsListener($this->getFramework(), $requestStack, 'mod_', ModuleProxy::class);
+        $callback = new TemplateOptionsListener($this->mockFramework(), $requestStack, 'mod_', ModuleProxy::class);
 
         $this->assertSame(['' => '-', 'mod_all' => 'mod_all'], $callback($this->mockDataContainer('tl_module')));
     }
 
-    private function getFramework()
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFramework(): ContaoFramework
     {
         $controllerAdapter = $this->mockAdapter(['getTemplateGroup']);
         $controllerAdapter
@@ -166,7 +171,10 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
-    private function mockDataContainer(string $table, array $activeRecord = [])
+    /**
+     * @return DataContainer&MockObject
+     */
+    private function mockDataContainer(string $table, array $activeRecord = []): DataContainer
     {
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;

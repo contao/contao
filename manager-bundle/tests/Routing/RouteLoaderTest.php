@@ -17,6 +17,7 @@ use Contao\ManagerBundle\Routing\RouteLoader;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\Routing\Route;
@@ -100,7 +101,10 @@ class RouteLoaderTest extends ContaoTestCase
         $this->assertSame(3, array_search('contao_catch_all', array_keys($routes), true));
     }
 
-    private function mockRoutePlugin(string $routeName, string $routePath)
+    /**
+     * @return RoutingPluginInterface&MockObject
+     */
+    private function mockRoutePlugin(string $routeName, string $routePath): RoutingPluginInterface
     {
         $collection = new RouteCollection();
         $collection->add($routeName, new Route($routePath));

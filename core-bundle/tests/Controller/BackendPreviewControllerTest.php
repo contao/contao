@@ -16,6 +16,7 @@ use Contao\CoreBundle\Controller\BackendPreviewController;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -124,7 +125,10 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertSame('/preview.php/', $response->getTargetUrl());
     }
 
-    private function mockRequest()
+    /**
+     * @return Request&MockObject
+     */
+    private function mockRequest(): Request
     {
         $request = $this->createMock(Request::class);
         $request->query = new InputBag();
@@ -137,7 +141,10 @@ class BackendPreviewControllerTest extends TestCase
         return $request;
     }
 
-    private function mockAuthorizationChecker(bool $granted = true)
+    /**
+     * @return AuthorizationCheckerInterface&MockObject
+     */
+    private function mockAuthorizationChecker(bool $granted = true): AuthorizationCheckerInterface
     {
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authorizationChecker

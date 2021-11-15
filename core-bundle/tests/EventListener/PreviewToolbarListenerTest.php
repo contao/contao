@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\PreviewToolbarListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class PreviewToolbarListenerTest extends TestCase
     {
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -69,14 +70,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(),
+            $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -92,14 +93,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(false),
+            $this->mockRequest(false),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -115,14 +116,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(),
+            $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -138,14 +139,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(),
+            $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -164,14 +165,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(true, false, 'html', $hasSession),
+            $this->mockRequest(true, false, 'html', $hasSession),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -203,14 +204,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(true, false, 'html', $hasSession),
+            $this->mockRequest(true, false, 'html', $hasSession),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -242,14 +243,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(),
+            $this->mockRequest(),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -265,14 +266,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(true, true),
+            $this->mockRequest(true, true),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -288,14 +289,14 @@ class PreviewToolbarListenerTest extends TestCase
 
         $event = new ResponseEvent(
             $this->createMock(HttpKernelInterface::class),
-            $this->getRequestMock(true, false, 'json'),
+            $this->mockRequest(true, false, 'json'),
             HttpKernelInterface::MAIN_REQUEST,
             $response
         );
 
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
-            $this->getTwigMock(),
+            $this->mockTwig(),
             $this->mockRouterWithContext()
         );
 
@@ -304,7 +305,10 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    private function getRequestMock(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true)
+    /**
+     * @return Request&MockObject
+     */
+    private function mockRequest(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request
     {
         $request = $this->createMock(Request::class);
         $request->headers = new HeaderBag();
@@ -336,7 +340,10 @@ class PreviewToolbarListenerTest extends TestCase
         return $request;
     }
 
-    private function getTwigMock()
+    /**
+     * @return Environment&MockObject
+     */
+    private function mockTwig(): Environment
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -347,7 +354,10 @@ class PreviewToolbarListenerTest extends TestCase
         return $twig;
     }
 
-    private function mockRouterWithContext()
+    /**
+     * @return RouterInterface&MockObject
+     */
+    private function mockRouterWithContext(): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
         $router

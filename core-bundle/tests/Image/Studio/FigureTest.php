@@ -25,6 +25,7 @@ use Contao\Image\ResizerInterface;
 use Contao\System;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -331,7 +332,7 @@ class FigureTest extends TestCase
 
         System::setContainer($container);
 
-        $figure = new Figure($this->getImageMock(), $metadata, $linkAttributes, $lightbox, $options);
+        $figure = new Figure($this->mockImage(), $metadata, $linkAttributes, $lightbox, $options);
         $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
 
         $assert($data);
@@ -554,7 +555,7 @@ class FigureTest extends TestCase
 
         $template = new FrontendTemplate('ce_image');
 
-        $figure = new Figure($this->getImageMock());
+        $figure = new Figure($this->mockImage());
         $figure->applyLegacyTemplateData($template);
 
         $this->assertSame(['img foo'], $template->getData()['picture']['img']);
@@ -575,7 +576,7 @@ class FigureTest extends TestCase
 
         $template = new \stdClass();
 
-        $figure = new Figure($this->getImageMock(), null, ['href' => 'foo://bar']);
+        $figure = new Figure($this->mockImage(), null, ['href' => 'foo://bar']);
         $figure->applyLegacyTemplateData($template);
 
         $this->assertSame('foo://bar', $template->href);
@@ -591,7 +592,7 @@ class FigureTest extends TestCase
 
     public function testGettingSchemaOrgData(): void
     {
-        $figure = new Figure($this->getImageMock());
+        $figure = new Figure($this->mockImage());
 
         $this->assertSame(
             [
@@ -603,7 +604,7 @@ class FigureTest extends TestCase
         );
 
         $figure = new Figure(
-            $this->getImageMock(),
+            $this->mockImage(),
             new Metadata([
                 Metadata::VALUE_UUID => 'uuid',
                 Metadata::VALUE_CAPTION => 'caption',
@@ -621,7 +622,10 @@ class FigureTest extends TestCase
         );
     }
 
-    private function getImageMock()
+    /**
+     * @return ImageResult&MockObject
+     */
+    private function mockImage(): ImageResult
     {
         $img = ['img foo'];
         $sources = ['sources foo'];

@@ -30,6 +30,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Webmozart\PathUtil\Path;
@@ -44,7 +45,7 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio)->fromFilesModel($model)->build();
     }
@@ -102,7 +103,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromUuid($uuid)->build();
     }
@@ -140,7 +141,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromId(5)->build();
     }
@@ -178,7 +179,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromPath($absoluteFilePath)->build();
     }
@@ -199,7 +200,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->fromPath($relativeFilePath)->build();
     }
@@ -233,7 +234,7 @@ class FigureBuilderTest extends TestCase
             ->willReturn($filePathOutsideUploadDir)
         ;
 
-        $studio = $this->getStudioMockForImage($filePathOutsideUploadDir);
+        $studio = $this->mockStudioForImage($filePathOutsideUploadDir);
 
         $this->getFigureBuilder($studio)->fromImage($image)->build();
     }
@@ -308,7 +309,7 @@ class FigureBuilderTest extends TestCase
             Validator::class => $validatorAdapter,
         ]);
 
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $this->getFigureBuilder($studio, $framework)->from($identifier)->build();
     }
@@ -435,7 +436,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
         $figureBuilder = $this->getFigureBuilder($studio, $framework);
 
         $setValidResourceOperations = [
@@ -499,7 +500,7 @@ class FigureBuilderTest extends TestCase
         [$absoluteFilePath] = $this->getTestFilePaths();
 
         $size = '_any_size_configuration';
-        $studio = $this->getStudioMockForImage($absoluteFilePath, $size);
+        $studio = $this->mockStudioForImage($absoluteFilePath, $size);
 
         $this->getFigureBuilder($studio)
             ->fromPath($absoluteFilePath, false)
@@ -513,7 +514,7 @@ class FigureBuilderTest extends TestCase
         [$absoluteFilePath] = $this->getTestFilePaths();
 
         $resizeOptions = new ResizeOptions();
-        $studio = $this->getStudioMockForImage($absoluteFilePath, null, $resizeOptions);
+        $studio = $this->mockStudioForImage($absoluteFilePath, null, $resizeOptions);
 
         $this->getFigureBuilder($studio)
             ->fromPath($absoluteFilePath, false)
@@ -584,7 +585,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $figure = $this->getFigureBuilder($studio, $framework)
             ->fromFilesModel($filesModel)
@@ -716,7 +717,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
         $figure = $this->getFigureBuilder($studio, $framework)->fromFilesModel($filesModel)->build();
 
         $emptyMetadata = [
@@ -763,7 +764,7 @@ class FigureBuilderTest extends TestCase
             Validator::class => new Adapter(Validator::class),
         ]);
 
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $figure = $this->getFigureBuilder($studio, $framework)
             ->from($resource)
@@ -937,7 +938,7 @@ class FigureBuilderTest extends TestCase
     public function testSetLightboxResourceOrUrl($resource, array $expectedArguments, bool $hasLightbox = true): void
     {
         if ($hasLightbox) {
-            $studio = $this->getStudioMockForLightbox(...$expectedArguments);
+            $studio = $this->mockStudioForLightbox(...$expectedArguments);
         } else {
             $studio = $this->createMock(Studio::class);
         }
@@ -1014,7 +1015,7 @@ class FigureBuilderTest extends TestCase
      */
     public function testLightboxResourceFallback(?Metadata $metadata, ?string $expectedFilePath, ?string $expectedUrl): void
     {
-        $studio = $this->getStudioMockForLightbox($expectedFilePath, $expectedUrl);
+        $studio = $this->mockStudioForLightbox($expectedFilePath, $expectedUrl);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($metadata): void {
@@ -1052,7 +1053,7 @@ class FigureBuilderTest extends TestCase
     {
         $image = $this->createMock(ImageInterface::class);
         $size = '_custom_size_configuration';
-        $studio = $this->getStudioMockForLightbox($image, null, $size);
+        $studio = $this->mockStudioForLightbox($image, null, $size);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($image, $size): void {
@@ -1072,7 +1073,7 @@ class FigureBuilderTest extends TestCase
     {
         $image = $this->createMock(ImageInterface::class);
         $resizeOptions = new ResizeOptions();
-        $studio = $this->getStudioMockForLightbox($image, null, null, null, $resizeOptions);
+        $studio = $this->mockStudioForLightbox($image, null, null, null, $resizeOptions);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($image, $resizeOptions): void {
@@ -1092,7 +1093,7 @@ class FigureBuilderTest extends TestCase
     {
         $image = $this->createMock(ImageInterface::class);
         $groupIdentifier = '12345';
-        $studio = $this->getStudioMockForLightbox($image, null, null, $groupIdentifier);
+        $studio = $this->mockStudioForLightbox($image, null, null, $groupIdentifier);
 
         $figure = $this->getFigure(
             static function (FigureBuilder $builder) use ($image, $groupIdentifier): void {
@@ -1181,7 +1182,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 
-        $studio = $this->getStudioMockForImage($absoluteFilePath);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
 
         $eventDispatcher = new EventDispatcher();
 
@@ -1208,7 +1209,7 @@ class FigureBuilderTest extends TestCase
         [$absoluteFilePath] = $this->getTestFilePaths();
 
         if (null === $studio) {
-            $studio = $this->getStudioMockForImage($absoluteFilePath);
+            $studio = $this->mockStudioForImage($absoluteFilePath);
         }
 
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
@@ -1220,7 +1221,10 @@ class FigureBuilderTest extends TestCase
         return $builder->build();
     }
 
-    private function getStudioMockForImage(string $expectedFilePath, $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null)
+    /**
+     * @return Studio&MockObject
+     */
+    private function mockStudioForImage(string $expectedFilePath, $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1235,7 +1239,10 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getStudioMockForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null)
+    /**
+     * @return Studio&MockObject
+     */
+    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 

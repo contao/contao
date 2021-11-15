@@ -472,7 +472,10 @@ class PageCandidatesTest extends TestCase
         $this->assertSame(['bar/baz', 'bar', 15], $candidates->getCandidates($request));
     }
 
-    private function mockRequest(string $pathInfo)
+    /**
+     * @return Request&MockObject
+     */
+    private function mockRequest(string $pathInfo): Request
     {
         $request = $this->createMock(Request::class);
         $request
@@ -489,7 +492,10 @@ class PageCandidatesTest extends TestCase
         return $request;
     }
 
-    private function mockPageRegistry(?array $urlPrefixes, ?array $urlSuffixes)
+    /**
+     * @return PageRegistry&MockObject
+     */
+    private function mockPageRegistry(?array $urlPrefixes, ?array $urlSuffixes): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -509,8 +515,10 @@ class PageCandidatesTest extends TestCase
 
     /**
      * @param QueryBuilder&MockObject $queryBuilder
+     *
+     * @return Connection&MockObject
      */
-    private function mockConnection($queryBuilder = null)
+    private function mockConnection(QueryBuilder $queryBuilder = null): Connection
     {
         if (null === $queryBuilder) {
             $queryBuilder = $this->createMock(QueryBuilder::class);

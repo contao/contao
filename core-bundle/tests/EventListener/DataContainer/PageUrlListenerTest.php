@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -21,6 +22,7 @@ use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageUrlListenerTest extends TestCase
@@ -1545,7 +1547,10 @@ class PageUrlListenerTest extends TestCase
         $listener->validateUrlPrefix('.html', $dc);
     }
 
-    private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false)
+    /**
+     * @return Connection&MockObject
+     */
+    private function mockConnection(array $prefixAndSuffix, array $ids, array $aliases, array $aliasIds, bool $prefixCheck = false): Connection
     {
         $connection = $this->createMock(Connection::class);
 
@@ -1582,7 +1587,10 @@ class PageUrlListenerTest extends TestCase
         return $connection;
     }
 
-    private function mockFrameworkWithPages(array $inputData, array ...$data)
+    /**
+     * @return ContaoFramework&MockObject
+     */
+    private function mockFrameworkWithPages(array $inputData, array ...$data): ContaoFramework
     {
         $pagesById = [];
         $pagesByPid = [];
@@ -1626,7 +1634,10 @@ class PageUrlListenerTest extends TestCase
         );
     }
 
-    private function mockTranslator(string $messageKey = null, string $argument = null)
+    /**
+     * @return TranslatorInterface&MockObject
+     */
+    private function mockTranslator(string $messageKey = null, string $argument = null): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -1652,7 +1663,10 @@ class PageUrlListenerTest extends TestCase
         return $translator;
     }
 
-    private function mockConnectionWithStatement()
+    /**
+     * @return Connection&MockObject
+     */
+    private function mockConnectionWithStatement(): Connection
     {
         $statement = $this->createMock(Result::class);
         $statement

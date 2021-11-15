@@ -23,6 +23,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -456,7 +457,10 @@ class ContaoKernelTest extends ContaoTestCase
         return $kernel;
     }
 
-    private function mockConfigPlugin(LoaderInterface $loader)
+    /**
+     * @return ConfigPluginInterface&MockObject
+     */
+    private function mockConfigPlugin(LoaderInterface $loader): ConfigPluginInterface
     {
         $plugin = $this->createMock(ConfigPluginInterface::class);
         $plugin

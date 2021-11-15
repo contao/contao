@@ -30,6 +30,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -517,7 +518,10 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         return $request;
     }
 
-    private function mockTokenStorageWithToken(TokenInterface $token = null)
+    /**
+     * @return TokenStorageInterface&MockObject
+     */
+    private function mockTokenStorageWithToken(TokenInterface $token = null): TokenStorageInterface
     {
         $tokenStorage = $this->createMock(TokenStorage::class);
         $tokenStorage
@@ -529,7 +533,10 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         return $tokenStorage;
     }
 
-    private function mockScopeMatcher(bool $hasFrontendUser, RequestEvent $event)
+    /**
+     * @return ScopeMatcher&MockObject
+     */
+    private function mockScopeMatcher(bool $hasFrontendUser, RequestEvent $event): ScopeMatcher
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher

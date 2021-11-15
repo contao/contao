@@ -17,6 +17,7 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -497,7 +498,10 @@ class SearchIndexSubscriberTest extends TestCase
         return $response;
     }
 
-    private function getTranslator()
+    /**
+     * @return TranslatorInterface&MockObject
+     */
+    private function getTranslator(): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInt
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -248,10 +249,12 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         return $request;
     }
 
-    private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null)
+    /**
+     * @return RememberMe&MockObject
+     */
+    private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null): RememberMe
     {
         $entity = $this->createMock(RememberMe::class);
-
         $entity
             ->method('getValue')
             ->willReturn($value)
