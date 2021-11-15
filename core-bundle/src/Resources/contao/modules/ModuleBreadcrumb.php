@@ -257,7 +257,7 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (RouteNotFoundException $exception)
 		{
-			// Ignore
+			return null;
 		}
 		catch (ExceptionInterface $exception)
 		{
