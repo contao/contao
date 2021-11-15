@@ -44,7 +44,6 @@ class OptIn implements OptInInterface
             $token = $prefix.'-'.substr($token, \strlen($prefix) + 1);
         }
 
-        /** @var OptInModel $optIn */
         $optIn = $this->framework->createInstance(OptInModel::class);
         $optIn->tstamp = time();
         $optIn->token = $token;

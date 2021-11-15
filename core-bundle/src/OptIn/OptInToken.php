@@ -123,7 +123,6 @@ class OptInToken implements OptInTokenInterface
             $this->model->save();
         }
 
-        /** @var Email $email */
         $email = $this->framework->createInstance(Email::class);
         $email->subject = $this->model->emailSubject;
         $email->text = $this->model->emailText;
