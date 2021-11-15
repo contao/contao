@@ -90,7 +90,7 @@ class SitemapControllerTest extends TestCase
         ;
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -142,7 +142,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -202,7 +202,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -257,7 +257,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -312,7 +312,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -363,7 +363,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -415,7 +415,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->mockContainer($framework, [44 => false]);
+        $container = $this->getContainer($framework, [44 => false]);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -458,7 +458,7 @@ class SitemapControllerTest extends TestCase
         ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -496,7 +496,7 @@ class SitemapControllerTest extends TestCase
         ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -549,7 +549,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
@@ -631,7 +631,7 @@ class SitemapControllerTest extends TestCase
         $registry = new PageRegistry($this->createMock(Connection::class));
 
         $controller = new SitemapController($registry);
-        $controller->setContainer($this->mockContainer($framework));
+        $controller->setContainer($this->getContainer($framework));
 
         $this->expectDeprecation('Since contao/core-bundle 4.11: Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
 
@@ -681,7 +681,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('custom1', new RouteConfig(null, null, null, [], [], ['_format' => 'xml'], []));
