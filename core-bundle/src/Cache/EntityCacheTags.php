@@ -82,6 +82,8 @@ class EntityCacheTags
 
     /**
      * Derives a cache tag from a model class and returns it.
+     *
+     * @param class-string<Model> $className
      */
     public function getTagForModelClass(string $className): string
     {
