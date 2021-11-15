@@ -467,7 +467,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserByIdentifier(string $identifier): ?self
 	{
-		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if ($request === null)

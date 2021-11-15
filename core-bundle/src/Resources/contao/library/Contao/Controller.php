@@ -16,7 +16,6 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -1684,7 +1683,6 @@ abstract class Controller extends System
 			return array($size, $margin);
 		};
 
-		/** @var FigureBuilder $figureBuilder */
 		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
 
 		// Set image resource

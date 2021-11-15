@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\UriSigner;
 
 /**
  * Provide methods to handle an error 401 page.
@@ -136,10 +135,7 @@ class PageError401 extends Frontend
 			// Add the referer so the login module can redirect back
 			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . Environment::get('base') . Environment::get('request');
 
-			/** @var UriSigner $uriSigner */
-			$uriSigner = System::getContainer()->get('uri_signer');
-
-			$this->redirect($uriSigner->sign($url));
+			$this->redirect(System::getContainer()->get('uri_signer')->sign($url));
 		}
 
 		return $obj401;

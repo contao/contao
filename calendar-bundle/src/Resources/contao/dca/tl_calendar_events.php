@@ -25,7 +25,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 System::loadLanguageFile('tl_content');
 
@@ -669,7 +668,6 @@ class tl_calendar_events extends Backend
 				$objCalendar = $this->Database->prepare("SELECT id FROM tl_calendar_events WHERE pid=?")
 											  ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -1043,9 +1041,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('calendar_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -1094,7 +1090,6 @@ class tl_calendar_events extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

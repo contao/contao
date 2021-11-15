@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Image\ImageInterface;
@@ -427,7 +426,6 @@ abstract class Template extends Controller
 	 */
 	public function addSchemaOrg(array $jsonLd): void
 	{
-		/** @var ResponseContext $responseContext */
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
