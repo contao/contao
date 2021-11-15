@@ -127,7 +127,6 @@ class PageUrlListener implements ResetInterface
             throw new \RuntimeException($this->translator->trans('ERR.urlPrefixExists', [$value], 'contao_default'));
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findByPk($dc->id);
 

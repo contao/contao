@@ -181,7 +181,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
                 continue;
             }
 
-            /** @var System $systemAdapter */
             $systemAdapter = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
