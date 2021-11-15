@@ -46,7 +46,6 @@ use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnha
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
-use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundleTest extends TestCase
 {
