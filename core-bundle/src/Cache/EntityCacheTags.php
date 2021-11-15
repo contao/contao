@@ -47,6 +47,8 @@ class EntityCacheTags
 
     /**
      * Derives a cache tag from an entity class and returns it.
+     *
+     * @param class-string $className
      */
     public function getTagForEntityClass(string $className): string
     {
