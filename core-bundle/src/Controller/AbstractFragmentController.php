@@ -99,7 +99,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         // Current request is the main request (e.g. ESI fragment), so we have to replace
         // insert tags etc. on the template output
-        if ($request === $this->get('request_stack')->getMasterRequest()) {
+        if ($request === $this->get('request_stack')->getMainRequest()) {
             $templateClass = FrontendTemplate::class;
         }
 

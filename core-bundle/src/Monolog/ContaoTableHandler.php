@@ -73,7 +73,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->statement->execute([
+        $this->statement->executeStatement([
             'tstamp' => $date->format('U'),
             'text' => StringUtil::specialchars((string) $record['formatted']),
             'source' => (string) $context->getSource(),
