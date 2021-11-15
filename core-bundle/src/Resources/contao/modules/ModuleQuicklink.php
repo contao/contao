@@ -134,7 +134,7 @@ class ModuleQuicklink extends Module
 						}
 						catch (RouteNotFoundException $e)
 						{
-							continue 2;
+							$href = null;
 						}
 						break;
 				}
