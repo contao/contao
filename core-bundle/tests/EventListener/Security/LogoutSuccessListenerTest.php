@@ -10,20 +10,32 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Logout;
+namespace Contao\CoreBundle\Tests\EventListener\Security;
 
+use Contao\CoreBundle\EventListener\Security\LogoutSuccessListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Logout\LogoutSuccessHandler;
-use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\HttpUtils;
 
-/**
- * @group legacy
- */
-class LogoutSuccessHandlerTest extends TestCase
+class LogoutSuccessListenerTest extends TestCase
 {
+    public function testReturnsIfResponseIsAlreadySet(): void
+    {
+        $response = new Response();
+
+        $event = new LogoutEvent(new Request(), null);
+        $event->setResponse($response);
+
+        $listener = new LogoutSuccessListener($this->createMock(HttpUtils::class), $this->createMock(ScopeMatcher::class));
+        $listener($event);
+
+        $this->assertSame($response, $event->getResponse());
+    }
+
     public function testRedirectsToAGivenUrl(): void
     {
         $request = new Request();
@@ -44,10 +56,12 @@ class LogoutSuccessHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
+        $event = new LogoutEvent($request, null);
 
-        /** @var RedirectResponse $response */
-        $response = $handler->onLogoutSuccess($request);
+        $listener = new LogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener($event);
+
+        $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
@@ -73,10 +87,12 @@ class LogoutSuccessHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
+        $event = new LogoutEvent($request, null);
 
-        /** @var RedirectResponse $response */
-        $response = $handler->onLogoutSuccess($request);
+        $listener = new LogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener($event);
+
+        $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
@@ -102,41 +118,15 @@ class LogoutSuccessHandlerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
+        $event = new LogoutEvent($request, null);
 
-        /** @var RedirectResponse $response */
-        $response = $handler->onLogoutSuccess($request);
+        $listener = new LogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener($event);
+
+        $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/home', $response->getTargetUrl());
-    }
-
-    public function testRedirectsToTheDefaultUrl(): void
-    {
-        $request = new Request();
-
-        $httpUtils = $this->createMock(HttpUtils::class);
-        $httpUtils
-            ->expects($this->once())
-            ->method('createRedirectResponse')
-            ->with($request, '/')
-            ->willReturn(new RedirectResponse('http://localhost'))
-        ;
-
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
-
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
-
-        /** @var RedirectResponse $response */
-        $response = $handler->onLogoutSuccess($request);
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('http://localhost', $response->getTargetUrl());
     }
 
     public function testRedirectsToTheLoginScreenInTheBackend(): void
@@ -158,10 +148,12 @@ class LogoutSuccessHandlerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $handler = new LogoutSuccessHandler($httpUtils, $scopeMatcher);
+        $event = new LogoutEvent($request, null);
 
-        /** @var RedirectResponse $response */
-        $response = $handler->onLogoutSuccess($request);
+        $listener = new LogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener($event);
+
+        $response = $event->getResponse();
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('contao_backend_login', $response->getTargetUrl());

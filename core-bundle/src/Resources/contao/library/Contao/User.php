@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
@@ -102,7 +103,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-abstract class User extends System implements UserInterface, EquatableInterface, \Serializable
+abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
 	/**
 	 * Object instance (Singleton)
@@ -453,8 +454,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	/**
 	 * @return User
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use Contao\User::loadUserByIdentifier() instead.
 	 */
 	public static function loadUserByUsername($username)
+	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::loadUserByIdentifier()" instead.');
+
+		return self::loadUserByIdentifier($username);
+	}
+
+	public static function loadUserByIdentifier(string $identifier): ?self
 	{
 		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
@@ -468,7 +479,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		$isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
 
 		// Load the user object
-		if ($user->findBy('username', $username) === false)
+		if ($user->findBy('username', $identifier) === false)
 		{
 			// Return if its not a real login attempt
 			if (!$isLogin)
@@ -478,7 +489,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 			$password = $request->request->get('password');
 
-			if (self::triggerImportUserHook($username, $password, $user->strTable) === false)
+			if (self::triggerImportUserHook($identifier, $password, $user->strTable) === false)
 			{
 				return null;
 			}
@@ -496,10 +507,15 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use Contao\User::getUserIdentifier() instead.
 	 */
 	public function getUsername()
 	{
-		return $this->username;
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::getUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::getUserIdentifier()" instead.');
+
+		return $this->getUserIdentifier();
 	}
 
 	public function setUsername($username)
@@ -530,7 +546,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPassword()
+	public function getPassword(): ?string
 	{
 		return $this->password;
 	}

@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
@@ -61,21 +60,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         yield 'no authentication without POST' => [false, 'tl_login', false];
         yield 'no authentication without form submit' => [true, null, false];
         yield 'no authentication with invalid form submit' => [true, 'tl_foobar', false];
-    }
-
-    public function testThrowsExceptionIfUsernameIsNotAString(): void
-    {
-        $request = $this->mockRequest();
-        $request->request->set('FORM_SUBMIT', 'tl_login');
-        $request->request->set('username', ['foo']);
-        $request->request->set('password', 'foobar');
-
-        $authenticationManager = $this->mockAuthenticationManager(null);
-        $listener = $this->createListener($authenticationManager);
-
-        $this->expectException(BadRequestHttpException::class);
-
-        $listener($this->mockRequestEvent($request));
     }
 
     public function testTrimsTheUsername(): void

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
@@ -47,9 +48,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -96,10 +97,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
             ->expects($this->once())
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willThrowException(new UserNotFoundException())
         ;
 
@@ -132,9 +133,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -265,7 +266,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         }
 
         if (null === $userProvider) {
-            $userProvider = $this->createMock(UserProviderInterface::class);
+            $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         }
 
         if (null === $logger) {

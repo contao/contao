@@ -27,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 /**
  * Creates a new Contao back end user.
@@ -40,14 +40,14 @@ class UserCreateCommand extends Command
 
     private ContaoFramework $framework;
     private Connection $connection;
-    private EncoderFactoryInterface $encoderFactory;
+    private PasswordHasherFactoryInterface $passwordHasherFactory;
     private array $locales;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory, Locales $locales)
+    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory, Locales $locales)
     {
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->locales = $locales->getEnabledLocaleIds();
 
         parent::__construct();
@@ -260,7 +260,7 @@ class UserCreateCommand extends Command
     private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
     {
         $time = time();
-        $hash = $this->encoderFactory->getEncoder(BackendUser::class)->encodePassword($password, null);
+        $hash = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class)->hash($password);
 
         $data = [
             'tstamp' => $time,

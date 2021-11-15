@@ -153,7 +153,7 @@ class ModuleChangePassword extends Module
 				// Validate the old password
 				if ($strKey == 'oldPassword')
 				{
-					$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+					$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 					if (!$encoder->isPasswordValid($objMember->password, $objWidget->value, null))
 					{

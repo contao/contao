@@ -10,17 +10,17 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener;
+namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\EventListener\SwitchUserListener;
+use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityTokenInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
@@ -67,7 +67,7 @@ class SwitchUserListenerTest extends TestCase
 
         $context = [
             'contao' => new ContaoContext(
-                'Contao\CoreBundle\EventListener\SwitchUserListener::__invoke',
+                'Contao\CoreBundle\EventListener\Security\SwitchUserListener::__invoke',
                 ContaoContext::ACCESS,
                 'user1'
             ),
@@ -90,10 +90,10 @@ class SwitchUserListenerTest extends TestCase
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
 
         if (null !== $username) {
-            $token = $this->createMock(TokenInterface::class);
+            $token = $this->createMock(ForwardCompatibilityTokenInterface::class);
             $token
                 ->expects($this->once())
-                ->method('getUsername')
+                ->method('getUserIdentifier')
                 ->willReturn($username)
             ;
 
@@ -110,12 +110,12 @@ class SwitchUserListenerTest extends TestCase
     private function mockSwitchUserEvent(string $username = null): SwitchUserEvent
     {
         /** @var UserInterface&MockObject $user */
-        $user = $this->createPartialMock(BackendUser::class, ['getUsername']);
+        $user = $this->createPartialMock(BackendUser::class, ['getUserIdentifier']);
 
         if (null !== $username) {
             $user
                 ->expects($this->once())
-                ->method('getUsername')
+                ->method('getUserIdentifier')
                 ->willReturn($username)
             ;
         }
