@@ -21,7 +21,6 @@ use Contao\Input;
 use Contao\NewsletterChannelModel;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter'] = array
 (
@@ -372,7 +371,6 @@ class tl_newsletter extends Backend
 				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
 											 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();

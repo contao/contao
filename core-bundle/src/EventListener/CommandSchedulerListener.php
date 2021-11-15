@@ -71,7 +71,6 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
             return false;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         return $config->isComplete() && !$config->get('disableCron') && $this->canRunDbQuery();

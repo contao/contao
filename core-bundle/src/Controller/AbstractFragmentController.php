@@ -71,10 +71,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $this->initializeContaoFramework();
 
-        /** @var PageModel $pageAdapter */
-        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
-
-        return $pageAdapter->findByPk((int) $pageModel);
+        return $this->getContaoAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 
     /**

@@ -76,7 +76,6 @@ class LegacyCron
             return;
         }
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         // Load the default language file (see #8719)

@@ -37,7 +37,6 @@ class InsertTagsController
     {
         $this->framework->initialize();
 
-        /** @var InsertTags $it */
         $it = $this->framework->createInstance(InsertTags::class);
 
         $response = new Response($it->replace($insertTag, false));

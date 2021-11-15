@@ -83,7 +83,6 @@ class RouteProvider extends AbstractPageRouteProvider
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
@@ -106,7 +105,6 @@ class RouteProvider extends AbstractPageRouteProvider
     {
         $this->framework->initialize(true);
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
         if (null === $names) {
@@ -277,7 +275,6 @@ class RouteProvider extends AbstractPageRouteProvider
             && !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
             && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
         ) {
-            /** @var System $system */
             $system = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback) {
@@ -292,7 +289,6 @@ class RouteProvider extends AbstractPageRouteProvider
         $rootPages = [];
         $indexPages = [];
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
 

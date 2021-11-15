@@ -153,7 +153,7 @@ class LightboxResultTest extends TestCase
 
         $locator = $this->createMock(ContainerInterface::class);
         $locator
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],

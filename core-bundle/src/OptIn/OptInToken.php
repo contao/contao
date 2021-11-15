@@ -63,7 +63,6 @@ class OptInToken implements OptInTokenInterface
             return;
         }
 
-        /** @var OptInModel $adapter */
         $adapter = $this->framework->getAdapter(OptInModel::class);
         $prefix = strtok($this->getIdentifier(), '-');
 
@@ -124,7 +123,6 @@ class OptInToken implements OptInTokenInterface
             $this->model->save();
         }
 
-        /** @var Email $email */
         $email = $this->framework->createInstance(Email::class);
         $email->subject = $this->model->emailSubject;
         $email->text = $this->model->emailText;

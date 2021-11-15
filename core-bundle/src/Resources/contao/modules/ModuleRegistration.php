@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
@@ -468,7 +467,6 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendActivationMail($arrData)
 	{
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
@@ -526,7 +524,6 @@ class ModuleRegistration extends Module
 		$this->strTemplate = 'mod_message';
 		$this->Template = new FrontendTemplate($this->strTemplate);
 
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related record
@@ -599,7 +596,6 @@ class ModuleRegistration extends Module
 		$this->strTemplate = 'mod_message';
 		$this->Template = new FrontendTemplate($this->strTemplate);
 
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optInToken = null;
 		$models = OptInModel::findByRelatedTableAndIds('tl_member', array($objMember->id));

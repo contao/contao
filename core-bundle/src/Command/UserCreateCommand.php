@@ -104,7 +104,6 @@ class UserCreateCommand extends Command
             $input->setOption('language', $language);
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $minLength = $config->get('minPasswordLength');
         $username = $input->getOption('username');
@@ -246,7 +245,6 @@ class UserCreateCommand extends Command
     {
         $this->framework->initialize();
 
-        /** @var UserGroupModel $userGroupModel */
         $userGroupModel = $this->framework->getAdapter(UserGroupModel::class);
         $groups = $userGroupModel->findAll();
 

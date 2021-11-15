@@ -372,7 +372,6 @@ class FileSelector extends Widget
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
 
 		$flag = substr($this->strField, 0, 2);
