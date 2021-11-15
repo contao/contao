@@ -26,6 +26,7 @@ class LogoutSuccessListenerTest extends TestCase
     public function testReturnsIfResponseIsAlreadySet(): void
     {
         $response = new Response();
+
         $event = new LogoutEvent(new Request(), null);
         $event->setResponse($response);
 
