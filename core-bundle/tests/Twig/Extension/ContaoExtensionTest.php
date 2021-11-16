@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -205,9 +206,13 @@ class ContaoExtensionTest extends TestCase
     {
         $extension = $this->getContaoExtension();
 
-        System::setContainer($this->getContainerWithContaoConfiguration(
+        $container = $this->getContainerWithContaoConfiguration(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
-        ));
+        );
+
+        $container->set(InsertTagParser::class, new InsertTagParser($this->mockContaoFramework()));
+
+        System::setContainer($container);
 
         $output = $extension->renderLegacyTemplate(
             'foo.html5',
@@ -222,9 +227,13 @@ class ContaoExtensionTest extends TestCase
     {
         $extension = $this->getContaoExtension();
 
-        System::setContainer($this->getContainerWithContaoConfiguration(
+        $container = $this->getContainerWithContaoConfiguration(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
-        ));
+        );
+
+        $container->set(InsertTagParser::class, new InsertTagParser($this->mockContaoFramework()));
+
+        System::setContainer($container);
 
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
@@ -260,6 +269,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set(InsertTagParser::class, new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
 

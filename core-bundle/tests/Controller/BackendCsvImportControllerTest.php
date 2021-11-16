@@ -16,6 +16,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FileUpload;
@@ -41,6 +42,7 @@ class BackendCsvImportControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
+        $container->set(InsertTagParser::class, new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
     }

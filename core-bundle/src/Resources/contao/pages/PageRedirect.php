@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -27,7 +28,7 @@ class PageRedirect extends Frontend
 	 */
 	public function generate($objPage)
 	{
-		$this->redirect($this->replaceInsertTags($objPage->url, false), $this->getRedirectStatusCode($objPage));
+		$this->redirect(System::getContainer()->get(InsertTagParser::class)->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
 	}
 
 	/**
@@ -39,7 +40,7 @@ class PageRedirect extends Frontend
 	 */
 	public function getResponse($objPage)
 	{
-		return new RedirectResponse($this->replaceInsertTags($objPage->url, false), $this->getRedirectStatusCode($objPage));
+		return new RedirectResponse(System::getContainer()->get(InsertTagParser::class)->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
 	}
 
 	/**

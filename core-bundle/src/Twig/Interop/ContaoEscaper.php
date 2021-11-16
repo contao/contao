@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
-use Contao\Controller;
 use Contao\StringUtil;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -65,9 +64,6 @@ final class ContaoEscaper
         }
 
         $string = (string) $string;
-
-        // Replace insert tags before '{' and '}' get encoded
-        $string = Controller::replaceInsertTags($string, false);
         $string = StringUtil::decodeEntities($string);
 
         // Original logic

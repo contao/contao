@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
@@ -284,9 +285,11 @@ class ModuleArticle extends Module
 		$this->headline = $this->title;
 		$this->printable = false;
 
+		$container = System::getContainer();
+
 		// Generate article
-		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$strArticle = $container->get(InsertTagParser::class)->replaceInline($this->generate());
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

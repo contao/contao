@@ -427,6 +427,11 @@ services:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
 
+    Contao\CoreBundle\InsertTag\InsertTagParser:
+        arguments:
+            - '@contao.framework'
+        public: true
+
     Contao\CoreBundle\Intl\Countries:
         arguments:
             - '@translator'
@@ -718,7 +723,7 @@ services:
             - '@contao.security.token_checker'
             - '@Contao\CoreBundle\String\HtmlDecoder'
             - '@request_stack'
-            - '@contao.framework'
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
         public: true
 
     contao.search.indexer.default:
@@ -912,6 +917,8 @@ services:
         public: true
 
     Contao\CoreBundle\String\HtmlDecoder:
+        arguments:
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
         public: true
 
     Contao\CoreBundle\String\SimpleTokenExpressionLanguage:
@@ -992,7 +999,9 @@ services:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\FigureRenderer'
 
-    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime: ~
+    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
+        arguments:
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
 
     Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:

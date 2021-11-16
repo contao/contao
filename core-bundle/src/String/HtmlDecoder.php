@@ -12,11 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
-use Contao\InsertTags;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\StringUtil;
 
 class HtmlDecoder
 {
+    private InsertTagParser $insertTagParser;
+
+    public function __construct(InsertTagParser $insertTagParser)
+    {
+        $this->insertTagParser = $insertTagParser;
+    }
+
     /**
      * Converts an input-encoded string to plain text UTF-8.
      *
@@ -31,7 +38,7 @@ class HtmlDecoder
         if ($removeInsertTags) {
             $val = StringUtil::stripInsertTags($val);
         } else {
-            $val = (string) (new InsertTags())->replace($val, false);
+            $val = $this->insertTagParser->replaceInline($val);
         }
 
         $val = strip_tags($val);
@@ -52,7 +59,7 @@ class HtmlDecoder
     public function htmlToPlainText(string $val, bool $removeInsertTags = false): string
     {
         if (!$removeInsertTags) {
-            $val = (string) (new InsertTags())->replace($val, false);
+            $val = (string) $this->insertTagParser->replaceInline($val);
         }
 
         // Add new lines before and after block level elements
