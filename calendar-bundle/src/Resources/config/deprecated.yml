@@ -1,0 +1,35 @@
+services:
+    contao_calendar.listener.generate_page:
+        alias: Contao\CalendarBundle\EventListener\GeneratePageListener
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0.
+
+    contao_calendar.listener.insert_tags:
+        alias: Contao\CalendarBundle\EventListener\InsertTagsListener
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0.
+
+    contao_calendar.listener.preview_url_convert:
+        alias: Contao\CalendarBundle\EventListener\PreviewUrlConvertListener
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0.
+
+    contao_calendar.listener.preview_url_create:
+        alias: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0.
+
+    contao_calendar.picker.event_provider:
+        alias: Contao\CalendarBundle\Picker\EventPickerProvider
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0.

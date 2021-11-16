@@ -1,10 +1,38 @@
+imports:
+    - { resource: deprecated.yml }
+
 services:
     _instanceof:
         Contao\CoreBundle\Framework\FrameworkAwareInterface:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-    contao_calendar.picker.event_provider:
+    Contao\CalendarBundle\EventListener\GeneratePageListener:
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: generatePage }
+
+    Contao\CalendarBundle\EventListener\InsertTagsListener:
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags }
+
+    Contao\CalendarBundle\EventListener\PreviewUrlConvertListener:
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    Contao\CalendarBundle\EventListener\PreviewUrlCreateListener:
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
+    Contao\CalendarBundle\Picker\EventPickerProvider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
         arguments:
             - '@knp_menu.factory'
