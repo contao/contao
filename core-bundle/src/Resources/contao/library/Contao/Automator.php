@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cache\ContaoCacheClearer;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -211,7 +212,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		$clearer = $container->get('contao.cache.clear_internal');
+		$clearer = $container->get(ContaoCacheClearer::class);
 		$clearer->clear($container->getParameter('kernel.cache_dir'));
 
 		// Add a log entry

@@ -1,3 +1,6 @@
+imports:
+    - { resource: deprecated.yml }
+
 services:
     _defaults:
         autoconfigure: true
@@ -26,9 +29,6 @@ services:
     Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager: '@contao.security.two_factor.trusted_device_manager'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
 
-    # Backwards compatibility
-    Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
-
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
         arguments:
@@ -47,11 +47,10 @@ services:
             - '%kernel.debug%'
         public: true
 
-    contao.cache.clear_internal:
-        class: Contao\CoreBundle\Cache\ContaoCacheClearer
+    Contao\CoreBundle\Cache\ContaoCacheClearer:
+        public: true
         arguments:
             - '@filesystem'
-        public: true
 
     contao.cache.warm_internal:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer

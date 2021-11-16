@@ -1,0 +1,10 @@
+services:
+    contao.cache.clear_internal:
+        alias: Contao\CoreBundle\Cache\ContaoCacheClearer
+        public: true
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0.
+
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
