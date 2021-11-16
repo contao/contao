@@ -99,7 +99,7 @@ abstract class Module extends Frontend
 
 	/**
 	 * Model
-	 * @var ModuleModel
+	 * @var ?ModuleModel
 	 */
 	protected $objModel;
 
