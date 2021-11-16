@@ -29,6 +29,8 @@ class PageUrlGeneratorTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $provider = $this->createMock(RouteProviderInterface::class);
 
         $this->pageRegistry = $this->createMock(PageRegistry::class);

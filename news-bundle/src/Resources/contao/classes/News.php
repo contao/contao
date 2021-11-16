@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
@@ -140,12 +141,14 @@ class News extends Frontend
 			$objArticle = NewsModel::findPublishedByPids($arrArchives);
 		}
 
+		$container = System::getContainer();
+
 		// Parse the items
 		if ($objArticle !== null)
 		{
 			$arrUrls = array();
 
-			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$request = $container->get('request_stack')->getCurrentRequest();
 
 			if ($request)
 			{
@@ -220,7 +223,7 @@ class News extends Frontend
 					$strDescription = $objArticle->teaser;
 				}
 
-				$strDescription = $this->replaceInsertTags($strDescription, false);
+				$strDescription = $container->get(InsertTagParser::class)->replaceInline($strDescription);
 				$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 				// Add the article image as enclosure
@@ -264,10 +267,10 @@ class News extends Frontend
 			$GLOBALS['objPage'] = $origObjPage;
 		}
 
-		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get(InsertTagParser::class)->replaceInline($objFeed->$strType()));
 	}
 
 	/**

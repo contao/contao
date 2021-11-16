@@ -94,8 +94,8 @@ class Newsletter extends Backend
 		}
 
 		// Replace insert tags
-		$html = $this->replaceInsertTags($objNewsletter->content, false);
-		$text = $this->replaceInsertTags($objNewsletter->text, false);
+		$html = System::getContainer()->get(InsertTagParser::class)->replaceInline($objNewsletter->content);
+		$text = System::getContainer()->get(InsertTagParser::class)->replaceInline($objNewsletter->text);
 
 		// Convert relative URLs
 		if ($objNewsletter->externalImages)

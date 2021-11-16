@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
@@ -160,7 +161,7 @@ trait TemplateInheritance
 		}
 
 		// Replace insert tags
-		$strBuffer = Controller::replaceInsertTags($strBuffer);
+		$strBuffer = System::getContainer()->get(InsertTagParser::class)->replace($strBuffer);
 
 		// Add start and end markers in debug mode
 		if ($blnDebug)

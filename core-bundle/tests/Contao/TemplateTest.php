@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -34,7 +36,10 @@ class TemplateTest extends TestCase
 
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -412,11 +417,6 @@ class TemplateTest extends TestCase
                 $this->compile();
 
                 return $this->strBuffer;
-            }
-
-            public static function replaceInsertTags($strBuffer, $blnCache = true)
-            {
-                return $strBuffer; // ignore insert tags
             }
 
             public static function replaceDynamicScriptTags($strBuffer)

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -82,9 +84,11 @@ class InsertTagTest extends TestCase
 
         System::setContainer($container);
 
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
-                InsertTagRuntime::class => static fn () => new InsertTagRuntime(),
+                InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
             ])
         );
 

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
@@ -43,9 +43,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder(),
+            new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(InsertTagParser::class)
         );
 
         $responseContext = $factory->createResponseContext();
@@ -65,9 +65,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder(),
+            new HtmlDecoder($this->createMock(InsertTagParser::class)),
             $this->createMock(RequestStack::class),
-            $this->createMock(ContaoFramework::class)
+            $this->createMock(InsertTagParser::class)
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -96,25 +96,18 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testContaoWebpageResponseContext(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
-
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
             ->expects($this->once())
             ->method('setResponseContext')
         ;
 
-        $controllerAdapter = $this->mockAdapter(['replaceInsertTags']);
-        $controllerAdapter
-            ->expects($this->once())
-            ->method('replaceInsertTags')
-            ->with('{{link_url::42}}')
-            ->willReturn('de/foobar.html')
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->method('replaceInline')
+            ->withConsecutive(['My title'], ['My description'], ['{{link_url::42}}'])
+            ->willReturnOnConsecutiveCalls('My title', 'My description', 'de/foobar.html')
         ;
-
-        $contaoFramework = $this->mockContaoFramework([
-            Controller::class => $controllerAdapter,
-        ]);
 
         $requestStack = new RequestStack();
         $requestStack->push(Request::create('https://example.com/'));
@@ -131,9 +124,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder(),
+            new HtmlDecoder($insertTagsParser),
             $requestStack,
-            $contaoFramework
+            $insertTagsParser
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -167,20 +160,29 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
 
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->method('replaceInline')
+            ->willReturnArgument(0)
+        ;
+
         $factory = new CoreResponseContextFactory(
             $this->createMock(ResponseContextAccessor::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder(),
+            new HtmlDecoder($insertTagsParser),
             $this->createMock(RequestStack::class),
-            $this->createMock(ContaoFramework::class)
+            $insertTagsParser
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);

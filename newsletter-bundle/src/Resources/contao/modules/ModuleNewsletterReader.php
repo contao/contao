@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
@@ -123,7 +124,7 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Parse simple tokens and insert tags
-		$strContent = $this->replaceInsertTags($strContent);
+		$strContent = System::getContainer()->get(InsertTagParser::class)->replace($strContent);
 		$strContent = System::getContainer()->get(SimpleTokenParser::class)->parse($strContent, array());
 
 		// Encode e-mail addresses

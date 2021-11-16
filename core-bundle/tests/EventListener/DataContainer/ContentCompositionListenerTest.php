@@ -63,6 +63,8 @@ class ContentCompositionListenerTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
         $this->security = $this->createMock(Security::class);

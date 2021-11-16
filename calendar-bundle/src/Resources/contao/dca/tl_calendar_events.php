@@ -15,6 +15,7 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Events;
@@ -831,7 +832,7 @@ class tl_calendar_events extends Backend
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+					return str_replace('%', '%%', System::getContainer()->get(InsertTagParser::class)->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)

@@ -22,6 +22,7 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -555,7 +556,10 @@ class FigureBuilderTest extends TestCase
      */
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
