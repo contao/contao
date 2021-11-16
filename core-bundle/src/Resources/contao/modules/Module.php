@@ -257,6 +257,11 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
+		if (!$this->objModel instanceof Model)
+		{
+			return array();
+		}
+
 		return array(System::getContainer()->get(EntityCacheTags::class)->getTagForModelInstance($this->objModel));
 	}
 
