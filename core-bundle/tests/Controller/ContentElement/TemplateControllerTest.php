@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\TemplateController;
 use Contao\FrontendTemplate;
 use Contao\TestCase\ContaoTestCase;
@@ -105,6 +106,7 @@ class TemplateControllerTest extends ContaoTestCase
         $container = new Container();
         $container->set('contao.framework', $framework);
         $container->set('request_stack', $this->createMock(RequestStack::class));
+        $container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         return $container;
     }

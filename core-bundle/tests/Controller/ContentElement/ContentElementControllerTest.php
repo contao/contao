@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\System;
-use FOS\HttpCache\ResponseTagger;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +34,7 @@ class ContentElementControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
+        $this->container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         System::setContainer($this->container);
     }
@@ -173,15 +174,15 @@ class ContentElementControllerTest extends TestCase
         $model = $this->mockContentModel();
         $model->id = 42;
 
-        $responseTagger = $this->createMock(ResponseTagger::class);
-        $responseTagger
+        $entityCacheTags = $this->createMock(EntityCacheTags::class);
+        $entityCacheTags
             ->expects($this->once())
-            ->method('addTags')
-            ->with(['contao.db.tl_content.42'])
+            ->method('tagWith')
+            ->with($model)
         ;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test');
-        $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
+        $container->set(EntityCacheTags::class, $entityCacheTags);
 
         $controller = new TestController();
         $controller->setContainer($container);

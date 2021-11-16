@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
@@ -67,11 +68,7 @@ class ModuleArticle extends Module
 		$this->blnNoMarkup = $blnNoMarkup;
 
 		// Tag the article (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_article.' . $this->id));
-		}
+		System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
 
 		return parent::generate();
 	}

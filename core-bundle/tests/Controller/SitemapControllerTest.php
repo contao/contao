@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\ArticleModel;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\SitemapController;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -20,7 +21,6 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
-use FOS\HttpCache\ResponseTagger;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -757,10 +757,10 @@ class SitemapControllerTest extends TestCase
             ;
         }
 
-        $responseTagger = $this->createMock(ResponseTagger::class);
-        $responseTagger
+        $entityCacheTags = $this->createMock(EntityCacheTags::class);
+        $entityCacheTags
             ->expects($this->once())
-            ->method('addTags')
+            ->method('tagWith')
             ->with([
                 'contao.sitemap',
                 'contao.sitemap.42',
@@ -772,7 +772,7 @@ class SitemapControllerTest extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
         $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('fos_http_cache.http.symfony_response_tagger', $responseTagger);
+        $container->set(EntityCacheTags::class, $entityCacheTags);
 
         return $container;
     }
