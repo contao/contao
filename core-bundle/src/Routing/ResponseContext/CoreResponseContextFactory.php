@@ -94,7 +94,6 @@ class CoreResponseContextFactory
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
             // TODO: Replace this with the insert tags service once #3638 has been merged
-            /** @var Controller $controller */
             $controller = $this->contaoFramework->getAdapter(Controller::class);
             $url = $controller->replaceInsertTags($pageModel->canonicalLink, false);
 

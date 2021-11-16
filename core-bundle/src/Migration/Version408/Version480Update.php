@@ -129,7 +129,6 @@ class Version480Update extends AbstractMigration
 
         $this->framework->initialize();
 
-        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
 
         foreach (['jquery' => 'j_mediaelement', 'scripts' => 'js_mediaelement'] as $column => $templateName) {
@@ -159,9 +158,7 @@ class Version480Update extends AbstractMigration
     {
         $this->framework->initialize();
 
-        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
-
         $jTemplateExists = \array_key_exists('j_mediaelement', $controller->getTemplateGroup('j_'));
         $jsTemplateExists = \array_key_exists('js_mediaelement', $controller->getTemplateGroup('js_'));
 

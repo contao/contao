@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -42,7 +41,6 @@ class LogoutHandlerTest extends TestCase
             ->with('User "foobar" has logged out')
         ;
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -85,7 +83,6 @@ class LogoutHandlerTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postLogout" hook has been deprecated %s.');
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foobar';
 
@@ -183,7 +180,6 @@ class LogoutHandlerTest extends TestCase
             ->willReturn(true)
         ;
 
-        /** @var TwoFactorToken&MockObject $token */
         $token = $this->createMock(TwoFactorToken::class);
         $token
             ->expects($this->once())

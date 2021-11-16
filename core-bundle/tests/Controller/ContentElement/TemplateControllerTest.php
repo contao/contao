@@ -16,7 +16,6 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\TemplateController;
 use Contao\FrontendTemplate;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +32,6 @@ class TemplateControllerTest extends ContaoTestCase
 
         $container = $this->mockContainer($data, 'ce_template');
 
-        /** @var ContentModel&MockObject $contentModel */
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->data = serialize($data);
 
@@ -47,7 +45,6 @@ class TemplateControllerTest extends ContaoTestCase
     {
         $container = $this->mockContainer([], 'ce_template');
 
-        /** @var ContentModel&MockObject $contentModel */
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->data = null;
 
@@ -66,7 +63,6 @@ class TemplateControllerTest extends ContaoTestCase
 
         $container = $this->mockContainer($data, 'ce_template_custom1');
 
-        /** @var ContentModel&MockObject $contentModel */
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->data = serialize($data);
         $contentModel->customTpl = 'ce_template_custom1';
@@ -79,7 +75,6 @@ class TemplateControllerTest extends ContaoTestCase
 
     private function mockContainer(array $expectedData, string $expectedTemplate): Container
     {
-        /** @var FrontendTemplate&MockObject $template */
         $template = $this->createMock(FrontendTemplate::class);
         $template
             ->expects($this->once())

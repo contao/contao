@@ -157,7 +157,7 @@ class ExceptionConverterListenerTest extends TestCase
 
     public function testConvertsServiceUnavailableExceptions(): void
     {
-        $event = $this->getResponseEvent(new ServiceUnavailableException());
+        $event = $this->getResponseEvent(new ServiceUnavailableException(''));
 
         $listener = new ExceptionConverterListener();
         $listener($event);

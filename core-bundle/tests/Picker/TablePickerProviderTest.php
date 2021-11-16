@@ -464,9 +464,6 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @param ItemInterface&MockObject $menu
-     */
     private function createMenuTableProvider(array $modules, string $current, ItemInterface $menu = null): TablePickerProvider
     {
         $expectedItems = [];

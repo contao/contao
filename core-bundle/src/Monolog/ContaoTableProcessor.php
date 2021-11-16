@@ -89,7 +89,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $token = $this->tokenStorage->getToken();
 
-        $context->setUsername(null === $token ? 'N/A' : $token->getUsername());
+        $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
     }
 
     private function updateSource(ContaoContext $context, Request $request = null): void

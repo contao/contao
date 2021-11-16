@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\BackendLocaleListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -28,7 +27,6 @@ class BackendLocaleListenerTest extends TestCase
 {
     public function testSetsTheLocale(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->language = 'de';
 
@@ -91,7 +89,6 @@ class BackendLocaleListenerTest extends TestCase
 
     public function testDoesNotSetTheLocaleIfNoUserLanguage(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
 
         $security = $this->createMock(Security::class);

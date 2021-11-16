@@ -29,13 +29,13 @@ use Webmozart\PathUtil\Path;
  */
 class FaviconController
 {
-    private ContaoFramework $contaoFramework;
+    private ContaoFramework $framework;
     private string $projectDir;
     private ?ResponseTagger $responseTagger;
 
-    public function __construct(ContaoFramework $contaoFramework, string $projectDir, ResponseTagger $responseTagger = null)
+    public function __construct(ContaoFramework $framework, string $projectDir, ResponseTagger $responseTagger = null)
     {
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
         $this->projectDir = $projectDir;
         $this->responseTagger = $responseTagger;
     }
@@ -45,12 +45,10 @@ class FaviconController
      */
     public function __invoke(Request $request): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
-        /** @var PageModel $pageModel */
-        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        $pageModel = $this->framework->getAdapter(PageModel::class);
 
-        /** @var PageModel|null $rootPage */
         $rootPage = $pageModel->findPublishedFallbackByHostname(
             $request->server->get('HTTP_HOST'),
             ['fallbackToEmpty' => true]
@@ -60,8 +58,7 @@ class FaviconController
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        /** @var FilesModel $filesModel */
-        $filesModel = $this->contaoFramework->getAdapter(FilesModel::class);
+        $filesModel = $this->framework->getAdapter(FilesModel::class);
         $faviconModel = $filesModel->findByUuid($favicon);
 
         if (null === $faviconModel) {
