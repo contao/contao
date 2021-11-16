@@ -130,22 +130,27 @@ class ContentMedia extends ContentElement
 		// Convert the language to a locale (see #5678)
 		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);
 
+		// Determine caption
+		$strCaption = $this->playerCaption;
+
 		// Pass File objects to the template
 		while ($objFiles->next())
 		{
-			$arrMeta = StringUtil::deserialize($objFiles->meta);
+			$objMeta = $objFiles->current()->getMetadata($strLanguage);
+			$strTitle = null;
 
-			if (\is_array($arrMeta) && isset($arrMeta[$strLanguage]))
+			if (null !== $objMeta)
 			{
-				$strTitle = $arrMeta[$strLanguage]['title'];
-			}
-			else
-			{
-				$strTitle = $objFiles->name;
+				$strTitle = $objMeta->getTitle();
+
+				if (empty($strCaption))
+				{
+					$strCaption = $objMeta->getCaption();
+				}
 			}
 
 			$objFile = new File($objFiles->path);
-			$objFile->title = StringUtil::specialchars($strTitle);
+			$objFile->title = StringUtil::specialchars($strTitle ?: $objFiles->name);
 
 			$arrFiles[$objFile->extension] = $objFile;
 		}
@@ -184,7 +189,7 @@ class ContentMedia extends ContentElement
 
 		$this->Template->attributes = $attributes;
 		$this->Template->preload = $this->playerPreload;
-		$this->Template->caption = $this->playerCaption;
+		$this->Template->caption = $strCaption;
 
 		if ($this->playerStart || $this->playerStop)
 		{
