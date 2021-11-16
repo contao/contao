@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
@@ -49,6 +50,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|null            $favicon
  * @property string|null            $robotsTxt
  * @property string                 $mailerTransport
+ * @property string|integer         $enableCanonical
+ * @property string                 $canonicalLink
+ * @property string                 $canonicalKeepParams
  * @property string                 $adminEmail
  * @property string                 $dateFormat
  * @property string                 $timeFormat
@@ -140,6 +144,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByFavicon($val, array $opt=array())
  * @method static PageModel|null findOneByRobotsTxt($val, array $opt=array())
  * @method static PageModel|null findOneByMailerTransport($val, array $opt=array())
+ * @method static PageModel|null findOneByEnableCanonical($val, array $opt=array())
+ * @method static PageModel|null findOneByCanonicalLink($val, array $opt=array())
+ * @method static PageModel|null findOneByCanonicalKeepParams($val, array $opt=array())
  * @method static PageModel|null findOneByAdminEmail($val, array $opt=array())
  * @method static PageModel|null findOneByDateFormat($val, array $opt=array())
  * @method static PageModel|null findOneByTimeFormat($val, array $opt=array())
@@ -196,6 +203,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByFavicon($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobotsTxt($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByMailerTransport($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByEnableCanonical($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCanonicalLink($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCanonicalKeepParams($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
@@ -256,6 +266,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByFavicon($val, array $opt=array())
  * @method static integer countByRobotsTxt($val, array $opt=array())
  * @method static integer countByMailerTransport($val, array $opt=array())
+ * @method static integer countByEnableCanonical($val, array $opt=array())
+ * @method static integer countByCanonicalLink($val, array $opt=array())
+ * @method static integer countByCanonicalKeepParams($val, array $opt=array())
  * @method static integer countByAdminEmail($val, array $opt=array())
  * @method static integer countByDateFormat($val, array $opt=array())
  * @method static integer countByTimeFormat($val, array $opt=array())
@@ -326,15 +339,16 @@ class PageModel extends Model
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
 
 				switch ($strKey)
 				{
 					case 'pageTitle':
-						$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'description':
-						$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'robots':
@@ -1157,6 +1171,7 @@ class PageModel extends Model
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
 			$this->mailerTransport = $objParentPage->mailerTransport;
+			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->useAutoItem = Config::get('useAutoItem');
 
 			// Store whether the root page has been published
@@ -1180,7 +1195,7 @@ class PageModel extends Model
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') && $objParentPage->language ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
+				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
 				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 			}
 		}

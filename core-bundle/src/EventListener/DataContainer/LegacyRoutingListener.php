@@ -84,7 +84,7 @@ class LegacyRoutingListener
      */
     public function overrideUrlPrefix($value, DataContainer $dc): ?string
     {
-        return $this->prependLocale && $dc->activeRecord->language ? LocaleUtil::formatAsLanguageTag($dc->activeRecord->language) : '';
+        return $this->prependLocale ? LocaleUtil::formatAsLanguageTag($dc->activeRecord->language) : '';
     }
 
     /**
