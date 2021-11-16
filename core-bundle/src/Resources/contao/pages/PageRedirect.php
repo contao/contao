@@ -63,7 +63,6 @@ class PageRedirect extends Frontend
 	 */
 	private function prepare($objPage)
 	{
-		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
 
 		$locale = str_replace('-', '_', $objPage->language);
