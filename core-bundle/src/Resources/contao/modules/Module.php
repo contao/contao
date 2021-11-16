@@ -196,7 +196,7 @@ abstract class Module extends Frontend
 	/**
 	 * Return the model
 	 *
-	 * @return Model
+	 * @return ?Model
 	 */
 	public function getModel()
 	{
@@ -257,7 +257,7 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		if (!$this->objModel instanceof Model)
+		if ($this->objModel === null)
 		{
 			return array();
 		}
