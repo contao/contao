@@ -73,7 +73,7 @@ class RememberMe
         $this->class = \get_class($user);
         $this->series = $series;
         $this->value = random_bytes(64);
-        $this->username = $user->getUsername();
+        $this->username = $user->getUserIdentifier();
         $this->lastUsed = new \DateTime();
         $this->expires = null;
     }

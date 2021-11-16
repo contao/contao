@@ -78,9 +78,8 @@ security:
         contao.security.frontend_user_provider:
             id: contao.security.frontend_user_provider
 
-    encoders:
-        Contao\User:
-            algorithm: auto
+    password_hashers:
+        Contao\User: auto
 
     firewalls:
         dev:
@@ -105,7 +104,6 @@ security:
                 path: contao_backend_logout
                 handlers:
                     - contao.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
@@ -125,7 +123,6 @@ security:
                 path: contao_frontend_logout
                 handlers:
                     - contao.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
     access_control:
         - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

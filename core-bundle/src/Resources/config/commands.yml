@@ -84,7 +84,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '@security.encoder_factory'
+            - '@security.password_hasher_factory'
             - '@Contao\CoreBundle\Intl\Locales'
 
     Contao\CoreBundle\Command\UserListCommand:
@@ -96,7 +96,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-            - '@security.encoder_factory'
+            - '@security.password_hasher_factory'
 
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand

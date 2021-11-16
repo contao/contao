@@ -71,7 +71,6 @@ class SitemapControllerTest extends TestCase
 
     public function testGeneratesSitemapForRegularPages(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -87,7 +86,7 @@ class SitemapControllerTest extends TestCase
         ;
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -100,7 +99,6 @@ class SitemapControllerTest extends TestCase
 
     public function testRecursivelyWalksThePageTree(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -115,7 +113,6 @@ class SitemapControllerTest extends TestCase
             ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
@@ -138,7 +135,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -157,7 +154,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsUnpublishedPagesButAddsChildPages(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -171,7 +167,6 @@ class SitemapControllerTest extends TestCase
             ->method('getAbsoluteUrl')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
@@ -197,7 +192,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -210,7 +205,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsPagesThatRequireItemButAddsChildPages(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -225,7 +219,6 @@ class SitemapControllerTest extends TestCase
             ->method('getAbsoluteUrl')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
@@ -251,7 +244,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -264,7 +257,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsPagesWithoutContentComposition(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -279,7 +271,6 @@ class SitemapControllerTest extends TestCase
             ->method('getAbsoluteUrl')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
@@ -305,7 +296,7 @@ class SitemapControllerTest extends TestCase
         $articles = [44 => null];
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -318,7 +309,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsNonRegularPages(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -332,7 +322,6 @@ class SitemapControllerTest extends TestCase
             ->method('getAbsoluteUrl')
         ;
 
-        /** @var PageModel&MockObject $page1 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
@@ -355,7 +344,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -368,7 +357,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsPagesIfTheUserDoesNotHaveAccess(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -384,7 +372,6 @@ class SitemapControllerTest extends TestCase
             ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,
@@ -406,7 +393,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->mockContainer($framework, [44 => false]);
+        $container = $this->getContainer($framework, [44 => false]);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -424,7 +411,6 @@ class SitemapControllerTest extends TestCase
 
     public function testGeneratesTheTeaserArticleUrls(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -448,7 +434,7 @@ class SitemapControllerTest extends TestCase
         ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -461,7 +447,6 @@ class SitemapControllerTest extends TestCase
 
     public function testGeneratesTheTeaserArticleUrlsByIdIfAliasIsEmpty(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -485,7 +470,7 @@ class SitemapControllerTest extends TestCase
         ]);
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -498,7 +483,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsNoindexNofollowPages(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -514,7 +498,6 @@ class SitemapControllerTest extends TestCase
             ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 42,
@@ -537,7 +520,7 @@ class SitemapControllerTest extends TestCase
         ];
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
-        $container = $this->mockContainer($framework);
+        $container = $this->getContainer($framework);
 
         $controller = new SitemapController($this->mockPageRegistry());
         $controller->setContainer($container);
@@ -553,7 +536,6 @@ class SitemapControllerTest extends TestCase
      */
     public function testCallsTheLegacyHookForEachRootPage(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -569,7 +551,6 @@ class SitemapControllerTest extends TestCase
             ->willReturn('https://www.foobar.com/en/page1.html')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 22,
             'pid' => 21,
@@ -616,7 +597,7 @@ class SitemapControllerTest extends TestCase
         );
 
         $controller = new SitemapController($this->mockPageRegistry());
-        $controller->setContainer($this->mockContainer($framework));
+        $controller->setContainer($this->getContainer($framework));
 
         $this->expectDeprecation('Since contao/core-bundle 4.11: Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
 
@@ -745,7 +726,7 @@ class SitemapControllerTest extends TestCase
     /**
      * @param array<bool> $isGranted
      */
-    private function mockContainer(ContaoFramework $framework, array $isGranted = null): ContainerBuilder
+    private function getContainer(ContaoFramework $framework, array $isGranted = null): ContainerBuilder
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher

@@ -380,7 +380,7 @@ services:
             - { name: kernel.reset, method: reset }
 
     contao.listener.switch_user:
-        class: Contao\CoreBundle\EventListener\SwitchUserListener
+        class: Contao\CoreBundle\EventListener\Security\SwitchUserListener
         arguments:
             - '@security.token_storage'
             - '@logger'
@@ -388,7 +388,7 @@ services:
             - kernel.event_listener
 
     contao.listener.two_factor.frontend:
-        class: Contao\CoreBundle\EventListener\TwoFactorFrontendListener
+        class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
@@ -404,5 +404,12 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
+        tags:
+            - kernel.event_listener
+
+    Contao\CoreBundle\EventListener\Security\LogoutSuccessListener:
+        arguments:
+            - '@security.http_utils'
+            - '@contao.routing.scope_matcher'
         tags:
             - kernel.event_listener

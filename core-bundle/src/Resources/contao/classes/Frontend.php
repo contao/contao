@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -149,8 +150,9 @@ abstract class Frontend extends Controller
 				$arrOptions[] = $strAlias;
 			}
 
-			/** @var PageModel $objPageModel */
-			$objPageModel = System::getContainer()->get('contao.framework')->getAdapter(PageModel::class);
+			/** @var ContaoFramework $framework */
+			$framework = System::getContainer()->get('contao.framework');
+			$objPageModel = $framework->getAdapter(PageModel::class);
 
 			// Check if there are pages with a matching alias
 			$objPages = $objPageModel->findByAliases($arrOptions);

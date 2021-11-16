@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
@@ -37,6 +38,20 @@ abstract class AbstractController extends SymfonyAbstractController
     protected function initializeContaoFramework(): void
     {
         $this->get('contao.framework')->initialize();
+    }
+
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     *
+     * @phpstan-return Adapter<T>
+     */
+    protected function getContaoAdapter(string $class)
+    {
+        return $this->get('contao.framework')->getAdapter($class);
     }
 
     protected function tagResponse(array $tags): void

@@ -21,7 +21,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
 use Contao\Widget;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_form_field'] = array
 (
@@ -459,7 +458,6 @@ class tl_form_field extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Set root IDs
@@ -588,7 +586,6 @@ class tl_form_field extends Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing form fields with not allowed types

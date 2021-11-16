@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
-use FOS\HttpCacheBundle\CacheManager;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -1262,7 +1261,6 @@ abstract class DataContainer extends Backend
 		{
 			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 			$data = $objSessionBag->all();
 
 			unset(
@@ -1434,9 +1432,7 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		/** @var CacheManager $cacheManager */
-		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
-		$cacheManager->invalidateTags($tags);
+		System::getContainer()->get('fos_http_cache.cache_manager')->invalidateTags($tags);
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)

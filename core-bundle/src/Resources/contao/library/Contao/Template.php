@@ -10,10 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Image\ImageInterface;
@@ -332,10 +330,6 @@ abstract class Template extends Controller
 		$response->headers->set('Content-Type', $this->strContentType);
 		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
 
-		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
-		$response->headers->remove('Cache-Control');
-
 		return $response;
 	}
 
@@ -432,7 +426,6 @@ abstract class Template extends Controller
 	 */
 	public function addSchemaOrg(array $jsonLd): void
 	{
-		/** @var ResponseContext $responseContext */
 		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(JsonLdManager::class))

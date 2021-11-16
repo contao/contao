@@ -16,10 +16,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SlugValidCharactersEvent extends Event
 {
-    /**
-     * @var array
-     */
-    private $options;
+    private array $options;
 
     public function __construct(array $options)
     {

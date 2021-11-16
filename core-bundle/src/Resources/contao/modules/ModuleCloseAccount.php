@@ -77,7 +77,7 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
-			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 			// Validate the password
 			if (!$objWidget->hasErrors() && !$encoder->isPasswordValid($this->User->password, $objWidget->value, null))

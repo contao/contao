@@ -65,7 +65,6 @@ class Route404ProviderTest extends TestCase
 
     public function testGetRoutesByNamesWithoutValueReturnsAllRoutes(): void
     {
-        /** @var PageModel&MockObject $notFoundPage */
         $notFoundPage = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -79,7 +78,6 @@ class Route404ProviderTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $otherPage */
         $otherPage = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -201,7 +199,6 @@ class Route404ProviderTest extends TestCase
 
     public function testCreatesOneRouteWithoutLocale(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -249,7 +246,6 @@ class Route404ProviderTest extends TestCase
 
     public function testCreatesTwoRoutesWithLocale(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -393,7 +389,6 @@ class Route404ProviderTest extends TestCase
 
     public function testIgnoresRoutesWithoutRootId(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->type = 'error_404';
@@ -428,7 +423,6 @@ class Route404ProviderTest extends TestCase
 
     public function testIgnoresPagesWithNoRootPageFoundException(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 17;
         $page->type = 'error_404';

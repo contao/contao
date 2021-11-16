@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
@@ -168,7 +167,6 @@ class ModuleSubscribe extends Module
 	{
 		$this->Template = new FrontendTemplate('mod_newsletter');
 
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token
@@ -361,7 +359,6 @@ class ModuleSubscribe extends Module
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
 		}
 
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optInToken = $optIn->create('nl', $strEmail, $arrRelated);
 

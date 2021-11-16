@@ -365,7 +365,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'bar';
 
@@ -423,7 +422,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -484,7 +482,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 

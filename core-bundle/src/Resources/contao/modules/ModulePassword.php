@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\String\SimpleTokenParser;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Front end module "lost password".
@@ -185,7 +183,6 @@ class ModulePassword extends Module
 	 */
 	protected function setNewPassword()
 	{
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 
 		// Find an unconfirmed token with only one related record
@@ -247,7 +244,6 @@ class ModulePassword extends Module
 		$objWidget->rowClassConfirm = 'row_1 odd';
 		$this->Template->rowLast = 'row_2 row_last even';
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Validate the field
@@ -316,7 +312,6 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 

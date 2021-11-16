@@ -90,7 +90,6 @@ class UserListCommand extends Command
     {
         $this->framework->initialize();
 
-        /** @var UserModel $userModel */
         $userModel = $this->framework->getAdapter(UserModel::class);
 
         if ($onlyAdmins) {

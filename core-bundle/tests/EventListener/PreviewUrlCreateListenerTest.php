@@ -18,7 +18,6 @@ use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -30,8 +29,6 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack->push(new Request());
 
         $event = new PreviewUrlCreateEvent('page', 42);
-
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
@@ -52,11 +49,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack->push(new Request());
 
         $event = new PreviewUrlCreateEvent('article', 3);
-
-        /** @var ArticleModel&MockObject $articleModel */
         $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
-
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
@@ -130,7 +123,6 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
-        /** @var ArticleModel&MockObject $articleModel */
         $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
 
         $adapters = [

@@ -23,7 +23,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
@@ -550,9 +549,7 @@ class tl_user extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
-
 				$session = $objSession->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));
