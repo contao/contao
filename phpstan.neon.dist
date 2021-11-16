@@ -38,11 +38,6 @@ parameters:
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
-        # Ignore wrong class-string when testing the guard that enforces it at runtime
-        -
-            message: '#Parameter \#1 \$className of method Contao\\CoreBundle\\Cache\\EntityCacheTags::getTagForModelClass\(\) expects class-string<Contao\\Model>, string given\.#'
-            path: %currentWorkingDirectory%/core-bundle/tests/Cache/EntityCacheTagsTest.php
-
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

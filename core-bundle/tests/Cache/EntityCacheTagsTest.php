@@ -41,7 +41,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid entity class.');
 
         $entityCacheTags->getTagForEntityClass(\stdClass::class);
@@ -50,7 +50,6 @@ class EntityCacheTagsTest extends DoctrineTestCase
     public function testGetTagForEntityInstance(): void
     {
         $entityCacheTags = $this->getEntityCacheTags();
-
         $post = (new BlogPost())->setId(5);
 
         $this->assertSame(
@@ -63,7 +62,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given object of type "stdClass" is no valid entity instance.');
 
         $entityCacheTags->getTagForEntityInstance(new \stdClass());
@@ -83,9 +82,10 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid model class.');
 
+        /** @phpstan-ignore-next-line */
         $entityCacheTags->getTagForModelClass(\stdClass::class);
     }
 
@@ -104,7 +104,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     }
 
     /**
-     * @dataProvider provideArguments
+     * @dataProvider getArguments
      */
     public function testGetTags($argument, array $expectedTags): void
     {
@@ -113,7 +113,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $this->assertSame($expectedTags, $entityCacheTags->getTagsFor($argument));
     }
 
-    public function provideArguments(): \Generator
+    public function getArguments(): \Generator
     {
         yield 'single tag' => [
             'foo',
@@ -215,7 +215,6 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page->id = 2;
 
         $entityCacheTags = $this->getEntityCacheTags($responseTagger);
-
         $entityCacheTags->tagWithEntityClass(BlogPost::class);
         $entityCacheTags->tagWithEntityInstance($post);
         $entityCacheTags->tagWithModelClass(PageModel::class);
@@ -245,7 +244,6 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page->id = 2;
 
         $entityCacheTags = $this->getEntityCacheTags(null, $cacheInvalidator);
-
         $entityCacheTags->invalidateTagsForEntityClass(BlogPost::class);
         $entityCacheTags->invalidateTagsForEntityInstance($post);
         $entityCacheTags->invalidateTagsForModelClass(PageModel::class);
