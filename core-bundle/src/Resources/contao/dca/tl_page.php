@@ -1048,12 +1048,12 @@ class tl_page extends Backend
 	 *
 	 * @return string
 	 */
-	public function getTitleTag(PageModel $model)
+	public function getTitleTag(PageModel $page)
 	{
 		$page->loadDetails();
 
 		/** @var LayoutModel $layout */
-		if (!$layout = $model->getRelated('layout'))
+		if (!$layout = $page->getRelated('layout'))
 		{
 			return '';
 		}
