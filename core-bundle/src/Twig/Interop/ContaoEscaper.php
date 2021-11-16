@@ -64,7 +64,6 @@ final class ContaoEscaper
         }
 
         $string = (string) $string;
-
         $string = StringUtil::decodeEntities($string);
 
         // Original logic

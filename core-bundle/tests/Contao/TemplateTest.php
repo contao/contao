@@ -38,6 +38,7 @@ class TemplateTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
         System::setContainer($container);
     }
 

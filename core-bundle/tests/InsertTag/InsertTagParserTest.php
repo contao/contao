@@ -26,7 +26,6 @@ class InsertTagParserTest extends TestCase
         parent::setUp();
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
         System::setContainer($container);

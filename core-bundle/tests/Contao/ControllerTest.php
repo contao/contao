@@ -170,6 +170,7 @@ class ControllerTest extends TestCase
             ->method('replaceInline')
             ->willReturnArgument(0)
         ;
+
         $insertTagParser
             ->method('replace')
             ->willReturnArgument(0)
@@ -179,7 +180,9 @@ class ControllerTest extends TestCase
         $container->set(Studio::class, $studio);
         $container->set(InsertTagParser::class, $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+
         System::setContainer($container);
+
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['caption' => null];
 
         $this->expectDeprecation('%sUsing %saddImageToTemplate() is deprecated%s');
@@ -335,6 +338,7 @@ class ControllerTest extends TestCase
             ->method('replaceInline')
             ->willReturnArgument(0)
         ;
+
         $insertTagParser
             ->method('replace')
             ->willReturnArgument(0)
@@ -344,6 +348,7 @@ class ControllerTest extends TestCase
         $container->set(Studio::class, $studio);
         $container->set(InsertTagParser::class, $insertTagParser);
         $container->set('monolog.logger.contao', $logger);
+
         System::setContainer($container);
 
         $this->expectDeprecation('%sUsing %saddImageToTemplate() is deprecated%s');

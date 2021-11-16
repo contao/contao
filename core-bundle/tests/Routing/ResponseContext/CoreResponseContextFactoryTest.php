@@ -162,6 +162,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
         System::setContainer($container);
 
         /** @var PageModel $pageModel */

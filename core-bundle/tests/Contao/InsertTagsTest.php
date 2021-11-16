@@ -40,6 +40,7 @@ class InsertTagsTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_HOOKS']);
+
         InsertTags::reset();
 
         parent::tearDown();

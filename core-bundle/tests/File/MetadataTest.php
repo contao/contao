@@ -28,6 +28,7 @@ class MetadataTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
         System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
