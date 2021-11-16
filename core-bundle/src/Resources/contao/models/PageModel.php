@@ -1180,7 +1180,7 @@ class PageModel extends Model
 
 			if (System::getContainer()->getParameter('contao.legacy_routing'))
 			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
+				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') && $objParentPage->language ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
 				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
 			}
 		}
