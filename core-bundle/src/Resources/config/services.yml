@@ -304,7 +304,7 @@ services:
         class: Contao\CoreBundle\Fragment\FragmentHandler
         decorates: fragment.handler
         arguments:
-            - [!tagged_locator { tag: kernel.fragment_renderer, index_by: alias }]
+            - !tagged_locator { tag: kernel.fragment_renderer, index_by: alias }
             - '@contao.fragment.handler.inner'
             - '@request_stack'
             - '@contao.fragment.registry'
