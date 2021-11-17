@@ -16,6 +16,7 @@ use Contao\BackendTemplate;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
@@ -23,6 +24,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\VarDumper\VarDumper;
 use Webmozart\PathUtil\Path;
 
@@ -384,6 +386,47 @@ class TemplateTest extends TestCase
         System::setContainer($container);
 
         (new FrontendTemplate())->figure(1, null);
+    }
+
+    public function testDoesNotReplaceInsertTagsInBackEnd(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->value ?>'
+        );
+
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->never())
+            ->method('replace')
+        ;
+
+        $request = $this->createMock(Request::class);
+
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->expects($this->once())
+            ->method('getCurrentRequest')
+            ->willReturn($request)
+        ;
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('request_stack', $requestStack);
+        $container->set('contao.routing.scope_matcher', $scopeMatcher);
+
+        System::setContainer($container);
+
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+        $template->parse();
     }
 
     /**
