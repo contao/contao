@@ -12,11 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides the template inheritance logic
