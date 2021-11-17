@@ -12,9 +12,11 @@ namespace Contao;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides the template inheritance logic
@@ -89,6 +91,7 @@ trait TemplateInheritance
 		}
 
 		$strBuffer = '';
+		$container = System::getContainer();
 
 		// Start with the template itself
 		$this->strParent = $this->strTemplate;
@@ -114,7 +117,7 @@ trait TemplateInheritance
 				}
 				else
 				{
-					System::getContainer()
+					$container
 						->get('monolog.logger.contao')
 						->log(
 							LogLevel::ERROR,
@@ -150,7 +153,7 @@ trait TemplateInheritance
 
 		if ($blnDebug === null)
 		{
-			$blnDebug = System::getContainer()->getParameter('kernel.debug');
+			$blnDebug = $container->getParameter('kernel.debug');
 
 			// Backwards compatibility
 			if ($blnDebug !== (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false))
@@ -160,8 +163,13 @@ trait TemplateInheritance
 			}
 		}
 
-		// Replace insert tags
-		$strBuffer = System::getContainer()->get(InsertTagParser::class)->replace($strBuffer);
+		// Replace insert tags, but not for the back end
+		$request = $container->get('request_stack')->getCurrentRequest();
+
+		if (null === $request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		{
+			$strBuffer = $container->get(InsertTagParser::class)->replace($strBuffer);
+		}
 
 		// Add start and end markers in debug mode
 		if ($blnDebug)
