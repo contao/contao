@@ -64,13 +64,14 @@ class PreviewAuthenticationListener
             return;
         }
 
+        $context = $this->router->getContext();
+        $context->setBaseUrl('');
+
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-
-        $url = str_replace($request->getScriptName(), '', $url);
 
         $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }
