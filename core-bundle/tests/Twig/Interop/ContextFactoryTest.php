@@ -192,8 +192,8 @@ class ContextFactoryTest extends TestCase
             $this->assertSame("{$function}foo", $context[$function]('foo'), "function call to $function with parameters succeeds");
         }
 
-        $this->assertArrayHasKey('data', $context);
-        $this->assertSame($object, $context['data']);
+        $this->assertArrayHasKey('this', $context);
+        $this->assertSame($object, $context['this']);
 
         $this->assertCount(\count($expectedFields) + \count($expectedFunctions) + 1, $context);
     }

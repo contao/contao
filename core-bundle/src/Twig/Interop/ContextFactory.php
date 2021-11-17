@@ -82,8 +82,8 @@ final class ContextFactory
             $context[$name] = $this->getCallableWrapper($method->getClosure($object), $name);
         }
 
-        if (!isset($context['data'])) {
-            $context['data'] = $object;
+        if (!isset($context['this'])) {
+            $context['this'] = $object;
         }
 
         return $context;
