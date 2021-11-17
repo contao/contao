@@ -5,10 +5,7 @@ services:
     contao.migration.migration_collection:
         class: Contao\CoreBundle\Migration\MigrationCollection
         arguments:
-            - ~ # FIXME: can we use a tagged_iterator here?
-
-    # Backwards compatibility
-    Contao\CoreBundle\Migration\MigrationCollection: '@contao.migration.migration_collection'
+            - ~ # migrations
 
     Contao\CoreBundle\Migration\Version400\Version400Update:
         arguments:
@@ -93,3 +90,11 @@ services:
     Contao\CoreBundle\Migration\Version412\PageLanguageMigration:
         arguments:
             - '@database_connection'
+
+    # Backwards compatibility
+    Contao\CoreBundle\Migration\MigrationCollection:
+        alias: contao.migration.migration_collection
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.migration.migration_collection" instead.

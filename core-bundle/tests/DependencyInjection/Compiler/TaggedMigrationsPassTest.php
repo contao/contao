@@ -23,7 +23,7 @@ class TaggedMigrationsPassTest extends TestCase
     public function testAddsTheMigrations(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition(MigrationCollection::class, new Definition(MigrationCollection::class));
+        $container->setDefinition('contao.migration.migration_collection', new Definition(MigrationCollection::class));
 
         $migrations = [
             'Test\Migration1' => [],
@@ -47,7 +47,7 @@ class TaggedMigrationsPassTest extends TestCase
         $pass = new TaggedMigrationsPass();
         $pass->process($container);
 
-        $migrationServices = $container->getDefinition(MigrationCollection::class)->getArgument(0);
+        $migrationServices = $container->getDefinition('contao.migration.migration_collection')->getArgument(0);
 
         $this->assertSame(
             [
