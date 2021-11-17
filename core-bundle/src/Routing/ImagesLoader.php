@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Controller\ImagesController;
 use Symfony\Component\Config\Loader\Loader;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Webmozart\PathUtil\Path;
 
 class ImagesLoader extends Loader
 {

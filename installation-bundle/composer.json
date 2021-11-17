@@ -24,14 +24,13 @@
         "symfony/dependency-injection": "^5.3",
         "symfony/deprecation-contracts": "^2.1",
         "symfony/event-dispatcher": "^5.3",
-        "symfony/filesystem": "^5.3",
+        "symfony/filesystem": "^5.4",
         "symfony/finder": "^5.3",
         "symfony/framework-bundle": "^5.3",
         "symfony/http-foundation": "^5.3",
         "symfony/http-kernel": "^5.3",
         "symfony/polyfill-mbstring": "^1.0",
-        "symfony/yaml": "^5.3",
-        "webmozart/path-util": "^2.2"
+        "symfony/yaml": "^5.3"
     },
     "conflict": {
         "contao/core": "*",

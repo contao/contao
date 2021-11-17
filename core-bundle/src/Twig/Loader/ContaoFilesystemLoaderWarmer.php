@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental

@@ -15,10 +15,10 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
-use Webmozart\PathUtil\Path;
 
 class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
 {

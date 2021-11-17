@@ -14,7 +14,7 @@ namespace Contao\ManagerBundle\EventListener;
 
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal

@@ -37,7 +37,7 @@
         "symfony/doctrine-bridge": "^5.3",
         "symfony/error-handler": "^5.3",
         "symfony/expression-language": "^5.3",
-        "symfony/filesystem": "^5.3",
+        "symfony/filesystem": "^5.4",
         "symfony/finder": "^5.3",
         "symfony/framework-bundle": "^5.3",
         "symfony/http-client": "^5.3",
@@ -55,8 +55,7 @@
         "symfony/web-profiler-bundle": "^5.3",
         "symfony/yaml": "^5.3",
         "toflar/psr6-symfony-http-cache-store": "^3.0",
-        "twig/extra-bundle": "^3.0",
-        "webmozart/path-util": "^2.2"
+        "twig/extra-bundle": "^3.0"
     },
     "require-dev": {
         "composer/composer": "^2.0",
