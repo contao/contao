@@ -55,7 +55,7 @@ class TwigIntegrationTest extends TestCase
 
     public function testRendersWidgets(): void
     {
-        $content = "{{ strClass }}\n{{ strLabel }} {{ data.label }}\n {{ getErrorAsString }}";
+        $content = "{{ strClass }}\n{{ strLabel }} {{ this.label }}\n {{ getErrorAsString }}";
 
         // Setup legacy framework and environment
         (new Filesystem())->touch(Path::join($this->getTempDir(), 'templates/form_textfield.html5'));
