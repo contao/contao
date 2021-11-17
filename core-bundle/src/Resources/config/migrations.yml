@@ -2,7 +2,13 @@ services:
     _defaults:
         autoconfigure: true
 
-    Contao\CoreBundle\Migration\MigrationCollection: ~
+    contao.migration.migration_collection:
+        class: Contao\CoreBundle\Migration\MigrationCollection
+        arguments:
+            - ~ # FIXME: can we use a tagged_iterator here?
+
+    # Backwards compatibility
+    Contao\CoreBundle\Migration\MigrationCollection: '@contao.migration.migration_collection'
 
     Contao\CoreBundle\Migration\Version400\Version400Update:
         arguments:

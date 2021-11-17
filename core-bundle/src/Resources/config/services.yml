@@ -235,12 +235,16 @@ services:
         tags:
             - contao.escargot_subscriber
 
-    Contao\CoreBundle\Cron\Cron:
+    contao.cron:
+        class: Contao\CoreBundle\Cron\Cron
         arguments:
             - '@Contao\CoreBundle\Repository\CronJobRepository'
             - '@doctrine.orm.entity_manager'
             - '@?logger'
         public: true
+
+    # Backwards compatibility
+    Contao\CoreBundle\Cron\Cron: '@contao.cron'
 
     Contao\CoreBundle\Cron\LegacyCron:
         arguments:
@@ -655,9 +659,13 @@ services:
             - [addRouteFilter, ['@contao.routing.published_filter']]
         public: true
 
-    Contao\CoreBundle\Routing\Page\PageRegistry:
+    contao.routing.page_registry:
+        class: Contao\CoreBundle\Routing\Page\PageRegistry
         arguments:
             - '@database_connection'
+
+    # Backwards compatibility
+    Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
 
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
@@ -965,15 +973,23 @@ services:
             - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
         public: true
 
-    Contao\CoreBundle\Twig\Loader\ThemeNamespace: ~
+    contao.twig.theme_namespace:
+        class: Contao\CoreBundle\Twig\Loader\ThemeNamespace
 
-    Contao\CoreBundle\Twig\Loader\TemplateLocator:
+    # Backwards compatibility
+    Contao\CoreBundle\Twig\Loader\ThemeNamespace: '@contao.twig.theme_namespace'
+
+    contao.twig.template_loader:
+        class: Contao\CoreBundle\Twig\Loader\TemplateLocator
         arguments:
             - '%kernel.project_dir%'
             - '%kernel.bundles%'
             - '%kernel.bundles_metadata%'
             - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
             - '@database_connection'
+
+    # Backwards compatibility
+    Contao\CoreBundle\Twig\Loader\TemplateLocator: '@contao.twig.template_loader'
 
     Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader:
         arguments:
@@ -982,25 +998,33 @@ services:
         tags:
             - { name: twig.loader, priority: 1 }
 
-    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
+    # Backwards compatibility
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader: '@contao.twig.filesystem_loader'
+
+    contao.twig.filesystem_loader:
+        class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
         arguments:
             - '@cache.system'
-            - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
-            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@contao.twig.template_loader'
+            - '@contao.twig.theme_namespace'
             - '%kernel.project_dir%'
         tags:
             - { name: twig.loader, priority: 2 }
             - { name: kernel.reset, method: reset }
 
-    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
+    contao.twig.filesystem_loader_warmer:
+        class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer
         arguments:
-            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
+            - '@contao.twig.filesystem_loader'
             - '@Contao\CoreBundle\Twig\Loader\TemplateLocator'
             - '%kernel.project_dir%'
             - '%kernel.environment%'
         tags:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    # Backwards compatibility
+    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer: '@contao.twig.filesystem_loader_warmer'
 
     Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime:
         arguments:
