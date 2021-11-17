@@ -17,3 +17,7 @@ services:
         class: Contao\ManagerBundle\Command\InstallWebDirCommand
         arguments:
             - '%kernel.project_dir%'
+
+    Contao\ManagerBundle\Command\MaintenanceModeCommand:
+        arguments:
+            - '%contao.web_dir%'
