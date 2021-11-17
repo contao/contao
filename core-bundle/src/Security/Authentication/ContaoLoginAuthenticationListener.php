@@ -29,6 +29,10 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the new authenticator system instead.
+ */
 class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 {
     private TokenStorageInterface $tokenStorage;

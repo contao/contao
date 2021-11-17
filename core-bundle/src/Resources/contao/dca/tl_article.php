@@ -23,7 +23,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $this->loadDataContainer('tl_page');
 
@@ -357,9 +356,7 @@ class tl_article extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 
 		// Set the default page user and group
@@ -820,9 +817,7 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
-			/** @var SessionInterface $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+
 /**
  * Provide methods to handle front end forms.
  *
@@ -243,7 +245,7 @@ class Form extends Hybrid
 
 				if ($objWidget->name && $objWidget->label)
 				{
-					$arrLabels[$objWidget->name] = $this->replaceInsertTags($objWidget->label); // see #4268
+					$arrLabels[$objWidget->name] = System::getContainer()->get(InsertTagParser::class)->replaceInline($objWidget->label); // see #4268
 				}
 
 				$this->Template->fields .= $objWidget->parse();
@@ -400,7 +402,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = html_entity_decode($this->replaceInsertTags($this->subject, false), ENT_QUOTES, 'UTF-8');
+				$email->subject = html_entity_decode(System::getContainer()->get(InsertTagParser::class)->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
 			}
 
 			// Send copy to sender

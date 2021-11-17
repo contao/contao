@@ -10,12 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Twig\Interop;
+namespace Contao\CoreBundle\InsertTag;
 
-/**
- * @experimental
- */
-class ChunkedText implements \IteratorAggregate
+final class ChunkedText implements \IteratorAggregate
 {
     public const TYPE_TEXT = 0;
     public const TYPE_RAW = 1;
@@ -25,6 +22,9 @@ class ChunkedText implements \IteratorAggregate
      */
     private $chunks;
 
+    /**
+     * @internal
+     */
     public function __construct(array $chunks)
     {
         $this->chunks = $chunks;

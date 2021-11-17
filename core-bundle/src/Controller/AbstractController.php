@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Model\Collection as ModelCollection;
+use Doctrine\Common\Collections\Collection;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
@@ -30,6 +34,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services[] = ContaoCsrfTokenManager::class;
+        $services[] = EntityCacheTags::class;
 
         return $services;
     }
@@ -39,13 +44,26 @@ abstract class AbstractController extends SymfonyAbstractController
         $this->get('contao.framework')->initialize();
     }
 
-    protected function tagResponse(array $tags): void
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     *
+     * @phpstan-return Adapter<T>
+     */
+    protected function getContaoAdapter(string $class)
     {
-        if (!$this->has('fos_http_cache.http.symfony_response_tagger')) {
-            return;
-        }
+        return $this->get('contao.framework')->getAdapter($class);
+    }
 
-        $this->get('fos_http_cache.http.symfony_response_tagger')->addTags($tags);
+    /**
+     * @param array|Collection|ModelCollection|string|object|null $tags
+     */
+    protected function tagResponse($tags): void
+    {
+        $this->get(EntityCacheTags::class)->tagWith($tags);
     }
 
     /**

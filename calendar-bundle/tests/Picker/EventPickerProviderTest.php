@@ -20,7 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -138,7 +137,6 @@ class EventPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        /** @var CalendarModel&MockObject $calendarModel */
         $calendarModel = $this->mockClassWithProperties(CalendarModel::class);
         $calendarModel->id = 1;
 

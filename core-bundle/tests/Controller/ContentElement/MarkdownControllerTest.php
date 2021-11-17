@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +31,6 @@ class MarkdownControllerTest extends ContaoTestCase
     {
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");
 
-        /** @var ContentModel&MockObject $contentModel */
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = '# Headline';
@@ -57,7 +56,6 @@ class MarkdownControllerTest extends ContaoTestCase
 
         $container = $this->mockContainer($expectedHtml);
 
-        /** @var ContentModel&MockObject $contentModel */
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
         $contentModel->code = <<<'MARKDOWN'
@@ -84,7 +82,6 @@ class MarkdownControllerTest extends ContaoTestCase
         $tempTestFile = $fs->tempnam($this->getTempDir(), '');
         $fs->dumpFile($tempTestFile, '# Headline');
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel
             ->expects($this->once())
@@ -95,7 +92,6 @@ class MarkdownControllerTest extends ContaoTestCase
         $filesAdapter = $this->mockConfiguredAdapter(['findByPk' => $filesModel]);
         $container = $this->mockContainer('<h1>Headline</h1>'."\n", [FilesModel::class => $filesAdapter]);
 
-        /** @var ContentModel&MockObject $contentModel */
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceFile';
         $contentModel->singleSRC = 'uuid';
@@ -109,7 +105,6 @@ class MarkdownControllerTest extends ContaoTestCase
 
     private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container
     {
-        /** @var FrontendTemplate&MockObject $template */
         $template = $this->createMock(FrontendTemplate::class);
         $template
             ->expects($this->once())
@@ -141,8 +136,9 @@ class MarkdownControllerTest extends ContaoTestCase
             ->willReturn($template)
         ;
 
-        $container = new Container();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
+        $container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
 
         return $container;
     }

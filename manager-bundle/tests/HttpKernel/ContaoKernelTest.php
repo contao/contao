@@ -440,8 +440,6 @@ class ContaoKernelTest extends ContaoTestCase
 
     /**
      * Returns a kernel with a plugin loader mock.
-     *
-     * @return ContaoKernel&MockObject
      */
     private function getKernel(string $projectDir, string $env = 'prod'): ContaoKernel
     {

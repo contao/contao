@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
@@ -77,6 +79,7 @@ class ContaoEscaperTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
 
@@ -129,11 +132,6 @@ class ContaoEscaperTest extends TestCase
         yield 'prevent double encoding' => [
             'A&amp;B',
             'A&amp;B',
-        ];
-
-        yield 'replacing insert tags beforehand' => [
-            'foo{{bar}}',
-            'foobaz',
         ];
     }
 

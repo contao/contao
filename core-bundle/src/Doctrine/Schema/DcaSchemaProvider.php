@@ -287,7 +287,6 @@ class DcaSchemaProvider
     {
         $this->framework->initialize();
 
-        /** @var Installer $installer */
         $installer = $this->framework->createInstance(Installer::class);
         $sqlTarget = $installer->getFromDca();
         $sqlLegacy = $installer->getFromFile();

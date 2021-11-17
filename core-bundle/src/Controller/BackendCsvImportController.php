@@ -112,7 +112,6 @@ class BackendCsvImportController
 
         $this->framework->initialize();
 
-        /** @var FileUpload $uploader */
         $uploader = $this->framework->createInstance(FileUpload::class);
         $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
@@ -124,7 +123,6 @@ class BackendCsvImportController
             try {
                 $data = $this->fetchData($uploader, $request->request->get('separator', ''), $callback);
             } catch (\RuntimeException $e) {
-                /** @var Message $message */
                 $message = $this->framework->getAdapter(Message::class);
                 $message->addError($e->getMessage());
 
@@ -146,8 +144,6 @@ class BackendCsvImportController
     private function prepareTemplate(Request $request, FileUpload $uploader, bool $allowLinebreak = false): BackendTemplate
     {
         $template = new BackendTemplate('be_csv_import');
-
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $template->formId = $this->getFormId($request);

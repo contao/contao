@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -39,7 +39,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $session = $this->mockSession();
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getRoles']);
         $user
             ->expects($this->once())
@@ -47,9 +46,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -96,10 +95,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
             ->expects($this->once())
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willThrowException(new UserNotFoundException())
         ;
 
@@ -124,7 +123,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturnOnConsecutiveCalls(true, false)
         ;
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user
             ->expects($this->never())
@@ -132,9 +130,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -265,7 +263,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         }
 
         if (null === $userProvider) {
-            $userProvider = $this->createMock(UserProviderInterface::class);
+            $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         }
 
         if (null === $logger) {

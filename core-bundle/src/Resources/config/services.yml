@@ -65,6 +65,13 @@ services:
             - '@Contao\CoreBundle\Intl\Locales'
         public: true
 
+    Contao\CoreBundle\Cache\EntityCacheTags:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@?fos_http_cache.cache_manager'
+        public: true
+
     Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
@@ -119,7 +126,7 @@ services:
         arguments:
             - '@contao.framework'
             - '%kernel.project_dir%'
-            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@Contao\CoreBundle\Cache\EntityCacheTags'
         tags:
             - controller.service_arguments
 
@@ -297,7 +304,7 @@ services:
         class: Contao\CoreBundle\Fragment\FragmentHandler
         decorates: fragment.handler
         arguments:
-            - ~ # fragment renderer locator
+            - !tagged_locator { tag: kernel.fragment_renderer, index_by: alias }
             - '@contao.fragment.handler.inner'
             - '@request_stack'
             - '@contao.fragment.registry'
@@ -426,6 +433,11 @@ services:
         tags:
             - { name: container.service_subscriber, id: contao.assets.files_context }
             - { name: container.service_subscriber, id: contao.image.resizer }
+
+    Contao\CoreBundle\InsertTag\InsertTagParser:
+        arguments:
+            - '@contao.framework'
+        public: true
 
     Contao\CoreBundle\Intl\Countries:
         arguments:
@@ -718,7 +730,7 @@ services:
             - '@contao.security.token_checker'
             - '@Contao\CoreBundle\String\HtmlDecoder'
             - '@request_stack'
-            - '@contao.framework'
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
         public: true
 
     contao.search.indexer.default:
@@ -760,7 +772,7 @@ services:
             - ~ # user provider
             - ~ # user checker
             - ~ # provider-shared key
-            - '@security.encoder_factory'
+            - '@security.password_hasher_factory'
             - '@contao.framework'
             - ~ # 2FA authentication provider
             - '@scheb_two_factor.authenticated_token_handler'
@@ -912,6 +924,8 @@ services:
         public: true
 
     Contao\CoreBundle\String\HtmlDecoder:
+        arguments:
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
         public: true
 
     Contao\CoreBundle\String\SimpleTokenExpressionLanguage:
@@ -992,7 +1006,9 @@ services:
         arguments:
             - '@Contao\CoreBundle\Image\Studio\FigureRenderer'
 
-    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime: ~
+    Contao\CoreBundle\Twig\Runtime\InsertTagRuntime:
+        arguments:
+            - '@Contao\CoreBundle\InsertTag\InsertTagParser'
 
     Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime:
         arguments:

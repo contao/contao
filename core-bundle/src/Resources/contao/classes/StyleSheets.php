@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\InsertTag\InsertTagParser;
+
 trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\StyleSheets" class has been deprecated and will no longer work in Contao 5.0. Use external stylesheets instead.');
 
 /**
@@ -973,7 +975,7 @@ class StyleSheets extends Backend
 		}
 
 		// Replace insert tags (see #5512)
-		return $this->replaceInsertTags($return, false);
+		return System::getContainer()->get(InsertTagParser::class)->replaceInline($return);
 	}
 
 	/**

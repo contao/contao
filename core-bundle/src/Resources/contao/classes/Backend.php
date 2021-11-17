@@ -21,7 +21,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to manage back end controllers.
@@ -333,9 +332,7 @@ abstract class Backend extends Controller
 			throw new \InvalidArgumentException('Back end module "' . $module . '" is not defined in the BE_MOD array');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$arrTables = (array) ($arrModule['tables'] ?? array());
 		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
 		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');

@@ -18,7 +18,6 @@ use Contao\Message;
 use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\String\UnicodeString;
 
 $GLOBALS['TL_DCA']['tl_style_sheet'] = array
@@ -246,9 +245,7 @@ class tl_style_sheet extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('style_sheet_updater');
 
 		if (empty($session) || !is_array($session))
@@ -288,7 +285,6 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

@@ -108,10 +108,7 @@ class ContaoContext implements ContextInterface
 
         $this->framework->initialize();
 
-        /** @var PageModel $pageAdapter */
-        $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
-        return $pageAdapter->findByPk((int) $pageModel);
+        return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 
     /**

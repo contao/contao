@@ -18,7 +18,6 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -365,7 +364,6 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      * @param array<array<string>>          $runonceFiles
-     * @param Installer&MockObject          $installer
      */
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null): MigrateCommand
     {

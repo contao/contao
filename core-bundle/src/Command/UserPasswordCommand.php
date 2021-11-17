@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 /**
  * Changes the password of a Contao back end user.
@@ -39,13 +39,13 @@ class UserPasswordCommand extends Command
 
     private ContaoFramework $framework;
     private Connection $connection;
-    private EncoderFactoryInterface $encoderFactory;
+    private PasswordHasherFactoryInterface $passwordHasherFactory;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory)
+    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory)
     {
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
 
         parent::__construct();
     }
@@ -88,7 +88,6 @@ class UserPasswordCommand extends Command
 
         $this->framework->initialize();
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $minLength = $config->get('minPasswordLength') ?: 8;
 
@@ -96,8 +95,8 @@ class UserPasswordCommand extends Command
             throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
         }
 
-        $encoder = $this->encoderFactory->getEncoder(BackendUser::class);
-        $hash = $encoder->encodePassword($input->getOption('password'), null);
+        $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class);
+        $hash = $passwordHasher->hash($input->getOption('password'));
 
         $affected = $this->connection->update(
             'tl_user',

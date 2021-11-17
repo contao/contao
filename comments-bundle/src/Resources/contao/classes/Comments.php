@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 
 /**
  * Class Comments
@@ -119,7 +119,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = $this->replaceInsertTags($objComments->reply);
+					$objPartial->reply = System::getContainer()->get(InsertTagParser::class)->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
 
 					// Clean the RTE output
@@ -574,7 +574,6 @@ class Comments extends Frontend
 		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
@@ -591,7 +590,6 @@ class Comments extends Frontend
 	{
 		if (strncmp(Input::get('token'), 'com-', 4) === 0)
 		{
-			/** @var OptIn $optIn */
 			$optIn = System::getContainer()->get('contao.opt-in');
 
 			// Find an unconfirmed token with only one related record

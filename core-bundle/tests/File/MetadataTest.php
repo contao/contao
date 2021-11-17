@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\File;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\System;
@@ -24,7 +26,10 @@ class MetadataTest extends TestCase
     {
         parent::setUp();
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',

@@ -37,7 +37,6 @@ class Slug
     public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
-            /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
             if (null !== ($page = $pageAdapter->findWithDetails((int) $options))) {

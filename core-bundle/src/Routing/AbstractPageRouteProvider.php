@@ -65,7 +65,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findBy([implode(' OR ', $conditions)], $aliases);
 
