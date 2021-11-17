@@ -65,6 +65,8 @@ class PreviewAuthenticationListener
         }
 
         $context = $this->router->getContext();
+        $baseUrl = $context->getBaseUrl();
+
         $context->setBaseUrl('');
 
         $url = $this->router->generate(
@@ -72,6 +74,8 @@ class PreviewAuthenticationListener
             ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $context->setBaseUrl($baseUrl);
 
         $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }

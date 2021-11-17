@@ -61,8 +61,12 @@ class PreviewAuthenticationListenerTest extends TestCase
         $context = $this->createMock(RequestContext::class);
         $context
             ->expects($this->once())
+            ->method('getBaseUrl')
+        ;
+
+        $context
+            ->expects($this->exactly(2))
             ->method('setBaseUrl')
-            ->with('')
         ;
 
         $router = $this->createMock(UrlGeneratorInterface::class);
