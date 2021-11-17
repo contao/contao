@@ -55,6 +55,18 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'operations' => array
 		(
+			'articles' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_log']['goToArticles'],
+				'href'                => 'do=article',
+				'icon'                => 'article.svg'
+			),
+			'uri' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_log']['goToUri'],
+				'href'                => '',
+				'icon'                => 'forward.svg'
+			),
 			'delete' => array
 			(
 				'href'                => 'act=delete',
@@ -120,6 +132,19 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'sorting'                 => true,
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'uri' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "varchar(1024) NOT NULL default ''"
+		),
+		'page' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'relation'                => array('type' => 'hasOne', 'load' => 'lazy', 'table' => 'tl_page'),
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		)
 	)
 );

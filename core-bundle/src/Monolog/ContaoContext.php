@@ -31,11 +31,13 @@ class ContaoContext
     private ?string $ip;
     private ?string $browser;
     private ?string $source;
+    private ?string $uri;
+    private ?int $pageId;
 
     /**
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
+    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null, string $uri = null, int $pageId = null)
     {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
@@ -47,6 +49,8 @@ class ContaoContext
         $this->ip = $ip;
         $this->browser = $browser;
         $this->source = $source;
+        $this->uri = $uri;
+        $this->pageId = $pageId;
     }
 
     /**
@@ -59,6 +63,8 @@ class ContaoContext
             'action' => $this->action,
             'username' => $this->username,
             'browser' => $this->browser,
+            'uri' => $this->uri,
+            'pageId' => $this->pageId,
         ]);
     }
 
@@ -115,5 +121,25 @@ class ContaoContext
     public function setSource(string $source): void
     {
         $this->source = $source;
+    }
+
+    public function getUri(): ?string
+    {
+        return $this->uri;
+    }
+
+    public function setUri(string $uri): void
+    {
+        $this->uri = $uri;
+    }
+
+    public function getPageId(): ?int
+    {
+        return $this->pageId;
+    }
+
+    public function setPageId(?int $pageId): void
+    {
+        $this->pageId = $pageId;
     }
 }

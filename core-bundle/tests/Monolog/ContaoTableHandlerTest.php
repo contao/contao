@@ -17,7 +17,6 @@ use Contao\CoreBundle\Monolog\ContaoTableHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use Monolog\Logger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
@@ -53,16 +52,10 @@ class ContaoTableHandlerTest extends TestCase
             'message' => 'foobar',
         ];
 
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('executeStatement')
-        ;
-
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('prepare')
-            ->willReturn($statement)
+            ->method('insert')
+            ->willReturn(1)
         ;
 
         $system = $this->mockConfiguredAdapter(['importStatic' => $this]);
