@@ -60,7 +60,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
-            - '@?contao.installer'
+            - '@?contao_installation.installer'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
