@@ -100,17 +100,14 @@ final class ContextFactory
             get_mangled_object_vars($object) : (array) $object;
 
         foreach ($mangledObjectVars as $key => $value) {
-            if (preg_match('/^\x0(\S+)\x0(\S+)$/', $key, $matches)) {
+            if (strncmp($key, "\0*\0", 3) === 0) {
                 // Protected member
-                if ('*' === $matches[1]) {
-                    yield $matches[2] => $value;
-                }
-
-                continue;
+                $key = substr($key, 3);
             }
 
-            // Public or dynamic member
-            yield $key => $value;
+            if ("\0" !== $key[0]) {
+                yield $key => $value;
+            }
         }
     }
 
