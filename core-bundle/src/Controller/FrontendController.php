@@ -129,7 +129,7 @@ class FrontendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services[] = ContaoCsrfTokenManager::class;
+        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
 
         return $services;
     }
