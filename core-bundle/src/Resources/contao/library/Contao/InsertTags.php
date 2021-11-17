@@ -33,7 +33,7 @@ use Webmozart\PathUtil\Path;
  */
 class InsertTags extends Controller
 {
-	private const MAX_NESTING_LEVEL = 100;
+	private const MAX_NESTING_LEVEL = 64;
 
 	/**
 	 * @var int
