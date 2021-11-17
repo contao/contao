@@ -136,6 +136,11 @@ abstract class Module extends Frontend
 			$this->objModel = $objModel;
 		}
 
+		if ($this->objModel === null)
+		{
+			throw new \LogicException('No module model given');
+		}
+
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
@@ -257,7 +262,7 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		return array(System::getContainer()->get(EntityCacheTags::class)->getTagForModelClass($this->objModel));
+		return array(System::getContainer()->get(EntityCacheTags::class)->getTagForModelInstance($this->objModel));
 	}
 
 	/**
