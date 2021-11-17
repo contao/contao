@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Tests\Fixtures\Twig\ParentClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Template;
@@ -91,7 +92,7 @@ class ContextFactoryTest extends TestCase
 
     public function testCreateContextFromClass(): void
     {
-        $object = new class() {
+        $object = new class() extends ParentClassWithMembersStub {
             private const PRIVATE_CONSTANT = 1;
             protected const PROTECTED_CONSTANT = 2;
             public const PUBLIC_CONSTANT = 3;
@@ -138,6 +139,8 @@ class ContextFactoryTest extends TestCase
             {
                 /** @phpstan-ignore-next-line */
                 $this->dynamic = 'd';
+
+                parent::__construct();
             }
 
             public function __foo(): void
@@ -149,42 +152,50 @@ class ContextFactoryTest extends TestCase
         $context = (new ContextFactory())->fromClass($object);
 
         $expectedFields = [
-            'PRIVATE_CONSTANT' => 1,
             'PROTECTED_CONSTANT' => 2,
             'PUBLIC_CONSTANT' => 3,
-            'privateField' => 'a',
             'protectedField' => 'b',
             'publicField' => 'c',
-            'privateStaticField' => 'A',
             'protectedStaticField' => 'B',
             'publicStaticField' => 'C',
             'dynamic' => 'd',
+            // Members from ParentClassWithMembersStub
+            'PARENT_PROTECTED_CONSTANT' => 2,
+            'PARENT_PUBLIC_CONSTANT' => 3,
+            'parentProtectedField' => 'b',
+            'parentPublicField' => 'c',
+            'parentProtectedStaticField' => 'B',
+            'parentPublicStaticField' => 'C',
+            'parentDynamic' => 'd',
         ];
 
         $expectedFunctions = [
-            'privateDo',
             'protectedDo',
             'publicDo',
-            'privateStaticDo',
             'protectedStaticDo',
             'publicStaticDo',
+            // Functions from ParentClassWithMembersStub
+            'parentProtectedDo',
+            'parentPublicDo',
+            'parentProtectedStaticDo',
+            'parentPublicStaticDo',
         ];
 
-        $this->assertCount(\count($expectedFields) + \count($expectedFunctions) + 1, $context);
+        foreach ($expectedFields as $field => $value) {
+            $this->assertArrayHasKey($field, $context, "field $field exists");
+            $this->assertSame($context[$field], $value, "field $field holds correct value");
+        }
+
+        foreach ($expectedFunctions as $function) {
+            $this->assertArrayHasKey($function, $context, "function $function exists");
+            $this->assertSame($function, $context[$function](), "function call to $function without parameters succeeds");
+            $this->assertSame("{$function}foo", $context[$function]('foo'), "function call to $function with parameters succeeds");
+        }
 
         $this->assertArrayHasKey('data', $context);
         $this->assertSame($object, $context['data']);
 
-        foreach ($expectedFields as $field => $value) {
-            $this->assertArrayHasKey($field, $context);
-            $this->assertSame($context[$field], $value);
-        }
-
-        foreach ($expectedFunctions as $function) {
-            $this->assertArrayHasKey($function, $context);
-            $this->assertSame($function, $context[$function](), 'function call without parameters');
-            $this->assertSame("{$function}foo", $context[$function]('foo'), 'function call with parameters');
-        }
+        $this->assertCount(\count($expectedFields) + \count($expectedFunctions) + 1, $context);
     }
 
     public function testEnhancesErrorMessageInCallableWrappersIfStringAccessFails(): void

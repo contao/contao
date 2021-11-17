@@ -44,19 +44,35 @@ final class ContextFactory
 
     /**
      * Create a Twig template context from an arbitrary object. This will also
-     * make private or protected methods/properties/constants accessible.
+     * make protected methods/properties/constants accessible.
      */
     public function fromClass(object $object): array
     {
         $class = new \ReflectionClass($object);
 
-        $context = array_merge(
-            $class->getConstants(),
-            $class->getStaticProperties(),
-            iterator_to_array($this->getAllMembers($object)),
-        );
+        $context = iterator_to_array($this->getAllMembers($object));
+
+        foreach ($class->getReflectionConstants() as $constant) {
+            if ($constant->isPrivate()) {
+                continue;
+            }
+
+            $context[$constant->getName()] = $constant->getValue();
+        }
+
+        foreach ($class->getStaticProperties() as $property => $value) {
+            if ($class->getProperty($property)->isPrivate()) {
+                continue;
+            }
+
+            $context[$property] = $value;
+        }
 
         foreach ($class->getMethods() as $method) {
+            if ($method->isPrivate()) {
+                continue;
+            }
+
             $name = $method->getName();
 
             if (0 === strpos($name, '__')) {
@@ -85,16 +101,15 @@ final class ContextFactory
 
         foreach ($mangledObjectVars as $key => $value) {
             if (preg_match('/^\x0(\S+)\x0(\S+)$/', $key, $matches)) {
-                // Protected or private member
-                if ('*' === $matches[1] || \get_class($object) === $matches[1]) {
+                // Protected member
+                if ('*' === $matches[1]) {
                     yield $matches[2] => $value;
-                    continue;
                 }
 
-                throw new \InvalidArgumentException('Could not identify prepended key.');
+                continue;
             }
 
-            // Public member
+            // Public or dynamic member
             yield $key => $value;
         }
     }
