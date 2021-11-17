@@ -70,6 +70,8 @@ class PreviewAuthenticationListener
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
+        $url = str_replace($request->getScriptName(), '', $url);
+
         $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }
 }

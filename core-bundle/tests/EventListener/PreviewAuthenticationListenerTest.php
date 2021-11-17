@@ -62,13 +62,14 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with('contao_backend_login')
-            ->willReturn('/contao/login')
+            ->willReturn('/preview.php/contao/login')
         ;
 
         $uriSigner = $this->createMock(UriSigner::class);
         $uriSigner
             ->expects($this->once())
             ->method('sign')
+            ->with('/contao/login')
             ->willReturn('/contao/login')
         ;
 
@@ -81,6 +82,7 @@ class PreviewAuthenticationListenerTest extends TestCase
         $listener($requestEvent);
 
         $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());
+        $this->assertStringNotContainsStringIgnoringCase('/preview.php', $requestEvent->getResponse()->headers->get('location'));
     }
 
     private function getRequestEvent(Request $request = null, bool $isSubRequest = false): RequestEvent
