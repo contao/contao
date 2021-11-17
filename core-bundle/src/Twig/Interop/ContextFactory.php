@@ -100,7 +100,7 @@ final class ContextFactory
             get_mangled_object_vars($object) : (array) $object;
 
         foreach ($mangledObjectVars as $key => $value) {
-            if (strncmp($key, "\0*\0", 3) === 0) {
+            if (0 === strncmp($key, "\0*\0", 3)) {
                 // Protected member
                 $key = substr($key, 3);
             }
