@@ -68,10 +68,7 @@ class ModuleArticle extends Module
 		$this->blnNoMarkup = $blnNoMarkup;
 
 		// Tag the article (see #2137)
-		if ($this->objModel !== null)
- 		{
- 			System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
- 		}
+		System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
 
 		return parent::generate();
 	}
