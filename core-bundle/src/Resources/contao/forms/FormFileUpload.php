@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
-
 /**
  * Class FormFileUpload
  *
