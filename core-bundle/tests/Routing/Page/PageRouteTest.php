@@ -108,6 +108,21 @@ class PageRouteTest extends TestCase
         $this->assertSame(['https'], $route->getSchemes());
     }
 
+    public function testRouteIsStatelessWhenPageIsAlwaysLoadedFromCache(): void
+    {
+        $route = new PageRoute($this->mockPageModel(['includeCache' => '', 'alwaysLoadFromCache' => '']));
+
+        $this->assertFalse($route->getDefaults()['_stateless']);
+
+        $route = new PageRoute($this->mockPageModel(['includeCache' => '', 'alwaysLoadFromCache' => '1']));
+
+        $this->assertFalse($route->getDefaults()['_stateless']);
+
+        $route = new PageRoute($this->mockPageModel(['includeCache' => '1', 'alwaysLoadFromCache' => '1']));
+
+        $this->assertTrue($route->getDefaults()['_stateless']);
+    }
+
     /**
      * @return PageModel&MockObject
      */

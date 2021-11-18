@@ -43,6 +43,7 @@ class PageRoute extends Route implements RouteObjectInterface
                 '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
                 '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage),
                 '_format' => 'html',
+                '_stateless' => $pageModel->includeCache && $pageModel->alwaysLoadFromCache,
                 '_canonical_route' => 'tl_page.'.$pageModel->id,
             ],
             $defaults
