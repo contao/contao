@@ -353,7 +353,7 @@ class TwoFactorControllerTest extends TestCase
             $this->mockSecurityHelper($user, true)
         );
 
-        $backupCodeManager = $container->get(BackupCodeManager::class);
+        $backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
         $backupCodeManager
             ->expects($this->once())
             ->method('generateBackupCodes')
@@ -482,9 +482,9 @@ class TwoFactorControllerTest extends TestCase
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('contao.security.two_factor.trusted_device_manager', $this->createMock(TrustedDeviceManager::class));
         $container->set('security.authentication_utils', $authenticationUtils);
-        $container->set(BackupCodeManager::class, $this->createMock(BackupCodeManager::class));
+        $container->set('contao.security.two_factor.backup_code_manager', $this->createMock(BackupCodeManager::class));
         $container->set('security.helper', $security);
-        $container->set(EntityCacheTags::class, $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($container);
 

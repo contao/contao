@@ -35,9 +35,6 @@ services:
         public: true
         synthetic: true
 
-    # Autowiring alias
-    Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
-
     contao_manager.listener.backend_menu_listener:
         class: Contao\ManagerBundle\EventListener\BackendMenuListener
         arguments:
@@ -93,6 +90,9 @@ services:
         decorates: twig.template_iterator
         arguments:
             - '@contao_manager.twig.file_extension_filter_iterator.inner'
+
+    # Autowiring aliases
+    Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
 
     # Backwards compatibility
     Contao\ManagerBundle\Controller\DebugController:

@@ -46,7 +46,7 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
     public function __invoke(TerminateEvent $event): void
     {
         if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->locator->get(Cron::class)->run(Cron::SCOPE_WEB);
+            $this->locator->get('contao.cron')->run(Cron::SCOPE_WEB);
         }
     }
 
@@ -59,7 +59,7 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
      */
     public static function getSubscribedServices(): array
     {
-        return [Cron::class];
+        return ['contao.cron' => Cron::class];
     }
 
     private function canRunCron(Request $request): bool

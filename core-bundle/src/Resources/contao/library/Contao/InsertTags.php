@@ -11,10 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
-use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -754,7 +752,7 @@ class InsertTags extends Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+					$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -829,7 +827,7 @@ class InsertTags extends Controller
 					unset($configuration['size'], $configuration['template']);
 
 					// Render the figure
-					$figureRenderer = $container->get(FigureRenderer::class);
+					$figureRenderer = $container->get('contao.image.studio.figure_renderer');
 
 					try
 					{

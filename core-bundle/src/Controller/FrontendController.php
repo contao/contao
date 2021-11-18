@@ -109,7 +109,7 @@ class FrontendController extends AbstractController
     public function requestTokenScriptAction(): Response
     {
         $token = $this
-            ->get(ContaoCsrfTokenManager::class)
+            ->get('contao.csrf.token_manager')
             ->getToken($this->getParameter('contao.csrf_token_name'))
             ->getValue()
         ;

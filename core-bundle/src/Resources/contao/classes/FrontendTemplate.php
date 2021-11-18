@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

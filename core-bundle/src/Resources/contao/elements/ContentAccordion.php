@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-
 /**
  * Front end content element "accordion".
  *
@@ -41,7 +39,7 @@ class ContentAccordion extends ContentElement
 		if ($this->addImage)
 		{
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)

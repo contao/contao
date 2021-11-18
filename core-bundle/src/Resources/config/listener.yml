@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -67,7 +70,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.helper'
-            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+            - '@contao.routing.page_registry'
             - '@translator'
             - '@database_connection'
             - '@request_stack'
@@ -94,7 +97,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener
         public: true
         arguments:
-            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+            - '@contao.routing.page_registry'
             - '@security.helper'
             - '@?event_dispatcher'
 
@@ -120,8 +123,8 @@ services:
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
-            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
-            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@contao.twig.filesystem_loader_warmer'
+            - '@contao.twig.theme_namespace'
             - '@translator'
 
     contao.listener.data_container.validate_custom_rgxp:
@@ -206,7 +209,7 @@ services:
         arguments:
             - '@translator'
             - '@contao.routing.scope_matcher'
-            - '@Contao\CoreBundle\Intl\Locales'
+            - '@contao.intl.locales'
         tags:
             - kernel.event_subscriber
 
@@ -332,7 +335,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.routing.scope_matcher'
-            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
+            - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
             - '%contao.csrf_cookie_prefix%'
         tags:

@@ -42,6 +42,6 @@ class TaggedMigrationsPass implements CompilerPassInterface
             $services = array_merge(...$services);
         }
 
-        $definition->addArgument($services);
+        $definition->setArgument(0, $services);
     }
 }

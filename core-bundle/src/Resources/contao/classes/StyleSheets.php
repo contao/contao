@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
-
 /**
  * Provide methods to handle style sheets.
  *
@@ -970,7 +968,7 @@ class StyleSheets extends Backend
 		}
 
 		// Replace insert tags (see #5512)
-		return System::getContainer()->get(InsertTagParser::class)->replaceInline($return);
+		return System::getContainer()->get('contao.insert_tag_parser')->replaceInline($return);
 	}
 
 	/**

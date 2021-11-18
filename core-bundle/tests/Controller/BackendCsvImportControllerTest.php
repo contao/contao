@@ -42,7 +42,7 @@ class BackendCsvImportControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('session', new Session(new MockArraySessionStorage()));
         $container->set('contao.resource_finder', $finder);
-        $container->set(InsertTagParser::class, new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag_parser', new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
     }

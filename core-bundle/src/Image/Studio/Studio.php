@@ -21,6 +21,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
 use Contao\Image\ResizerInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class Studio implements ServiceSubscriberInterface
@@ -67,13 +68,13 @@ class Studio implements ServiceSubscriberInterface
     public static function getSubscribedServices(): array
     {
         return [
-            self::class,
+            'contao.image.studio' => self::class,
             'contao.image.picture_factory' => PictureFactoryInterface::class,
             'contao.image.image_factory' => ImageFactoryInterface::class,
             'contao.image.resizer' => ResizerInterface::class,
             'contao.assets.files_context' => ContaoContext::class,
             'contao.framework' => ContaoFramework::class,
-            'event_dispatcher' => 'event_dispatcher',
+            'event_dispatcher' => EventDispatcherInterface::class,
         ];
     }
 }

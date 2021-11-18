@@ -73,7 +73,7 @@ abstract class AbstractController extends SymfonyAbstractController
     {
         return [
             'csrf_field_name' => 'REQUEST_TOKEN',
-            'csrf_token_manager' => $this->get(ContaoCsrfTokenManager::class),
+            'csrf_token_manager' => $this->get('contao.csrf.token_manager'),
             'csrf_token_id' => $this->getParameter('contao.csrf_token_name'),
         ];
     }

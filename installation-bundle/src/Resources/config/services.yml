@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     _instanceof:
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:

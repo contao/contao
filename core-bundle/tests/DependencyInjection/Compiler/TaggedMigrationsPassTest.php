@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
-use Contao\CoreBundle\Migration\MigrationCollection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -23,7 +22,7 @@ class TaggedMigrationsPassTest extends TestCase
     public function testAddsTheMigrations(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition('contao.migration.migration_collection', new Definition(MigrationCollection::class));
+        $container->setDefinition('contao.migration.migration_collection', new Definition('contao.migration.migration_collection'));
 
         $migrations = [
             'Test\Migration1' => [],

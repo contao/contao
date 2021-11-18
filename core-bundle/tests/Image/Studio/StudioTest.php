@@ -20,6 +20,7 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizerInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 class StudioTest extends TestCase
@@ -41,7 +42,7 @@ class StudioTest extends TestCase
             ResizerInterface::class,
             ContaoFramework::class,
             ContaoContext::class,
-            'event_dispatcher',
+            EventDispatcherInterface::class,
         ];
 
         $this->assertEqualsCanonicalizing($services, Studio::getSubscribedServices());

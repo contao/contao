@@ -527,7 +527,7 @@ class FigureBuilder
         $settings = clone $this;
 
         $imageResult = $this->locator
-            ->get(Studio::class)
+            ->get('contao.image.studio')
             ->createImage($settings->filePath, $settings->sizeConfiguration, $settings->resizeOptions)
         ;
 
@@ -677,7 +677,7 @@ class FigureBuilder
         }
 
         return $this->locator
-            ->get(Studio::class)
+            ->get('contao.image.studio')
             ->createLightboxImage(
                 $filePathOrImage,
                 $url,

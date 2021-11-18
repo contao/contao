@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 
 /**
  * Class Comments
@@ -119,7 +118,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = System::getContainer()->get(InsertTagParser::class)->replace($objComments->reply);
+					$objPartial->reply = System::getContainer()->get('contao.insert_tag_parser')->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
 
 					// Clean the RTE output

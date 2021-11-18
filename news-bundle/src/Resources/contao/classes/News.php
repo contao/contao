@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\String\HtmlDecoder;
-
 /**
  * Provide methods regarding news archives.
  *
@@ -223,7 +220,7 @@ class News extends Frontend
 					$strDescription = $objArticle->teaser;
 				}
 
-				$strDescription = $container->get(InsertTagParser::class)->replaceInline($strDescription);
+				$strDescription = $container->get('contao.insert_tag_parser')->replaceInline($strDescription);
 				$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 				// Add the article image as enclosure
@@ -270,7 +267,7 @@ class News extends Frontend
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get(InsertTagParser::class)->replaceInline($objFeed->$strType()));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag_parser')->replaceInline($objFeed->$strType()));
 	}
 
 	/**
@@ -465,7 +462,7 @@ class News extends Frontend
 	 */
 	public static function getSchemaOrgData(NewsModel $objArticle): array
 	{
-		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 		$jsonLd = array(
 			'@type' => 'NewsArticle',

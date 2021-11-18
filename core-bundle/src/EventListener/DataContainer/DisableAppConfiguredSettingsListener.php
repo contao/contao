@@ -43,7 +43,7 @@ class DisableAppConfiguredSettingsListener
 
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['xlabel'][] = [
                 'contao.listener.data_container.disable_app_configured_settings',
-                'renderHelpIcon'
+                'renderHelpIcon',
             ];
 
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['disabled'] = true;

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\SimpleTokenParser;
-
 /**
  * Front end module "lost password".
  *
@@ -324,7 +322,7 @@ class ModulePassword extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_password, $arrData)
+			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 
 		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
-
 /**
  * Front end content element "module".
  *

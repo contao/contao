@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
@@ -615,7 +614,7 @@ class InstallationController implements ContainerAwareInterface
             return '';
         }
 
-        return $this->container->get(ContaoCsrfTokenManager::class)->getToken($tokenName)->getValue();
+        return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
     /**
