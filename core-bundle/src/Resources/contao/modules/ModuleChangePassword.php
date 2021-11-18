@@ -113,6 +113,7 @@ class ModuleChangePassword extends Module
 
 		/** @var FormPassword $objNewPassword */
 		$objNewPassword = null;
+		$arrWidgets = [];
 
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
@@ -169,6 +170,19 @@ class ModuleChangePassword extends Module
 			}
 
 			$strFields .= $objWidget->parse();
+			$arrWidgets[] = $objWidget;
+		}
+
+		// Finalize form widgets (#1185)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
+		{
+			foreach ($arrWidgets as $objWidget)
+			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+			}
 		}
 
 		$this->Template->fields = $strFields;

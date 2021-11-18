@@ -91,6 +91,11 @@ class ModuleCloseAccount extends Module
 			// Close account
 			if (!$objWidget->hasErrors())
 			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+
 				// HOOK: send account ID
 				if (isset($GLOBALS['TL_HOOKS']['closeAccount']) && \is_array($GLOBALS['TL_HOOKS']['closeAccount']))
 				{

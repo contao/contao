@@ -112,6 +112,7 @@ class ModulePassword extends Module
 		$strFields = '';
 		$doNotSubmit = false;
 		$strFormId = 'tl_lost_password_' . $this->id;
+		$arrWidgets = [];
 
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
@@ -145,6 +146,19 @@ class ModulePassword extends Module
 			}
 
 			$strFields .= $objWidget->parse();
+			$arrWidgets[] = $objWidget;
+		}
+
+		// Finalize form widgets (#1185)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
+		{
+			foreach ($arrWidgets as $objWidget)
+			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+			}
 		}
 
 		$this->Template->fields = $strFields;
@@ -255,6 +269,11 @@ class ModulePassword extends Module
 			// Set the new password and redirect
 			if (!$objWidget->hasErrors())
 			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+
 				$objSession->set('setPasswordToken', '');
 
 				$objMember->tstamp = time();
