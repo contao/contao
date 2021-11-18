@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -376,7 +375,7 @@ trait TemplateInheritance
 			return null;
 		}
 
-		$contextFactory = $container->get(ContextFactory::class);
+		$contextFactory = $container->get('contao.twig.context_factory');
 
 		$context = $this instanceof Template ?
 			$contextFactory->fromContaoTemplate($this) :
