@@ -208,6 +208,7 @@ class ExceptionConverterListenerTest extends TestCase
 
     public function testConvertsUnusedArgumentsExceptionsDeprecated(): void
     {
+        /** @psalm-suppress UndefinedClass */
         $event = $this->getResponseEvent(new \UnusedArgumentsException());
 
         $listener = new ExceptionConverterListener();
@@ -216,6 +217,8 @@ class ExceptionConverterListenerTest extends TestCase
         $exception = $event->getThrowable();
 
         $this->assertInstanceOf(NotFoundHttpException::class, $exception);
+
+        /** @psalm-suppress UndefinedClass */
         $this->assertInstanceOf(\UnusedArgumentsException::class, $exception->getPrevious());
     }
 
