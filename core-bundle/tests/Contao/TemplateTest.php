@@ -448,6 +448,10 @@ class TemplateTest extends TestCase
         $template = new BackendTemplate('test_template');
         $template->setData(['value' => 'test']);
         $template->parse(false);
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+        $template->parse(false);
     }
 
     public function testAlwaysReplacesInsertTagsWhenRequested(): void
@@ -459,7 +463,7 @@ class TemplateTest extends TestCase
 
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('replace')
         ;
 
@@ -483,6 +487,10 @@ class TemplateTest extends TestCase
         System::setContainer($container);
 
         $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+        $template->parse(true);
+
+        $template = new FrontendTemplate('test_template');
         $template->setData(['value' => 'test']);
         $template->parse(true);
     }
