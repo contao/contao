@@ -13,7 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
@@ -23,6 +32,7 @@ use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -119,6 +129,55 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(ContentCompositionInterface::class)
             ->addTag('contao.page')
         ;
+
+        $container->registerAttributeForAutoconfiguration(
+            AsContentElement::class,
+            static function (ChildDefinition $definition, AsContentElement $attribute): void {
+                $definition->addTag(ContentElementReference::TAG_NAME, $attribute->attributes);
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsFrontendModule::class,
+            static function (ChildDefinition $definition, AsFrontendModule $attribute): void {
+                $definition->addTag(FrontendModuleReference::TAG_NAME, $attribute->attributes);
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsCronJob::class,
+            static function (ChildDefinition $definition, AsCronJob $attribute): void {
+                $definition->addTag('contao.cronjob', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsHook::class,
+            static function (ChildDefinition $definition, AsHook $attribute): void {
+                $definition->addTag('contao.hook', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsCallback::class,
+            static function (ChildDefinition $definition, AsCallback $attribute): void {
+                $definition->addTag('contao.callback', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsPage::class,
+            static function (ChildDefinition $definition, AsPage $attribute): void {
+                $definition->addTag('contao.page', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsPickerProvider::class,
+            static function (ChildDefinition $definition, AsPickerProvider $attribute): void {
+                $definition->addTag('contao.picker_provider', get_object_vars($attribute));
+            }
+        );
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
