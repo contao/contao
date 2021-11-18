@@ -1023,3 +1023,7 @@ services:
             version: 4.13
             message: Using the "%service_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\String\SimpleTokenParser" instead.
         public: true
+
+    Contao\CoreBundle\Monolog\SystemLogger:
+        arguments:
+            - '@logger'
