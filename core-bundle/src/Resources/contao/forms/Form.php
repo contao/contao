@@ -264,7 +264,7 @@ class Form extends Hybrid
 			// Finalize form widgets (#1185)
 			foreach ($arrWidgets as $objWidget)
 			{
-				if ($objWidget instanceof FinalizableWidget)
+				if ($objWidget instanceof FinalizableWidgetInterface)
 				{
 					$objWidget->finalize();
 				}

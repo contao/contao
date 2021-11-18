@@ -755,7 +755,7 @@ abstract class Widget extends Controller
 		{
 			@trigger_error('Finalizing a widget during Widget::validate() has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 
-			if ($this instanceof FinalizableWidget)
+			if ($this instanceof FinalizableWidgetInterface)
 			{
 				$this->finalize();
 			}

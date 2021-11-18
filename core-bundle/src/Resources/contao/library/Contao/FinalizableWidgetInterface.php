@@ -11,9 +11,9 @@
 namespace Contao;
 
 /**
- * Widget can be finalized after all other widgets were validated.
+ * Widget can be finalized after a form was submitted and all other widgets of a form were validated.
  */
-interface FinalizableWidget
+interface FinalizableWidgetInterface
 {
 	public function finalize(): void;
 }

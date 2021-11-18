@@ -26,7 +26,7 @@ use Contao\CoreBundle\Monolog\ContaoContext;
  *
  * @todo Rename to FormUpload in Contao 5.0
  */
-class FormFileUpload extends Widget implements UploadableWidgetInterface, FinalizableWidget
+class FormFileUpload extends Widget implements UploadableWidgetInterface, FinalizableWidgetInterface
 {
 	/**
 	 * Template
