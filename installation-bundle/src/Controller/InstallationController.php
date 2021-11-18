@@ -589,6 +589,7 @@ class InstallationController implements ContainerAwareInterface
             $context['language'] = $this->container->get('translator')->getLocale();
         }
 
+        // Backwards compatibility
         if (!isset($context['ua'])) {
             $context['ua'] = $this->getUserAgentString();
         }

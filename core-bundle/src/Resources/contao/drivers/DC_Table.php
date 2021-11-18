@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -30,7 +31,7 @@ use Symfony\Component\String\UnicodeString;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DC_Table extends DataContainer implements \listable, \editable
+class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
 	 * Name of the parent table
@@ -133,7 +134,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
@@ -666,7 +667,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, TL_GENERAL);
+				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
 		}
@@ -963,7 +964,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, TL_GENERAL);
+				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
 
 				// Switch to edit mode
 				if (!$blnDoNotRedirect)
@@ -1530,7 +1531,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
 			{
-				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, TL_GENERAL);
+				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, ContaoContext::GENERAL);
 			}
 		}
 
@@ -1698,7 +1699,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Add log entry and delete record from tl_undo if there was no error
 		if (!$error)
 		{
-			$this->log('Undone ' . $query, __METHOD__, TL_GENERAL);
+			$this->log('Undone ' . $query, __METHOD__, ContaoContext::GENERAL);
 
 			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)

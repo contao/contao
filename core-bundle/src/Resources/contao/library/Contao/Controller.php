@@ -394,7 +394,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
+			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, ContaoMonologContext::ERROR);
 
 			return '';
 		}
@@ -576,7 +576,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
+			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, ContaoMonologContext::ERROR);
 
 			return '';
 		}
@@ -651,7 +651,7 @@ abstract class Controller extends System
 
 		if (!class_exists($strClass))
 		{
-			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, TL_ERROR);
+			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, ContaoMonologContext::ERROR);
 
 			return '';
 		}

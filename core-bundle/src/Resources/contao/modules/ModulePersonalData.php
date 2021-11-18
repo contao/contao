@@ -297,7 +297,7 @@ class ModulePersonalData extends Module
 				}
 			}
 
-			if ($objWidget instanceof \uploadable)
+			if ($objWidget instanceof UploadableWidgetInterface)
 			{
 				$hasUpload = true;
 			}

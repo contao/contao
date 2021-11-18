@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
@@ -297,7 +298,7 @@ class ModuleRegistration extends Module
 				}
 			}
 
-			if ($objWidget instanceof \uploadable)
+			if ($objWidget instanceof UploadableWidgetInterface)
 			{
 				$hasUpload = true;
 			}
@@ -567,7 +568,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Log activity
-		$this->log('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, TL_ACCESS);
+		$this->log('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, ContaoContext::ACCESS);
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
@@ -658,7 +659,7 @@ class ModuleRegistration extends Module
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
-		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, TL_ACCESS);
+		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, ContaoContext::ACCESS);
 	}
 }
 

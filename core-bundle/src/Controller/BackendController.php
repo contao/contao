@@ -109,9 +109,14 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/file", name="contao_backend_file")
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     *             Use the picker instead.
      */
     public function fileAction(): Response
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
+
         $this->initializeContaoFramework();
 
         $controller = new BackendFile();
@@ -133,9 +138,14 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/page", name="contao_backend_page")
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     *             Use the picker instead.
      */
     public function pageAction(): Response
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
+
         $this->initializeContaoFramework();
 
         $controller = new BackendPage();

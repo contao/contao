@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Types;
@@ -245,7 +246,7 @@ class Versions extends Controller
 			}
 		}
 
-		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
+		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, ContaoContext::GENERAL);
 	}
 
 	/**
@@ -356,7 +357,7 @@ class Versions extends Controller
 			}
 		}
 
-		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
+		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, ContaoContext::GENERAL);
 	}
 
 	/**
