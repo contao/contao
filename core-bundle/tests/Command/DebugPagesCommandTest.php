@@ -1,0 +1,157 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\Command;
+
+use Contao\CoreBundle\Command\DebugPagesCommand;
+use Contao\CoreBundle\Controller\Page\RootPageController;
+use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\PageError401;
+use Contao\PageError403;
+use Contao\PageError404;
+use Contao\PageForward;
+use Contao\PageLogout;
+use Contao\PageModel;
+use Contao\PageRedirect;
+use Contao\PageRegular;
+use Contao\PageRoot;
+use Contao\System;
+use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
+
+class DebugPagesCommandTest extends ContaoTestCase
+{
+    public function testNameAndArguments(): void
+    {
+        $framework = $this->mockContaoFramework();
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $command = new DebugPagesCommand($framework, $pageRegistry);
+
+        $this->assertSame('debug:pages', $command->getName());
+        $this->assertSame(0, $command->getDefinition()->getArgumentCount());
+        $this->assertEmpty($command->getDefinition()->getOptions());
+    }
+
+    /**
+     * @dataProvider commandOutputProvider
+     */
+    public function testCommandOutput(array $pages, array $legacyPages, string $expectedOutput): void
+    {
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->setParameter('contao.resources_paths', $this->getTempDir());
+
+        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+
+        System::setContainer($container);
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('keys')
+            ->willReturn(array_values(array_column($pages, 0)))
+        ;
+
+        $pageRegistry
+            ->method('supportsContentComposition')
+            ->willReturnCallback(
+                static function (PageModel $pageModel): bool {
+                    return 'regular' === $pageModel->type;
+                }
+            )
+        ;
+
+        $command = new DebugPagesCommand($this->mockContaoFramework(), $pageRegistry);
+
+        $GLOBALS['TL_PTY'] = $legacyPages;
+
+        foreach ($pages as $page) {
+            $command->add($page[0], $page[1], $page[2]);
+        }
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
+
+        unset($GLOBALS['TL_PTY']);
+    }
+
+    public function commandOutputProvider(): \Generator
+    {
+        yield 'Regular pages list' => [
+            [
+                ['root', new RouteConfig('foo', null, '.php', [], [], ['_controller' => RootPageController::class]), null],
+            ],
+            [
+                'regular' => PageRegular::class,
+                'forward' => PageForward::class,
+                'redirect' => PageRedirect::class,
+                'root' => PageRoot::class,
+                'logout' => PageLogout::class,
+                'error_401' => PageError401::class,
+                'error_403' => PageError403::class,
+                'error_404' => PageError404::class,
+            ],
+            <<<'OUTPUT'
+
+                Contao Pages
+                ============
+
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
+                  Type        Path   URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                             Options  
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
+                  error_401   *      *            no                    -                -              -                                                                    -        
+                  error_403   *      *            no                    -                -              -                                                                    -        
+                  error_404   *      *            no                    -                -              -                                                                    -        
+                  forward     *      *            no                    -                -              -                                                                    -        
+                  logout      *      *            no                    -                -              -                                                                    -        
+                  redirect    *      *            no                    -                -              -                                                                    -        
+                  regular     *      *            yes                   -                -              -                                                                    -        
+                  root        foo    .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController   -        
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
+
+
+                OUTPUT
+        ];
+
+        yield 'With custom pages' => [
+            [
+                ['root', new RouteConfig('foo', null, '.php', [], [], ['_controller' => RootPageController::class]), null],
+                ['bar', new RouteConfig('foo/bar', null, '.html', [], [], ['_controller' => TestPageController::class]), null],
+                ['baz', new RouteConfig(null, null, null, ['page' => '\d+'], ['utf8' => false], []), null],
+            ],
+            [
+                'regular' => PageRegular::class,
+                'root' => PageRoot::class,
+            ],
+            <<<'OUTPUT'
+
+                Contao Pages
+                ============
+
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
+                  Type      Path      URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                                      Options       
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
+                  bar       foo/bar   .html        no                    -                -              _controller : Contao\CoreBundle\Fixtures\Controller\Page\TestPageController   -             
+                  baz       *         *            no                    -                page : \d+     -                                                                             utf8 : false  
+                  regular   *         *            yes                   -                -              -                                                                             -             
+                  root      foo       .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController            -             
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
+
+
+                OUTPUT
+        ];
+    }
+}
