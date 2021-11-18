@@ -98,7 +98,7 @@ class ModulePersonalData extends Module
 		$doNotSubmit = false;
 		$hasUpload = false;
 		$row = 0;
-		$arrWidgets = [];
+		$arrWidgets = array();
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array

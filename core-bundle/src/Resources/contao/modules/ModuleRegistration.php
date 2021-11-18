@@ -162,7 +162,7 @@ class ModuleRegistration extends Module
 		$arrFields = array();
 		$hasUpload = false;
 		$i = 0;
-		$arrWidgets = [];
+		$arrWidgets = array();
 
 		// Build the form
 		foreach ($this->editable as $field)

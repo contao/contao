@@ -113,7 +113,7 @@ class ModuleChangePassword extends Module
 
 		/** @var FormPassword $objNewPassword */
 		$objNewPassword = null;
-		$arrWidgets = [];
+		$arrWidgets = array();
 
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)

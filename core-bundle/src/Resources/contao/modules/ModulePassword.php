@@ -112,7 +112,7 @@ class ModulePassword extends Module
 		$strFields = '';
 		$doNotSubmit = false;
 		$strFormId = 'tl_lost_password_' . $this->id;
-		$arrWidgets = [];
+		$arrWidgets = array();
 
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
