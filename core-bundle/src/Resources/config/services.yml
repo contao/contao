@@ -859,7 +859,6 @@ services:
         tags:
             - { name: twig.loader, priority: 1 }
 
-
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
         arguments:
