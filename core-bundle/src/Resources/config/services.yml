@@ -379,7 +379,7 @@ services:
             - '@security.token_storage'
             - '@contao.routing.scope_matcher'
 
-    contao.opt-in:
+    contao.opt_in:
         class: Contao\CoreBundle\OptIn\OptIn
         public: true
         arguments:
@@ -914,15 +914,27 @@ services:
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'
     Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag_parser'
+    Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
+    Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
+    Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
     Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager: '@contao.security.two_factor.trusted_device_manager'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
+    Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
 
     # Backwards compatibility
+    contao.opt-in:
+        alias: contao.opt_in
+        public: true
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.opt_in" instead.
+
     Contao\CoreBundle\Cron\Cron:
         alias: contao.cron
         public: true
@@ -948,22 +960,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.studio.figure_renderer" instead.
-
-    Contao\CoreBundle\Intl\Countries:
-        alias: contao.intl.countries
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.intl.countries" instead.
-
-    Contao\CoreBundle\Intl\Locales:
-        alias: contao.intl.locales
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.intl.locales" instead.
 
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
         alias: contao.response_context.accessor
@@ -996,14 +992,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.security.two_factor.backup_code_manager" instead.
-
-    Contao\CoreBundle\String\HtmlDecoder:
-        alias: contao.string.html_decoder
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.string.html_decoder" instead.
 
     Contao\CoreBundle\Twig\Extension\ContaoExtension:
         alias: contao.twig.contao_extension

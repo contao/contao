@@ -573,7 +573,7 @@ class Comments extends Frontend
 		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
@@ -589,7 +589,7 @@ class Comments extends Frontend
 	{
 		if (strncmp(Input::get('token'), 'com-', 4) === 0)
 		{
-			$optIn = System::getContainer()->get('contao.opt-in');
+			$optIn = System::getContainer()->get('contao.opt_in');
 
 			// Find an unconfirmed token with only one related record
 			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))
