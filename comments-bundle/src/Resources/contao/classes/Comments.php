@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Class Comments
@@ -533,7 +534,7 @@ class Comments extends Frontend
 		}
 
 		// Add a log entry
-		$this->log('Purged the unactivated comment subscriptions', __METHOD__, TL_CRON);
+		$this->log('Purged the unactivated comment subscriptions', __METHOD__, ContaoContext::CRON);
 	}
 
 	/**

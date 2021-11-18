@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
@@ -256,7 +257,7 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 			return '';
 		}

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Provide methods regarding calendars.
@@ -60,7 +61,7 @@ class Calendar extends Frontend
 		else
 		{
 			$this->generateFiles($objCalendar->row());
-			$this->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"', __METHOD__, TL_CRON);
+			$this->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
@@ -80,7 +81,7 @@ class Calendar extends Frontend
 			{
 				$objCalendar->feedName = $objCalendar->alias ?: 'calendar' . $objCalendar->id;
 				$this->generateFiles($objCalendar->row());
-				$this->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"', __METHOD__, TL_CRON);
+				$this->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 			}
 		}
 	}
@@ -102,7 +103,7 @@ class Calendar extends Frontend
 
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated calendar feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+				$this->log('Generated calendar feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 			}
 		}
 	}

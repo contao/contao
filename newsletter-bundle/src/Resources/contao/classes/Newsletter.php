@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
@@ -208,7 +209,7 @@ class Newsletter extends Backend
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
 									   ->execute($strRecipient);
 
-						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, TL_ERROR);
+						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, ContaoContext::ERROR);
 					}
 
 					unset($_SESSION['REJECTED_RECIPIENTS']);
@@ -337,7 +338,7 @@ class Newsletter extends Backend
 		}
 
 		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = TL_NEWSLETTER . '_' . $objNewsletter->id;
+		$objEmail->logFile = ContaoContext::NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
@@ -502,7 +503,7 @@ class Newsletter extends Backend
 					// Skip invalid entries
 					if (!Validator::isEmail($strRecipient))
 					{
-						$this->log('The recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
+						$this->log('The recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, ContaoContext::ERROR);
 						++$intInvalid;
 						continue;
 					}
@@ -522,7 +523,7 @@ class Newsletter extends Backend
 
 					if ($objDenyList->count > 0)
 					{
-						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
+						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, ContaoContext::ERROR);
 						continue;
 					}
 
@@ -909,7 +910,7 @@ class Newsletter extends Backend
 		}
 
 		// Add a log entry
-		$this->log('Purged the unactivated newsletter subscriptions', __METHOD__, TL_CRON);
+		$this->log('Purged the unactivated newsletter subscriptions', __METHOD__, ContaoContext::CRON);
 	}
 
 	/**

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -313,7 +314,7 @@ class Config
 		// Make sure the file has been written (see #4483)
 		if (!filesize($strTemp))
 		{
-			System::log('The local configuration file could not be written. Have you reached your quota limit?', __METHOD__, TL_ERROR);
+			System::log('The local configuration file could not be written. Have you reached your quota limit?', __METHOD__, ContaoContext::ERROR);
 
 			return;
 		}
