@@ -27,6 +27,8 @@ class PageRedirect extends Frontend
 	 */
 	public function generate($objPage)
 	{
+		$this->prepare($objPage);
+
 		$this->redirect($this->replaceInsertTags($objPage->url, false), $this->getRedirectStatusCode($objPage));
 	}
 
@@ -39,6 +41,8 @@ class PageRedirect extends Frontend
 	 */
 	public function getResponse($objPage)
 	{
+		$this->prepare($objPage);
+
 		return new RedirectResponse($this->replaceInsertTags($objPage->url, false), $this->getRedirectStatusCode($objPage));
 	}
 
@@ -52,6 +56,20 @@ class PageRedirect extends Frontend
 	protected function getRedirectStatusCode($objPage)
 	{
 		return ($objPage->redirect == 'temporary') ? 303 : 301;
+	}
+
+	/**
+	 * @param PageModel $objPage
+	 */
+	private function prepare($objPage)
+	{
+		$GLOBALS['TL_LANGUAGE'] = $objPage->language;
+
+		$locale = str_replace('-', '_', $objPage->language);
+
+		$container = System::getContainer();
+		$container->get('request_stack')->getCurrentRequest()->setLocale($locale);
+		$container->get('translator')->setLocale($locale);
 	}
 }
 
