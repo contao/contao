@@ -154,10 +154,13 @@ class InsertTags extends Controller
 
 		if (static::$strAllowedTagsRegex === null)
 		{
-			static::$strAllowedTagsRegex = '(' . implode('|', array_map(static function ($allowedTag)
-			{
-				return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
-			}, $container->getParameter('contao.insert_tags.allowed_tags'))) . ')';
+			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
+				static function ($allowedTag)
+				{
+					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
+				},
+				$container->getParameter('contao.insert_tags.allowed_tags')
+			)) . ')';
 		}
 
 		// Create one cache per cache setting (see #7700)
