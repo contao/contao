@@ -111,6 +111,11 @@ class ModuleSubscribe extends Module
 
 			if ($varSubmitted !== false)
 			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+
 				$this->addRecipient(...$varSubmitted);
 			}
 		}
