@@ -161,9 +161,9 @@ trait TemplateInheritance
 			}
 		}
 
-		// Replace insert tags, but not for the back end
 		$request = $container->get('request_stack')->getCurrentRequest();
 
+		// Replace insert tags except in the back end
 		if (null === $request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$strBuffer = $container->get(InsertTagParser::class)->replace($strBuffer);
