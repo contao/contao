@@ -401,13 +401,11 @@ class TemplateTest extends TestCase
             ->method('replace')
         ;
 
-        $request = $this->createMock(Request::class);
-
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack
             ->expects($this->once())
             ->method('getCurrentRequest')
-            ->willReturn($request)
+            ->willReturn($this->createMock(Request::class))
         ;
 
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
