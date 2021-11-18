@@ -162,6 +162,7 @@ class ModuleRegistration extends Module
 		$arrFields = array();
 		$hasUpload = false;
 		$i = 0;
+		$arrWidgets = [];
 
 		// Build the form
 		foreach ($this->editable as $field)
@@ -313,6 +314,7 @@ class ModuleRegistration extends Module
 			}
 
 			$arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
+			$arrWidgets[] = $objWidget;
 
 			++$i;
 		}
@@ -334,6 +336,14 @@ class ModuleRegistration extends Module
 		// Create new user if there are no errors
 		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
+			foreach ($arrWidgets as $objWidget)
+			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+			}
+
 			$this->createNewUser($arrUser);
 		}
 

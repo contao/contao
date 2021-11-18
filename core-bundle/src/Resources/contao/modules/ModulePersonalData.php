@@ -98,6 +98,7 @@ class ModulePersonalData extends Module
 		$doNotSubmit = false;
 		$hasUpload = false;
 		$row = 0;
+		$arrWidgets = [];
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
@@ -312,6 +313,7 @@ class ModulePersonalData extends Module
 			}
 
 			$arrFields[$strGroup][$field] .= $temp;
+			$arrWidgets[] = $objWidget;
 
 			++$row;
 		}
@@ -334,6 +336,14 @@ class ModulePersonalData extends Module
 		// Redirect or reload if there was no error
 		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
 		{
+			foreach ($arrWidgets as $objWidget)
+			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+			}
+
 			// HOOK: updated personal data
 			if (isset($GLOBALS['TL_HOOKS']['updatePersonalData']) && \is_array($GLOBALS['TL_HOOKS']['updatePersonalData']))
 			{
