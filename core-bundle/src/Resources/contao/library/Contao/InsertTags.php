@@ -34,7 +34,7 @@ use Webmozart\PathUtil\Path;
  */
 class InsertTags extends Controller
 {
-	private const MAX_NESTING_LEVEL = 100;
+	private const MAX_NESTING_LEVEL = 64;
 
 	/**
 	 * @var int
@@ -45,6 +45,11 @@ class InsertTags extends Controller
 	 * @var array
 	 */
 	protected static $arrItCache = array();
+
+	/**
+	 * @var ?string
+	 */
+	protected static $strAllowedTagsRegex;
 
 	/**
 	 * Make the constructor public
@@ -60,6 +65,7 @@ class InsertTags extends Controller
 	public static function reset()
 	{
 		static::$arrItCache = array();
+		static::$strAllowedTagsRegex = null;
 	}
 
 	/**
@@ -110,9 +116,11 @@ class InsertTags extends Controller
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$container = System::getContainer();
+
 		// Backwards compatibility
 		// Preserve insert tags
-		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']))
+		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
 			$return = StringUtil::restoreBasicEntities($strBuffer);
 
@@ -144,8 +152,18 @@ class InsertTags extends Controller
 		}
 
 		$arrBuffer = array();
-		$container = System::getContainer();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
+
+		if (static::$strAllowedTagsRegex === null)
+		{
+			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
+				static function ($allowedTag)
+				{
+					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
+				},
+				$container->getParameter('contao.insert_tags.allowed_tags')
+			)) . ')';
+		}
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -171,6 +189,12 @@ class InsertTags extends Controller
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
 				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
+				continue;
+			}
+
+			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
+			{
+				$arrBuffer[$_rit+1] = '{{' . $strTag . '}}';
 				continue;
 			}
 
