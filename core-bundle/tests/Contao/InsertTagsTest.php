@@ -62,7 +62,7 @@ class InsertTagsTest extends TestCase
             try {
                 return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false);
             } catch (\RuntimeException $exception) {
-                $this->assertSame('Maximum insert tag nesting level of 100 reached', $exception->getMessage());
+                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
                 return '[{]infinite-try-catch::'.((int) $tagParts[1] + 1).'[}]';
             }
@@ -72,7 +72,7 @@ class InsertTagsTest extends TestCase
             try {
                 return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
             } catch (\RuntimeException $exception) {
-                $this->assertSame('Maximum insert tag nesting level of 100 reached', $exception->getMessage());
+                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
 
                 if ((int) $tagParts[1] >= 100) {
                     return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
@@ -838,7 +838,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Maximum insert tag nesting level of 100 reached');
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
 
         $insertTagParser->replaceInline('{{infinite-nested::1}}');
     }
@@ -850,7 +850,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Maximum insert tag nesting level of 100 reached');
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
 
         $insertTagParser->replaceInline('{{infinite-recursion::1}}');
     }
@@ -862,7 +862,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
         $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
 
-        $this->assertSame('[{]infinite-try-catch::101[}]', $output);
+        $this->assertSame('[{]infinite-try-catch::65[}]', $output);
     }
 
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
@@ -872,7 +872,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Maximum insert tag nesting level of 100 reached');
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
 
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
     }
