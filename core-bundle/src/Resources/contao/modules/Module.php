@@ -135,6 +135,11 @@ abstract class Module extends Frontend
 			$this->objModel = $objModel;
 		}
 
+		if ($this->objModel === null)
+		{
+			throw new \LogicException('No module model given');
+		}
+
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
