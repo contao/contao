@@ -31,11 +31,20 @@ class BackendTemplate extends Template
 	/**
 	 * Add a hook to modify the template output
 	 *
+	 * @param bool|null $replaceInsertTags Whether insert tags should be replaced (default: always, except in the back end scope)
+	 *
 	 * @return string
 	 */
-	public function parse()
+	public function parse(/* $replaceInsertTags = null */)
 	{
-		$strBuffer = parent::parse();
+		$replaceInsertTags = null;
+
+		if (\func_num_args() > 0)
+		{
+			$replaceInsertTags = func_get_arg(0);
+		}
+
+		$strBuffer = parent::parse($replaceInsertTags);
 
 		// HOOK: add custom parse filters
 		if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseBackendTemplate']))

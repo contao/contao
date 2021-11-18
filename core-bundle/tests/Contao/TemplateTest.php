@@ -427,6 +427,104 @@ class TemplateTest extends TestCase
         $template->parse();
     }
 
+    public function testDoesNotReplaceInsertTags(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->value ?>'
+        );
+
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->never())
+            ->method('replace')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set(InsertTagParser::class, $insertTags);
+
+        System::setContainer($container);
+
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+        $template->parse(false);
+    }
+
+    public function testAlwaysReplacesInsertTagsWhenRequested(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->value ?>'
+        );
+
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->once())
+            ->method('replace')
+        ;
+
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->expects($this->never())
+            ->method('getCurrentRequest')
+        ;
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->never())
+            ->method('isBackendRequest')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('request_stack', $requestStack);
+        $container->set('contao.routing.scope_matcher', $scopeMatcher);
+
+        System::setContainer($container);
+
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+        $template->parse(true);
+    }
+
+    public function testReplacesInsertTagsByDefault(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?= $this->value ?>'
+        );
+
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->once())
+            ->method('replace')
+        ;
+
+        $requestStack = $this->createMock(RequestStack::class);
+        $requestStack
+            ->expects($this->once())
+            ->method('getCurrentRequest')
+            ->willReturn(null)
+        ;
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->never())
+            ->method('isBackendRequest')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('request_stack', $requestStack);
+        $container->set('contao.routing.scope_matcher', $scopeMatcher);
+
+        System::setContainer($container);
+
+        $template = new BackendTemplate('test_template');
+        $template->setData(['value' => 'test']);
+        $template->parse();
+    }
+
     /**
      * @dataProvider provideBuffer
      */

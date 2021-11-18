@@ -79,9 +79,11 @@ trait TemplateInheritance
 	/**
 	 * Parse the template file and return it as string
 	 *
+	 * @param bool|null $replaceInsertTags Whether insert tags should be replaced (default: always, except in the back end scope)
+	 *
 	 * @return string The template markup
 	 */
-	public function inherit()
+	public function inherit(/* $replaceInsertTags = null */)
 	{
 		if (null !== ($result = $this->renderTwigSurrogateIfExists()))
 		{
@@ -161,10 +163,21 @@ trait TemplateInheritance
 			}
 		}
 
-		$request = $container->get('request_stack')->getCurrentRequest();
+		$replaceInsertTags = null;
 
-		// Replace insert tags except in the back end
-		if (null === $request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if (\func_num_args() > 0)
+		{
+			$replaceInsertTags = func_get_arg(0);
+		}
+
+		// Do not replace insert tags by default in the back end (#3693)
+		if (null === $replaceInsertTags)
+		{
+			$request = $container->get('request_stack')->getCurrentRequest();
+			$replaceInsertTags = null === $request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		}
+
+		if ($replaceInsertTags)
 		{
 			$strBuffer = $container->get(InsertTagParser::class)->replace($strBuffer);
 		}
