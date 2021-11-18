@@ -33,6 +33,7 @@ if (!interface_exists('listable', false))
 	interface executable
 	{
 	}
+
 	interface uploadable
 	{
 	}
