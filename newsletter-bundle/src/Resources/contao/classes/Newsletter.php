@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\Database\Result;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -95,8 +94,8 @@ class Newsletter extends Backend
 		}
 
 		// Replace insert tags
-		$html = $this->replaceInsertTags($objNewsletter->content, false);
-		$text = $this->replaceInsertTags($objNewsletter->text, false);
+		$html = System::getContainer()->get(InsertTagParser::class)->replaceInline($objNewsletter->content);
+		$text = System::getContainer()->get(InsertTagParser::class)->replaceInline($objNewsletter->text);
 
 		// Convert relative URLs
 		if ($objNewsletter->externalImages)
@@ -104,7 +103,6 @@ class Newsletter extends Backend
 			$html = $this->convertRelativeUrls($html);
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 		$token = Input::get('token');
 
@@ -376,7 +374,6 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
-		/** @var SimpleTokenParser $simpleTokenParser */
 		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
 
 		// Prepare the text content

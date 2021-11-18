@@ -12,20 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
+use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
-use Contao\InsertTags;
 
 class InsertTagRuntimeTest extends TestCase
 {
     public function testRenderInsertTag(): void
     {
-        $insertTags = $this->createMock(InsertTags::class);
+        $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('replace')
-            ->with('{{tag}}', false)
+            ->method('render')
+            ->with('tag')
             ->willReturn('replaced-tag')
         ;
 
@@ -36,11 +36,11 @@ class InsertTagRuntimeTest extends TestCase
 
     public function testReplaceInsertTags(): void
     {
-        $insertTags = $this->createMock(InsertTags::class);
+        $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('replace')
-            ->with('foo {{tag}}', false)
+            ->method('replaceInline')
+            ->with('foo {{tag}}')
             ->willReturn('foo replaced-tag')
         ;
 
@@ -51,11 +51,11 @@ class InsertTagRuntimeTest extends TestCase
 
     public function testReplaceInsertTagsChunkedRaw(): void
     {
-        $insertTags = $this->createMock(InsertTags::class);
+        $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('replace')
-            ->with('{{tag}} foo', false, true)
+            ->method('replaceChunked')
+            ->with('{{tag}} foo')
             ->willReturn(new ChunkedText(['', '<replaced-tag>', ' foo']))
         ;
 

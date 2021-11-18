@@ -363,9 +363,7 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		/** @var Session $objSession */
 		$objSession = static::getContainer()->get('session');
-
 		$ref = Input::get('ref');
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);

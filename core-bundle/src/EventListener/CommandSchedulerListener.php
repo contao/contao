@@ -50,6 +50,13 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
         }
     }
 
+    /**
+     * Lazy-load services to prevent issues with MySQL server_version.
+     *
+     * @see https://github.com/contao/contao/pull/3623
+     *
+     * @return array<string>
+     */
     public static function getSubscribedServices(): array
     {
         return [Cron::class];
@@ -64,7 +71,6 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
             return false;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         return $config->isComplete() && !$config->get('disableCron') && $this->canRunDbQuery();

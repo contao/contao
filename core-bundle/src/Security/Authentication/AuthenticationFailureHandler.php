@@ -53,7 +53,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         $username = 'anon.';
 
         if ($exception instanceof AccountStatusException && ($user = $exception->getUser()) instanceof UserInterface) {
-            $username = $user->getUsername();
+            $username = $user->getUserIdentifier();
         }
 
         $this->logger->info(

@@ -35,7 +35,6 @@ class PurgeExpiredDataCron
     {
         $this->framework->initialize();
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $this->cleanTable('tl_undo', (int) $config->get('undoPeriod'));

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\OptIn\OptIn;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -258,7 +257,6 @@ class Automator extends System
 	 */
 	public function purgeOptInTokens()
 	{
-		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optIn->purgeTokens();
 

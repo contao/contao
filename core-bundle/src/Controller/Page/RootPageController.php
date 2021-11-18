@@ -33,9 +33,7 @@ class RootPageController extends AbstractController
 
     private function getNextPage(int $rootPageId): PageModel
     {
-        /** @var PageModel $pageAdapter */
-        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
-        $nextPage = $pageAdapter->findFirstPublishedByPid($rootPageId);
+        $nextPage = $this->getContaoAdapter(PageModel::class)->findFirstPublishedByPid($rootPageId);
 
         if ($nextPage instanceof PageModel) {
             return $nextPage;

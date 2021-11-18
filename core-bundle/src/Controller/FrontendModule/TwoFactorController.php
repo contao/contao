@@ -80,9 +80,7 @@ class TwoFactorController extends AbstractFrontendModuleController
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
-        /** @var PageModel $adapter */
-        $adapter = $this->get('contao.framework')->getAdapter(PageModel::class);
-
+        $adapter = $this->getContaoAdapter(PageModel::class);
         $redirectPage = $model->jumpTo > 0 ? $adapter->findByPk($model->jumpTo) : null;
         $return = $redirectPage instanceof PageModel ? $redirectPage->getAbsoluteUrl() : $this->pageModel->getAbsoluteUrl();
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
@@ -99,18 +100,15 @@ class LightboxResult
      */
     private function getDefaultLightboxSizeConfiguration(): ?array
     {
-        $framework = $this->locator->get('contao.framework');
         $page = $GLOBALS['objPage'] ?? null;
 
         if (!$page instanceof PageModel || null === $page->layout) {
             return null;
         }
 
-        /** @var LayoutModel $layoutModelAdapter */
-        $layoutModelAdapter = $framework->getAdapter(LayoutModel::class);
-
-        /** @var LayoutModel|null $layoutModel */
-        $layoutModel = $layoutModelAdapter->findByPk($page->layout);
+        /** @var ContaoFramework $framework */
+        $framework = $this->locator->get('contao.framework');
+        $layoutModel = $framework->getAdapter(LayoutModel::class)->findByPk($page->layout);
 
         if (null === $layoutModel || empty($layoutModel->lightboxSize)) {
             return null;

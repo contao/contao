@@ -13,14 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\PageModel;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class InsertTagsTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -39,12 +43,48 @@ class InsertTagsTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
         InsertTags::reset();
 
+        InsertTags::reset();
+
         parent::tearDown();
     }
 
     public function replaceInsertTagsHook(string $tag): string
     {
-        return str_replace(['[', ']'], ['{', '}'], explode('::', $tag, 2)[1] ?? '');
+        $tagParts = explode('::', $tag, 2);
+
+        if ('infinite-nested' === $tagParts[0]) {
+            return '{{infinite-nested::'.((int) $tagParts[1] + 1).'}}';
+        }
+
+        if ('infinite-recursion' === $tagParts[0]) {
+            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false);
+        }
+
+        if ('infinite-try-catch' === $tagParts[0]) {
+            try {
+                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false);
+            } catch (\RuntimeException $exception) {
+                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
+
+                return '[{]infinite-try-catch::'.((int) $tagParts[1] + 1).'[}]';
+            }
+        }
+
+        if ('infinite-retry' === $tagParts[0]) {
+            try {
+                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
+            } catch (\RuntimeException $exception) {
+                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
+
+                if ((int) $tagParts[1] >= 100) {
+                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false);
+                }
+
+                throw $exception;
+            }
+        }
+
+        return str_replace(['[', ']'], ['{', '}'], $tagParts[1] ?? '');
     }
 
     /**
@@ -55,6 +95,17 @@ class InsertTagsTest extends TestCase
     public function testInsertTags(string $source, string $expected): void
     {
         InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $output = $insertTagParser->replaceInline($source);
+
+        $this->assertSame($expected, $output);
+
+        $output = (string) $insertTagParser->replaceChunked($source);
+
+        $this->assertSame($expected, $output);
+
+        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
 
         $output = (new InsertTags())->replace($source, false);
 
@@ -116,6 +167,8 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider provideFigureInsertTags
+     *
+     * @group legacy
      */
     public function testFigureInsertTag(string $input, array $expectedArguments): void
     {
@@ -135,6 +188,14 @@ class InsertTagsTest extends TestCase
         ;
 
         $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $output = $insertTagParser->replaceInline($input);
+
+        $this->assertSame('<figure>foo</figure>', $output);
+        $this->assertSame($expectedArguments, $usedArguments);
+
+        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
 
         $output = (new InsertTags())->replace($input, false);
 
@@ -227,6 +288,8 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider provideInvalidFigureInsertTags
+     *
+     * @group legacy
      */
     public function testFigureInsertTagReturnsEmptyStringIfInvalid(string $input, bool $invalidConfiguration): void
     {
@@ -238,6 +301,13 @@ class InsertTagsTest extends TestCase
         ;
 
         $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $output = $insertTagParser->replaceInline($input);
+
+        $this->assertSame('', $output);
+
+        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
 
         $output = (new InsertTags())->replace($input, false);
 
@@ -337,6 +407,12 @@ class InsertTagsTest extends TestCase
 
         /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $insertTags);
+        $output = $insertTagParser->replaceInline($source);
+
+        $this->assertSame($expected, $output);
+
+        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
 
         $this->assertSame($expected, $insertTags->replace($source, false));
     }
@@ -577,30 +653,31 @@ class InsertTagsTest extends TestCase
 
         /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $insertTags);
 
-        $this->assertSame($expected, $insertTags->replace($source, false));
-        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+        $this->assertSame($expected, $insertTagParser->replaceInline($source));
+        $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));
 
-        $this->assertSame($expected, $insertTags->replace($source));
-        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+        $this->assertSame($expected, $insertTagParser->replace($source));
+        $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
 
         // Test case insensitivity
         $source = str_replace('lng', 'LnG', $source);
 
-        $this->assertSame($expected, $insertTags->replace($source, false));
-        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+        $this->assertSame($expected, $insertTagParser->replaceInline($source));
+        $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));
 
-        $this->assertSame($expected, $insertTags->replace($source));
-        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+        $this->assertSame($expected, $insertTagParser->replace($source));
+        $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
 
         $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source).'">';
         $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected).'">';
 
-        $this->assertSame($expected, $insertTags->replace($source, false));
-        $this->assertSame($expected.$expected, $insertTags->replace($source.$source, false));
+        $this->assertSame($expected, $insertTagParser->replaceInline($source));
+        $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));
 
-        $this->assertSame($expected, $insertTags->replace($source));
-        $this->assertSame($expected.$expected, $insertTags->replace($source.$source));
+        $this->assertSame($expected, $insertTagParser->replace($source));
+        $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
 
         unset($GLOBALS['objPage']);
     }
@@ -821,6 +898,52 @@ class InsertTagsTest extends TestCase
             'DE_DEDE*DE_*DEU-DE',
             'deu-DE',
         ];
+    }
+
+    public function testInfiniteNestedInsertTag(): void
+    {
+        InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+
+        $insertTagParser->replaceInline('{{infinite-nested::1}}');
+    }
+
+    public function testInfiniteRecursionInsertTag(): void
+    {
+        InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+
+        $insertTagParser->replaceInline('{{infinite-recursion::1}}');
+    }
+
+    public function testInfiniteRecursionWithCatchInsertTag(): void
+    {
+        InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+        $output = $insertTagParser->replaceInline('{{infinite-try-catch::1}}');
+
+        $this->assertSame('[{]infinite-try-catch::65[}]', $output);
+    }
+
+    public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
+    {
+        InsertTags::reset();
+
+        $insertTagParser = new InsertTagParser($this->mockContaoFramework());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Maximum insert tag nesting level of 64 reached');
+
+        $insertTagParser->replaceInline('{{infinite-retry::1}}');
     }
 
     private function setContainerWithContaoConfiguration(array $configuration = []): void

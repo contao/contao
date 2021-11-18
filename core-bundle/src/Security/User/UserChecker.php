@@ -103,7 +103,6 @@ class UserChecker implements UserCheckerInterface
      */
     private function checkIfAccountIsActive(User $user): void
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $start = (int) $user->start;

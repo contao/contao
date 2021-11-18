@@ -23,7 +23,6 @@ use Imagine\Gd\Imagine;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -129,7 +128,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
@@ -290,13 +288,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	public function showAll()
 	{
 		$return = '';
-
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
 
 		// Add to clipboard
@@ -656,7 +651,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -709,7 +703,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -797,9 +790,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -861,7 +852,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -971,9 +961,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -1084,9 +1072,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -1139,9 +1125,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			/** @var Session $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$arrClipboard = $objSession->get('CLIPBOARD');
 			$arrClipboard[$this->strTable] = array();
 			$objSession->set('CLIPBOARD', $arrClipboard);
@@ -1219,7 +1203,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				if ($blnIsAjax)
 				{
-					/** @var Session $objSession */
 					$objSession = System::getContainer()->get('session');
 
 					if ($objSession->isStarted())
@@ -1656,7 +1639,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Get current IDs from session
@@ -2375,9 +2357,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			// Set the new value so the input field can show it
 			if (Input::get('act') == 'editAll')
 			{
-				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
-
 				$session = $objSession->all();
 
 				if (($index = array_search($this->strPath . '/' . $this->varValue . $this->strExtension, $session['CURRENT']['IDS'])) !== false)
@@ -2612,9 +2592,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			return '';
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
 

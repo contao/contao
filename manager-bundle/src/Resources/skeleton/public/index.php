@@ -10,6 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use Composer\Autoload\ClassLoader;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -18,15 +19,15 @@ use Symfony\Component\HttpKernel\TerminableInterface;
 @ini_set('display_errors', '0');
 
 // Disable the phar stream wrapper for security reasons (see #105)
-if (\in_array('phar', stream_get_wrappers(), true)) {
+if (in_array('phar', stream_get_wrappers(), true)) {
     stream_wrapper_unregister('phar');
 }
 
-/** @var Composer\Autoload\ClassLoader */
+/** @var ClassLoader $loader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
 $request = Request::createFromGlobals();
-$kernel = ContaoKernel::fromRequest(\dirname(__DIR__), $request);
+$kernel = ContaoKernel::fromRequest(dirname(__DIR__), $request);
 
 $response = $kernel->handle($request);
 $response->send();

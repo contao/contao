@@ -18,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
+/**
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+ *             the Symfony\Component\Security\Http\Event\LogoutEvent event instead
+ */
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
     private ScopeMatcher $scopeMatcher;

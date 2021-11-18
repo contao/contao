@@ -193,7 +193,7 @@ class CommandSchedulerListenerTest extends TestCase
     /**
      * @return Connection&MockObject
      */
-    private function mockConnection()
+    private function mockConnection(): Connection
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager

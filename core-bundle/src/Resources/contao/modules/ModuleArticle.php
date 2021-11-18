@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlDecoder;
@@ -66,11 +68,7 @@ class ModuleArticle extends Module
 		$this->blnNoMarkup = $blnNoMarkup;
 
 		// Tag the article (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_article.' . $this->id));
-		}
+		System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
 
 		return parent::generate();
 	}
@@ -284,9 +282,11 @@ class ModuleArticle extends Module
 		$this->headline = $this->title;
 		$this->printable = false;
 
+		$container = System::getContainer();
+
 		// Generate article
-		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$strArticle = $container->get(InsertTagParser::class)->replaceInline($this->generate());
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

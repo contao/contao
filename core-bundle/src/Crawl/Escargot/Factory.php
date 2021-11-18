@@ -124,7 +124,6 @@ class Factory
 
         $collection = new BaseUriCollection();
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $rootPages = $pageModel->findPublishedRootPages();
 

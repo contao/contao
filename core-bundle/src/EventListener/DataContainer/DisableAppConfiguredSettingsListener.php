@@ -49,7 +49,6 @@ class DisableAppConfiguredSettingsListener
 
     public function renderHelpIcon(): string
     {
-        /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
         return $adapter->getHtml(

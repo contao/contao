@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -240,7 +241,7 @@ class PageRegular extends Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
+		$this->Template->title = strip_tags(System::getContainer()->get(InsertTagParser::class)->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes

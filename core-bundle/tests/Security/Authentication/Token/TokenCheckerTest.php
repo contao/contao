@@ -317,6 +317,9 @@ class TokenCheckerTest extends TestCase
         $this->assertNull($tokenChecker->getFrontendUsername());
     }
 
+    /**
+     * @return User&MockObject
+     */
     private function mockUser(string $class): User
     {
         /** @var User&MockObject $user */

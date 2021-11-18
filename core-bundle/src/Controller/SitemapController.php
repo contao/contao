@@ -44,8 +44,7 @@ class SitemapController extends AbstractController
     {
         $this->initializeContaoFramework();
 
-        /** @var PageModel $pageModel */
-        $pageModel = $this->get('contao.framework')->getAdapter(PageModel::class);
+        $pageModel = $this->getContaoAdapter(PageModel::class);
         $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->server->get('HTTP_HOST')]);
 
         if (null === $rootPages) {
@@ -97,8 +96,7 @@ class SitemapController extends AbstractController
 
     private function callLegacyHook(PageModel $rootPage, array $pages): array
     {
-        /** @var System $systemAdapter */
-        $systemAdapter = $this->get('contao.framework')->getAdapter(System::class);
+        $systemAdapter = $this->getContaoAdapter(System::class);
 
         // HOOK: take additional pages
         if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages'])) {
@@ -114,8 +112,7 @@ class SitemapController extends AbstractController
 
     private function getPageAndArticleUrls(int $parentPageId): array
     {
-        /** @var PageModel $pageModelAdapter */
-        $pageModelAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
+        $pageModelAdapter = $this->getContaoAdapter(PageModel::class);
 
         // Since the publication status of a page is not inherited by its child
         // pages, we have to use findByPid() instead of findPublishedByPid() and
@@ -126,8 +123,7 @@ class SitemapController extends AbstractController
             return [];
         }
 
-        /** @var ArticleModel $articleModelAdapter */
-        $articleModelAdapter = $this->get('contao.framework')->getAdapter(ArticleModel::class);
+        $articleModelAdapter = $this->getContaoAdapter(ArticleModel::class);
 
         $result = [];
 

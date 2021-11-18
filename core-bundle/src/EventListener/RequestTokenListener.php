@@ -70,7 +70,6 @@ class RequestTokenListener
             return;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if (\defined('BYPASS_TOKEN_CHECK')) {

@@ -24,7 +24,6 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\System;
 use Imagine\Gd\Imagine as ImagineGd;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -99,7 +98,6 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'foobar']);
         $fileMock
             ->method('exists')
@@ -126,7 +124,6 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -586,7 +583,6 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -766,7 +762,6 @@ class ImageTest extends TestCase
             'viewHeight' => 100,
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -890,7 +885,6 @@ class ImageTest extends TestCase
             'viewHeight' => 200,
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -959,7 +953,6 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
         $fileMock
             ->method('exists')
