@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
 /**
  * Provide methods regarding news archives.
  *
@@ -56,7 +58,7 @@ class News extends Frontend
 		else
 		{
 			$this->generateFiles($objFeed->row());
-			$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+			$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
@@ -76,7 +78,7 @@ class News extends Frontend
 			{
 				$objFeed->feedName = $objFeed->alias ?: 'news' . $objFeed->id;
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 			}
 		}
 	}
@@ -98,7 +100,7 @@ class News extends Frontend
 
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 			}
 		}
 	}

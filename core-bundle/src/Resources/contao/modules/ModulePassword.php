@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
 /**
  * Front end module "lost password".
  *
@@ -325,7 +327,7 @@ class ModulePassword extends Module
 			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 
-		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
+		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, ContaoContext::ACCESS);
 
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

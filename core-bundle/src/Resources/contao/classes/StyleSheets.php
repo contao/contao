@@ -10,10 +10,17 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\StyleSheets" class has been deprecated and will no longer work in Contao 5.0. Use external stylesheets instead.');
+
 /**
  * Provide methods to handle style sheets.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use external stylesheets instead.
  */
 class StyleSheets extends Backend
 {
@@ -59,7 +66,7 @@ class StyleSheets extends Backend
 		else
 		{
 			$this->writeStyleSheet($objStyleSheet->row());
-			$this->log('Generated style sheet "' . $objStyleSheet->name . '.css"', __METHOD__, TL_CRON);
+			$this->log('Generated style sheet "' . $objStyleSheet->name . '.css"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
@@ -114,7 +121,7 @@ class StyleSheets extends Backend
 		while ($objStyleSheets->next())
 		{
 			$this->writeStyleSheet($objStyleSheets->row());
-			$this->log('Generated style sheet "' . $objStyleSheets->name . '.css"', __METHOD__, TL_CRON);
+			$this->log('Generated style sheet "' . $objStyleSheets->name . '.css"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
