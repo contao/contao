@@ -267,7 +267,7 @@ class Comments extends Frontend
 			// Validate the widget
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
-				$objWidget->validate();
+				$objWidget->validate(false);
 
 				if ($objWidget->hasErrors())
 				{
@@ -276,6 +276,18 @@ class Comments extends Frontend
 			}
 
 			$arrWidgets[$arrField['name']] = $objWidget;
+		}
+
+		// Finalize form widgets (#1185)
+		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $strFormId)
+		{
+			foreach ($arrWidgets as $objWidget)
+			{
+				if ($objWidget instanceof FinalizableWidgetInterface)
+				{
+					$objWidget->finalize();
+				}
+			}
 		}
 
 		$objTemplate->fields = $arrWidgets;
