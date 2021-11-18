@@ -226,8 +226,9 @@ class tl_style_sheet extends Backend
 	 */
 	public function checkPermission()
 	{
-		Message::addInfo($GLOBALS['TL_LANG']['MSC']['internalCssEditor']);
 		trigger_deprecation('contao/core-bundle', '4.13', 'The internal CSS editor has been deprecated. Use external style sheets instead.');
+
+		Message::addInfo($GLOBALS['TL_LANG']['MSC']['internalCssEditor']);
 
 		if ($this->User->isAdmin)
 		{

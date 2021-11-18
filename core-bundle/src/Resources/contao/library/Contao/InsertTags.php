@@ -788,7 +788,7 @@ class InsertTags extends Controller
 
 				// User agent
 				case 'ua':
-					trigger_deprecation('contao/core-bundle', '4.13', 'Using the ua insert tag has been deprecated and will no longer work in Contao 5.0.');
+					trigger_deprecation('contao/core-bundle', '4.13', 'Using the "ua" insert tag has been deprecated and will no longer work in Contao 5.0.');
 
 					$flags[] = 'attr';
 					$ua = Environment::get('agent');
