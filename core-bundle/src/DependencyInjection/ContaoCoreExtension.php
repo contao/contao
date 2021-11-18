@@ -101,6 +101,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
+        $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);

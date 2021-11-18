@@ -33,6 +33,7 @@ class InsertTagsTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
 
         System::setContainer($container);
     }
@@ -324,6 +325,73 @@ class InsertTagsTest extends TestCase
 
         yield 'invalid configuration' => [
             '{{figure::1?foo=bar}}', true,
+        ];
+    }
+
+    /**
+     * @dataProvider allowedInsertTagsProvider
+     *
+     * @group legacy
+     */
+    public function testAllowedInsertTags(string $source, string $expected, array $allowedTags): void
+    {
+        System::getContainer()->setParameter('contao.insert_tags.allowed_tags', $allowedTags);
+
+        InsertTags::reset();
+
+        $output = (new InsertTags())->replace($source, false);
+
+        $this->assertSame($expected, $output);
+    }
+
+    public function allowedInsertTagsProvider(): \Generator
+    {
+        yield 'All allowed' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            'foo1bar2baz',
+            ['*'],
+        ];
+
+        yield 'First allowed' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            'foo1bar{{plain2::2}}baz',
+            ['plain1'],
+        ];
+
+        yield 'Second allowed' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            'foo{{plain1::1}}bar2baz',
+            ['plain2'],
+        ];
+
+        yield 'Both allowed' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            'foo1bar2baz',
+            ['plain1', 'plain2'],
+        ];
+
+        yield 'None allowed' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            [],
+        ];
+
+        yield 'Wildcard start' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz',
+            'foo{{plain1::1}}bar2baz',
+            ['*lain2'],
+        ];
+
+        yield 'Wildcard end' => [
+            'foo{{plain1::1}}bar{{plain2::2}}baz{{plain}}',
+            'foo1bar2baz{{plain}}',
+            ['plain*'],
+        ];
+
+        yield 'Wildcard center' => [
+            'foo{{plain::1}}bar{{plain::2}}baz{{plin}}',
+            'foo1bar2baz{{plin}}',
+            ['pl*in'],
         ];
     }
 
@@ -880,6 +948,7 @@ class InsertTagsTest extends TestCase
     private function setContainerWithContaoConfiguration(array $configuration = []): void
     {
         $container = $this->getContainerWithContaoConfiguration();
+        $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
         foreach ($configuration as $name => $value) {
