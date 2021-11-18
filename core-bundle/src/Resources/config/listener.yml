@@ -33,11 +33,6 @@ services:
         arguments:
             - '@contao.framework'
 
-    Contao\CoreBundle\EventListener\DataContainer\LogTableListener:
-        arguments:
-            - '@contao.framework'
-            - '@Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener'
-
     Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener:
         arguments:
             - '@database_connection'

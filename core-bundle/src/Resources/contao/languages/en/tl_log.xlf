@@ -62,12 +62,6 @@
       <trans-unit id="tl_log.FE">
         <source>Front end</source>
       </trans-unit>
-      <trans-unit id="tl_log.goToUri">
-        <source>Go to URI</source>
-      </trans-unit>
-      <trans-unit id="tl_log.goToArticles">
-        <source>Go to articles of page ID %s</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

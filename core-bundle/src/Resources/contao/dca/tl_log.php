@@ -55,18 +55,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		),
 		'operations' => array
 		(
-			'articles' => array
-			(
-				'label' => &$GLOBALS['TL_LANG']['tl_log']['goToArticles'],
-				'href'                => 'do=article',
-				'icon'                => 'article.svg'
-			),
-			'uri' => array
-			(
-				'label' => &$GLOBALS['TL_LANG']['tl_log']['goToUri'],
-				'href'                => '',
-				'icon'                => 'forward.svg'
-			),
 			'delete' => array
 			(
 				'href'                => 'act=delete',
