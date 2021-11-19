@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -47,8 +46,7 @@ class Automator extends System
 		// Clear the index
 		$searchIndexer->clear();
 
-		// Add a log entry
-		$this->log('Purged the search tables', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the search tables');
 	}
 
 	/**
@@ -61,8 +59,7 @@ class Automator extends System
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_undo");
 
-		// Add a log entry
-		$this->log('Purged the undo table', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the undo table');
 	}
 
 	/**
@@ -75,8 +72,7 @@ class Automator extends System
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_version");
 
-		// Add a log entry
-		$this->log('Purged the version table', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the version table');
 	}
 
 	/**
@@ -89,8 +85,7 @@ class Automator extends System
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_log");
 
-		// Add a log entry
-		$this->log('Purged the system log', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the system log');
 	}
 
 	/**
@@ -103,8 +98,7 @@ class Automator extends System
 		// Truncate the table
 		$objDatabase->execute("TRUNCATE TABLE tl_crawl_queue");
 
-		// Add a log entry
-		$this->log('Purged the crawl queue', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the crawl queue');
 	}
 
 	/**
@@ -129,8 +123,7 @@ class Automator extends System
 		// Also empty the shared cache so there are no links to deleted images
 		$this->purgePageCache();
 
-		// Add a log entry
-		$this->log('Purged the image cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the image cache');
 	}
 
 	/**
@@ -153,8 +146,7 @@ class Automator extends System
 		// Also empty the shared cache so there are no links to deleted scripts
 		$this->purgePageCache();
 
-		// Add a log entry
-		$this->log('Purged the script cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the script cache');
 	}
 
 	/**
@@ -166,7 +158,7 @@ class Automator extends System
 
 		if (!$container->has('fos_http_cache.cache_manager'))
 		{
-			$this->log('Cannot purge the shared cache; invalid reverse proxy configuration', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('contao.monolog.system_logger')->error('Cannot purge the shared cache; invalid reverse proxy configuration');
 
 			return;
 		}
@@ -176,15 +168,14 @@ class Automator extends System
 
 		if (!$cacheManager->supports(CacheInvalidator::CLEAR))
 		{
-			$this->log('Cannot purge the shared cache; invalid reverse proxy configuration', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('contao.monolog.system_logger')->error('Cannot purge the shared cache; invalid reverse proxy configuration');
 
 			return;
 		}
 
 		$cacheManager->clearCache();
 
-		// Add a log entry
-		$this->log('Purged the shared cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the shared cache');
 	}
 
 	/**
@@ -201,8 +192,7 @@ class Automator extends System
 		$objFolder = new Folder($strCacheDir . '/contao/search');
 		$objFolder->purge();
 
-		// Add a log entry
-		$this->log('Purged the search cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the search cache');
 	}
 
 	/**
@@ -215,8 +205,7 @@ class Automator extends System
 		$clearer = $container->get('contao.cache.clear_internal');
 		$clearer->clear($container->getParameter('kernel.cache_dir'));
 
-		// Add a log entry
-		$this->log('Purged the internal cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the internal cache');
 	}
 
 	/**
@@ -228,8 +217,7 @@ class Automator extends System
 		$objFolder = new Folder('system/tmp');
 		$objFolder->purge();
 
-		// Add a log entry
-		$this->log('Purged the temp folder', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the temp folder');
 	}
 
 	/**
@@ -249,8 +237,7 @@ class Automator extends System
 			$objMember->delete();
 		}
 
-		// Add a log entry
-		$this->log('Purged the unactivated member registrations', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the unactivated member registrations');
 	}
 
 	/**
@@ -261,8 +248,7 @@ class Automator extends System
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();
 
-		// Add a log entry
-		$this->log('Purged the expired double opt-in tokens', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the expired double opt-in tokens');
 	}
 
 	/**
@@ -357,8 +343,7 @@ class Automator extends System
 		// Also empty the shared cache so there are no links to deleted files
 		$this->purgePageCache();
 
-		// Add a log entry
-		$this->log('Regenerated the XML files', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Regenerated the XML files');
 	}
 
 	/**
@@ -371,14 +356,13 @@ class Automator extends System
 		$command = $container->get('contao.command.symlinks');
 		$status = $command->run(new ArgvInput(array()), new NullOutput());
 
-		// Add a log entry
 		if ($status > 0)
 		{
-			$this->log('The symlinks could not be regenerated', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('contao.monolog.system_logger')->error('The symlinks could not be regenerated');
 		}
 		else
 		{
-			$this->log('Regenerated the symlinks', __METHOD__, ContaoContext::CRON);
+			System::getContainer()->get('contao.monolog.system_logger')->cron('Regenerated the symlinks');
 		}
 	}
 
@@ -392,8 +376,7 @@ class Automator extends System
 		$warmer = $container->get('contao.cache.warm_internal');
 		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
 
-		// Add a log entry
-		$this->log('Generated the internal cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('contao.monolog.system_logger')->cron('Generated the internal cache');
 	}
 
 	/**

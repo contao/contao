@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
@@ -152,7 +151,8 @@ class ModuleSearch extends Module
 			}
 			catch (\Exception $e)
 			{
-				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, ContaoContext::ERROR);
+				System::getContainer()->get('contao.monolog.system_logger')->error('Website search failed: ' . $e->getMessage());
+
 				$objResult = new SearchResult(array());
 			}
 

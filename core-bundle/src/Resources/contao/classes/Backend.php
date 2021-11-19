@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
@@ -262,10 +261,10 @@ abstract class Backend extends Controller
 
 			if (!unlink($file))
 			{
-				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
+				throw new \Exception('The file ' . $strRelpath . ' cannot be deleted. Please remove the file manually and correct the file permission settings on your server.');
 			}
 
-			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, ContaoContext::GENERAL);
+			System::getContainer()->get('contao.monolog.system_logger')->info('File ' . $strRelpath . ' ran once and has then been removed successfully');
 		}
 
 		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
@@ -403,7 +402,7 @@ abstract class Backend extends Controller
 			// Fabricate a new data container object
 			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
-				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+				System::getContainer()->get('contao.monolog.system_logger')->error('Missing data container for table "' . $strTable . '"');
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
@@ -493,7 +492,7 @@ abstract class Backend extends Controller
 				case 'undo':
 					if (!$dc instanceof ListableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, ContaoContext::ERROR);
+						System::getContainer()->get('contao.monolog.system_logger')->error('Data container ' . $strTable . ' is not listable');
 						trigger_error('The current data container is not listable', E_USER_ERROR);
 					}
 					break;
@@ -507,7 +506,7 @@ abstract class Backend extends Controller
 				case 'edit':
 					if (!$dc instanceof EditableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, ContaoContext::ERROR);
+						System::getContainer()->get('contao.monolog.system_logger')->error('Data container ' . $strTable . ' is not editable');
 						trigger_error('The current data container is not editable', E_USER_ERROR);
 					}
 					break;
