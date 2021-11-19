@@ -41,7 +41,7 @@ class RewireTwigPathsPass implements CompilerPassInterface
 
         $original->removeMethodCall('addPath');
 
-        $replaced = $container->getDefinition('contao.twig.fail_tolerant_filesystem_loader');
+        $replaced = $container->getDefinition('contao.twig.loader.fail_tolerant_filesystem');
 
         foreach ($calls as $call) {
             $replaced->addMethodCall(...$call);

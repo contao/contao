@@ -138,7 +138,7 @@ class MarkdownControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
-        $container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         return $container;
     }

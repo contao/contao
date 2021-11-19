@@ -176,7 +176,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
 
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
@@ -232,7 +232,7 @@ class ContaoCoreExtensionTest extends TestCase
             $this->assertTrue($container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
         }
 
-        $methodCalls = $container->getDefinition('contao.image.image_sizes')->getMethodCalls();
+        $methodCalls = $container->getDefinition('contao.image.sizes')->getMethodCalls();
 
         $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
 
@@ -316,7 +316,7 @@ class ContaoCoreExtensionTest extends TestCase
             $container
         );
 
-        $definition = $container->getDefinition('contao.crawl.escargot_factory');
+        $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
         $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));

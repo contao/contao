@@ -64,7 +64,7 @@ class ModuleArticle extends Module
 		$this->blnNoMarkup = $blnNoMarkup;
 
 		// Tag the article (see #2137)
-		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
+		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
 
 		return parent::generate();
 	}

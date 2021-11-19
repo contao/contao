@@ -20,11 +20,11 @@ class TaggedMigrationsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has('contao.migration.migration_collection')) {
+        if (!$container->has('contao.migration.collection')) {
             return;
         }
 
-        $definition = $container->findDefinition('contao.migration.migration_collection');
+        $definition = $container->findDefinition('contao.migration.collection');
         $services = [];
 
         foreach ($container->findTaggedServiceIds('contao.migration', true) as $serviceId => $attributes) {

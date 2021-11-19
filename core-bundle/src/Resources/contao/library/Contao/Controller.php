@@ -1671,7 +1671,7 @@ abstract class Controller extends System
 
 				/** @var BoxInterface $originalSize */
 				$originalSize = $container
-					->get('contao.image.image_factory')
+					->get('contao.image.factory')
 					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
 					->getDimensions()
 					->getSize();
