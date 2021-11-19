@@ -419,7 +419,7 @@ services:
         arguments:
             - '@translator'
 
-    contao.listener.widget.custom_rgpx:
+    contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
         arguments:
             - '@translator'
