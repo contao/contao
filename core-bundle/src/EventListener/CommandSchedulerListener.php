@@ -20,12 +20,11 @@ use Doctrine\DBAL\Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * @internal
  */
-class CommandSchedulerListener implements ServiceSubscriberInterface
+class CommandSchedulerListener
 {
     private ContainerInterface $locator;
     private ContaoFramework $framework;
@@ -48,18 +47,6 @@ class CommandSchedulerListener implements ServiceSubscriberInterface
         if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
             $this->locator->get('contao.cron')->run(Cron::SCOPE_WEB);
         }
-    }
-
-    /**
-     * Lazy-load services to prevent issues with MySQL server_version.
-     *
-     * @see https://github.com/contao/contao/pull/3623
-     *
-     * @return array<string>
-     */
-    public static function getSubscribedServices(): array
-    {
-        return ['contao.cron' => Cron::class];
     }
 
     private function canRunCron(Request $request): bool
