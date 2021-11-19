@@ -383,6 +383,12 @@ services:
             - '@security.token_storage'
             - '@contao.routing.scope_matcher'
 
+    contao.monolog.system_logger:
+        class: Contao\CoreBundle\Monolog\SystemLogger
+        public: true
+        arguments:
+            - '@logger'
+
     contao.opt_in:
         class: Contao\CoreBundle\OptIn\OptIn
         public: true
@@ -920,6 +926,7 @@ services:
     Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag_parser'
     Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
     Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
+    Contao\CoreBundle\Monolog\SystemLogger: '@contao.monolog.system_logger'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
@@ -1047,7 +1054,3 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.string.simple_token_parser" instead.
-
-    Contao\CoreBundle\Monolog\SystemLogger:
-        arguments:
-            - '@logger'
