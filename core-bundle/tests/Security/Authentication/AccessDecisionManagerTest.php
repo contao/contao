@@ -24,15 +24,13 @@ class AccessDecisionManagerTest extends TestCase
     public function testLeavesOriginalConfigurationUntouchedIfNoRequestAvailable(): void
     {
         $inner = $this->createAccessDecisionManager(true);
-        $backend = $this->createAccessDecisionManager(false);
-        $frontend = $this->createAccessDecisionManager(false);
+        $contao = $this->createAccessDecisionManager(false);
 
         $requestStack = new RequestStack();
 
         $accessDecisionManager = new AccessDecisionManager(
             $inner,
-            $backend,
-            $frontend,
+            $contao,
             $this->mockScopeMatcher(),
             $requestStack
         );
@@ -43,56 +41,14 @@ class AccessDecisionManagerTest extends TestCase
     public function testLeavesOriginalConfigurationUntouchedIfNotContaoScope(): void
     {
         $inner = $this->createAccessDecisionManager(true);
-        $backend = $this->createAccessDecisionManager(false);
-        $frontend = $this->createAccessDecisionManager(false);
+        $contao = $this->createAccessDecisionManager(false);
 
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
         $accessDecisionManager = new AccessDecisionManager(
             $inner,
-            $backend,
-            $frontend,
-            $this->mockScopeMatcher(),
-            $requestStack
-        );
-
-        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
-    }
-
-    public function testCorrectManagerForContaoBackend(): void
-    {
-        $inner = $this->createAccessDecisionManager(false);
-        $backend = $this->createAccessDecisionManager(true);
-        $frontend = $this->createAccessDecisionManager(false);
-
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'backend']));
-
-        $accessDecisionManager = new AccessDecisionManager(
-            $inner,
-            $backend,
-            $frontend,
-            $this->mockScopeMatcher(),
-            $requestStack
-        );
-
-        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
-    }
-
-    public function testCorrectManagerForContaoFrontend(): void
-    {
-        $inner = $this->createAccessDecisionManager(false);
-        $backend = $this->createAccessDecisionManager(false);
-        $frontend = $this->createAccessDecisionManager(true);
-
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
-
-        $accessDecisionManager = new AccessDecisionManager(
-            $inner,
-            $backend,
-            $frontend,
+            $contao,
             $this->mockScopeMatcher(),
             $requestStack
         );

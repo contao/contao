@@ -741,18 +741,11 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
         arguments:
             - '@.inner'
-            - '@contao.security.access_decision_manager.backend'
-            - '@contao.security.access_decision_manager.frontend'
+            - '@contao.security.access_decision_manager.contao'
             - '@contao.routing.scope_matcher'
             - '@request_stack'
 
-    contao.security.access_decision_manager.backend:
-        class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
-        arguments:
-            - !tagged_iterator security.voter
-            - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
-
-    contao.security.access_decision_manager.frontend:
+    contao.security.access_decision_manager.contao:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
         arguments:
             - !tagged_iterator security.voter
