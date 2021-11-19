@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\Database\Result;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
@@ -95,8 +94,8 @@ class Newsletter extends Backend
 		}
 
 		// Replace insert tags
-		$html = System::getContainer()->get(InsertTagParser::class)->replaceInline($objNewsletter->content);
-		$text = System::getContainer()->get(InsertTagParser::class)->replaceInline($objNewsletter->text);
+		$html = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objNewsletter->content);
+		$text = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objNewsletter->text);
 
 		// Convert relative URLs
 		if ($objNewsletter->externalImages)
@@ -375,7 +374,7 @@ class Newsletter extends Backend
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
-		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
+		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);

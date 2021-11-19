@@ -65,16 +65,12 @@ class ContaoCoreExtension extends Extension
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../Resources/config')
-        );
-
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('commands.yml');
         $loader->load('controller.yml');
         $loader->load('listener.yml');
-        $loader->load('services.yml');
         $loader->load('migrations.yml');
+        $loader->load('services.yml');
 
         // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);

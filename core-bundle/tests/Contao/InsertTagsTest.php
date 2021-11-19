@@ -186,7 +186,7 @@ class InsertTagsTest extends TestCase
             )
         ;
 
-        $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
+        $this->setContainerWithContaoConfiguration(['contao.image.studio.figure_renderer' => $figureRenderer]);
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
         $output = $insertTagParser->replaceInline($input);
@@ -299,7 +299,7 @@ class InsertTagsTest extends TestCase
             ->willThrowException(new \InvalidArgumentException('bad call'))
         ;
 
-        $this->setContainerWithContaoConfiguration([FigureRenderer::class => $figureRenderer]);
+        $this->setContainerWithContaoConfiguration(['contao.image.studio.figure_renderer' => $figureRenderer]);
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
         $output = $insertTagParser->replaceInline($input);

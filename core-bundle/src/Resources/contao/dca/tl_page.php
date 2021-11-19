@@ -12,11 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
-use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
-use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
@@ -1091,7 +1087,7 @@ class tl_page extends Backend
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', System::getContainer()->get(InsertTagParser::class)->replaceInline($strVal));
+					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag_parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
@@ -1176,7 +1172,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(PageUrlListener::class)
+			->get('contao.listener.data_container.page_url')
 			->generateAlias($varValue, $dc)
 		;
 	}
@@ -1193,7 +1189,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->generateArticleForPage($dc)
 		;
 	}
@@ -1210,7 +1206,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get(PageUrlListener::class)
+			->get('contao.listener.data_container.page_url')
 			->purgeSearchIndex((int) $dc->id)
 		;
 	}
@@ -1358,7 +1354,7 @@ class tl_page extends Backend
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.');
 
-		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
+		return System::getContainer()->get('contao.listener.data_container.page_type_options')($dc);
 	}
 
 	/**
@@ -1608,7 +1604,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
 		;
 	}

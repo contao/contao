@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -213,7 +214,7 @@ class BackendController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
-        $services['uri_signer'] = 'uri_signer'; // TODO: adjust this once we are on Symfony 5 only (see https://github.com/symfony/symfony/pull/35298)
+        $services['uri_signer'] = UriSigner::class;
 
         return $services;
     }

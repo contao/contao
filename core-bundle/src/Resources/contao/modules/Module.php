@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
@@ -263,7 +262,7 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		return array(System::getContainer()->get(EntityCacheTags::class)->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.entity_cache_tags')->getTagForModelInstance($this->objModel));
 	}
 
 	/**

@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
@@ -271,7 +270,7 @@ class Calendar extends Frontend
 						$strDescription = $event['teaser'];
 					}
 
-					$strDescription = System::getContainer()->get(InsertTagParser::class)->replaceInline($strDescription);
+					$strDescription = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($strDescription);
 					$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 					if (\is_array($event['media:content']))
@@ -305,7 +304,7 @@ class Calendar extends Frontend
 		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get(InsertTagParser::class)->replaceInline($objFeed->$strType()));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objFeed->$strType()));
 	}
 
 	/**

@@ -35,7 +35,7 @@ class FrontendCron extends Frontend
 		// Do not run if there is POST data
 		if (empty($_POST))
 		{
-			System::getContainer()->get(Cron::class)->run(Cron::SCOPE_WEB);
+			System::getContainer()->get('contao.cron')->run(Cron::SCOPE_WEB);
 		}
 
 		return new Response('', Response::HTTP_NO_CONTENT);

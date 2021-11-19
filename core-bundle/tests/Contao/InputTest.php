@@ -423,7 +423,7 @@ class InputTest extends TestCase
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
 
         $container = new ContainerBuilder();
-        $container->set(SimpleTokenParser::class, $simpleTokenParser);
+        $container->set('contao.string.simple_token_parser', $simpleTokenParser);
         $container->setParameter('kernel.charset', 'UTF-8');
 
         System::setContainer($container);

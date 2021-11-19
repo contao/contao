@@ -16,11 +16,8 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -805,7 +802,7 @@ abstract class Controller extends System
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		$parser = System::getContainer()->get(InsertTagParser::class);
+		$parser = System::getContainer()->get('contao.insert_tag_parser');
 
 		if ($blnCache)
 		{
@@ -1568,7 +1565,7 @@ abstract class Controller extends System
 			return new Metadata(array(
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => System::getContainer()->get(InsertTagParser::class)->replaceInline($rowData['imageUrl'] ?? ''),
+				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag_parser')->replaceInline($rowData['imageUrl'] ?? ''),
 				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
 			));
 		};
@@ -1694,7 +1691,7 @@ abstract class Controller extends System
 			return array($size, $margin);
 		};
 
-		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+		$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 
 		// Set image resource
 		if (null !== $filesModel)
@@ -2199,13 +2196,13 @@ abstract class Controller extends System
 	 * @return string The text with the replaced tokens
 	 *
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0;
-	 *             Use the SimpleTokenParser::class service instead.
+	 *             Use the contao.string.simple_token_parser service instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strBuffer, $arrData);
+		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strBuffer, $arrData);
 	}
 
 	/**

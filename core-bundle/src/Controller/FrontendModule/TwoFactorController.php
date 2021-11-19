@@ -67,7 +67,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['security.helper'] = Security::class;
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
-        $services[BackupCodeManager::class] = BackupCodeManager::class;
+        $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
 
         return $services;
     }
@@ -114,7 +114,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
             $template->showBackupCodes = true;
-            $template->backupCodes = $this->get(BackupCodeManager::class)->generateBackupCodes($user);
+            $template->backupCodes = $this->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {

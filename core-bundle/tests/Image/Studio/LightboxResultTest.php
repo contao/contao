@@ -81,7 +81,7 @@ class LightboxResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
             ])
         ;
 
@@ -128,7 +128,7 @@ class LightboxResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
             ])
         ;
 
@@ -157,7 +157,7 @@ class LightboxResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
             ])
         ;
 
@@ -183,7 +183,7 @@ class LightboxResultTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 
@@ -218,7 +218,7 @@ class LightboxResultTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 
@@ -261,7 +261,7 @@ class LightboxResultTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 
@@ -313,7 +313,7 @@ class LightboxResultTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 

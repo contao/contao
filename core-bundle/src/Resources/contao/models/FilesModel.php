@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Webmozart\PathUtil\Path;
@@ -438,7 +437,7 @@ class FilesModel extends Model
 			// Make sure we resolve insert tags pointing to files
 			if (isset($data[Metadata::VALUE_URL]))
 			{
-				$data[Metadata::VALUE_URL] = System::getContainer()->get(InsertTagParser::class)->replaceInline($data[Metadata::VALUE_URL]);
+				$data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($data[Metadata::VALUE_URL]);
 			}
 
 			// Fill missing meta fields with empty values

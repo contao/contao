@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\String\HtmlDecoder;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -229,7 +228,7 @@ class ModuleBreadcrumb extends Module
 			);
 
 			$position = 0;
-			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			foreach ($items as $item)
 			{

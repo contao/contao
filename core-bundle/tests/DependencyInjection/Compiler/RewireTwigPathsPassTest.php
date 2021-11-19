@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Twig\Loader\FilesystemLoader;
@@ -31,11 +30,11 @@ class RewireTwigPathsPassTest extends TestCase
             ->addMethodCall('foo')
         ;
 
-        $loader = new Definition(FailTolerantFilesystemLoader::class);
+        $loader = new Definition('contao.twig.fail_tolerant_filesystem_loader');
 
         $container->addDefinitions([
             'twig.loader.native_filesystem' => $baseLoader,
-            FailTolerantFilesystemLoader::class => $loader,
+            'contao.twig.fail_tolerant_filesystem_loader' => $loader,
         ]);
 
         (new RewireTwigPathsPass())->process($container);
@@ -59,11 +58,11 @@ class RewireTwigPathsPassTest extends TestCase
             ->addMethodCall('foo')
         ;
 
-        $loader = new Definition(FailTolerantFilesystemLoader::class);
+        $loader = new Definition('contao.twig.fail_tolerant_filesystem_loader');
 
         $container->addDefinitions([
             'twig.loader.native_filesystem' => $baseLoader,
-            FailTolerantFilesystemLoader::class => $loader,
+            'contao.twig.fail_tolerant_filesystem_loader' => $loader,
         ]);
 
         (new RewireTwigPathsPass())->process($container);
