@@ -137,7 +137,7 @@ class ModulePassword extends Module
 			// Validate the widget
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
-				$objWidget->validate();
+				$objWidget->validate(false);
 
 				if ($objWidget->hasErrors())
 				{
@@ -264,7 +264,7 @@ class ModulePassword extends Module
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') && Input::post('FORM_SUBMIT') == $objSession->get('setPasswordToken'))
 		{
-			$objWidget->validate();
+			$objWidget->validate(false);
 
 			// Set the new password and redirect
 			if (!$objWidget->hasErrors())

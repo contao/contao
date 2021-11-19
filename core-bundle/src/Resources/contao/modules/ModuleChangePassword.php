@@ -149,7 +149,7 @@ class ModuleChangePassword extends Module
 			// Validate the widget
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
-				$objWidget->validate();
+				$objWidget->validate(false);
 
 				// Validate the old password
 				if ($strKey == 'oldPassword')

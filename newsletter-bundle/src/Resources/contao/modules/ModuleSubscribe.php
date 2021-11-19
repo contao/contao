@@ -313,7 +313,7 @@ class ModuleSubscribe extends Module
 		// Validate the captcha
 		if ($objWidget !== null)
 		{
-			$objWidget->validate();
+			$objWidget->validate(false);
 
 			if ($objWidget->hasErrors())
 			{

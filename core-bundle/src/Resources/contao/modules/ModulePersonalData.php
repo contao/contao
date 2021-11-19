@@ -210,7 +210,7 @@ class ModulePersonalData extends Module
 			// Validate the form data
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
-				$objWidget->validate();
+				$objWidget->validate(false);
 				$varValue = $objWidget->value;
 
 				$rgxp = $arrData['eval']['rgxp'] ?? null;

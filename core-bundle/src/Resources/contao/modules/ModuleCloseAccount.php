@@ -77,7 +77,7 @@ class ModuleCloseAccount extends Module
 		// Validate widget
 		if (Input::post('FORM_SUBMIT') == $strFormId)
 		{
-			$objWidget->validate();
+			$objWidget->validate(false);
 
 			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 

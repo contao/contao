@@ -213,7 +213,7 @@ class ModuleRegistration extends Module
 			// Validate input
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
-				$objWidget->validate();
+				$objWidget->validate(false);
 
 				$varValue = $objWidget->value;
 				$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
