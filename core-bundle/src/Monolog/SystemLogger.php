@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Monolog;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-final class SystemLogger
+final class SystemLogger implements SystemLoggerInterface
 {
     private LoggerInterface $logger;
 
