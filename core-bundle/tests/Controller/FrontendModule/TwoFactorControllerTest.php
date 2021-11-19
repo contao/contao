@@ -382,8 +382,10 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('contao.framework', $services);
         $this->assertArrayHasKey('contao.routing.scope_matcher', $services);
         $this->assertArrayHasKey('contao.security.two_factor.authenticator', $services);
+        $this->assertArrayHasKey('contao.security.two_factor.backup_code_manager', $services);
+        $this->assertArrayHasKey('contao.security.two_factor.trusted_device_manager', $services);
         $this->assertArrayHasKey('security.authentication_utils', $services);
-        $this->assertArrayHasKey('security.token_storage', $services);
+        $this->assertArrayHasKey('security.helper', $services);
         $this->assertArrayHasKey('translator', $services);
     }
 
