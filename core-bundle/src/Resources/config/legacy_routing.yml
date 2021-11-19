@@ -55,8 +55,8 @@ services:
 
     contao.routing.url_generator:
         class: Contao\CoreBundle\Routing\UrlGenerator
+        public: true
         arguments:
             - '@router'
             - '@contao.framework'
             - '%contao.prepend_locale%'
-        public: true

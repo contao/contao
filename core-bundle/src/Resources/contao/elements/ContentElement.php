@@ -274,11 +274,7 @@ abstract class ContentElement extends Frontend
 		}
 
 		// Tag the content element (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
-		}
+		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
 
 		return $this->Template->parse();
 	}

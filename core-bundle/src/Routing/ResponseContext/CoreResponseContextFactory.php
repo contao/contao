@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
-use Contao\Controller;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -31,16 +30,16 @@ class CoreResponseContextFactory
     private TokenChecker $tokenChecker;
     private HtmlDecoder $htmlDecoder;
     private RequestStack $requestStack;
-    private ContaoFramework $contaoFramework;
+    private InsertTagParser $insertTagParser;
 
-    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, HtmlDecoder $htmlDecoder, RequestStack $requestStack, ContaoFramework $contaoFramework)
+    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, HtmlDecoder $htmlDecoder, RequestStack $requestStack, InsertTagParser $insertTagParser)
     {
         $this->responseContextAccessor = $responseContextAccessor;
         $this->eventDispatcher = $eventDispatcher;
         $this->tokenChecker = $tokenChecker;
         $this->htmlDecoder = $htmlDecoder;
         $this->requestStack = $requestStack;
-        $this->contaoFramework = $contaoFramework;
+        $this->insertTagParser = $insertTagParser;
     }
 
     public function createResponseContext(): ResponseContext
@@ -93,9 +92,7 @@ class CoreResponseContextFactory
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalLink) {
-            // TODO: Replace this with the insert tags service once #3638 has been merged
-            $controller = $this->contaoFramework->getAdapter(Controller::class);
-            $url = $controller->replaceInsertTags($pageModel->canonicalLink, false);
+            $url = $this->insertTagParser->replaceInline($pageModel->canonicalLink);
 
             // Ensure absolute links
             if (!preg_match('#^https?://#', $url)) {

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
@@ -32,9 +34,11 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/cache');
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.charset', 'UTF-8');
+        $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
+        $container->set('contao.insert_tag_parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
     }

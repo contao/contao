@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
@@ -152,7 +152,7 @@ class ModuleSearch extends Module
 			}
 			catch (\Exception $e)
 			{
-				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, ContaoContext::ERROR);
 				$objResult = new SearchResult(array());
 			}
 
@@ -305,7 +305,7 @@ class ModuleSearch extends Module
 				continue;
 			}
 
-			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
 
 			$figureMeta = new Metadata(array_filter(array(

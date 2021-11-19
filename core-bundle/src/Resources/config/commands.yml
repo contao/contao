@@ -18,9 +18,10 @@ services:
             - '@contao.crawl.escargot_factory'
             - '@filesystem'
 
-    Contao\CoreBundle\Command\CronCommand:
+    contao.command.cron:
+        class: Contao\CoreBundle\Command\CronCommand
         arguments:
-            - '@Contao\CoreBundle\Cron\Cron'
+            - '@contao.cron'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
@@ -30,16 +31,18 @@ services:
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand
 
-    Contao\CoreBundle\Command\DebugPagesCommand:
+    contao.command.debug_pages:
+        class: Contao\CoreBundle\Command\DebugPagesCommand
         arguments:
             - '@contao.framework'
-            - '@Contao\CoreBundle\Routing\Page\PageRegistry'
+            - '@contao.routing.page_registry'
 
-    Contao\CoreBundle\Command\DebugContaoTwigCommand:
+    contao.command.debug_twig:
+        class: Contao\CoreBundle\Command\DebugContaoTwigCommand
         arguments:
-            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader'
-            - '@Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer'
-            - '@Contao\CoreBundle\Twig\Loader\ThemeNamespace'
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.filesystem_loader_warmer'
+            - '@contao.twig.theme_namespace'
             - '%kernel.project_dir%'
 
     contao.command.filesync:
@@ -47,19 +50,20 @@ services:
 
     contao.command.install:
         class: Contao\CoreBundle\Command\InstallCommand
+        public: true
         arguments:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
-        public: true
 
-    Contao\CoreBundle\Command\MigrateCommand:
+    contao.command.migrate:
+        class: Contao\CoreBundle\Command\MigrateCommand
         arguments:
-            - '@Contao\CoreBundle\Migration\MigrationCollection'
+            - '@contao.migration.migration_collection'
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
-            - '@?contao.installer'
+            - '@?contao_installation.installer'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
@@ -72,26 +76,28 @@ services:
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
+        public: true
         arguments:
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%kernel.logs_dir%'
             - '@contao.resource_finder'
             - '@event_dispatcher'
-        public: true
 
-    Contao\CoreBundle\Command\UserCreateCommand:
+    contao.command.user_create:
+        class: Contao\CoreBundle\Command\UserCreateCommand
         arguments:
             - '@contao.framework'
             - '@database_connection'
             - '@security.password_hasher_factory'
-            - '@Contao\CoreBundle\Intl\Locales'
+            - '@contao.intl.locales'
 
-    Contao\CoreBundle\Command\UserListCommand:
+    contao.command.user_list:
+        class: Contao\CoreBundle\Command\UserListCommand
         arguments:
             - '@contao.framework'
 
-    contao.command.user_password_command:
+    contao.command.user_password:
         class: Contao\CoreBundle\Command\UserPasswordCommand
         arguments:
             - '@contao.framework'
@@ -100,3 +106,7 @@ services:
 
     contao.command.version:
         class: Contao\CoreBundle\Command\VersionCommand
+        deprecated:
+            package: contao/core-bundle
+            version: 4.4
+            message: Using the "%service_id%" service ID has been deprecated and will no longer work in Contao 5.0.

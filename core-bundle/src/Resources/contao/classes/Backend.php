@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
@@ -264,7 +265,7 @@ abstract class Backend extends Controller
 				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
 			}
 
-			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, ContaoContext::GENERAL);
 		}
 
 		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
@@ -402,7 +403,7 @@ abstract class Backend extends Controller
 			// Fabricate a new data container object
 			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
-				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
+				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
@@ -481,7 +482,7 @@ abstract class Backend extends Controller
 
 			if (!$act || $act == 'paste' || $act == 'select')
 			{
-				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
+				$act = ($dc instanceof ListableDataContainerInterface) ? 'showAll' : 'edit';
 			}
 
 			switch ($act)
@@ -490,9 +491,9 @@ abstract class Backend extends Controller
 				case 'show':
 				case 'showAll':
 				case 'undo':
-					if (!$dc instanceof \listable)
+					if (!$dc instanceof ListableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
+						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, ContaoContext::ERROR);
 						trigger_error('The current data container is not listable', E_USER_ERROR);
 					}
 					break;
@@ -504,9 +505,9 @@ abstract class Backend extends Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
-					if (!$dc instanceof \editable)
+					if (!$dc instanceof EditableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
+						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, ContaoContext::ERROR);
 						trigger_error('The current data container is not editable', E_USER_ERROR);
 					}
 					break;

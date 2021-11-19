@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Migration\MigrationCollection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -21,11 +20,11 @@ class TaggedMigrationsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(MigrationCollection::class)) {
+        if (!$container->has('contao.migration.migration_collection')) {
             return;
         }
 
-        $definition = $container->findDefinition(MigrationCollection::class);
+        $definition = $container->findDefinition('contao.migration.migration_collection');
         $services = [];
 
         foreach ($container->findTaggedServiceIds('contao.migration', true) as $serviceId => $attributes) {
@@ -43,6 +42,6 @@ class TaggedMigrationsPass implements CompilerPassInterface
             $services = array_merge(...$services);
         }
 
-        $definition->addArgument($services);
+        $definition->setArgument(0, $services);
     }
 }

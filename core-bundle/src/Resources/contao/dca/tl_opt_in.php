@@ -187,7 +187,7 @@ class tl_opt_in extends Backend
 	{
 		$model = OptInModel::findByPk($dc->id);
 
-		System::getContainer()->get('contao.opt-in')->find($model->token)->send();
+		System::getContainer()->get('contao.opt_in')->find($model->token)->send();
 		Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['resendToken'], $model->email));
 		Controller::redirect($this->getReferer());
 	}

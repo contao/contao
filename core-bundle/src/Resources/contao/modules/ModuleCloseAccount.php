@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
 /**
  * Front end module "close account".
  *
@@ -111,7 +113,7 @@ class ModuleCloseAccount extends Module
 					}
 
 					$objMember->delete();
-					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, ContaoContext::ACCESS);
 				}
 				// Deactivate the account
 				else
@@ -119,7 +121,7 @@ class ModuleCloseAccount extends Module
 					$objMember->disable = 1;
 					$objMember->tstamp = time();
 					$objMember->save();
-					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, ContaoContext::ACCESS);
 				}
 
 				$container = System::getContainer();

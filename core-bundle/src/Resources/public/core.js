@@ -53,7 +53,7 @@ var AjaxRequest =
 	/**
 	 * Toggle the site structure tree
 	 *
-	 * @param {object} el    The DOM lement
+	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
 	 * @param {int}    level The indentation level
 	 * @param {int}    mode  The insert mode

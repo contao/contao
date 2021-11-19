@@ -11,11 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -59,7 +58,7 @@ class PageRegular extends Frontend
 		$response = $this->Template->getResponse($blnCheckRequest);
 
 		// Finalize the response context so it cannot be used anymore
-		System::getContainer()->get(ResponseContextAccessor::class)->finalizeCurrentContext($response);
+		System::getContainer()->get('contao.response_context.accessor')->finalizeCurrentContext($response);
 
 		return $response;
 	}
@@ -84,7 +83,7 @@ class PageRegular extends Frontend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
 
-		$this->responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
+		$this->responseContext = $container->get('contao.response_context.factory')->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
 
@@ -240,7 +239,7 @@ class PageRegular extends Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
+		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes
@@ -266,7 +265,7 @@ class PageRegular extends Frontend
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, ContaoContext::ERROR);
 
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}

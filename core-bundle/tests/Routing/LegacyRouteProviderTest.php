@@ -30,6 +30,8 @@ class LegacyRouteProviderTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->frontendLoader = $this->createMock(FrontendLoader::class);
         $this->provider = new LegacyRouteProvider($this->frontendLoader);
     }
