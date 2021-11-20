@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Interop\PhpTemplateParentReference;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateParentReferenceNode;
 use Twig\Compiler;
 use Twig\Environment;
 
@@ -23,7 +23,7 @@ class PhpTemplateParentReferenceNodeTest extends TestCase
     {
         $compiler = new Compiler($this->createMock(Environment::class));
 
-        (new PhpTemplateParentReference())->compile($compiler);
+        (new PhpTemplateParentReferenceNode())->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
             echo sprintf('[[TL_PARENT_%s]]', \Contao\CoreBundle\Framework\ContaoFramework::getNonce());

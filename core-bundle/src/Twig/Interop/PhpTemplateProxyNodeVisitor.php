@@ -66,7 +66,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
                 continue;
             }
 
-            $blockNodes[$name] = new BlockNode($name, new PhpTemplateParentReference(), 0);
+            $blockNodes[$name] = new BlockNode($name, new PhpTemplateParentReferenceNode(), 0);
         }
 
         $node->setNode('blocks', new Node($blockNodes));

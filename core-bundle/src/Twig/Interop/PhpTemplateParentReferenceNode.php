@@ -20,7 +20,7 @@ use Twig\Node\NodeOutputInterface;
 /**
  * @experimental
  */
-final class PhpTemplateParentReference extends Node implements NodeOutputInterface
+final class PhpTemplateParentReferenceNode extends Node implements NodeOutputInterface
 {
     public function compile(Compiler $compiler): void
     {

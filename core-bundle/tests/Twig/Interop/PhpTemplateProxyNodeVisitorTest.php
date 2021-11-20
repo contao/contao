@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Interop\PhpTemplateParentReference;
+use Contao\CoreBundle\Twig\Interop\PhpTemplateParentReferenceNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Twig\Environment;
@@ -62,8 +62,8 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
         $this->assertSame('a', $blocks['a']->getAttribute('name'));
         $this->assertSame('b', $blocks['b']->getAttribute('name'));
 
-        $this->assertInstanceOf(PhpTemplateParentReference::class, $blocks['a']->getNode('body'));
-        $this->assertInstanceOf(PhpTemplateParentReference::class, $blocks['b']->getNode('body'));
+        $this->assertInstanceOf(PhpTemplateParentReferenceNode::class, $blocks['a']->getNode('body'));
+        $this->assertInstanceOf(PhpTemplateParentReferenceNode::class, $blocks['b']->getNode('body'));
 
         $this->assertInstanceOf(PhpTemplateProxyNode::class, $module->getNode('body'));
     }
