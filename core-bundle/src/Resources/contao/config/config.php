@@ -380,10 +380,12 @@ $GLOBALS['TL_CRON'] = array
 		'purgeTempFolder' => array('Contao\Automator', 'purgeTempFolder'),
 		'purgeSearchCache' => array('Contao\Automator', 'purgeSearchCache'),
 		'generateSitemap' => array('Contao\Automator', 'generateSitemap'),
-		'purgeRegistrations' => array('Contao\Automator', 'purgeRegistrations'),
-		'purgeOptInTokens' => array('Contao\Automator', 'purgeOptInTokens')
 	),
-	'hourly' => array(),
+	'hourly' => array
+	(
+		'purgeRegistrations' => array('Contao\Automator', 'purgeRegistrations'),
+		'purgeOptInTokens' => array('Contao\Automator', 'purgeOptInTokens'),
+	),
 	'minutely' => array()
 );
 
