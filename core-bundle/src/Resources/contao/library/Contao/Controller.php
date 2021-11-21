@@ -16,14 +16,12 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
 use Contao\Model\Collection;
 use Imagine\Image\BoxInterface;
-use Psr\Log\LogLevel;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
@@ -1731,13 +1729,7 @@ abstract class Controller extends System
 
 		if (null === $figure)
 		{
-			System::getContainer()
-				->get('monolog.logger.contao')
-				->log(
-					LogLevel::ERROR,
-					sprintf('Image "%s" could not be processed: %s', $rowData['singleSRC'], $figureBuilder->getLastException()->getMessage()),
-					array('contao' => new ContaoMonologContext(__METHOD__, 'ERROR'))
-				);
+			System::getContainer()->get('contao.monolog.system_logger')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
 
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)

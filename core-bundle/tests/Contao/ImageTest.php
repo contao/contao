@@ -1565,7 +1565,7 @@ class ImageTest extends TestCase
         $container->set('contao.image.resizer', $resizer);
         $container->set('contao.image.image_factory', $factory);
         $container->set('filesystem', new Filesystem());
-        $container->set('monolog.logger.contao', new NullLogger());
+        $container->set('contao.monolog.system_logger', new NullLogger());
 
         return $container;
     }

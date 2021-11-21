@@ -19,12 +19,10 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Monolog\SystemLoggerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\System;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -319,15 +317,11 @@ class ControllerTest extends TestCase
             ->willReturn($figureBuilder)
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
+        $logger = $this->createMock(SystemLoggerInterface::class);
         $logger
             ->expects($this->once())
-            ->method('log')
-            ->with(
-                LogLevel::ERROR,
-                'Image "/path/to/image.jpg" could not be processed: <error>',
-                ['contao' => new ContaoContext('Contao\Controller::addImageToTemplate', 'ERROR')]
-            )
+            ->method('error')
+            ->with('Image "/path/to/image.jpg" could not be processed: <error>')
         ;
 
         $template = new \stdClass();
@@ -347,7 +341,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag_parser', $insertTagParser);
-        $container->set('monolog.logger.contao', $logger);
+        $container->set('contao.monolog.system_logger', $logger);
 
         System::setContainer($container);
 

@@ -15,10 +15,9 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
 use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityTokenInterface;
-use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Monolog\SystemLoggerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
@@ -54,28 +53,20 @@ class SwitchUserListenerTest extends TestCase
     }
 
     /**
-     * @return LoggerInterface&MockObject
+     * @return SystemLoggerInterface&MockObject
      */
-    private function mockLogger(string $message = null): LoggerInterface
+    private function mockLogger(string $message = null): SystemLoggerInterface
     {
-        $logger = $this->createMock(LoggerInterface::class);
+        $logger = $this->createMock(SystemLoggerInterface::class);
 
         if (null === $message) {
             return $logger;
         }
 
-        $context = [
-            'contao' => new ContaoContext(
-                'Contao\CoreBundle\EventListener\Security\SwitchUserListener::__invoke',
-                ContaoContext::ACCESS,
-                'user1'
-            ),
-        ];
-
         $logger
             ->expects($this->once())
-            ->method('info')
-            ->with($message, $context)
+            ->method('access')
+            ->with($message)
         ;
 
         return $logger;
