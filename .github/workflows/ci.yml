@@ -23,6 +23,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: pcov
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -51,6 +53,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -75,6 +79,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -101,6 +107,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -125,6 +133,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -149,6 +159,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -176,6 +188,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -209,6 +223,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -244,6 +260,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -276,6 +294,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -315,6 +335,8 @@ jobs:
                   ini-values: memory_limit=1G
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
@@ -339,6 +361,8 @@ jobs:
                   php-version: 8.0
                   extensions: json, zlib
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -362,6 +386,8 @@ jobs:
                   php-version: 7.4
                   extensions: json, zlib
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1

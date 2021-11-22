@@ -2,88 +2,117 @@ services:
     _defaults:
         autoconfigure: true
 
-    Contao\CoreBundle\Migration\MigrationCollection: ~
+    contao.migration.migration_collection:
+        class: Contao\CoreBundle\Migration\MigrationCollection
+        arguments:
+            - ~
 
-    Contao\CoreBundle\Migration\Version400\Version400Update:
+    contao.migration.v400.version_400_update:
+        class: Contao\CoreBundle\Migration\Version400\Version400Update
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version401\Version410Update:
+    contao.migration.v401.version_410_update:
+        class: Contao\CoreBundle\Migration\Version401\Version410Update
         arguments:
             - '@database_connection'
             - '@contao.framework'
 
-    Contao\CoreBundle\Migration\Version403\Version430Update:
+    contao.migration.v403.version_430_update:
+        class: Contao\CoreBundle\Migration\Version403\Version430Update
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version404\Version440Update:
+    contao.migration.v404.version_440_update:
+        class: Contao\CoreBundle\Migration\Version404\Version440Update
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version404\Version447Update:
+    contao.migration.v404.version_447_update:
+        class: Contao\CoreBundle\Migration\Version404\Version447Update
         arguments:
             - '@database_connection'
             - '@translator'
 
-    Contao\CoreBundle\Migration\Version405\Version450Update:
+    contao.migration.v405.version_450_update:
+        class: Contao\CoreBundle\Migration\Version405\Version450Update
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version406\Version460Update:
+    contao.migration.v406.version_460_update:
+        class: Contao\CoreBundle\Migration\Version406\Version460Update
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version407\Version470Update:
+    contao.migration.v407.version_470_update:
+        class: Contao\CoreBundle\Migration\Version407\Version470Update
         arguments:
             - '@database_connection'
             - '@filesystem'
             - '%contao.upload_path%'
             - '%kernel.project_dir%'
 
-    Contao\CoreBundle\Migration\Version408\Version480Update:
+    contao.migration.v408.version_480_update:
+        class: Contao\CoreBundle\Migration\Version408\Version480Update
         arguments:
             - '@database_connection'
             - '@filesystem'
             - '@contao.framework'
             - '%kernel.project_dir%'
 
-    Contao\CoreBundle\Migration\Version409\CeAccessMigration:
+    contao.migration.v409.ce_access:
+        class: Contao\CoreBundle\Migration\Version409\CeAccessMigration
         arguments:
             - '@database_connection'
             - '@contao.framework'
 
-    Contao\CoreBundle\Migration\Version410\DropSearchMigration:
+    contao.migration.v410.drop_search:
+        class: Contao\CoreBundle\Migration\Version410\DropSearchMigration
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version410\OrderFieldMigration:
+    contao.migration.v410.order_field:
+        class: Contao\CoreBundle\Migration\Version410\OrderFieldMigration
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version410\RoutingMigration:
+    contao.migration.v410.routing:
+        class: Contao\CoreBundle\Migration\Version410\RoutingMigration
         arguments:
             - '@database_connection'
             - '@contao.framework'
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
 
-    Contao\CoreBundle\Migration\Version411\MergeWebfontsMigration:
+    contao.migration.v411.merge_webfonts:
+        class: Contao\CoreBundle\Migration\Version411\MergeWebfontsMigration
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version411\RemoveJsHighlightMigration:
+    contao.migration.v411.remove_js_highlight:
+        class: Contao\CoreBundle\Migration\Version411\RemoveJsHighlightMigration
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version411\TwoFactorBackupCodesMigration:
+    contao.migration.v411.two_factor_backup_codes:
+        class: Contao\CoreBundle\Migration\Version411\TwoFactorBackupCodesMigration
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version412\AllowedExcludedFieldsMigration:
+    contao.migration.v412.allowed_excluded_fields:
+        class: Contao\CoreBundle\Migration\Version412\AllowedExcludedFieldsMigration
         arguments:
             - '@database_connection'
 
-    Contao\CoreBundle\Migration\Version412\PageLanguageMigration:
+    contao.migration.v412.page_language:
+        class: Contao\CoreBundle\Migration\Version412\PageLanguageMigration
         arguments:
             - '@database_connection'
+
+    # Backwards compatibility
+    Contao\CoreBundle\Migration\MigrationCollection:
+        alias: contao.migration.migration_collection
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.migration.migration_collection" instead.

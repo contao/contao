@@ -139,7 +139,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
 		),
@@ -293,7 +293,6 @@ class tl_image_size extends Backend
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))

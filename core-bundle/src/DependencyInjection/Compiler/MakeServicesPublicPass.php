@@ -39,7 +39,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
     private const ALIASES = [
         'database_connection',
         'mailer',
-        'security.encoder_factory',
+        'security.password_hasher_factory',
     ];
 
     public function process(ContainerBuilder $container): void

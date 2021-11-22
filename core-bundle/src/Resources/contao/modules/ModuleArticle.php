@@ -11,10 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 
 /**
- * Provides methodes to handle articles.
+ * Provides methods to handle articles.
  *
  * @property integer $tstamp
  * @property string  $title
@@ -65,11 +64,7 @@ class ModuleArticle extends Module
 		$this->blnNoMarkup = $blnNoMarkup;
 
 		// Tag the article (see #2137)
-		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-			$responseTagger->addTags(array('contao.db.tl_article.' . $this->id));
-		}
+		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
 
 		return parent::generate();
 	}
@@ -164,20 +159,22 @@ class ModuleArticle extends Module
 		$strSection = $chunks[0] ?? null;
 		$strArticle = $chunks[1] ?? $strSection;
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
+		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
-			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($this->title ?? ''));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($this->title ?? ''));
 
 				if ($this->teaser)
 				{
-					$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($this->teaser));
+					$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($this->teaser));
 				}
 			}
 		}
@@ -281,9 +278,11 @@ class ModuleArticle extends Module
 		$this->headline = $this->title;
 		$this->printable = false;
 
+		$container = System::getContainer();
+
 		// Generate article
-		$strArticle = $this->replaceInsertTags($this->generate(), false);
-		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$strArticle = $container->get('contao.insert_tag_parser')->replaceInline($this->generate());
+		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 
 		if (empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']))

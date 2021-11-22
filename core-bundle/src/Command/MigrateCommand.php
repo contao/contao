@@ -158,7 +158,7 @@ class MigrateCommand extends Command
             return 1;
         }
 
-        if (!$dryRun && !$this->executeMigrations($dryRun, $asJson)) {
+        if (!$dryRun && !$this->executeMigrations(false, $asJson)) {
             return 1;
         }
 
@@ -292,7 +292,7 @@ class MigrateCommand extends Command
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption): bool
     {
         if (null === $this->installer) {
-            $this->io->error('Service "contao.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
+            $this->io->error('Service "contao_installation.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
 
             return false;
         }

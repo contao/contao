@@ -13,7 +13,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Image;
@@ -23,7 +22,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
@@ -181,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get(Locales::class)->getEnabledLocales(null, Input::get('do') != 'user');
+				return System::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, Input::get('do') != 'user');
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -550,9 +548,7 @@ class tl_user extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
-
 				$session = $objSession->all();
 				$objUser = $this->Database->execute("SELECT id FROM tl_user WHERE `admin`=1");
 				$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objUser->fetchEach('id'));

@@ -16,7 +16,6 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BackupCodeManagerTest extends TestCase
@@ -33,11 +32,9 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesNullValue(): void
     {
-        /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
         $frontendUser->backupCodes = null;
 
-        /** @var BackendUser&MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class);
         $backendUser->backupCodes = null;
 
@@ -49,11 +46,9 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesInvalidJson(): void
     {
-        /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
         $frontendUser->backupCodes = 'foobar';
 
-        /** @var BackendUser&MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class);
         $backendUser->backupCodes = 'foobar';
 
@@ -70,11 +65,9 @@ class BackupCodeManagerTest extends TestCase
             password_hash('234567', PASSWORD_DEFAULT),
         ]);
 
-        /** @var FrontendUser&MockObject $frontendUser */
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
         $frontendUser->backupCodes = $backupCodes;
 
-        /** @var BackendUser&MockObject $backendUser */
         $backendUser = $this->mockClassWithProperties(BackendUser::class);
         $backendUser->backupCodes = $backupCodes;
 
@@ -91,7 +84,6 @@ class BackupCodeManagerTest extends TestCase
             '$2y$10$Ie2VHgQLiNTfAI1kDV19U.i9dsvIE4tt3h75rpVHnoWqJFS0Lq1Yy', // 0082ec-b95f03
         ]);
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->backupCodes = $backupCodes;
 
@@ -111,7 +103,6 @@ class BackupCodeManagerTest extends TestCase
     {
         $backupCodeManager = new BackupCodeManager();
 
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user
             ->expects($this->once())

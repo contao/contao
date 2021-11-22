@@ -13,8 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
-use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
@@ -24,6 +32,7 @@ use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -56,16 +65,12 @@ class ContaoCoreExtension extends Extension
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new YamlFileLoader(
-            $container,
-            new FileLocator(__DIR__.'/../Resources/config')
-        );
-
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('commands.yml');
         $loader->load('controller.yml');
         $loader->load('listener.yml');
-        $loader->load('services.yml');
         $loader->load('migrations.yml');
+        $loader->load('services.yml');
 
         // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
@@ -84,10 +89,15 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
-        $container->setParameter('contao.backend', $config['backend']);
+        $container->setParameter('contao.backend.attributes', $config['backend']['attributes']);
+        $container->setParameter('contao.backend.custom_css', $config['backend']['custom_css']);
+        $container->setParameter('contao.backend.custom_js', $config['backend']['custom_js']);
+        $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
+        $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
+        $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
@@ -117,6 +127,55 @@ class ContaoCoreExtension extends Extension
             ->registerForAutoconfiguration(ContentCompositionInterface::class)
             ->addTag('contao.page')
         ;
+
+        $container->registerAttributeForAutoconfiguration(
+            AsContentElement::class,
+            static function (ChildDefinition $definition, AsContentElement $attribute): void {
+                $definition->addTag(ContentElementReference::TAG_NAME, $attribute->attributes);
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsFrontendModule::class,
+            static function (ChildDefinition $definition, AsFrontendModule $attribute): void {
+                $definition->addTag(FrontendModuleReference::TAG_NAME, $attribute->attributes);
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsCronJob::class,
+            static function (ChildDefinition $definition, AsCronJob $attribute): void {
+                $definition->addTag('contao.cronjob', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsHook::class,
+            static function (ChildDefinition $definition, AsHook $attribute): void {
+                $definition->addTag('contao.hook', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsCallback::class,
+            static function (ChildDefinition $definition, AsCallback $attribute): void {
+                $definition->addTag('contao.callback', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsPage::class,
+            static function (ChildDefinition $definition, AsPage $attribute): void {
+                $definition->addTag('contao.page', get_object_vars($attribute));
+            }
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsPickerProvider::class,
+            static function (ChildDefinition $definition, AsPickerProvider $attribute): void {
+                $definition->addTag('contao.picker_provider', get_object_vars($attribute));
+            }
+        );
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -304,11 +363,11 @@ class ContaoCoreExtension extends Extension
 
     private function handleBackup(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition(BackupManager::class)) {
+        if (!$container->hasDefinition('contao.backup_manager')) {
             return;
         }
 
-        $dbDumper = $container->getDefinition(BackupManager::class);
+        $dbDumper = $container->getDefinition('contao.backup_manager');
         $dbDumper->replaceArgument(2, $config['backup']['directory']);
         $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
         $dbDumper->replaceArgument(4, $config['backup']['keep_max']);

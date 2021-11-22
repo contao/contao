@@ -41,7 +41,7 @@ class MakeServicesPublicPassTest extends TestCase
         // Aliases
         $container->setAlias('database_connection', 'doctrine.dbal.default_connection');
         $container->setAlias('mailer', 'mailer.mailer');
-        $container->setAlias('security.encoder_factory', 'security.encoder_factory.generic');
+        $container->setAlias('security.password_hasher_factory', 'security.password_hasher_factory.generic');
 
         $pass = new MakeServicesPublicPass();
         $pass->process($container);
@@ -60,6 +60,6 @@ class MakeServicesPublicPassTest extends TestCase
         // Aliases
         $this->assertTrue($container->getAlias('database_connection')->isPublic());
         $this->assertTrue($container->getAlias('mailer')->isPublic());
-        $this->assertTrue($container->getAlias('security.encoder_factory')->isPublic());
+        $this->assertTrue($container->getAlias('security.password_hasher_factory')->isPublic());
     }
 }

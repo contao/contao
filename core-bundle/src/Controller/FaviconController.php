@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FilesModel;
 use Contao\PageModel;
-use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,15 +29,15 @@ use Webmozart\PathUtil\Path;
  */
 class FaviconController
 {
-    private ContaoFramework $contaoFramework;
+    private ContaoFramework $framework;
     private string $projectDir;
-    private ?ResponseTagger $responseTagger;
+    private EntityCacheTags $entityCacheTags;
 
-    public function __construct(ContaoFramework $contaoFramework, string $projectDir, ResponseTagger $responseTagger = null)
+    public function __construct(ContaoFramework $framework, string $projectDir, EntityCacheTags $entityCacheTags)
     {
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
         $this->projectDir = $projectDir;
-        $this->responseTagger = $responseTagger;
+        $this->entityCacheTags = $entityCacheTags;
     }
 
     /**
@@ -45,12 +45,10 @@ class FaviconController
      */
     public function __invoke(Request $request): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
-        /** @var PageModel $pageModel */
-        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        $pageModel = $this->framework->getAdapter(PageModel::class);
 
-        /** @var PageModel|null $rootPage */
         $rootPage = $pageModel->findPublishedFallbackByHostname(
             $request->server->get('HTTP_HOST'),
             ['fallbackToEmpty' => true]
@@ -60,8 +58,7 @@ class FaviconController
             return new Response('', Response::HTTP_NOT_FOUND);
         }
 
-        /** @var FilesModel $filesModel */
-        $filesModel = $this->contaoFramework->getAdapter(FilesModel::class);
+        $filesModel = $this->framework->getAdapter(FilesModel::class);
         $faviconModel = $filesModel->findByUuid($favicon);
 
         if (null === $faviconModel) {
@@ -82,9 +79,7 @@ class FaviconController
                 break;
         }
 
-        if (null !== $this->responseTagger) {
-            $this->responseTagger->addTags(['contao.db.tl_page.'.$rootPage->id]);
-        }
+        $this->entityCacheTags->tagWithModelInstance($rootPage);
 
         return $response;
     }

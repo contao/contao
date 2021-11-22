@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
+                ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
             ->end()
         ;
@@ -561,6 +562,31 @@ class Configuration implements ConfigurationInterface
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
                     ->defaultValue('')
+                ->end()
+                ->scalarNode('route_prefix')
+                    ->info('Defines the path of the Contao backend.')
+                    ->validate()
+                        ->ifTrue(static fn (string $prefix) => 1 !== preg_match('/^\/\S*[^\/]$/', $prefix))
+                        ->thenInvalid('The backend path must begin but not end with a slash. Invalid path configured: %s')
+                    ->end()
+                    ->example('/admin')
+                    ->defaultValue('/contao')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addInsertTagsNode(): NodeDefinition
+    {
+        return (new TreeBuilder('insert_tags'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_tags')
+                    ->info('A list of allowed insert tags.')
+                    ->example(['*_url', 'request_token'])
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['*'])
                 ->end()
             ->end()
         ;

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\FrontendController;
 use Contao\CoreBundle\Cron\Cron;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +67,7 @@ class FrontendControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('parameter_bag', $bag);
-        $container->set(ContaoCsrfTokenManager::class, $tokenManager);
+        $container->set('contao.csrf.token_manager', $tokenManager);
 
         $controller = new FrontendController();
         $controller->setContainer($container);

@@ -127,7 +127,6 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         if ($image->getImagine() instanceof GdImagine) {
             $dimensions = $image->getDimensions();
 
-            /** @var Config $config */
             $config = $this->framework->getAdapter(Config::class);
             $gdMaxImgWidth = $config->get('gdMaxImgWidth');
             $gdMaxImgHeight = $config->get('gdMaxImgHeight');

@@ -20,13 +20,11 @@ use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PageRegistryTest extends TestCase
 {
     public function testReturnsParameteredPageRouteIfPathIsNullWithoutRequireItem(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'alias' => 'bar',
@@ -47,7 +45,6 @@ class PageRegistryTest extends TestCase
 
     public function testReturnsParameteredPageRouteIfPathIsNullWithRequireItem(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'alias' => 'bar',
@@ -71,7 +68,6 @@ class PageRegistryTest extends TestCase
      */
     public function testReturnsPageRouteWithPath(RouteConfig $config, string $urlPrefix, string $alias, string $urlSuffix, string $expectedPath): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'alias' => $alias,
@@ -158,7 +154,6 @@ class PageRegistryTest extends TestCase
 
     public function testConfiguresTheRoute(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'language' => 'en',
@@ -242,7 +237,6 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionReturnsTrueForUnknownType(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
         $registry = new PageRegistry($this->createMock(Connection::class));
 
@@ -255,10 +249,7 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionWithBoolean(): void
     {
-        /** @var PageModel&MockObject $fooModel */
         $fooModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
-
-        /** @var PageModel&MockObject $barModel */
         $barModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'bar']);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -271,7 +262,6 @@ class PageRegistryTest extends TestCase
 
     public function testSupportsContentCompositionFromPage(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
 
         $page = $this->createMock(ContentCompositionInterface::class);
@@ -290,7 +280,6 @@ class PageRegistryTest extends TestCase
 
     public function testOverwritesExistingTypes(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
             'language' => 'en',
@@ -337,7 +326,6 @@ class PageRegistryTest extends TestCase
 
     public function testRemovesType(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
             [

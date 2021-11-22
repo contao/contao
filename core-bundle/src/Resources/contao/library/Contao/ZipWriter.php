@@ -24,7 +24,7 @@ namespace Contao;
 class ZipWriter
 {
 	/**
-	 * File signatur
+	 * File signature
 	 */
 	const FILE_SIGNATURE = "\x50\x4b\x03\x04";
 

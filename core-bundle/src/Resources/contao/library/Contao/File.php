@@ -349,13 +349,13 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				// Store in variable as empty() calls __isset() which is not implemented and thus always true
 				$imageViewSize = $this->imageViewSize;
 
 				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
-				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				// Store in variable as empty() calls __isset() which is not implemented and thus always true
 				$imageViewSize = $this->imageViewSize;
 
 				return !empty($imageViewSize) ? $imageViewSize[1] : null;

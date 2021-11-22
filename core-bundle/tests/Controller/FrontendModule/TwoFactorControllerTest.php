@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
@@ -87,7 +88,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsAResponseIfTheUserIsAFrontendUser(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -113,7 +113,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyDisabled(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -140,7 +139,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testRedirectsAfterTwoFactorHasBeenDisabled(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -186,7 +184,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyEnabled(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -218,7 +215,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testFailsIfTheTwoFactorCodeIsInvalid(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -249,7 +245,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testDoesNotRedirectIfTheTwoFactorCodeIsInvalid(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -282,7 +277,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -322,7 +316,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testShowsTheBackupCodes(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -350,7 +343,6 @@ class TwoFactorControllerTest extends TestCase
 
     public function testGeneratesTheBackupCodes(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -361,8 +353,7 @@ class TwoFactorControllerTest extends TestCase
             $this->mockSecurityHelper($user, true)
         );
 
-        /** @var BackupCodeManager&MockObject $backupCodeManager */
-        $backupCodeManager = $container->get(BackupCodeManager::class);
+        $backupCodeManager = $container->get('contao.security.two_factor.backup_code_manager');
         $backupCodeManager
             ->expects($this->once())
             ->method('generateBackupCodes')
@@ -391,8 +382,10 @@ class TwoFactorControllerTest extends TestCase
         $this->assertArrayHasKey('contao.framework', $services);
         $this->assertArrayHasKey('contao.routing.scope_matcher', $services);
         $this->assertArrayHasKey('contao.security.two_factor.authenticator', $services);
+        $this->assertArrayHasKey('contao.security.two_factor.backup_code_manager', $services);
+        $this->assertArrayHasKey('contao.security.two_factor.trusted_device_manager', $services);
         $this->assertArrayHasKey('security.authentication_utils', $services);
-        $this->assertArrayHasKey('security.token_storage', $services);
+        $this->assertArrayHasKey('security.helper', $services);
         $this->assertArrayHasKey('translator', $services);
     }
 
@@ -458,7 +451,6 @@ class TwoFactorControllerTest extends TestCase
      */
     private function mockPageModel(): PageModel
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->enforceTwoFactor = '';
 
@@ -492,8 +484,9 @@ class TwoFactorControllerTest extends TestCase
         $container->set('contao.security.two_factor.authenticator', $authenticator);
         $container->set('contao.security.two_factor.trusted_device_manager', $this->createMock(TrustedDeviceManager::class));
         $container->set('security.authentication_utils', $authenticationUtils);
-        $container->set(BackupCodeManager::class, $this->createMock(BackupCodeManager::class));
+        $container->set('contao.security.two_factor.backup_code_manager', $this->createMock(BackupCodeManager::class));
         $container->set('security.helper', $security);
+        $container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($container);
 

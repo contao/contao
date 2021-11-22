@@ -25,7 +25,7 @@ class DebugController
     private Security $security;
 
     /**
-     * @internal Do not inherit from this class; decorate the "Contao\ManagerBundle\Controller\DebugController" service instead
+     * @internal Do not inherit from this class; decorate the "contao_manager.controller.debug" service instead
      */
     public function __construct(Security $security, RequestStack $requestStack, JwtManager $jwtManager)
     {

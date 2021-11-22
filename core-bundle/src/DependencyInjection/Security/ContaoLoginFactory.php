@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Security;
 
-use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -61,7 +60,7 @@ class ContaoLoginFactory extends AbstractFactory
         $container
             ->setDefinition($twoFactorProviderId, new ChildDefinition(TwoFactorFactory::PROVIDER_DEFINITION_ID))
             ->replaceArgument(0, new Reference($twoFactorFirewallConfigId))
-            ->replaceArgument(2, new Reference(BackupCodeManager::class))
+            ->replaceArgument(2, new Reference('contao.security.two_factor.backup_code_manager'))
         ;
 
         $provider = 'contao.security.authentication_provider.'.$id;

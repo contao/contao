@@ -289,7 +289,6 @@ class UserSessionListenerTest extends TestCase
 
     public function testFailsToReplaceTheSessionIfThereIsNoSession(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->session = [];
 

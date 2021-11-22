@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
-use Contao\CoreBundle\Doctrine\Backup\BackupManager;
-use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -331,10 +329,10 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
 
-        $definition = $container->getDefinition(BackupManager::class);
+        $definition = $container->getDefinition('contao.backup_manager');
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
-        $this->assertEquals(new Reference(DumperInterface::class), $definition->getArgument(1));
+        $this->assertEquals(new Reference('contao.backup_manager.dumper'), $definition->getArgument(1));
         $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
         $this->assertSame(5, $definition->getArgument(4));
@@ -352,10 +350,10 @@ class ContaoCoreExtensionTest extends TestCase
             $container
         );
 
-        $definition = $container->getDefinition(BackupManager::class);
+        $definition = $container->getDefinition('contao.backup_manager');
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
-        $this->assertEquals(new Reference(DumperInterface::class), $definition->getArgument(1));
+        $this->assertEquals(new Reference('contao.backup_manager.dumper'), $definition->getArgument(1));
         $this->assertSame('somewhere/else', $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
         $this->assertSame(10, $definition->getArgument(4));

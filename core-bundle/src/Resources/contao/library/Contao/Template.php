@@ -10,11 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
-use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use MatthiasMullie\Minify\CSS;
@@ -331,10 +327,6 @@ abstract class Template extends Controller
 		$response->headers->set('Content-Type', $this->strContentType);
 		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
 
-		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
-		$response->headers->remove('Cache-Control');
-
 		return $response;
 	}
 
@@ -408,7 +400,7 @@ abstract class Template extends Controller
 	 */
 	public function rawPlainText(string $value, bool $removeInsertTags = false): string
 	{
-		return StringUtil::inputEncodedToPlainText($value, $removeInsertTags);
+		return System::getContainer()->get('contao.string.html_decoder')->inputEncodedToPlainText($value, $removeInsertTags);
 	}
 
 	/**
@@ -423,7 +415,7 @@ abstract class Template extends Controller
 	 */
 	public function rawHtmlToPlainText(string $value, bool $removeInsertTags = false): string
 	{
-		return StringUtil::htmlToPlainText($value, $removeInsertTags);
+		return System::getContainer()->get('contao.string.html_decoder')->htmlToPlainText($value, $removeInsertTags);
 	}
 
 	/**
@@ -431,8 +423,7 @@ abstract class Template extends Controller
 	 */
 	public function addSchemaOrg(array $jsonLd): void
 	{
-		/** @var ResponseContext $responseContext */
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+		$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
 		{
@@ -466,7 +457,7 @@ abstract class Template extends Controller
 	 */
 	public function figure($from, $size, $configuration = array(), $template = 'image')
 	{
-		return System::getContainer()->get(FigureRenderer::class)->render($from, $size, $configuration, $template);
+		return System::getContainer()->get('contao.image.studio.figure_renderer')->render($from, $size, $configuration, $template);
 	}
 
 	/**

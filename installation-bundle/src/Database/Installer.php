@@ -26,7 +26,7 @@ class Installer
     private SchemaProvider $schemaProvider;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.installer" service instead
+     * @internal Do not inherit from this class; decorate the "contao_installation.installer" service instead
      */
     public function __construct(Connection $connection, SchemaProvider $schemaProvider)
     {

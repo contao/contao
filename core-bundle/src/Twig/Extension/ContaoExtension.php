@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
+use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
-use Contao\CoreBundle\Twig\Interop\ChunkedText;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -208,10 +208,7 @@ final class ContaoExtension extends AbstractExtension
 
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = array_map(
-                    static fn ($block) => \is_array($block) ? $block : [$block],
-                    $blocks
-                );
+                $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
             }
 
             public function parse(): string
