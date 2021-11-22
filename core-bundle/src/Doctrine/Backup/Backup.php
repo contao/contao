@@ -34,6 +34,10 @@ class Backup
      */
     public function getSize(): int
     {
+        if (!file_exists($this->getFilepath())) {
+            return 0;
+        }
+
         return (int) filesize($this->getFilepath());
     }
 

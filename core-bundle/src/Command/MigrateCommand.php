@@ -69,7 +69,7 @@ class MigrateCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        if (!$input->getOption('no-backup')) {
+        if (!$input->getOption('dry-run') && !$input->getOption('no-backup')) {
             $this->backup($input);
         }
 
@@ -106,6 +106,10 @@ class MigrateCommand extends Command
 
         try {
             $this->backupManager->create($config);
+
+            if ($asJson) {
+                $this->writeNdjson('backup-result', $config->getBackup()->toArray());
+            }
         } catch (\Throwable $exception) {
             if ($asJson) {
                 $this->writeNdjson('error', [
