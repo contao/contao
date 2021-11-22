@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\Cron;
 
 use Contao\CoreBundle\Cron\PurgeMemberRegistrationsCron;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\MemberModel;
 use Contao\Model\Collection;
