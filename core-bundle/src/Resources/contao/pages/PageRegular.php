@@ -58,7 +58,7 @@ class PageRegular extends Frontend
 		$response = $this->Template->getResponse($blnCheckRequest);
 
 		// Finalize the response context so it cannot be used anymore
-		System::getContainer()->get('contao.response_context.accessor')->finalizeCurrentContext($response);
+		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
 		return $response;
 	}
@@ -83,7 +83,7 @@ class PageRegular extends Frontend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
 
-		$this->responseContext = $container->get('contao.response_context.factory')->createContaoWebpageResponseContext($objPage);
+		$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
 
@@ -239,7 +239,7 @@ class PageRegular extends Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objLayout->titleTag));
+		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes

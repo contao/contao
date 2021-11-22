@@ -162,7 +162,7 @@ class ModuleArticle extends Module
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
-			$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
@@ -281,7 +281,7 @@ class ModuleArticle extends Module
 		$container = System::getContainer();
 
 		// Generate article
-		$strArticle = $container->get('contao.insert_tag_parser')->replaceInline($this->generate());
+		$strArticle = $container->get('contao.insert_tag.parser')->replaceInline($this->generate());
 		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 

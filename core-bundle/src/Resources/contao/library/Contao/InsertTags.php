@@ -778,7 +778,7 @@ class InsertTags extends Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{

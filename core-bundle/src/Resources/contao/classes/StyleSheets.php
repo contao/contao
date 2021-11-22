@@ -975,7 +975,7 @@ class StyleSheets extends Backend
 		}
 
 		// Replace insert tags (see #5512)
-		return System::getContainer()->get('contao.insert_tag_parser')->replaceInline($return);
+		return System::getContainer()->get('contao.insert_tag.parser')->replaceInline($return);
 	}
 
 	/**

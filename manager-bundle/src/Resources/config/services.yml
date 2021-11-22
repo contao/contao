@@ -23,14 +23,6 @@ services:
             - '%kernel.project_dir%'
             - '%contao.web_dir%'
 
-    contao_manager.controller.debug:
-        class: Contao\ManagerBundle\Controller\DebugController
-        public: true
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@contao_manager.jwt_manager'
-
     contao_manager.jwt_manager:
         public: true
         synthetic: true

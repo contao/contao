@@ -35,7 +35,7 @@ class RewireTwigPathsPassTest extends TestCase
 
         $container->addDefinitions([
             'twig.loader.native_filesystem' => $baseLoader,
-            'contao.twig.loader.fail_tolerant_filesystem' => $loader,
+            'contao.twig.fail_tolerant_filesystem_loader' => $loader,
         ]);
 
         (new RewireTwigPathsPass())->process($container);
@@ -63,7 +63,7 @@ class RewireTwigPathsPassTest extends TestCase
 
         $container->addDefinitions([
             'twig.loader.native_filesystem' => $baseLoader,
-            'contao.twig.loader.fail_tolerant_filesystem' => $loader,
+            'contao.twig.fail_tolerant_filesystem_loader' => $loader,
         ]);
 
         (new RewireTwigPathsPass())->process($container);

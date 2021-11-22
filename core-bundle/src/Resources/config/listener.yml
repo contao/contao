@@ -119,7 +119,7 @@ services:
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
-            - '@contao.twig.loader.filesystem_warmer'
+            - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 

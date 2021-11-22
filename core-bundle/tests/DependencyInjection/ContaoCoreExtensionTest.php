@@ -342,9 +342,9 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
-        $this->assertTrue($container->hasDefinition('contao.search.indexer.default'));
+        $this->assertTrue($container->hasDefinition('contao.search.default_indexer'));
 
-        $definition = $container->getDefinition('contao.search.indexer.default');
+        $definition = $container->getDefinition('contao.search.default_indexer');
 
         $this->assertTrue($definition->getArgument(2));
     }
@@ -369,7 +369,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Should still have the interface registered for autoconfiguration
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
-        $this->assertFalse($container->hasDefinition('contao.search.indexer.default'));
+        $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
     }
 
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void

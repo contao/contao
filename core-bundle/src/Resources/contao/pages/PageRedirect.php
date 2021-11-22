@@ -27,7 +27,7 @@ class PageRedirect extends Frontend
 	 */
 	public function generate($objPage)
 	{
-		$this->redirect(System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
+		$this->redirect(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
 	}
 
 	/**
@@ -39,7 +39,7 @@ class PageRedirect extends Frontend
 	 */
 	public function getResponse($objPage)
 	{
-		return new RedirectResponse(System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
+		return new RedirectResponse(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
 	}
 
 	/**

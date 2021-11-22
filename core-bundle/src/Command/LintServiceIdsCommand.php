@@ -37,6 +37,7 @@ class LintServiceIdsCommand extends Command
     ];
 
     private static array $renameNamespaces = [
+        'authentication' => '',
         'contao_core' => 'contao',
         'event_listener' => 'listener',
         'http_kernel' => '',
@@ -64,6 +65,7 @@ class LintServiceIdsCommand extends Command
     ];
 
     private static array $exceptions = [
+        'contao.listener.menu.backend',
         'contao.migration.version_400.version_400_update',
     ];
 

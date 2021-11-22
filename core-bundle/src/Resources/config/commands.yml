@@ -40,8 +40,8 @@ services:
     contao.command.debug_twig:
         class: Contao\CoreBundle\Command\DebugContaoTwigCommand
         arguments:
-            - '@contao.twig.loader.filesystem'
-            - '@contao.twig.loader.filesystem_warmer'
+            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '%kernel.project_dir%'
 
