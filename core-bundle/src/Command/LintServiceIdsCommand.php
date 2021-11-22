@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,53 +27,44 @@ class LintServiceIdsCommand extends Command
 {
     protected static $defaultName = 'contao:lint-service-ids';
 
-    private static array $ignore = [
-        'listener',
-        'migration',
-        'picker',
-        'runtime',
-        'subscriber',
+    /**
+     * Strip from name if the alias is part of the namespace.
+     *
+     * @var array<string,string>
+     */
+    private static array $aliasNames = [
+        'subscriber' => 'listener',
     ];
 
-    private static array $ignoredChunks = [
-        'authentication',
-        'candidates',
-        'data_collector',
-        'http_kernel',
-        'insert_tag',
-        'logout',
-        'matcher',
-        'remember_me',
-        'schema',
-        'voter',
+    private static array $renameNamespaces = [
+        'contao_core' => 'contao',
+        'event_listener' => 'listener',
+        'http_kernel' => '',
+    ];
+
+    /**
+     * Strip these prefixes from the last chunk of the service ID.
+     *
+     * @var array<string>
+     */
+    private static array $stripPrefixes = [
+        'contao_table_',
+        'core_',
+    ];
+
+    /**
+     * Classes that are not meant to be a single service and can therefore not
+     * derive the service ID from the class name.
+     *
+     * @var array<class-string>
+     */
+    private static array $generalServiceClasses = [
+        MemoryTokenStorage::class,
+        ResourceFinder::class,
     ];
 
     private static array $exceptions = [
-        'contao.assets.assets_context',
-        'contao.assets.files_context',
-        'contao.csrf.token_storage',
-        'contao.fragment.forward_renderer',
-        'contao.image.deferred_image_storage',
-        'contao.listener.element_template_options',
-        'contao.listener.module_template_options',
-        'contao.migration.version400.version400_update',
-        'contao.monolog.handler',
-        'contao.monolog.processor',
-        'contao.resource_finder',
-        'contao.response_context.accessor',
-        'contao.response_context.factory',
-        'contao.routing.candidates',
-        'contao.routing.input_enhancer',
-        'contao.routing.page_registry',
-        'contao.security.authentication_listener',
-        'contao.security.authentication_provider',
-        'contao.security.backend_user_provider',
-        'contao.security.entry_point',
-        'contao.security.frontend_user_provider',
-        'contao.security.token_checker',
-        'contao.security.user_checker',
-        'contao.session.contao_backend',
-        'contao.session.contao_frontend',
+        'contao.migration.version_400.version_400_update',
     ];
 
     private string $projectDir;
@@ -102,6 +95,35 @@ class LintServiceIdsCommand extends Command
         $tc = 0;
         $io = new SymfonyStyle($input, $output);
 
+        $allClasses = [];
+        $ignoreClasses = self::$generalServiceClasses;
+        $classesByServiceId = [];
+
+        foreach ($files as $file) {
+            $yaml = Yaml::parseFile($file->getPathname(), Yaml::PARSE_CUSTOM_TAGS);
+
+            foreach ($yaml['services'] ?? [] as $serviceId => $config) {
+                if (!isset($config['class'])) {
+                    continue;
+                }
+
+                $classesByServiceId[$serviceId] ??= $config['class'];
+
+                // The same service ID is used for two different classes (e.g. contao.routing.candidates).
+                if ($classesByServiceId[$serviceId] !== $config['class']) {
+                    $ignoreClasses[] = $config['class'];
+                    $ignoreClasses[] = $classesByServiceId[$serviceId];
+                }
+
+                // The same class is used for two different services (e.g. ArrayAttributeBag).
+                if (\in_array($config['class'], $allClasses, true)) {
+                    $ignoreClasses[] = $config['class'];
+                }
+
+                $allClasses[] = $config['class'];
+            }
+        }
+
         foreach ($files as $file) {
             $fc = 0;
             $yaml = Yaml::parseFile($file->getPathname(), Yaml::PARSE_CUSTOM_TAGS);
@@ -112,6 +134,10 @@ class LintServiceIdsCommand extends Command
 
             foreach ($yaml['services'] as $serviceId => $config) {
                 if ('_' === $serviceId[0] || !isset($config['class'])) {
+                    continue;
+                }
+
+                if (\in_array($config['class'], $ignoreClasses, true)) {
                     continue;
                 }
 
@@ -142,7 +168,7 @@ class LintServiceIdsCommand extends Command
 
     private function getServiceIdFromClass(string $class): ?string
     {
-        $chunks = explode('\\', Container::underscore($class));
+        $chunks = explode('\\', strtolower(Container::underscore($class)));
 
         foreach ($chunks as &$chunk) {
             $chunk = preg_replace('(^([a-z]+)(\d+)(.*)$)', '$1_$2$3', $chunk);
@@ -151,40 +177,39 @@ class LintServiceIdsCommand extends Command
         unset($chunk);
 
         // The first chunk is the vendor name (e.g. Contao).
-        $vendor = array_shift($chunks);
-
-        if ('contao' !== $vendor) {
+        if ('contao' !== array_shift($chunks)) {
             return null;
         }
 
         // The second chunk is the bundle name (e.g. CoreBundle).
-        $bundle = array_shift($chunks);
-
-        if ('_bundle' !== substr($bundle, -7)) {
+        if ('_bundle' !== substr($chunks[0], -7)) {
             return null;
         }
 
-        $bundle = substr($bundle, 0, -7);
+        // Rename "xxx_bundle" to "contao_xxx"
+        $chunks[0] = 'contao_'.substr($chunks[0], 0, -7);
 
         // The last chunk is the class name
         $name = array_pop($chunks);
 
         // The remaining chunks make up the sub-namespaces between the bundle
-        // and the class name. We ignore the ones in self::$ignoredChunks.
+        // and the class name. We rename the ones from self::$renameNamespaces.
         foreach ($chunks as $i => &$chunk) {
-            if ('event_listener' === $chunk) {
-                $chunk = 'listener';
-            }
+            $chunk = self::$renameNamespaces[$chunk] ?? $chunk;
 
-            if (\in_array($chunk, self::$ignoredChunks, true)) {
+            if (!$chunk || ($i > 1 && false !== strpos($name, $chunk))) {
                 unset($chunks[$i]);
             }
         }
 
         unset($chunk);
 
-        // The first remaining chunk is our category.
-        $category = array_shift($chunks);
+        // Strip prefixes from the name.
+        foreach (self::$stripPrefixes as $prefix) {
+            if (0 === strncmp($name, $prefix, \strlen($prefix))) {
+                $name = substr($name, \strlen($prefix));
+            }
+        }
 
         // Now we split up the class name to unset certain chunks of the path,
         // e.g. we remove "Listener" from "BackendMenuListener".
@@ -193,26 +218,20 @@ class LintServiceIdsCommand extends Command
         foreach ($nameChunks as $i => $nameChunk) {
             if (
                 'contao' === $nameChunk
-                || $category === $nameChunk
                 || \in_array($nameChunk, $chunks, true)
-                || \in_array($nameChunk, self::$ignore, true)
+                || \in_array(self::$aliasNames[$nameChunk] ?? '', $chunks, true)
             ) {
                 unset($nameChunks[$i]);
+            }
+
+            if (\in_array($nameChunk.'_'.($nameChunks[$i + 1] ?? ''), $chunks, true)) {
+                unset($nameChunks[$i], $nameChunks[$i + 1]);
             }
         }
 
         $name = implode('_', $nameChunks);
-        $path = \count($chunks) ? implode('.', $chunks) : '';
-        $prefix = strtolower($vendor.'_'.$bundle);
+        $path = implode('.', $chunks);
 
-        if ('contao_core' === $prefix) {
-            $prefix = 'contao';
-        }
-
-        if ($category === $name) {
-            $category = '';
-        }
-
-        return implode('.', array_filter([$prefix, $category, $path, $name]));
+        return implode('.', array_filter([$path, $name]));
     }
 }
