@@ -87,14 +87,14 @@ class MigrateCommandTest extends TestCase
             $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
         } else {
             if ($backupsEnabled) {
-                $this->assertRegExp('/Creating a database dump to "valid_backup_filename__20211101141254.sql" with the default options./', $display);
+                $this->assertStringContainsString('Creating a database dump', $display);
             }
-            $this->assertRegExp('/Migration 1/', $display);
-            $this->assertRegExp('/Migration 2/', $display);
-            $this->assertRegExp('/Result 1/', $display);
-            $this->assertRegExp('/Result 2/', $display);
-            $this->assertRegExp('/Executed 2 migrations/', $display);
-            $this->assertRegExp('/All migrations completed/', $display);
+            $this->assertStringContainsString('Migration 1', $display);
+            $this->assertStringContainsString('Migration 2', $display);
+            $this->assertStringContainsString('Result 1', $display);
+            $this->assertStringContainsString('Result 2', $display);
+            $this->assertStringContainsString('Executed 2 migrations', $display);
+            $this->assertStringContainsString('All migrations completed', $display);
         }
     }
 
