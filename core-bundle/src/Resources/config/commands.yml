@@ -56,11 +56,6 @@ services:
             - '%contao.upload_path%'
             - '%contao.image.target_dir%'
 
-    contao.command.lint_service_ids:
-        class: Contao\CoreBundle\Command\LintServiceIdsCommand
-        arguments:
-            - '%kernel.project_dir%'
-
     contao.command.migrate:
         class: Contao\CoreBundle\Command\MigrateCommand
         arguments:

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "contao/service-id-linter": "^1.0"
+    }
+}
