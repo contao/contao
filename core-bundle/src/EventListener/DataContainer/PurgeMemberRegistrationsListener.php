@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\MemberModel;
@@ -36,10 +37,16 @@ class PurgeMemberRegistrationsListener
      */
     private $scopeMatcher;
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher)
+    /**
+     * @var ContaoFramework
+     */
+    private $framework;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, ContaoFramework $framework)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
+        $this->framework = $framework;
     }
 
     public function __invoke(): void
@@ -51,7 +58,10 @@ class PurgeMemberRegistrationsListener
             return;
         }
 
-        foreach (MemberModel::findExpiredRegistrations() ?? [] as $member) {
+        /** @var MemberModel $memberModel */
+        $memberModel = $this->framework->getAdapter(MemberModel::class);
+
+        foreach ($memberModel->findExpiredRegistrations() ?? [] as $member) {
             $member->delete();
         }
     }

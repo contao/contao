@@ -43,6 +43,8 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber;
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\LegacyCron;
+use Contao\CoreBundle\Cron\PurgeMemberRegistrationsCron;
+use Contao\CoreBundle\Cron\PurgeOptInTokensCron;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
@@ -53,6 +55,7 @@ use Contao\CoreBundle\EventListener\BypassMaintenanceListener;
 use Contao\CoreBundle\EventListener\ClearSessionDataListener;
 use Contao\CoreBundle\EventListener\CommandSchedulerListener;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
+use Contao\CoreBundle\EventListener\DataContainer\PurgeMemberRegistrationsListener;
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\EventListener\ExceptionConverterListener;
@@ -3683,5 +3686,59 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame($this->getTempDir().'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+    }
+
+    public function testRegistersThePurgeMemberRegistrationsListener(): void
+    {
+        $this->assertTrue($this->container->has('contao.listener.data_container.purge_member_registrations'));
+
+        $definition = $this->container->getDefinition('contao.listener.data_container.purge_member_registrations');
+
+        $this->assertSame(PurgeMemberRegistrationsListener::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('request_stack'),
+                new Reference('contao.routing.scope_matcher'),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersThePurgeMemberRegistrationsCron(): void
+    {
+        $this->assertTrue($this->container->has('contao.cron.purge_member_registrations'));
+
+        $definition = $this->container->getDefinition('contao.cron.purge_member_registrations');
+
+        $this->assertSame(PurgeMemberRegistrationsCron::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.framework'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
+    }
+
+    public function testRegistersThePurgeOptInTokensCron(): void
+    {
+        $this->assertTrue($this->container->has('contao.cron.purge_optin_tokens'));
+
+        $definition = $this->container->getDefinition('contao.cron.purge_optin_tokens');
+
+        $this->assertSame(PurgeOptInTokensCron::class, $definition->getClass());
+        $this->assertTrue($definition->isPrivate());
+
+        $this->assertEquals(
+            [
+                new Reference('contao.opt-in'),
+                new Reference('logger', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ],
+            $definition->getArguments()
+        );
     }
 }

@@ -43,7 +43,10 @@ class PurgeMemberRegistrationsCron
     {
         $this->framework->initialize();
 
-        foreach (MemberModel::findExpiredRegistrations() ?? [] as $member) {
+        /** @var MemberModel $memberModel */
+        $memberModel = $this->framework->getAdapter(MemberModel::class);
+
+        foreach ($memberModel->findExpiredRegistrations() ?? [] as $member) {
             $member->delete();
         }
 
