@@ -40,7 +40,7 @@ class Backup
     public function getHumanReadableSize(): string
     {
         $base = log($this->getSize()) / log(1024);
-        $suffix = ['B', 'KB', 'MB', 'GB', 'TB'][floor($base)];
+        $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][floor($base)];
 
         return round(pow(1024, $base - floor($base)), 2).' '.$suffix;
     }
