@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\Automator;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
+use Contao\MemberModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Purges the member registrations in the front and back end, whenever tl_member is loaded.
+ * Purges the member registrations in the front and back end, whenever tl_member is loaded (#3711).
  *
  * @internal
  *
@@ -51,6 +51,8 @@ class PurgeMemberRegistrationsListener
             return;
         }
 
-        (new Automator())->purgeRegistrations();
+        foreach (MemberModel::findExpiredRegistrations() ?? [] as $member) {
+            $member->delete();
+        }
     }
 }

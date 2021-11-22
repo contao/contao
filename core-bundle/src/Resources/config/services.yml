@@ -207,6 +207,18 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_member_registrations:
+        class: Contao\CoreBundle\Cron\PurgeMemberRegistrationsCron
+        arguments:
+            - '@contao.framework'
+            - '@?logger'
+
+    contao.cron.purge_optin_tokens:
+        class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
+        arguments:
+            - '@contao.opt-in'
+            - '@?logger'
+
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
         arguments:
             - '@request_stack'
