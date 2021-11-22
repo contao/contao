@@ -40,12 +40,10 @@ class BackupTest extends ContaoTestCase
 
         $this->assertSame($this->getValidBackupPath(), $backup->getFilepath());
         $this->assertSame('2021-11-01T14:12:54+0000', $backup->getCreatedAt()->format(\DateTimeInterface::ISO8601));
-        $this->assertSame('6 B', $backup->getHumanReadableSize());
         $this->assertSame(6, $backup->getSize());
         $this->assertSame([
             'createdAt' => '2021-11-01T14:12:54+0000',
             'size' => 6,
-            'humanReadableSize' => '6 B',
             'path' => $this->getValidBackupPath(),
         ], $backup->toArray());
     }

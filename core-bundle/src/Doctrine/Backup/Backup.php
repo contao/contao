@@ -37,14 +37,6 @@ class Backup
         return (int) filesize($this->getFilepath());
     }
 
-    public function getHumanReadableSize(): string
-    {
-        $base = log($this->getSize()) / log(1024);
-        $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][floor($base)];
-
-        return round(pow(1024, $base - floor($base)), 2).' '.$suffix;
-    }
-
     public function getFilepath(): string
     {
         return $this->filepath;
@@ -72,7 +64,6 @@ class Backup
         return [
             'createdAt' => $this->getCreatedAt()->format(\DateTimeInterface::ISO8601),
             'size' => $this->getSize(),
-            'humanReadableSize' => $this->getHumanReadableSize(),
             'path' => $this->getFilepath(),
         ];
     }

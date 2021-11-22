@@ -58,7 +58,7 @@ class BackupListCommand extends AbstractBackupCommand
         foreach ($backups as $backup) {
             $formatted[] = [
                 $backup->getCreatedAt()->format('Y-m-d H:i:s'),
-                $backup->getHumanReadableSize(),
+                $this->getHumanReadableSize($backup),
                 $backup->getFilepath(),
             ];
         }
@@ -78,5 +78,14 @@ class BackupListCommand extends AbstractBackupCommand
         }
 
         return json_encode($json);
+    }
+
+    private function getHumanReadableSize(Backup $backup): string
+    {
+        // TODO: Might want to replace this with the successor of System::getReadableSize() once this is a proper service
+        $base = log($backup->getSize()) / log(1024);
+        $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][floor($base)];
+
+        return round(pow(1024, $base - floor($base)), 2).' '.$suffix;
     }
 }
