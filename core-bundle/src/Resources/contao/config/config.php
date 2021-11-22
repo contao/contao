@@ -381,6 +381,7 @@ $GLOBALS['TL_CRON'] = array
 		'purgeSearchCache' => array('Contao\Automator', 'purgeSearchCache'),
 		'generateSitemap' => array('Contao\Automator', 'generateSitemap'),
 	),
+	'hourly' => array(),
 	'minutely' => array()
 );
 
