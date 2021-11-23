@@ -394,7 +394,6 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn($isBackendUser)
         ;
 
-
         return new PrettyErrorScreenListener(true, $twig, $framework, $security, $pageRegistry, $httpKernel);
     }
 
