@@ -180,7 +180,7 @@ class PageRegistry
     }
 
     /**
-     * Checks whether this is a routable page type (#3415)
+     * Checks whether this is a routable page type (#3415).
      */
     public function isRoutable(PageModel $page): bool
     {
