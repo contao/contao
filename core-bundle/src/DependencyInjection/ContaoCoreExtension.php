@@ -190,10 +190,10 @@ class ContaoCoreExtension extends Extension
 
         if (!$config['search']['default_indexer']['enable']) {
             // Remove the default indexer completely if it was disabled
-            $container->removeDefinition('contao.search.indexer.default');
+            $container->removeDefinition('contao.search.default_indexer');
         } else {
             // Configure whether to index protected pages on the default indexer
-            $defaultIndexer = $container->getDefinition('contao.search.indexer.default');
+            $defaultIndexer = $container->getDefinition('contao.search.default_indexer');
             $defaultIndexer->setArgument(2, $config['search']['index_protected']);
         }
 
@@ -223,11 +223,11 @@ class ContaoCoreExtension extends Extension
             ->addTag('contao.escargot_subscriber')
         ;
 
-        if (!$container->hasDefinition('contao.crawl.escargot_factory')) {
+        if (!$container->hasDefinition('contao.crawl.escargot.factory')) {
             return;
         }
 
-        $factory = $container->getDefinition('contao.crawl.escargot_factory');
+        $factory = $container->getDefinition('contao.crawl.escargot.factory');
         $factory->setArgument(2, $config['crawl']['additional_uris']);
         $factory->setArgument(3, $config['crawl']['default_http_client_options']);
     }
@@ -260,7 +260,7 @@ class ContaoCoreExtension extends Extension
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
 
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {

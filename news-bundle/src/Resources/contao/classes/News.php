@@ -222,7 +222,7 @@ class News extends Frontend
 					$strDescription = $objArticle->teaser;
 				}
 
-				$strDescription = $container->get('contao.insert_tag_parser')->replaceInline($strDescription);
+				$strDescription = $container->get('contao.insert_tag.parser')->replaceInline($strDescription);
 				$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 				// Add the article image as enclosure
@@ -269,7 +269,7 @@ class News extends Frontend
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag_parser')->replaceInline($objFeed->$strType()));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
 	}
 
 	/**

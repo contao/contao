@@ -52,11 +52,6 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.contao_json_ld_schema:
-        class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
-        tags:
-            - kernel.event_listener
-
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
@@ -125,7 +120,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
             - '@contao.twig.filesystem_loader_warmer'
-            - '@contao.twig.theme_namespace'
+            - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
     contao.listener.data_container.validate_custom_rgxp:
@@ -205,6 +200,11 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.json_ld_schema:
+        class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
+        tags:
+            - kernel.event_listener
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
@@ -234,7 +234,7 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.menu.backend_menu:
+    contao.listener.menu.backend:
         class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
         arguments:
             - '@security.helper'
@@ -275,7 +275,7 @@ services:
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
-    contao.listener.pretty_error_screens:
+    contao.listener.pretty_error_screen:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
             - '%contao.pretty_error_screens%'
@@ -297,7 +297,7 @@ services:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
 
-    contao.listener.preview_bar:
+    contao.listener.preview_toolbar:
         class: Contao\CoreBundle\EventListener\PreviewToolbarListener
         arguments:
             - '@contao.routing.scope_matcher'
@@ -372,6 +372,24 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.security.switch_user:
+        class: Contao\CoreBundle\EventListener\Security\SwitchUserListener
+        arguments:
+            - '@security.token_storage'
+            - '@logger'
+        tags:
+            - kernel.event_listener
+
+    contao.listener.security.two_factor_frontend:
+        class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+            - '@security.token_storage'
+            - '%scheb_two_factor.security_tokens%'
+        tags:
+            - kernel.event_listener
+
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
@@ -385,24 +403,6 @@ services:
         tags:
             - kernel.event_subscriber
             - { name: kernel.reset, method: reset }
-
-    contao.listener.switch_user:
-        class: Contao\CoreBundle\EventListener\Security\SwitchUserListener
-        arguments:
-            - '@security.token_storage'
-            - '@logger'
-        tags:
-            - kernel.event_listener
-
-    contao.listener.two_factor.frontend:
-        class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.scope_matcher'
-            - '@security.token_storage'
-            - '%scheb_two_factor.security_tokens%'
-        tags:
-            - kernel.event_listener
 
     contao.listener.user_session:
         class: Contao\CoreBundle\EventListener\UserSessionListener

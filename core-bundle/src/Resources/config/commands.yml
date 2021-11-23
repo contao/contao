@@ -15,7 +15,7 @@ services:
     contao.command.crawl:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
-            - '@contao.crawl.escargot_factory'
+            - '@contao.crawl.escargot.factory'
             - '@filesystem'
 
     contao.command.cron:
@@ -42,7 +42,7 @@ services:
         arguments:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.filesystem_loader_warmer'
-            - '@contao.twig.theme_namespace'
+            - '@contao.twig.loader.theme_namespace'
             - '%kernel.project_dir%'
 
     contao.command.filesync:
@@ -59,17 +59,17 @@ services:
     contao.command.migrate:
         class: Contao\CoreBundle\Command\MigrateCommand
         arguments:
-            - '@contao.migration.migration_collection'
+            - '@contao.migration.collection'
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
-            - '@?contao_installation.installer'
+            - '@?contao_installation.database.installer'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
         arguments:
-            - '@contao.image.image_factory'
-            - '@contao.image.resizer'
+            - '@contao.image.factory'
+            - '@contao.image.legacy_resizer'
             - '%contao.image.target_dir%'
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'

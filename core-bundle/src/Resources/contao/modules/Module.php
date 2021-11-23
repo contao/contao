@@ -262,7 +262,7 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		return array(System::getContainer()->get('contao.cache.entity_cache_tags')->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
 	}
 
 	/**

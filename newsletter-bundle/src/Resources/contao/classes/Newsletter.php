@@ -94,8 +94,8 @@ class Newsletter extends Backend
 		}
 
 		// Replace insert tags
-		$html = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objNewsletter->content);
-		$text = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objNewsletter->text);
+		$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content);
+		$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text);
 
 		// Convert relative URLs
 		if ($objNewsletter->externalImages)

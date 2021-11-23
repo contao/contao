@@ -106,7 +106,7 @@ class TemplateControllerTest extends ContaoTestCase
         $container = new Container();
         $container->set('contao.framework', $framework);
         $container->set('request_stack', $this->createMock(RequestStack::class));
-        $container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         return $container;
     }
