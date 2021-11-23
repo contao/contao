@@ -33,7 +33,7 @@ class FrontendModuleControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($this->container);
     }
@@ -147,7 +147,7 @@ class FrontendModuleControllerTest extends TestCase
         ;
 
         $container = $this->mockContainerWithFrameworkTemplate('mod_test');
-        $container->set('contao.cache.entity_cache_tags', $entityCacheTags);
+        $container->set('contao.cache.entity_tags', $entityCacheTags);
 
         $controller = new TestController();
         $controller->setContainer($container);

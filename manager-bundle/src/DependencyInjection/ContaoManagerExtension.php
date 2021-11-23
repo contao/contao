@@ -24,6 +24,7 @@ class ContaoManagerExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('controller.yml');
         $loader->load('services.yml');
 
         $container->setParameter('contao_manager.manager_path', $config['manager_path']);

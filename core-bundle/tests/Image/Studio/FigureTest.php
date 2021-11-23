@@ -328,7 +328,7 @@ class FigureTest extends TestCase
         );
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 

@@ -745,7 +745,7 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+					$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
 				}
 				else
 				{

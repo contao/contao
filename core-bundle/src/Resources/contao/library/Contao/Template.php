@@ -423,7 +423,7 @@ abstract class Template extends Controller
 	 */
 	public function addSchemaOrg(array $jsonLd): void
 	{
-		$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if (!$responseContext || !$responseContext->has(JsonLdManager::class))
 		{

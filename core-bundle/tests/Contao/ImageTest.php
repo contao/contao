@@ -1448,14 +1448,14 @@ class ImageTest extends TestCase
 
         /** @var DeferredImageInterface $deferredImage */
         $deferredImage = System::getContainer()
-            ->get('contao.image.image_factory')
+            ->get('contao.image.factory')
             ->create(Path::join(
                 System::getContainer()->getParameter('kernel.project_dir'),
                 $imageObj->getResizedPath()
             ))
         ;
 
-        System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
+        System::getContainer()->get('contao.image.legacy_resizer')->resizeDeferredImage($deferredImage);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'getImageHookCallback']],
@@ -1562,8 +1562,8 @@ class ImageTest extends TestCase
             Path::join($container->getParameter('kernel.project_dir'), $container->getParameter('contao.upload_path'))
         );
 
-        $container->set('contao.image.resizer', $resizer);
-        $container->set('contao.image.image_factory', $factory);
+        $container->set('contao.image.legacy_resizer', $resizer);
+        $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());
 
