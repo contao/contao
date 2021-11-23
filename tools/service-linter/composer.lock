@@ -4,59 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc227def8382df24731a99fcd9572cea",
+    "content-hash": "4b1d579f8965234fa4a99478b57a75ad",
     "packages": [
-        {
-            "name": "contao/service-id-linter",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/contao/service-id-linter.git",
-                "reference": "c25f63c6efd2f750b008d14f328a5a423768c1ac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/contao/service-id-linter/zipball/c25f63c6efd2f750b008d14f328a5a423768c1ac",
-                "reference": "c25f63c6efd2f750b008d14f328a5a423768c1ac",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4 || ^8.0",
-                "symfony/console": "^5.1",
-                "symfony/dependency-injection": "^5.1",
-                "symfony/finder": "^5.1",
-                "symfony/yaml": "^5.1"
-            },
-            "bin": [
-                "bin/lint-service-ids"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Contao\\ServiceIdLinter\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Leo Feyer",
-                    "homepage": "https://github.com/leofeyer"
-                },
-                {
-                    "name": "Martin Auswöger",
-                    "homepage": "https://au.si/"
-                }
-            ],
-            "description": "Contao service ID linter",
-            "support": {
-                "issues": "https://github.com/contao/service-id-linter/issues",
-                "source": "https://github.com/contao/service-id-linter/tree/1.0.0"
-            },
-            "time": "2021-11-22T18:07:03+00:00"
-        },
         {
             "name": "psr/container",
             "version": "1.1.2",
@@ -1154,7 +1103,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^7.4 || ^8.0"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
 }

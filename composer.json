@@ -252,6 +252,7 @@
             "@unit-tests",
             "@functional-tests",
             "@cs-fixer",
+            "@service-linter",
             "@phpstan",
             "@psalm",
             "@monorepo-tools"
@@ -268,6 +269,7 @@
         "monorepo-tools": "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "tools/phpstan/vendor/bin/phpstan analyze --ansi",
         "psalm": "tools/psalm/vendor/bin/psalm --no-suggestions",
+        "service-linter": "tools/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "vendor/bin/phpunit --colors=always"
     },
     "support": {

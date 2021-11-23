@@ -172,6 +172,32 @@ jobs:
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
+    service-linter:
+        name: Service Linter
+        runs-on: ubuntu-18.04
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin service-linter install --no-interaction --no-progress
+
+            - name: Run the service linter
+              run: tools/service-linter/bin/lint-service-ids --ansi
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-18.04
