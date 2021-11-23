@@ -34,7 +34,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
 
     public function decide(TokenInterface $token, array $attributes, $object = null)
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request || !$this->scopeMatcher->isContaoRequest($request)) {
             return $this->inner->decide($token, $attributes, $object);

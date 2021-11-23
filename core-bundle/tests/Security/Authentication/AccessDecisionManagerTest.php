@@ -56,6 +56,25 @@ class AccessDecisionManagerTest extends TestCase
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
+    public function testLeavesOriginalConfigurationUntouchedIfNotMainRequest(): void
+    {
+        $inner = $this->createAccessDecisionManager(true);
+        $contao = $this->createAccessDecisionManager(false);
+
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+        $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
+
+        $accessDecisionManager = new AccessDecisionManager(
+            $inner,
+            $contao,
+            $this->mockScopeMatcher(),
+            $requestStack
+        );
+
+        $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
+    }
+
     public function testUsesContaoDecisionManagerIfContaoRequest(): void
     {
         $inner = $this->createAccessDecisionManager(false);
