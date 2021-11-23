@@ -13,8 +13,8 @@ parameters:
     level: 5
 
     paths:
-        - core-bundle/src
-        - core-bundle/tests
+        - %currentWorkingDirectory%/core-bundle/src
+        - %currentWorkingDirectory%/core-bundle/tests
 
     dynamicConstantNames:
         - BE_USER_LOGGED_IN
