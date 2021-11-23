@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Hier kunt u de spambeveiliging uitschakelen (niet aanbevolen).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>

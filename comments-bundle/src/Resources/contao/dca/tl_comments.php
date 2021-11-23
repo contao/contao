@@ -28,7 +28,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_comments'] = array
 (
@@ -67,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
@@ -156,7 +155,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'flag'                    => 8,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -305,9 +304,7 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
-
 				$session = $objSession->all();
 
 				if (empty($session['CURRENT']['IDS']) || !is_array($session['CURRENT']['IDS']))

@@ -112,7 +112,7 @@ class tl_module_listing extends Backend
 	public function getAllTables()
 	{
 		$arrTables = $this->Database->listTables();
-		$arrViews = System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
+		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))
 		{

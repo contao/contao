@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing;
 
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Route404Provider;
@@ -64,7 +65,6 @@ class Route404ProviderTest extends TestCase
 
     public function testGetRoutesByNamesWithoutValueReturnsAllRoutes(): void
     {
-        /** @var PageModel&MockObject $notFoundPage */
         $notFoundPage = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -78,7 +78,6 @@ class Route404ProviderTest extends TestCase
             ]
         );
 
-        /** @var PageModel&MockObject $otherPage */
         $otherPage = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -200,7 +199,6 @@ class Route404ProviderTest extends TestCase
 
     public function testCreatesOneRouteWithoutLocale(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -209,6 +207,7 @@ class Route404ProviderTest extends TestCase
                 'type' => 'error_404',
                 'domain' => 'example.com',
                 'rootUseSSL' => true,
+                'rootLanguage' => 'en',
             ]
         );
 
@@ -247,7 +246,6 @@ class Route404ProviderTest extends TestCase
 
     public function testCreatesTwoRoutesWithLocale(): void
     {
-        /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -387,6 +385,76 @@ class Route404ProviderTest extends TestCase
             ['id' => 17, 'type' => 'error_404', 'rootLanguage' => 'en', 'urlPrefix' => ''],
             ['id' => 42, 'type' => 'error_404', 'rootLanguage' => 'de', 'urlPrefix' => ''],
         ];
+    }
+
+    public function testIgnoresRoutesWithoutRootId(): void
+    {
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->type = 'error_404';
+
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByType')
+            ->with('error_404')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $request = $this->mockRequestWithPath('/');
+
+        $provider = new Route404Provider(
+            $framework,
+            $this->createMock(Candidates::class),
+            $this->createMock(PageRegistry::class)
+        );
+
+        $routes = $provider->getRouteCollectionForRequest($request)->all();
+
+        $this->assertIsArray($routes);
+        $this->assertEmpty($routes);
+    }
+
+    public function testIgnoresPagesWithNoRootPageFoundException(): void
+    {
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 17;
+        $page->type = 'error_404';
+        $page->rootId = 1;
+
+        $page
+            ->expects($this->once())
+            ->method('loadDetails')
+            ->willThrowException(new NoRootPageFoundException())
+        ;
+
+        $pageAdapter = $this->mockAdapter(['findByType']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findByType')
+            ->with('error_404')
+            ->willReturn(new Collection([$page], 'tl_page'))
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
+        $request = $this->mockRequestWithPath('/');
+
+        $provider = new Route404Provider(
+            $framework,
+            $this->createMock(Candidates::class),
+            $this->createMock(PageRegistry::class)
+        );
+
+        $routes = $provider->getRouteCollectionForRequest($request)->all();
+
+        $this->assertIsArray($routes);
+        $this->assertEmpty($routes);
     }
 
     /**

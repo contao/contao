@@ -20,7 +20,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -55,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('email'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
@@ -141,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -163,7 +162,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 8,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		)
@@ -269,7 +268,6 @@ class tl_newsletter_recipients extends Backend
 				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
 											 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();

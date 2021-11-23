@@ -61,7 +61,6 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var CalendarFeedModel $adapter */
         $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
 
         if (null === ($feed = $adapter->findByPk($feedId))) {
@@ -75,30 +74,30 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var CalendarEventsModel $adapter */
         $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        /** @var Events $events */
         $events = $this->framework->getAdapter(Events::class);
 
         switch ($insertTag) {
             case 'event':
                 return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
+                    '<a href="%s" title="%s"%s>%s</a>',
                     $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
                     StringUtil::specialcharsAttribute($model->title),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->title
                 );
 
             case 'event_open':
                 return sprintf(
-                    '<a href="%s" title="%s">',
+                    '<a href="%s" title="%s"%s>',
                     $events->generateEventUrl($model, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialcharsAttribute($model->title)
+                    StringUtil::specialcharsAttribute($model->title),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
             case 'event_url':

@@ -18,7 +18,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_form'] = array
 (
@@ -57,9 +56,9 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 1,
+			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'filter;search,limit',
 		),
 		'label' => array
@@ -335,7 +334,6 @@ class tl_form extends Backend
 			$GLOBALS['TL_DCA']['tl_form']['config']['notDeletable'] = true;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check current action
@@ -424,7 +422,6 @@ class tl_form extends Backend
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_form']) && in_array($insertId, $arrNew['tl_form']))
@@ -529,7 +526,7 @@ class tl_form extends Backend
 		}
 
 		$arrTables = $this->Database->listTables();
-		$arrViews = System::getContainer()->get('database_connection')->getSchemaManager()->listViews();
+		$arrViews = System::getContainer()->get('database_connection')->createSchemaManager()->listViews();
 
 		if (!empty($arrViews))
 		{

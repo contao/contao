@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Front end module "change password".
  *
@@ -38,7 +36,7 @@ class ModuleChangePassword extends Module
 		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['changePassword'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['changePassword'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -155,7 +153,7 @@ class ModuleChangePassword extends Module
 				// Validate the old password
 				if ($strKey == 'oldPassword')
 				{
-					$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+					$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 					if (!$encoder->isPasswordValid($objMember->password, $objWidget->value, null))
 					{

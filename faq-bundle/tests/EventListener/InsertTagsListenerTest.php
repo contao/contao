@@ -17,7 +17,6 @@ use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
@@ -40,7 +39,6 @@ class InsertTagsListenerTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        /** @var FaqModel&MockObject $faqModel */
         $faqModel = $this->mockClassWithProperties(FaqModel::class);
         $faqModel->alias = 'what-does-foobar-mean';
         $faqModel->question = 'What does "foobar" mean?';
@@ -62,8 +60,28 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
+            $listener->onReplaceInsertTags('faq::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
             '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">',
             $listener->onReplaceInsertTags('faq_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
+            $listener->onReplaceInsertTags('faq_open::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
+            $listener->onReplaceInsertTags('faq_open::2::blank::absolute', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
+            $listener->onReplaceInsertTags('faq_open::2::absolute::blank', false, null, [])
         );
 
         $this->assertSame(
@@ -79,6 +97,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         $this->assertSame(
             'http://domain.tld/faq/what-does-foobar-mean.html',
             $listener->onReplaceInsertTags('faq_url::2::absolute', false, null, [])
+        );
+
+        $this->assertSame(
+            'http://domain.tld/faq/what-does-foobar-mean.html',
+            $listener->onReplaceInsertTags('faq_url::2::blank::absolute', false, null, [])
         );
 
         $this->assertSame(
@@ -101,7 +124,6 @@ class InsertTagsListenerTest extends ContaoTestCase
             ->willReturn($page)
         ;
 
-        /** @var FaqModel&MockObject $faqModel */
         $faqModel = $this->mockClassWithProperties(FaqModel::class);
         $faqModel->alias = 'what-does-foobar-mean';
         $faqModel->question = 'What does "foobar" mean?';

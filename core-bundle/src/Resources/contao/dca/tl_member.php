@@ -13,8 +13,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\DataContainer;
 use Contao\FrontendUser;
 use Contao\Image;
@@ -53,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('dateAdded'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
@@ -140,7 +138,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -150,7 +148,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -176,7 +174,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -224,7 +222,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				$countries = System::getContainer()->get(Countries::class)->getCountries();
+				$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
 
 				// Convert to lower case for backwards compatibility, to be changed in Contao 5.0
 				return array_combine(array_map('strtolower', array_keys($countries)), $countries);
@@ -279,7 +277,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get(Locales::class)->getLocales(null, false);
+				return System::getContainer()->get('contao.intl.locales')->getLocales(null, false);
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -306,7 +304,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'rgxp'=>'extnd', 'nospace'=>true, 'maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50', 'autocapitalize'=>'off', 'autocomplete'=>'username'),
 			'sql'                     => 'varchar(64) BINARY NULL'
@@ -363,7 +361,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['dateAdded'],
 			'default'                 => time(),
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
@@ -377,7 +375,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['currentLogin'],
 			'sorting'                 => true,
-			'flag'                    => 6,
+			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'eval'                    => array('rgxp'=>'datim', 'doNotCopy'=>true),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Monolog;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Statement;
+use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
@@ -73,7 +73,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         /** @var ContaoContext $context */
         $context = $record['extra']['contao'];
 
-        $this->statement->execute([
+        $this->statement->executeStatement([
             'tstamp' => $date->format('U'),
             'text' => StringUtil::specialchars((string) $record['formatted']),
             'source' => (string) $context->getSource(),
@@ -133,7 +133,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
         trigger_deprecation('contao/core-bundle', '4.0', 'Using the "addLogEntry" hook has been deprecated and will no longer work in Contao 5.0.');
 
-        /** @var System $system */
         $system = $framework->getAdapter(System::class);
 
         // Must create variables to allow modification-by-reference in hook

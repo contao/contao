@@ -63,7 +63,6 @@ class PublishedFilterTest extends TestCase
 
     public function testRemovesARouteIfThePageHasNotBeenPublished(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->isPublic = false;
         $pageModel->rootIsPublic = true;
@@ -95,7 +94,6 @@ class PublishedFilterTest extends TestCase
 
     public function testRemovesARouteIfTheRootPageHasNotBeenPublished(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->isPublic = true;
         $pageModel->rootIsPublic = false;
@@ -127,7 +125,6 @@ class PublishedFilterTest extends TestCase
 
     public function testDoesNotRemoveARouteIfThePageHasBeenPublished(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->isPublic = true;
         $pageModel->rootIsPublic = true;

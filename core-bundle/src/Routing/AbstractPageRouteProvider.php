@@ -65,7 +65,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findBy([implode(' OR ', $conditions)], $aliases);
 
@@ -195,7 +194,10 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $result = [];
 
         foreach ($languages as $language) {
-            $locales = LocaleUtil::getFallbacks($language);
+            if (!$locales = LocaleUtil::getFallbacks($language)) {
+                continue;
+            }
+
             $language = array_pop($locales);
             $result[] = $language;
 

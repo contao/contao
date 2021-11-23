@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Patchwork\Utf8;
 
 /**
  * Front end module "quick navigation".
@@ -38,7 +37,7 @@ class ModuleQuicknav extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['quicknav'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['quicknav'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -71,7 +70,7 @@ class ModuleQuicknav extends Module
 			$this->rootPage = $objPage->rootId;
 		}
 
-		// Overwrite the domain and language if the reference page belongs to a differnt root page (see #3765)
+		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
 		else
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);

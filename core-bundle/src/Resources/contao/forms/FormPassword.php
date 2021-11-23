@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Class FormPassword
  *
@@ -122,7 +120,7 @@ class FormPassword extends Widget
 		// Check password length either from DCA or use Config as fallback (#1087)
 		$intLength = $this->minlength ?: Config::get('minPasswordLength');
 
-		if (Utf8::strlen($varInput) < $intLength)
+		if (mb_strlen($varInput) < $intLength)
 		{
 			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], $intLength));
 		}
@@ -132,7 +130,7 @@ class FormPassword extends Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
-			$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 			return $encoder->encodePassword($varInput, null);
 		}

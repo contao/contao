@@ -289,8 +289,10 @@ class Locales
             array_combine($this->locales, $this->locales)
         );
 
+        $system = $this->contaoFramework->getAdapter(System::class);
+
         foreach ($GLOBALS['TL_HOOKS']['getLanguages'] as $callback) {
-            $this->contaoFramework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}($return, $languages, $langsNative, $installedOnly);
+            $system->importStatic($callback[0])->{$callback[1]}($return, $languages, $langsNative, $installedOnly);
         }
 
         return $return;

@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\Studio;
-use Patchwork\Utf8;
 
 /**
  * Front end module "event list".
@@ -56,7 +54,7 @@ class ModuleEventlist extends Events
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventlist'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['eventlist'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -185,6 +183,7 @@ class ModuleEventlist extends Events
 			$sort($arrAllEvents[$key]);
 		}
 
+		$intCount = 0;
 		$arrEvents = array();
 
 		// Remove events outside the scope
@@ -227,6 +226,7 @@ class ModuleEventlist extends Events
 
 					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
 					$event['firstDate'] = Date::parse($objPage->dateFormat, $day);
+					$event['count'] = ++$intCount; // see #74
 
 					$arrEvents[] = $event;
 				}
@@ -365,7 +365,7 @@ class ModuleEventlist extends Events
 					}
 				}
 
-				$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+				$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 
 				$figure = $figureBuilder
 					->from($event['singleSRC'])
@@ -382,7 +382,6 @@ class ModuleEventlist extends Events
 						$figure = $figureBuilder
 							->setLinkHref($event['href'])
 							->setLinkAttribute('title', $objTemplate->readMore)
-							->setOptions(array('linkTitle' => $objTemplate->readMore)) // Backwards compatibility
 							->build();
 					}
 

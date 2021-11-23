@@ -35,7 +35,7 @@ class Version450Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
@@ -49,7 +49,7 @@ class Version450Update extends AbstractMigration
     public function run(): MigrationResult
     {
         $columns = $this->connection
-            ->getSchemaManager()
+            ->createSchemaManager()
             ->listTableColumns('tl_content')
         ;
 
@@ -81,7 +81,7 @@ class Version450Update extends AbstractMigration
         }
 
         $columns = $this->connection
-            ->getSchemaManager()
+            ->createSchemaManager()
             ->listTableColumns('tl_form_field')
         ;
 
@@ -106,7 +106,7 @@ class Version450Update extends AbstractMigration
         }
 
         $columns = $this->connection
-            ->getSchemaManager()
+            ->createSchemaManager()
             ->listTableColumns('tl_module')
         ;
 

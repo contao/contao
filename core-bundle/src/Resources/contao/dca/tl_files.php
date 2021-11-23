@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\File;
@@ -24,7 +25,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
-use Patchwork\Utf8;
 use Symfony\Component\Finder\Finder;
 
 $GLOBALS['TL_DCA']['tl_files'] = array
@@ -623,7 +623,7 @@ class tl_files extends Backend
 					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 				}
 
-				if (Utf8::strlen($varValue) > $intMaxlength)
+				if (mb_strlen($varValue) > $intMaxlength)
 				{
 					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
 				}
@@ -874,7 +874,7 @@ class tl_files extends Backend
 					$this->import(Automator::class, 'Automator');
 					$this->Automator->generateSymlinks();
 
-					$this->log('Folder "' . $strPath . '" has been published', __METHOD__, TL_FILES);
+					$this->log('Folder "' . $strPath . '" has been published', __METHOD__, ContaoContext::FILES);
 				}
 			}
 			elseif ($blnUnprotected)
@@ -885,7 +885,7 @@ class tl_files extends Backend
 				$this->import(Automator::class, 'Automator');
 				$this->Automator->generateSymlinks();
 
-				$this->log('Folder "' . $strPath . '" has been protected', __METHOD__, TL_FILES);
+				$this->log('Folder "' . $strPath . '" has been protected', __METHOD__, ContaoContext::FILES);
 			}
 		}
 
@@ -962,7 +962,7 @@ class tl_files extends Backend
 					$blnUnsynchronized = true;
 					$objFolder->unsynchronize();
 
-					$this->log('Synchronization of folder "' . $strPath . '" has been disabled', __METHOD__, TL_FILES);
+					$this->log('Synchronization of folder "' . $strPath . '" has been disabled', __METHOD__, ContaoContext::FILES);
 				}
 			}
 			elseif ($blnUnsynchronized)
@@ -970,7 +970,7 @@ class tl_files extends Backend
 				$blnUnsynchronized = false;
 				$objFolder->synchronize();
 
-				$this->log('Synchronization of folder "' . $strPath . '" has been enabled', __METHOD__, TL_FILES);
+				$this->log('Synchronization of folder "' . $strPath . '" has been enabled', __METHOD__, ContaoContext::FILES);
 			}
 		}
 

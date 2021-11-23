@@ -14,6 +14,7 @@ use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
@@ -23,7 +24,6 @@ use Imagine\Gd\Imagine;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -38,7 +38,7 @@ use Webmozart\PathUtil\Path;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DC_Folder extends DataContainer implements \listable, \editable
+class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
 	 * Current path
@@ -129,7 +129,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	{
 		parent::__construct();
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
@@ -154,7 +153,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -290,13 +289,10 @@ class DC_Folder extends DataContainer implements \listable, \editable
 	public function showAll()
 	{
 		$return = '';
-
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
 
 		// Add to clipboard
@@ -656,7 +652,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -709,7 +704,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -769,7 +763,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Add a log entry
-			$this->log('File or folder "' . $source . '" has been moved to "' . $destination . '"', __METHOD__, TL_FILES);
+			$this->log('File or folder "' . $source . '" has been moved to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
 		}
 
 		// Redirect
@@ -797,9 +791,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -861,7 +853,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -938,7 +929,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been copied to "' . $destination . '"', __METHOD__, TL_FILES);
+		$this->log('File or folder "' . $source . '" has been copied to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -971,9 +962,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
@@ -1063,7 +1052,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been deleted', __METHOD__, TL_FILES);
+		$this->log('File or folder "' . $source . '" has been deleted', __METHOD__, ContaoContext::FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1084,9 +1073,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -1139,9 +1126,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			/** @var Session $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$arrClipboard = $objSession->get('CLIPBOARD');
 			$arrClipboard[$this->strTable] = array();
 			$objSession->set('CLIPBOARD', $arrClipboard);
@@ -1219,7 +1204,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			{
 				if ($blnIsAjax)
 				{
-					/** @var Session $objSession */
 					$objSession = System::getContainer()->get('session');
 
 					if ($objSession->isStarted())
@@ -1656,7 +1640,6 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Get current IDs from session
@@ -2246,7 +2229,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('Folder "' . $this->intId . '" has been protected', __METHOD__, TL_FILES);
+			$this->log('Folder "' . $this->intId . '" has been protected', __METHOD__, ContaoContext::FILES);
 		}
 		else
 		{
@@ -2256,7 +2239,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('The protection from folder "' . $this->intId . '" has been removed', __METHOD__, TL_FILES);
+			$this->log('The protection from folder "' . $this->intId . '" has been removed', __METHOD__, ContaoContext::FILES);
 		}
 
 		$this->redirect($this->getReferer());
@@ -2336,7 +2319,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
-				$this->log('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created', __METHOD__, TL_FILES);
+				$this->log('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created', __METHOD__, ContaoContext::FILES);
 			}
 			else
 			{
@@ -2360,7 +2343,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, TL_FILES);
+				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, ContaoContext::FILES);
 			}
 
 			$strWebDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
@@ -2375,9 +2358,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			// Set the new value so the input field can show it
 			if (Input::get('act') == 'editAll')
 			{
-				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
-
 				$session = $objSession->all();
 
 				if (($index = array_search($this->strPath . '/' . $this->varValue . $this->strExtension, $session['CURRENT']['IDS'])) !== false)
@@ -2612,9 +2593,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			return '';
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$blnClipboard = false;
 		$arrClipboard = $objSession->get('CLIPBOARD');
 
@@ -2900,14 +2879,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						}
 						else
 						{
-							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image"');
+							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image"');
 						}
 
-						$importantPart = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+						$importantPart = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 						{
-							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important"');
+							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important"');
 						}
 					}
 					catch (RuntimeException $e)

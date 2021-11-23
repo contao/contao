@@ -17,13 +17,11 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\Events;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheCalendarFeedTag(): void
     {
-        /** @var CalendarFeedModel&MockObject $feedModel */
         $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);
         $feedModel->feedBase = 'http://localhost/';
         $feedModel->alias = 'events';
@@ -42,7 +40,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReplacesTheEventTags(): void
     {
-        /** @var CalendarEventsModel&MockObject $eventModel */
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';
@@ -74,8 +71,28 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
+            $listener('event::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
             '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">',
             $listener('event_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
+            $listener('event_open::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
+            $listener('event_open::2::blank::absolute', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
+            $listener('event_open::2::absolute::blank', false, null, [])
         );
 
         $this->assertSame(
@@ -94,6 +111,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            'http://domain.tld/events/the-foobar-event.html',
+            $listener('event_url::2::blank::absolute', false, null, [])
+        );
+
+        $this->assertSame(
             'The &quot;foobar&quot; event',
             $listener('event_title::2', false, null, [])
         );
@@ -106,7 +128,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testHandlesEmptyUrls(): void
     {
-        /** @var CalendarEventsModel&MockObject $eventModel */
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
         $eventModel->teaser = '<p>The annual foobar event.</p>';

@@ -38,7 +38,7 @@ class Version410Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_user', 'tl_user_group', 'tl_image_size'])) {
             return false;

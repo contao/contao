@@ -4,11 +4,11 @@ on:
     pull_request: ~
     push:
         branches:
-            - 4.12
+            - 4.x
         tags:
-            - 4.12.*
+            - '*'
     schedule:
-        - cron: 0 13 * * MON,TUE
+        - cron: 0 13 * * MON,THU
 
 jobs:
     coverage:
@@ -23,6 +23,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: pcov
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -34,9 +36,9 @@ jobs:
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v2
               with:
-                  file: ./clover.xml
+                  files: ./clover.xml
                   fail_ci_if_error: true
 
     ecs:
@@ -51,6 +53,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -61,7 +65,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
+              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/config/default.php --no-progress-bar --ansi
 
     ecs-legacy:
         name: ECS Legacy
@@ -75,6 +79,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -86,8 +92,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
 
     phpstan:
         name: PHPStan
@@ -101,6 +107,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -125,6 +133,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -149,6 +159,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -159,6 +171,32 @@ jobs:
                   python3 -m pip install --upgrade setuptools wheel
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
+
+    service-linter:
+        name: Service Linter
+        runs-on: ubuntu-18.04
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.0
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  tools: flex
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin service-linter install --no-interaction --no-progress
+
+            - name: Run the service linter
+              run: tools/service-linter/bin/lint-service-ids --ansi
 
     validate-assets:
         name: Validate the backend theme was built, thus assets are in sync with source files
@@ -245,6 +283,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -278,6 +318,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -313,6 +355,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Initialize the database
               run: |
@@ -345,6 +389,8 @@ jobs:
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -384,6 +430,8 @@ jobs:
                   ini-values: memory_limit=1G
                   tools: flex
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
@@ -408,6 +456,8 @@ jobs:
                   php-version: 8.0
                   extensions: json, zlib
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1
@@ -431,6 +481,8 @@ jobs:
                   php-version: 7.4
                   extensions: json, zlib
                   coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
               uses: actions/checkout@v1

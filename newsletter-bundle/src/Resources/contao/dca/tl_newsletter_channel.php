@@ -13,12 +13,12 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Mailer\AvailableTransports;
+use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
@@ -56,9 +56,9 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 1,
+			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'search,limit'
 		),
 		'label' => array
@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
@@ -243,7 +243,6 @@ class tl_newsletter_channel extends Backend
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notDeletable'] = true;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check current action

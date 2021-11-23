@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
-
 /**
  * Front end module "newsletter unsubscribe".
  *
@@ -43,7 +40,7 @@ class ModuleUnsubscribe extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['unsubscribe'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['unsubscribe'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -281,7 +278,7 @@ class ModuleUnsubscribe extends Module
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
-		$objEmail->text = System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_unsubscribe, $arrData);
+		$objEmail->text = System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page

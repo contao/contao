@@ -13,7 +13,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Image;
@@ -23,7 +22,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $this->loadDataContainer('tl_page');
 
@@ -60,7 +58,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 6,
+			'mode'                    => DataContainer::MODE_TREE_EXTENDED,
 			'panelLayout'             => 'filter;search'
 		),
 		'label' => array
@@ -357,9 +355,7 @@ class tl_article extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 
 		// Set the default page user and group
@@ -779,7 +775,7 @@ class tl_article extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_article::pasteArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
 		;
 	}
@@ -820,9 +816,7 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
-			/** @var SessionInterface $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 

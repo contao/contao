@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\Routing\FrontendLoader;
 use Contao\CoreBundle\Routing\LegacyRouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -26,15 +25,13 @@ class LegacyRouteProviderTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @var FrontendLoader&MockObject
-     */
-    private $frontendLoader;
-
     private LegacyRouteProvider $provider;
+    private $frontendLoader;
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->frontendLoader = $this->createMock(FrontendLoader::class);
         $this->provider = new LegacyRouteProvider($this->frontendLoader);
     }

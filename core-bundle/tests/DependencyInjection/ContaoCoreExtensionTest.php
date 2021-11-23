@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
@@ -175,7 +176,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
 
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
@@ -231,7 +232,7 @@ class ContaoCoreExtensionTest extends TestCase
             $this->assertTrue($container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
         }
 
-        $methodCalls = $container->getDefinition('contao.image.image_sizes')->getMethodCalls();
+        $methodCalls = $container->getDefinition('contao.image.sizes')->getMethodCalls();
 
         $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
 
@@ -315,7 +316,7 @@ class ContaoCoreExtensionTest extends TestCase
             $container
         );
 
-        $definition = $container->getDefinition('contao.crawl.escargot_factory');
+        $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
         $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
@@ -341,9 +342,9 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
-        $this->assertTrue($container->hasDefinition('contao.search.indexer.default'));
+        $this->assertTrue($container->hasDefinition('contao.search.default_indexer'));
 
-        $definition = $container->getDefinition('contao.search.indexer.default');
+        $definition = $container->getDefinition('contao.search.default_indexer');
 
         $this->assertTrue($definition->getArgument(2));
     }
@@ -368,7 +369,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Should still have the interface registered for autoconfiguration
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
-        $this->assertFalse($container->hasDefinition('contao.search.indexer.default'));
+        $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
     }
 
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
@@ -448,6 +449,43 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         $this->assertSame(Path::normalize($this->getTempDir()).'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
+    }
+
+    /**
+     * @dataProvider provideComposerJsonContent
+     */
+    public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+                'kernel.charset' => 'UTF-8',
+            ])
+        );
+
+        $composerJsonFilePath = Path::join($this->getTempDir(), 'composer.json');
+
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($composerJsonFilePath, json_encode($composerJson, JSON_THROW_ON_ERROR));
+
+        (new ContaoCoreExtension())->load([], $container);
+
+        $filesystem->remove($composerJsonFilePath);
+
+        $this->assertSame(Path::join($this->getTempDir(), $expectedWebDir), $container->getParameter('contao.web_dir'));
+    }
+
+    public function provideComposerJsonContent(): \Generator
+    {
+        yield 'extra.public-dir key not present' => [
+            [],
+            'public',
+        ];
+
+        yield 'extra.public-dir configured' => [
+            ['extra' => ['public-dir' => 'foo']],
+            'foo',
+        ];
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder

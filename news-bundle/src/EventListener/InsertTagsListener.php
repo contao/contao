@@ -61,7 +61,6 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var NewsFeedModel $adapter */
         $adapter = $this->framework->getAdapter(NewsFeedModel::class);
 
         if (null === ($feed = $adapter->findByPk($feedId))) {
@@ -75,30 +74,30 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var NewsModel $adapter */
         $adapter = $this->framework->getAdapter(NewsModel::class);
 
         if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        /** @var News $news */
         $news = $this->framework->getAdapter(News::class);
 
         switch ($insertTag) {
             case 'news':
                 return sprintf(
-                    '<a href="%s" title="%s">%s</a>',
+                    '<a href="%s" title="%s"%s>%s</a>',
                     $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
                     StringUtil::specialcharsAttribute($model->headline),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $model->headline
                 );
 
             case 'news_open':
                 return sprintf(
-                    '<a href="%s" title="%s">',
+                    '<a href="%s" title="%s"%s>',
                     $news->generateNewsUrl($model, false, \in_array('absolute', $arguments, true)) ?: './',
-                    StringUtil::specialcharsAttribute($model->headline)
+                    StringUtil::specialcharsAttribute($model->headline),
+                    \in_array('blank', $arguments, true) ? ' target="_blank" rel="noreferrer noopener"' : ''
                 );
 
             case 'news_url':

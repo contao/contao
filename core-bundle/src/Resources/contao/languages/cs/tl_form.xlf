@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Přenašeč mailů</target>
       </trans-unit>
       <trans-unit id="tl_form.mailerTransport.1">
         <source>Here you can override the mailer transport used to send the form via e-mail.</source>
+        <target>Zde můžete přepsat přenašeč mailů, který se používá pro odesílání mailů z Vaší webové stránky.</target>
       </trans-unit>
       <trans-unit id="tl_form.recipient.0">
         <source>Recipient address</source>
@@ -89,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.0">
         <source>CSV file (Microsoft Excel)</source>
+        <target>soubor CSV (Microsoft Excel)</target>
       </trans-unit>
       <trans-unit id="tl_form.csv_excel.1">
         <source>The form data will be attached to the e-mail as a CSV file readable by Microsoft Excel.</source>
+        <target>Údaje z formuláře budou připojená k mailu jako soubor CSV formátovaný pro Microsoft Excel.</target>
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.0">
         <source>Skip empty fields</source>
@@ -243,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+        <target>Definujte existující tabulky v následujícím nastavení DCE &lt;code&gt;%s&lt;/code&gt;.</target>
       </trans-unit>
     </body>
   </file>

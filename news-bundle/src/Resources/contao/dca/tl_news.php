@@ -24,7 +24,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 System::loadLanguageFile('tl_content');
 
@@ -77,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
@@ -146,10 +145,10 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'internal'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,jumpTo;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'article'                     => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,articleId;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop',
-		'external'                    => '{title_legend},headline,alias,author;{date_legend},date,time;{source_legend},source,url,target;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments,featured;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,jumpTo;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,articleId;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,url,target;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -182,17 +181,25 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'featured' => array
+		(
+			'exclude'                 => true,
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'alias' => array
 		(
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_news', 'generateAlias')
@@ -206,7 +213,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -219,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 8,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'mandatory'=>true, 'doNotCopy'=>true, 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'load_callback' => array
@@ -339,7 +346,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -459,22 +466,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'featured' => array
-		(
-			'exclude'                 => true,
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
+			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'published' => array
 		(
 			'exclude'                 => true,
 			'filter'                  => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -527,7 +526,7 @@ class tl_news extends Backend
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'] ?? array());
-			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key]);
+			unset($GLOBALS['TL_DCA']['tl_news']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_news']['fields']['noComments']);
 		}
 
 		if ($this->User->isAdmin)
@@ -625,7 +624,6 @@ class tl_news extends Backend
 				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
 											 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -746,21 +744,25 @@ class tl_news extends Backend
 			return '';
 		}
 
-		global $objPage;
+		$origObjPage = $GLOBALS['objPage'] ?? null;
 
-		// Set the global page object so we can replace the insert tags
-		$objPage = $page;
+		// Override the global page object, so we can replace the insert tags
+		$GLOBALS['objPage'] = $page;
 
-		return implode(
+		$title = implode(
 			'%s',
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
 		);
+
+		$GLOBALS['objPage'] = $origObjPage;
+
+		return $title;
 	}
 
 	/**
@@ -894,9 +896,7 @@ class tl_news extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('news_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -945,7 +945,6 @@ class tl_news extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

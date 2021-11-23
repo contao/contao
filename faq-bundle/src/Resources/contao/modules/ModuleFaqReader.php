@@ -12,10 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Patchwork\Utf8;
 
 /**
  * Class ModuleFaqReader
@@ -46,7 +43,7 @@ class ModuleFaqReader extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqreader'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['faqreader'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -98,13 +95,14 @@ class ModuleFaqReader extends Module
 		// Add the FAQ record to the template (see #221)
 		$this->Template->faq = $objFaq->row();
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+		// Overwrite the page metadata (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objFaq->pageTitle)
 			{
@@ -112,16 +110,16 @@ class ModuleFaqReader extends Module
 			}
 			elseif ($objFaq->question)
 			{
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objFaq->question));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->description)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->description));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objFaq->description));
 			}
 			elseif ($objFaq->question)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objFaq->question));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objFaq->question));
 			}
 
 			if ($objFaq->robots)
@@ -143,7 +141,7 @@ class ModuleFaqReader extends Module
 		if ($objFaq->addImage)
 		{
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)

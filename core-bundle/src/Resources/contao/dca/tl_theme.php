@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
@@ -18,7 +19,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
 (
@@ -56,9 +56,9 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('name'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'sort,search,limit'
 		),
 		'label' => array
@@ -162,7 +162,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'unique'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
@@ -172,7 +172,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
@@ -272,7 +272,7 @@ class tl_theme extends Backend
 			if ($objFile !== null && file_exists(TL_ROOT . '/' . $objFile->path))
 			{
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-				$label = Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($projectDir), '', 'class="theme_preview"') . ' ' . $label;
+				$label = Image::getHtml(System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($projectDir), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 
@@ -284,7 +284,6 @@ class tl_theme extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		if ($objSession->get('style_sheet_update_all'))
@@ -304,9 +303,7 @@ class tl_theme extends Backend
 	 */
 	public function scheduleUpdate()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$objSession->set('style_sheet_update_all', true);
 	}
 

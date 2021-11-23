@@ -14,7 +14,6 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Monolog\Handler\GroupHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -22,7 +21,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Terminal42\Escargot\Exception\InvalidJobIdException;
 
 /**
@@ -30,7 +28,7 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class Crawl extends Backend implements \executable
+class Crawl extends Backend implements MaintenanceModuleInterface
 {
 	/**
 	 * @var bool
@@ -59,7 +57,7 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
-		if (!System::getContainer()->has('contao.crawl.escargot_factory'))
+		if (!System::getContainer()->has('contao.crawl.escargot.factory'))
 		{
 			return '';
 		}
@@ -75,8 +73,7 @@ class Crawl extends Backend implements \executable
 			$blnMaintenance = false;
 		}
 
-		/** @var Factory $factory */
-		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
+		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = null;
@@ -128,7 +125,6 @@ class Crawl extends Backend implements \executable
 			throw new ResponseException($response);
 		}
 
-		/** @var FrontendPreviewAuthenticator $objAuthenticator */
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
 		if ($memberWidget && $memberWidget->value)
@@ -143,7 +139,6 @@ class Crawl extends Backend implements \executable
 			}
 			else
 			{
-				/** @var SessionInterface $session */
 				$session = System::getContainer()->get('session');
 				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
 

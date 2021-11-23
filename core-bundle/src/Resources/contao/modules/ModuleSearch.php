@@ -12,9 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Patchwork\Utf8;
 
 /**
  * Front end module "search".
@@ -41,7 +40,7 @@ class ModuleSearch extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['search'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['search'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -153,7 +152,7 @@ class ModuleSearch extends Module
 			}
 			catch (\Exception $e)
 			{
-				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, TL_ERROR);
+				$this->log('Website search failed: ' . $e->getMessage(), __METHOD__, ContaoContext::ERROR);
 				$objResult = new SearchResult(array());
 			}
 
@@ -306,7 +305,7 @@ class ModuleSearch extends Module
 				continue;
 			}
 
-			$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
 
 			$figureMeta = new Metadata(array_filter(array(

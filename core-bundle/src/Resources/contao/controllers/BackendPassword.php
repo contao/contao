@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Patchwork\Utf8;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -52,9 +50,7 @@ class BackendPassword extends Backend
 	 */
 	public function run()
 	{
-		/** @var Request $request */
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
 		$objTemplate = new BackendTemplate('be_password');
 
 		if (Input::post('FORM_SUBMIT') == 'tl_password')
@@ -62,7 +58,7 @@ class BackendPassword extends Backend
 			$pw = $request->request->get('password');
 
 			// Password too short
-			if (Utf8::strlen($pw) < Config::get('minPasswordLength'))
+			if (mb_strlen($pw) < Config::get('minPasswordLength'))
 			{
 				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['passwordLength'], Config::get('minPasswordLength')));
 			}
@@ -74,7 +70,7 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(BackendUser::class);
+				$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(BackendUser::class);
 
 				// Make sure the password has been changed
 				if ($encoder->isPasswordValid($this->User->password, $pw, null))

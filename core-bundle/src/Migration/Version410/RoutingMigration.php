@@ -41,7 +41,7 @@ class RoutingMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist('tl_page')) {
             return false;
@@ -79,7 +79,6 @@ class RoutingMigration extends AbstractMigration
 
         $this->framework->initialize();
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if ($config->get('folderUrl')) {

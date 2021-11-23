@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-
 /**
  * Content element "YouTube".
  *
@@ -133,7 +131,7 @@ class ContentYouTube extends ContentElement
 		if ($this->splashImage)
 		{
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)

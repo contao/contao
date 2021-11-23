@@ -16,10 +16,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class GenerateSymlinksEvent extends Event
 {
-    /**
-     * @var array
-     */
-    private $symlinks = [];
+    private array $symlinks = [];
 
     public function getSymlinks(): array
     {

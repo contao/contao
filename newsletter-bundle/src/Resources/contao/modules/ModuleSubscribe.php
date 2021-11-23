@@ -10,10 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
-
 /**
  * Front end module "newsletter subscribe".
  *
@@ -45,7 +41,7 @@ class ModuleSubscribe extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['subscribe'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['subscribe'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -169,8 +165,7 @@ class ModuleSubscribe extends Module
 	{
 		$this->Template = new FrontendTemplate('mod_newsletter');
 
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
@@ -362,8 +357,7 @@ class ModuleSubscribe extends Module
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
 		}
 
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('nl', $strEmail, $arrRelated);
 
 		// Get the channels
@@ -379,7 +373,7 @@ class ModuleSubscribe extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_subscribe, $arrData)
+			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_subscribe, $arrData)
 		);
 
 		// Redirect to the jumpTo page

@@ -98,6 +98,11 @@ abstract class Hybrid extends Frontend
 			$this->objParent = $objModel;
 		}
 
+		if ($this->objParent === null)
+		{
+			throw new \LogicException('No content model or module model given');
+		}
+
 		if (!$this->strKey || !$this->strTable)
 		{
 			return;

@@ -20,7 +20,7 @@ use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
 use Doctrine\ORM\Configuration;
@@ -34,11 +34,11 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @param Connection|MockObject|null $connection
+     * @param Connection&MockObject $connection
      *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry($connection = null): Registry
+    protected function mockDoctrineRegistry(Connection $connection = null): Registry
     {
         if (null === $connection) {
             $connection = $this->createMock(Connection::class);
@@ -47,7 +47,7 @@ abstract class DoctrineTestCase extends TestCase
         if ($connection instanceof MockObject) {
             $connection
                 ->method('getDatabasePlatform')
-                ->willReturn(new MySqlPlatform())
+                ->willReturn(new MySQLPlatform())
             ;
 
             $connection
@@ -97,9 +97,6 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
-    /**
-     * @param Connection&MockObject $connection
-     */
     protected function getDcaSchemaProvider(array $dca = [], array $file = [], $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
