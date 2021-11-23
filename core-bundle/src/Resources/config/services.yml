@@ -616,6 +616,21 @@ services:
     contao.search.delegating_indexer:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
+    contao.security.access_decision_manager:
+        decorates: security.access.decision_manager
+        class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
+        arguments:
+            - '@.inner'
+            - '@contao.security.access_decision_manager.priority'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+
+    contao.security.access_decision_manager.priority:
+        class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
+        arguments:
+            - !tagged_iterator security.voter
+            - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
+
     contao.security.authentication_entry_point:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
         arguments:
