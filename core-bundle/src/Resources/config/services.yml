@@ -621,11 +621,11 @@ services:
         class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
         arguments:
             - '@.inner'
-            - '@contao.security.access_decision_manager.contao'
+            - '@contao.security.access_decision_manager.priority'
             - '@contao.routing.scope_matcher'
             - '@request_stack'
 
-    contao.security.access_decision_manager.contao:
+    contao.security.access_decision_manager.priority:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
         arguments:
             - !tagged_iterator security.voter
