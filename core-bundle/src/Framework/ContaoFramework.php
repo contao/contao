@@ -117,8 +117,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if (!$this->legacyRouting) {
             $this->throwOnLegacyRoutingHooks();
         }
-
-        self::$nonce = bin2hex(random_bytes(16));
     }
 
     public function setHookListeners(array $hookListeners): void
@@ -169,6 +167,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     public static function getNonce(): string
     {
+        if ('' === self::$nonce) {
+            self::$nonce = bin2hex(random_bytes(16));
+        }
+
         return self::$nonce;
     }
 
