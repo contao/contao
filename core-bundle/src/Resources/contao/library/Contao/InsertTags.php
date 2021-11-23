@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -230,6 +232,36 @@ class InsertTags extends Controller
 					{
 						$arrCache[$strTag] = '';
 						break;
+					}
+
+					if ($keys[0] == 'LNG' && \count($keys) == 2)
+					{
+						trigger_deprecation('contao/core-bundle', '4.12', 'Using the label::LNG insert tag has been deprecated and will no longer work in Contao 5.0.');
+
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Ignore
+						}
+					}
+
+					if ($keys[0] == 'CNT' && \count($keys) == 2)
+					{
+						trigger_deprecation('contao/core-bundle', '4.12', 'Using the label::CNT insert tag has been deprecated and will no longer work in Contao 5.0.');
+
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Ignore
+						}
 					}
 
 					$file = $keys[0];
