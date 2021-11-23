@@ -392,6 +392,13 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.service_unavailable:
+        class: Contao\CoreBundle\EventListener\ServiceUnavailableListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+        tags:
+            - kernel.event_listener
+
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:

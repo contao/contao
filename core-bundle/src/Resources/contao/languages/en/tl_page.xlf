@@ -38,6 +38,12 @@
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
       </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Enable maintenance mode</source>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Shows a page to all visitors that this website is currently under maintenance.</source>
+      </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
       </trans-unit>
