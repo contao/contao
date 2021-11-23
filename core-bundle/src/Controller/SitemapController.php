@@ -140,7 +140,7 @@ class SitemapController extends AbstractController
                 && !$pageModel->requireItem
                 && 'noindex,nofollow' !== $pageModel->robots
                 && $this->pageRegistry->supportsContentComposition($pageModel)
-                && $this->pageRegistry->getRoute($pageModel)->isRoutable()
+                && $this->pageRegistry->isRoutable($pageModel)
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
                 $urls = [$pageModel->getAbsoluteUrl()];

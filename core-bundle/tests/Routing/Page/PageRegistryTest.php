@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\CoreBundle\Routing\Page\UnroutablePageRouteCompiler;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
@@ -380,7 +381,7 @@ class PageRegistryTest extends TestCase
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add($type, new RouteConfig());
 
-        $this->assertFalse($registry->getRoute($pageModel)->isRoutable());
+        $this->assertFalse($registry->isRoutable($pageModel));
     }
 
     public function errorPageTypeProvider(): \Generator
@@ -396,6 +397,23 @@ class PageRegistryTest extends TestCase
         yield 'Does not generate route for error_404' => [
             'error_404',
         ];
+    }
+
+    public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
+    {
+        /** @var PageModel&MockObject $pageModel */
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'type' => 'foobar',
+                'rootLanguage' => 'en',
+            ]
+        );
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry->add('foobar', new RouteConfig(null, null, null, [], ['compiler_class' => UnroutablePageRouteCompiler::class]));
+
+        $this->assertFalse($registry->isRoutable($pageModel));
     }
 
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection

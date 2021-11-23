@@ -179,6 +179,29 @@ class PageRegistry
         return array_keys($this->routeConfigs);
     }
 
+    /**
+     * Checks whether this is a routable page type (#3415)
+     */
+    public function isRoutable(PageModel $page): bool
+    {
+        $type = $page->type;
+
+        // Check for non-routable legacy error pages
+        if (\in_array($type, self::DISABLE_ROUTING, true)) {
+            return false;
+        }
+
+        // Any legacy page without route config is routable by default
+        if (!isset($this->routeConfigs[$type])) {
+            return true;
+        }
+
+        // Check if page controller is routable
+        $options = $this->routeConfigs[$type]->getOptions();
+
+        return ($options['compiler_class'] ?? null) !== UnroutablePageRouteCompiler::class;
+    }
+
     private function initializePrefixAndSuffix(): void
     {
         if (null !== $this->urlPrefixes || null !== $this->urlSuffixes) {

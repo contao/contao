@@ -112,9 +112,8 @@ class Route404Provider extends AbstractPageRouteProvider
         foreach ($pages as $page) {
             $this->addNotFoundRoutesForPage($page, $routes);
 
-            $route = $this->pageRegistry->getRoute($page);
-
-            if ($route->isRoutable()) {
+            if ($this->pageRegistry->isRoutable($page)) {
+                $route = $this->pageRegistry->getRoute($page);
                 $this->addLocaleRedirectRoute($route, null, $routes);
             }
         }

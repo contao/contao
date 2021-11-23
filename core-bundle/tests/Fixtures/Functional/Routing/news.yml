@@ -90,3 +90,4 @@ tl_page:
       alias: news-reader
       type: regular
       published: '1'
+      requireItem: '1'
