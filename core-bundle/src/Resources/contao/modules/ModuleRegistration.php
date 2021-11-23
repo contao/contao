@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 
@@ -360,7 +359,7 @@ class ModuleRegistration extends Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
 
-		$this->Template->requestToken = System::getContainer()->get(ContaoCsrfTokenManager::class)->getFrontendTokenValue();
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 
 	/**

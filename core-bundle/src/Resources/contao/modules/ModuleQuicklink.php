@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
@@ -147,7 +146,7 @@ class ModuleQuicklink extends Module
 		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
-		$this->Template->requestToken = System::getContainer()->get(ContaoCsrfTokenManager::class)->getFrontendTokenValue();
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 }
 

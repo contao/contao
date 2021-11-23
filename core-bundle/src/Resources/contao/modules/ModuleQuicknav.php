@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
@@ -88,7 +87,7 @@ class ModuleQuicknav extends Module
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
-		$this->Template->requestToken = System::getContainer()->get(ContaoCsrfTokenManager::class)->getFrontendTokenValue();
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 
 	/**

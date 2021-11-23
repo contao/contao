@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-
 /**
  * Front end module "change password".
  *
@@ -222,7 +220,7 @@ class ModuleChangePassword extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
-		$this->Template->requestToken = System::getContainer()->get(ContaoCsrfTokenManager::class)->getFrontendTokenValue();
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 }
 
