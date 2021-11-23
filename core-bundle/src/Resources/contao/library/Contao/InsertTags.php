@@ -236,8 +236,6 @@ class InsertTags extends Controller
 
 					if ($keys[0] == 'LNG' && \count($keys) == 2)
 					{
-						trigger_deprecation('contao/core-bundle', '4.12', 'Using the label::LNG insert tag has been deprecated and will no longer work in Contao 5.0.');
-
 						try
 						{
 							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
@@ -245,14 +243,12 @@ class InsertTags extends Controller
 						}
 						catch (\Throwable $exception)
 						{
-							// Ignore
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
 						}
 					}
 
 					if ($keys[0] == 'CNT' && \count($keys) == 2)
 					{
-						trigger_deprecation('contao/core-bundle', '4.12', 'Using the label::CNT insert tag has been deprecated and will no longer work in Contao 5.0.');
-
 						try
 						{
 							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
@@ -260,7 +256,7 @@ class InsertTags extends Controller
 						}
 						catch (\Throwable $exception)
 						{
-							// Ignore
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
 						}
 					}
 
