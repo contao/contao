@@ -203,7 +203,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getMethods()
         );
 
-        if (!$urlPrefix || (!$this->legacyRouting && $page->loadDetails() && $page->disableLanguageRedirect)) {
+        if (!$urlPrefix || (!$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect)) {
             return;
         }
 
