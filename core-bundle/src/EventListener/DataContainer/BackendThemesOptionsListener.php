@@ -23,12 +23,12 @@ use Contao\DataContainer;
 class BackendThemesOptionsListener
 {
     private BackendThemes $backendThemes;
-    private array $backendConfig;
+    private ?string $backendTheme;
 
-    public function __construct(BackendThemes $backendThemes, array $backendConfig)
+    public function __construct(BackendThemes $backendThemes, ?string $backendTheme)
     {
         $this->backendThemes = $backendThemes;
-        $this->backendConfig = $backendConfig;
+        $this->backendTheme = $backendTheme;
     }
 
     /**
@@ -50,7 +50,7 @@ class BackendThemesOptionsListener
             return;
         }
 
-        if (null === $this->backendConfig['theme']) {
+        if ('' === (string) $this->backendTheme) {
             return;
         }
 
