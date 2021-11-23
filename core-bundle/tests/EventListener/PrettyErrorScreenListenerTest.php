@@ -112,7 +112,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
             'type' => 'error_'.$type,
-            'rootLanguage' => ''
+            'rootLanguage' => '',
         ]);
 
         $request = $this->getRequest('frontend');
@@ -148,7 +148,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
             'type' => 'error_403',
-            'rootLanguage' => ''
+            'rootLanguage' => '',
         ]);
 
         $request = $this->getRequest('frontend');

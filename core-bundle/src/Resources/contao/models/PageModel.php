@@ -556,7 +556,7 @@ class PageModel extends Model
 			$arrOptions['order'] = "$t.sorting";
 		}
 
-		return static::findOneBy($arrColumns, [$intPid, $strType], $arrOptions);
+		return static::findOneBy($arrColumns, array($intPid, $strType), $arrOptions);
 	}
 
 	/**

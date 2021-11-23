@@ -18,8 +18,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\Date;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\PageModel;
 use Contao\StringUtil;
