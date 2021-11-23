@@ -363,11 +363,11 @@ class ContaoCoreExtension extends Extension
 
     private function handleBackup(array $config, ContainerBuilder $container): void
     {
-        if (!$container->hasDefinition('contao.backup_manager')) {
+        if (!$container->hasDefinition('contao.doctrine.backup_manager')) {
             return;
         }
 
-        $dbDumper = $container->getDefinition('contao.backup_manager');
+        $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
         $dbDumper->replaceArgument(2, $config['backup']['directory']);
         $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
         $dbDumper->replaceArgument(4, $config['backup']['keep_max']);

@@ -26,17 +26,17 @@ services:
     contao.command.backup_create:
         class: Contao\CoreBundle\Command\Backup\BackupCreateCommand
         arguments:
-            - '@contao.backup_manager'
+            - '@contao.doctrine.backup_manager'
 
     contao.command.backup_restore:
         class: Contao\CoreBundle\Command\Backup\BackupRestoreCommand
         arguments:
-            - '@contao.backup_manager'
+            - '@contao.doctrine.backup_manager'
 
     contao.command.backup_list:
         class: Contao\CoreBundle\Command\Backup\BackupListCommand
         arguments:
-            - '@contao.backup_manager'
+            - '@contao.doctrine.backup_manager'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
@@ -78,7 +78,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
-            - '@contao.backup_manager'
+            - '@contao.doctrine.backup_manager'
             - '@?contao_installation.database.installer'
 
     contao.command.resize_images:

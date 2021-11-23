@@ -329,10 +329,10 @@ class ContaoCoreExtensionTest extends TestCase
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
 
-        $definition = $container->getDefinition('contao.backup_manager');
+        $definition = $container->getDefinition('contao.doctrine.backup_manager');
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
-        $this->assertEquals(new Reference('contao.backup_manager.dumper'), $definition->getArgument(1));
+        $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
         $this->assertSame(5, $definition->getArgument(4));
@@ -350,10 +350,10 @@ class ContaoCoreExtensionTest extends TestCase
             $container
         );
 
-        $definition = $container->getDefinition('contao.backup_manager');
+        $definition = $container->getDefinition('contao.doctrine.backup_manager');
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
-        $this->assertEquals(new Reference('contao.backup_manager.dumper'), $definition->getArgument(1));
+        $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('somewhere/else', $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
         $this->assertSame(10, $definition->getArgument(4));
