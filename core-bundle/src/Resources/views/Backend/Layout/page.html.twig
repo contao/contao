@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    {% block head %}
+        <meta charset="{{ charset }}">
+        <title>{{ title }} | {{ host }}</title>
+        <base href="{{ base }}">
+
+    {% block meta %}
+    <meta name="generator" content="Contao Open Source CMS">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+    <meta name="referrer" content="origin">
+    {% endblock %}
+
+    {% block stylesheets %}
+        {{ contao_backend_link_tags('app') }}
+
+        {# deprecated entries #}
+    <link rel="stylesheet" href="assets/colorpicker/css/mooRainbow.min.css">
+    <link rel="stylesheet" href="assets/chosen/css/chosen.min.css">
+    <link rel="stylesheet" href="assets/simplemodal/css/simplemodal.min.css">
+    <link rel="stylesheet" href="assets/datepicker/css/datepicker.min.css">
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ contao_backend_script_tags('app') }}
+
+        {# deprecated entries #}
+        <script>{{ localeString|raw }}</script>
+        <script src="assets/mootools/js/mootools.min.js"></script>
+        <script src="assets/colorpicker/js/mooRainbow.min.js"></script>
+        <script src="assets/chosen/js/chosen.min.js"></script>
+        <script src="assets/simplemodal/js/simplemodal.min.js"></script>
+        <script src="assets/datepicker/js/datepicker.min.js"></script>
+        <script src="bundles/contaocore/mootao.js"></script>
+        <script src="bundles/contaocore/core.js"></script>
+        <script src="system/themes/flexible/hover.min.js"></script>
+        <script>{{ dateString|raw }}</script>
+    {% endblock %}
+
+        {# deprecated entries #}
+        {{ stylesheets|default|raw }}
+        {{ javascripts|default|raw }}
+    {% endblock %}
+</head>
+<body class="font-sans">
+
+{% block body %}{% endblock %}
+
+</body>
+</html>

@@ -70,7 +70,7 @@ class EncoreEntrypointLookupCollection implements EntrypointLookupCollectionInte
 
         // Use the default theme
         if (null === $buildName || '_default' === $buildName) {
-            $themePath = sprintf('%s/web/bundles/contaocore/theme/entrypoints.json', $this->projectDir);
+            $themePath = sprintf('%s/public/bundles/contaocore/theme/entrypoints.json', $this->projectDir);
 
             return new EntrypointLookup($themePath);
         }

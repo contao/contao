@@ -1,0 +1,9 @@
+<div class="flex-1 flex items-stretch overflow-hidden">
+    <main class="flex-1 overflow-y-auto">
+        {% block main %}{% endblock %}
+    </main>
+
+    <aside class="hidden w-96 bg-white p-8 border-l border-gray-200 overflow-y-auto lg:block">
+        {% block aside %}{% endblock %}
+    </aside>
+</div>

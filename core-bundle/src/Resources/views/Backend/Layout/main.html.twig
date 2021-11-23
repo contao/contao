@@ -1,74 +1,33 @@
-<!DOCTYPE html>
-<html lang="{{ language }}">
-<head>
-    {% block head %}
-        <meta charset="{{ charset }}">
-        <title>{{ title }} | {{ host }}</title>
-        <base href="{{ base }}">
+{% extends '@ContaoCore/Backend/Layout/page.html.twig' %}
 
-    {% block meta %}
-    <meta name="generator" content="Contao Open Source CMS">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
-    <meta name="referrer" content="origin">
-    {% endblock %}
+{% block body %}
 
-    {% block stylesheets %}
-        {{ contao_backend_link_tags('app') }}
+    <div class="relative min-h-screen flex flex-col">
+        {% include '@ContaoCore/Backend/Section/navbar.html.twig' %}
 
-        {# deprecated entries #}
-    <link rel="stylesheet" href="assets/colorpicker/css/mooRainbow.min.css">
-    <link rel="stylesheet" href="assets/chosen/css/chosen.min.css">
-    <link rel="stylesheet" href="assets/simplemodal/css/simplemodal.min.css">
-    <link rel="stylesheet" href="assets/datepicker/css/datepicker.min.css">
-    {% endblock %}
+        <div class="relative flex-grow bg-white overflow-hidden flex">
 
-    {% block javascripts %}
-        {{ contao_backend_script_tags('app') }}
-
-        {# deprecated entries #}
-        <script>{{ localeString|raw }}</script>
-        <script src="assets/mootools/js/mootools.min.js"></script>
-        <script src="assets/colorpicker/js/mooRainbow.min.js"></script>
-        <script src="assets/chosen/js/chosen.min.js"></script>
-        <script src="assets/simplemodal/js/simplemodal.min.js"></script>
-        <script src="assets/datepicker/js/datepicker.min.js"></script>
-        <script src="bundles/contaocore/mootao.js"></script>
-        <script src="bundles/contaocore/core.js"></script>
-        <script src="system/themes/flexible/hover.min.js"></script>
-        <script>{{ dateString|raw }}</script>
-    {% endblock %}
-
-        {# deprecated entries #}
-        {{ stylesheets|default|raw }}
-        {{ javascripts|default|raw }}
-    {% endblock %}
-</head>
-<body class="font-sans">
-
-<div class="relative min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800">
-    {% include '@ContaoCore/Backend/Section/navbar.html.twig' %}
-
-    <div class="flex-grow flex overflow-hidden w-full max-w-7xl mx-auto">
-        {% include '@ContaoCore/Backend/Section/sidebar.html.twig' %}
-
-        <div class="flex flex-col min-w-0 flex-1 overflow-hidden md:py-6">
-            <main
-                id="main"
-                class="max-w-7xl w-full mx-auto md:px-4 sm:px-6 md:px-8"
-                tabindex="0"
-                aria-labelledby="main_headline">
-
-                <div class="px-4 lg:px-0 pt-4 pb-2 md:pb-4">
-                    <h1 class="text-lg md:text-xl font-semibold text-gray-900 dark:text-gray-100">{{ headline|raw }}</h1>
+            <div class="hidden md:flex md:flex-shrink-0 bg-gray-100">
+                <div class="w-64 flex flex-col">
+                    {% include '@ContaoCore/Backend/Section/sidebar.html.twig' %}
                 </div>
+            </div>
 
-                <div class="space-y-8">
-                    {{ main|raw }}
-                </div>
-            </main>
+            <div class="flex-1 flex flex-col">
+                <main class="flex-1 overflow-y-auto focus:outline-none">
+                    <div class="relative max-w-4xl mx-auto md:px-8 xl:px-0">
+                        <div class="pt-10 pb-16">
+                            <div class="px-4 sm:px-6 md:px-0">
+                                <h1 class="text-3xl font-extrabold text-gray-900">{{ headline|raw }}</h1>
+                            </div>
+                            <div class="px-4 sm:px-6 md:px-0">
+                                {{ main|raw }}
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
         </div>
     </div>
-</div>
 
-</body>
-</html>
+{% endblock %}
