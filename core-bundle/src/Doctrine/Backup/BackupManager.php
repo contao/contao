@@ -90,9 +90,9 @@ class BackupManager
             $backups[] = new Backup($file->getPathname());
         }
 
-        uasort($backups, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
+        usort($backups, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
 
-        return array_values($backups);
+        return $backups;
     }
 
     /**
