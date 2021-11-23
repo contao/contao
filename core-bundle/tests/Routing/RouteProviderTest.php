@@ -745,6 +745,11 @@ class RouteProviderTest extends TestCase
         $page->rootUseSSL = 'https' === $scheme;
         $page->rootSorting = mt_rand();
 
+        $page
+            ->method('loadDetails')
+            ->willReturnSelf()
+        ;
+
         return $page;
     }
 
