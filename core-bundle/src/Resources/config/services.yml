@@ -616,19 +616,6 @@ services:
     contao.search.delegating_indexer:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
-    contao.security.authentication_entry_point:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
-        arguments:
-            - '@router'
-            - '@uri_signer'
-            - '@contao.framework'
-            - '@contao.routing.scope_matcher'
-
-    contao.security.authentication_failure_handler:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
-        arguments:
-            - '@?logger'
-
     contao.security.access_decision_manager:
         decorates: security.access.decision_manager
         class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
@@ -643,6 +630,19 @@ services:
         arguments:
             - !tagged_iterator security.voter
             - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
+
+    contao.security.authentication_entry_point:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
+        arguments:
+            - '@router'
+            - '@uri_signer'
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+
+    contao.security.authentication_failure_handler:
+        class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
+        arguments:
+            - '@?logger'
 
     contao.security.authentication_provider:
         class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider

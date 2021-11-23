@@ -16,7 +16,6 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Contao\CoreBundle\Security\Authentication\AccessDecisionManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
@@ -417,23 +416,6 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertFalse($container->has('contao.listener.search_index'));
-    }
-
-    public function testAccessDecisionManagerIsDecoratedCorrectly(): void
-    {
-        $container = $this->getContainerBuilder();
-
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
-
-        $definition = $container->getDefinition('contao.security.access_decision_manager');
-
-        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
-        $this->assertSame(AccessDecisionManager::class, $definition->getClass());
-        $this->assertEquals(new Reference('.inner'), $definition->getArgument(0));
-        $this->assertEquals(new Reference('contao.security.access_decision_manager.contao'), $definition->getArgument(1));
-        $this->assertEquals(new Reference('contao.routing.scope_matcher'), $definition->getArgument(2));
-        $this->assertEquals(new Reference('request_stack'), $definition->getArgument(3));
     }
 
     /**

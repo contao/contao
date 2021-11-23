@@ -32,7 +32,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         $this->requestStack = $requestStack;
     }
 
-    public function decide(TokenInterface $token, array $attributes, $object = null)
+    public function decide(TokenInterface $token, array $attributes, $object = null): bool
     {
         $request = $this->requestStack->getMainRequest();
 

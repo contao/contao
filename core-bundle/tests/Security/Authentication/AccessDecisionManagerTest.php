@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\CoreBundle\Security\Authentication\AccessDecisionManager;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -23,16 +24,11 @@ class AccessDecisionManagerTest extends TestCase
 {
     public function testLeavesOriginalConfigurationUntouchedIfNoRequestAvailable(): void
     {
-        $inner = $this->createAccessDecisionManager(true);
-        $contao = $this->createAccessDecisionManager(false);
-
-        $requestStack = new RequestStack();
-
         $accessDecisionManager = new AccessDecisionManager(
-            $inner,
-            $contao,
+            $this->mockAccessDecisionManager(true),
+            $this->mockAccessDecisionManager(false),
             $this->mockScopeMatcher(),
-            $requestStack
+            new RequestStack()
         );
 
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
@@ -40,15 +36,12 @@ class AccessDecisionManagerTest extends TestCase
 
     public function testLeavesOriginalConfigurationUntouchedIfNotContaoScope(): void
     {
-        $inner = $this->createAccessDecisionManager(true);
-        $contao = $this->createAccessDecisionManager(false);
-
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
 
         $accessDecisionManager = new AccessDecisionManager(
-            $inner,
-            $contao,
+            $this->mockAccessDecisionManager(true),
+            $this->mockAccessDecisionManager(false),
             $this->mockScopeMatcher(),
             $requestStack
         );
@@ -58,16 +51,13 @@ class AccessDecisionManagerTest extends TestCase
 
     public function testLeavesOriginalConfigurationUntouchedIfNotMainRequest(): void
     {
-        $inner = $this->createAccessDecisionManager(true);
-        $contao = $this->createAccessDecisionManager(false);
-
         $requestStack = new RequestStack();
         $requestStack->push(new Request());
         $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
 
         $accessDecisionManager = new AccessDecisionManager(
-            $inner,
-            $contao,
+            $this->mockAccessDecisionManager(true),
+            $this->mockAccessDecisionManager(false),
             $this->mockScopeMatcher(),
             $requestStack
         );
@@ -77,15 +67,12 @@ class AccessDecisionManagerTest extends TestCase
 
     public function testUsesContaoDecisionManagerIfContaoRequest(): void
     {
-        $inner = $this->createAccessDecisionManager(false);
-        $contao = $this->createAccessDecisionManager(true);
-
         $requestStack = new RequestStack();
         $requestStack->push(new Request([], [], ['_scope' => 'frontend']));
 
         $accessDecisionManager = new AccessDecisionManager(
-            $inner,
-            $contao,
+            $this->mockAccessDecisionManager(false),
+            $this->mockAccessDecisionManager(true),
             $this->mockScopeMatcher(),
             $requestStack
         );
@@ -93,12 +80,16 @@ class AccessDecisionManagerTest extends TestCase
         $accessDecisionManager->decide($this->createMock(TokenInterface::class), []);
     }
 
-    private function createAccessDecisionManager(bool $shouldBeCalled)
+    /**
+     * @return AccessDecisionManagerInterface&MockObject
+     */
+    private function mockAccessDecisionManager(bool $shouldBeCalled): AccessDecisionManagerInterface
     {
         $manager = $this->createMock(AccessDecisionManagerInterface::class);
         $manager
             ->expects($shouldBeCalled ? $this->once() : $this->never())
             ->method('decide')
+            ->willReturn(true)
         ;
 
         return $manager;
