@@ -77,8 +77,8 @@ class ModuleListing extends Module
 
 		$this->strTemplate = $this->list_layout ?: 'list_default';
 
-		$this->list_where = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($this->list_where);
-		$this->list_info_where = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($this->list_info_where);
+		$this->list_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_where);
+		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
 		return parent::generate();
 	}
@@ -365,7 +365,7 @@ class ModuleListing extends Module
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		$this->list_info = StringUtil::deserialize($this->list_info);
-		$this->list_info_where = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($this->list_info_where);
+		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
 		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)

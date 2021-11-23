@@ -661,13 +661,13 @@ abstract class System
 	 * @return array The available image sizes
 	 *
 	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
-	 *             Use the contao.image.image_sizes service instead.
+	 *             Use the contao.image.sizes service instead.
 	 */
 	public static function getImageSizes()
 	{
-		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_sizes" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.sizes" service instead.');
 
-		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+		return static::getContainer()->get('contao.image.sizes')->getAllOptions();
 	}
 
 	/**

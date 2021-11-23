@@ -92,7 +92,7 @@ class ContentModule extends ContentElement
 		$objModule = new $strClass($objModel, $this->strColumn);
 
 		// Tag the content element (see #2137)
-		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
+		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
 
 		$strBuffer = $objModule->generate();
 

@@ -34,7 +34,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.cache.entity_cache_tags'] = EntityCacheTags::class;
+        $services['contao.cache.entity_tags'] = EntityCacheTags::class;
 
         return $services;
     }
@@ -63,7 +63,7 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function tagResponse($tags): void
     {
-        $this->get('contao.cache.entity_cache_tags')->tagWith($tags);
+        $this->get('contao.cache.entity_tags')->tagWith($tags);
     }
 
     /**

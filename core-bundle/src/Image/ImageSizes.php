@@ -32,7 +32,7 @@ class ImageSizes implements ResetInterface
     private ?array $options = null;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
+     * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
      */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, TranslatorInterface $translator)
     {
@@ -117,7 +117,7 @@ class ImageSizes implements ResetInterface
             || 2 !== \count($this->options['relative'] ?? [])
             || 10 !== \count($this->options['exact'] ?? [])
         ) {
-            trigger_deprecation('contao/core-bundle', '4.13', 'Using $GLOBALS[\'TL_CROP\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.image.image_sizes" service instead.');
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using $GLOBALS[\'TL_CROP\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.image.sizes" service instead.');
         }
 
         $rows = $this->connection->fetchAllAssociative(

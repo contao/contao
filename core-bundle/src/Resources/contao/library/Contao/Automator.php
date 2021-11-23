@@ -212,7 +212,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		$clearer = $container->get('contao.cache.clear_internal');
+		$clearer = $container->get('contao.cache.clearer');
 		$clearer->clear($container->getParameter('kernel.cache_dir'));
 
 		// Add a log entry
@@ -389,7 +389,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		$warmer = $container->get('contao.cache.warm_internal');
+		$warmer = $container->get('contao.cache.warmer');
 		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
 
 		// Add a log entry

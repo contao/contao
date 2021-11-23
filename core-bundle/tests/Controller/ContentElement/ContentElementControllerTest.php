@@ -34,7 +34,7 @@ class ContentElementControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($this->container);
     }
@@ -182,7 +182,7 @@ class ContentElementControllerTest extends TestCase
         ;
 
         $container = $this->mockContainerWithFrameworkTemplate('ce_test');
-        $container->set('contao.cache.entity_cache_tags', $entityCacheTags);
+        $container->set('contao.cache.entity_tags', $entityCacheTags);
 
         $controller = new TestController();
         $controller->setContainer($container);

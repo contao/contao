@@ -2,6 +2,14 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.data_container.legacy_routing:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
+
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
@@ -24,13 +32,6 @@ services:
             - '@contao.routing.legacy_matcher.inner'
             - '%contao.url_suffix%'
             - '%contao.prepend_locale%'
-
-    Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener:
-        arguments:
-            - '@contao.framework'
-            - '@translator'
-            - '%contao.prepend_locale%'
-            - '%contao.url_suffix%'
 
     contao.routing.legacy_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
