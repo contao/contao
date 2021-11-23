@@ -275,11 +275,11 @@ abstract class Template extends Controller
 	/**
 	 * Parse the template file and return it as string
 	 *
-	 * @param bool|null $replaceInsertTags Whether insert tags should be replaced (default: always, except in the back end scope)
+	 * @param bool|null $preserveInsertTagsInLegacyTemplates Whether insert tags should be preserved (default: always, except in the front end scope)
 	 *
 	 * @return string The template markup
 	 */
-	public function parse(/* $replaceInsertTags = null */)
+	public function parse(/* $preserveInsertTagsInLegacyTemplates = null */)
 	{
 		if (!$this->strTemplate)
 		{
@@ -296,14 +296,14 @@ abstract class Template extends Controller
 			}
 		}
 
-		$replaceInsertTags = null;
+		$preserveInsertTagsInLegacyTemplates = null;
 
 		if (\func_num_args() > 0)
 		{
-			$replaceInsertTags = func_get_arg(0);
+			$preserveInsertTagsInLegacyTemplates = func_get_arg(0);
 		}
 
-		return $this->inherit($replaceInsertTags);
+		return $this->inherit($preserveInsertTagsInLegacyTemplates);
 	}
 
 	/**

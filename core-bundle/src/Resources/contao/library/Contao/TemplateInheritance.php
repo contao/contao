@@ -78,11 +78,11 @@ trait TemplateInheritance
 	/**
 	 * Parse the template file and return it as string
 	 *
-	 * @param bool|null $replaceInsertTags Whether insert tags should be replaced (default: always, except in the back end scope)
+	 * @param bool|null $preserveInsertTagsInLegacyTemplates Whether insert tags should be preserved (default: always, except in the front end scope)
 	 *
 	 * @return string The template markup
 	 */
-	public function inherit(/* $replaceInsertTags = null */)
+	public function inherit(/* $preserveInsertTagsInLegacyTemplates = null */)
 	{
 		if (null !== ($result = $this->renderTwigSurrogateIfExists()))
 		{
@@ -162,21 +162,21 @@ trait TemplateInheritance
 			}
 		}
 
-		$replaceInsertTags = null;
+		$preserveInsertTagsInLegacyTemplates = null;
 
 		if (\func_num_args() > 0)
 		{
-			$replaceInsertTags = func_get_arg(0);
+			$preserveInsertTagsInLegacyTemplates = func_get_arg(0);
 		}
 
-		// Do not replace insert tags by default in the back end (#3693)
-		if (null === $replaceInsertTags)
+		// Replace insert tags only in the front end scope (#3693)
+		if (null === $preserveInsertTagsInLegacyTemplates)
 		{
 			$request = $container->get('request_stack')->getCurrentRequest();
-			$replaceInsertTags = null === $request || !$container->get('contao.routing.scope_matcher')->isBackendRequest($request);
+			$preserveInsertTagsInLegacyTemplates = null === $request || !$container->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 		}
 
-		if ($replaceInsertTags)
+		if (!$preserveInsertTagsInLegacyTemplates)
 		{
 			$strBuffer = System::getContainer()->get('contao.insert_tag_parser')->replace($strBuffer);
 		}

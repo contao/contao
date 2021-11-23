@@ -411,12 +411,12 @@ class TemplateTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(true)
+            ->method('isFrontendRequest')
+            ->willReturn(false)
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('contao.insert_tag_parser', $insertTags);
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
 
@@ -441,17 +441,17 @@ class TemplateTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('contao.insert_tag_parser', $insertTags);
 
         System::setContainer($container);
 
         $template = new BackendTemplate('test_template');
         $template->setData(['value' => 'test']);
-        $template->parse(false);
+        $template->parse(true);
 
         $template = new FrontendTemplate('test_template');
         $template->setData(['value' => 'test']);
-        $template->parse(false);
+        $template->parse(true);
     }
 
     public function testAlwaysReplacesInsertTagsWhenRequested(): void
@@ -476,11 +476,11 @@ class TemplateTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->never())
-            ->method('isBackendRequest')
+            ->method('isFrontendRequest')
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('contao.insert_tag_parser', $insertTags);
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
 
@@ -488,14 +488,14 @@ class TemplateTest extends TestCase
 
         $template = new BackendTemplate('test_template');
         $template->setData(['value' => 'test']);
-        $template->parse(true);
+        $template->parse(false);
 
         $template = new FrontendTemplate('test_template');
         $template->setData(['value' => 'test']);
-        $template->parse(true);
+        $template->parse(false);
     }
 
-    public function testReplacesInsertTagsByDefault(): void
+    public function testDoesNotReplacesInsertTagsByDefault(): void
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
@@ -504,7 +504,7 @@ class TemplateTest extends TestCase
 
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('replace')
         ;
 
@@ -522,7 +522,7 @@ class TemplateTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set(InsertTagParser::class, $insertTags);
+        $container->set('contao.insert_tag_parser', $insertTags);
         $container->set('request_stack', $requestStack);
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
 

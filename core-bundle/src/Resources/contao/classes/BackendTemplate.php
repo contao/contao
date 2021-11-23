@@ -31,20 +31,20 @@ class BackendTemplate extends Template
 	/**
 	 * Add a hook to modify the template output
 	 *
-	 * @param bool|null $replaceInsertTags Whether insert tags should be replaced (default: always, except in the back end scope)
+	 * @param bool|null $preserveInsertTagsInLegacyTemplates Whether insert tags should be preserved (default: always, except in the front end scope)
 	 *
 	 * @return string
 	 */
-	public function parse(/* $replaceInsertTags = null */)
+	public function parse(/* $preserveInsertTagsInLegacyTemplates = null */)
 	{
-		$replaceInsertTags = null;
+		$preserveInsertTagsInLegacyTemplates = null;
 
 		if (\func_num_args() > 0)
 		{
-			$replaceInsertTags = func_get_arg(0);
+			$preserveInsertTagsInLegacyTemplates = func_get_arg(0);
 		}
 
-		$strBuffer = parent::parse($replaceInsertTags);
+		$strBuffer = parent::parse($preserveInsertTagsInLegacyTemplates);
 
 		// HOOK: add custom parse filters
 		if (isset($GLOBALS['TL_HOOKS']['parseBackendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['parseBackendTemplate']))
