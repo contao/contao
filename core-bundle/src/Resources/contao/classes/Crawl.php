@@ -28,7 +28,7 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class Crawl extends Backend implements \executable
+class Crawl extends Backend implements MaintenanceModuleInterface
 {
 	/**
 	 * @var bool

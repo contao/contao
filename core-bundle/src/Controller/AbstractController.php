@@ -33,8 +33,8 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['event_dispatcher'] = EventDispatcherInterface::class;
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
-        $services[] = ContaoCsrfTokenManager::class;
-        $services[] = EntityCacheTags::class;
+        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
+        $services['contao.cache.entity_cache_tags'] = EntityCacheTags::class;
 
         return $services;
     }
@@ -63,7 +63,7 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function tagResponse($tags): void
     {
-        $this->get(EntityCacheTags::class)->tagWith($tags);
+        $this->get('contao.cache.entity_cache_tags')->tagWith($tags);
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class AbstractController extends SymfonyAbstractController
     {
         return [
             'csrf_field_name' => 'REQUEST_TOKEN',
-            'csrf_token_manager' => $this->get(ContaoCsrfTokenManager::class),
+            'csrf_token_manager' => $this->get('contao.csrf.token_manager'),
             'csrf_token_id' => $this->getParameter('contao.csrf_token_name'),
         ];
     }

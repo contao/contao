@@ -310,25 +310,15 @@ class SimpleTokenParserTest extends TestCase
     public function parsesSimpleTokensWithShorthandIfProvider(): \Generator
     {
         yield 'Test true matches' => [true, true];
-
         yield 'Test 1 matches' => [1, true];
-
         yield 'Test "1" matches' => ['1', true];
-
         yield 'Test "anything" matches' => ['anything', true];
-
         yield 'Test non-empty array matches' => [['foo'], true];
-
         yield 'Test false does not match' => [false, false];
-
         yield 'Test 0 does not match' => [0, false];
-
         yield 'Test "0" does not match' => ['0', false];
-
         yield 'Test null does not match' => [null, false];
-
         yield 'Test empty string does not match' => ['', false];
-
         yield 'Test empty array does not match' => [[], false];
     }
 
@@ -560,35 +550,12 @@ class SimpleTokenParserTest extends TestCase
 
     public function parseSimpleTokensDoesntExecutePhp(): \Generator
     {
-        yield '(<?php)' => [
-            'This <?php var_dump() ?> is a test.',
-            false,
-        ];
-
-        yield '(<?=)' => [
-            'This <?= $var ?> is a test.',
-            false,
-        ];
-
-        yield '(<?)' => [
-            'This <? var_dump() ?> is a test.',
-            \PHP_VERSION_ID >= 70000,
-        ];
-
-        yield '(<%)' => [
-            'This <% var_dump() ?> is a test.',
-            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
-        ];
-
-        yield '(<script language="php">)' => [
-            'This <script language="php"> var_dump() </script> is a test.',
-            \PHP_VERSION_ID >= 70000,
-        ];
-
-        yield '(<script language=\'php\'>)' => [
-            'This <script language=\'php\'> var_dump() </script> is a test.',
-            \PHP_VERSION_ID >= 70000,
-        ];
+        yield '(<?php)' => ['This <?php var_dump() ?> is a test.'];
+        yield '(<?=)' => ['This <?= $var ?> is a test.'];
+        yield '(<?)' => ['This <? var_dump() ?> is a test.'];
+        yield '(<%)' => ['This <% var_dump() ?> is a test.'];
+        yield '(<script language="php">)' => ['This <script language="php"> var_dump() </script> is a test.'];
+        yield '(<script language=\'php\'>)' => ['This <script language=\'php\'> var_dump() </script> is a test.'];
     }
 
     /**
@@ -601,35 +568,12 @@ class SimpleTokenParserTest extends TestCase
 
     public function parseSimpleTokensDoesntExecutePhpInToken(): \Generator
     {
-        yield '(<?php)' => [
-            ['foo' => 'This <?php var_dump() ?> is a test.'],
-            false,
-        ];
-
-        yield '(<?=)' => [
-            ['foo' => 'This <?= $var ?> is a test.'],
-            false,
-        ];
-
-        yield '(<?)' => [
-            ['foo' => 'This <? var_dump() ?> is a test.'],
-            \PHP_VERSION_ID >= 70000,
-        ];
-
-        yield '(<%)' => [
-            ['foo' => 'This <% var_dump() ?> is a test.'],
-            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
-        ];
-
-        yield '(<script language="php">)' => [
-            ['foo' => 'This <script language="php"> var_dump() </script> is a test.'],
-            \PHP_VERSION_ID >= 70000,
-        ];
-
-        yield '(<script language=\'php\'>)' => [
-            ['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.'],
-            \PHP_VERSION_ID >= 70000,
-        ];
+        yield '(<?php)' => [['foo' => 'This <?php var_dump() ?> is a test.']];
+        yield '(<?=)' => [['foo' => 'This <?= $var ?> is a test.']];
+        yield '(<?)' => [['foo' => 'This <? var_dump() ?> is a test.']];
+        yield '(<%)' => [['foo' => 'This <% var_dump() ?> is a test.']];
+        yield '(<script language="php">)' => [['foo' => 'This <script language="php"> var_dump() </script> is a test.']];
+        yield '(<script language=\'php\'>)' => [['foo' => 'This <script language=\'php\'> var_dump() </script> is a test.']];
     }
 
     public function testDoesNotExecutePhpCodeInCombinedTokens(): void

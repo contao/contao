@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -107,7 +106,7 @@ class FrontendTemplate extends Template
 	/**
 	 * Compile the template
 	 *
-	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
+	 * @throws UnusedArgumentsException If there are unused $_GET parameters
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
@@ -152,7 +151,7 @@ class FrontendTemplate extends Template
 		// Check whether all $_GET parameters have been used (see #4277)
 		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
-			throw new \UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
+			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
 		}
 
 		/** @var PageModel|null $objPage */
@@ -227,7 +226,7 @@ class FrontendTemplate extends Template
 			}
 
 			// Tag the page (see #2137)
-			System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($objPage);
+			System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($objPage);
 		}
 
 		return $response;

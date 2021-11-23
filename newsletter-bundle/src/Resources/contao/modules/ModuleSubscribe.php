@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\SimpleTokenParser;
-
 /**
  * Front end module "newsletter subscribe".
  *
@@ -167,7 +165,7 @@ class ModuleSubscribe extends Module
 	{
 		$this->Template = new FrontendTemplate('mod_newsletter');
 
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) < 1 || key($arrRelated) != 'tl_newsletter_recipients' || \count($arrIds = current($arrRelated)) < 1)
@@ -359,7 +357,7 @@ class ModuleSubscribe extends Module
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
 		}
 
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('nl', $strEmail, $arrRelated);
 
 		// Get the channels
@@ -375,7 +373,7 @@ class ModuleSubscribe extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_subscribe, $arrData)
+			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_subscribe, $arrData)
 		);
 
 		// Redirect to the jumpTo page

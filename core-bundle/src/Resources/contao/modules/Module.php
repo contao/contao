@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -262,7 +262,7 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		return array(System::getContainer()->get(EntityCacheTags::class)->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.entity_cache_tags')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
@@ -373,7 +373,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 							continue 2;
 						}
@@ -386,7 +386,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 							continue 2;
 						}

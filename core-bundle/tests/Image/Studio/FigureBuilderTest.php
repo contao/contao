@@ -557,7 +557,7 @@ class FigureBuilderTest extends TestCase
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag_parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
 
@@ -1270,7 +1270,7 @@ class FigureBuilderTest extends TestCase
         $locator
             ->method('get')
             ->willReturnMap([
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
                 ['contao.framework', $framework],
                 ['event_dispatcher', $eventDispatcher ?? new EventDispatcher()],
             ])

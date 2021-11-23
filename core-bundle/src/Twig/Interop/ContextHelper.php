@@ -74,7 +74,7 @@ final class ContextHelper
                 try {
                     return (string) $this();
                 } catch (\Throwable $e) {
-                    // A __toString function may not throw an exception in PHP<7.4
+                    // A __toString function must not throw an exception in PHP<7.4
                     if (\PHP_VERSION_ID < 70400) {
                         return '';
                     }

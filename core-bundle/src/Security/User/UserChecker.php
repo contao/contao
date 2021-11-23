@@ -84,7 +84,7 @@ class UserChecker implements UserCheckerInterface
     }
 
     /**
-     * Checks wether login is allowed (front end only).
+     * Checks whether login is allowed (front end only).
      */
     private function checkIfLoginIsAllowed(User $user): void
     {

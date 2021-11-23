@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Class Comments
@@ -119,7 +119,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = System::getContainer()->get(InsertTagParser::class)->replace($objComments->reply);
+					$objPartial->reply = System::getContainer()->get('contao.insert_tag_parser')->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
 
 					// Clean the RTE output
@@ -533,7 +533,7 @@ class Comments extends Frontend
 		}
 
 		// Add a log entry
-		$this->log('Purged the unactivated comment subscriptions', __METHOD__, TL_CRON);
+		$this->log('Purged the unactivated comment subscriptions', __METHOD__, ContaoContext::CRON);
 	}
 
 	/**
@@ -574,7 +574,7 @@ class Comments extends Frontend
 		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
@@ -590,7 +590,7 @@ class Comments extends Frontend
 	{
 		if (strncmp(Input::get('token'), 'com-', 4) === 0)
 		{
-			$optIn = System::getContainer()->get('contao.opt-in');
+			$optIn = System::getContainer()->get('contao.opt_in');
 
 			// Find an unconfirmed token with only one related record
 			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
-
 /**
  * Front end content element "module".
  *
@@ -94,7 +92,7 @@ class ContentModule extends ContentElement
 		$objModule = new $strClass($objModel, $this->strColumn);
 
 		// Tag the content element (see #2137)
-		System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
+		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
 
 		$strBuffer = $objModule->generate();
 

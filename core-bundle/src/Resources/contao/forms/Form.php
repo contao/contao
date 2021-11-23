@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Provide methods to handle front end forms.
@@ -231,7 +231,7 @@ class Form extends Hybrid
 					}
 				}
 
-				if ($objWidget instanceof \uploadable)
+				if ($objWidget instanceof UploadableWidgetInterface)
 				{
 					$hasUpload = true;
 				}
@@ -245,7 +245,7 @@ class Form extends Hybrid
 
 				if ($objWidget->name && $objWidget->label)
 				{
-					$arrLabels[$objWidget->name] = System::getContainer()->get(InsertTagParser::class)->replaceInline($objWidget->label); // see #4268
+					$arrLabels[$objWidget->name] = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objWidget->label); // see #4268
 				}
 
 				$this->Template->fields .= $objWidget->parse();
@@ -402,7 +402,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = html_entity_decode(System::getContainer()->get(InsertTagParser::class)->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
+				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag_parser')->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
 			}
 
 			// Send copy to sender
@@ -555,11 +555,11 @@ class Form extends Hybrid
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
-			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, TL_FORMS);
+			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, ContaoContext::FORMS);
 		}
 		else
 		{
-			$this->log('Form "' . $this->title . '" has been submitted by a guest.', __METHOD__, TL_FORMS);
+			$this->log('Form "' . $this->title . '" has been submitted by a guest.', __METHOD__, ContaoContext::FORMS);
 		}
 
 		// Check whether there is a jumpTo page

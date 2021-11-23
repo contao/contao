@@ -161,7 +161,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set(InsertTagParser::class, new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag_parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
 

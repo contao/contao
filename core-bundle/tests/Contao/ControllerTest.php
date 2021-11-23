@@ -177,8 +177,8 @@ class ControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set(Studio::class, $studio);
-        $container->set(InsertTagParser::class, $insertTagParser);
+        $container->set('contao.image.studio', $studio);
+        $container->set('contao.insert_tag_parser', $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 
         System::setContainer($container);
@@ -345,8 +345,8 @@ class ControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set(Studio::class, $studio);
-        $container->set(InsertTagParser::class, $insertTagParser);
+        $container->set('contao.image.studio', $studio);
+        $container->set('contao.insert_tag_parser', $insertTagParser);
         $container->set('monolog.logger.contao', $logger);
 
         System::setContainer($container);

@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\SimpleTokenParser;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Front end module "lost password".
@@ -183,7 +183,7 @@ class ModulePassword extends Module
 	 */
 	protected function setNewPassword()
 	{
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
@@ -312,7 +312,7 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
 		// Prepare the simple token data
@@ -324,10 +324,10 @@ class ModulePassword extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_password, $arrData)
+			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 
-		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
+		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, ContaoContext::ACCESS);
 
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

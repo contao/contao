@@ -59,7 +59,7 @@ class HtmlDecoder
     public function htmlToPlainText(string $val, bool $removeInsertTags = false): string
     {
         if (!$removeInsertTags) {
-            $val = (string) $this->insertTagParser->replaceInline($val);
+            $val = $this->insertTagParser->replaceInline($val);
         }
 
         // Add new lines before and after block level elements

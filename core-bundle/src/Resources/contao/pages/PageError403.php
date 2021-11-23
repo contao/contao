@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -127,7 +128,7 @@ class PageError403 extends Frontend
 
 			if (null === $objNextPage)
 			{
-				$this->log('Forward page ID "' . $obj403->jumpTo . '" does not exist', __METHOD__, TL_ERROR);
+				$this->log('Forward page ID "' . $obj403->jumpTo . '" does not exist', __METHOD__, ContaoContext::ERROR);
 
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}

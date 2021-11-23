@@ -10,11 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Provides methods to handle articles.
@@ -68,7 +64,7 @@ class ModuleArticle extends Module
 		$this->blnNoMarkup = $blnNoMarkup;
 
 		// Tag the article (see #2137)
-		System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
+		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
 
 		return parent::generate();
 	}
@@ -163,14 +159,14 @@ class ModuleArticle extends Module
 		$strSection = $chunks[0] ?? null;
 		$strArticle = $chunks[1] ?? $strSection;
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
+		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if (!$this->blnNoMarkup && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias) && $this->title)
 		{
-			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
-				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
@@ -285,7 +281,7 @@ class ModuleArticle extends Module
 		$container = System::getContainer();
 
 		// Generate article
-		$strArticle = $container->get(InsertTagParser::class)->replaceInline($this->generate());
+		$strArticle = $container->get('contao.insert_tag_parser')->replaceInline($this->generate());
 		$strArticle = html_entity_decode($strArticle, ENT_QUOTES, $container->getParameter('kernel.charset'));
 		$strArticle = $this->convertRelativeUrls($strArticle, '', true);
 

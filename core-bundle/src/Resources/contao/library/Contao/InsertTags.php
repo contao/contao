@@ -11,10 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
-use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -33,7 +32,7 @@ use Webmozart\PathUtil\Path;
  */
 class InsertTags extends Controller
 {
-	private const MAX_NESTING_LEVEL = 100;
+	private const MAX_NESTING_LEVEL = 64;
 
 	/**
 	 * @var int
@@ -44,6 +43,11 @@ class InsertTags extends Controller
 	 * @var array
 	 */
 	protected static $arrItCache = array();
+
+	/**
+	 * @var ?string
+	 */
+	protected static $strAllowedTagsRegex;
 
 	/**
 	 * Make the constructor public
@@ -59,6 +63,7 @@ class InsertTags extends Controller
 	public static function reset()
 	{
 		static::$arrItCache = array();
+		static::$strAllowedTagsRegex = null;
 	}
 
 	/**
@@ -109,8 +114,11 @@ class InsertTags extends Controller
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$container = System::getContainer();
+
+		// Backwards compatibility
 		// Preserve insert tags
-		if (Config::get('disableInsertTags'))
+		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
 			$return = StringUtil::restoreBasicEntities($strBuffer);
 
@@ -142,8 +150,18 @@ class InsertTags extends Controller
 		}
 
 		$arrBuffer = array();
-		$container = System::getContainer();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
+
+		if (static::$strAllowedTagsRegex === null)
+		{
+			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
+				static function ($allowedTag)
+				{
+					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
+				},
+				$container->getParameter('contao.insert_tags.allowed_tags')
+			)) . ')';
+		}
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
@@ -169,6 +187,12 @@ class InsertTags extends Controller
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
 				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
+				continue;
+			}
+
+			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
+			{
+				$arrBuffer[$_rit+1] = '{{' . $strTag . '}}';
 				continue;
 			}
 
@@ -331,7 +355,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						$this->log('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+						$this->log('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 					}
 
 					if (\count($keys) == 2)
@@ -754,7 +778,7 @@ class InsertTags extends Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+					$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -786,6 +810,8 @@ class InsertTags extends Controller
 
 				// User agent
 				case 'ua':
+					trigger_deprecation('contao/core-bundle', '4.13', 'Using the "ua" insert tag has been deprecated and will no longer work in Contao 5.0.');
+
 					$flags[] = 'attr';
 					$ua = Environment::get('agent');
 
@@ -829,7 +855,7 @@ class InsertTags extends Controller
 					unset($configuration['size'], $configuration['template']);
 
 					// Render the figure
-					$figureRenderer = $container->get(FigureRenderer::class);
+					$figureRenderer = $container->get('contao.image.studio.figure_renderer');
 
 					try
 					{
@@ -1085,7 +1111,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$this->log('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
+					$this->log('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, ContaoContext::ERROR);
 					break;
 			}
 
@@ -1200,7 +1226,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
+							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, ContaoContext::ERROR);
 							break;
 					}
 				}

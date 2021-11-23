@@ -13,7 +13,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Image;
@@ -776,7 +775,7 @@ class tl_article extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_article::pasteArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
 		;
 	}

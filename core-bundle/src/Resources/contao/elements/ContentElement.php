@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\Model\Collection;
 
 /**
@@ -275,7 +274,7 @@ abstract class ContentElement extends Frontend
 		}
 
 		// Tag the content element (see #2137)
-		System::getContainer()->get(EntityCacheTags::class)->tagWithModelInstance($this->objModel);
+		System::getContainer()->get('contao.cache.entity_cache_tags')->tagWithModelInstance($this->objModel);
 
 		return $this->Template->parse();
 	}
