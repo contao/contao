@@ -46,10 +46,7 @@ class PageUrlListener implements ResetInterface
      */
     public function generateAlias(string $value, DataContainer $dc): string
     {
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
-        /** @var PageModel $pageModel */
         $pageModel = $pageAdapter->findWithDetails($dc->id);
 
         if ('' !== $value) {
@@ -130,7 +127,6 @@ class PageUrlListener implements ResetInterface
             throw new \RuntimeException($this->translator->trans('ERR.urlPrefixExists', [$value], 'contao_default'));
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findByPk($dc->id);
 
@@ -156,7 +152,6 @@ class PageUrlListener implements ResetInterface
             return $value;
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $rootPage = $pageAdapter->findByPk($dc->id);
 
@@ -186,7 +181,6 @@ class PageUrlListener implements ResetInterface
             ['pageId' => $pageId]
         );
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
         foreach ($urls as $url) {
@@ -196,7 +190,6 @@ class PageUrlListener implements ResetInterface
 
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pages = $pageAdapter->findByPid($pid);
 
@@ -226,7 +219,6 @@ class PageUrlListener implements ResetInterface
         $currentSuffix = $currentPage->urlSuffix;
 
         if ('root' === $currentPage->type) {
-            /** @var Input $input */
             $input = $this->framework->getAdapter(Input::class);
 
             if (null !== ($dns = $input->post('dns'))) {
@@ -254,7 +246,6 @@ class PageUrlListener implements ResetInterface
             return false;
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $currentUrl = $this->buildUrl($currentAlias, $currentPrefix, $currentSuffix);
 

@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('name'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'filter;search,limit',
 		),
 		'label' => array
@@ -214,7 +214,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'eval'                    => array('multiple'=>true),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
 		),

@@ -8,57 +8,33 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * Interface listable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-interface listable
+use Contao\EditableDataContainerInterface;
+use Contao\ListableDataContainerInterface;
+use Contao\MaintenanceModuleInterface;
+use Contao\UploadableWidgetInterface;
+
+// Register aliases in the global namespace for backwards compatibility
+class_exists(ListableDataContainerInterface::class);
+class_exists(EditableDataContainerInterface::class);
+class_exists(MaintenanceModuleInterface::class);
+class_exists(UploadableWidgetInterface::class);
+
+// Let composer find the deprecated interfaces for autoload backwards compatibility
+if (!interface_exists('listable', false))
 {
-	public function delete();
+	interface listable
+	{
+	}
 
-	public function show();
+	interface editable
+	{
+	}
 
-	public function showAll();
+	interface executable
+	{
+	}
 
-	public function undo();
-}
-
-/**
- * Interface editable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-interface editable
-{
-	public function create();
-
-	public function cut();
-
-	public function copy();
-
-	public function move();
-
-	public function edit();
-}
-
-/**
- * Interface executable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-interface executable
-{
-	public function run();
-
-	public function isActive();
-}
-
-/**
- * Interface uploadable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-interface uploadable
-{
+	interface uploadable
+	{
+	}
 }

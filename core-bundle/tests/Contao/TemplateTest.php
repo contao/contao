@@ -13,13 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\VarDumper\VarDumper;
 use Webmozart\PathUtil\Path;
 
@@ -33,7 +36,10 @@ class TemplateTest extends TestCase
 
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -214,7 +220,7 @@ class TemplateTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    public function testLoadsTheAssetsPackages(): void
+    public function testStripsLeadingSlashFromAssetUrl(): void
     {
         $packages = $this->createMock(Packages::class);
         $packages
@@ -230,7 +236,64 @@ class TemplateTest extends TestCase
         System::setContainer($container);
 
         $template = new FrontendTemplate();
-        $template->asset('/path/to/asset', 'package_name');
+        $url = $template->asset('/path/to/asset', 'package_name');
+
+        $this->assertSame('path/to/asset', $url);
+    }
+
+    public function testStripsTheBasePathFromAssetUrl(): void
+    {
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->expects($this->once())
+            ->method('getUrl')
+            ->with('/path/to/asset', 'package_name')
+            ->willReturn('/foo/path/to/asset')
+        ;
+
+        $request = Request::create(
+            'https://example.com/foo/index.php',
+            'GET',
+            [],
+            [],
+            [],
+            [
+                'SCRIPT_FILENAME' => '/foo/index.php',
+                'SCRIPT_NAME' => '/foo/index.php',
+            ]
+        );
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('assets.packages', $packages);
+        $container->get('request_stack')->push($request);
+
+        System::setContainer($container);
+
+        $template = new FrontendTemplate();
+        $url = $template->asset('/path/to/asset', 'package_name');
+
+        $this->assertSame('path/to/asset', $url);
+    }
+
+    public function testDoesNotModifyAbsoluteAssetUrl(): void
+    {
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->expects($this->once())
+            ->method('getUrl')
+            ->with('/path/to/asset', 'package_name')
+            ->willReturn('https://cdn.example.com/path/to/asset')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('assets.packages', $packages);
+
+        System::setContainer($container);
+
+        $template = new FrontendTemplate();
+        $url = $template->asset('/path/to/asset', 'package_name');
+
+        $this->assertSame('https://cdn.example.com/path/to/asset', $url);
     }
 
     public function testCanDumpTemplateVars(): void
@@ -298,7 +361,7 @@ class TemplateTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
-        $container->set(FigureRenderer::class, $figureRenderer);
+        $container->set('contao.image.studio.figure_renderer', $figureRenderer);
 
         System::setContainer($container);
 
@@ -316,7 +379,7 @@ class TemplateTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
-        $container->set(FigureRenderer::class, $figureRenderer);
+        $container->set('contao.image.studio.figure_renderer', $figureRenderer);
 
         System::setContainer($container);
 
@@ -354,11 +417,6 @@ class TemplateTest extends TestCase
                 $this->compile();
 
                 return $this->strBuffer;
-            }
-
-            public static function replaceInsertTags($strBuffer, $blnCache = true)
-            {
-                return $strBuffer; // ignore insert tags
             }
 
             public static function replaceDynamicScriptTags($strBuffer)

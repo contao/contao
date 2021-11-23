@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Model\Collection;
 
 /**
@@ -124,7 +123,7 @@ class ModuleRandomImage extends Module
 		}
 
 		$figure = System::getContainer()
-			->get(Studio::class)
+			->get('contao.image.studio')
 			->createFigureBuilder()
 			->fromFilesModel($images[array_rand($images)])
 			->setSize($this->imgSize)

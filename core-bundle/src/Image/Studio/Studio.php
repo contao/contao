@@ -12,18 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Studio;
 
-use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Image\ImageFactoryInterface;
-use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
-use Contao\Image\ResizerInterface;
 use Psr\Container\ContainerInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
-class Studio implements ServiceSubscriberInterface
+class Studio
 {
     private ContainerInterface $locator;
     private string $projectDir;
@@ -62,18 +56,5 @@ class Studio implements ServiceSubscriberInterface
     public function createLightboxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null): LightboxResult
     {
         return new LightboxResult($this->locator, $filePathOrImage, $url, $sizeConfiguration, $groupIdentifier, $resizeOptions);
-    }
-
-    public static function getSubscribedServices(): array
-    {
-        return [
-            self::class,
-            'contao.image.picture_factory' => PictureFactoryInterface::class,
-            'contao.image.image_factory' => ImageFactoryInterface::class,
-            'contao.image.resizer' => ResizerInterface::class,
-            'contao.assets.files_context' => ContaoContext::class,
-            'contao.framework' => ContaoFramework::class,
-            'event_dispatcher' => 'event_dispatcher',
-        ];
     }
 }

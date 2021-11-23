@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -69,7 +70,6 @@ class Route404Provider extends AbstractPageRouteProvider
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
@@ -93,7 +93,6 @@ class Route404Provider extends AbstractPageRouteProvider
     {
         $this->framework->initialize(true);
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
         if (null === $names) {
@@ -124,7 +123,6 @@ class Route404Provider extends AbstractPageRouteProvider
     {
         $this->framework->initialize(true);
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findByType('error_404');
 
@@ -147,7 +145,15 @@ class Route404Provider extends AbstractPageRouteProvider
             return;
         }
 
-        $page->loadDetails();
+        try {
+            $page->loadDetails();
+
+            if (!$page->rootId) {
+                return;
+            }
+        } catch (NoRootPageFoundException $e) {
+            return;
+        }
 
         $defaults = [
             '_token_check' => true,

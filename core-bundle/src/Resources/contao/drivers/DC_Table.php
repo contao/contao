@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -30,7 +31,7 @@ use Symfony\Component\String\UnicodeString;
  * @author Leo Feyer <https://github.com/leofeyer>
  * @author Andreas Schempp <https://github.com/aschempp>
  */
-class DC_Table extends DataContainer implements \listable, \editable
+class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
 	 * Name of the parent table
@@ -133,7 +134,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
@@ -666,7 +667,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, TL_GENERAL);
+				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
 		}
@@ -963,7 +964,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, TL_GENERAL);
+				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
 
 				// Switch to edit mode
 				if (!$blnDoNotRedirect)
@@ -1530,7 +1531,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
 			{
-				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, TL_GENERAL);
+				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, ContaoContext::GENERAL);
 			}
 		}
 
@@ -1698,7 +1699,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		// Add log entry and delete record from tl_undo if there was no error
 		if (!$error)
 		{
-			$this->log('Undone ' . $query, __METHOD__, TL_GENERAL);
+			$this->log('Undone ' . $query, __METHOD__, ContaoContext::GENERAL);
 
 			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)
@@ -3262,7 +3263,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 		$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 
-		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == 5)
+		if ($ptable === null && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 		{
 			$ptable = $this->strTable;
 		}
@@ -3595,7 +3596,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		{
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $this->$topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
 			}
 		}
 
@@ -3837,7 +3838,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
 		// Must be either visible in the root trail or allowed by permissions (or their children)
-		if (!\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		// In the extended tree view (mode 6) we have to check on the parent table only
+		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
+
+		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
 			return '';
 		}
@@ -5622,7 +5626,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					// Sort by month
-					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(7, 8)))
+					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 					{
 						if (!$session['filter'][$filter][$field])
 						{
@@ -5783,7 +5787,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 				{
-					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 6 ? rsort($options) : sort($options);
+					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == self::SORT_DAY_DESC ? rsort($options) : sort($options);
 
 					foreach ($options as $k=>$v)
 					{
@@ -5803,7 +5807,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null, array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 				{
-					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == 8 ? rsort($options) : sort($options);
+					($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'] ?? null) == self::SORT_MONTH_DESC ? rsort($options) : sort($options);
 
 					foreach ($options as $k=>$v)
 					{

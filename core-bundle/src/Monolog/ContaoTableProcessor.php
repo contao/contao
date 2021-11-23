@@ -46,7 +46,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
-        $level = $record['level'] ?? 0;
+        $level = $record['level'];
 
         $this->updateAction($context, $level);
         $this->updateBrowser($context, $request);
@@ -89,7 +89,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $token = $this->tokenStorage->getToken();
 
-        $context->setUsername(null === $token ? 'N/A' : $token->getUsername());
+        $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
     }
 
     private function updateSource(ContaoContext $context, Request $request = null): void

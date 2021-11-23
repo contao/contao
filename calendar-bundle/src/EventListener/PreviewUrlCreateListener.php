@@ -79,9 +79,6 @@ class PreviewUrlCreateListener
      */
     private function getEventModel($id): ?CalendarEventsModel
     {
-        /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
-
-        return $adapter->findByPk($id);
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($id);
     }
 }

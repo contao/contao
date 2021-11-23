@@ -82,7 +82,7 @@ class Picture
 	 * Create a picture instance from the given image path and size
 	 *
 	 * @param string|File          $file The image path or File instance
-	 * @param array|integer|string $size The image size as array (width, height, resize mode) or an tl_image_size ID or a predifined image size key
+	 * @param array|integer|string $size The image size as array (width, height, resize mode) or an tl_image_size ID or a predefined image size key
 	 *
 	 * @return static The created picture instance
 	 */
@@ -179,7 +179,7 @@ class Picture
 	/**
 	 * Set the image size
 	 *
-	 * @param ImageSizeModel|object|string $imageSize The image size or a predifined image size key
+	 * @param ImageSizeModel|object|string $imageSize The image size or a predefined image size key
 	 *
 	 * @return $this The picture object
 	 */
@@ -217,7 +217,7 @@ class Picture
 	public function getTemplateData()
 	{
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$image = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $this->image->getOriginalPath());
+		$image = System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $this->image->getOriginalPath());
 
 		if (\is_string($this->imageSize) && $this->imageSize[0] === '_')
 		{

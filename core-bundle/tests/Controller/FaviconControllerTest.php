@@ -12,12 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\PageModel;
-use FOS\HttpCache\ResponseTagger;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -39,7 +38,7 @@ class FaviconControllerTest extends TestCase
         ;
 
         $request = Request::create('/robots.txt');
-        $controller = new FaviconController($framework, $this->getFixturesDir(), $this->createMock(ResponseTagger::class));
+        $controller = new FaviconController($framework, $this->getFixturesDir(), $this->createMock(EntityCacheTags::class));
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
@@ -69,12 +68,10 @@ class FaviconControllerTest extends TestCase
 
     private function getController(string $iconPath): FaviconController
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->id = 42;
         $pageModel->favicon = 'favicon-uuid';
 
-        /** @var FilesModel&MockObject $faviconModel */
         $faviconModel = $this->mockClassWithProperties(FilesModel::class);
         $faviconModel->path = $iconPath;
         $faviconModel->extension = substr($iconPath, -3);
@@ -104,13 +101,13 @@ class FaviconControllerTest extends TestCase
             ->method('initialize')
         ;
 
-        $responseTagger = $this->createMock(ResponseTagger::class);
-        $responseTagger
+        $entityCacheTags = $this->createMock(EntityCacheTags::class);
+        $entityCacheTags
             ->expects($this->once())
-            ->method('addTags')
-            ->with(['contao.db.tl_page.42'])
+            ->method('tagWithModelInstance')
+            ->with($pageModel)
         ;
 
-        return new FaviconController($framework, $this->getFixturesDir(), $responseTagger);
+        return new FaviconController($framework, $this->getFixturesDir(), $entityCacheTags);
     }
 }

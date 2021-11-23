@@ -24,7 +24,7 @@ class DefaultIndexer implements IndexerInterface
     private bool $indexProtected;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
+     * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
      */
     public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
@@ -41,6 +41,10 @@ class DefaultIndexer implements IndexerInterface
 
         if ('' === $document->getBody()) {
             $this->throwBecause('Cannot index empty response.');
+        }
+
+        if (($canonical = $document->extractCanonicalUri()) && ((string) $canonical !== (string) $document->getUri())) {
+            $this->throwBecause(sprintf('Ignored because canonical URI "%s" does not match document URI.', $canonical));
         }
 
         try {
@@ -85,7 +89,6 @@ class DefaultIndexer implements IndexerInterface
 
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
         try {
@@ -108,7 +111,6 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
         $search->removeEntry((string) $document->getUri());
     }

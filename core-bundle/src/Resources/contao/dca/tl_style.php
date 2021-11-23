@@ -20,7 +20,6 @@ use Contao\StyleSheets;
 use Contao\System;
 use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_style'] = array
 (
@@ -568,6 +567,8 @@ class tl_style extends Backend
 	 */
 	public function checkPermission()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The internal CSS editor has been deprecated. Use external style sheets instead.');
+
 		Message::addInfo($GLOBALS['TL_LANG']['MSC']['internalCssEditor']);
 
 		if ($this->User->isAdmin)
@@ -611,9 +612,7 @@ class tl_style extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('style_sheet_updater');
 
 		if (empty($session) || !is_array($session))
@@ -646,7 +645,6 @@ class tl_style extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

@@ -13,8 +13,8 @@ parameters:
     level: 5
 
     paths:
-        - core-bundle/src
-        - core-bundle/tests
+        - %currentWorkingDirectory%/core-bundle/src
+        - %currentWorkingDirectory%/core-bundle/tests
 
     dynamicConstantNames:
         - BE_USER_LOGGED_IN
@@ -23,7 +23,7 @@ parameters:
         - Contao\Model
         - Contao\Template
 
-    excludes_analyse:
+    excludePaths:
         - %currentWorkingDirectory%/core-bundle/src/Resources/*
         - %currentWorkingDirectory%/core-bundle/tests/Fixtures/*
         - %currentWorkingDirectory%/core-bundle/tests/Functional/app/*
@@ -36,7 +36,7 @@ parameters:
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
-        - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
+        - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false

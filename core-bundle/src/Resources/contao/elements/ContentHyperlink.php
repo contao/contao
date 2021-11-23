@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-
 /**
  * Front end content element "hyperlink".
  *
@@ -45,7 +43,7 @@ class ContentHyperlink extends ContentElement
 		if ($this->useImage)
 		{
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)

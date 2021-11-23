@@ -14,7 +14,6 @@ use Contao\CoreBundle\Security\Exception\LockedException;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -70,7 +69,6 @@ class ModuleLogin extends Module
 		}
 		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
 		{
-			/** @var UriSigner $uriSigner */
 			$uriSigner = System::getContainer()->get('uri_signer');
 
 			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)

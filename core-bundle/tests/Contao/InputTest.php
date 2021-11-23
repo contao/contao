@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\SimpleTokenParser;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
@@ -423,7 +423,7 @@ class InputTest extends TestCase
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
 
         $container = new ContainerBuilder();
-        $container->set(SimpleTokenParser::class, $simpleTokenParser);
+        $container->set('contao.string.simple_token_parser', $simpleTokenParser);
         $container->setParameter('kernel.charset', 'UTF-8');
 
         System::setContainer($container);

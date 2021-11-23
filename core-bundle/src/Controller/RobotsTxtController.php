@@ -29,12 +29,12 @@ use webignition\RobotsTxt\File\Parser;
  */
 class RobotsTxtController
 {
-    private ContaoFramework $contaoFramework;
+    private ContaoFramework $framework;
     private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(ContaoFramework $contaoFramework, EventDispatcherInterface $eventDispatcher)
+    public function __construct(ContaoFramework $framework, EventDispatcherInterface $eventDispatcher)
     {
-        $this->contaoFramework = $contaoFramework;
+        $this->framework = $framework;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -43,12 +43,10 @@ class RobotsTxtController
      */
     public function __invoke(Request $request): Response
     {
-        $this->contaoFramework->initialize();
+        $this->framework->initialize();
 
-        /** @var PageModel $pageModel */
-        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        $pageModel = $this->framework->getAdapter(PageModel::class);
 
-        /** @var PageModel|null $rootPage */
         $rootPage = $pageModel->findPublishedFallbackByHostname(
             $request->server->get('HTTP_HOST'),
             ['fallbackToEmpty' => true]

@@ -10,9 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide methods to handle versioning.
@@ -243,7 +246,7 @@ class Versions extends Controller
 			}
 		}
 
-		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
+		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, ContaoContext::GENERAL);
 	}
 
 	/**
@@ -354,7 +357,7 @@ class Versions extends Controller
 			}
 		}
 
-		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, TL_GENERAL);
+		$this->log('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid), __METHOD__, ContaoContext::GENERAL);
 	}
 
 	/**
@@ -458,7 +461,8 @@ class Versions extends Controller
 
 						if (\is_array($arrFields[$k]))
 						{
-							$blnIsBinary = $arrFields[$k]['type'] === BinaryType::class || $arrFields[$k]['type'] === BlobType::class;
+							// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
+							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
 						}
 						else
 						{
@@ -649,11 +653,13 @@ class Versions extends Controller
 		$arrVersions = array();
 
 		$objUser = BackendUser::getInstance();
+		$params = $objUser->isAdmin ? array() : array($objUser->id);
+
 		$objDatabase = Database::getInstance();
 
 		// Get the total number of versions
 		$objTotal = $objDatabase->prepare("SELECT COUNT(*) AS count FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : ""))
-								->execute($objUser->id);
+								->execute(...$params);
 
 		$intLast   = ceil($objTotal->count / 30);
 		$intPage   = Input::get('vp') ?? 1;
@@ -672,7 +678,7 @@ class Versions extends Controller
 		// Get the versions
 		$objVersions = $objDatabase->prepare("SELECT pid, tstamp, version, fromTable, username, userid, description, editUrl, active FROM tl_version WHERE editUrl IS NOT NULL" . (!$objUser->isAdmin ? " AND userid=?" : "") . " ORDER BY tstamp DESC, pid, version DESC")
 								   ->limit(30, $intOffset)
-								   ->execute($objUser->id);
+								   ->execute(...$params);
 
 		while ($objVersions->next())
 		{

@@ -46,17 +46,13 @@ class GeneratePageListener
 
         $this->framework->initialize();
 
-        /** @var NewsFeedModel $adapter */
         $adapter = $this->framework->getAdapter(NewsFeedModel::class);
 
         if (!($feeds = $adapter->findByIds($newsfeeds)) instanceof Collection) {
             return;
         }
 
-        /** @var Template $template */
         $template = $this->framework->getAdapter(Template::class);
-
-        /** @var Environment $environment */
         $environment = $this->framework->getAdapter(Environment::class);
 
         foreach ($feeds as $feed) {

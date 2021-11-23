@@ -59,7 +59,6 @@ class RobotsTxtListener
             $directiveList->add(new Directive('Disallow', '/contao/'));
         }
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
 
         // Only fetch the fallback page because there can only be one sitemap per host

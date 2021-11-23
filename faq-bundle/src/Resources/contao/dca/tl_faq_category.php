@@ -17,7 +17,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_faq_category'] = array
 (
@@ -57,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('title'),
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'panelLayout'             => 'search,limit'
 		),
 		'label' => array
@@ -283,7 +282,6 @@ class tl_faq_category extends Backend
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notDeletable'] = true;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check current action

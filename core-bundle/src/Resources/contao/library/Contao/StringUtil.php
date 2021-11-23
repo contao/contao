@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\SimpleTokenParser;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -51,7 +50,6 @@ class StringUtil
 		$intCharCount = 0;
 		$arrWords = array();
 		$arrChunks = preg_split('/\s+/', $strString);
-		$blnAddEllipsis = false;
 
 		foreach ($arrChunks as $strChunk)
 		{
@@ -70,27 +68,27 @@ class StringUtil
 				$arrWords[] = mb_substr($strChunk, 0, $intNumberOfChars);
 			}
 
-			if ($strEllipsis !== false)
-			{
-				$blnAddEllipsis = true;
-			}
-
 			break;
+		}
+
+		if ($strEllipsis === false)
+		{
+			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "false" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass an empty string instead.');
+			$strEllipsis = '';
 		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($strEllipsis === true)
 		{
 			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.');
-
 			$strEllipsis = ' …';
 		}
 
-		return implode(' ', $arrWords) . ($blnAddEllipsis ? $strEllipsis : '');
+		return implode(' ', $arrWords) . $strEllipsis;
 	}
 
 	/**
-	 * Shorten a HTML string to a given number of characters
+	 * Shorten an HTML string to a given number of characters
 	 *
 	 * The function preserves words, so the result might be a bit shorter or
 	 * longer than the number of characters given. It preserves allowed tags.
@@ -112,7 +110,7 @@ class StringUtil
 		$strString = strip_tags($strString, Config::get('allowedTags'));
 		$strString = preg_replace('/ +/', ' ', $strString);
 
-		// Seperate tags and text
+		// Separate tags and text
 		$arrChunks = preg_split('/(<[^>]+>)/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 
 		for ($i=0, $c=\count($arrChunks); $i<$c; $i++)
@@ -234,6 +232,10 @@ class StringUtil
 		{
 			$strCharset = 'UTF-8';
 		}
+		else
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a charset to StringUtil::decodeEntities() has been deprecated and will no longer work in Contao 5.0. Always use UTF-8 instead.');
+		}
 
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
 		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
@@ -244,9 +246,9 @@ class StringUtil
 	/**
 	 * Restore basic entities
 	 *
-	 * @param string $strBuffer The string with the tags to be replaced
+	 * @param string|array $strBuffer The string with the tags to be replaced
 	 *
-	 * @return string The string with the original entities
+	 * @return string|array The string with the original entities
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
@@ -483,9 +485,13 @@ class StringUtil
 	 * @param string $strString The HTML5 string
 	 *
 	 * @return string The XHTML string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function toXhtml($strString)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
+
 		$arrPregReplace = array
 		(
 			'/<(br|hr|img)([^>]*)>/i' => '<$1$2 />', // Close stand-alone tags
@@ -556,13 +562,13 @@ class StringUtil
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
 	 *
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
-	 *             Use the SimpleTokenParser::class service instead.
+	 *             Use the contao.string.simple_token_parser service instead.
 	 */
 	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData, $blnAllowHtml);
+		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strString, $arrData, $blnAllowHtml);
 	}
 
 	/**
@@ -679,9 +685,7 @@ class StringUtil
 		}
 
 		// Remove special characters not supported on e.g. Windows
-		$strName = str_replace(array('\\', '/', ':', '*', '?', '"', '<', '>', '|'), '-', $strName);
-
-		return $strName;
+		return str_replace(array('\\', '/', ':', '*', '?', '"', '<', '>', '|'), '-', $strName);
 	}
 
 	/**
@@ -827,16 +831,7 @@ class StringUtil
 		$strString = str_replace('|urlattr|attr}}', '|urlattr}}', $strString);
 
 		// Encode all remaining single closing curly braces
-		$strString = preg_replace_callback(
-			'/}}?/',
-			static function ($match)
-			{
-				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
-			},
-			$strString
-		);
-
-		return $strString;
+		return preg_replace_callback('/}}?/', static fn ($match) => \strlen($match[0]) === 2 ? $match[0] : '&#125;', $strString);
 	}
 
 	/**
@@ -856,14 +851,7 @@ class StringUtil
 		$strString = preg_replace('/(?:\|urlattr|\|attr)?}}/', '|urlattr}}', $strString);
 
 		// Encode all remaining single closing curly braces
-		$strString = preg_replace_callback(
-			'/}}?/',
-			static function ($match)
-			{
-				return \strlen($match[0]) === 2 ? $match[0] : '&#125;';
-			},
-			$strString
-		);
+		$strString = preg_replace_callback('/}}?/', static fn ($match) => \strlen($match[0]) === 2 ? $match[0] : '&#125;', $strString);
 
 		$colonRegEx = '('
 			. ':'                 // Plain text colon
@@ -1096,26 +1084,16 @@ class StringUtil
 	 *
 	 * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
 	 *
-	 * @see StringUtil::revertInputEncoding()
-	 *
 	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
 	 */
 	public static function inputEncodedToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
-		if ($blnRemoveInsertTags)
-		{
-			$strValue = static::stripInsertTags($strValue);
-		}
-		else
-		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
-		}
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::inputEncodedToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		$strValue = strip_tags($strValue);
-		$strValue = static::revertInputEncoding($strValue);
-		$strValue = str_replace(array('{{', '}}'), array('[{]', '[}]'), $strValue);
-
-		return $strValue;
+		return System::getContainer()->get('contao.string.html_decoder')->inputEncodedToPlainText($strValue, $blnRemoveInsertTags);
 	}
 
 	/**
@@ -1125,30 +1103,16 @@ class StringUtil
 	 * entities and encoded entities and is meant to be used with content from
 	 * fields that have the allowHtml flag enabled.
 	 *
-	 * @see StringUtil::inputEncodedToPlainText()
-	 *
 	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5;
+	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
 	 */
 	public static function htmlToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
 	{
-		if (!$blnRemoveInsertTags)
-		{
-			$strValue = Controller::replaceInsertTags($strValue, false);
-		}
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::htmlToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		// Add new lines before and after block level elements
-		$strValue = preg_replace(
-			array('/[\r\n]+/', '/<\/?(?:br|blockquote|div|dl|figcaption|figure|footer|h\d|header|hr|li|p|pre|tr)\b/i'),
-			array(' ', "\n$0"),
-			$strValue
-		);
-
-		$strValue = static::inputEncodedToPlainText($strValue, true);
-
-		// Remove duplicate line breaks and spaces
-		$strValue = trim(preg_replace(array('/[^\S\n]+/', '/\s*\n\s*/'), array(' ', "\n"), $strValue));
-
-		return $strValue;
+		return System::getContainer()->get('contao.string.html_decoder')->htmlToPlainText($strValue, $blnRemoveInsertTags);
 	}
 }
 

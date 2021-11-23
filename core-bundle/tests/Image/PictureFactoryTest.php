@@ -27,7 +27,6 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PictureFactoryTest extends TestCase
 {
@@ -123,7 +122,6 @@ class PictureFactoryTest extends TestCase
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -142,7 +140,6 @@ class PictureFactoryTest extends TestCase
             'media' => '(max-width: 900px)',
         ];
 
-        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
         $imageSizeItemModel
             ->method('row')
@@ -208,7 +205,6 @@ class PictureFactoryTest extends TestCase
             'formats' => '',
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -395,9 +391,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->with(
-                $this->callback(
-                    static fn (): bool => true
-                ),
+                $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (PictureConfiguration $config): bool {
                         $this->assertSame($config->getSizeItems(), []);
@@ -411,9 +405,7 @@ class PictureFactoryTest extends TestCase
                         return true;
                     }
                 ),
-                $this->callback(
-                    static fn (): bool => true
-                )
+                $this->callback(static fn (): bool => true)
             )
             ->willReturn($pictureMock)
         ;
@@ -436,9 +428,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('getImportantPartFromLegacyMode')
             ->with(
-                $this->callback(
-                    static fn (): bool => true
-                ),
+                $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (string $mode): bool {
                         $this->assertSame('left_top', $mode);

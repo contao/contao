@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Event\AbstractResponseContextEvent;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ResponseContext
@@ -71,12 +70,12 @@ final class ResponseContext
 
     /**
      * @template T
-     * @psalm-param class-string<T> $serviceId
-     * @psalm-return T
      *
-     * @throws ServiceNotFoundException
+     * @param class-string<T> $serviceId
      *
      * @return object
+     *
+     * @phpstan-return T
      */
     public function get(string $serviceId)
     {

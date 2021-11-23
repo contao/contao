@@ -290,6 +290,12 @@
       <trans-unit id="FMD.html.1">
         <source>Allows you to add custom HTML code</source>
       </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+      </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
       </trans-unit>
