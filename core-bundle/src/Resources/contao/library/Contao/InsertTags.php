@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -294,6 +296,32 @@ class InsertTags extends Controller
 					{
 						$arrCache[$strTag] = '';
 						break;
+					}
+
+					if ($keys[0] == 'LNG' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
+					if ($keys[0] == 'CNT' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
 					}
 
 					$file = $keys[0];
