@@ -802,7 +802,7 @@ abstract class Controller extends System
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		$parser = System::getContainer()->get('contao.insert_tag_parser');
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
 
 		if ($blnCache)
 		{
@@ -1565,7 +1565,7 @@ abstract class Controller extends System
 			return new Metadata(array(
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag_parser')->replaceInline($rowData['imageUrl'] ?? ''),
+				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag.parser')->replaceInline($rowData['imageUrl'] ?? ''),
 				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
 			));
 		};
@@ -1671,7 +1671,7 @@ abstract class Controller extends System
 
 				/** @var BoxInterface $originalSize */
 				$originalSize = $container
-					->get('contao.image.image_factory')
+					->get('contao.image.factory')
 					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
 					->getDimensions()
 					->getSize();

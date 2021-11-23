@@ -129,7 +129,7 @@ class FigureRendererTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
-        $container->set('contao.insert_tag_parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
 

@@ -745,6 +745,11 @@ class RouteProviderTest extends TestCase
         $page->rootUseSSL = 'https' === $scheme;
         $page->rootSorting = mt_rand();
 
+        $page
+            ->method('loadDetails')
+            ->willReturnSelf()
+        ;
+
         return $page;
     }
 
@@ -765,6 +770,11 @@ class RouteProviderTest extends TestCase
         $page->rootIsFallback = $fallback;
         $page->rootUseSSL = false;
         $page->rootSorting = array_reduce((array) $language, static fn ($c, $i) => $c + \ord($i), 0);
+
+        $page
+            ->method('loadDetails')
+            ->willReturnSelf()
+        ;
 
         return $page;
     }

@@ -51,7 +51,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
-    ->get('contao.image.image_factory')
+    ->get('contao.image.factory')
     ->create($rootDir.'/'.$objSubfiles->path, [80, 60, 'center_center'])
     ->getUrl($rootDir)
 ;
@@ -71,7 +71,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
-    ->get('contao.image.image_factory')
+    ->get('contao.image.factory')
     ->create(
         $rootDir.'/'.$path,
         (new ResizeConfiguration())

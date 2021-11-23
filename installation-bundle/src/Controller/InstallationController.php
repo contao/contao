@@ -365,7 +365,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $this->container->get('contao_installation.install_tool')->handleRunOnce();
 
-        $installer = $this->container->get('contao_installation.installer');
+        $installer = $this->container->get('contao_installation.database.installer');
 
         $this->context['sql_form'] = $installer->getCommands();
 

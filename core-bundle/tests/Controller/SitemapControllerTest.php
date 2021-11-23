@@ -772,7 +772,7 @@ class SitemapControllerTest extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
         $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('contao.cache.entity_cache_tags', $entityCacheTags);
+        $container->set('contao.cache.entity_tags', $entityCacheTags);
 
         return $container;
     }

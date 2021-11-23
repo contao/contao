@@ -323,7 +323,7 @@ class PageModel extends Model
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
 
-			$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if (!$responseContext)
 			{

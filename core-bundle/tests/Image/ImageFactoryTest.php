@@ -644,7 +644,7 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        System::getContainer()->set('contao.image.image_factory', $imageFactory);
+        System::getContainer()->set('contao.image.factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -722,7 +722,7 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        System::getContainer()->set('contao.image.image_factory', $imageFactory);
+        System::getContainer()->set('contao.image.factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -815,7 +815,7 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        System::getContainer()->set('contao.image.image_factory', $imageFactory);
+        System::getContainer()->set('contao.image.factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'emptyHookCallback']],
