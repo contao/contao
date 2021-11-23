@@ -495,7 +495,7 @@ class TemplateTest extends TestCase
         $template->parse(false);
     }
 
-    public function testDoesNotReplacesInsertTagsByDefault(): void
+    public function testDoesNotReplaceInsertTagsByDefault(): void
     {
         (new Filesystem())->dumpFile(
             Path::join($this->getTempDir(), 'templates/test_template.html5'),
