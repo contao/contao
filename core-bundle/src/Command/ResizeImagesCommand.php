@@ -211,7 +211,7 @@ class ResizeImagesCommand extends Command
                 if ($timeLimit && microtime(true) - $startTime + $sleep > $timeLimit) {
                     $this->io->writeln('Time limit of '.$timeLimit.' seconds reached.');
 
-                    return 0;
+                    break;
                 }
 
                 usleep((int) ($sleep * 1000000));

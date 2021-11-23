@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\HtmlDecoder;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -229,7 +229,7 @@ class ModuleBreadcrumb extends Module
 			);
 
 			$position = 0;
-			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			foreach ($items as $item)
 			{
@@ -261,7 +261,7 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 			return '';
 		}

@@ -19,7 +19,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
 (
@@ -273,7 +272,7 @@ class tl_theme extends Backend
 			if ($objFile !== null && file_exists(TL_ROOT . '/' . $objFile->path))
 			{
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-				$label = Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($projectDir), '', 'class="theme_preview"') . ' ' . $label;
+				$label = Image::getHtml(System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($projectDir), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}
 
@@ -285,7 +284,6 @@ class tl_theme extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		if ($objSession->get('style_sheet_update_all'))
@@ -305,9 +303,7 @@ class tl_theme extends Backend
 	 */
 	public function scheduleUpdate()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$objSession->set('style_sheet_update_all', true);
 	}
 

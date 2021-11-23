@@ -16,7 +16,6 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
-use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendIndex;
 use Psr\Container\ContainerInterface;
@@ -33,7 +32,7 @@ class RegisterPagesPassTest extends TestCase
         $container
             ->expects($this->once())
             ->method('has')
-            ->with(PageRegistry::class)
+            ->with('contao.routing.page_registry')
             ->willReturn(false)
         ;
 
@@ -62,7 +61,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page', ['type' => 'my_type']);
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -85,7 +84,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -108,7 +107,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -131,7 +130,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -162,7 +161,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page', ['defaults' => ['_controller' => 'MyController::action']]);
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -194,7 +193,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->setPublic(false);
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -228,7 +227,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->setPublic(false);
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -262,7 +261,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $this->createMock(Definition::class));
+        $container->setDefinition('contao.routing.page_registry', $this->createMock(Definition::class));
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -294,7 +293,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->setPublic(false);
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -327,7 +326,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();
@@ -358,7 +357,7 @@ class RegisterPagesPassTest extends TestCase
         $definition->addTag('contao.page');
 
         $container = new ContainerBuilder();
-        $container->setDefinition(PageRegistry::class, $registry);
+        $container->setDefinition('contao.routing.page_registry', $registry);
         $container->setDefinition('test.controller', $definition);
 
         $pass = new RegisterPagesPass();

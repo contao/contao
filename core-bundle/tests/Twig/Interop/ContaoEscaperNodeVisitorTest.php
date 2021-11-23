@@ -12,14 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\System;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
@@ -106,7 +110,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         System::setContainer($container);
 
-        $templateContent = '<span title={{ title|e(\'html_attr\') }}></span>';
+        $templateContent = '<span title={{ title|insert_tag|e(\'html_attr\') }}></span>';
 
         $output = $this->getEnvironment($templateContent)->render(
             'legacy.html.twig',
@@ -138,6 +142,14 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);
+
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $environment->addRuntimeLoader(
+            new FactoryRuntimeLoader([
+                InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
+            ])
+        );
 
         return $environment;
     }

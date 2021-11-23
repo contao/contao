@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
+                ->append($this->addInsertTagsNode())
             ->end()
         ;
 
@@ -569,6 +570,22 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addInsertTagsNode(): NodeDefinition
+    {
+        return (new TreeBuilder('insert_tags'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_tags')
+                    ->info('A list of allowed insert tags.')
+                    ->example(['*_url', 'request_token'])
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['*'])
                 ->end()
             ->end()
         ;

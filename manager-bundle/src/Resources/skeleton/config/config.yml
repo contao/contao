@@ -16,7 +16,7 @@ framework:
     secret: '%env(APP_SECRET)%'
     router:
         utf8: true
-        resource: contao_manager.routing_loader::loadFromPlugins
+        resource: contao_manager.routing.route_loader::loadFromPlugins
         type: service
         strict_requirements: '%kernel.debug%'
     csrf_protection: ~

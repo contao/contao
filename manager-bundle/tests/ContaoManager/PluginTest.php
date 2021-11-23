@@ -513,7 +513,7 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        // Adjust the error reporting to suppress mysqli warnings
+        // Adjust the error_reporting to suppress mysqli warnings
         $er = error_reporting();
         error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 

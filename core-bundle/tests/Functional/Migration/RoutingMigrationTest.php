@@ -16,7 +16,6 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\Version410\RoutingMigration;
 use Contao\TestCase\FunctionalTestCase;
-use Doctrine\DBAL\Connection;
 
 class RoutingMigrationTest extends FunctionalTestCase
 {
@@ -28,16 +27,13 @@ class RoutingMigrationTest extends FunctionalTestCase
         static::bootKernel();
         static::resetDatabaseSchema();
 
-        /** @var Connection $connection */
         $connection = static::getContainer()->get('database_connection');
 
         foreach ($dropFields as $field) {
             $connection->executeStatement('ALTER TABLE tl_page DROP '.$field);
         }
 
-        /** @var ContaoFramework $framework */
         $framework = static::getContainer()->get('contao.framework');
-
         $migration = new RoutingMigration($connection, $framework);
 
         $this->assertSame($expected, $migration->shouldRun());
@@ -76,7 +72,6 @@ class RoutingMigrationTest extends FunctionalTestCase
         static::bootKernel();
         static::resetDatabaseSchema();
 
-        /** @var Connection $connection */
         $connection = static::getContainer()->get('database_connection');
         $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
@@ -86,7 +81,6 @@ class RoutingMigrationTest extends FunctionalTestCase
         $this->assertFalse(isset($columns['urlsuffix']));
         $this->assertFalse(isset($columns['usefolderurl']));
 
-        /** @var ContaoFramework $framework */
         $framework = static::getContainer()->get('contao.framework');
 
         $migration = new RoutingMigration($connection, $framework);
@@ -110,14 +104,12 @@ class RoutingMigrationTest extends FunctionalTestCase
         static::resetDatabaseSchema();
         static::loadFixtures([__DIR__.'/../../Fixtures/Functional/Migration/routing.yml'], false);
 
-        /** @var Connection $connection */
         $connection = static::getContainer()->get('database_connection');
         $connection->executeStatement('ALTER TABLE tl_page DROP urlPrefix, DROP urlSuffix, DROP useFolderUrl');
 
         /** @var ContaoFramework $framework */
         $framework = static::getContainer()->get('contao.framework');
 
-        /** @var Config $config */
         $config = $framework->getAdapter(Config::class);
         $config->set('folderUrl', $folderUrl);
 

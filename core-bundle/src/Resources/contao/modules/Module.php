@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -136,6 +137,11 @@ abstract class Module extends Frontend
 			$this->objModel = $objModel;
 		}
 
+		if ($this->objModel === null)
+		{
+			throw new \LogicException('No module model given');
+		}
+
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
@@ -257,7 +263,7 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		return array('contao.db.tl_module.' . $this->id);
+		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
@@ -372,7 +378,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 							continue 2;
 						}
@@ -389,7 +395,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 							continue 2;
 						}

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\Command\DebugPagesCommand;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
-use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Routing\Page\UnroutablePageRouteCompiler;
 use Contao\FrontendIndex;
@@ -43,7 +42,7 @@ class RegisterPagesPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(PageRegistry::class)) {
+        if (!$container->has('contao.routing.page_registry')) {
             return;
         }
 
@@ -52,7 +51,7 @@ class RegisterPagesPass implements CompilerPassInterface
 
     protected function registerPages(ContainerBuilder $container): void
     {
-        $registry = $container->findDefinition(PageRegistry::class);
+        $registry = $container->findDefinition('contao.routing.page_registry');
         $command = $container->hasDefinition(DebugPagesCommand::class) ? $container->findDefinition(DebugPagesCommand::class) : null;
 
         foreach ($this->findAndSortTaggedServices(self::TAG_NAME, $container) as $reference) {
