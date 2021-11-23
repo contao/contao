@@ -147,7 +147,8 @@ class RouteProvider extends AbstractPageRouteProvider
     private function addRoutesForRootPages(array $pages, array &$routes): void
     {
         foreach ($pages as $page) {
-            $this->addRoutesForRootPage($page, $routes);
+            $route = $this->pageRegistry->getRoute($page);
+            $this->addRoutesForRootPage($route, $routes);
         }
     }
 
@@ -179,22 +180,18 @@ class RouteProvider extends AbstractPageRouteProvider
         $route = $this->pageRegistry->getRoute($page);
         $routes['tl_page.'.$page->id] = $route;
 
-        $this->addRoutesForRootPage($page, $routes);
+        $this->addRoutesForRootPage($route, $routes);
     }
 
-    private function addRoutesForRootPage(PageModel $page, array &$routes): void
+    private function addRoutesForRootPage(PageRoute $route, array &$routes): void
     {
+        $page = $route->getPageModel();
+
         if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
 
-        $page->loadDetails();
-        $route = $this->pageRegistry->getRoute($page);
-        $urlPrefix = '';
-
-        if ($route instanceof PageRoute) {
-            $urlPrefix = $route->getUrlPrefix();
-        }
+        $urlPrefix = $route->getUrlPrefix();
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
             $urlPrefix ? '/'.$urlPrefix.'/' : '/',
@@ -206,7 +203,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getMethods()
         );
 
-        if (!$urlPrefix || (!$this->legacyRouting && $page->disableLanguageRedirect)) {
+        if (!$urlPrefix || (!$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect)) {
             return;
         }
 
