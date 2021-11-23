@@ -1072,7 +1072,7 @@ class tl_page extends Backend
 	 */
 	public function getTitleTag(PageModel $model)
 	{
-		$page->loadDetails();
+		$model->loadDetails();
 
 		/** @var LayoutModel $layout */
 		if (!$layout = $model->getRelated('layout'))
@@ -1083,7 +1083,7 @@ class tl_page extends Backend
 		$origObjPage = $GLOBALS['objPage'] ?? null;
 
 		// Override the global page object, so we can replace the insert tags
-		$GLOBALS['objPage'] = $page;
+		$GLOBALS['objPage'] = $model;
 
 		$title = implode(
 			'%s',
