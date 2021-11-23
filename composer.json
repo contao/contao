@@ -262,9 +262,9 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --fix --ansi",
-        "ecs-legacy": "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --fix --ansi",
-        "ecs-templates": "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --fix --ansi",
+        "ecs": "tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/config/default.php --fix --ansi",
+        "ecs-legacy": "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --ansi",
+        "ecs-templates": "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "vendor/bin/phpunit --testsuite=functional --colors=always",
         "monorepo-tools": "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "tools/phpstan/vendor/bin/phpstan analyze --ansi",

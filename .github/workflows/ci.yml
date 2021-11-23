@@ -65,7 +65,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
+              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/config/default.php --no-progress-bar --ansi
 
     ecs-legacy:
         name: ECS Legacy
@@ -92,8 +92,8 @@ jobs:
 
             - name: Run ECS
               run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
 
     phpstan:
         name: PHPStan
