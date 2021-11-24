@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\MigrateCommand;
+use Contao\CoreBundle\Doctrine\Backup\Backup;
+use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -35,7 +38,7 @@ class MigrateCommandTest extends TestCase
     {
         $command = $this->getCommand();
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -48,40 +51,55 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @dataProvider getOutputFormats
+     * @dataProvider getOutputFormatsAndBackup
      */
-    public function testExecutesPendingMigrations(string $format): void
+    public function testExecutesPendingMigrations(string $format, bool $backupsEnabled): void
     {
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]]
+            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
+            [],
+            null,
+            $backupsEnabled
         );
 
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => !$backupsEnabled], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
 
         if ('ndjson' === $format) {
-            $this->assertSame(
+            $expected = [];
+
+            if ($backupsEnabled) {
+                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'path' => 'valid_backup_filename__20211101141254.sql'];
+            }
+
+            $expected = array_merge(
+                $expected,
                 [
                     ['type' => 'migration-pending', 'name' => 'Migration 1'],
                     ['type' => 'migration-pending', 'name' => 'Migration 2'],
                     ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
                     ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-                ],
-                $this->jsonArrayFromNdjson($display)
+                ]
             );
+
+            $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
         } else {
-            $this->assertRegExp('/Migration 1/', $display);
-            $this->assertRegExp('/Migration 2/', $display);
-            $this->assertRegExp('/Result 1/', $display);
-            $this->assertRegExp('/Result 2/', $display);
-            $this->assertRegExp('/Executed 2 migrations/', $display);
-            $this->assertRegExp('/All migrations completed/', $display);
+            if ($backupsEnabled) {
+                $this->assertStringContainsString('Creating a database dump', $display);
+            }
+
+            $this->assertStringContainsString('Migration 1', $display);
+            $this->assertStringContainsString('Migration 2', $display);
+            $this->assertStringContainsString('Result 1', $display);
+            $this->assertStringContainsString('Result 2', $display);
+            $this->assertStringContainsString('Executed 2 migrations', $display);
+            $this->assertStringContainsString('All migrations completed', $display);
         }
     }
 
@@ -102,7 +120,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame('executed', $GLOBALS['test_'.self::class]);
@@ -160,7 +178,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
 
-        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -230,6 +248,8 @@ class MigrateCommandTest extends TestCase
         );
 
         $tester = new CommandTester($command);
+
+        // No --no-backup here because --dry-run should automatically disable backups
         $code = $tester->execute(['--dry-run' => true, '--format' => $format]);
         $display = $tester->getDisplay();
 
@@ -275,7 +295,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['n']);
 
-        $code = $tester->execute([]);
+        $code = $tester->execute(['--no-backup' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -299,7 +319,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -343,7 +363,7 @@ class MigrateCommandTest extends TestCase
             $this->expectException(\Exception::class);
         }
 
-        $code = $tester->execute(['--format' => $format], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -360,12 +380,20 @@ class MigrateCommandTest extends TestCase
         yield ['ndjson'];
     }
 
+    public function getOutputFormatsAndBackup(): \Generator
+    {
+        yield 'txt and backups enabled' => ['txt', true];
+        yield 'txt and backups disabled' => ['txt', false];
+        yield 'ndjson and backups enabled' => ['ndjson', true];
+        yield 'ndjson and backups disabled' => ['ndjson', false];
+    }
+
     /**
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      * @param array<array<string>>          $runonceFiles
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, bool $backupsEnabled = false): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -401,11 +429,24 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$duplicatedRunonceFiles)
         ;
 
+        $backupManager = $this->createMock(BackupManager::class);
+        $backupManager
+            ->expects($backupsEnabled ? $this->once() : $this->never())
+            ->method('createCreateConfig')
+            ->willReturn(new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql')))
+        ;
+
+        $backupManager
+            ->expects($backupsEnabled ? $this->once() : $this->never())
+            ->method('create')
+        ;
+
         return new MigrateCommand(
             $migrations,
             $fileLocator,
             $this->getTempDir(),
             $this->createMock(ContaoFramework::class),
+            $backupManager,
             $installer ?? $this->createMock(Installer::class)
         );
     }

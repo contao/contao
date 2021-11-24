@@ -106,6 +106,7 @@ class ContaoCoreExtension extends Extension
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
+        $this->handleBackup($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -358,6 +359,18 @@ class ContaoCoreExtension extends Extension
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
         }
+    }
+
+    private function handleBackup(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.doctrine.backup_manager')) {
+            return;
+        }
+
+        $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
+        $dbDumper->replaceArgument(2, $config['backup']['directory']);
+        $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
+        $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
