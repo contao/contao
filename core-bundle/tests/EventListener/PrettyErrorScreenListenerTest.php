@@ -26,6 +26,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -107,8 +108,6 @@ class PrettyErrorScreenListenerTest extends TestCase
      */
     public function testCreatesSubrequestForException(int $type, \Exception $exception): void
     {
-        $mainPage = $this->mockPageWithProperties(['rootId' => 1]);
-
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
             'type' => 'error_'.$type,
@@ -116,7 +115,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         ]);
 
         $request = $this->getRequest('frontend');
-        $request->attributes->set('pageModel', $mainPage);
+        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
 
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $httpKernel
@@ -143,8 +142,6 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void
     {
-        $mainPage = $this->mockPageWithProperties(['rootId' => 1]);
-
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
             'type' => 'error_403',
@@ -152,7 +149,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         ]);
 
         $request = $this->getRequest('frontend');
-        $request->attributes->set('pageModel', $mainPage);
+        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
 
         $httpKernel = $this->createMock(HttpKernelInterface::class);
         $httpKernel
@@ -375,7 +372,6 @@ class PrettyErrorScreenListenerTest extends TestCase
                 ->with($errorPage->type, $errorPage->pid)
                 ->willReturn($errorPage)
             ;
-            $adapters[PageModel::class] = $pageAdapter;
 
             $pageRegistry
                 ->expects($this->once())
@@ -383,6 +379,8 @@ class PrettyErrorScreenListenerTest extends TestCase
                 ->with($errorPage)
                 ->willReturn(new PageRoute($errorPage))
             ;
+
+            $adapters[PageModel::class] = $pageAdapter;
         }
 
         $framework = $this->mockContaoFramework($adapters);
@@ -420,10 +418,12 @@ class PrettyErrorScreenListenerTest extends TestCase
         return new ExceptionEvent($kernel, $request, $type, $exception);
     }
 
+    /**
+     * @return PageModel&MockObject
+     */
     private function mockPageWithProperties(array $properties = []): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $properties);
-
         $page
             ->method('loadDetails')
             ->willReturnSelf()
