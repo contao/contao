@@ -12,6 +12,21 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.command.backup_create:
+        class: Contao\CoreBundle\Command\Backup\BackupCreateCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
+    contao.command.backup_list:
+        class: Contao\CoreBundle\Command\Backup\BackupListCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
+    contao.command.backup_restore:
+        class: Contao\CoreBundle\Command\Backup\BackupRestoreCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
     contao.command.crawl:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
@@ -63,6 +78,7 @@ services:
             - '@contao.resource_locator'
             - '%kernel.project_dir%'
             - '@contao.framework'
+            - '@contao.doctrine.backup_manager'
             - '@?contao_installation.database.installer'
 
     contao.command.resize_images:
