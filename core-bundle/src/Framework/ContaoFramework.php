@@ -73,6 +73,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+        self::$nonce = '';
 
         if (!$this->isInitialized()) {
             return;
@@ -83,8 +84,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         Input::resetUnusedGet();
         InsertTags::reset();
         Registry::getInstance()->reset();
-
-        self::$nonce = '';
     }
 
     public function isInitialized(): bool
