@@ -108,16 +108,10 @@ class FrontendController extends AbstractController
      */
     public function requestTokenScriptAction(): Response
     {
-        $token = $this
-            ->get('contao.csrf.token_manager')
-            ->getToken($this->getParameter('contao.csrf_token_name'))
-            ->getValue()
-        ;
-
-        $token = json_encode($token);
+        $tokenValue = json_encode($this->get('contao.csrf.token_manager')->getFrontendTokenValue());
 
         $response = new Response();
-        $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$token.'})');
+        $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$tokenValue.'})');
         $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');

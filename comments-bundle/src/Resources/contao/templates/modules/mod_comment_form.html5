@@ -10,7 +10,7 @@
       <form id="<?= $this->formId ?>" method="post">
         <div class="formbody">
           <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
-          <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+          <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
           <?php foreach ($this->fields as $field): ?>
             <?= $field->parse() ?>
           <?php endforeach; ?>
