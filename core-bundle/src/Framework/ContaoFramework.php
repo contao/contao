@@ -161,9 +161,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         return $this->adapterCache[$class];
     }
 
-    /**
-     * @internal
-     */
     public static function getNonce(): string
     {
         if ('' === self::$nonce) {
