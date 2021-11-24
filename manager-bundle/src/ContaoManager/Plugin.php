@@ -77,12 +77,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
-            BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class]),
+            BundleConfig::create(SecurityBundle::class)->setLoadAfter([FrameworkBundle::class, ContaoCoreBundle::class]),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(TwigExtraBundle::class),
             BundleConfig::create(MonologBundle::class),
             BundleConfig::create(DoctrineBundle::class),
-            BundleConfig::create(LexikMaintenanceBundle::class),
+            BundleConfig::create(LexikMaintenanceBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),

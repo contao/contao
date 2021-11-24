@@ -52,13 +52,11 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                 ->setLoadAfter(
                     [
                         FrameworkBundle::class,
-                        SecurityBundle::class,
                         TwigBundle::class,
                         MonologBundle::class,
                         DoctrineBundle::class,
                         KnpMenuBundle::class,
                         KnpTimeBundle::class,
-                        LexikMaintenanceBundle::class,
                         NelmioCorsBundle::class,
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,

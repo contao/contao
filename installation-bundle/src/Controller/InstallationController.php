@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Webmozart\PathUtil\Path;
 
 /**
- * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route("%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true})
  *
  * @internal
  */
