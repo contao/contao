@@ -25,9 +25,7 @@ class ContaoCsrfTokenManagerTest extends TestCase
     public function testGetFrontendTokenValue(): void
     {
         $storage = new MemoryTokenStorage();
-        $storage->initialize([
-            'contao_csrf_token' => 'foo',
-        ]);
+        $storage->initialize(['contao_csrf_token' => 'foo']);
 
         $tokenManager = new ContaoCsrfTokenManager(
             $this->createMock(RequestStack::class),
@@ -38,8 +36,7 @@ class ContaoCsrfTokenManagerTest extends TestCase
             'contao_csrf_token'
         );
 
-        $tokenValue = $tokenManager->getFrontendTokenValue();
-        $token = new CsrfToken('contao_csrf_token', $tokenValue);
+        $token = new CsrfToken('contao_csrf_token', $tokenManager->getFrontendTokenValue());
 
         $this->assertTrue($tokenManager->isTokenValid($token));
     }
@@ -54,7 +51,7 @@ class ContaoCsrfTokenManagerTest extends TestCase
             '',
         );
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException('RuntimeException');
         $this->expectExceptionMessage('The Contao CSRF token manager was not initialized with a frontend token name.');
 
         $tokenManager->getFrontendTokenValue();
