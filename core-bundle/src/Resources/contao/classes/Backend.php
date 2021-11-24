@@ -264,7 +264,7 @@ abstract class Backend extends Controller
 				throw new \Exception('The file ' . $strRelpath . ' cannot be deleted. Please remove the file manually and correct the file permission settings on your server.');
 			}
 
-			System::getContainer()->get('contao.monolog.system_logger')->info('File ' . $strRelpath . ' ran once and has then been removed successfully');
+			System::getContainer()->get('contao.monolog.logger')->logInfo('File ' . $strRelpath . ' ran once and has then been removed successfully');
 		}
 
 		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
@@ -402,7 +402,7 @@ abstract class Backend extends Controller
 			// Fabricate a new data container object
 			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
-				System::getContainer()->get('contao.monolog.system_logger')->error('Missing data container for table "' . $strTable . '"');
+				System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Missing data container for table "' . $strTable . '"');
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
@@ -492,7 +492,7 @@ abstract class Backend extends Controller
 				case 'undo':
 					if (!$dc instanceof ListableDataContainerInterface)
 					{
-						System::getContainer()->get('contao.monolog.system_logger')->error('Data container ' . $strTable . ' is not listable');
+						System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Data container ' . $strTable . ' is not listable');
 						trigger_error('The current data container is not listable', E_USER_ERROR);
 					}
 					break;
@@ -506,7 +506,7 @@ abstract class Backend extends Controller
 				case 'edit':
 					if (!$dc instanceof EditableDataContainerInterface)
 					{
-						System::getContainer()->get('contao.monolog.system_logger')->error('Data container ' . $strTable . ' is not editable');
+						System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Data container ' . $strTable . ' is not editable');
 						trigger_error('The current data container is not editable', E_USER_ERROR);
 					}
 					break;

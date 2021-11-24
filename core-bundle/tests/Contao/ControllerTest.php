@@ -19,7 +19,7 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Monolog\SystemLoggerInterface;
+use Contao\CoreBundle\Monolog\LoggerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\System;
@@ -317,7 +317,13 @@ class ControllerTest extends TestCase
             ->willReturn($figureBuilder)
         ;
 
-        $logger = $this->createMock(SystemLoggerInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('asContaoError')
+            ->willReturnSelf()
+        ;
+
         $logger
             ->expects($this->once())
             ->method('error')
@@ -341,7 +347,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag_parser', $insertTagParser);
-        $container->set('contao.monolog.system_logger', $logger);
+        $container->set('contao.monolog.logger', $logger);
 
         System::setContainer($container);
 

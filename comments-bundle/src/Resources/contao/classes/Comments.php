@@ -531,7 +531,7 @@ class Comments extends Frontend
 			$objNotify->delete();
 		}
 
-		System::getContainer()->get('contao.monolog.system_logger')->cron('Purged the unactivated comment subscriptions');
+		System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Purged the unactivated comment subscriptions');
 	}
 
 	/**

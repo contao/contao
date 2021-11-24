@@ -66,7 +66,7 @@ class PageForward extends Frontend
 		// Forward page does not exist
 		if (!$objNextPage instanceof PageModel)
 		{
-			System::getContainer()->get('contao.monolog.system_logger')->error('Forward page ID "' . $objPage->jumpTo . '" does not exist');
+			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Forward page ID "' . $objPage->jumpTo . '" does not exist');
 
 			throw new ForwardPageNotFoundException('Forward page not found');
 		}

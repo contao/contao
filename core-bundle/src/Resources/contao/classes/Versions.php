@@ -245,7 +245,7 @@ class Versions extends Controller
 			}
 		}
 
-		System::getContainer()->get('contao.monolog.system_logger')->info('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid));
+		System::getContainer()->get('contao.monolog.logger')->logInfo('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been created' . $this->getParentEntries($this->strTable, $this->intPid));
 	}
 
 	/**
@@ -356,7 +356,7 @@ class Versions extends Controller
 			}
 		}
 
-		System::getContainer()->get('contao.monolog.system_logger')->info('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid));
+		System::getContainer()->get('contao.monolog.logger')->logInfo('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid));
 	}
 
 	/**

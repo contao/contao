@@ -149,7 +149,7 @@ class PageError404 extends Frontend
 
 			if (null === $objNextPage)
 			{
-				System::getContainer()->get('contao.monolog.system_logger')->error('Forward page ID "' . $obj404->jumpTo . '" does not exist');
+				System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Forward page ID "' . $obj404->jumpTo . '" does not exist');
 
 				throw new ForwardPageNotFoundException('Forward page not found');
 			}

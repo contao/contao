@@ -151,7 +151,7 @@ class ModuleSearch extends Module
 			}
 			catch (\Exception $e)
 			{
-				System::getContainer()->get('contao.monolog.system_logger')->error('Website search failed: ' . $e->getMessage());
+				System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Website search failed: ' . $e->getMessage());
 
 				$objResult = new SearchResult(array());
 			}

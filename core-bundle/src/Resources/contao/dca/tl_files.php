@@ -873,7 +873,7 @@ class tl_files extends Backend
 					$this->import(Automator::class, 'Automator');
 					$this->Automator->generateSymlinks();
 
-					System::getContainer()->get('contao.monolog.system_logger')->files('Folder "' . $strPath . '" has been published');
+					System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('Folder "' . $strPath . '" has been published');
 				}
 			}
 			elseif ($blnUnprotected)
@@ -884,7 +884,7 @@ class tl_files extends Backend
 				$this->import(Automator::class, 'Automator');
 				$this->Automator->generateSymlinks();
 
-				System::getContainer()->get('contao.monolog.system_logger')->files('Folder "' . $strPath . '" has been protected');
+				System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('Folder "' . $strPath . '" has been protected');
 			}
 		}
 
@@ -961,7 +961,7 @@ class tl_files extends Backend
 					$blnUnsynchronized = true;
 					$objFolder->unsynchronize();
 
-					System::getContainer()->get('contao.monolog.system_logger')->files('Synchronization of folder "' . $strPath . '" has been disabled');
+					System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('Synchronization of folder "' . $strPath . '" has been disabled');
 				}
 			}
 			elseif ($blnUnsynchronized)
@@ -969,7 +969,7 @@ class tl_files extends Backend
 				$blnUnsynchronized = false;
 				$objFolder->synchronize();
 
-				System::getContainer()->get('contao.monolog.system_logger')->files('Synchronization of folder "' . $strPath . '" has been enabled');
+				System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('Synchronization of folder "' . $strPath . '" has been enabled');
 			}
 		}
 

@@ -72,7 +72,7 @@ class PageRoot extends Frontend
 		// No published pages yet
 		if (null === $objNextPage)
 		{
-			System::getContainer()->get('contao.monolog.system_logger')->error('No active page found under root page "' . $rootPageId . '"');
+			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('No active page found under root page "' . $rootPageId . '"');
 
 			throw new NoActivePageFoundException('No active page found under root page.');
 		}

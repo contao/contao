@@ -945,7 +945,7 @@ class tl_page extends Backend
 			{
 				if (!in_array($id, $pagemounts))
 				{
-					System::getContainer()->get('contao.monolog.system_logger')->error('Page ID ' . $id . ' was not mounted');
+					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Page ID ' . $id . ' was not mounted');
 
 					$error = true;
 					break;
@@ -970,7 +970,7 @@ class tl_page extends Backend
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
 				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
 				{
-					System::getContainer()->get('contao.monolog.system_logger')->error('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages');
+					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages');
 
 					$error = true;
 					break;

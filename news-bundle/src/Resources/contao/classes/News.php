@@ -57,7 +57,7 @@ class News extends Frontend
 		{
 			$this->generateFiles($objFeed->row());
 
-			System::getContainer()->get('contao.monolog.system_logger')->cron('Generated news feed "' . $objFeed->feedName . '.xml"');
+			System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated news feed "' . $objFeed->feedName . '.xml"');
 		}
 	}
 
@@ -78,7 +78,7 @@ class News extends Frontend
 				$objFeed->feedName = $objFeed->alias ?: 'news' . $objFeed->id;
 				$this->generateFiles($objFeed->row());
 
-				System::getContainer()->get('contao.monolog.system_logger')->cron('Generated news feed "' . $objFeed->feedName . '.xml"');
+				System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated news feed "' . $objFeed->feedName . '.xml"');
 			}
 		}
 	}
@@ -101,7 +101,7 @@ class News extends Frontend
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
 
-				System::getContainer()->get('contao.monolog.system_logger')->cron('Generated news feed "' . $objFeed->feedName . '.xml"');
+				System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated news feed "' . $objFeed->feedName . '.xml"');
 			}
 		}
 	}

@@ -390,7 +390,7 @@ services:
         class: Contao\CoreBundle\EventListener\Security\SwitchUserListener
         arguments:
             - '@security.token_storage'
-            - '@contao.monolog.system_logger'
+            - '@logger'
         tags:
             - kernel.event_listener
 

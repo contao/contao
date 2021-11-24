@@ -383,8 +383,8 @@ services:
             - '@security.token_storage'
             - '@contao.routing.scope_matcher'
 
-    contao.monolog.system_logger:
-        class: Contao\CoreBundle\Monolog\SystemLogger
+    contao.monolog.logger:
+        class: Contao\CoreBundle\Monolog\Logger
         public: true
         arguments:
             - '@logger'
@@ -926,7 +926,7 @@ services:
     Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag_parser'
     Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
     Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
-    Contao\CoreBundle\Monolog\SystemLoggerInterface: '@contao.monolog.system_logger'
+    Contao\CoreBundle\Monolog\LoggerInterface: '@contao.monolog.logger'
     Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'

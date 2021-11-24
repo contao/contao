@@ -182,7 +182,7 @@ class FileUpload extends Backend
 
 						// Notify the user
 						Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['fileUploaded'], $file['name']));
-						System::getContainer()->get('contao.monolog.system_logger')->files('File "' . $strNewFile . '" has been uploaded');
+						System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File "' . $strNewFile . '" has been uploaded');
 
 						// Resize the uploaded image if necessary
 						$this->resizeUploadedImage($strNewFile);
@@ -307,7 +307,7 @@ class FileUpload extends Backend
 		if ($objFile->isGdImage && ($arrImageSize[0] > Config::get('gdMaxImgWidth') || $arrImageSize[1] > Config::get('gdMaxImgHeight')))
 		{
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileExceeds'], $objFile->basename));
-			System::getContainer()->get('contao.monolog.system_logger')->files('File "' . $strImage . '" is too big to be resized automatically');
+			System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File "' . $strImage . '" is too big to be resized automatically');
 
 			return false;
 		}
@@ -339,7 +339,7 @@ class FileUpload extends Backend
 			$this->blnHasResized = true;
 
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
-			System::getContainer()->get('contao.monolog.system_logger')->files('File "' . $strImage . '" was scaled down to the maximum dimensions');
+			System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File "' . $strImage . '" was scaled down to the maximum dimensions');
 
 			return true;
 		}

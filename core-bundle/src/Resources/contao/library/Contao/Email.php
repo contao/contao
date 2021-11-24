@@ -603,7 +603,7 @@ class Email
 			}
 		}
 
-		System::getContainer()->get('contao.monolog.system_logger')->log($this->strLogFile, $strMessage);
+		System::getContainer()->get('contao.monolog.logger')->log($this->strLogFile, $strMessage);
 
 		return true;
 	}

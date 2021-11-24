@@ -554,11 +554,11 @@ class Form extends Hybrid
 		{
 			$this->import(FrontendUser::class, 'User');
 
-			System::getContainer()->get('contao.monolog.system_logger')->forms('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
+			System::getContainer()->get('contao.monolog.logger')->asContaoForms()->info('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
 		}
 		else
 		{
-			System::getContainer()->get('contao.monolog.system_logger')->forms('Form "' . $this->title . '" has been submitted by a guest.');
+			System::getContainer()->get('contao.monolog.logger')->asContaoForms()->info('Form "' . $this->title . '" has been submitted by a guest.');
 		}
 
 		// Check whether there is a jumpTo page

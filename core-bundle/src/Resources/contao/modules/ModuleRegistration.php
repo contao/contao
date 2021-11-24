@@ -565,7 +565,7 @@ class ModuleRegistration extends Module
 			}
 		}
 
-		System::getContainer()->get('contao.monolog.system_logger')->access('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
+		System::getContainer()->get('contao.monolog.logger')->asContaoAccess()->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
@@ -656,7 +656,7 @@ class ModuleRegistration extends Module
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
-		System::getContainer()->get('contao.monolog.system_logger')->access('A new user (ID ' . $intId . ') has registered on the website');
+		System::getContainer()->get('contao.monolog.logger')->asContaoAccess()->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
 

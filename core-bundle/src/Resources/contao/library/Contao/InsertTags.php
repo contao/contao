@@ -354,7 +354,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						System::getContainer()->get('contao.monolog.system_logger')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
+						System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
 					}
 
 					if (\count($keys) == 2)
@@ -1110,7 +1110,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					System::getContainer()->get('contao.monolog.system_logger')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
+					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}
 
@@ -1225,7 +1225,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							System::getContainer()->get('contao.monolog.system_logger')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
+							System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
 							break;
 					}
 				}

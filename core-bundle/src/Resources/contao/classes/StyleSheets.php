@@ -65,7 +65,7 @@ class StyleSheets extends Backend
 		{
 			$this->writeStyleSheet($objStyleSheet->row());
 
-			System::getContainer()->get('contao.monolog.system_logger')->cron('Generated style sheet "' . $objStyleSheet->name . '.css"');
+			System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated style sheet "' . $objStyleSheet->name . '.css"');
 		}
 	}
 
@@ -121,7 +121,7 @@ class StyleSheets extends Backend
 		{
 			$this->writeStyleSheet($objStyleSheets->row());
 
-			System::getContainer()->get('contao.monolog.system_logger')->cron('Generated style sheet "' . $objStyleSheets->name . '.css"');
+			System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated style sheet "' . $objStyleSheets->name . '.css"');
 		}
 	}
 

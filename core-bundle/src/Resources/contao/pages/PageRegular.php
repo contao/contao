@@ -264,7 +264,7 @@ class PageRegular extends Frontend
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			System::getContainer()->get('contao.monolog.system_logger')->error('Could not find layout ID "' . $objPage->layout . '"');
+			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Could not find layout ID "' . $objPage->layout . '"');
 
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}

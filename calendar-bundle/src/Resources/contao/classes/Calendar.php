@@ -59,7 +59,7 @@ class Calendar extends Frontend
 		{
 			$this->generateFiles($objCalendar->row());
 
-			System::getContainer()->get('contao.monolog.system_logger')->cron('Generated calendar feed "' . $objCalendar->feedName . '.xml"');
+			System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"');
 		}
 	}
 
@@ -80,7 +80,7 @@ class Calendar extends Frontend
 				$objCalendar->feedName = $objCalendar->alias ?: 'calendar' . $objCalendar->id;
 				$this->generateFiles($objCalendar->row());
 
-				System::getContainer()->get('contao.monolog.system_logger')->cron('Generated calendar feed "' . $objCalendar->feedName . '.xml"');
+				System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"');
 			}
 		}
 	}
@@ -103,7 +103,7 @@ class Calendar extends Frontend
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
 
-				System::getContainer()->get('contao.monolog.system_logger')->cron('Generated calendar feed "' . $objFeed->feedName . '.xml"');
+				System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated calendar feed "' . $objFeed->feedName . '.xml"');
 			}
 		}
 	}

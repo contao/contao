@@ -111,7 +111,7 @@ trait TemplateInheritance
 				}
 				else
 				{
-					System::getContainer()->get('contao.monolog.system_logger')->error('Invalid template path: ' . StringUtil::stripRootDir($strParent));
+					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Invalid template path: ' . StringUtil::stripRootDir($strParent));
 				}
 
 				// Capture the output of the root template

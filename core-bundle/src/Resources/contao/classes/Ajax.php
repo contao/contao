@@ -317,7 +317,7 @@ class Ajax extends Backend
 						// The record does not exist
 						if ($objRow->numRows < 1)
 						{
-							System::getContainer()->get('contao.monolog.system_logger')->error('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"');
+							System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"');
 
 							throw new BadRequestHttpException('Bad request');
 						}
@@ -426,7 +426,7 @@ class Ajax extends Backend
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
 				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] ?? null) && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))
 				{
-					System::getContainer()->get('contao.monolog.system_logger')->error('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)');
+					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)');
 
 					throw new BadRequestHttpException('Bad request');
 				}
