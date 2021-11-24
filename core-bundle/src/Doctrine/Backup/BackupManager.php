@@ -20,7 +20,6 @@ use Symfony\Component\Finder\Finder;
 
 /**
  * @internal
- * @final
  */
 class BackupManager
 {
@@ -99,11 +98,7 @@ class BackupManager
      */
     public function create(CreateConfig $config): void
     {
-        $this->executeTransactional(
-            function () use ($config): void {
-                $this->doCreate($config);
-            }
-        );
+        $this->executeTransactional(fn () => $this->doCreate($config));
     }
 
     /**
@@ -111,11 +106,7 @@ class BackupManager
      */
     public function restore(RestoreConfig $config): void
     {
-        $this->executeTransactional(
-            function () use ($config): void {
-                $this->doRestore($config);
-            }
-        );
+        $this->executeTransactional(fn () => $this->doRestore($config));
     }
 
     /**

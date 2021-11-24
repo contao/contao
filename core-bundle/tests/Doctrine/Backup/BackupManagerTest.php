@@ -103,8 +103,7 @@ class BackupManagerTest extends ContaoTestCase
     }
 
     /**
-     * @testWith [true]
-     *           [false]
+     * @dataProvider getAutocommitSettings
      */
     public function testSuccessfulCreate(bool $autoCommitEnabled): void
     {
@@ -149,8 +148,7 @@ class BackupManagerTest extends ContaoTestCase
     }
 
     /**
-     * @testWith [true]
-     *           [false]
+     * @dataProvider getAutocommitSettings
      */
     public function testUnsuccessfulCreate(bool $autoCommitEnabled): void
     {
@@ -175,6 +173,12 @@ class BackupManagerTest extends ContaoTestCase
         $manager->create($config);
 
         $this->assertFalse((new Filesystem())->exists($config->getBackup()->getFilepath()));
+    }
+
+    public function getAutocommitSettings(): \Generator
+    {
+        yield [true];
+        yield [false];
     }
 
     public function testDirectoryIsCleanedUpAfterSuccessfulCreate(): void
