@@ -532,7 +532,7 @@ class PageModel extends Model
 	}
 
 	/**
-	 * Find the first published regular page by its parent ID
+	 * Find the first published page by its type and parent ID
 	 *
 	 * @param string  $strType    The page type
 	 * @param integer $intPid     The parent page's ID
