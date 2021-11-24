@@ -12,6 +12,21 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.command.backup_create:
+        class: Contao\CoreBundle\Command\Backup\BackupCreateCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
+    contao.command.backup_list:
+        class: Contao\CoreBundle\Command\Backup\BackupListCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
+    contao.command.backup_restore:
+        class: Contao\CoreBundle\Command\Backup\BackupRestoreCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
     contao.command.crawl:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:
@@ -22,21 +37,6 @@ services:
         class: Contao\CoreBundle\Command\CronCommand
         arguments:
             - '@contao.cron'
-
-    contao.command.backup_create:
-        class: Contao\CoreBundle\Command\Backup\BackupCreateCommand
-        arguments:
-            - '@contao.doctrine.backup_manager'
-
-    contao.command.backup_restore:
-        class: Contao\CoreBundle\Command\Backup\BackupRestoreCommand
-        arguments:
-            - '@contao.doctrine.backup_manager'
-
-    contao.command.backup_list:
-        class: Contao\CoreBundle\Command\Backup\BackupListCommand
-        arguments:
-            - '@contao.doctrine.backup_manager'
 
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand

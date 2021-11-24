@@ -28,9 +28,7 @@ class BackupCreateCommand extends AbstractBackupCommand
     {
         parent::configure();
 
-        $this
-            ->setDescription('Creates a new backup.')
-        ;
+        $this->setDescription('Creates a new backup.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -58,10 +56,7 @@ class BackupCreateCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(sprintf(
-            'Successfully created an SQL dump at "%s".',
-            $config->getBackup()->getFilepath(),
-        ));
+        $io->success(sprintf('Successfully created an SQL dump at "%s".', $config->getBackup()->getFilepath()));
 
         return 0;
     }

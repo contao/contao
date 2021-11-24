@@ -30,7 +30,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
         parent::configure();
 
         $this
-            ->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command checks whether the backup has been generated with Contao too. Use --force to disable this check.')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.')
             ->setDescription('Restores a backup.')
         ;
     }
@@ -64,10 +64,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(sprintf(
-            'Successfully restored backup from "%s".',
-            $config->getBackup()->getFilepath(),
-        ));
+        $io->success(sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilepath()));
 
         return 0;
     }

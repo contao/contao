@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
@@ -39,6 +38,7 @@ class Dumper implements DumperInterface
     public function doDump(Connection $connection, CreateConfig $config): \Generator
     {
         yield 'SET FOREIGN_KEY_CHECKS = 0;';
+
         $schemaManager = $connection->createSchemaManager();
         $platform = $connection->getDatabasePlatform();
 
@@ -119,8 +119,6 @@ class Dumper implements DumperInterface
     }
 
     /**
-     * @throws Exception
-     *
      * @return array<Table>
      */
     private function getTablesToDump(AbstractSchemaManager $schemaManager, CreateConfig $config): array

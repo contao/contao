@@ -36,7 +36,7 @@ abstract class AbstractBackupCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump to process.')
+            ->addArgument('file', InputArgument::OPTIONAL, 'The path to the SQL dump file')
             ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables). You can use the prefixes "+" and "-" to modify the existing configuration (e.g. "+tl_user" would add "tl_user" to the existing list).')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
         ;
@@ -44,8 +44,10 @@ abstract class AbstractBackupCommand extends Command
 
     /**
      * @template T of AbstractConfig
-     * @psalm-param T $config
-     * @psalm-return T
+     *
+     * @phpstan-param T $config
+     *
+     * @phpstan-return T
      */
     protected function handleCommonConfig(InputInterface $input, AbstractConfig $config): AbstractConfig
     {

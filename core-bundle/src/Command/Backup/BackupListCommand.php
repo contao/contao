@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -27,10 +26,9 @@ class BackupListCommand extends AbstractBackupCommand
 
     protected function configure(): void
     {
-        $this
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
-            ->setDescription('Lists all backups.')
-        ;
+        parent::configure();
+
+        $this->setDescription('Lists the existing backups.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -80,12 +78,14 @@ class BackupListCommand extends AbstractBackupCommand
         return json_encode($json);
     }
 
+    /**
+     * @todo Might want to replace this with the successor of System::getReadableSize() once this is a proper service
+     */
     private function getHumanReadableSize(Backup $backup): string
     {
-        // TODO: Might want to replace this with the successor of System::getReadableSize() once this is a proper service
         $base = log($backup->getSize()) / log(1024);
         $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][floor($base)];
 
-        return round(pow(1024, $base - floor($base)), 2).' '.$suffix;
+        return round(1024 ** ($base - floor($base)), 2).' '.$suffix;
     }
 }

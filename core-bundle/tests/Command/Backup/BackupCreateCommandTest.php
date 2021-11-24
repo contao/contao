@@ -18,6 +18,7 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupCreateCommandTest extends TestCase
@@ -27,7 +28,7 @@ class BackupCreateCommandTest extends TestCase
      */
     public function testSuccessfulCommandRun(array $arguments, \Closure $expectedCreateConfig, string $expectedOutput): void
     {
-        $command = new BackupCreateCommand($this->createBackupManager($expectedCreateConfig));
+        $command = new BackupCreateCommand($this->mockBackupManager($expectedCreateConfig));
 
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
@@ -35,41 +36,6 @@ class BackupCreateCommandTest extends TestCase
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
         $this->assertSame(0, $code);
-    }
-
-    /**
-     * @dataProvider unsuccessfulCommandRunProvider
-     */
-    public function testUnsuccessfulCommandRun(array $arguments, string $expectedOutput): void
-    {
-        $backupManager = $this->createMock(BackupManager::class);
-        $backupManager
-            ->expects($this->once())
-            ->method('create')
-            ->willThrowException(new BackupManagerException('Some error.'))
-        ;
-
-        $command = new BackupCreateCommand($backupManager);
-
-        $commandTester = new CommandTester($command);
-        $code = $commandTester->execute($arguments);
-        $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
-
-        $this->assertStringContainsString($expectedOutput, $normalizedOutput);
-        $this->assertSame(1, $code);
-    }
-
-    public function unsuccessfulCommandRunProvider(): \Generator
-    {
-        yield 'Text format' => [
-            [],
-            '[ERROR] Some error.',
-        ];
-
-        yield 'JSON format' => [
-            ['--format' => 'json'],
-            '{"error":"Some error."}',
-        ];
     }
 
     public function successfulCommandRunProvider(): \Generator
@@ -115,11 +81,49 @@ class BackupCreateCommandTest extends TestCase
 
                 return true;
             },
-            '{"createdAt":"2021-11-01T14:12:54+0000","size":100,"path":"test__20211101141254.sql.gz"}',
+            '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"path":"test__20211101141254.sql.gz"}',
         ];
     }
 
-    private function createBackupManager(\Closure $expectedCreateConfig): BackupManager
+    /**
+     * @dataProvider unsuccessfulCommandRunProvider
+     */
+    public function testUnsuccessfulCommandRun(array $arguments, string $expectedOutput): void
+    {
+        $backupManager = $this->createMock(BackupManager::class);
+        $backupManager
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new BackupManagerException('Some error.'))
+        ;
+
+        $command = new BackupCreateCommand($backupManager);
+
+        $commandTester = new CommandTester($command);
+        $code = $commandTester->execute($arguments);
+        $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
+
+        $this->assertStringContainsString($expectedOutput, $normalizedOutput);
+        $this->assertSame(1, $code);
+    }
+
+    public function unsuccessfulCommandRunProvider(): \Generator
+    {
+        yield 'Text format' => [
+            [],
+            '[ERROR] Some error.',
+        ];
+
+        yield 'JSON format' => [
+            ['--format' => 'json'],
+            '{"error":"Some error."}',
+        ];
+    }
+
+    /**
+     * @return BackupManager&MockObject
+     */
+    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager
     {
         $backupManager = $this->createMock(BackupManager::class);
 

@@ -37,8 +37,8 @@ class DumperTest extends ContaoTestCase
     {
         $backup = new Backup('backup__20211101141254.sql');
 
-        $connection = $this->mockConnection($tables, $views, $queries);
         $dumper = new Dumper();
+        $connection = $this->mockConnection($tables, $views, $queries);
         $config = (new CreateConfig($backup));
 
         $this->assertSame($expectedDump, iterator_to_array($dumper->dump($connection, $config), false));
@@ -176,6 +176,7 @@ class DumperTest extends ContaoTestCase
             ->method('listTables')
             ->willReturn($tables)
         ;
+
         $schemaManager
             ->expects($this->once())
             ->method('listViews')
@@ -188,6 +189,7 @@ class DumperTest extends ContaoTestCase
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
+
         $connection
             ->method('getDatabasePlatform')
             ->willReturn(new MySQLPlatform())

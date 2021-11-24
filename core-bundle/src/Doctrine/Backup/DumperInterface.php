@@ -20,10 +20,6 @@ interface DumperInterface
     /**
      * The data yielded is streamed into the backup file. Every yielded string
      * will be a new line.
-     *
-     * @throws BackupManagerException in case anything went wrong
-     *
-     * @return \Generator<string>
      */
     public function dump(Connection $connection, CreateConfig $config): \Generator;
 }

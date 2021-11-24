@@ -53,9 +53,10 @@ class Backup
 
     public static function createNewAtPath(string $targetPath, \DateTime $dateTime = null): self
     {
-        $targetPath = rtrim($targetPath, '/');
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));
+
+        $targetPath = rtrim($targetPath, '/');
         $filepath = sprintf('%s/backup__%s.sql.gz', $targetPath, $now->format(self::DATETIME_FORMAT));
 
         (new Filesystem())->dumpFile($filepath, '');
@@ -66,7 +67,7 @@ class Backup
     public function toArray(): array
     {
         return [
-            'createdAt' => $this->getCreatedAt()->format(\DateTimeInterface::ISO8601),
+            'createdAt' => $this->getCreatedAt()->format(\DateTimeInterface::ATOM),
             'size' => $this->getSize(),
             'path' => $this->getFilepath(),
         ];
@@ -79,8 +80,8 @@ class Backup
     {
         preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);
 
-        // No need to check for false here because the regex does not allow a format that does not work
-        // PHP will even turn month 42 into a valid datetime
+        // No need to check for false here because the regex does not allow a format that does not work.
+        // PHP will even turn month 42 into a valid datetime.
         return \DateTime::createFromFormat(self::DATETIME_FORMAT, $matches[1], new \DateTimeZone('UTC'));
     }
 

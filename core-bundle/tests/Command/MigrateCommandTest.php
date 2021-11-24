@@ -75,20 +75,25 @@ class MigrateCommandTest extends TestCase
             $expected = [];
 
             if ($backupsEnabled) {
-                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+0000', 'size' => 0, 'path' => 'valid_backup_filename__20211101141254.sql'];
+                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'path' => 'valid_backup_filename__20211101141254.sql'];
             }
-            $expected = array_merge($expected, [
-                ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                ['type' => 'migration-pending', 'name' => 'Migration 2'],
-                ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
-                ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-            ]);
+
+            $expected = array_merge(
+                $expected,
+                [
+                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
+                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
+                    ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
+                    ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
+                ]
+            );
 
             $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
         } else {
             if ($backupsEnabled) {
                 $this->assertStringContainsString('Creating a database dump', $display);
             }
+
             $this->assertStringContainsString('Migration 1', $display);
             $this->assertStringContainsString('Migration 2', $display);
             $this->assertStringContainsString('Result 1', $display);
@@ -243,7 +248,9 @@ class MigrateCommandTest extends TestCase
         );
 
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--dry-run' => true, '--format' => $format]); // No --no-backup here because --dry-run should automatically disable backups
+
+        // No --no-backup here because --dry-run should automatically disable backups
+        $code = $tester->execute(['--dry-run' => true, '--format' => $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -428,6 +435,7 @@ class MigrateCommandTest extends TestCase
             ->method('createCreateConfig')
             ->willReturn(new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql')))
         ;
+
         $backupManager
             ->expects($backupsEnabled ? $this->once() : $this->never())
             ->method('create')
