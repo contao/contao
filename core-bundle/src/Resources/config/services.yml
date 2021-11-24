@@ -122,6 +122,8 @@ services:
             - '%contao.csrf_cookie_prefix%'
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
+            - ~
+            - '%contao.csrf_token_name%'
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
@@ -137,6 +139,18 @@ services:
             - '%contao.url_suffix%'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
+
+    contao.doctrine.backup.dumper:
+        class: Contao\CoreBundle\Doctrine\Backup\Dumper
+
+    contao.doctrine.backup_manager:
+        class: Contao\CoreBundle\Doctrine\Backup\BackupManager
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.backup.dumper'
+            - ~
+            - ~
+            - ~
 
     contao.doctrine.dca_schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
@@ -616,6 +630,21 @@ services:
     contao.search.delegating_indexer:
         class: Contao\CoreBundle\Search\Indexer\DelegatingIndexer
 
+    contao.security.access_decision_manager:
+        decorates: security.access.decision_manager
+        class: Contao\CoreBundle\Security\Authentication\AccessDecisionManager
+        arguments:
+            - '@.inner'
+            - '@contao.security.access_decision_manager.priority'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+
+    contao.security.access_decision_manager.priority:
+        class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
+        arguments:
+            - !tagged_iterator security.voter
+            - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
+
     contao.security.authentication_entry_point:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
         arguments:
@@ -913,6 +942,7 @@ services:
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
+    Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'

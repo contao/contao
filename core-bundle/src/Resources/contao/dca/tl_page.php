@@ -1051,28 +1051,28 @@ class tl_page extends Backend
 	/**
 	 * Return the SERP URL
 	 *
-	 * @param PageModel $model
+	 * @param PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getSerpUrl(PageModel $model)
+	public function getSerpUrl(PageModel $page)
 	{
-		return $model->getAbsoluteUrl();
+		return $page->getAbsoluteUrl();
 	}
 
 	/**
 	 * Return the title tag from the associated page layout
 	 *
-	 * @param PageModel $model
+	 * @param PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getTitleTag(PageModel $model)
+	public function getTitleTag(PageModel $page)
 	{
 		$page->loadDetails();
 
 		/** @var LayoutModel $layout */
-		if (!$layout = $model->getRelated('layout'))
+		if (!$layout = $page->getRelated('layout'))
 		{
 			return '';
 		}

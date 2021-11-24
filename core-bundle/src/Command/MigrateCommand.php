@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
+use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -35,15 +36,17 @@ class MigrateCommand extends Command
     private FileLocator $fileLocator;
     private string $projectDir;
     private ContaoFramework $framework;
+    private BackupManager $backupManager;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
         $this->projectDir = $projectDir;
         $this->framework = $framework;
+        $this->backupManager = $backupManager;
         $this->installer = $installer;
 
         parent::__construct();
@@ -57,6 +60,7 @@ class MigrateCommand extends Command
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, ndjson)', 'txt')
+            ->addOption('no-backup', null, InputOption::VALUE_NONE, 'Disable the database backup which is created by default before executing the migrations.')
             ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
@@ -64,6 +68,10 @@ class MigrateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
+
+        if (!$input->getOption('dry-run') && !$input->getOption('no-backup')) {
+            $this->backup($input);
+        }
 
         if ('ndjson' !== $input->getOption('format')) {
             return $this->executeCommand($input);
@@ -82,6 +90,39 @@ class MigrateCommand extends Command
         }
 
         return 1;
+    }
+
+    private function backup(InputInterface $input): void
+    {
+        $asJson = 'ndjson' === $input->getOption('format');
+        $config = $this->backupManager->createCreateConfig();
+
+        if (!$asJson) {
+            $this->io->info(sprintf(
+                'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
+                $config->getBackup()->getFilepath()
+            ));
+        }
+
+        try {
+            $this->backupManager->create($config);
+
+            if ($asJson) {
+                $this->writeNdjson('backup-result', $config->getBackup()->toArray());
+            }
+        } catch (\Throwable $exception) {
+            if ($asJson) {
+                $this->writeNdjson('error', [
+                    'message' => $exception->getMessage(),
+                    'code' => $exception->getCode(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'trace' => $exception->getTraceAsString(),
+                ]);
+            } else {
+                $this->io->error($exception->getMessage());
+            }
+        }
     }
 
     private function executeCommand(InputInterface $input): int
