@@ -365,10 +365,10 @@ class PrettyErrorScreenListenerTest extends TestCase
         $pageRegistry = $this->createMock(PageRegistry::class);
 
         if (null !== $errorPage) {
-            $pageAdapter = $this->mockAdapter(['findFirstPublishedTypeByPid']);
+            $pageAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
             $pageAdapter
                 ->expects($this->once())
-                ->method('findFirstPublishedTypeByPid')
+                ->method('findFirstPublishedByTypeAndPid')
                 ->with($errorPage->type, $errorPage->pid)
                 ->willReturn($errorPage)
             ;

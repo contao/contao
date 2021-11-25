@@ -149,7 +149,7 @@ class PrettyErrorScreenListener
             }
 
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedTypeByPid('error_'.$type, $pageModel->loadDetails()->rootId);
+            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
 
             if (null === $errorPage) {
                 return;
@@ -157,12 +157,15 @@ class PrettyErrorScreenListener
 
             $route = $this->pageRegistry->getRoute($errorPage);
             $subRequest = $request->duplicate(null, null, $route->getDefaults());
-            $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
-            $event->setResponse($response);
-        } catch (ResponseException $e) {
-            $event->setResponse($e->getResponse());
-        } catch (\Throwable $e) {
-            return;
+
+            try {
+                $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+                $event->setResponse($response);
+            } catch (ResponseException $e) {
+                $event->setResponse($e->getResponse());
+            } catch (\Throwable $e) {
+                return;
+            }
         } finally {
             $processing = false;
         }
