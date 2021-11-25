@@ -568,7 +568,7 @@ abstract class Model
 	 *
 	 * @return static|Collection|null The model or a model collection if there are multiple rows
 	 *
-	 * @throws \Exception If $strKey is not a related field
+	 * @throws \LogicException If $strKey is not a related field
 	 */
 	public function getRelated($strKey, array $arrOptions=array())
 	{
@@ -583,7 +583,7 @@ abstract class Model
 		{
 			$table = static::getTable();
 
-			throw new \Exception("Field $table.$strKey does not seem to be related");
+			throw new \LogicException("Field $table.$strKey does not seem to be related");
 		}
 
 		// The relation exists but there is no reference yet (see #6161 and #458)

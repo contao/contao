@@ -21,6 +21,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -209,6 +210,7 @@ class PageUrlListener implements ResetInterface
 
     /**
      * @throws DuplicateAliasException
+     * @throws Exception
      */
     private function aliasExists(string $currentAlias, int $currentId, PageModel $currentPage, bool $throw = false): bool
     {

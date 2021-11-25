@@ -16,6 +16,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 /**
  * @internal
@@ -29,6 +30,9 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
         $this->connection = $connection;
     }
 
+    /**
+     * @throws Exception
+     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();

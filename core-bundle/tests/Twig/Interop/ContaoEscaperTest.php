@@ -151,6 +151,9 @@ class ContaoEscaperTest extends TestCase
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
     }
 
+    /**
+     * @throws RuntimeError
+     */
     private function invokeEscapeHtml($input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtml(
@@ -160,6 +163,9 @@ class ContaoEscaperTest extends TestCase
         );
     }
 
+    /**
+     * @throws RuntimeError
+     */
     private function invokeEscapeHtmlAttr($input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtmlAttr(

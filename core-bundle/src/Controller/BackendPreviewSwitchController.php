@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -129,6 +130,9 @@ class BackendPreviewSwitchController
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function getMembersDataList(BackendUser $user, Request $request): array
     {
         $andWhereGroups = '';

@@ -81,6 +81,9 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
         return SubscriberInterface::DECISION_POSITIVE;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function needsContent(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): string
     {
         $statusCode = $response->getStatusCode();

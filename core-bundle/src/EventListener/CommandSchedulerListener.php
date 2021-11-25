@@ -17,6 +17,7 @@ use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -41,6 +42,8 @@ class CommandSchedulerListener
 
     /**
      * Runs the command scheduler.
+     *
+     * @throws ContainerExceptionInterface
      */
     public function __invoke(TerminateEvent $event): void
     {

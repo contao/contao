@@ -24,7 +24,9 @@ use Contao\Image\ResizeOptions;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Validator;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -210,6 +212,9 @@ class FigureBuilder
      * Sets the image resource from an absolute or relative path.
      *
      * @param bool $autoDetectDbafsPaths Set to false to skip searching for a FilesModel
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {
@@ -249,6 +254,9 @@ class FigureBuilder
      * Sets the image resource by guessing the identifier type.
      *
      * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function from($identifier): self
     {
@@ -689,6 +697,9 @@ class FigureBuilder
     }
 
     /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     *
      * @return FilesModel
      *
      * @phpstan-return Adapter<FilesModel>
@@ -702,6 +713,9 @@ class FigureBuilder
     }
 
     /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     *
      * @return Validator
      *
      * @phpstan-return Adapter<Validator>

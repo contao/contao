@@ -490,6 +490,8 @@ class ContaoCoreExtensionTest extends TestCase
 
     /**
      * @dataProvider provideComposerJsonContent
+     *
+     * @throws \JsonException
      */
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {

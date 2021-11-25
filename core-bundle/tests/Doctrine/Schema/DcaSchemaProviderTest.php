@@ -21,6 +21,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -345,6 +346,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
      * @dataProvider provideIndexes
      *
      * @param bool|string $largePrefixes
+     *
+     * @throws SchemaException
      */
     public function testAppendToSchemaAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
     {

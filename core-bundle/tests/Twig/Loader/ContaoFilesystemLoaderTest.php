@@ -28,6 +28,9 @@ use Webmozart\PathUtil\Path;
 
 class ContaoFilesystemLoaderTest extends TestCase
 {
+    /**
+     * @throws LoaderError
+     */
     public function testAddsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();
@@ -45,6 +48,9 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertFalse($loader->exists('@Contao_foo-Bar_Baz2/2.html.twig'));
     }
 
+    /**
+     * @throws LoaderError
+     */
     public function testPrependsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();

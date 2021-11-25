@@ -22,6 +22,9 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\System;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\TwigFunction;
@@ -35,6 +38,11 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame(1, $visitor->getPriority());
     }
 
+    /**
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
     public function testEscapesEntities(): void
     {
         $templateContent = '<h1>{{ headline }}</h1><p>{{ content|raw }}</p>';

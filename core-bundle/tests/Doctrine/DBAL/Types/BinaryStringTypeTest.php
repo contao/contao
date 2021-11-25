@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Doctrine\DBAL\Types;
 
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use PHPUnit\Framework\TestCase;
@@ -21,6 +22,9 @@ class BinaryStringTypeTest extends TestCase
 {
     private Type $type;
 
+    /**
+     * @throws Exception
+     */
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();

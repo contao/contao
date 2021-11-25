@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Monolog;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
@@ -93,6 +94,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
      * Verifies the database connection and prepares the statement.
      *
      * @throws \RuntimeException
+     * @throws Exception
      */
     private function createStatement(): void
     {

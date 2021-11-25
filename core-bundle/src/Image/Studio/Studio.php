@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Image\Studio;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\ResizeOptions;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 class Studio
@@ -52,6 +53,8 @@ class Studio
     /**
      * @param string|ImageInterface|null                 $filePathOrImage
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
+     *
+     * @throws ContainerExceptionInterface
      */
     public function createLightboxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null): LightboxResult
     {

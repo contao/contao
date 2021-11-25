@@ -15,6 +15,7 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -72,6 +73,7 @@ class Installer
 
     /**
      * @throws \InvalidArgumentException
+     * @throws Exception
      */
     public function execCommand(string $hash): void
     {

@@ -17,8 +17,10 @@ use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FormTextField;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Types\Type;
 
@@ -126,6 +128,10 @@ class CeAccessMigrationTest extends TestCase
         $this->assertFalse($migration->shouldRun());
     }
 
+    /**
+     * @throws Exception
+     * @throws SchemaException
+     */
     public function testDoesNothingIfTheElementsColumnDoesNotExist(): void
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);

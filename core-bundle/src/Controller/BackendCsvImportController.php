@@ -20,6 +20,7 @@ use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -100,6 +101,7 @@ class BackendCsvImportController
     }
 
     /**
+     * @throws Exception
      * @throws InternalServerErrorException
      */
     private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response

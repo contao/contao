@@ -127,7 +127,7 @@ class File extends System
 	 *
 	 * @param string $strFile The file path
 	 *
-	 * @throws \Exception If $strFile is a directory
+	 * @throws \LogicException If $strFile is a directory
 	 */
 	public function __construct($strFile)
 	{
@@ -142,7 +142,7 @@ class File extends System
 		// Make sure we are not pointing to a directory
 		if (is_dir($this->strRootDir . '/' . $strFile))
 		{
-			throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
+			throw new \LogicException(sprintf('Directory "%s" is not a file', $strFile));
 		}
 
 		$this->import(Files::class, 'Files');

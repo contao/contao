@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 /**
  * @internal
@@ -31,6 +32,9 @@ class CeAccessMigration extends AbstractMigration
         $this->framework = $framework;
     }
 
+    /**
+     * @throws Exception
+     */
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();

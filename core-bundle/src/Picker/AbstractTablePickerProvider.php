@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -208,6 +209,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $this->router->generate('contao_backend', $params);
     }
 
+    /**
+     * @throws Exception
+     */
     protected function getPtableAndPid(string $table, string $value): array
     {
         // Use the first value if array to find a database record

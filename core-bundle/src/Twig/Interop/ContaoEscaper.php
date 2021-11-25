@@ -32,6 +32,8 @@ final class ContaoEscaper
      * htmlspecialchars with the double_encode parameter set to false.
      *
      * @see twig_escape_filter
+     *
+     * @throws RuntimeError
      */
     public function escapeHtml(Environment $environment, $string, ?string $charset): string
     {
@@ -56,6 +58,8 @@ final class ContaoEscaper
      * replaces insert tags and decodes entities beforehand.
      *
      * @see twig_escape_filter
+     *
+     * @throws RuntimeError
      */
     public function escapeHtmlAttr(Environment $environment, $string, ?string $charset): string
     {

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Service\ResetInterface;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
@@ -66,6 +67,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     private $currentThemeSlug;
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, ThemeNamespace $themeNamespace, string $rootPath = null)
     {
         parent::__construct([], $rootPath);
@@ -97,6 +101,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
+     *
+     * @throws LoaderError
      */
     public function addPath(string $path, string $namespace = 'Contao', bool $trackTemplates = false): void
     {
@@ -123,6 +129,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
+     *
+     * @throws LoaderError
      */
     public function prependPath(string $path, string $namespace = 'Contao'): void
     {
@@ -154,6 +162,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     /**
      * Writes the currently registered template paths and hierarchy to the
      * cache.
+     *
+     * @throws InvalidArgumentException
      */
     public function persist(): void
     {
@@ -175,6 +185,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @param string $name The name of the template to load
      *
+     * @throws LoaderError
+     *
      * @return string The cache key
      */
     public function getCacheKey(string $name): string
@@ -191,6 +203,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * the template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
+     *
+     * @throws LoaderError
      */
     public function getSourceContext(string $name): Source
     {
@@ -260,6 +274,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $name The template name
      * @param int    $time Timestamp of the last modification time of the
      *                     cached template
+     *
+     * @throws LoaderError
      *
      * @return bool true if the template is fresh, false otherwise
      */

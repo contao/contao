@@ -19,7 +19,9 @@ use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class LightboxResult
 {
@@ -33,6 +35,9 @@ class LightboxResult
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null)
     {

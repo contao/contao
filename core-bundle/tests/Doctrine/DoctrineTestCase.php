@@ -23,9 +23,11 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaConfig;
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -108,6 +110,8 @@ abstract class DoctrineTestCase extends TestCase
 
     /**
      * Returns an empty Schema which has the default table options set.
+     *
+     * @throws SchemaException
      */
     protected function getSchema(): Schema
     {
@@ -120,6 +124,8 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Returns an EntityManager configured to load the annotated entities in
      * the tests/Fixture/Entity directory.
+     *
+     * @throws ORMException
      */
     protected function getTestEntityManager(): EntityManager
     {

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Loader;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\Finder\Finder;
@@ -49,6 +50,8 @@ class TemplateLocator
     }
 
     /**
+     * @throws Exception
+     *
      * @return array<string, string>
      */
     public function findThemeDirectories(): array
