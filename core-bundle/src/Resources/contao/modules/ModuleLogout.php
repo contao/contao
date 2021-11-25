@@ -48,7 +48,7 @@ class ModuleLogout extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		$strRedirect = Environment::get('base');

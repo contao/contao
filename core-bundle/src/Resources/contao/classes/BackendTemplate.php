@@ -32,6 +32,8 @@ class BackendTemplate extends Template
 	 * Add a hook to modify the template output
 	 *
 	 * @return string
+	 *
+	 * @deprecated Since Contao 4.13 will be made protected in Contao 5.0.
 	 */
 	public function parse()
 	{
@@ -45,6 +47,13 @@ class BackendTemplate extends Template
 				$this->import($callback[0]);
 				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
 			}
+		}
+
+		if (!is_a(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? null, parent::class, true))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s()" from outside has been deprecated and will be made protected in Contao 5.0. Use "%s::parseWithInsertTags()" instead.', __METHOD__, __CLASS__);
+
+			return System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 		}
 
 		return $strBuffer;

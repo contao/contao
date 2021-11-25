@@ -47,7 +47,7 @@ class ModuleSubscribe extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
@@ -116,7 +116,7 @@ class ModuleSubscribe extends Module
 		// Add the captcha widget to the template
 		if ($objWidget !== null)
 		{
-			$this->Template->captcha = $objWidget->parse();
+			$this->Template->captcha = $objWidget->parseWithInsertTags();
 		}
 
 		$session = System::getContainer()->get('session');

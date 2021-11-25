@@ -297,7 +297,7 @@ class Pagination
 		// Adding rel="prev" and rel="next" links is not possible
 		// anymore with unique variable names (see #3515 and #4141)
 
-		return $objTemplate->parse();
+		return $objTemplate->parseWithInsertTags();
 	}
 
 	/**

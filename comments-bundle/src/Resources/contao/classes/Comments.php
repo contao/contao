@@ -126,7 +126,7 @@ class Comments extends Frontend
 					$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 				}
 
-				$arrComments[] = $objPartial->parse();
+				$arrComments[] = $objPartial->parseWithoutInsertTags();
 				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
 
 				++$count;

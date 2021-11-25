@@ -60,7 +60,7 @@ class TemplateTest extends TestCase
         $template->setData(['value' => 'test']);
 
         $obLevel = ob_get_level();
-        $this->assertSame('test', $template->parse());
+        $this->assertSame('test', $template->parseWithoutInsertTags());
         $this->assertSame($obLevel, ob_get_level());
     }
 
@@ -77,7 +77,7 @@ class TemplateTest extends TestCase
         ob_start();
 
         try {
-            $template->parse();
+            $template->parseWithoutInsertTags();
             $this->fail('Parse should throw an exception');
         } catch (\Exception $e) {
             // Ignore
@@ -110,7 +110,7 @@ class TemplateTest extends TestCase
         ob_start();
 
         try {
-            $template->parse();
+            $template->parseWithoutInsertTags();
             $this->fail('Parse should throw an exception');
         } catch (\Exception $e) {
             // Ignore
@@ -171,7 +171,7 @@ class TemplateTest extends TestCase
         ob_start();
 
         try {
-            $template->parse();
+            $template->parseWithoutInsertTags();
             $this->fail('Parse should throw an exception');
         } catch (\Exception $e) {
             // Ignore
@@ -210,7 +210,7 @@ class TemplateTest extends TestCase
         ob_start();
 
         try {
-            $template->parse();
+            $template->parseWithoutInsertTags();
             $this->fail('Parse should throw an exception');
         } catch (\Exception $e) {
             // Ignore
@@ -331,23 +331,23 @@ class TemplateTest extends TestCase
             .'test'
             ."\n<!-- TEMPLATE END: templates/test_template.html5 -->\n";
 
-        $this->assertSame('test', $template->parse());
-        $this->assertSame($sourceWithComments, $template->setDebug(true)->parse());
+        $this->assertSame('test', $template->parseWithoutInsertTags());
+        $this->assertSame($sourceWithComments, $template->setDebug(true)->parseWithoutInsertTags());
 
-        $this->assertSame('test', $template->setDebug(false)->parse());
-        $this->assertSame('test', $template->setDebug()->parse());
+        $this->assertSame('test', $template->setDebug(false)->parseWithoutInsertTags());
+        $this->assertSame('test', $template->setDebug()->parseWithoutInsertTags());
 
         System::getContainer()->setParameter('kernel.debug', true);
         $GLOBALS['TL_CONFIG']['debugMode'] = true;
 
-        $this->assertSame($sourceWithComments, $template->parse());
-        $this->assertSame('test', $template->setDebug(false)->parse());
+        $this->assertSame($sourceWithComments, $template->parseWithoutInsertTags());
+        $this->assertSame('test', $template->setDebug(false)->parseWithoutInsertTags());
 
         $GLOBALS['TL_CONFIG']['debugMode'] = false;
 
         $this->expectDeprecation('%sTL_CONFIG.debugMode%s');
 
-        $this->assertSame('test', $template->setDebug()->parse());
+        $this->assertSame('test', $template->setDebug()->parseWithoutInsertTags());
     }
 
     public function testFigureFunction(): void

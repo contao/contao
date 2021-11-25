@@ -694,7 +694,7 @@ abstract class DataContainer extends Backend
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$objTemplate->language = Backend::getTinyMceLanguage();
 
-			$updateMode = $objTemplate->parse();
+			$updateMode = $objTemplate->parseWithInsertTags();
 
 			unset($file, $type, $pickerBuilder, $fileBrowserTypes, $fileBrowserType);
 		}
@@ -776,7 +776,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return $strPreview . '
-<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
+<div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parseWithoutInsertTags() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
 </div>';
 	}
 

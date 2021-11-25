@@ -180,6 +180,8 @@ class FormSelectMenu extends Widget
 	 * @param array $arrAttributes An optional attributes array
 	 *
 	 * @return string The template markup
+	 *
+	 * @deprecated Since Contao 4.13 will be made protected in Contao 5.0.
 	 */
 	public function parse($arrAttributes=null)
 	{
@@ -210,7 +212,16 @@ class FormSelectMenu extends Widget
 
 		$this->strClass = $strClass;
 
-		return parent::parse($arrAttributes);
+		$strBuffer = parent::parse($arrAttributes);
+
+		if (!is_a(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['class'] ?? null, parent::class, true))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s()" from outside has been deprecated and will be made protected in Contao 5.0. Use "%s::parseWithInsertTags()" instead.', __METHOD__, __CLASS__);
+
+			return System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+		}
+
+		return $strBuffer;
 	}
 
 	/**

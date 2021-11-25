@@ -44,7 +44,7 @@ class ModuleRegistration extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		$this->editable = StringUtil::deserialize($this->editable);
@@ -302,7 +302,7 @@ class ModuleRegistration extends Module
 				$hasUpload = true;
 			}
 
-			$temp = $objWidget->parse();
+			$temp = $objWidget->parseWithInsertTags();
 
 			$this->Template->fields .= $temp;
 
@@ -320,7 +320,7 @@ class ModuleRegistration extends Module
 		if (!$this->disableCaptcha)
 		{
 			$objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
-			$strCaptcha = $objCaptcha->parse();
+			$strCaptcha = $objCaptcha->parseWithInsertTags();
 
 			$this->Template->fields .= $strCaptcha;
 			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;

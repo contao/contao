@@ -36,14 +36,14 @@
         <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
         <div class="tl_tbox">
           <div>
-            <?= $this->subscribersWidget->parse() ?>
+            <?= $this->subscribersWidget->parseWithoutInsertTags() ?>
             <?php if (!$this->subscribersWidget->hasErrors()): ?>
               <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlSubscribers.1') ?></p>
             <?php endif; ?>
           </div>
           <?php if ($this->memberWidget): ?>
             <div>
-              <?= $this->memberWidget->parse() ?>
+              <?= $this->memberWidget->parseWithoutInsertTags() ?>
               <?php if (!$this->memberWidget->hasErrors()): ?>
                 <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.crawlMember.1') ?></p>
               <?php endif; ?>

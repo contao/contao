@@ -71,7 +71,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $template->link = $module->name;
         $template->href = $href;
 
-        return new Response($template->parse());
+        return new Response($template->parseWithoutInsertTags());
     }
 
     abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response;

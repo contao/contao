@@ -46,7 +46,7 @@ class ModuleSearch extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		$this->pages = StringUtil::deserialize($this->pages);
@@ -279,7 +279,7 @@ class ModuleSearch extends Module
 
 				$this->addImageToTemplateFromSearchResult($arrResult[$i], $objTemplate);
 
-				$this->Template->results .= $objTemplate->parse();
+				$this->Template->results .= $objTemplate->parseWithInsertTags();
 			}
 
 			$this->Template->header = vsprintf($GLOBALS['TL_LANG']['MSC']['sResults'], array($from, $to, $count, $strKeywords));

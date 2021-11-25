@@ -12,7 +12,7 @@
           <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
           <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
           <?php foreach ($this->fields as $field): ?>
-            <?= $field->parse() ?>
+            <?= $field->parseWithoutInsertTags() ?>
           <?php endforeach; ?>
           <div class="widget widget-submit">
             <button type="submit" class="submit"><?= $this->submit ?></button>

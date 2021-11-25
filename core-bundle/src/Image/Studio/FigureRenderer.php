@@ -91,6 +91,6 @@ class FigureRenderer
         $imageTemplate = new FrontendTemplate($template);
         $figure->applyLegacyTemplateData($imageTemplate);
 
-        return $imageTemplate->parse();
+        return $imageTemplate->parseWithInsertTags();
     }
 }

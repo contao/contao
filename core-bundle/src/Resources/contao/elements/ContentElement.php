@@ -276,7 +276,7 @@ abstract class ContentElement extends Frontend
 		// Tag the content element (see #2137)
 		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
 
-		return $this->Template->parse();
+		return $this->Template->parseWithInsertTags();
 	}
 
 	protected function isHidden()

@@ -42,7 +42,7 @@ class ModuleChangePassword extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		// Return if there is no logged in user
@@ -168,7 +168,7 @@ class ModuleChangePassword extends Module
 				}
 			}
 
-			$strFields .= $objWidget->parse();
+			$strFields .= $objWidget->parseWithInsertTags();
 		}
 
 		$this->Template->fields = $strFields;

@@ -673,7 +673,7 @@ class tl_form_field extends Backend
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($arrRow);
 
-		$strWidget = $objWidget->parse();
+		$strWidget = $objWidget->parseWithoutInsertTags();
 		$strWidget = preg_replace('/ name="[^"]+"/i', '', $strWidget);
 		$strWidget = str_replace(array(' type="submit"', ' autofocus', ' required'), array(' type="button"', '', ''), $strWidget);
 

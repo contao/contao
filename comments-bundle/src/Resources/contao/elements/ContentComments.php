@@ -40,7 +40,7 @@ class ContentComments extends ContentElement
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['comments'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		return parent::generate();

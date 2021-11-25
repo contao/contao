@@ -610,7 +610,7 @@ class PageRegular extends Frontend
 				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
-					$strHeadTags .= $objTemplate->parse();
+					$strHeadTags .= $objTemplate->parseWithInsertTags();
 				}
 			}
 		}
@@ -648,7 +648,7 @@ class PageRegular extends Frontend
 				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
-					$strScripts .= $objTemplate->parse();
+					$strScripts .= $objTemplate->parseWithInsertTags();
 				}
 			}
 
@@ -666,7 +666,7 @@ class PageRegular extends Frontend
 				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
-					$strScripts .= $objTemplate->parse();
+					$strScripts .= $objTemplate->parseWithInsertTags();
 				}
 			}
 
@@ -684,7 +684,7 @@ class PageRegular extends Frontend
 				if ($strTemplate)
 				{
 					$objTemplate = new FrontendTemplate($strTemplate);
-					$strScripts .= $objTemplate->parse();
+					$strScripts .= $objTemplate->parseWithInsertTags();
 				}
 			}
 		}

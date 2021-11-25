@@ -91,7 +91,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		if (!$this->isActive())
 		{
-			return $template->parse();
+			return $template->parseWithoutInsertTags();
 		}
 
 		$activeSubscribers = $subscribersWidget->value;
@@ -245,7 +245,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$template->subscriberLogHrefs = $subscriberLogHrefs;
 
-		return $template->parse();
+		return $template->parseWithoutInsertTags();
 	}
 
 	/**

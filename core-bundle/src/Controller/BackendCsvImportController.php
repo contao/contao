@@ -138,7 +138,7 @@ class BackendCsvImportController
             return new RedirectResponse($this->getBackUrl($request));
         }
 
-        return new Response($template->parse());
+        return new Response($template->parseWithoutInsertTags());
     }
 
     private function prepareTemplate(Request $request, FileUpload $uploader, bool $allowLinebreak = false): BackendTemplate

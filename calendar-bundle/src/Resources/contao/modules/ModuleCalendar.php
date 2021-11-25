@@ -60,7 +60,7 @@ class ModuleCalendar extends Events
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar, true));
@@ -184,7 +184,7 @@ class ModuleCalendar extends Events
 		$objTemplate->weeks = $this->compileWeeks();
 		$objTemplate->substr = $GLOBALS['TL_LANG']['MSC']['dayShortLength'];
 
-		$this->Template->calendar = $objTemplate->parse();
+		$this->Template->calendar = $objTemplate->parseWithInsertTags();
 	}
 
 	/**

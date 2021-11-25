@@ -53,7 +53,7 @@ class ModuleEventReader extends Events
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		// Set the item from the auto_item parameter
@@ -425,7 +425,7 @@ class ModuleEventReader extends Events
 			return $jsonLd;
 		};
 
-		$this->Template->event = $objTemplate->parse();
+		$this->Template->event = $objTemplate->parseWithInsertTags();
 
 		// Tag the event (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))

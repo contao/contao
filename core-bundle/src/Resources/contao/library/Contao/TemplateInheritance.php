@@ -76,6 +76,27 @@ trait TemplateInheritance
 	 */
 	protected $blnDebug;
 
+	public function parseWithoutInsertTags(...$arguments): string
+	{
+		if (!$this instanceof Template && !$this instanceof Widget && !\is_callable(array($this, 'parse')))
+		{
+			throw new \LogicException(sprintf('Unable to call %s::parse()', static::class));
+		}
+
+		return $this->parse(...$arguments);
+	}
+
+	public function parseWithInsertTags(...$arguments): string
+	{
+		// Do not replace insert tags in twig templates
+		if ($this->twigSurrogateExists())
+		{
+			return $this->parseWithoutInsertTags(...$arguments);
+		}
+
+		return System::getContainer()->get('contao.insert_tag.parser')->replace($this->parseWithoutInsertTags(...$arguments));
+	}
+
 	/**
 	 * Parse the template file and return it as string
 	 *
@@ -159,9 +180,6 @@ trait TemplateInheritance
 				$blnDebug = (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false);
 			}
 		}
-
-		// Replace insert tags
-		$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 
 		// Add start and end markers in debug mode
 		if ($blnDebug)
@@ -344,7 +362,7 @@ trait TemplateInheritance
 			$tpl->setData($data);
 		}
 
-		echo $tpl->parse();
+		echo $tpl->parseWithoutInsertTags();
 	}
 
 	/**
@@ -366,24 +384,29 @@ trait TemplateInheritance
 		return Controller::getTemplate($strTemplate);
 	}
 
+	protected function twigSurrogateExists(): bool
+	{
+		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		{
+			return false;
+		}
+
+		return $twig->getLoader()->exists("@Contao/{$this->strTemplate}.html.twig");
+	}
+
 	/**
 	 * Render a Twig template if one exists
 	 */
 	protected function renderTwigSurrogateIfExists(): ?string
 	{
-		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		if (!$this->twigSurrogateExists())
 		{
 			return null;
 		}
 
-		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
+		$twig = System::getContainer()->get('twig');
 
-		if ($twig->getLoader()->exists($templateCandidate))
-		{
-			return $twig->render($templateCandidate, ContextHelper::fromContaoTemplate($this));
-		}
-
-		return null;
+		return $twig->render("@Contao/{$this->strTemplate}.html.twig", ContextHelper::fromContaoTemplate($this));
 	}
 }
 

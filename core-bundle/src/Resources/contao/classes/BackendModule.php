@@ -81,7 +81,7 @@ abstract class BackendModule extends Backend
 		$this->Template = new BackendTemplate($this->strTemplate);
 		$this->compile();
 
-		return $this->Template->parse();
+		return $this->Template->parseWithoutInsertTags();
 	}
 
 	/**

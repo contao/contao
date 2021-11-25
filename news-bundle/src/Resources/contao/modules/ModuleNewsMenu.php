@@ -61,7 +61,7 @@ class ModuleNewsMenu extends ModuleNews
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parse();
+			return $objTemplate->parseWithInsertTags();
 		}
 
 		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
