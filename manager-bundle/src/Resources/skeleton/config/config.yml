@@ -76,7 +76,7 @@ doctrine:
 # Lexik configuration
 lexik_maintenance:
     authorized:
-        path: ^/contao($|/)
+        path: ^%contao.backend.route_prefix%($|/)
         attributes:
             _bypass_maintenance: true
     driver:
