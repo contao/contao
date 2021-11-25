@@ -55,7 +55,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return new Configuration($container->getParameter('kernel.project_dir'));
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $projectDir = $container->getParameter('kernel.project_dir');
 
