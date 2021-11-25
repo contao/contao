@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property array   $options
  * @property array   $unknownOption
  * @property boolean $multiple
+ * @property boolean $collapseUncheckedOptionGroups
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -150,12 +151,6 @@ class CheckBox extends Widget
 			}
 		}
 
-		$arrCheckboxGroupConfig = array_merge(array(
-			'collapseInactive' => false,
-			'overwriteSession' => false,
-			'fallbackToFirst' => false
-		), $this->checkboxGroup ?? array());
-
 		foreach ($arrAllOptions as $i=>$arrOption)
 		{
 			// Single dimension array
@@ -170,21 +165,16 @@ class CheckBox extends Widget
 			$img = 'folPlus.svg';
 			$display = 'none';
 
-			if ($arrCheckboxGroupConfig['overwriteSession'] || !isset($state[$id]) || !empty($state[$id]))
+			if ($this->collapseUncheckedOptionGroups || !isset($state[$id]) || !empty($state[$id]))
 			{
-				$blnIsOpen = !$arrCheckboxGroupConfig['collapseInactive'] && !isset($state[$id]) || !empty($state[$id]);
+				$blnIsOpen = !$this->collapseUncheckedOptionGroups && (!isset($state[$id]) || !empty($state[$id]));
 
-				if ($arrCheckboxGroupConfig['overwriteSession'] && $arrCheckboxGroupConfig['collapseInactive'])
-				{
-					$blnIsOpen = false;
-				}
-
-				if ($arrCheckboxGroupConfig['fallbackToFirst'] && !$blnIsOpen && $blnFirst && empty($this->varValue))
+				if ($this->collapseUncheckedOptionGroups && $blnFirst && empty($this->varValue))
 				{
 					$blnIsOpen = true;
 				}
 
-				if (!$blnIsOpen && $arrCheckboxGroupConfig['collapseInactive'])
+				if (!$blnIsOpen && $this->collapseUncheckedOptionGroups)
 				{
 					foreach ($arrOption as $v)
 					{
