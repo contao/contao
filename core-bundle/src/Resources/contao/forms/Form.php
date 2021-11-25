@@ -77,7 +77,7 @@ class Form extends Hybrid
 			$objTemplate->link = $this->title;
 			$objTemplate->href = 'contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $this->id;
 
-			return $objTemplate->parseWithInsertTags();
+			return $objTemplate->parseTemplate();
 		}
 
 		if ($this->customTpl)
@@ -239,7 +239,7 @@ class Form extends Hybrid
 
 				if ($objWidget instanceof FormHidden)
 				{
-					$this->Template->hidden .= $objWidget->parseWithInsertTags();
+					$this->Template->hidden .= $objWidget->parseTemplate();
 					--$max_row;
 					continue;
 				}
@@ -249,7 +249,7 @@ class Form extends Hybrid
 					$arrLabels[$objWidget->name] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objWidget->label); // see #4268
 				}
 
-				$this->Template->fields .= $objWidget->parseWithInsertTags();
+				$this->Template->fields .= $objWidget->parseTemplate();
 				++$row;
 			}
 		}
@@ -420,7 +420,7 @@ class Form extends Hybrid
 				$objTemplate->fields = $fields;
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 
-				$email->attachFileFromString($objTemplate->parseWithInsertTags(), 'form.xml', 'application/xml');
+				$email->attachFileFromString($objTemplate->parseTemplate(), 'form.xml', 'application/xml');
 			}
 
 			// Attach CSV file
@@ -614,7 +614,7 @@ class Form extends Hybrid
 					$objTemplate->message = $message;
 					$objTemplate->class = strtolower($tl);
 
-					$this->Template->fields .= $objTemplate->parseWithInsertTags() . "\n";
+					$this->Template->fields .= $objTemplate->parseTemplate() . "\n";
 				}
 
 				$_SESSION[$formId][$tl] = array();

@@ -225,7 +225,7 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate->setData($context);
         $partialTemplate->setBlocks($blocks);
 
-        return $partialTemplate->parseWithInsertTags();
+        return $partialTemplate->parseTemplate();
     }
 
     private function getTwigIncludeFunction(): TwigFunction

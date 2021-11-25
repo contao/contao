@@ -45,7 +45,7 @@ class ModulePassword extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parseWithInsertTags();
+			return $objTemplate->parseTemplate();
 		}
 
 		return parent::generate();
@@ -143,7 +143,7 @@ class ModulePassword extends Module
 				}
 			}
 
-			$strFields .= $objWidget->parseWithInsertTags();
+			$strFields .= $objWidget->parseTemplate();
 		}
 
 		$this->Template->fields = $strFields;
@@ -301,7 +301,7 @@ class ModulePassword extends Module
 		$objSession->set('setPasswordToken', $strToken);
 
 		$this->Template->formId = $strToken;
-		$this->Template->fields = $objWidget->parseWithInsertTags();
+		$this->Template->fields = $objWidget->parseTemplate();
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['setNewPassword']);
 	}
 

@@ -206,7 +206,7 @@ class BackendMain extends Backend
 		$objTemplate->shortcutsLink = $GLOBALS['TL_LANG']['MSC']['shortcuts'][1];
 		$objTemplate->editElement = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
 
-		return $objTemplate->parseWithInsertTags();
+		return $objTemplate->parseTemplate();
 	}
 
 	/**

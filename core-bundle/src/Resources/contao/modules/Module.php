@@ -249,7 +249,7 @@ abstract class Module extends Frontend
 			$responseTagger->addTags($tags);
 		}
 
-		return $this->Template->parseWithInsertTags();
+		return $this->Template->parseTemplate();
 	}
 
 	/**
@@ -408,7 +408,7 @@ abstract class Module extends Frontend
 
 		$objTemplate->items = $items;
 
-		return !empty($items) ? $objTemplate->parseWithInsertTags() : '';
+		return !empty($items) ? $objTemplate->parseTemplate() : '';
 	}
 
 	/**

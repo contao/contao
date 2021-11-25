@@ -694,7 +694,7 @@ abstract class DataContainer extends Backend
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
 			$objTemplate->language = Backend::getTinyMceLanguage();
 
-			$updateMode = $objTemplate->parseWithInsertTags();
+			$updateMode = $objTemplate->parseTemplate();
 
 			unset($file, $type, $pickerBuilder, $fileBrowserTypes, $fileBrowserType);
 		}

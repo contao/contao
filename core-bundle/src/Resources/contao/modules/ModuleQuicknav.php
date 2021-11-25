@@ -43,7 +43,7 @@ class ModuleQuicknav extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parseWithInsertTags();
+			return $objTemplate->parseTemplate();
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_quicknav_' . $this->id)

@@ -1048,7 +1048,7 @@ class InsertTags extends Controller
 							$picture['class'] = StringUtil::specialcharsAttribute($class);
 							$pictureTemplate = new FrontendTemplate($strTemplate);
 							$pictureTemplate->setData($picture);
-							$arrCache[$strTag] = $pictureTemplate->parseWithInsertTags();
+							$arrCache[$strTag] = $pictureTemplate->parseTemplate();
 						}
 
 						// Add a lightbox link

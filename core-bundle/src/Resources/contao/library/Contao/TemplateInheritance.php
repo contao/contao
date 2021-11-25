@@ -97,6 +97,36 @@ trait TemplateInheritance
 		return System::getContainer()->get('contao.insert_tag.parser')->replace($this->parseWithoutInsertTags(...$arguments));
 	}
 
+	public function parseTemplate(...$arguments): string
+	{
+		return $this->replaceInsertTagsIfAllowed($this->parseWithoutInsertTags(...$arguments));
+	}
+
+	public function replaceInsertTagsIfAllowed(string $strBuffer): string
+	{
+		// Do not replace insert tags in if an outputFrontendTemplate hook is registered
+		if ($GLOBALS['TL_HOOKS']['outputFrontendTemplate'] ?? false)
+		{
+			return $strBuffer;
+		}
+
+		// Do not replace insert tags in twig templates
+		if ($this->twigSurrogateExists())
+		{
+			return $strBuffer;
+		}
+
+		// Only replace insert tags for frontend requests
+		if (
+			($request = System::getContainer()->get('request_stack')->getCurrentRequest())
+			&& System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request)
+		) {
+			return System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+		}
+
+		return $strBuffer;
+	}
+
 	/**
 	 * Parse the template file and return it as string
 	 *

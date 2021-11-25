@@ -257,7 +257,7 @@ abstract class Hybrid extends Frontend
 			$this->Template->class .= ' ' . implode(' ', $this->objParent->classes);
 		}
 
-		return $this->Template->parseWithInsertTags();
+		return $this->Template->parseTemplate();
 	}
 
 	protected function isHidden()

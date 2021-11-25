@@ -48,7 +48,7 @@ class FormFieldsetStop extends Widget
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 
-			return $objTemplate->parseWithInsertTags();
+			return $objTemplate->parseTemplate();
 		}
 
 		$strBuffer = parent::parse($arrAttributes);
@@ -57,7 +57,7 @@ class FormFieldsetStop extends Widget
 		{
 			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s()" from outside has been deprecated and will be made protected in Contao 5.0. Use "%s::parseWithInsertTags()" instead.', __METHOD__, __CLASS__);
 
-			return System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+			$strBuffer = $this->replaceInsertTagsIfAllowed($strBuffer);
 		}
 
 		return $strBuffer;

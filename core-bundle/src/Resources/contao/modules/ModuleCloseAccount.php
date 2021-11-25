@@ -44,7 +44,7 @@ class ModuleCloseAccount extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parseWithInsertTags();
+			return $objTemplate->parseTemplate();
 		}
 
 		// Return if there is no logged in user
@@ -140,7 +140,7 @@ class ModuleCloseAccount extends Module
 			}
 		}
 
-		$this->Template->fields = $objWidget->parseWithInsertTags();
+		$this->Template->fields = $objWidget->parseTemplate();
 
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);

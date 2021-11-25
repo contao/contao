@@ -60,7 +60,7 @@ class FrontendTemplate extends Template
 		{
 			trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s()" from outside has been deprecated and will be made protected in Contao 5.0. Use "%s::parseWithInsertTags()" instead.', __METHOD__, __CLASS__);
 
-			return System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+			$strBuffer = $this->replaceInsertTagsIfAllowed($strBuffer);
 		}
 
 		return $strBuffer;
@@ -124,11 +124,13 @@ class FrontendTemplate extends Template
 		}
 
 		// Parse the template
-		$this->strBuffer = $this->parse();
+		$this->strBuffer = $this->parseTemplate();
 
 		// HOOK: add custom output filters
 		if (isset($GLOBALS['TL_HOOKS']['outputFrontendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['outputFrontendTemplate']))
 		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using the "outputFrontendTemplate" hook has been deprecated and will no longer work in Contao 5.0. Use a respons listener instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['outputFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
@@ -136,6 +138,15 @@ class FrontendTemplate extends Template
 			}
 		}
 
+		// Replace insert tags
+		$strBufferReplaced = System::getContainer()->get('contao.insert_tag.parser')->replace($this->strBuffer);
+
+		if ($strBufferReplaced !== $this->strBuffer && $this->twigSurrogateExists())
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Replacing insert tags after the page HTML was fully rendered is deprecated and will no longer work in Contao 5.0. Replace the insert tags using the Twig insert_tag and insert_tag_raw filters instead.');
+		}
+
+		$this->strBuffer = $strBufferReplaced;
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)

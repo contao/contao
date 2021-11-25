@@ -43,7 +43,7 @@ class ModuleCustomnav extends Module
 			$objTemplate->link = $this->name;
 			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
-			return $objTemplate->parseWithInsertTags();
+			return $objTemplate->parseTemplate();
 		}
 
 		// Always return an array (see #4616)
@@ -243,7 +243,7 @@ class ModuleCustomnav extends Module
 		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
-		$this->Template->items = !empty($items) ? $objTemplate->parseWithInsertTags() : '';
+		$this->Template->items = !empty($items) ? $objTemplate->parseTemplate() : '';
 	}
 }
 

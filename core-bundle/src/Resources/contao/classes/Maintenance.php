@@ -75,7 +75,7 @@ class Maintenance extends Backend implements MaintenanceModuleInterface
 			$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['enable'];
 		}
 
-		return $objTemplate->parseWithInsertTags();
+		return $objTemplate->parseTemplate();
 	}
 }
 
