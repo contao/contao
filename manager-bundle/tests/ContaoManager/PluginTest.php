@@ -83,7 +83,7 @@ class PluginTest extends ContaoTestCase
 
         $this->assertSame(SecurityBundle::class, $bundles[1]->getName());
         $this->assertSame([], $bundles[1]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class, FrameworkBundle::class], $bundles[1]->getLoadAfter());
+        $this->assertSame([FrameworkBundle::class], $bundles[1]->getLoadAfter());
 
         $this->assertSame(TwigBundle::class, $bundles[2]->getName());
         $this->assertSame([], $bundles[2]->getReplace());
@@ -103,7 +103,7 @@ class PluginTest extends ContaoTestCase
 
         $this->assertSame(LexikMaintenanceBundle::class, $bundles[6]->getName());
         $this->assertSame([], $bundles[6]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[6]->getLoadAfter());
+        $this->assertSame([], $bundles[6]->getLoadAfter());
 
         $this->assertSame(NelmioCorsBundle::class, $bundles[7]->getName());
         $this->assertSame([], $bundles[7]->getReplace());

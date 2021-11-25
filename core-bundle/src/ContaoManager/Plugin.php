@@ -20,11 +20,13 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
+use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
@@ -50,11 +52,13 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                 ->setLoadAfter(
                     [
                         FrameworkBundle::class,
+                        SecurityBundle::class,
                         TwigBundle::class,
                         MonologBundle::class,
                         DoctrineBundle::class,
                         KnpMenuBundle::class,
                         KnpTimeBundle::class,
+                        LexikMaintenanceBundle::class,
                         NelmioCorsBundle::class,
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,
