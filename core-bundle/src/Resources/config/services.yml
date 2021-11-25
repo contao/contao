@@ -650,7 +650,6 @@ services:
         arguments:
             - '@router'
             - '@uri_signer'
-            - '@contao.framework'
             - '@contao.routing.scope_matcher'
 
     contao.security.authentication_failure_handler:
