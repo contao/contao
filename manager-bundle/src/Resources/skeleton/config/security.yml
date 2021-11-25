@@ -49,7 +49,6 @@ security:
                 handlers:
                     - contao.security.logout_handler
 
-    # Backwards compatibility
     access_control:
         - { path: ^%contao.backend.route_prefix%/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^%contao.backend.route_prefix%/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
