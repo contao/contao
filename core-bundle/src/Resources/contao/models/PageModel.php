@@ -540,7 +540,7 @@ class PageModel extends Model
 	 *
 	 * @return PageModel|null The model or null if there is no published regular page
 	 */
-	public static function findFirstPublishedTypeByPid($strType, $intPid, array $arrOptions=array())
+	public static function findFirstPublishedByTypeAndPid($strType, $intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type=?");
