@@ -45,10 +45,7 @@ class PreviewUrlConvertListener
             return;
         }
 
-        /** @var News $newsAdapter */
-        $newsAdapter = $this->framework->getAdapter(News::class);
-
-        $event->setUrl($newsAdapter->generateNewsUrl($news, false, true));
+        $event->setUrl($this->framework->getAdapter(News::class)->generateNewsUrl($news, false, true));
     }
 
     private function getNewsModel(Request $request): ?NewsModel
@@ -57,9 +54,6 @@ class PreviewUrlConvertListener
             return null;
         }
 
-        /** @var NewsModel $adapter */
-        $adapter = $this->framework->getAdapter(NewsModel::class);
-
-        return $adapter->findByPk($request->query->get('news'));
+        return $this->framework->getAdapter(NewsModel::class)->findByPk($request->query->get('news'));
     }
 }

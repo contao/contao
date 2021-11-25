@@ -386,7 +386,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        self::$container
+        self::getContainer()
             ->get('doctrine')
             ->getConnection()
             ->executeStatement('UPDATE tl_page SET urlPrefix=language')
@@ -725,7 +725,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        self::$container
+        self::getContainer()
             ->get('doctrine')
             ->getConnection()
             ->executeStatement("UPDATE tl_page SET urlSuffix=''")
@@ -1075,7 +1075,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        self::$container
+        self::getContainer()
             ->get('doctrine')
             ->getConnection()
             ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")

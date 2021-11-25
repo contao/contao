@@ -497,9 +497,13 @@ class Environment
 	 * Return the operating system and the browser name and version
 	 *
 	 * @return object The agent information
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected static function agent()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::get(\'agent\')" has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
+
 		$ua = static::get('httpUserAgent');
 
 		$return = new \stdClass();

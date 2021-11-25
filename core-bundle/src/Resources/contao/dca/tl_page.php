@@ -12,10 +12,8 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
-use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
-use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Idna;
@@ -29,7 +27,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
@@ -773,9 +770,7 @@ class tl_page extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 
 		// Set the default page user and group
@@ -951,7 +946,7 @@ class tl_page extends Backend
 			{
 				if (!in_array($id, $pagemounts))
 				{
-					$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, TL_ERROR);
+					$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, ContaoContext::ERROR);
 
 					$error = true;
 					break;
@@ -976,7 +971,7 @@ class tl_page extends Backend
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
 				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
 				{
-					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, TL_ERROR);
+					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, ContaoContext::ERROR);
 
 					$error = true;
 					break;
@@ -1056,47 +1051,51 @@ class tl_page extends Backend
 	/**
 	 * Return the SERP URL
 	 *
-	 * @param PageModel $model
+	 * @param PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getSerpUrl(PageModel $model)
+	public function getSerpUrl(PageModel $page)
 	{
-		return $model->getAbsoluteUrl();
+		return $page->getAbsoluteUrl();
 	}
 
 	/**
 	 * Return the title tag from the associated page layout
 	 *
-	 * @param PageModel $model
+	 * @param PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getTitleTag(PageModel $model)
+	public function getTitleTag(PageModel $page)
 	{
-		$model->loadDetails();
+		$page->loadDetails();
 
 		/** @var LayoutModel $layout */
-		if (!$layout = $model->getRelated('layout'))
+		if (!$layout = $page->getRelated('layout'))
 		{
 			return '';
 		}
 
-		global $objPage;
+		$origObjPage = $GLOBALS['objPage'] ?? null;
 
-		// Set the global page object so we can replace the insert tags
-		$objPage = $model;
+		// Override the global page object, so we can replace the insert tags
+		$GLOBALS['objPage'] = $page;
 
-		return implode(
+		$title = implode(
 			'%s',
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
 		);
+
+		$GLOBALS['objPage'] = $origObjPage;
+
+		return $title;
 	}
 
 	/**
@@ -1150,7 +1149,6 @@ class tl_page extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
@@ -1174,7 +1172,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(PageUrlListener::class)
+			->get('contao.listener.data_container.page_url')
 			->generateAlias($varValue, $dc)
 		;
 	}
@@ -1191,7 +1189,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->generateArticleForPage($dc)
 		;
 	}
@@ -1208,7 +1206,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get(PageUrlListener::class)
+			->get('contao.listener.data_container.page_url')
 			->purgeSearchIndex((int) $dc->id)
 		;
 	}
@@ -1356,7 +1354,7 @@ class tl_page extends Backend
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.');
 
-		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
+		return System::getContainer()->get('contao.listener.data_container.page_type_options')($dc);
 	}
 
 	/**
@@ -1606,7 +1604,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
 		;
 	}
@@ -1629,9 +1627,7 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
-			/** @var SessionInterface $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 

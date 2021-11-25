@@ -43,7 +43,6 @@ class InputEnhancer implements RouteEnhancerInterface
 
         $this->framework->initialize(true);
 
-        /** @var Input $input */
         $input = $this->framework->getAdapter(Input::class);
 
         if (!empty($page->urlPrefix)) {
@@ -54,7 +53,6 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];

@@ -100,7 +100,7 @@ class FrontendUser extends User
 
 		if ($strUser !== null)
 		{
-			static::$objInstance = static::loadUserByUsername($strUser);
+			static::$objInstance = static::loadUserByIdentifier($strUser);
 
 			return static::$objInstance;
 		}

@@ -46,13 +46,10 @@ class MarkdownController extends AbstractContentElementController
             return new Response();
         }
 
-        /** @var Config $config */
-        $config = $this->get('contao.framework')->getAdapter(Config::class);
-
-        /** @var Input $input */
-        $input = $this->get('contao.framework')->getAdapter(Input::class);
-
+        $config = $this->getContaoAdapter(Config::class);
+        $input = $this->getContaoAdapter(Input::class);
         $html = $this->createConverter($model, $request)->convertToHtml($markdown)->getContent();
+
         $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
 
         return $template->getResponse();
@@ -96,10 +93,7 @@ class MarkdownController extends AbstractContentElementController
             return '';
         }
 
-        /** @var FilesModel $filesAdapter */
-        $filesAdapter = $this->get('contao.framework')->getAdapter(FilesModel::class);
-
-        /** @var FilesModel|null $filesModel */
+        $filesAdapter = $this->getContaoAdapter(FilesModel::class);
         $filesModel = $filesAdapter->findByPk($file);
 
         if (null === $filesModel) {

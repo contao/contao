@@ -29,7 +29,6 @@ use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\RequestToken;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +50,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -85,7 +84,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_contao_referer_id', 'foobar');
         $request->setLocale('de');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -113,16 +112,8 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializesTheFrameworkWithoutARequest(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        /** @var Config&MockObject $config */
-        $config = $framework->getAdapter(Config::class);
-        $config
-            ->expects($this->once())
-            ->method('preload')
-        ;
-
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -148,16 +139,8 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testInitializesTheFrameworkWithoutARequestInFrontendMode(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        /** @var Config&MockObject $config */
-        $config = $framework->getAdapter(Config::class);
-        $config
-            ->expects($this->once())
-            ->method('preload')
-        ;
-
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -187,16 +170,8 @@ class ContaoFrameworkTest extends TestCase
         $request->server->set('SCRIPT_FILENAME', '/var/www/contao4/public/index.php');
         $request->server->set('SCRIPT_NAME', '/contao4/public/index.php');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-
-        /** @var Config&MockObject $config */
-        $config = $framework->getAdapter(Config::class);
-        $config
-            ->expects($this->once())
-            ->method('preload')
-        ;
-
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
@@ -226,7 +201,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -289,7 +264,7 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn(true)
         ;
 
-        $framework = $this->mockFramework($request, null, $tokenChecker);
+        $framework = $this->getFramework($request, null, $tokenChecker);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -332,7 +307,7 @@ class ContaoFrameworkTest extends TestCase
             ->willReturn(false)
         ;
 
-        $framework = $this->mockFramework(Request::create('/index.html'), $scopeMatcher);
+        $framework = $this->getFramework(Request::create('/index.html'), $scopeMatcher);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -350,7 +325,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_contao_referer_id', 'foobar');
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
 
         $errorReporting = error_reporting();
@@ -458,7 +433,7 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testFailsIfTheContainerIsNotSet(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
 
         $this->expectException('LogicException');
 
@@ -490,7 +465,7 @@ class ContaoFrameworkTest extends TestCase
         $request->attributes->set('_scope', 'frontend');
         $request->setSession($session);
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
@@ -502,7 +477,7 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAnObjectInstance(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
 
         $class = LegacyClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
@@ -513,7 +488,7 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreateASingeltonObjectInstance(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
 
         $class = LegacySingletonClass::class;
         $instance = $framework->createInstance($class, [1, 2]);
@@ -524,7 +499,7 @@ class ContaoFrameworkTest extends TestCase
 
     public function testCreatesAdaptersForLegacyClasses(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
         $adapter = $framework->getAdapter(LegacyClass::class);
 
         $ref = new \ReflectionClass($adapter);
@@ -590,7 +565,7 @@ class ContaoFrameworkTest extends TestCase
             ],
         ];
 
-        $framework = $this->mockFramework($request);
+        $framework = $this->getFramework($request);
         $framework->setContainer($container);
         $framework->setHookListeners($listeners);
 
@@ -647,9 +622,9 @@ class ContaoFrameworkTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->mockFramework());
+        $this->assertInstanceOf(ResetInterface::class, $this->getFramework());
 
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
         $adapter = $framework->getAdapter(Input::class);
 
         $this->assertSame($adapter, $framework->getAdapter(Input::class));
@@ -665,14 +640,13 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testDelegatesTheResetCalls(): void
     {
-        $framework = $this->mockFramework();
+        $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         Environment::set('scriptFilename', 'bar');
         Input::setUnusedGet('foo', 'bar');
 
-        /** @var PageModel&MockObject $model */
         $model = $this
             ->getMockBuilder(PageModel::class)
             ->disableOriginalConstructor()
@@ -696,10 +670,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    /**
-     * @param TokenChecker&MockObject $tokenChecker
-     */
-    private function mockFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
+    private function getFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
     {
         $requestStack = new RequestStack();
 

@@ -153,7 +153,7 @@ class ModuleChangePassword extends Module
 				// Validate the old password
 				if ($strKey == 'oldPassword')
 				{
-					$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+					$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
 					if (!$encoder->isPasswordValid($objMember->password, $objWidget->value, null))
 					{
@@ -220,6 +220,7 @@ class ModuleChangePassword extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 }
 

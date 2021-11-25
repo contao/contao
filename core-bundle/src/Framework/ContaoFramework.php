@@ -44,6 +44,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     use ContainerAwareTrait;
 
     private static bool $initialized = false;
+    private static string $nonce = '';
 
     private RequestStack $requestStack;
     private ScopeMatcher $scopeMatcher;
@@ -72,6 +73,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+        self::$nonce = '';
 
         if (!$this->isInitialized()) {
             return;
@@ -121,6 +123,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->hookListeners = $hookListeners;
     }
 
+    /**
+     * @template T
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     *
+     * @phpstan-return object
+     */
     public function createInstance($class, $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
@@ -137,7 +148,9 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @param class-string<T> $class
      *
-     * @return Adapter<T>
+     * @return T
+     *
+     * @phpstan-return Adapter<T>
      */
     public function getAdapter($class): Adapter
     {
@@ -146,6 +159,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         return $this->adapterCache[$class];
+    }
+
+    public static function getNonce(): string
+    {
+        if ('' === self::$nonce) {
+            self::$nonce = bin2hex(random_bytes(16));
+        }
+
+        return self::$nonce;
     }
 
     /**
@@ -239,7 +261,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         // Set the container
         System::setContainer($this->container);
 
-        /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
         // Preload the configuration (see #5872)
@@ -338,17 +359,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
-        /** @var Config $config */
-        $config = $this->getAdapter(Config::class);
-
-        if (!$config->isComplete()) {
+        if (!$this->getAdapter(Config::class)->isComplete()) {
             throw new RedirectResponseException('/contao/install');
         }
     }
 
     private function setTimezone(): void
     {
-        /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
         $this->iniSet('date.timezone', (string) $config->get('timeZone'));
@@ -375,7 +392,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function handleRequestToken(): void
     {
-        /** @var RequestToken $requestToken */
         $requestToken = $this->getAdapter(RequestToken::class);
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0

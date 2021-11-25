@@ -6,9 +6,8 @@ security:
         contao.security.frontend_user_provider:
             id: contao.security.frontend_user_provider
 
-    encoders:
-        Contao\User:
-            algorithm: auto
+    password_hashers:
+        Contao\User: auto
 
     firewalls:
         contao_install:
@@ -30,7 +29,6 @@ security:
                 handlers:
                     - contao.security.logout_handler
                     - contao_manager.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
         contao_frontend:
             request_matcher: contao.routing.frontend_matcher
@@ -50,7 +48,6 @@ security:
                 path: contao_frontend_logout
                 handlers:
                     - contao.security.logout_handler
-                success_handler: contao.security.logout_success_handler
 
     # Backwards compatibility
     access_control:

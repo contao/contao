@@ -96,7 +96,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             $this->createRememberMeCookie($request, $series, $cookieValue)
         );
 
-        return $this->getUserProvider($matchedToken->getClass())->loadUserByUsername($matchedToken->getUsername());
+        return $this->getUserProvider($matchedToken->getClass())->loadUserByIdentifier($matchedToken->getUsername());
     }
 
     protected function onLoginSuccess(Request $request, Response $response, TokenInterface $token): void

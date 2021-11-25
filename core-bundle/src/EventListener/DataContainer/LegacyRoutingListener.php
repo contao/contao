@@ -43,7 +43,6 @@ class LegacyRoutingListener
      */
     public function disableRoutingFields(): void
     {
-        /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
         $renderHelpIcon = fn () => $adapter->getHtml(

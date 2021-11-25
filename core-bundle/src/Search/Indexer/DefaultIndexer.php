@@ -24,7 +24,7 @@ class DefaultIndexer implements IndexerInterface
     private bool $indexProtected;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
+     * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
      */
     public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
@@ -89,7 +89,6 @@ class DefaultIndexer implements IndexerInterface
 
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
         try {
@@ -112,7 +111,6 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
         $search->removeEntry((string) $document->getUri());
     }

@@ -13,12 +13,16 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\BackendPage" class has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
 
 /**
  * Back end page picker.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the picker instead.
  */
 class BackendPage extends Backend
 {
@@ -57,7 +61,6 @@ class BackendPage extends Backend
 	 */
 	public function run()
 	{
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$objTemplate = new BackendTemplate('be_picker');

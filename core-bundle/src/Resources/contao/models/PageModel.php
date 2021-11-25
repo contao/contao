@@ -11,12 +11,10 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
@@ -325,8 +323,7 @@ class PageModel extends Model
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
 
-			/** @var ResponseContext|null $responseContext */
-			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if (!$responseContext)
 			{
@@ -339,7 +336,7 @@ class PageModel extends Model
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 				switch ($strKey)
 				{
@@ -1203,7 +1200,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
+			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, ContaoContext::ERROR);
 
 			throw new NoRootPageFoundException('No root page found');
 		}

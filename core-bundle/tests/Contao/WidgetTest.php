@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Input;
 use Contao\System;
 use Contao\Widget;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -127,7 +126,6 @@ class WidgetTest extends TestCase
 
     public function testValidatesThePostData(): void
     {
-        /** @var Widget&MockObject $widget */
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
