@@ -36,13 +36,14 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webmozart\PathUtil\Path;
 
-class ContaoCoreExtension extends Extension
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 {
     public function getAlias(): string
     {
@@ -52,6 +53,17 @@ class ContaoCoreExtension extends Extension
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
         return new Configuration($container->getParameter('kernel.project_dir'));
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $projectDir = $container->getParameter('kernel.project_dir');
+
+        $configuration = new Configuration($projectDir);
+        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        // Prepend the backend route prefix to make it available for third-party bundle configuration
+        $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
     }
 
     public function load(array $configs, ContainerBuilder $container): void
