@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 <?php if (PHP_VERSION_ID >= 80000): ?>
-#[AsFrontendModule("<?= $elementName ?>", "<?= $category ?>")]
+#[AsFrontendModule("<?= $elementName ?>", category: "<?= $category ?>")]
 <?php else: ?>
 /**
  * @FrontendModule("<?= $elementName ?>", category="<?= $category ?>")

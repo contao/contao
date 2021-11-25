@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 <?php if (PHP_VERSION_ID >= 80000): ?>
-#[AsContentElement("<?= $elementName ?>", "<?= $category ?>")]
+#[AsContentElement("<?= $elementName ?>", category: "<?= $category ?>")]
 <?php else: ?>
 /**
  * @ContentElement("<?= $elementName ?>", category="<?= $category ?>")

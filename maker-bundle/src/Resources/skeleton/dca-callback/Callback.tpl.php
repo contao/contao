@@ -14,7 +14,7 @@ use <?= $use ?>;
 <?php endforeach; ?>
 
 <?php if (PHP_VERSION_ID >= 80000): ?>
-#[AsCallback("<?= $table ?>", "<?= $target ?>")]
+#[AsCallback(table: "<?= $table ?>", target: "<?= $target ?>")]
 <?php else: ?>
 /**
  * @Callback(table="<?= $table ?>", target="<?= $target ?>")
