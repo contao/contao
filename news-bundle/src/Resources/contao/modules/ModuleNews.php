@@ -238,7 +238,7 @@ abstract class ModuleNews extends Module
 			return $jsonLd;
 		};
 
-		return $objTemplate->parseWithInsertTags();
+		return $objTemplate->parseTemplate();
 	}
 
 	/**

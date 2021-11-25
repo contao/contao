@@ -392,7 +392,7 @@ class Newsletter extends Backend
 			$objTemplate->css = $css;
 
 			// Parse template
-			$objEmail->html = $objTemplate->parseWithInsertTags();
+			$objEmail->html = $objTemplate->parseTemplate();
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
