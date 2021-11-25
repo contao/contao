@@ -390,16 +390,11 @@ class ContaoKernelTest extends ContaoTestCase
     }
 
     /**
-     * @group legacy
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
     public function testReturnsTheContaoCacheInProdMode(): void
     {
-        if (!class_exists(Event::class)) {
-            $this->expectDeprecation('%sLegacyEventDispatcherProxy is deprecated%s');
-        }
-
         unset($_SERVER['APP_ENV']);
 
         $tempDir = realpath($this->getTempDir());

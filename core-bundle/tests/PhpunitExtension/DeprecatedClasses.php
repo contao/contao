@@ -21,8 +21,6 @@ use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStu
 use Contao\GdImage;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\LegacyEventDispatcherProxy;
 
 final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
@@ -43,10 +41,6 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 
         if (class_exists(LegacyLogoutHandlerListener::class)) {
             $deprecations[LogoutHandler::class] = ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'];
-        }
-
-        if (!class_exists(Event::class)) {
-            $deprecations[LegacyEventDispatcherProxy::class] = ['%sLegacyEventDispatcherProxy is deprecated%s'];
         }
 
         return $deprecations;
