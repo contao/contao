@@ -125,8 +125,6 @@ class ContentMedia extends ContentElement
 			$arrFiles = array('m4a'=>null, 'mp3'=>null, 'wma'=>null, 'mpeg'=>null, 'wav'=>null, 'ogg'=>null);
 		}
 
-		$objFiles->reset();
-
 		// Convert the language to a locale (see #5678)
 		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);
 
@@ -134,9 +132,10 @@ class ContentMedia extends ContentElement
 		$strCaption = $this->playerCaption;
 
 		// Pass File objects to the template
-		while ($objFiles->next())
+		foreach ($objFiles as $objFile)
 		{
-			$objMeta = $objFiles->current()->getMetadata($strLanguage);
+			/** @var FilesModel $objFile */
+			$objMeta = $objFile->getMetadata($strLanguage);
 			$strTitle = null;
 
 			if (null !== $objMeta)
@@ -149,8 +148,8 @@ class ContentMedia extends ContentElement
 				}
 			}
 
-			$objFile = new File($objFiles->path);
-			$objFile->title = StringUtil::specialchars($strTitle ?: $objFiles->name);
+			$objFile = new File($objFile->path);
+			$objFile->title = StringUtil::specialchars($strTitle ?: $objFile->name);
 
 			$arrFiles[$objFile->extension] = $objFile;
 		}
