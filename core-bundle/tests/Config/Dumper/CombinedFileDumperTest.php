@@ -52,7 +52,7 @@ class CombinedFileDumperTest extends TestCase
     /**
      * @return Filesystem&MockObject
      */
-    private function mockFilesystem($expects): Filesystem
+    private function mockFilesystem(string $expects): Filesystem
     {
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem

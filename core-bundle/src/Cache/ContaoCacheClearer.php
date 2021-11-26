@@ -28,7 +28,7 @@ class ContaoCacheClearer implements CacheClearerInterface
         $this->filesystem = $filesystem;
     }
 
-    public function clear($cacheDir): void
+    public function clear(string $cacheDir): void
     {
         $this->filesystem->remove(Path::join($cacheDir, 'contao/config'));
         $this->filesystem->remove(Path::join($cacheDir, 'contao/dca'));

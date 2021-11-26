@@ -86,7 +86,10 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): ?Collection
+    /**
+     * @return Collection|array<UserModel>|UserModel|null
+     */
+    private function getUsers(bool $onlyAdmins = false)
     {
         $this->framework->initialize();
 

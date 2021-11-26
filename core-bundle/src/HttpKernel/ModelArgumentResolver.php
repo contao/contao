@@ -66,8 +66,9 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
             return null;
         }
 
-        $value = $request->attributes->get($name);
+        /** @var class-string<Model> $type */
         $type = $argument->getType();
+        $value = $request->attributes->get($name);
 
         if ($type && $value instanceof $type) {
             return $value;
@@ -84,7 +85,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         }
 
         /** @var Model $model */
-        $model = $this->framework->getAdapter($argument->getType());
+        $model = $this->framework->getAdapter($type);
 
         return $model->findByPk((int) $value);
     }

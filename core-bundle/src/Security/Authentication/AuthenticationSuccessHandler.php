@@ -158,6 +158,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             throw new BadRequestHttpException('Missing form field "_target_path". You probably need to adjust your custom login template.');
         }
 
-        return base64_decode($targetPath, true);
+        return base64_decode((string) $targetPath, true);
     }
 }

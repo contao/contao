@@ -260,6 +260,8 @@ class GdImageTest extends TestCase
     }
 
     /**
+     * @param resource $resource
+     *
      * @psalm-suppress UndefinedClass
      */
     private function assertIsGdResource($resource): void

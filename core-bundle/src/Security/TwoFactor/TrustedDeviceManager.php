@@ -85,6 +85,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $user->save();
     }
 
+    /**
+     * @return mixed
+     */
     public function getTrustedDevices(User $user)
     {
         return $this->entityManager

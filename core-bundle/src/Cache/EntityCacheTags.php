@@ -34,7 +34,7 @@ class EntityCacheTags
     private ?CacheInvalidator $cacheInvalidator;
 
     /**
-     * @var array<string, ClassMetadata>
+     * @var array<string, ClassMetadata<object>>
      */
     private array $classMetadata = [];
 
@@ -295,6 +295,9 @@ class EntityCacheTags
         $this->cacheInvalidator->invalidateTags($this->getTagsFor($target));
     }
 
+    /**
+     * @return ClassMetadata<object>
+     */
     private function getClassMetadata(string $className): ?ClassMetadata
     {
         $getMetadata = function (string $className) {

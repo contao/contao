@@ -24,6 +24,8 @@ use Twig\Error\RuntimeError;
 class ContaoEscaperTest extends TestCase
 {
     /**
+     * @param string|int $input
+     *
      * @dataProvider provideHtmlInput
      */
     public function testEscapesHtml($input, string $expectedOutput): void
@@ -71,6 +73,8 @@ class ContaoEscaperTest extends TestCase
     }
 
     /**
+     * @param string|int $input
+     *
      * @dataProvider provideHtmlAttributeInput
      */
     public function testEscapesHtmlAttributes($input, string $expectedOutput): void
@@ -104,6 +108,9 @@ class ContaoEscaperTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
+    /**
+     * @return string|false
+     */
     public function executeReplaceInsertTagsCallback(string $tag, bool $cache)
     {
         if ('bar' !== $tag) {
@@ -151,6 +158,9 @@ class ContaoEscaperTest extends TestCase
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
     }
 
+    /**
+     * @param string|int $input
+     */
     private function invokeEscapeHtml($input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtml(
@@ -160,6 +170,9 @@ class ContaoEscaperTest extends TestCase
         );
     }
 
+    /**
+     * @param string|int $input
+     */
     private function invokeEscapeHtmlAttr($input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtmlAttr(

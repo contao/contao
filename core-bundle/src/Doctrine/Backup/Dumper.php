@@ -105,6 +105,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @param mixed $value
+     */
     private function formatValueForDump($value, Column $column, Connection $connection): string
     {
         if (null === $value) {

@@ -25,6 +25,10 @@ class MemberGroupVoter extends Voter
         return ContaoCorePermissions::MEMBER_IN_GROUPS === $attribute;
     }
 
+    /**
+     * @param mixed $attribute
+     * @param mixed $subject
+     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         // Filter non-numeric values

@@ -180,9 +180,11 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param string|int|float $string
+     *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
+    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
@@ -286,6 +288,8 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param array|object $value
+     *
      * @group legacy
      *
      * @dataProvider invalidEncodingsProvider
@@ -294,6 +298,7 @@ class StringUtilTest extends TestCase
      */
     public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
     {
+        /** @phpstan-ignore-next-line */
         $result = StringUtil::convertEncoding($value, 'UTF-8');
 
         $this->assertSame('', $result);

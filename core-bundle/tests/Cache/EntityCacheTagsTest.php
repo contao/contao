@@ -85,7 +85,10 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid model class.');
 
-        /** @phpstan-ignore-next-line */
+        /*
+         * @phpstan-ignore-next-line
+         * @psalm-suppress InvalidArgument
+         */
         $entityCacheTags->getTagForModelClass(\stdClass::class);
     }
 
@@ -104,6 +107,8 @@ class EntityCacheTagsTest extends DoctrineTestCase
     }
 
     /**
+     * @param mixed $argument
+     *
      * @dataProvider getArguments
      */
     public function testGetTags($argument, array $expectedTags): void

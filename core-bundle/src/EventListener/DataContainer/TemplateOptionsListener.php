@@ -20,11 +20,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TemplateOptionsListener
 {
-    private Adapter $controller;
     private RequestStack $requestStack;
     private string $templatePrefix;
     private ?string $proxyClass;
     private array $customTemplates = [];
+
+    /**
+     * @var Adapter<Controller>
+     */
+    private Adapter $controller;
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack, string $templatePrefix, string $proxyClass = null)
     {

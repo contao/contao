@@ -514,12 +514,12 @@ class AuthenticationProviderTest extends TestCase
         yield ['onInvalidCredentials'];
     }
 
-    public function onValidCredentials($username): bool
+    public function onValidCredentials(string $username): bool
     {
         return true;
     }
 
-    public function onInvalidCredentials($username): bool
+    public function onInvalidCredentials(string $username): bool
     {
         return false;
     }
