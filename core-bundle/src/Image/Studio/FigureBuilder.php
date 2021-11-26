@@ -351,10 +351,8 @@ class FigureBuilder
      *
      * Set the value to null to remove it. If you want to explicitly remove an
      * auto-generated value from the results, set the $forceRemove flag to true.
-     *
-     * @param string|int|bool $forceRemove
      */
-    public function setLinkAttribute(string $attribute, ?string $value, $forceRemove = false): self
+    public function setLinkAttribute(string $attribute, ?string $value, bool $forceRemove = false): self
     {
         if (null !== $value || $forceRemove) {
             $this->additionalLinkAttributes[$attribute] = $value;
