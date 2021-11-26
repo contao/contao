@@ -218,7 +218,7 @@ class DefaultIndexerTest extends ContaoTestCase
      */
     public function testIndexesADocumentWithDeprecatedJsonLd(Document $document, ?array $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
     {
-        $this->expectDeprecation('Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
+        $this->expectDeprecation('Since contao/core-bundle 4.9: Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
 
         $this->testIndexesADocument($document, $expectedIndexParams, $expectedMessage, $indexProtected);
     }

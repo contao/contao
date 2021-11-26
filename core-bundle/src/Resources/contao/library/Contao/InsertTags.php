@@ -477,7 +477,7 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
-						@trigger_error('Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+						trigger_deprecation('contao/core-bundle', '4.9', 'Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.');
 
 						$strUrl = 'javascript:history.go(-1)';
 						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;
