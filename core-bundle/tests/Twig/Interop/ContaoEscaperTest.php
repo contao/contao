@@ -73,11 +73,9 @@ class ContaoEscaperTest extends TestCase
     }
 
     /**
-     * @param string|int $input
-     *
      * @dataProvider provideHtmlAttributeInput
      */
-    public function testEscapesHtmlAttributes($input, string $expectedOutput): void
+    public function testEscapesHtmlAttributes(string $input, string $expectedOutput): void
     {
         $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
 

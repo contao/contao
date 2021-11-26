@@ -180,7 +180,7 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param string|int|float $string
+     * @param mixed $string
      *
      * @dataProvider validEncodingsProvider
      */
