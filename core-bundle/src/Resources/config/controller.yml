@@ -102,9 +102,9 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
-
     Contao\CoreBundle\Controller\Page\Error503PageController: ~
+
+    Contao\CoreBundle\Controller\Page\RootPageController: ~
 
     Contao\CoreBundle\Controller\SitemapController:
         arguments:
