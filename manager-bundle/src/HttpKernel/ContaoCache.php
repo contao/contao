@@ -52,11 +52,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 
     public function getEventDispatcher(): EventDispatcher
     {
-        if (!$this->eventDispatcher) {
-            $this->eventDispatcher = new EventDispatcher();
-        }
-
-        return $this->eventDispatcher;
+        return $this->eventDispatcher ??= new EventDispatcher();
     }
 
     public function fetch(Request $request, $catch = false): Response
