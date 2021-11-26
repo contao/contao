@@ -17,6 +17,9 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
+/**
+ * @internal
+ */
 class ServiceUnavailableListener
 {
     private ScopeMatcher $scopeMatcher;
