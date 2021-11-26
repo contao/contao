@@ -97,12 +97,6 @@ services:
             - '@security.helper'
             - '@?event_dispatcher'
 
-    contao.listener.data_container.backend_themes_options:
-        class: Contao\CoreBundle\EventListener\DataContainer\BackendThemesOptionsListener
-        arguments:
-            - '@Contao\CoreBundle\BackendTheme\BackendThemes'
-            - '%contao.backend.theme%'
-
     contao.listener.data_container.page_url:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUrlListener
         public: true

@@ -94,7 +94,6 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.backend.custom_css', $config['backend']['custom_css']);
         $container->setParameter('contao.backend.custom_js', $config['backend']['custom_js']);
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
-        $container->setParameter('contao.backend.theme', $config['backend']['theme']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
@@ -177,11 +176,6 @@ class ContaoCoreExtension extends Extension
                 $definition->addTag('contao.picker_provider', get_object_vars($attribute));
             }
         );
-
-        $container
-            ->registerForAutoconfiguration(BackendThemeInterface::class)
-            ->addTag('contao.backend_theme')
-        ;
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
