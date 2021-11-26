@@ -62,6 +62,8 @@ services:
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
+        arguments:
+            - '@contao.filesystem.filesystem'
 
     contao.command.install:
         class: Contao\CoreBundle\Command\InstallCommand

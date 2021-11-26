@@ -178,6 +178,23 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    contao.filesystem.dbafs:
+        class: Contao\CoreBundle\Filesystem\Dbafs
+        arguments:
+            - '@database_connection'
+            - tl_files
+            - md5
+        calls:
+            - [setDatabasePathPrefix, ['%contao.upload_path%']]
+
+    contao.filesystem.filesystem:
+        class: Contao\CoreBundle\Filesystem\Filesystem
+        arguments:
+            - '@contao.filesystem.dbafs'
+            - '@flysystem.adapter.default_storage'
+        tags:
+            - { name: contao.filesystem }
+
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -988,6 +1005,7 @@ services:
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
+    Contao\CoreBundle\Filesystem\Filesystem: '@contao.filesystem.filesystem'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Image\Studio\Studio:

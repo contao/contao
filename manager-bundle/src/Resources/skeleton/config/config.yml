@@ -108,3 +108,11 @@ scheb_two_factor:
         enabled: true
     backup_codes:
         enabled: true
+
+# Flysystem configuration
+flysystem:
+    storages:
+        default_storage:
+            adapter: local
+            options:
+                directory: '%kernel.project_dir%/%contao.upload_path%'
