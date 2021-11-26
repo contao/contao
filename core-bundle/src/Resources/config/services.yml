@@ -1104,10 +1104,6 @@ services:
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.string.simple_token_expression_language" instead.
 
-    Contao\CoreBundle\BackendTheme\BackendThemes:
-        arguments: [ !tagged { tag: 'contao.backend_theme', index_by: 'alias' } ]
-        public: true
-
     Contao\CoreBundle\Util\SimpleTokenParser:
         alias: contao.string.simple_token_parser
         public: true
