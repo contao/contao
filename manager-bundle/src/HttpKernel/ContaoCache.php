@@ -50,6 +50,11 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new CleanupCacheTagsListener());
     }
 
+    /**
+     * Overwrites the getEventDispatcher() method of the EventDispatchingHttpCache
+     * trait, so the LegacyEventDispatcherProxy is not used. Once we have upgraded
+     * to Symfony 6, the method can be removed again.
+     */
     public function getEventDispatcher(): EventDispatcher
     {
         return $this->eventDispatcher ??= new EventDispatcher();
