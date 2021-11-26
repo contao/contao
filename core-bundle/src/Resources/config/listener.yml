@@ -315,3 +315,10 @@ services:
             - '@event_dispatcher'
         tags:
             - kernel.event_listener
+
+    contao.listener.undo_operations_listener:
+        class: Contao\CoreBundle\EventListener\UndoOperationsListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@translator'

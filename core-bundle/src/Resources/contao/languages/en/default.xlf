@@ -1229,6 +1229,12 @@
       <trans-unit id="MSC.delAllConfirmFile">
         <source>Do you really want to delete the selected resources?</source>
       </trans-unit>
+      <trans-unit id="MSC.restoreParentConfirm">
+        <source>To restore record `%s` ID %s, the related parent record `%s` ID %s will be restored, too.</source>
+      </trans-unit>
+      <trans-unit id="MSC.cannotBeRestored">
+        <source>This record cannot be restored, because the parent is missing and cannot be restored.</source>
+      </trans-unit>
       <trans-unit id="MSC.filterRecords">
         <source>Records</source>
       </trans-unit>

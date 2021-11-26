@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\Database\Result;
 use Doctrine\DBAL\Exception\DriverException;
 use Patchwork\Utf8;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -1522,8 +1523,8 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		$this->import(BackendUser::class, 'User');
 
-		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, originalId, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?, ?)")
+									  ->execute($this->User->id, time(), $this->strTable, $this->intId, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -1672,8 +1673,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		$error = false;
-		$query = $objRecords->query;
 		$data = StringUtil::deserialize($objRecords->data);
 
 		if (!\is_array($data))
@@ -1681,64 +1680,42 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$this->redirect($this->getReferer());
 		}
 
-		$arrFields = array();
+		/** @var \Contao\Database\Result $objParent */
+		$objParent = $this->getParentRecordToRestore($objRecords->fromTable, $data[$objRecords->fromTable][0]);
 
-		// Restore the data
-		foreach ($data as $table=>$fields)
+		while ($objParent)
 		{
-			$this->loadDataContainer($table);
+			$row = $objParent->row();
+			$error = false;
+			$parentData = StringUtil::deserialize($row['data']);
+			$this->restoreUndoRecord($parentData, $error);
 
-			// Get the currently available fields
-			if (!isset($arrFields[$table]))
+			if (!$error)
 			{
-				$arrFields[$table] = array_flip($this->Database->getFieldNames($table));
+				$this->log('Undone ' . $row['query'], __METHOD__, TL_GENERAL);
+
+				$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
+					->limit(1)
+					->execute($row['id']);
 			}
 
-			foreach ($fields as $row)
-			{
-				// Unset fields that no longer exist in the database
-				$row = array_intersect_key($row, $arrFields[$table]);
-
-				// Re-insert the data
-				$objInsertStmt = $this->Database->prepare("INSERT INTO " . $table . " %s")
-												->set($row)
-												->execute();
-
-				// Do not delete record from tl_undo if there is an error
-				if ($objInsertStmt->affectedRows < 1)
-				{
-					$error = true;
-				}
-
-				// Trigger the undo_callback
-				if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback']))
-				{
-					foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($table, $row, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($table, $row, $this);
-						}
-					}
-				}
-			}
+			$objParent = $this->getParentRecordToRestore($row['fromTable'], $parentData[$row['fromTable']][0]);
 		}
+
+		$error = false;
+		$this->restoreUndoRecord($data, $error);
 
 		// Add log entry and delete record from tl_undo if there was no error
 		if (!$error)
 		{
-			$this->log('Undone ' . $query, __METHOD__, TL_GENERAL);
+			$this->log('Undone ' . $objRecords->query, __METHOD__, TL_GENERAL);
 
 			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)
 						   ->execute($this->intId);
 		}
 
+		// TODO: Apply invalidateCacheTags logic for parent row(s)
 		$this->invalidateCacheTags();
 
 		$this->redirect($this->getReferer());
@@ -6237,6 +6214,100 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		return $attributes;
+	}
+
+	/*
+	 * Check whether the given record has a parent that needs to be restored before.
+	 */
+	private function getParentRecordToRestore(string $table, array $data): ?Result
+	{
+		$this->loadDataContainer($table);
+
+		$parent = array();
+
+		if (isset($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable']) && true === $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'])
+		{
+			$parent = array('table' => $data['ptable'], 'id' => $data['pid']);
+		}
+
+		if (!$parent && isset($GLOBALS['TL_DCA'][$table]['config']['ptable']))
+		{
+			$parent = array('table' => $GLOBALS['TL_DCA'][$table]['config']['ptable'], 'id' => $data['pid']);
+		}
+
+		if (!$parent)
+		{
+			return null;
+		}
+
+		$objParent = $this->Database
+			->prepare('SELECT COUNT(*) AS rowExists FROM ' . $parent['table'] . ' WHERE id = ?')
+			->execute($parent['id'])
+		;
+
+		if ((int) $objParent->rowExists > 0)
+		{
+			return null;
+		}
+
+		$objParentRecord = $this->Database
+			->prepare('SELECT * FROM tl_undo WHERE fromTable = ? AND originalId = ?')
+			->limit(1)
+			->execute($parent['table'], $parent['id'])
+		;
+
+		return ($objParentRecord->numRows > 0) ? $objParentRecord : null;
+	}
+
+	private function restoreUndoRecord(array $data, bool &$log)
+	{
+		$arrFields = array();
+
+		// Restore the data
+		foreach ($data as $table=>$fields)
+		{
+			$this->loadDataContainer($table);
+
+			// Get the currently available fields
+			if (!isset($arrFields[$table]))
+			{
+				$arrFields[$table] = array_flip($this->Database->getFieldNames($table));
+			}
+
+			foreach ($fields as $row)
+			{
+				// Unset fields that no longer exist in the database
+				$row = array_intersect_key($row, $arrFields[$table]);
+
+				// Re-insert the data
+				$objInsertStmt = $this->Database->prepare("INSERT INTO " . $table . " %s")
+					->set($row)
+					->execute();
+
+				// Do not delete record from tl_undo if there is an error
+				if ($objInsertStmt->affectedRows < 1)
+				{
+					$error = true;
+				}
+
+				// Trigger the undo_callback
+				if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onundo_callback']))
+				{
+					foreach ($GLOBALS['TL_DCA'][$table]['config']['onundo_callback'] as $callback)
+					{
+						if (\is_array($callback))
+						{
+							$this->import($callback[0]);
+							$this->{$callback[0]}->{$callback[1]}($table, $row, $this);
+						}
+						elseif (\is_callable($callback))
+						{
+							$callback($table, $row, $this);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

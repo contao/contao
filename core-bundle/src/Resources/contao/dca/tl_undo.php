@@ -88,6 +88,10 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			'sorting'                 => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
+		'originalId' => array
+		(
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+		),
 		'query' => array
 		(
 			'sql'                     => "text NULL"
