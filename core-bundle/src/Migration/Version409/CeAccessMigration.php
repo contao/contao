@@ -16,6 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
 
 /**
@@ -48,6 +49,10 @@ class CeAccessMigration extends AbstractMigration
         return !isset($columns['elements']);
     }
 
+    /**
+     * @throws DriverException
+     * @throws Exception
+     */
     public function run(): MigrationResult
     {
         $this->framework->initialize();

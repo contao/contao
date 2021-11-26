@@ -17,6 +17,7 @@ use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FormTextField;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
@@ -48,6 +49,10 @@ class CeAccessMigrationTest extends TestCase
         unset($GLOBALS['TL_CTE'], $GLOBALS['TL_FFL']);
     }
 
+    /**
+     * @throws DriverException
+     * @throws Exception
+     */
     public function testActivatesTheFieldsInAllUserGroups(): void
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
@@ -95,6 +100,9 @@ class CeAccessMigrationTest extends TestCase
         $this->assertTrue($migration->run()->isSuccessful());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testDoesNothingIfTheUserGroupTableDoesNotExist(): void
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);

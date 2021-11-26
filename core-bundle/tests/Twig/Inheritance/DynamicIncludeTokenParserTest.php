@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Lexer;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\AbstractExpression;
@@ -35,6 +36,8 @@ class DynamicIncludeTokenParserTest extends TestCase
 
     /**
      * @dataProvider provideSources
+     *
+     * @throws SyntaxError
      */
     public function testHandlesContaoIncludes(string $code, string ...$expectedStrings): void
     {
@@ -103,6 +106,9 @@ class DynamicIncludeTokenParserTest extends TestCase
         ];
     }
 
+    /**
+     * @throws SyntaxError
+     */
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
         $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
@@ -131,6 +137,8 @@ class DynamicIncludeTokenParserTest extends TestCase
 
     /**
      * @dataProvider provideTokens
+     *
+     * @throws SyntaxError
      */
     public function testParsesArguments(string $source, ?AbstractExpression $variables, bool $only, bool $ignoreMissing): void
     {

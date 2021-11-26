@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -28,6 +29,8 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
 {
     /**
      * @dataProvider provideRequestAndDirty
+     *
+     * @throws InvalidArgumentException
      */
     public function testDoesNotAddMessageIfNotBackendRequestOrAppCacheIsNotDirty(bool $backendRequest, bool $dirty): void
     {
@@ -72,6 +75,9 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         yield [false, false];
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function testAddsMessage(): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);

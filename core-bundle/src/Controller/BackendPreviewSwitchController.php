@@ -63,6 +63,8 @@ class BackendPreviewSwitchController
 
     /**
      * @Route("/preview_switch", name="contao_backend_switch")
+     *
+     * @throws Exception
      */
     public function __invoke(Request $request): Response
     {

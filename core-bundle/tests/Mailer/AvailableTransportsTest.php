@@ -20,6 +20,9 @@ use Doctrine\Common\Annotations\AnnotationReader;
 
 class AvailableTransportsTest extends TestCase
 {
+    /**
+     * @throws \ReflectionException
+     */
     public function testAnnotatedCallbacks(): void
     {
         $service = new AvailableTransports();

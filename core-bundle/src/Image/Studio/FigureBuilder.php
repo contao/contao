@@ -174,6 +174,8 @@ class FigureBuilder
 
     /**
      * Sets the image resource from a tl_files UUID.
+     *
+     * @throws ContainerExceptionInterface
      */
     public function fromUuid(string $uuid): self
     {

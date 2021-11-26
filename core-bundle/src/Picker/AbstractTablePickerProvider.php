@@ -41,6 +41,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->connection = $connection;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getUrl(PickerConfig $config): string
     {
         $table = $this->getTableFromContext($config->getContext());

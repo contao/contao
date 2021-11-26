@@ -32,6 +32,9 @@ class BinaryStringTypeTest extends TestCase
         Type::addType(BinaryStringType::NAME, BinaryStringType::class);
     }
 
+    /**
+     * @throws Exception
+     */
     protected function setUp(): void
     {
         parent::setUp();

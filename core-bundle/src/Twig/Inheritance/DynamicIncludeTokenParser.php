@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Twig\Error\SyntaxError;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
@@ -70,6 +71,9 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         }
     }
 
+    /**
+     * @throws SyntaxError
+     */
     private function parseArguments(): array
     {
         $stream = $this->parser->getStream();

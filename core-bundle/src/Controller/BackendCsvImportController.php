@@ -53,6 +53,9 @@ class BackendCsvImportController
         $this->projectDir = $projectDir;
     }
 
+    /**
+     * @throws Exception
+     */
     public function importListWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
@@ -65,6 +68,9 @@ class BackendCsvImportController
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function importTableWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
@@ -80,6 +86,9 @@ class BackendCsvImportController
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public function importOptionWizardAction(DataContainer $dc): Response
     {
         return $this->importFromTemplate(
@@ -246,8 +255,6 @@ class BackendCsvImportController
 
     /**
      * Returns the uploaded files from a FileUpload instance.
-     *
-     * @throws \RuntimeException
      *
      * @return array<string>
      */

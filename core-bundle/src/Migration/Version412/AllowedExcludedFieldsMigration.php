@@ -16,6 +16,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
 
 /**
@@ -75,6 +76,10 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
         return false;
     }
 
+    /**
+     * @throws DriverException
+     * @throws Exception
+     */
     public function run(): MigrationResult
     {
         $groups = $this->connection->fetchAllAssociative("

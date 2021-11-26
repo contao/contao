@@ -22,6 +22,8 @@ class AbstractPageRouteProviderTest extends TestCase
 {
     /**
      * @dataProvider compareRoutesProvider
+     *
+     * @throws \ReflectionException
      */
     public function testCompareRoutes(Route $a, Route $b, ?array $languages, int $expected): void
     {
@@ -243,6 +245,8 @@ class AbstractPageRouteProviderTest extends TestCase
 
     /**
      * @dataProvider ordersRoutesByPreferredLanguages
+     *
+     * @throws \ReflectionException
      */
     public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
     {
@@ -359,6 +363,8 @@ class AbstractPageRouteProviderTest extends TestCase
 
     /**
      * @dataProvider convertLanguageForSortingProvider
+     *
+     * @throws \ReflectionException
      */
     public function testConvertLanguagesForSorting(array $languages, array $expected): void
     {
