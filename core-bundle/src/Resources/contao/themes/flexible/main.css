@@ -355,6 +355,9 @@ body:not(.fullscreen) #container {
 	text-overflow:ellipsis;
 	line-height:22px;
 }
+#main_headline span a {
+	text-decoration: underline;
+}
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
