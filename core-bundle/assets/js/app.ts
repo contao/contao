@@ -1,3 +1,8 @@
 require('../styles/app.css');
 
-import 'alpinejs'
+import toggles from './_toggles';
+
+document.addEventListener('DOMContentLoaded', () => {
+    toggles()
+
+}, false);

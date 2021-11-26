@@ -350,7 +350,6 @@ services:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
             - { name: knp_menu.menu_builder, method: buildUserMenu, alias: be_user_menu }
-        public: true
 
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
@@ -1124,10 +1123,7 @@ services:
 
     Contao\CoreBundle\BackendTheme\EncoreEntrypointLookupCollection:
         arguments:
-            - '@Contao\CoreBundle\BackendTheme\BackendThemes'
-            - '%kernel.project_dir%'
-            - '%contao.backend%'
-            - '@contao.framework'
+            - '%contao.web_dir%'
 
     contao.backend_theme.tag_renderer:
         class: Symfony\WebpackEncoreBundle\Asset\TagRenderer

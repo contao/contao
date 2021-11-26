@@ -4,7 +4,7 @@ const projectDir = process.cwd().replace(/\/assets$/, '').replace(/\/src\/Resour
 
 module.exports = {
     darkMode: 'class',
-    purge: [
+    content: [
         projectDir + '/src/Resources/views/**/*.html.twig',
         projectDir + '/vendor/**/Resources/views/**/*.html.twig',
     ],
