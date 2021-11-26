@@ -539,7 +539,6 @@ abstract class Backend extends Controller
 							$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 						}
 
-
 						$strUrl = $container->get('router')->generate('contao_backend', array
 						(
 							'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
