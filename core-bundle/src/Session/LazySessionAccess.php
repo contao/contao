@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  * Automatically starts the session if someone accesses $_SESSION.
  *
  * @internal
+ * @implements \ArrayAccess<mixed, mixed>
  */
 class LazySessionAccess implements \ArrayAccess, \Countable
 {

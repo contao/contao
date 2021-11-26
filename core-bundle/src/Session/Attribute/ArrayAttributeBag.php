@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
  * Provides an array access adapter for a session attribute bag.
+ *
+ * @implements \ArrayAccess<mixed, mixed>
  */
 class ArrayAttributeBag extends AttributeBag implements \ArrayAccess
 {

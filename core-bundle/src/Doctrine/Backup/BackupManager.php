@@ -165,8 +165,8 @@ class BackupManager
     }
 
     /**
-     * @param resource $fileHandle
-     * @param resource $deflateContext
+     * @param resource                 $fileHandle
+     * @param \DeflateContext|resource $deflateContext
      */
     private function writeLine(string $data, $fileHandle, $deflateContext): void
     {
@@ -181,8 +181,8 @@ class BackupManager
     }
 
     /**
-     * @param resource $fileHandle
-     * @param resource $deflateContext
+     * @param resource                 $fileHandle
+     * @param \DeflateContext|resource $deflateContext
      */
     private function finishWriting($fileHandle, $deflateContext): void
     {
