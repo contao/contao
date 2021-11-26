@@ -23,6 +23,7 @@ use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
@@ -47,6 +48,16 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         $this->addSubscriber(new PurgeListener());
         $this->addSubscriber(new PurgeTagsListener());
         $this->addSubscriber(new CleanupCacheTagsListener());
+    }
+
+    /**
+     * Overwrites the getEventDispatcher() method of the EventDispatchingHttpCache
+     * trait, so the LegacyEventDispatcherProxy is not used. Once we have upgraded
+     * to Symfony 6, the method can be removed again.
+     */
+    public function getEventDispatcher(): EventDispatcher
+    {
+        return $this->eventDispatcher ??= new EventDispatcher();
     }
 
     public function fetch(Request $request, $catch = false): Response

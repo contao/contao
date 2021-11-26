@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -235,9 +236,12 @@ class ContaoExtensionTest extends TestCase
 
         System::setContainer($container);
 
+        $framework = new \ReflectionClass(ContaoFramework::class);
+        $framework->setStaticPropertyValue('nonce', '<nonce>');
+
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
-            ['B' => "root before B\n[[TL_PARENT]]root after B"],
+            ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
             ['foo' => 'bar']
         );
 

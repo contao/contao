@@ -44,6 +44,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     use ContainerAwareTrait;
 
     private static bool $initialized = false;
+    private static string $nonce = '';
 
     private RequestStack $requestStack;
     private ScopeMatcher $scopeMatcher;
@@ -72,6 +73,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+        self::$nonce = '';
 
         if (!$this->isInitialized()) {
             return;
@@ -157,6 +159,15 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         return $this->adapterCache[$class];
+    }
+
+    public static function getNonce(): string
+    {
+        if ('' === self::$nonce) {
+            self::$nonce = bin2hex(random_bytes(16));
+        }
+
+        return self::$nonce;
     }
 
     /**

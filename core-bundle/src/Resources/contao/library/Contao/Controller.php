@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -839,7 +840,9 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_JQUERY']));
 		}
 
-		$arrReplace['[[TL_JQUERY]]'] = $strScripts;
+		$nonce = ContaoFramework::getNonce();
+
+		$arrReplace["[[TL_JQUERY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal MooTools scripts
@@ -848,7 +851,7 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_MOOTOOLS']));
 		}
 
-		$arrReplace['[[TL_MOOTOOLS]]'] = $strScripts;
+		$arrReplace["[[TL_MOOTOOLS_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal <body> tags
@@ -863,7 +866,7 @@ abstract class Controller extends System
 		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
-		$arrReplace['[[TL_BODY]]'] = $strScripts;
+		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		$objCombiner = new Combiner();
@@ -930,7 +933,7 @@ abstract class Controller extends System
 			}
 		}
 
-		$arrReplace['[[TL_CSS]]'] = $strScripts;
+		$arrReplace["[[TL_CSS_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal scripts
@@ -1000,7 +1003,7 @@ abstract class Controller extends System
 			}
 		}
 
-		$arrReplace['[[TL_HEAD]]'] = $strScripts;
+		$arrReplace["[[TL_HEAD_$nonce]]"] = $strScripts;
 
 		return str_replace(array_keys($arrReplace), $arrReplace, $strBuffer);
 	}
