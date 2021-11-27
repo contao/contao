@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\FetchMode;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -80,7 +80,12 @@ class BackendPreviewSwitchController
      */
     private $router;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName, TranslatorInterface $translator)
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -90,6 +95,7 @@ class BackendPreviewSwitchController
         $this->router = $router;
         $this->tokenManager = $tokenManager;
         $this->csrfTokenName = $csrfTokenName;
+        $this->translator = $translator;
     }
 
     /**
@@ -108,9 +114,7 @@ class BackendPreviewSwitchController
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
-            $this->authenticatePreview($request);
-
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return $this->authenticatePreview($request);
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
@@ -144,7 +148,7 @@ class BackendPreviewSwitchController
         }
     }
 
-    private function authenticatePreview(Request $request): void
+    private function authenticatePreview(Request $request): Response
     {
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
@@ -155,10 +159,16 @@ class BackendPreviewSwitchController
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
         if (null !== $frontendUsername) {
-            $this->previewAuthenticator->authenticateFrontendUser($frontendUsername, $showUnpublished);
+            if (!$this->previewAuthenticator->authenticateFrontendUser($frontendUsername, $showUnpublished)) {
+                return new Response($this->translator->trans('ERR.previewSwitchFailedUser', [], 'contao_default'), Response::HTTP_BAD_REQUEST);
+            }
         } else {
-            $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
+            if (!$this->previewAuthenticator->authenticateFrontendGuest($showUnpublished)) {
+                return new Response($this->translator->trans('ERR.previewSwitchFailed', [], 'contao_default'), Response::HTTP_BAD_REQUEST);
+            }
         }
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     private function getMembersDataList(BackendUser $user, Request $request): array
@@ -201,6 +211,6 @@ class BackendPreviewSwitchController
             [str_replace('%', '', $request->request->get('value')).'%']
         );
 
-        return $result->fetchAll(FetchMode::COLUMN);
+        return $result->fetchFirstColumn();
     }
 }

@@ -96,6 +96,7 @@ services:
             - '@router'
             - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
             - '%contao.csrf_token_name%'
+            - '@translator'
         tags:
             - controller.service_arguments
 

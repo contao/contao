@@ -241,7 +241,7 @@
                     if (204 === this.status) {
                         location.reload();
                     } else {
-                        location.reload();
+                        alert(this.responseText ? this.responseText : 'An unknown error occurred.');
                     }
                 });
             });

@@ -973,6 +973,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('router'),
                 new Reference(ContaoCsrfTokenManager::class),
                 new Reference('%contao.csrf_token_name%'),
+                new Reference('translator'),
             ],
             $definition->getArguments()
         );
