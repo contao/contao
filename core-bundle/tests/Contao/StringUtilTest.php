@@ -20,11 +20,14 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\NullLogger;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -289,11 +292,11 @@ class StringUtilTest extends TestCase
      * @group legacy
      *
      * @dataProvider invalidEncodingsProvider
-     *
-     * @expectedDeprecation Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.
      */
     public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
+
         $result = StringUtil::convertEncoding($value, 'UTF-8');
 
         $this->assertSame('', $result);

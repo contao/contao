@@ -718,7 +718,7 @@ class PageModel extends Model
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
-		@trigger_error('Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedByPid() instead and filter the guests pages yourself.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedByPid() instead and filter the guests pages yourself.');
 
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
