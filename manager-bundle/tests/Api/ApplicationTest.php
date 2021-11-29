@@ -106,11 +106,10 @@ class ApplicationTest extends ContaoTestCase
         $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
 
-        /** @var array $commands */
-        $commands = $application->all();
+        $expectedCommands = ['help', 'list', 'version', 'config:get'];
+        $actualCommands = array_intersect($expectedCommands, array_keys($application->all()));
 
-        $this->assertCount(4, $commands);
-        $this->assertArrayHasKey('config:get', $commands);
+        $this->assertSame($expectedCommands, $actualCommands);
     }
 
     public function testThrowsExceptionIfPluginReturnsInvalidCommand(): void
