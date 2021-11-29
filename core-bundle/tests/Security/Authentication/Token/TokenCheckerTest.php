@@ -30,6 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class TokenCheckerTest extends TestCase
 {
@@ -39,7 +40,7 @@ class TokenCheckerTest extends TestCase
     public function testChecksForUserInTokenStorageIfFirewallContextMatches(string $class, string $firewallContext, array $roles): void
     {
         $user = $this->mockUser($class);
-        $token = new UsernamePasswordToken($user, 'password', 'provider', $roles);
+        $token = new UsernamePasswordToken($user, 'provider', $roles);
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -91,7 +92,7 @@ class TokenCheckerTest extends TestCase
     public function testChecksForUserInSessionIfFirewallContextDoesNotMatch(string $class, string $firewallContext, array $roles): void
     {
         $user = $this->mockUser($class);
-        $token = new UsernamePasswordToken($user, 'password', 'provider', $roles);
+        $token = new UsernamePasswordToken($user, 'provider', $roles);
 
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -130,7 +131,7 @@ class TokenCheckerTest extends TestCase
     public function testReturnsTheFrontendUsername(): void
     {
         $user = $this->mockUser(FrontendUser::class);
-        $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_MEMBER']);
+        $token = new UsernamePasswordToken($user, 'provider', ['ROLE_MEMBER']);
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
@@ -147,7 +148,7 @@ class TokenCheckerTest extends TestCase
     public function testReturnsTheBackendUsername(): void
     {
         $user = $this->mockUser(BackendUser::class);
-        $token = new UsernamePasswordToken($user, 'password', 'provider', ['ROLE_USER']);
+        $token = new UsernamePasswordToken($user, 'provider', ['ROLE_USER']);
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
@@ -196,7 +197,7 @@ class TokenCheckerTest extends TestCase
         yield [new FrontendPreviewToken(null, true), false, false];
         yield [new FrontendPreviewToken(null, true), true, true];
         yield [new FrontendPreviewToken(null, false), true, false];
-        yield [new UsernamePasswordToken('user', 'password', 'provider'), true, false];
+        yield [new UsernamePasswordToken(new InMemoryUser('user', null), 'provider'), true, false];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
@@ -287,7 +288,7 @@ class TokenCheckerTest extends TestCase
 
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
-        $token = new UsernamePasswordToken('user', 'password', 'provider');
+        $token = new UsernamePasswordToken(new InMemoryUser('user', null), 'provider');
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),

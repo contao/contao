@@ -95,7 +95,7 @@
         "symfony/polyfill-mbstring": "^1.0",
         "symfony/process": "^5.3",
         "symfony/routing": "^5.3",
-        "symfony/security-bundle": "^5.3",
+        "symfony/security-bundle": "^5.4",
         "symfony/string": "^5.3",
         "symfony/translation": "^5.3",
         "symfony/twig-bundle": "^5.3",
@@ -116,7 +116,6 @@
         "contao/manager-bundle": "^4.5 <4.5.2",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
-        "symfony/security-core": "5.3.0",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },

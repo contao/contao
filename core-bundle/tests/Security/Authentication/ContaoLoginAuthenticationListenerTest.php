@@ -224,7 +224,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
                 function ($token) use ($username, $password) {
                     /** @var UsernamePasswordToken $token */
                     $this->assertInstanceOf(UsernamePasswordToken::class, $token);
-                    $this->assertSame($username, $token->getUser());
+                    $this->assertSame($username, $token->getUser()->getUserIdentifier());
                     $this->assertSame($password, $token->getCredentials());
 
                     return true;
