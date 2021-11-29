@@ -46,10 +46,7 @@ class ControllerResolver implements ControllerResolverInterface
         return $this->resolver->getController($request);
     }
 
-    /**
-     * @param callable|false $controller
-     */
-    public function getArguments(Request $request, $controller): array
+    public function getArguments(Request $request, callable $controller): array
     {
         if (!method_exists($this->resolver, 'getArguments')) {
             return [];

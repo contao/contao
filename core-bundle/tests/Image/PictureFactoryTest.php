@@ -605,7 +605,7 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
-     * @param PictureConfiguration|string $size
+     * @param PictureConfiguration|string|null $size
      *
      * @dataProvider getResizeOptionsScenarios
      */

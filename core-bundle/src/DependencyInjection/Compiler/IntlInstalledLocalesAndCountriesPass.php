@@ -46,7 +46,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<int, array|scalar|null>
+     * @return array<int, string>
      */
     private function getEnabledLocales(ContainerBuilder $container): array
     {

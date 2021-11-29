@@ -24,7 +24,6 @@ class ArrayAttributeBag extends AttributeBag implements \ArrayAccess
     /**
      * @param mixed $offset
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset): bool
     {
         return $this->has($offset);
@@ -45,7 +44,6 @@ class ArrayAttributeBag extends AttributeBag implements \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
@@ -54,7 +52,6 @@ class ArrayAttributeBag extends AttributeBag implements \ArrayAccess
     /**
      * @param mixed $offset
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
         $this->remove($offset);

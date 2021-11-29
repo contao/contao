@@ -34,7 +34,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     /**
      * @param mixed $offset
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($offset): bool
     {
         if (!$this->hasPreviousSession && !$this->session->isStarted()) {
@@ -63,7 +62,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
      * @param mixed $offset
      * @param mixed $value
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value): void
     {
         $this->startSession();
@@ -74,7 +72,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
     /**
      * @param mixed $offset
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($offset): void
     {
         $this->startSession();
@@ -82,7 +79,6 @@ class LazySessionAccess implements \ArrayAccess, \Countable
         unset($_SESSION[$offset]);
     }
 
-    #[\ReturnTypeWillChange]
     public function count(): int
     {
         if (!$this->hasPreviousSession && !$this->session->isStarted()) {

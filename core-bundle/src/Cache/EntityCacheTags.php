@@ -296,7 +296,11 @@ class EntityCacheTags
     }
 
     /**
-     * @return ClassMetadata<object>
+     * @template T of object
+     *
+     * @param class-string<T> $className
+     *
+     * @return ?ClassMetadata<T>
      */
     private function getClassMetadata(string $className): ?ClassMetadata
     {

@@ -301,7 +301,7 @@ class ContaoExtensionTest extends TestCase
     /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension($environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
         if (null === $environment) {
             $environment = $this->createMock(Environment::class);
