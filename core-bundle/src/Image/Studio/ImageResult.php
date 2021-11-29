@@ -166,7 +166,7 @@ class ImageResult
      * Set $absolute to true to return an absolute path instead of a path
      * relative to the project dir.
      */
-    public function getFilePath($absolute = false): string
+    public function getFilePath(bool $absolute = false): string
     {
         $path = $this->filePathOrImageInterface instanceof ImageInterface
             ? $this->filePathOrImageInterface->getPath()

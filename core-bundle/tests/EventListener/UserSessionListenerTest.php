@@ -17,6 +17,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\UserSessionListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use Contao\User;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -35,6 +36,8 @@ use Symfony\Component\Security\Core\User\InMemoryUser;
 class UserSessionListenerTest extends TestCase
 {
     /**
+     * @param class-string<User> $userClass
+     *
      * @dataProvider scopeBagProvider
      */
     public function testReplacesTheSessionUponKernelRequest(string $scope, string $userClass, string $sessionBagName): void
@@ -83,6 +86,8 @@ class UserSessionListenerTest extends TestCase
     }
 
     /**
+     * @param class-string<User> $userClass
+     *
      * @dataProvider scopeTableProvider
      */
     public function testStoresTheSessionUpwrite(string $scope, string $userClass, string $userTable): void

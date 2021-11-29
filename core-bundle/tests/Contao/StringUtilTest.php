@@ -183,9 +183,11 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param mixed $string
+     *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
+    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
@@ -289,6 +291,8 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param array|object $value
+     *
      * @group legacy
      *
      * @dataProvider invalidEncodingsProvider
@@ -297,6 +301,7 @@ class StringUtilTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
 
+        /** @phpstan-ignore-next-line */
         $result = StringUtil::convertEncoding($value, 'UTF-8');
 
         $this->assertSame('', $result);

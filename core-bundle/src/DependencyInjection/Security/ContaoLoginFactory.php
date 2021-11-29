@@ -27,7 +27,7 @@ class ContaoLoginFactory extends AbstractFactory
         $this->defaultFailureHandlerOptions = [];
     }
 
-    public function create(ContainerBuilder $container, $id, $config, $userProviderId, $defaultEntryPointId): array
+    public function create(ContainerBuilder $container, string $id, array $config, string $userProviderId, ?string $defaultEntryPointId): array
     {
         $ids = parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
 
@@ -46,7 +46,7 @@ class ContaoLoginFactory extends AbstractFactory
         return 'contao-login';
     }
 
-    protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId): string
+    protected function createAuthProvider(ContainerBuilder $container, string $id, array $config, string $userProviderId): string
     {
         $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
         $twoFactorFirewallConfigId = 'contao.security.two_factor_firewall_config.'.$id;
@@ -81,17 +81,17 @@ class ContaoLoginFactory extends AbstractFactory
         return 'contao.security.login_authentication_listener';
     }
 
-    protected function createEntryPoint($container, $id, $config, $defaultEntryPointId): string
+    protected function createEntryPoint(ContainerBuilder $container, string $id, array $config, ?string $defaultEntryPointId): string
     {
         return 'contao.security.authentication_entry_point';
     }
 
-    protected function createAuthenticationSuccessHandler($container, $id, $config): string
+    protected function createAuthenticationSuccessHandler(ContainerBuilder $container, string $id, array $config): string
     {
         return 'contao.security.authentication_success_handler';
     }
 
-    protected function createAuthenticationFailureHandler($container, $id, $config): string
+    protected function createAuthenticationFailureHandler(ContainerBuilder $container, string $id, array $config): string
     {
         return 'contao.security.authentication_failure_handler';
     }

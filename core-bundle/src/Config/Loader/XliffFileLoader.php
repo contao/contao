@@ -29,12 +29,12 @@ class XliffFileLoader extends Loader
         $this->addToGlobals = $addToGlobals;
     }
 
-    public function load($resource, $type = null): string
+    public function load($resource, string $type = null): string
     {
         return $this->convertXlfToPhp((string) $resource, $type ?: 'en');
     }
 
-    public function supports($resource, $type = null): bool
+    public function supports($resource, string $type = null): bool
     {
         return 'xlf' === Path::getExtension((string) $resource, true);
     }
@@ -127,7 +127,7 @@ class XliffFileLoader extends Loader
      *
      * @throws \OutOfBoundsException
      */
-    private function getStringRepresentation(array $chunks, $value): string
+    private function getStringRepresentation(array $chunks, string $value): string
     {
         switch (\count($chunks)) {
             case 2:
@@ -164,7 +164,7 @@ class XliffFileLoader extends Loader
     /**
      * Adds the labels to the global PHP language array.
      */
-    private function addGlobal(array $chunks, $value): void
+    private function addGlobal(array $chunks, string $value): void
     {
         if (false === $this->addToGlobals) {
             return;

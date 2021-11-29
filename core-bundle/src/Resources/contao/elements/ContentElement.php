@@ -274,7 +274,10 @@ abstract class ContentElement extends Frontend
 		}
 
 		// Tag the content element (see #2137)
-		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+		if ($this->objModel !== null)
+		{
+			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+		}
 
 		return $this->Template->parse();
 	}

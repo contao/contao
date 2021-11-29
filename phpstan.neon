@@ -10,7 +10,7 @@ rules:
     - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
 
 parameters:
-    level: 5
+    level: 6
 
     paths:
         - %currentWorkingDirectory%/core-bundle/src
@@ -35,9 +35,17 @@ parameters:
             message: '#PHPDoc tag @param references unknown parameter: \$options#'
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
+        # Ignore missing return types in interfaces that we can only change in Contao 5
+        -
+            message: '#has no return type specified#'
+            paths:
+                - %currentWorkingDirectory%/core-bundle/src/Config/Dumper/DumperInterface.php
+                - %currentWorkingDirectory%/core-bundle/src/ContaoFrameworkInterface.php
+                - %currentWorkingDirectory%/core-bundle/src/Framework/ContaoFrameworkInterface.php
+                - %currentWorkingDirectory%/core-bundle/src/Framework/FrameworkAwareInterface.php
+
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
     treatPhpDocTypesAsCertain: false
-    checkGenericClassInNonGenericObjectType: false
-    inferPrivatePropertyTypeFromConstructor: true
+    checkMissingIterableValueType: false

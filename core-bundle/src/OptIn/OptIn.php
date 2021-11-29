@@ -89,8 +89,11 @@ class OptIn implements OptInInterface
                 $related = $token->getRelatedRecords();
 
                 foreach ($related as $table => $id) {
+                    /** @var class-string<Model> $class */
+                    $class = $adapter->getClassFromTable($table);
+
                     /** @var Model $model */
-                    $model = $this->framework->getAdapter($adapter->getClassFromTable($table));
+                    $model = $this->framework->getAdapter($class);
 
                     if (null !== $model->findMultipleByIds($id)) {
                         $delete = false;

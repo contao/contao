@@ -62,7 +62,7 @@ class UserListCommand extends Command
 
         switch ($input->getOption('format')) {
             case 'text':
-                if (null === $users) {
+                if (0 === $users->count()) {
                     $io->note('No accounts found.');
 
                     return 0;
@@ -86,7 +86,7 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): ?Collection
+    private function getUsers(bool $onlyAdmins = false): Collection
     {
         $this->framework->initialize();
 

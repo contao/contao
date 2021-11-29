@@ -84,7 +84,7 @@ class BackupListCommand extends AbstractBackupCommand
     private function getHumanReadableSize(Backup $backup): string
     {
         $base = log($backup->getSize()) / log(1024);
-        $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][floor($base)];
+        $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][(int) floor($base)];
 
         return round(1024 ** ($base - floor($base)), 2).' '.$suffix;
     }
