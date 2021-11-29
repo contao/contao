@@ -415,7 +415,7 @@ class PageRegistryTest extends TestCase
         $registry->add('foobar', new RouteConfig(null, null, null, [], ['compiler_class' => UnroutablePageRouteCompiler::class]));
 
         $this->assertFalse($registry->isRoutable($pageModel));
-        
+
         $this->expectException(RouteNotFoundException::class);
         $registry->getRoute($pageModel);
     }

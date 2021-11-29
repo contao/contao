@@ -660,7 +660,7 @@ class RouteProviderTest extends TestCase
         $this->assertSame($route, $collection->get('tl_page.'.$pageModel->id));
     }
 
-    public function testDoesNotAddRoutesForUnroutablePage(): void
+    public function testDoesNotAddRouteForUnroutablePage(): void
     {
         $routablePage = $this->mockClassWithProperties(PageModel::class);
         $routablePage->id = 17;
