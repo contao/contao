@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "custom navigation".
@@ -134,14 +135,23 @@ class ModuleCustomnav extends Module
 						// no break
 
 					default:
-						$href = $objModel->getFrontendUrl();
+						try
+						{
+							$href = $objModel->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 				}
 
 				$trail = \in_array($objModel->id, $objPage->trail);
 
 				// Use the path without query string to check for active pages (see #480)
-				list($path) = explode('?', Environment::get('request'), 2);
+				[$path] = explode('?', Environment::get('request'), 2);
 
 				// Active page
 				if ($objPage->id == $objModel->id && $href == $path)

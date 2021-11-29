@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Patchwork\Utf8;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick navigation".
@@ -143,11 +144,22 @@ class ModuleQuicknav extends Module
 				// Check hidden pages
 				if (!$objSubpage->hide || $this->showHidden)
 				{
+					try
+					{
+						$href = $objSubpage->getFrontendUrl();
+					}
+					catch (ExceptionInterface $exception)
+					{
+						System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+						continue;
+					}
+
 					$arrPages[] = array
 					(
 						'level' => ($level - 2),
 						'title' => StringUtil::specialchars(StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
-						'href' => $objSubpage->getFrontendUrl(),
+						'href' => $href,
 						'link' => StringUtil::stripInsertTags($objSubpage->title),
 						'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 					);
