@@ -178,7 +178,6 @@ class BackendMenuListener
 
     private function getAlertsLabel(string $systemMessages): string
     {
-        /** @var Backend $adapter */
         $adapter = $this->framework->getAdapter(Backend::class);
         $count = substr_count($adapter->getSystemMessages(), 'class="tl_error');
 

@@ -127,7 +127,7 @@ class PictureFactory implements PictureFactoryInterface
      *
      * @param int|array|null $size
      *
-     * @psalm-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
+     * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
      */
     private function createConfig($size): array
     {
@@ -142,7 +142,6 @@ class PictureFactory implements PictureFactoryInterface
         if (isset($size[2])) {
             // Database record
             if (is_numeric($size[2])) {
-                /** @var ImageSizeModel $imageSizeModel */
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
@@ -188,7 +187,6 @@ class PictureFactory implements PictureFactoryInterface
                 }
 
                 if (!\array_key_exists($size[2], $this->imageSizeItemsCache)) {
-                    /** @var ImageSizeItemModel $adapter */
                     $adapter = $this->framework->getAdapter(ImageSizeItemModel::class);
                     $this->imageSizeItemsCache[$size[2]] = $adapter->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
                 }

@@ -32,7 +32,6 @@ class PageUrlListenerTest extends TestCase
      */
     public function testGeneratesAlias(array $activeRecord, string $expectedAlias): void
     {
-        /** @var MockObject&PageModel $page */
         $page = $this->mockClassWithProperties(PageModel::class, $activeRecord);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails']);
@@ -53,7 +52,6 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($page->alias)
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -143,7 +141,6 @@ class PageUrlListenerTest extends TestCase
             [$aliasIds]
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -182,7 +179,6 @@ class PageUrlListenerTest extends TestCase
             [$aliasIds]
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -713,7 +709,6 @@ class PageUrlListenerTest extends TestCase
 
     public function testPreventsNumericAliases(): void
     {
-        /** @var MockObject&PageModel $page */
         $page = $this->mockClassWithProperties(PageModel::class, ['id' => 17]);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails']);
@@ -740,7 +735,6 @@ class PageUrlListenerTest extends TestCase
             ->willReturn('Numeric aliases are not supported!')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
 
         $listener = new PageUrlListener(
@@ -773,7 +767,6 @@ class PageUrlListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -808,7 +801,6 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -846,7 +838,6 @@ class PageUrlListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -878,7 +869,6 @@ class PageUrlListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -974,13 +964,8 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var DataContainer&MockObject $dc1 */
         $dc1 = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
-
-        /** @var DataContainer&MockObject $dc2 */
         $dc2 = $this->mockClassWithProperties(DataContainer::class, ['id' => 2]);
-
-        /** @var DataContainer&MockObject $dc3 */
         $dc3 = $this->mockClassWithProperties(DataContainer::class, ['id' => 3]);
 
         $listener->generateAlias('foo', $dc1);
@@ -1030,7 +1015,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1064,7 +1048,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1152,7 +1135,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1232,7 +1214,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1261,7 +1242,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1293,7 +1273,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1327,7 +1306,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1382,7 +1360,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1463,7 +1440,6 @@ class PageUrlListenerTest extends TestCase
             $connection
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1492,7 +1468,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1524,7 +1499,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -1558,7 +1532,6 @@ class PageUrlListenerTest extends TestCase
             $this->mockConnectionWithStatement()
         );
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [

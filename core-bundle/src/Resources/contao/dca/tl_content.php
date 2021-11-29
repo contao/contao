@@ -23,7 +23,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
@@ -268,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -951,7 +950,6 @@ class tl_content extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -1108,9 +1106,7 @@ class tl_content extends Backend
 			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
 									 ->execute();
 
-			/** @var SessionInterface $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$session = $objSession->all();
 			$session['CURRENT']['IDS'] = array_diff($session['CURRENT']['IDS'], $objCes->fetchEach('cteAlias'));
 			$objSession->replace($session);
@@ -1137,7 +1133,6 @@ class tl_content extends Backend
 			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $this->User->elements[0];
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing content elements with not allowed types

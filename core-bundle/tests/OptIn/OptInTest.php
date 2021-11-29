@@ -18,7 +18,6 @@ use Contao\Model;
 use Contao\Model\Collection;
 use Contao\OptInModel;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class OptInTest extends ContaoTestCase
 {
@@ -68,7 +67,6 @@ class OptInTest extends ContaoTestCase
 
     public function testFindsAToken(): void
     {
-        /** @var OptInModel&MockObject $model */
         $model = $this->mockClassWithProperties(OptInModel::class);
         $model->token = 'foobar';
 
@@ -92,7 +90,6 @@ class OptInTest extends ContaoTestCase
             'confirmedOn' => strtotime('yesterday'),
         ];
 
-        /** @var OptInModel|MockObject $token */
         $token = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token
             ->expects($this->once())
@@ -143,7 +140,6 @@ class OptInTest extends ContaoTestCase
             'confirmedOn' => strtotime('yesterday'),
         ];
 
-        /** @var OptInModel|MockObject $token */
         $token = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token
             ->expects($this->once())
@@ -195,7 +191,6 @@ class OptInTest extends ContaoTestCase
             'confirmedOn' => 0,
         ];
 
-        /** @var OptInModel|MockObject $token */
         $token = $this->mockClassWithProperties(OptInModel::class, $properties);
         $token
             ->expects($this->never())

@@ -41,7 +41,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         // Group main configuration
         $config['size'] = $this->createPictureConfigurationItem($config);
 
-        // Append size items configuration keys
+        // Append the size item configuration keys
         $config['sizeItems'] = array_map(
             function (array $itemConfig): PictureConfigurationItem {
                 $sizeItem = $this->createPictureConfigurationItem($itemConfig);

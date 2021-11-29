@@ -71,6 +71,8 @@ class Metadata
 
     /**
      * Returns a value or null if the value was not found.
+     *
+     * @return mixed
      */
     public function get(string $key)
     {

@@ -317,9 +317,13 @@ class TokenCheckerTest extends TestCase
         $this->assertNull($tokenChecker->getFrontendUsername());
     }
 
+    /**
+     * @param class-string<User> $class
+     *
+     * @return User&MockObject
+     */
     private function mockUser(string $class): User
     {
-        /** @var User&MockObject $user */
         $user = $this->createPartialMock($class, []);
         $user->id = 1;
         $user->username = 'foobar';

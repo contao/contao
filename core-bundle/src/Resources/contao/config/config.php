@@ -468,6 +468,7 @@ $GLOBALS['TL_PURGE'] = array
 	)
 );
 
+// Backwards compatibility
 // Image crop modes
 $GLOBALS['TL_CROP'] = array
 (
@@ -488,6 +489,7 @@ $GLOBALS['TL_CROP'] = array
 	)
 );
 
+// Backwards compatibility
 // Cron jobs
 $GLOBALS['TL_CRON'] = array
 (

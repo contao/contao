@@ -68,7 +68,7 @@ class MaintenanceModeCommandTest extends TestCase
                     ->with(
                         Path::makeAbsolute('../../src/Resources/skeleton/public/.maintenance.html', __DIR__),
                         '/path/to/webdir/maintenance.html'
-                    );
+                    )
                 ;
             }
         }

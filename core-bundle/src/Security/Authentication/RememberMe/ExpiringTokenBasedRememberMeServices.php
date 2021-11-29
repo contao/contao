@@ -55,7 +55,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         // Delete the cookie from the tokenProvider
         if (
             null !== ($cookie = $request->cookies->get($this->options['name']))
-            && 2 === \count($parts = $this->decodeCookie($cookie))
+            && 2 === \count($parts = $this->decodeCookie((string) $cookie))
         ) {
             $this->repository->deleteBySeries($this->encodeSeries($parts[0]));
         }
@@ -96,7 +96,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             $this->createRememberMeCookie($request, $series, $cookieValue)
         );
 
-        return $this->getUserProvider($matchedToken->getClass())->loadUserByUsername($matchedToken->getUsername());
+        return $this->getUserProvider($matchedToken->getClass())->loadUserByIdentifier($matchedToken->getUsername());
     }
 
     protected function onLoginSuccess(Request $request, Response $response, TokenInterface $token): void
@@ -115,7 +115,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         $response->headers->setCookie($this->createRememberMeCookie($request, $series, $entity->getValue()));
     }
 
-    protected function decodeCookie($rawCookie): array
+    protected function decodeCookie(string $rawCookie): array
     {
         return array_map('base64_decode', explode('-', $rawCookie));
     }

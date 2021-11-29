@@ -12,8 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
@@ -363,9 +361,7 @@ abstract class System
 	 */
 	public static function getReferer($blnEncodeAmpersands=false, $strTable=null)
 	{
-		/** @var Session $objSession */
 		$objSession = static::getContainer()->get('session');
-
 		$ref = Input::get('ref');
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
@@ -607,9 +603,9 @@ abstract class System
 	 */
 	public static function getCountries()
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Countries::class);
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.countries" service instead.', __METHOD__);
 
-		$arrCountries = self::getContainer()->get(Countries::class)->getCountries();
+		$arrCountries = self::getContainer()->get('contao.intl.countries')->getCountries();
 
 		return array_combine(array_map('strtolower', array_keys($arrCountries)), $arrCountries);
 	}
@@ -626,14 +622,14 @@ abstract class System
 	 */
 	public static function getLanguages($blnInstalledOnly=false)
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Locales::class);
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.locales" service instead.', __METHOD__);
 
 		if ($blnInstalledOnly)
 		{
-			return self::getContainer()->get(Locales::class)->getEnabledLocales(null, true);
+			return self::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, true);
 		}
 
-		return self::getContainer()->get(Locales::class)->getLocales(null, true);
+		return self::getContainer()->get('contao.intl.locales')->getLocales(null, true);
 	}
 
 	/**
@@ -665,13 +661,13 @@ abstract class System
 	 * @return array The available image sizes
 	 *
 	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
-	 *             Use the contao.image.image_sizes service instead.
+	 *             Use the contao.image.sizes service instead.
 	 */
 	public static function getImageSizes()
 	{
-		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_sizes" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.sizes" service instead.');
 
-		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+		return static::getContainer()->get('contao.image.sizes')->getAllOptions();
 	}
 
 	/**

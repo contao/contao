@@ -24,7 +24,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 System::loadLanguageFile('tl_content');
 
@@ -347,7 +346,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -625,7 +624,6 @@ class tl_news extends Backend
 				$objArchive = $this->Database->prepare("SELECT id FROM tl_news WHERE pid=?")
 											 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -746,21 +744,25 @@ class tl_news extends Backend
 			return '';
 		}
 
-		global $objPage;
+		$origObjPage = $GLOBALS['objPage'] ?? null;
 
-		// Set the global page object so we can replace the insert tags
-		$objPage = $page;
+		// Override the global page object, so we can replace the insert tags
+		$GLOBALS['objPage'] = $page;
 
-		return implode(
+		$title = implode(
 			'%s',
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
 		);
+
+		$GLOBALS['objPage'] = $origObjPage;
+
+		return $title;
 	}
 
 	/**
@@ -894,9 +896,7 @@ class tl_news extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('news_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -945,7 +945,6 @@ class tl_news extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

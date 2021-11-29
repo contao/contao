@@ -24,7 +24,7 @@ class SearchIndexerPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
-    private const DELEGATING_SERVICE_ID = 'contao.search.indexer.delegating';
+    private const DELEGATING_SERVICE_ID = 'contao.search.delegating_indexer';
 
     public function process(ContainerBuilder $container): void
     {

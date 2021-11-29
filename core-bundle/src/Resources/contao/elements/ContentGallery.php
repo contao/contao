@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\Model\Collection;
 
 /**
@@ -216,7 +215,7 @@ class ContentGallery extends ContentElement
 		$body = array();
 
 		$figureBuilder = System::getContainer()
-			->get(Studio::class)
+			->get('contao.image.studio')
 			->createFigureBuilder()
 			->setSize($this->size)
 			->setLightboxGroupIdentifier('lb' . $this->id)

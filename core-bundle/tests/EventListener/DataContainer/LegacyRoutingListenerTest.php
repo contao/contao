@@ -16,7 +16,6 @@ use Contao\CoreBundle\EventListener\DataContainer\LegacyRoutingListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Image;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LegacyRoutingListenerTest extends TestCase
@@ -94,7 +93,6 @@ class LegacyRoutingListenerTest extends TestCase
             true
         );
 
-        /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             ['activeRecord' => (object) ['language' => 'en-US']]
@@ -111,7 +109,6 @@ class LegacyRoutingListenerTest extends TestCase
             false
         );
 
-        /** @var DataContainer&MockObject $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             ['activeRecord' => (object) ['language' => 'en-US']]

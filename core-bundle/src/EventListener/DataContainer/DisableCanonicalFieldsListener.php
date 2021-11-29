@@ -36,7 +36,6 @@ class DisableCanonicalFieldsListener
             return $value;
         }
 
-        /** @var PageModel $adapter */
         $adapter = $this->framework->getAdapter(PageModel::class);
 
         if (($page = $adapter->findWithDetails($dc->id)) && !$page->enableCanonical) {

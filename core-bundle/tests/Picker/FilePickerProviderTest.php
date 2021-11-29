@@ -20,7 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -248,7 +247,6 @@ class FilePickerProviderTest extends ContaoTestCase
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->path = '/foobar';
         $filesModel->uuid = StringUtil::uuidToBin('82243f46-a4c3-11e3-8e29-000c29e44aea');

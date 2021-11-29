@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler;
 use Contao\CoreBundle\Tests\TestCase;
@@ -20,7 +21,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationFailureHandlerTest extends TestCase
 {
@@ -43,10 +43,10 @@ class AuthenticationFailureHandlerTest extends TestCase
 
     public function testReadsTheUsernameFromTheException(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createMock(ForwardCompatibilityUserInterface::class);
         $user
             ->expects($this->once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('foobar')
         ;
 

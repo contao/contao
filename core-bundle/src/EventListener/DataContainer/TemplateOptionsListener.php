@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Controller;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,13 +26,12 @@ class TemplateOptionsListener
     private array $customTemplates = [];
 
     /**
-     * @var Controller
+     * @var Adapter<Controller>
      */
-    private $controller;
+    private Adapter $controller;
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack, string $templatePrefix, string $proxyClass = null)
     {
-        /** @var Controller $controller */
         $controller = $framework->getAdapter(Controller::class);
 
         $this->controller = $controller;

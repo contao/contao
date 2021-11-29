@@ -38,6 +38,8 @@ class Adapter
 
     /**
      * Calls a method of the adapted class.
+     *
+     * @return mixed
      */
     public function __call(string $name, array $arguments)
     {
