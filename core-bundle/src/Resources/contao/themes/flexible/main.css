@@ -355,7 +355,7 @@ body:not(.fullscreen) #container {
 	text-overflow:ellipsis;
 	line-height:22px;
 }
-#main_headline span a {
+#main_headline span a:hover {
 	text-decoration: underline;
 }
 #main_headline span:nth-child(even) {
