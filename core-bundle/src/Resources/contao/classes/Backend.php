@@ -549,7 +549,7 @@ abstract class Backend extends Controller
 						));
 
 						// Add object title or name
-						$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, ($objRow->title ?? $objRow->name ?? $objRow->headline));
+						$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, ($objRow->title ?: $objRow->name ?: $objRow->headline));
 					}
 
 					System::loadLanguageFile($ptable);
