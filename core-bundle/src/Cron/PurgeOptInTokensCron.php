@@ -47,11 +47,11 @@ class PurgeOptInTokensCron
 
     public function __invoke(): void
     {
-        $count = (int) $this->database->fetchOne("SELECT COUNT(*) FROM tl_opt_in");
+        $count = (int) $this->database->fetchOne('SELECT COUNT(*) FROM tl_opt_in');
 
         $this->optIn->purgeTokens();
 
-        $count = $count - (int) $this->database->fetchOne("SELECT COUNT(*) FROM tl_opt_in");
+        $count -= (int) $this->database->fetchOne('SELECT COUNT(*) FROM tl_opt_in');
 
         if ($count > 0 && null !== $this->logger) {
             $this->logger->info(sprintf('Purged %s expired double opt-in tokens', $count), ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);

@@ -13,12 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\PurgeExpiredMemberRegistrationsListener;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\MemberModel;
 use Contao\Model\Collection;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class PurgeExpiredMemberRegistrationsListenerTest extends TestCase
 {
@@ -55,8 +52,6 @@ class PurgeExpiredMemberRegistrationsListenerTest extends TestCase
             ->expects($this->never())
             ->method('findExpiredRegistrations')
         ;
-
-        $request = new Request(['act' => 'edit']);
 
         $framework = $this->mockContaoFramework([MemberModel::class => $memberModelAdapter]);
 
