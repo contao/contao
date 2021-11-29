@@ -396,7 +396,7 @@ services:
         class: Contao\CoreBundle\EventListener\ServiceUnavailableListener
         arguments:
             - '@contao.routing.scope_matcher'
-            - '@contao.security.token_checker'
+            - '@?contao_manager.jwt_manager'
         tags:
             # The priority must be lower than the Symfony route listener (defaults to 32)
             # and lower than the Symfony firewall listener (defaults to 8)

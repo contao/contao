@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -23,22 +24,29 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ServiceUnavailableListener
 {
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
+    public const JWT_ATTRIBUTE = 'bypass_maintenance';
 
-    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker)
+    private ScopeMatcher $scopeMatcher;
+    private ?JwtManager $jwtManager;
+
+    public function __construct(ScopeMatcher $scopeMatcher, JwtManager $jwtManager = null)
     {
         $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
+        $this->jwtManager = $jwtManager;
     }
 
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isFrontendMainRequest($event) || $this->tokenChecker->isPreviewMode()) {
+        $request = $event->getRequest();
+
+        if (
+            !$this->scopeMatcher->isFrontendMainRequest($event)
+            || $request->attributes->get('_preview', false)
+            || $this->isDisabledByJwt($request)
+        ) {
             return;
         }
 
-        $request = $event->getRequest();
         $pageModel = $request->attributes->get('pageModel');
 
         if (!$pageModel instanceof PageModel) {
@@ -50,5 +58,16 @@ class ServiceUnavailableListener
         if ($pageModel->maintenanceMode) {
             throw new ServiceUnavailableException(sprintf('Domain %s is in maintenance mode', $pageModel->dns));
         }
+    }
+
+    private function isDisabledByJwt(Request $request): bool
+    {
+        if (null === $this->jwtManager) {
+            return false;
+        }
+
+        $data = $this->jwtManager->parseRequest($request);
+
+        return (bool) ($data[self::JWT_ATTRIBUTE] ?? false);
     }
 }
