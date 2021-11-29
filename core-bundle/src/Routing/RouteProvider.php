@@ -147,8 +147,7 @@ class RouteProvider extends AbstractPageRouteProvider
     private function addRoutesForRootPages(array $pages, array &$routes): void
     {
         foreach ($pages as $page) {
-            $route = $this->pageRegistry->getRoute($page);
-            $this->addRoutesForRootPage($route, $routes);
+            $this->addRoutesForRootPage($page, $routes);
         }
     }
 
@@ -177,22 +176,20 @@ class RouteProvider extends AbstractPageRouteProvider
             return;
         }
 
-        $route = $this->pageRegistry->getRoute($page);
-
-        if ($route->isRoutable()) {
-            $routes['tl_page.'.$page->id] = $route;
+        if ($this->pageRegistry->isRoutable($page)) {
+            $routes['tl_page.'.$page->id] = $this->pageRegistry->getRoute($page);
         }
 
-        $this->addRoutesForRootPage($route, $routes);
+        $this->addRoutesForRootPage($page, $routes);
     }
 
-    private function addRoutesForRootPage(PageRoute $route, array &$routes): void
+    private function addRoutesForRootPage(PageModel $page, array &$routes): void
     {
-        $page = $route->getPageModel();
-
         if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
+
+        $route = $this->pageRegistry->getRoute($page);
 
         $urlPrefix = $route->getUrlPrefix();
 

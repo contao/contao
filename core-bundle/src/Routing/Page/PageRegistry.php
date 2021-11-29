@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class PageRegistry
 {
@@ -55,6 +56,12 @@ class PageRegistry
     public function getRoute(PageModel $pageModel): PageRoute
     {
         $type = $pageModel->type;
+
+        // Check for unroutable pages (#3415)
+        if (!$this->isRoutable($pageModel)) {
+            throw new RouteNotFoundException(sprintf('Cannot create route for unroutable page type "%s"', $type));
+        }
+
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
@@ -66,14 +73,7 @@ class PageRegistry
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
         }
 
-        $options = $config->getOptions();
-
-        // Register custom compiler for non-routable error pages (#3415)
-        if (\in_array($type, self::DISABLE_ROUTING, true)) {
-            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
-        }
-
-        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
+        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $config->getOptions(), $config->getMethods());
 
         if (null !== $config->getUrlSuffix()) {
             $route->setUrlSuffix($config->getUrlSuffix());

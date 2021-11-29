@@ -139,9 +139,4 @@ class PageRoute extends Route implements RouteObjectInterface
     {
         return 'tl_page.'.$this->pageModel->id;
     }
-
-    public function isRoutable(): bool
-    {
-        return ($this->getOptions()['compiler_class'] ?? '') !== UnroutablePageRouteCompiler::class;
-    }
 }
