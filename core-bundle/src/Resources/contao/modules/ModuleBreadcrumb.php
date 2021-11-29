@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Front end module "breadcrumb".
@@ -254,10 +253,6 @@ class ModuleBreadcrumb extends Module
 		try
 		{
 			return $pageModel->getFrontendUrl($strParams);
-		}
-		catch (RouteNotFoundException $exception)
-		{
-			return null;
 		}
 		catch (ExceptionInterface $exception)
 		{

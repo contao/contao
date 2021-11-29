@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Front end module "custom navigation".
@@ -134,14 +133,7 @@ class ModuleCustomnav extends Module
 						// no break
 
 					default:
-						try
-						{
-							$href = $objModel->getFrontendUrl();
-						}
-						catch (RouteNotFoundException $e)
-						{
-							$href = null;
-						}
+						$href = $objModel->getFrontendUrl();
 						break;
 				}
 

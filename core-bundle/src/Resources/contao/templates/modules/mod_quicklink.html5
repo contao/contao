@@ -10,7 +10,7 @@
         <select name="target" class="select">
           <option value=""><?= $this->title ?></option>
           <?php foreach ($this->items as $item): ?>
-            <option<?php if (null !== $item['href']): ?> value="<?= $item['href'] ?>"<?php endif; ?><?php if ($item['active']): ?> selected<?php endif; ?><?php if (null === $item['href']): ?> disabled<?php endif; ?>><?= $item['link'] ?></option>
+            <option value="<?= $item['href'] ?>"<?php if ($item['active']): ?> selected<?php endif; ?>><?= $item['link'] ?></option>
           <?php endforeach; ?>
         </select>
       </div>

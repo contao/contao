@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Front end module "quick link".
@@ -128,14 +127,7 @@ class ModuleQuicklink extends Module
 						// no break
 
 					default:
-						try
-						{
-							$href = $objSubpage->getFrontendUrl();
-						}
-						catch (RouteNotFoundException $e)
-						{
-							$href = null;
-						}
+						$href = $objSubpage->getFrontendUrl();
 						break;
 				}
 
