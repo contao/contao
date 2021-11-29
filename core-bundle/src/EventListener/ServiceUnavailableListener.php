@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
@@ -23,15 +24,17 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class ServiceUnavailableListener
 {
     private ScopeMatcher $scopeMatcher;
+    private TokenChecker $tokenChecker;
 
-    public function __construct(ScopeMatcher $scopeMatcher)
+    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker)
     {
         $this->scopeMatcher = $scopeMatcher;
+        $this->tokenChecker = $tokenChecker;
     }
 
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isFrontendMainRequest($event)) {
+        if (!$this->scopeMatcher->isFrontendMainRequest($event) || $this->tokenChecker->isPreviewMode()) {
             return;
         }
 
