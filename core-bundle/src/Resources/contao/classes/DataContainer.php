@@ -1547,6 +1547,106 @@ abstract class DataContainer extends Backend
 
 		return $dataContainer;
 	}
+
+	/**
+	 * Generates the label for a given data record according to the DCA configuration.
+	 *
+	 * @param array  $row   The data record
+	 * @param string $table The name of the data container
+	 */
+	public static function generateRecordLabel($row, $table): string
+	{
+		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'] ?? array('id');
+
+		// Label
+		foreach ($showFields as $k=>$v)
+		{
+			// Decrypt the value
+			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
+			{
+				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
+			}
+
+			if (strpos($v, ':') !== false)
+			{
+				list($strKey, $strTable) = explode(':', $v, 2);
+				list($strTable, $strField) = explode('.', $strTable, 2);
+
+				$objRef = Database::getInstance()
+					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
+					->limit(1)
+					->execute($row[$strKey]);
+
+				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
+			}
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+			{
+				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
+				{
+					$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
+				}
+				elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
+				{
+					$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
+				}
+				else
+				{
+					$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
+				}
+			}
+			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
+			{
+				$args[$k] = $row[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+			}
+			elseif (isset($row[$v]))
+			{
+				$row_v = StringUtil::deserialize($row[$v]);
+
+				if (\is_array($row_v))
+				{
+					$args_k = array();
+
+					foreach ($row_v as $option)
+					{
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+					}
+
+					$args[$k] = implode(', ', $args_k);
+				}
+				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
+				{
+					$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
+				}
+				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
+				{
+					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]] ?? null;
+				}
+				else
+				{
+					$args[$k] = $row[$v];
+				}
+			}
+			else
+			{
+				$args[$k] = null;
+			}
+		}
+
+		// Render the label
+		$label = vsprintf($GLOBALS['TL_DCA'][$table]['list']['label']['format'] ?? '%s', $args);
+
+		// Shorten the label it if it is too long
+		if (($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < \strlen(strip_tags($label)))
+		{
+			$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
+		}
+
+		// Remove empty brackets (), [], {}, <> and empty tags from the label
+		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
+		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+
+		return $label;
+	}
 }
 
 class_alias(DataContainer::class, 'DataContainer');
