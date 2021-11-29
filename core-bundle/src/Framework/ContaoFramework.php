@@ -124,13 +124,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $class
      *
      * @return T
-     *
-     * @phpstan-return object
      */
     public function createInstance($class, $args = [])
     {
@@ -148,17 +146,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @param class-string<T> $class
      *
-     * @return T
+     * @return Adapter<T>&T
      *
      * @phpstan-return Adapter<T>
      */
     public function getAdapter($class): Adapter
     {
-        if (!isset($this->adapterCache[$class])) {
-            $this->adapterCache[$class] = new Adapter($class);
-        }
-
-        return $this->adapterCache[$class];
+        return $this->adapterCache[$class] ??= new Adapter($class);
     }
 
     public static function getNonce(): string

@@ -52,14 +52,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration($container->getParameter('kernel.project_dir'));
+        return new Configuration((string) $container->getParameter('kernel.project_dir'));
     }
 
     public function prepend(ContainerBuilder $container): void
     {
-        $projectDir = $container->getParameter('kernel.project_dir');
-
-        $configuration = new Configuration($projectDir);
+        $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
         $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
@@ -72,7 +70,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
         }
 
-        $projectDir = $container->getParameter('kernel.project_dir');
+        $projectDir = (string) $container->getParameter('kernel.project_dir');
 
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);

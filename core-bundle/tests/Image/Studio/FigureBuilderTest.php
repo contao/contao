@@ -264,6 +264,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param mixed $identifier
+     *
      * @dataProvider provideMixedIdentifiers
      */
     public function testFromMixed($identifier): void
@@ -332,6 +334,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param mixed $invalidType
+     *
      * @dataProvider provideInvalidTypes
      */
     public function testFromInvalidTypeThrowsTypeError($invalidType, string $typeString): void
@@ -554,7 +558,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, ?string $locale, array $expectedMetadata): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
@@ -736,6 +740,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param ImageInterface|string|null $resource
+     *
      * @dataProvider provideUuidMetadataAutoFetchCases
      */
     public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
@@ -937,6 +943,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param ImageInterface|string|null $resource
+     *
      * @dataProvider provideLightboxResourcesOrUrls
      */
     public function testSetLightboxResourceOrUrl($resource, array $expectedArguments, bool $hasLightbox = true): void
@@ -1228,7 +1236,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return Studio&MockObject
      */
-    private function mockStudioForImage(string $expectedFilePath, $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForImage(string $expectedFilePath, string $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1244,9 +1252,11 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param ImageInterface|string|null $expectedResource
+     *
      * @return Studio&MockObject
      */
-    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 

@@ -31,8 +31,12 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 {
     private ContaoFramework $framework;
     private SessionInterface $session;
-    private string $userClass;
     private ?LoggerInterface $logger;
+
+    /**
+     * @var class-string<User>
+     */
+    private string $userClass;
 
     /**
      * @throws \RuntimeException
@@ -50,6 +54,8 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     }
 
     /**
+     * @param mixed $username
+     *
      * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0;
      *             use ContaoUserProvider::loadUserByIdentifier() instead
      */
@@ -57,7 +63,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     {
         trigger_deprecation('contao/core-bundle', '4.13', 'Using "ContaoUserProvider::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "ContaoUserProvider::loadUserByIdentifier()" instead.');
 
-        return $this->loadUserByIdentifier($username);
+        return $this->loadUserByIdentifier((string) $username);
     }
 
     public function loadUserByIdentifier(string $identifier): User
@@ -89,7 +95,10 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         return $user;
     }
 
-    public function supportsClass($class): bool
+    /**
+     * @param class-string<User> $class
+     */
+    public function supportsClass(string $class): bool
     {
         return $this->userClass === $class;
     }

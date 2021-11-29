@@ -97,6 +97,9 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
+    /**
+     * @param Connection&MockObject $connection
+     */
     protected function getDcaSchemaProvider(array $dca = [], array $file = [], $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(

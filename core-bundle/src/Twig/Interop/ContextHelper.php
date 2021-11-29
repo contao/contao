@@ -60,6 +60,10 @@ final class ContextHelper
 
             /**
              * Delegate call to callable, e.g. when in a Contao template context.
+             *
+             * @param array $args
+             *
+             * @return mixed
              */
             public function __invoke(...$args)
             {
@@ -87,6 +91,10 @@ final class ContextHelper
              * Called when evaluating '{{ var.invoke(…) }}' in a Twig template.
              * We do not cast to string here, so that other types (like arrays)
              * are supported as well.
+             *
+             * @param array $args
+             *
+             * @return mixed
              */
             public function invoke(...$args)
             {

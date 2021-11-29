@@ -31,6 +31,8 @@ final class ContaoEscaper
      * This implementation is a clone of Twig's html escape strategy but calls
      * htmlspecialchars with the double_encode parameter set to false.
      *
+     * @param mixed $string
+     *
      * @see twig_escape_filter
      */
     public function escapeHtml(Environment $environment, $string, ?string $charset): string
@@ -54,6 +56,8 @@ final class ContaoEscaper
     /**
      * This implementation is a clone of Twig's html_attr escape strategy but
      * replaces insert tags and decodes entities beforehand.
+     *
+     * @param mixed $string
      *
      * @see twig_escape_filter
      */

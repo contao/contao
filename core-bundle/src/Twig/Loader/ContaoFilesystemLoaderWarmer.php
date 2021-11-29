@@ -34,7 +34,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $this->environment = $environment;
     }
 
-    public function warmUp($cacheDir = null): array
+    public function warmUp(string $cacheDir = null): array
     {
         // Theme paths
         $themePaths = $this->templateLocator->findThemeDirectories();
