@@ -136,11 +136,6 @@ abstract class Module extends Frontend
 			$this->objModel = $objModel;
 		}
 
-		if ($this->objModel === null)
-		{
-			throw new \LogicException('No module model given');
-		}
-
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
@@ -262,6 +257,11 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
+		if ($this->objModel === null)
+		{
+			return array();
+		}
+
 		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
 	}
 
