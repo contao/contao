@@ -17,7 +17,7 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\MemberModel;
 
 /**
- * Purges the member registrations in the front and back end, whenever tl_member is loaded (#3711).
+ * Purges the member registrations in the back end whenever tl_member is revised (#3711).
  *
  * @internal
  *
