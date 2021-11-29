@@ -43,7 +43,6 @@ class MakeServicesPublicPassTest extends TestCase
         $container->setAlias('database_connection', 'doctrine.dbal.default_connection');
         $container->setAlias('mailer', 'mailer.mailer');
 
-
         $pass = new MakeServicesPublicPass();
         $pass->process($container);
 
