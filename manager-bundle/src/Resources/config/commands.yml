@@ -18,6 +18,7 @@ services:
         arguments:
             - '%kernel.project_dir%'
 
-    Contao\ManagerBundle\Command\MaintenanceModeCommand:
+    contao.command.maintenance-mode:
+        class: Contao\ManagerBundle\Command\MaintenanceModeCommand
         arguments:
             - '%contao.web_dir%'
