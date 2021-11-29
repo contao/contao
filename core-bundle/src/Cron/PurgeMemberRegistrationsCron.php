@@ -46,12 +46,20 @@ class PurgeMemberRegistrationsCron
         /** @var MemberModel $memberModel */
         $memberModel = $this->framework->getAdapter(MemberModel::class);
 
-        foreach ($memberModel->findExpiredRegistrations() ?? [] as $member) {
+        $members = $memberModel->findExpiredRegistrations();
+
+        if (null === $members) {
+            return;
+        }
+
+        $count = $members->count();
+
+        foreach ($members as $member) {
             $member->delete();
         }
 
         if (null !== $this->logger) {
-            $this->logger->info('Purged the unactivated member registrations', ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
+            $this->logger->info(sprintf('Purged %s unactivated member registrations', $count), ['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)]);
         }
     }
 }

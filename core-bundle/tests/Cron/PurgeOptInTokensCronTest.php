@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\Cron;
 use Contao\CoreBundle\Cron\PurgeOptInTokensCron;
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
 
 class PurgeOptInTokensCronTest extends TestCase
 {
@@ -26,6 +27,13 @@ class PurgeOptInTokensCronTest extends TestCase
             ->method('purgeTokens')
         ;
 
-        (new PurgeOptInTokensCron($optIn))();
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchOne')
+            ->willReturn('1')
+        ;
+
+        (new PurgeOptInTokensCron($optIn, $connection))();
     }
 }
