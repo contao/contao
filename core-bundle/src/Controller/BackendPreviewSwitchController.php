@@ -117,13 +117,13 @@ class BackendPreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
         if ($this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER')) {
-            $frontendUsername = (string) $request->request->get('user');
+            $frontendUsername = $request->request->get('user');
         }
 
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
         if (null !== $frontendUsername) {
-            $this->previewAuthenticator->authenticateFrontendUser($frontendUsername, $showUnpublished);
+            $this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished);
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }
