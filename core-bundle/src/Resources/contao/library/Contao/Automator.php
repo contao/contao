@@ -235,6 +235,8 @@ class Automator extends System
 
 	/**
 	 * Purge registrations that have not been activated within 24 hours
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function purgeRegistrations()
 	{
@@ -258,6 +260,8 @@ class Automator extends System
 
 	/**
 	 * Purge opt-in tokens
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function purgeOptInTokens()
 	{
