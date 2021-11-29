@@ -137,11 +137,6 @@ abstract class Module extends Frontend
 			$this->objModel = $objModel;
 		}
 
-		if ($this->objModel === null)
-		{
-			throw new \LogicException('No module model given');
-		}
-
 		parent::__construct();
 
 		$this->arrData = $objModule->row();
@@ -263,6 +258,11 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
+		if ($this->objModel === null)
+		{
+			return array();
+		}
+
 		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
 	}
 
@@ -552,7 +552,7 @@ abstract class Module extends Frontend
 	 */
 	protected static function getPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
 	{
-		@trigger_error('Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.');
 
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');

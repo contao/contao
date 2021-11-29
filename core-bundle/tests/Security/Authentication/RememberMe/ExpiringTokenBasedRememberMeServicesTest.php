@@ -33,7 +33,11 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private const SECRET = 'foobar';
 
     private ExpiringTokenBasedRememberMeServices $listener;
-    private $repository;
+
+    /**
+     * @var RememberMeRepository&MockObject
+     */
+    private RememberMeRepository $repository;
 
     private static array $options = [
         'name' => 'REMEMBERME',

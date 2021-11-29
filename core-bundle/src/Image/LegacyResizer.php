@@ -43,7 +43,7 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
     {
         $this->framework->initialize(true);
 
-        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = (string) System::getContainer()->getParameter('kernel.project_dir');
 
         if ($this->hasExecuteResizeHook() || $this->hasGetImageHook()) {
             trigger_deprecation('contao/core-bundle', '4.0', 'Using the "executeResize" and "getImage" hooks has been deprecated and will no longer work in Contao 5.0. Replace the "contao.image.legacy_resizer" service instead.');

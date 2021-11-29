@@ -145,7 +145,7 @@ class DefaultIndexer implements IndexerInterface
                 $this->throwBecause('No JSON-LD found.');
             }
 
-            @trigger_error('Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.9', 'Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
         }
 
         // Merge all entries to one meta array (the latter overrides the former)

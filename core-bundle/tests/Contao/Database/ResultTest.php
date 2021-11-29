@@ -184,6 +184,8 @@ class ResultTest extends TestCase
     }
 
     /**
+     * @param string|array|object $statement
+     *
      * @dataProvider getInvalidStatements
      */
     public function testInvalidStatements($statement): void

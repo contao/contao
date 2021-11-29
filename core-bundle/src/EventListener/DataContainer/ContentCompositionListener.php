@@ -39,7 +39,15 @@ class ContentCompositionListener
     private TranslatorInterface $translator;
     private Connection $connection;
     private RequestStack $requestStack;
+
+    /**
+     * @var Adapter<Image>
+     */
     private Adapter $image;
+
+    /**
+     * @var Adapter<Backend>
+     */
     private Adapter $backend;
 
     public function __construct(ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)

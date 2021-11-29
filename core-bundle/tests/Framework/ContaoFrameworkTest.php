@@ -29,6 +29,7 @@ use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\RequestToken;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -701,6 +702,9 @@ class ContaoFrameworkTest extends TestCase
         return $framework;
     }
 
+    /**
+     * @return Adapter<Config>&MockObject
+     */
     private function mockConfigAdapter(bool $complete = true): Adapter
     {
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
@@ -723,6 +727,9 @@ class ContaoFrameworkTest extends TestCase
         return $config;
     }
 
+    /**
+     * @return Adapter<RequestToken>&MockObject
+     */
     private function mockRequestTokenAdapter(bool $valid = true): Adapter
     {
         $adapter = $this->mockAdapter(['get', 'validate']);

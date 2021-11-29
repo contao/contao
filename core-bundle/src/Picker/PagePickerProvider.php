@@ -91,6 +91,11 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return string|int
+     */
     public function convertDcaValue(PickerConfig $config, $value)
     {
         if ('page' === $config->getContext()) {

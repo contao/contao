@@ -82,12 +82,8 @@ security:
         Contao\User: auto
 
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
-            security: false
-
         contao_install:
-            pattern: ^/contao/install$
+            pattern: ^%contao.backend.route_prefix%/install$
             security: false
 
         contao_backend:
@@ -125,9 +121,9 @@ security:
                     - contao.security.logout_handler
 
     access_control:
-        - { path: ^/contao/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/contao/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/contao(/|$), roles: ROLE_USER }
+        - { path: ^%contao.backend.route_prefix%/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^%contao.backend.route_prefix%/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^%contao.backend.route_prefix%(/|$), roles: ROLE_USER }
         - { path: ^/, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
 ```
 

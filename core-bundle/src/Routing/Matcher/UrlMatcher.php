@@ -56,7 +56,7 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
         ];
     }
 
-    protected function getAttributes(Route $route, $name, array $attributes): array
+    protected function getAttributes(Route $route, string $name, array $attributes): array
     {
         $attributes[RouteObjectInterface::ROUTE_NAME] = $name;
         $attributes[RouteObjectInterface::ROUTE_OBJECT] = $route;

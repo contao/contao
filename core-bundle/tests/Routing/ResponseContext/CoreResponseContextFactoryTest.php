@@ -117,7 +117,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
-        $pageModel->enableCanonical = true;
+        $pageModel->enableCanonical = '1';
         $pageModel->canonicalLink = '{{link_url::42}}';
 
         $factory = new CoreResponseContextFactory(

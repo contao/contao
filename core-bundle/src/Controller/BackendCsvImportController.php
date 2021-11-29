@@ -121,7 +121,7 @@ class BackendCsvImportController
 
         if ($request->request->get('FORM_SUBMIT') === $this->getFormId($request)) {
             try {
-                $data = $this->fetchData($uploader, $request->request->get('separator', ''), $callback);
+                $data = $this->fetchData($uploader, (string) $request->request->get('separator', ''), $callback);
             } catch (\RuntimeException $e) {
                 $message = $this->framework->getAdapter(Message::class);
                 $message->addError($e->getMessage());

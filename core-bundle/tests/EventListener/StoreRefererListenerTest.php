@@ -233,7 +233,7 @@ class StoreRefererListenerTest extends TestCase
         $listener($this->getResponseEvent($request));
     }
 
-    private function getListener(UserInterface $user = null, $expectsSecurityCall = false): StoreRefererListener
+    private function getListener(UserInterface $user = null, bool $expectsSecurityCall = false): StoreRefererListener
     {
         $security = $this->createMock(Security::class);
         $security

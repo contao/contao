@@ -44,19 +44,19 @@ class LogoutSuccessListener
             return;
         }
 
-        if ($targetUrl = $request->request->get('_target_path')) {
+        if ($targetUrl = (string) $request->request->get('_target_path')) {
             $event->setResponse($this->httpUtils->createRedirectResponse($request, $targetUrl));
 
             return;
         }
 
-        if ($targetUrl = $request->query->get('redirect')) {
+        if ($targetUrl = (string) $request->query->get('redirect')) {
             $event->setResponse($this->httpUtils->createRedirectResponse($request, $targetUrl));
 
             return;
         }
 
-        if ($targetUrl = $request->headers->get('Referer')) {
+        if ($targetUrl = (string) $request->headers->get('Referer')) {
             $event->setResponse($this->httpUtils->createRedirectResponse($request, $targetUrl));
         }
     }

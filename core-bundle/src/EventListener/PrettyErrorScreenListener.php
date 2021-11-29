@@ -17,8 +17,9 @@ use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\PageError404;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
@@ -42,13 +44,17 @@ class PrettyErrorScreenListener
     private Environment $twig;
     private ContaoFramework $framework;
     private Security $security;
+    private PageRegistry $pageRegistry;
+    private HttpKernelInterface $httpKernel;
 
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security)
+    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, HttpKernelInterface $httpKernel)
     {
         $this->prettyErrorScreens = $prettyErrorScreens;
         $this->twig = $twig;
         $this->framework = $framework;
         $this->security = $security;
+        $this->pageRegistry = $pageRegistry;
+        $this->httpKernel = $httpKernel;
     }
 
     /**
@@ -132,32 +138,36 @@ class PrettyErrorScreenListener
 
         $processing = true;
 
-        if (null !== ($response = $this->getResponseFromPageHandler($type))) {
-            $event->setResponse($response);
-        }
-
-        $processing = false;
-    }
-
-    private function getResponseFromPageHandler(int $type): ?Response
-    {
-        $this->framework->initialize(true);
-
-        $key = 'error_'.$type;
-
-        if (!isset($GLOBALS['TL_PTY'][$key]) || !class_exists($GLOBALS['TL_PTY'][$key])) {
-            return null;
-        }
-
-        /** @var PageError404 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY'][$key]();
-
         try {
-            return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
-        } catch (\Exception $e) {
-            return null;
+            $this->framework->initialize(true);
+
+            $request = $event->getRequest();
+            $pageModel = $request->attributes->get('pageModel');
+
+            if (!$pageModel instanceof PageModel) {
+                return;
+            }
+
+            $pageAdapter = $this->framework->getAdapter(PageModel::class);
+            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
+
+            if (null === $errorPage) {
+                return;
+            }
+
+            $route = $this->pageRegistry->getRoute($errorPage);
+            $subRequest = $request->duplicate(null, null, $route->getDefaults());
+
+            try {
+                $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+                $event->setResponse($response);
+            } catch (ResponseException $e) {
+                $event->setResponse($e->getResponse());
+            } catch (\Throwable $e) {
+                return;
+            }
+        } finally {
+            $processing = false;
         }
     }
 

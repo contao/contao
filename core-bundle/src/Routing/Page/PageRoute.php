@@ -26,6 +26,8 @@ class PageRoute extends Route implements RouteObjectInterface
 
     /**
      * The referenced content object (can be anything).
+     *
+     * @var mixed
      */
     private $content;
 
@@ -118,10 +120,12 @@ class PageRoute extends Route implements RouteObjectInterface
 
     /**
      * Sets the object this URL points to.
+     *
+     * @param mixed $content
      */
-    public function setContent($object): self
+    public function setContent($content): self
     {
-        $this->content = $object;
+        $this->content = $content;
 
         return $this;
     }

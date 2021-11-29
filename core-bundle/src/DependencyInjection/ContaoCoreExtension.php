@@ -36,13 +36,14 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Webmozart\PathUtil\Path;
 
-class ContaoCoreExtension extends Extension
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 {
     public function getAlias(): string
     {
@@ -51,7 +52,16 @@ class ContaoCoreExtension extends Extension
 
     public function getConfiguration(array $config, ContainerBuilder $container): Configuration
     {
-        return new Configuration($container->getParameter('kernel.project_dir'));
+        return new Configuration((string) $container->getParameter('kernel.project_dir'));
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
+        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        // Prepend the backend route prefix to make it available for third-party bundle configuration
+        $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
     }
 
     public function load(array $configs, ContainerBuilder $container): void
@@ -60,7 +70,7 @@ class ContaoCoreExtension extends Extension
             trigger_deprecation('contao/core-bundle', '4.12', 'Using the charset "%s" is not supported, use "UTF-8" instead. In Contao 5.0 an exception will be thrown for unsupported charsets.', $container->getParameter('kernel.charset'));
         }
 
-        $projectDir = $container->getParameter('kernel.project_dir');
+        $projectDir = (string) $container->getParameter('kernel.project_dir');
 
         $configuration = new Configuration($projectDir);
         $config = $this->processConfiguration($configuration, $configs);
@@ -106,6 +116,7 @@ class ContaoCoreExtension extends Extension
         $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
+        $this->handleBackup($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -358,6 +369,18 @@ class ContaoCoreExtension extends Extension
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(5, new Reference('security.access.role_hierarchy_voter'));
         }
+    }
+
+    private function handleBackup(array $config, ContainerBuilder $container): void
+    {
+        if (!$container->hasDefinition('contao.doctrine.backup_manager')) {
+            return;
+        }
+
+        $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
+        $dbDumper->replaceArgument(2, $config['backup']['directory']);
+        $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
+        $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
