@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+
 /**
  * Class FormPassword
  *
@@ -130,9 +132,11 @@ class FormPassword extends Widget
 		if (!$this->hasErrors())
 		{
 			$this->blnSubmitInput = true;
-			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
 
-			return $encoder->encodePassword($varInput, null);
+			/** @var PasswordHasherInterface $passwordHasher */
+			$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
+
+			return $passwordHasher->hash($varInput);
 		}
 
 		return '';

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
+
 /**
  * Provide methods to handle password fields.
  *
@@ -127,9 +129,10 @@ class Password extends Widget
 			$this->blnSubmitInput = true;
 			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
-			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(BackendUser::class);
+			/** @var PasswordHasherInterface $passwordHasher */
+			$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
-			return $encoder->encodePassword($varInput, null);
+			return $passwordHasher->hash($varInput);
 		}
 
 		return '';
