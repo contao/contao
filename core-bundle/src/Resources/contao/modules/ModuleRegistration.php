@@ -89,6 +89,11 @@ class ModuleRegistration extends Module
 			}
 		}
 
+		// Purge expired opt-in tokens (#3709)
+		/** @var OptIn $optIn */
+		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn->purgeTokens();
+
 		// Activate account
 		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
 		{

@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
+namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\DataContainer\PurgeMemberRegistrationsListener;
+use Contao\CoreBundle\EventListener\PurgeExpiredMemberRegistrationsListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\MemberModel;
@@ -20,7 +20,7 @@ use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PurgeMemberRegistrationsListenerTest extends TestCase
+class PurgeExpiredMemberRegistrationsListenerTest extends TestCase
 {
     public function testPurgesExpiredMemberRegistrations(): void
     {
@@ -37,15 +37,12 @@ class PurgeMemberRegistrationsListenerTest extends TestCase
             ->willReturn(new Collection([$member], 'tl_member'))
         ;
 
-        $requestStack = new RequestStack();
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-
         $framework = $this->mockContaoFramework([MemberModel::class => $memberModelAdapter]);
 
-        (new PurgeMemberRegistrationsListener($requestStack, $scopeMatcher, $framework))();
+        (new PurgeExpiredMemberRegistrationsListener($framework))('tl_member');
     }
 
-    public function testDoesNotPurgeExpiredMemberRegistrationsInBackEndAction(): void
+    public function testDoesNotPurgeExpiredMemberRegistrationsInOtherDataContainers(): void
     {
         $member = $this->createMock(MemberModel::class);
         $member
@@ -61,18 +58,8 @@ class PurgeMemberRegistrationsListenerTest extends TestCase
 
         $request = new Request(['act' => 'edit']);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(true)
-        ;
-
         $framework = $this->mockContaoFramework([MemberModel::class => $memberModelAdapter]);
 
-        (new PurgeMemberRegistrationsListener($requestStack, $scopeMatcher, $framework))();
+        (new PurgeExpiredMemberRegistrationsListener($framework))('tl_foobar');
     }
 }
