@@ -19,6 +19,7 @@ use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Api\ApiPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\HttpKernel\Kernel;
 
 class ApplicationTest extends ContaoTestCase
 {
@@ -109,7 +110,13 @@ class ApplicationTest extends ContaoTestCase
         /** @var array $commands */
         $commands = $application->all();
 
-        $this->assertCount(4, $commands);
+        if (Kernel::MINOR_VERSION > 3) {
+            $this->assertCount(6, $commands);
+        } else {
+            // TODO: BC, remove once we drop Symfony 5.3
+            $this->assertCount(4, $commands);
+        }
+
         $this->assertArrayHasKey('config:get', $commands);
     }
 
