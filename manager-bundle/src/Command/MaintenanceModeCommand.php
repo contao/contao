@@ -15,9 +15,14 @@ namespace Contao\ManagerBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -26,11 +31,13 @@ use Webmozart\PathUtil\Path;
 class MaintenanceModeCommand extends Command
 {
     private string $webDir;
+    private Environment $twig;
     private Filesystem $filesystem;
 
-    public function __construct(string $webDir, Filesystem $filesystem = null)
+    public function __construct(string $webDir, Environment $twig, Filesystem $filesystem = null)
     {
         $this->webDir = $webDir;
+        $this->twig = $twig;
         $this->filesystem = $filesystem ?? new Filesystem();
 
         parent::__construct();
@@ -40,83 +47,50 @@ class MaintenanceModeCommand extends Command
     {
         $this
             ->setName('contao:maintenance-mode')
-            ->addArgument('state', InputArgument::OPTIONAL, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
+            ->addArgument('state', InputArgument::REQUIRED, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
+            ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
+            ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')
             ->setDescription('Changes the state of the system maintenance mode. Without any argument, it toggles between the current state.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $isEnabled = $this->filesystem->exists(Path::join($this->webDir, 'maintenance.html'));
-
-        switch ($input->getArgument('state')) {
-            // Enable
-            case 'enable':
-            case 'on':
-                $shouldEnable = true;
-                break;
-
-            // Disable
-            case 'disable':
-            case 'off':
-                $shouldEnable = false;
-                break;
-
-            // Toggle if none or both options are set
-            default:
-                $shouldEnable = !$isEnabled;
-        }
+        $shouldEnable = \in_array($input->getArgument('state'), ['enable', 'on'], true);
 
         $io = new SymfonyStyle($input, $output);
 
         if ($shouldEnable) {
-            $this->enable($isEnabled);
+            $this->enable($input->getOption('template'), $input->getOption('templateVars'));
             $io->success('Maintenance mode enabled.');
         } else {
-            $this->disable($isEnabled);
+            $this->disable();
             $io->success('Maintenance mode disabled.');
         }
 
         return 0;
     }
 
-    private function enable(bool $isEnabled): void
+    /**
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    private function enable(string $templateName, string $templateVars): void
     {
-        // Already enabled
-        if ($isEnabled) {
-            return;
-        }
-
-        // Move existing template
-        if ($this->filesystem->exists(Path::join($this->webDir, '.maintenance.html'))) {
-            $this->filesystem->rename(
-                Path::join($this->webDir, '.maintenance.html'),
-                Path::join($this->webDir, 'maintenance.html'),
-                true
-            );
-
-            return;
-        }
-
-        // Copy our own skeleton template
-        $this->filesystem->copy(
-            Path::makeAbsolute('../Resources/skeleton/public/.maintenance.html', __DIR__),
+        // Render the template and write it to maintenance.html
+        $this->filesystem->dumpFile(
             Path::join($this->webDir, 'maintenance.html'),
-            true
+            $this->twig->render($templateName, array_merge([
+                'statusCode' => 503,
+                'language' => 'en',
+                'template' => $templateName,
+            ], json_decode($templateVars, true)))
         );
     }
 
-    private function disable(bool $isEnabled): void
+    private function disable(): void
     {
-        // Already disabled
-        if (!$isEnabled) {
-            return;
-        }
-
-        $this->filesystem->rename(
-            Path::join($this->webDir, 'maintenance.html'),
-            Path::join($this->webDir, '.maintenance.html'),
-            true
-        );
+        $this->filesystem->remove(Path::join($this->webDir, 'maintenance.html'));
     }
 }

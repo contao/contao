@@ -16,100 +16,123 @@ use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Twig\Environment;
 
 class MaintenanceModeCommandTest extends TestCase
 {
     /**
-     * @testWith [true, true]
-     *           [false, true]
-     *           [false, false]
+     * @dataProvider enableProvider
      */
-    public function testEnable(bool $alreadyEnabled, bool $maintenanceTemplateCustomized): void
+    public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string $customTemplateName = null, string $customTemplateVars = null): void
     {
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method other than the ones we mock
-            ->getMock()
+        $twig = $this->getTwigMock();
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                $expectedTemplateName,
+                $expectedTemplateVars
+            )
+            ->willReturn('parsed-template')
         ;
 
-        if ($alreadyEnabled) {
-            $filesystem
-                ->expects($this->once())
-                ->method('exists')
-                ->with('/path/to/webdir/maintenance.html')
-                ->willReturn(true)
-            ;
-        } else {
-            $filesystem
-                ->expects($this->exactly(2))
-                ->method('exists')
-                ->withConsecutive(
-                    ['/path/to/webdir/maintenance.html'],
-                    ['/path/to/webdir/.maintenance.html']
-                )
-                ->willReturnOnConsecutiveCalls(
-                    false,
-                    $maintenanceTemplateCustomized
-                )
-            ;
+        $filesystem = $this->getFilesystemMock();
+        $filesystem
+            ->expects($this->once())
+            ->method('dumpFile')
+            ->with(
+                '/path/to/webdir/maintenance.html',
+                'parsed-template'
+            )
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/webdir', $twig, $filesystem);
+
+        $params = ['state' => 'enable'];
+
+        if ($customTemplateName) {
+            $params['--template'] = $customTemplateName;
         }
 
-        if (!$alreadyEnabled) {
-            if ($maintenanceTemplateCustomized) {
-                $filesystem
-                    ->expects($this->once())
-                    ->method('rename')
-                    ->with('/path/to/webdir/.maintenance.html', '/path/to/webdir/maintenance.html', true)
-                ;
-            } else {
-                $filesystem
-                    ->expects($this->once())
-                    ->method('copy')
-                    ->with(
-                        Path::makeAbsolute('../../src/Resources/skeleton/public/.maintenance.html', __DIR__),
-                        '/path/to/webdir/maintenance.html'
-                    )
-                ;
-            }
+        if ($customTemplateVars) {
+            $params['--templateVars'] = $customTemplateVars;
         }
-
-        $command = new MaintenanceModeCommand('/path/to/webdir', $filesystem);
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['state' => 'enable']);
+        $commandTester->execute($params);
 
         $this->assertStringContainsString('[OK] Maintenance mode enabled', $commandTester->getDisplay(true));
     }
 
-    /**
-     * @testWith [true]
-     *           [false]
-     */
-    public function testDisable(bool $alreadyDisabled): void
+    public function testDisable(): void
     {
-        $filesystem = $this->getMockBuilder(Filesystem::class)
-            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method other than the ones we mock
-            ->getMock()
-        ;
-
+        $filesystem = $this->getFilesystemMock();
         $filesystem
             ->expects($this->once())
-            ->method('exists')
+            ->method('remove')
             ->with('/path/to/webdir/maintenance.html')
-            ->willReturn(!$alreadyDisabled)
         ;
 
-        $filesystem
-            ->expects($alreadyDisabled ? $this->never() : $this->once())
-            ->method('rename')
-            ->with('/path/to/webdir/maintenance.html', '/path/to/webdir/.maintenance.html', true)
-            ;
-
-        $command = new MaintenanceModeCommand('/path/to/webdir', $filesystem);
+        $command = new MaintenanceModeCommand(
+            '/path/to/webdir',
+            $this->getTwigMock(),
+            $filesystem
+        );
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);
 
         $this->assertStringContainsString('[OK] Maintenance mode disabled', $commandTester->getDisplay(true));
+    }
+
+    public function enableProvider(): \Generator
+    {
+        yield 'Test defaults' => [
+            '@ContaoCore/Error/service_unavailable.html.twig',
+            [
+                'statusCode' => 503,
+                'language' => 'en',
+                'template' => '@ContaoCore/Error/service_unavailable.html.twig',
+            ],
+        ];
+
+        yield 'Test custom template name' => [
+            '@CustomBundle/maintenance.html.twig',
+            [
+                'statusCode' => 503,
+                'language' => 'en',
+                'template' => '@CustomBundle/maintenance.html.twig',
+            ],
+            '@CustomBundle/maintenance.html.twig',
+        ];
+
+        yield 'Test custom template name and template vars' => [
+            '@CustomBundle/maintenance.html.twig',
+            [
+                'statusCode' => 503,
+                'language' => 'de',
+                'template' => '@CustomBundle/maintenance.html.twig',
+                'foo' => 'bar',
+            ],
+            '@CustomBundle/maintenance.html.twig',
+            '{"language":"de", "foo": "bar"}',
+        ];
+    }
+
+    private function getFilesystemMock()
+    {
+        return $this->getMockBuilder(Filesystem::class)
+            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method other than the ones we mock
+            ->getMock()
+        ;
+    }
+
+    private function getTwigMock()
+    {
+        return $this->getMockBuilder(Environment::class)
+            ->disableOriginalConstructor()
+            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method other than the ones we mock
+            ->getMock()
+        ;
     }
 }

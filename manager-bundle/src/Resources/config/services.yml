@@ -21,6 +21,7 @@ services:
         class: Contao\ManagerBundle\Command\MaintenanceModeCommand
         arguments:
             - '%contao.web_dir%'
+            - '@twig'
 
     contao_manager.command.setup:
         class: Contao\ManagerBundle\Command\ContaoSetupCommand
