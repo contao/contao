@@ -451,8 +451,14 @@ services:
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.page_url" instead.
 
-    contao.listener.data_container.undo:
-        class: Contao\CoreBundle\EventListener\DataContainer\UndoListener
+    contao.listener.data_container.undo.label:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
+    contao.listener.data_container.undo.jump_to_parent_operation_button:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationButtonListener
         arguments:
             - '@contao.framework'
             - '@database_connection'

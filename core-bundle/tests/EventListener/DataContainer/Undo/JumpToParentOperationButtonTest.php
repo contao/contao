@@ -10,11 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
+namespace Contao\CoreBundle\Tests\EventListener\DataContainer\Undo;
 
 use Contao\Backend;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\UndoListener;
+use Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationButtonListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -22,7 +22,7 @@ use Contao\Image;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class UndoListenerTest extends TestCase
+class JumpToParentOperationButtonTest extends TestCase
 {
     /**
      * @var Image&MockObject
@@ -96,9 +96,9 @@ class UndoListenerTest extends TestCase
             ->willReturn('tl_news')
         ;
 
-        $listener = new UndoListener($this->framework, $this->connection);
+        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection);
 
-        $buttonHtml = $listener->renderJumpToParentButton($row, '', '', '', 'parent.svg');
+        $buttonHtml = $listener($row, '', '', '', 'parent.svg');
         $this->assertSame("<a href=\"\" title=\"Show parent of Inhaltselement ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Inhaltselement ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
     }
 
@@ -131,8 +131,8 @@ class UndoListenerTest extends TestCase
             ->willReturn('tl_news')
         ;
 
-        $listener = new UndoListener($this->framework, $this->connection);
-        $buttonHtml = $listener->renderJumpToParentButton($row, '', '', '', 'parent.svg');
+        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection);
+        $buttonHtml = $listener($row, '', '', '', 'parent.svg');
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
     }
 
@@ -147,8 +147,8 @@ class UndoListenerTest extends TestCase
             ->willReturn('<img src="parent_.svg">')
         ;
 
-        $listener = new UndoListener($this->framework, $this->connection);
-        $buttonHtml = $listener->renderJumpToParentButton($row);
+        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection);
+        $buttonHtml = $listener($row);
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
     }
 
