@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.4/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
          colors="true"
          defaultTestSuite="core-bundle"
          bootstrap="vendor/autoload.php"
@@ -9,6 +9,7 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
+        <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0" />
         <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel" />
         <env name="APP_SECRET" value="foobar" />
         <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test" />
