@@ -77,6 +77,6 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
 
-        return $this->authenticationManager->authenticate(new UsernamePasswordToken(new InMemoryUser($username, $password), $password, $this->providerKey));
+        return $this->authenticationManager->authenticate(new UsernamePasswordToken($username, $password, $this->providerKey));
     }
 }
