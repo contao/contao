@@ -45,7 +45,7 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
             return new Response('');
         }
 
-        $formId = 'tl_maintenance_login_' . $model->id;
+        $formId = 'tl_maintenance_login_'.$model->id;
 
         $template->formId = $formId;
         $template->requestToken = $this->csrfTokenManager->getFrontendTokenValue();

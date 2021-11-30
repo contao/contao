@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\Config;
+
 // Palettes
 $GLOBALS['TL_DCA']['tl_module']['palettes']['maintenance_login'] = '{title_legend},name,headline,type;{config_legend},maintenanceUsername,maintenancePassword;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
