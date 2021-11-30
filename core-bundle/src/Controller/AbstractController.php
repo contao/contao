@@ -41,7 +41,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
     protected function initializeContaoFramework(): void
     {
-        $this->get('contao.framework')->initialize();
+        $this->container->get('contao.framework')->initialize();
     }
 
     /**
@@ -55,7 +55,7 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function getContaoAdapter(string $class)
     {
-        return $this->get('contao.framework')->getAdapter($class);
+        return $this->container->get('contao.framework')->getAdapter($class);
     }
 
     /**
@@ -63,7 +63,7 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function tagResponse($tags): void
     {
-        $this->get('contao.cache.entity_tags')->tagWith($tags);
+        $this->container->get('contao.cache.entity_tags')->tagWith($tags);
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class AbstractController extends SymfonyAbstractController
     {
         return [
             'csrf_field_name' => 'REQUEST_TOKEN',
-            'csrf_token_manager' => $this->get('contao.csrf.token_manager'),
+            'csrf_token_manager' => $this->container->get('contao.csrf.token_manager'),
             'csrf_token_id' => $this->getParameter('contao.csrf_token_name'),
         ];
     }
