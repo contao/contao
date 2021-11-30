@@ -17,7 +17,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "contao/core-bundle": "self.version",
-        "symfony/http-kernel": "^5.3"
+        "symfony/http-kernel": "^5.4"
     },
     "conflict": {
         "contao/core": "*",
@@ -25,12 +25,12 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "symfony/http-client": "^5.3"
+        "symfony/http-client": "^5.4"
     },
     "extra": {
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^5.3"
+            "require": "^5.4"
         }
     },
     "autoload": {
