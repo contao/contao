@@ -241,7 +241,7 @@ class tl_undo extends Backend
 		foreach ($tables->fetchFirstColumn() as $table)
 		{
 			System::loadLanguageFile($table);
-			$options[$table] = isset($GLOBALS['TL_LANG'][$table]['_table']) ? $GLOBALS['TL_LANG'][$table]['_table'][0] : $table;
+			$options[$table] = isset($GLOBALS['TL_LANG'][$table]['_type']) ? $GLOBALS['TL_LANG'][$table]['_type'][0] : $table;
 		}
 
 		return $options;

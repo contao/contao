@@ -2,10 +2,10 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_theme.php" source-language="en">
     <body>
-      <trans-unit id="tl_theme._table.0">
+      <trans-unit id="tl_theme._type.0">
         <source>Theme</source>
       </trans-unit>
-      <trans-unit id="tl_theme._table.1">
+      <trans-unit id="tl_theme._type.1">
         <source>Themes</source>
       </trans-unit>
       <trans-unit id="tl_theme.name.0">
