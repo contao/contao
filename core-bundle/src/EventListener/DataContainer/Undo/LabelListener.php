@@ -28,6 +28,7 @@ use Doctrine\DBAL\Exception;
 
 /**
  * @Callback(target="list.label.label", table="tl_undo")
+ *
  * @internal
  */
 class LabelListener

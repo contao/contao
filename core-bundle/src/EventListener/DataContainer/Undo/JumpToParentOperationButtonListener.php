@@ -23,6 +23,7 @@ use Doctrine\DBAL\Connection;
 
 /**
  * @Callback(target="list.operations.jumpToParent.button", table="tl_undo")
+ *
  * @internal
  */
 class JumpToParentOperationButtonListener
