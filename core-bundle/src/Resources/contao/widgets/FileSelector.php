@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Webmozart\PathUtil\Path;
 
 trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\FileSelector" class has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
 
@@ -487,7 +488,7 @@ class FileSelector extends Widget
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && \in_array('.public', $content))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}
@@ -655,7 +656,7 @@ class FileSelector extends Widget
 
 		do
 		{
-			if (file_exists($projectDir . '/' . $path . '/.public'))
+			if (is_file($projectDir . '/' . $path . '/.public'))
 			{
 				return false;
 			}

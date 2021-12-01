@@ -30,13 +30,13 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/tests/Functional/var/*
 
     ignoreErrors:
-        # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
         -
+            # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
             message: '#PHPDoc tag @param references unknown parameter: \$options#'
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
-        # Ignore missing return types in interfaces that we can only change in Contao 5
         -
+            # Ignore missing return types in interfaces that we can only change in Contao 5
             message: '#has no return type specified#'
             paths:
                 - %currentWorkingDirectory%/core-bundle/src/Config/Dumper/DumperInterface.php
