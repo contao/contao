@@ -36,6 +36,11 @@ parameters:
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
         -
+            # Ignore the forward compatible phpDoc comment of the UsernamePasswordToken constructor
+            message: '#UsernamePasswordToken constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
+            path: %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
+
+        -
             # Ignore missing return types in interfaces that we can only change in Contao 5
             message: '#has no return type specified#'
             paths:
@@ -46,12 +51,6 @@ parameters:
 
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
-
-        # Ignore parameter doctype annotation in Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken constructor
-        -
-            message: '#Parameter \#1 \$user of class Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
-            paths:
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
 
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false
