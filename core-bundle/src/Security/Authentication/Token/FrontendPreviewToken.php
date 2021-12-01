@@ -23,6 +23,7 @@ class FrontendPreviewToken extends AbstractToken
     {
         if (null === $user) {
             parent::__construct();
+            $this->setUser('anon.');
         } else {
             parent::__construct($user->getRoles());
             $this->setUser($user);
