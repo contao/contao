@@ -62,9 +62,7 @@ class TwigIntegrationTest extends TestCase
         TemplateLoader::addFile('form_textfield', 'templates');
 
         $environment = new Environment(new ArrayLoader(['@Contao/form_textfield.html.twig' => $content]));
-        $environment->addExtension(
-            new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))
-        );
+        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class)));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
@@ -76,9 +74,6 @@ class TwigIntegrationTest extends TestCase
         $textField = new FormTextField(['class' => 'my_class', 'label' => 'foo']);
         $textField->addError('bar');
 
-        $this->assertSame(
-            "my_class error\nfoo foo\n bar",
-            $textField->parse()
-        );
+        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse());
     }
 }

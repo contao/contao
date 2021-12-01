@@ -17,13 +17,13 @@ class ParentClassWithMembersStub
     public const PARENT_PUBLIC_CONSTANT = 3;
     protected const PARENT_PROTECTED_CONSTANT = 2;
     private const PARENT_PRIVATE_CONSTANT = 1;
+
     public $parentPublicField = 'c';
     public static $parentPublicStaticField = 'C';
     protected $parentProtectedField = 'b';
     protected static $parentProtectedStaticField = 'B';
 
     private $parentPrivateField = 'a';
-
     private static $parentPrivateStaticField = 'A';
 
     public function __construct()

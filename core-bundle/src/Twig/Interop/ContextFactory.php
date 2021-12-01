@@ -20,7 +20,7 @@ use Contao\Template;
 final class ContextFactory
 {
     /**
-     * Create a Twig template context from a @see Template object.
+     * Creates a Twig template context from a @see Template object.
      */
     public function fromContaoTemplate(Template $template): array
     {
@@ -43,13 +43,12 @@ final class ContextFactory
     }
 
     /**
-     * Create a Twig template context from an arbitrary object. This will also
+     * Creates a Twig template context from an arbitrary object. This will also
      * make protected methods/properties/constants accessible.
      */
     public function fromClass(object $object): array
     {
         $class = new \ReflectionClass($object);
-
         $context = iterator_to_array($this->getAllMembers($object));
 
         foreach ($class->getReflectionConstants() as $constant) {
@@ -90,14 +89,15 @@ final class ContextFactory
     }
 
     /**
-     * Find all members including those that were dynamically set ($this->foo = 'bar').
+     * Returns all members including those that were dynamically set ($this->foo = 'bar').
      */
     private function getAllMembers(object $object): \Generator
     {
         // See https://externals.io/message/105697#105697
         // Backwards compatibility with PHP < 7.4
-        $mangledObjectVars = \function_exists('get_mangled_object_vars') ?
-            get_mangled_object_vars($object) : (array) $object;
+        $mangledObjectVars = \function_exists('get_mangled_object_vars')
+            ? get_mangled_object_vars($object)
+            : (array) $object;
 
         foreach ($mangledObjectVars as $key => $value) {
             if (0 === strncmp($key, "\0*\0", 3)) {
@@ -112,7 +112,7 @@ final class ContextFactory
     }
 
     /**
-     * Wrap a callable into an object so that it can be evaluated in a Twig template.
+     * Wraps a callable into an object so that it can be evaluated in a Twig template.
      */
     private function getCallableWrapper(callable $callable, string $name): object
     {
@@ -134,7 +134,7 @@ final class ContextFactory
             }
 
             /**
-             * Delegate call to callable, e.g. when in a Contao template context.
+             * Delegates call to callable, e.g. when in a Contao template context.
              */
             public function __invoke(...$args)
             {
