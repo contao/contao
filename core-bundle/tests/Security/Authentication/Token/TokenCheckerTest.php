@@ -31,7 +31,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 
-
 class TokenCheckerTest extends TestCase
 {
     /**
