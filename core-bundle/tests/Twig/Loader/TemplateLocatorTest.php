@@ -17,9 +17,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\DriverException;
+use Doctrine\DBAL\Driver\DriverException as LegacyDriverException;
+use Doctrine\DBAL\Driver\PDO\Exception as PDOException;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Webmozart\PathUtil\Path;
@@ -89,14 +91,21 @@ class TemplateLocatorTest extends TestCase
         yield 'table not found' => [
             new TableNotFoundException(
                 'Table tl_theme doesn\'t exist.',
-                $this->createMock(DriverException::class)
+                $this->createMock(LegacyDriverException::class)
             ),
         ];
 
         yield 'failing connection' => [
             new ConnectionException(
                 'No database selected',
-                $this->createMock(DriverException::class)
+                $this->createMock(LegacyDriverException::class)
+            ),
+        ];
+
+        yield 'access denied' => [
+            new DriverException(
+                'Access denied',
+                PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'"))
             ),
         ];
     }
