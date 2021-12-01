@@ -296,7 +296,7 @@ class AuthenticationProviderTest extends TestCase
         $user = $this->createPartialMock(BackendUser::class, ['save', 'getUserIdentifier']);
         $user->admin = '1';
 
-        $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend');
 
         $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
         $twoFactorHandler
@@ -322,7 +322,7 @@ class AuthenticationProviderTest extends TestCase
         $user = $this->createPartialMock(BackendUser::class, ['save', 'getUserIdentifier']);
         $user->admin = '1';
 
-        $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend');
 
         $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
         $twoFactorHandler

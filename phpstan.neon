@@ -41,6 +41,11 @@ parameters:
             path: %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
 
         -
+            # Ignore forward compatible phpDoc commment of the AbstractToken constructor
+            message: '#Parameter \#1 \$user of method Symfony\\Component\\Security\\Core\\Authentication\\Token\\AbstractToken\:\:setUser\(\) expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
+            path: %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
+
+        -
             # Ignore missing return types in interfaces that we can only change in Contao 5
             message: '#has no return type specified#'
             paths:
