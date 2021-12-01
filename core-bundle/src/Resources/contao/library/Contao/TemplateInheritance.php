@@ -375,7 +375,7 @@ trait TemplateInheritance
 			return null;
 		}
 
-		$contextFactory = $container->get('contao.twig.context_factory');
+		$contextFactory = $container->get('contao.twig.interop.context_factory');
 
 		$context = $this instanceof Template ?
 			$contextFactory->fromContaoTemplate($this) :
