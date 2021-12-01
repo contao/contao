@@ -50,7 +50,7 @@ class MaintenanceModeCommand extends Command
             ->addArgument('state', InputArgument::REQUIRED, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
             ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')
-            ->setDescription('Changes the state of the system maintenance mode. Without any argument, it toggles between the current state.')
+            ->setDescription('Changes the state of the system maintenance mode.')
         ;
     }
 
