@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Twig\Interop\ContextHelper;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -371,19 +370,28 @@ trait TemplateInheritance
 	 */
 	protected function renderTwigSurrogateIfExists(): ?string
 	{
-		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		$container = System::getContainer();
+
+		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
 		{
 			return null;
 		}
 
 		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
 
-		if ($twig->getLoader()->exists($templateCandidate))
+		if (!$twig->getLoader()->exists($templateCandidate))
 		{
-			return $twig->render($templateCandidate, ContextHelper::fromContaoTemplate($this));
+			return null;
 		}
 
-		return null;
+		$contextFactory = $container->get('contao.twig.interop.context_factory');
+
+		$context = $this instanceof Template ?
+			$contextFactory->fromContaoTemplate($this) :
+			$contextFactory->fromClass($this)
+		;
+
+		return $twig->render($templateCandidate, $context);
 	}
 }
 
