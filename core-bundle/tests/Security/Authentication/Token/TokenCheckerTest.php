@@ -30,7 +30,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
-use Symfony\Component\Security\Core\User\InMemoryUser;
+
 
 class TokenCheckerTest extends TestCase
 {
@@ -197,7 +197,7 @@ class TokenCheckerTest extends TestCase
         yield [new FrontendPreviewToken(null, true), false, false];
         yield [new FrontendPreviewToken(null, true), true, true];
         yield [new FrontendPreviewToken(null, false), true, false];
-        yield [new UsernamePasswordToken(new InMemoryUser('user', null), 'provider'), true, false];
+        yield [new UsernamePasswordToken($this->createMock(FrontendUser::class), 'provider'), true, false];
     }
 
     public function testDoesNotReturnATokenIfTheSessionIsNotStarted(): void
@@ -288,7 +288,7 @@ class TokenCheckerTest extends TestCase
 
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
-        $token = new UsernamePasswordToken(new InMemoryUser('user', null), 'provider');
+        $token = new UsernamePasswordToken($this->createMock(FrontendUser::class), 'provider');
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
