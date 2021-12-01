@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\FrontendUser;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class FrontendPreviewToken extends AbstractToken
 {
@@ -24,7 +23,6 @@ class FrontendPreviewToken extends AbstractToken
     {
         if (null === $user) {
             parent::__construct();
-            $this->setUser(new InMemoryUser('anon.', null));
         } else {
             parent::__construct($user->getRoles());
             $this->setUser($user);
