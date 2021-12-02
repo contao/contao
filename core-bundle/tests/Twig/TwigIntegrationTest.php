@@ -20,9 +20,9 @@ use Contao\FormTextField;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
-use Webmozart\PathUtil\Path;
 
 class TwigIntegrationTest extends TestCase
 {
