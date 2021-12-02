@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
-
 /**
  * Front end module "change password".
  *
@@ -155,7 +153,6 @@ class ModuleChangePassword extends Module
 				// Validate the old password
 				if ($strKey == 'oldPassword')
 				{
-					/** @var PasswordHasherInterface $passwordHasher */
 					$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 					if (!$passwordHasher->verify($objMember->password, $objWidget->value))

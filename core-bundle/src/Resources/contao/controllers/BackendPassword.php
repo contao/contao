@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 /**
  * Back end help wizard.
@@ -71,7 +70,6 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				/** @var PasswordHasherInterface $passwordHasher */
 				$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
 				// Make sure the password has been changed

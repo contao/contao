@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 /**
  * Front end module "close account".
@@ -82,7 +81,6 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
-			/** @var PasswordHasherInterface $passwordHasher */
 			$passwordHasher = $container->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 			// Validate the password

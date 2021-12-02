@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Monolog\ContaoContext;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 /**
  * Front end module "registration".
@@ -215,8 +214,6 @@ class ModuleRegistration extends Module
 				$objWidget->validate();
 
 				$varValue = $objWidget->value;
-
-				/** @var PasswordHasherInterface $passwordHasher */
 				$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 				// Check whether the password matches the username
