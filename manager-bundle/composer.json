@@ -55,8 +55,7 @@
         "symfony/web-profiler-bundle": "^5.4",
         "symfony/yaml": "^5.4",
         "toflar/psr6-symfony-http-cache-store": "^3.0",
-        "twig/extra-bundle": "^3.0",
-        "webmozart/path-util": "^2.2"
+        "twig/extra-bundle": "^3.0"
     },
     "require-dev": {
         "composer/composer": "^2.0",

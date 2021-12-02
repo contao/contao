@@ -20,12 +20,12 @@ use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Webmozart\PathUtil\Path;
 
 class BackendCsvImportController
 {

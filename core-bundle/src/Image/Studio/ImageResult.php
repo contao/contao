@@ -24,7 +24,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeOptions;
 use Psr\Container\ContainerInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageResult
 {

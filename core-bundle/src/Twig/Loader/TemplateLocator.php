@@ -16,8 +16,8 @@ use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental

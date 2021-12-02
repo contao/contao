@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Util;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class SymlinkUtil
 {

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\HttpKernel\Bundle;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Webmozart\PathUtil\Path;
 
 /**
  * Allows registering legacy Contao modules as bundle.
