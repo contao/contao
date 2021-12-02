@@ -3,7 +3,7 @@
     <a href="#" title="{{ 'MSC.openToolbar'|trans }}">{{ include('@ContaoCore/Collector/contao.svg') }}</a>
 </div>
 <div class="cto-toolbar__inside">
-    <form action="{{ action }}" method="post">
+    <form action="{{ action }}" method="post" autocomplete="off">
         <div class="formbody">
             <input type="hidden" name="FORM_SUBMIT" value="tl_switch">
             <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
@@ -13,7 +13,7 @@
             {% if canSwitchUser %}
                 <div>
                     <label for="ctrl_user">{{ 'MSC.feUser'|trans }}:</label>
-                    <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}" autocomplete="username">
+                    <input type="text" name="user" id="ctrl_user" list="userlist" class="tl_text user" placeholder="{{ 'MSC.username'|trans }}" value="{{ user }}">
                     <datalist id="userlist"></datalist>
                 </div>
             {% endif %}

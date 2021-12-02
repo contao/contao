@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
 
 class PreviewAuthenticationListenerTest extends TestCase
 {
@@ -57,7 +58,25 @@ class PreviewAuthenticationListenerTest extends TestCase
             ->willReturn(false)
         ;
 
+        $context = $this->createMock(RequestContext::class);
+        $context
+            ->expects($this->once())
+            ->method('getBaseUrl')
+            ->willReturn('')
+        ;
+
+        $context
+            ->expects($this->exactly(2))
+            ->method('setBaseUrl')
+        ;
+
         $router = $this->createMock(UrlGeneratorInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('getContext')
+            ->willReturn($context)
+        ;
+
         $router
             ->expects($this->once())
             ->method('generate')
@@ -69,6 +88,7 @@ class PreviewAuthenticationListenerTest extends TestCase
         $uriSigner
             ->expects($this->once())
             ->method('sign')
+            ->with('/contao/login')
             ->willReturn('/contao/login')
         ;
 

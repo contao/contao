@@ -69,6 +69,7 @@
                             <element key="3"><string>Contao\CoreBundle\Tests\Cron</string></element>
                             <element key="4"><string>Contao\CoreBundle\Security\Authentication\Provider</string></element>
                             <element key="5"><string>Contao\CoreBundle\Tests\Security\Authentication\Provider</string></element>
+                            <element key="6"><string>Contao\CoreBundle\Tests\Security\Authentication\RememberMe</string></element>
                         </array>
                     </element>
                 </array>

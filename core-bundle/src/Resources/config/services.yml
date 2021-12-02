@@ -911,6 +911,10 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
 
+    contao.twig.interop.context_factory:
+        class: Contao\CoreBundle\Twig\Interop\ContextFactory
+        public: true
+
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
         arguments:

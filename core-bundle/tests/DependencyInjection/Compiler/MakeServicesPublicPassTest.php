@@ -32,6 +32,7 @@ class MakeServicesPublicPassTest extends TestCase
         $container->setDefinition('security.authentication.trust_resolver', (new Definition())->setPublic(false));
         $container->setDefinition('security.firewall.map', (new Definition())->setPublic(false));
         $container->setDefinition('security.logout_url_generator', (new Definition())->setPublic(false));
+        $container->setDefinition('security.password_hasher_factory', (new Definition())->setPublic(false));
         $container->setDefinition('security.helper', (new Definition())->setPublic(false));
 
         // Aliased definitions
@@ -41,7 +42,6 @@ class MakeServicesPublicPassTest extends TestCase
         // Aliases
         $container->setAlias('database_connection', 'doctrine.dbal.default_connection');
         $container->setAlias('mailer', 'mailer.mailer');
-        $container->setAlias('security.password_hasher_factory', 'security.password_hasher_factory.generic');
 
         $pass = new MakeServicesPublicPass();
         $pass->process($container);
@@ -55,11 +55,11 @@ class MakeServicesPublicPassTest extends TestCase
         $this->assertTrue($container->getDefinition('security.authentication.trust_resolver')->isPublic());
         $this->assertTrue($container->getDefinition('security.firewall.map')->isPublic());
         $this->assertTrue($container->getDefinition('security.logout_url_generator')->isPublic());
+        $this->assertTrue($container->getDefinition('security.password_hasher_factory')->isPublic());
         $this->assertTrue($container->getDefinition('security.helper')->isPublic());
 
         // Aliases
         $this->assertTrue($container->getAlias('database_connection')->isPublic());
         $this->assertTrue($container->getAlias('mailer')->isPublic());
-        $this->assertTrue($container->getAlias('security.password_hasher_factory')->isPublic());
     }
 }

@@ -260,6 +260,30 @@ class Form extends Hybrid
 			$this->processFormData($arrSubmitted, $arrLabels, $arrFields);
 		}
 
+		// Remove any uploads, if form did not validate (#1185)
+		if ($doNotSubmit && $hasUpload && !empty($_SESSION['FILES']))
+		{
+			foreach ($_SESSION['FILES'] as $field => $upload)
+			{
+				if (empty($arrFields[$field]))
+				{
+					continue;
+				}
+
+				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+				{
+					$file->delete();
+				}
+
+				if (is_file($upload['tmp_name']))
+				{
+					unlink($upload['tmp_name']);
+				}
+
+				unset($_SESSION['FILES'][$field]);
+			}
+		}
+
 		// Add a warning to the page title
 		if ($doNotSubmit && !Environment::get('isAjaxRequest'))
 		{
@@ -268,7 +292,6 @@ class Form extends Hybrid
 
 			$title = $objPage->pageTitle ?: $objPage->title;
 			$objPage->pageTitle = $GLOBALS['TL_LANG']['ERR']['form'] . ' - ' . $title;
-			$_SESSION['FILES'] = array(); // see #3007
 		}
 
 		$strAttributes = '';
