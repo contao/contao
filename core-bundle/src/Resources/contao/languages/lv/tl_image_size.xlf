@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Šeit varat definēt paredzamo attēla izkārtojuma platumu, faktiskais izmērs jānosaka, izmantojot CSS. Piemērs: (max-width: 600px) 100vw, 50vw.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -54,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.densities.1">
         <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>Šeit varat noteikt pikseļu blīvumu (piem., &lt;em&gt;1x, 1,5x, 2x&lt;/em&gt;) vai platuma deskriptorus (piem., &lt;em&gt;100w, 200w&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.0">
         <source>CSS classes</source>
@@ -81,12 +83,15 @@
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
         <source>Note that no optimizations such as meta data stripping or JPEG compression will be applied in this case.</source>
+        <target>Ņemiet vērā, ka šajā gadījumā netiks piemērotas nekādas optimizācijas, piemēram, metadatu noņemšana vai JPEG saspiešana.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
+        <target>Iespējot slinko ielādi</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Atlikt attēla ielādēšanu līdz brīdim, kad tas tiek ieritināts skata laukumā.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -147,6 +152,14 @@
       <trans-unit id="tl_image_size.gif:webp,gif">
         <source>GIF to WEBP</source>
         <target>GIF uz WEBP</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,png">
+        <source>WEBP to PNG</source>
+        <target>WEBP uz PNG</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.webp:webp,jpg">
+        <source>WEBP to JPG</source>
+        <target>WEBP uz JPG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

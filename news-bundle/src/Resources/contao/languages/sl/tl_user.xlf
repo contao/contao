@@ -19,6 +19,7 @@
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>
+        <target>Dovoljeni izvlečki novic</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.1">
         <source>Here you can grant access to one or more news feeds.</source>

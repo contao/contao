@@ -128,6 +128,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
+        <target>Pajek - Crawler</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.startCrawling">
         <source>Start crawling</source>
@@ -149,6 +150,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Pajek je trenutno na delu. Prosimo, počakajte, da zaključi, nato pa si oglejte rezultate.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
         <source>Download the debug log</source>

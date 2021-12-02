@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>Pārvaldiet tēmas, priekšgala moduļus, lapu izkārtojumus vai attēlu izmērus.</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -46,6 +47,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
+        <target>Pievienot vai rediģēt pielāgotas veidnes</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -57,6 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
+        <target>Pārvaldīt biedru kontus (priekšgals)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -64,6 +67,7 @@
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end)</source>
+        <target>Pārvaldīt biedru grupas (priekšgals)</target>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
@@ -71,6 +75,7 @@
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end)</source>
+        <target>Pārvaldīt lietotāju kontus (aizmugure)</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
@@ -78,6 +83,7 @@
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end)</source>
+        <target>Pārvaldīt lietotāju grupas (aizmugure)</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
@@ -85,6 +91,7 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
+        <target>Pārvaldīt dubultās piekrišanas žetonus</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -96,6 +103,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
+        <target>Datņu un mapju pārvaldība</target>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
@@ -103,6 +111,7 @@
       </trans-unit>
       <trans-unit id="MOD.log.1">
         <source>Browse the system log</source>
+        <target>Pārlūkot sistēmas žurnālu</target>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
@@ -110,6 +119,7 @@
       </trans-unit>
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
+        <target>Pielāgot Contao konfigurāciju</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -117,6 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Crawl the website or purge generated data</source>
+        <target>Pārmeklēt tīmekļa vietni vai attīrīt ģenerētos datus</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -283,24 +294,24 @@
         <target>Automātiskā atslēgšanās</target>
       </trans-unit>
       <trans-unit id="FMD.logout.1">
-        <source>Automatically logs out a user</source>
-        <target>Automātiski atslēdz lietotāju.</target>
+        <source>Automatically logs out a member</source>
+        <target>Automātiski atslēdz biedru</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
         <target>Personīgie dati</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
-        <source>Generates a form to edit a user's personal data</source>
-        <target>Ģenerē formu, lai rediģētu lietotāja personīgos datus.</target>
+        <source>Generates a form to edit a member's personal data</source>
+        <target>Ģenerē veidlapu biedru personas datu rediģēšanai</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
         <target>Biedru reģistrācija</target>
       </trans-unit>
       <trans-unit id="FMD.registration.1">
-        <source>Generates a user registration form</source>
-        <target>Šis modulis izveido formulāru, kas ļauj priekšgala lietotājiem reģistrēties jūsu mājas lapā.</target>
+        <source>Generates a member registration form</source>
+        <target>Ģenerē biedra reģistrācijas veidlapu</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

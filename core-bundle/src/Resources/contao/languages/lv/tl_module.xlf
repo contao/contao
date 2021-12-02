@@ -54,8 +54,7 @@
         <target>Parādīt aizsargātos ierakstus</target>
       </trans-unit>
       <trans-unit id="tl_module.showProtected.1">
-        <source>Show items that are usually only visible to authenticated users.</source>
-        <target>Rādīt vienumus, kas parasti redzami tikai autentificētiem lietotājiem.</target>
+        <source>Show items that are usually only visible to authenticated members.</source>
       </trans-unit>
       <trans-unit id="tl_module.defineRoot.0">
         <source>Set a reference page</source>
@@ -83,9 +82,11 @@
       </trans-unit>
       <trans-unit id="tl_module.customTpl.0">
         <source>Module template</source>
+        <target>Moduļa veidne</target>
       </trans-unit>
       <trans-unit id="tl_module.customTpl.1">
         <source>Here you can select the module template.</source>
+        <target>Šeit varat izvēlēties moduļa veidni.</target>
       </trans-unit>
       <trans-unit id="tl_module.pages.0">
         <source>Pages</source>
@@ -132,8 +133,8 @@
         <target>Pārsūtīt uz lapu, kas beidzamo reizi apmeklēta</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Novirzīt lietotāju atpakaļ uz pēdējo apmeklēto lapu, pāradresācijas lapas vietā.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Pārvirzīt biedru atpakaļ uz pēdējo apmeklēto lapu, nevis uz pāradresēto lapu.</target>
       </trans-unit>
       <trans-unit id="tl_module.1cl.0">
         <source>One column</source>
@@ -263,6 +264,7 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
+        <target>Salikuma sadaļa</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
@@ -405,25 +407,27 @@
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Atspējot aizsardzību pret surogātpastu </target>
       </trans-unit>
       <trans-unit id="tl_module.disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Šeit jūs varat atspējot aizsardzība pret surogātpastu (nav ieteicams).</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.0">
         <source>Member groups</source>
         <target>Biedru grupas</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_groups.1">
-        <source>Here you can assign the user to one or more groups.</source>
-        <target>Šeit Jūs varat lietotāju iekļaut vienā vai vairākās grupās.</target>
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>Šeit Jūs varat piešķirt biedru vienai vai vairākām grupām.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.0">
         <source>Allow login</source>
         <target>Atļaut pieteikšanos</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_allowLogin.1">
-        <source>Allow the new user to log into the front end.</source>
-        <target>Atļaut jaunam lietotājam pieteikties priekšgalā.</target>
+        <source>Allow the new member to log into the front end.</source>
+        <target>Atļaut jaunam biedram pieteikties priekšgalā.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_skipName.0">
         <source>Skip username</source>
@@ -470,8 +474,7 @@
         <target>Apstiprinājuma lapa</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
-        <source>Please choose the page to which users will be redirected after the request has been completed.</source>
-        <target>Lūdzu izvēlieties lapu, uz kuru lietotājs tiks novirzīts pēc pieprasījuma izpildes.</target>
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -486,8 +489,7 @@
         <target>Paroles ziņa</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_password.1">
-        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any user property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
-        <target>Jūs varat izmantot aizstājējzīmes &lt;em&gt;##domain##&lt;/em&gt; (domēna vārds), &lt;em&gt;##link##&lt;/em&gt; (aktivizacijas saite) un jebkuru ievades lauku (piem. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -495,7 +497,7 @@
       </trans-unit>
       <trans-unit id="tl_module.nav_legend">
         <source>Navigation settings</source>
-        <target>Navigācijas uzstādījumi</target>
+        <target>Navigācijas iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_module.reference_legend">
         <source>Reference page</source>
@@ -511,7 +513,7 @@
       </trans-unit>
       <trans-unit id="tl_module.image_legend">
         <source>Image settings</source>
-        <target>Attēla uzstādījumi</target>
+        <target>Attēla iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_module.config_legend">
         <source>Module configuration</source>
@@ -539,11 +541,11 @@
       </trans-unit>
       <trans-unit id="tl_module.email_legend">
         <source>E-mail settings</source>
-        <target>E-pasta uzstādījumi</target>
+        <target>E-pasta iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_module.account_legend">
         <source>Account settings</source>
-        <target>Konta uzstādījumi</target>
+        <target>Konta iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_module.emailText.0">
         <source>Your registration on %s</source>

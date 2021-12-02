@@ -319,6 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_content.rel.1">
         <source>To trigger the lightbox, enter a &lt;em&gt;data-lightbox&lt;/em&gt; attribute here.</source>
+        <target>Če želite, da se element odpre v lightbox-u, tu vstavite atribut &lt;em&gt;data-lightbox&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.useImage.0">
         <source>Create an image link</source>
@@ -342,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.1">
         <source>Use the home directory as file source if there is an authenticated member.</source>
+        <target>Uporabi domačo mapo kot izvor datotek, če je član preverjen.</target>
       </trans-unit>
       <trans-unit id="tl_content.perRow.0">
         <source>Thumbnails per row</source>
@@ -364,6 +366,7 @@
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Tu lahko omejite skupno število elementov. 0 prikaže vse.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -450,6 +453,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerPreload.1">
         <source>Here you can suggest how the browser shall preload the video.</source>
+        <target>Tu lahko predlagate, kako naj brskalnik prednaloži video.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerStart.0">
         <source>Start at</source>
@@ -477,9 +481,11 @@
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.0">
         <source>Aspect ratio</source>
+        <target>Razmerje stranic</target>
       </trans-unit>
       <trans-unit id="tl_content.playerAspect.1">
         <source>Here you can select the aspect ratio of the video to make it responsive.</source>
+        <target>Tu lahko izberete razmerje stranic videa in ga naredite odzivnega na različne velikosti zaslonov</target>
       </trans-unit>
       <trans-unit id="tl_content.splashImage.0">
         <source>Use a splash image</source>
@@ -611,6 +617,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite, da se element ne prikaže pred določenim dnevom/časom, ga vnesite tu. Drugače pustite polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -618,6 +625,7 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite, da se element ne prikaže po določenem datumu/času, ga vnesite tu. Drugače pustite polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -748,6 +756,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_nocontrols">
         <source>Hide the controls</source>
+        <target>Skrite orodja</target>
       </trans-unit>
       <trans-unit id="tl_content.player_loop">
         <source>Play in a loop</source>
@@ -764,6 +773,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
+        <target>Meta podatki (prednaloži samo meta podatke)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.none">
         <source>None (do not preload anything)</source>
@@ -774,6 +784,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_controls">
         <source>Hide the controls</source>
+        <target>Skrite orodja</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_cc_load_policy">
         <source>Show captions by default</source>
@@ -785,9 +796,11 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_hl">
         <source>Use the Contao page language</source>
+        <target>Uporabi jezik s Contao strani</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_iv_load_policy">
         <source>Hide annotations</source>
+        <target>Skrij pripise</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_modestbranding">
         <source>Hide the YouTube logo</source>

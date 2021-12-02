@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_form.skipEmpty.1">
         <source>Do not include empty fields in the form data.</source>
+        <target>Neiekļaut tukšos laukus veidlapas datos.</target>
       </trans-unit>
       <trans-unit id="tl_form.email.0">
         <source>E-mail</source>
@@ -227,6 +228,10 @@
       <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
         <target>Dzēst formulāru ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form.targetTableMissingAllowlist">
+        <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
+        <target>Definējiet pieejamās tabulas šādā DCA konfigurācijā: &lt;code&gt;%s&lt;/code&gt;.</target>
       </trans-unit>
     </body>
   </file>

@@ -6,8 +6,8 @@
         <target>Sistēmas administratora e-pasts</target>
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Lūdzu ievadiet sistēmas administratora e-pastu.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Šī e-pasta adrese tiks izmantota, lai sūtītu un saņemtu sistēmas ziņojumus.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>
@@ -95,6 +95,15 @@
       <trans-unit id="tl_settings.allowedTags.1">
         <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
         <target>Šeit jūs varat ievadīt sarakstu ar atļautajiem HTML tagaiem, kas netiks izsvītroti.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.0">
+        <source>Allowed HTML attributes</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.1">
+        <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributesWarning">
+        <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>

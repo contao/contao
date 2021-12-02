@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Ta naslov elektronske pošte bo uporabljen za pošiljanje in prejemanje sistemskih sporočil.</target>
       </trans-unit>
       <trans-unit id="tl_settings.dateFormat.0">
         <source>Date format</source>

@@ -11,15 +11,15 @@
       </trans-unit>
       <trans-unit id="MSC.by">
         <source>by</source>
-        <target>توسط</target>
+        <target>نویسنده</target>
       </trans-unit>
       <trans-unit id="MSC.empty">
         <source>There are no news items for this period.</source>
-        <target>آیتم خبری برای این دوره وجود ندارد.</target>
+        <target>آیتمی برای این دوره وجود ندارد.</target>
       </trans-unit>
       <trans-unit id="MSC.emptyList">
         <source>Currently there are no news items.</source>
-        <target>در حال حاضر آیتم‌های خبری وجود ندارند.</target>
+        <target>در حال حاضر آیتمی وجود ندارند.</target>
       </trans-unit>
       <trans-unit id="MSC.comments">
         <source>Comments</source>

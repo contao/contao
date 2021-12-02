@@ -38,8 +38,8 @@
         <target>Deaktivizēt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Ja nevēlaties ļaut grupai būt aktīvai pirms noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja nevēlaties ļaut grupai būt aktīvai pēc noteikta datuma / laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -51,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
+        <target>Atļautie elementi</target>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
+        <target>Grupas iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>

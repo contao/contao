@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_member.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja vēlaties, lai konts nebūtu aktīvs pirms noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
@@ -190,9 +191,11 @@
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja vēlaties, lai konts nebūtu aktīvs pēc noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Izmantojiet divfaktoru autentifikāciju</target>
       </trans-unit>
       <trans-unit id="tl_member.personal_legend">
         <source>Personal data</source>
@@ -220,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_member.account_legend">
         <source>Account settings</source>
-        <target>Konta uzstādījumi</target>
+        <target>Konta iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_member.personalData">
         <source>Personal data</source>

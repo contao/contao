@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_news.article.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to an article.</source>
-        <target>با کلیک دکمه &quot;بیشتر بخوانید ...&quot;، بازدیدکننده ها به یک مقاله بازگردانده خواهند شد.</target>
+        <target>با کلیک دکمه «بیشتر بخوانید...»، بازدیدکننده‌ها به یک نوشته بازگردانده خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_news.external.0">
         <source>Custom URL</source>

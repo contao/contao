@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.23] (2021-12-02)
+
+**Fixed issues:**
+
+- [#3741] Make sure GUIDs in RSS feeds are unique ([leofeyer])
+- [#3732] Disable form autocomplete for preview bar ([fritzmg])
+- [#3738] Fix the back end tree view CSS ([leofeyer])
+- [#3734] Delete uploaded files if a form does not validate ([fritzmg])
+- [#3470] Make sure .public is a file and not a directory ([fritzmg])
+- [#3692] Remove the script name before signing a redirect URI ([bytehead])
+- [#3690] Correctly store the referrer in the back end ([Toflar])
+- [#3699] Use ClockMock for time sensitive remember me token test ([SeverinGloeckle])
+- [#3647] Set language of redirect page in global context ([rabauss])
+- [#3668] Do not automatically focus input fields with autocomplete ([SeverinGloeckle])
+- [#3601] Inline fragments should not compile the front end template ([aschempp])
+- [#3656] Do not set the global page object in the back end ([leofeyer])
+- [#3654] Ensure defined admin email is always used as sender ([fritzmg])
+- [#3665] Handle doctrine binary types in version compare view ([SeverinGloeckle])
+- [#3637] Fix the decorator pattern in the FailTolerantProxyCacheWarmer ([aschempp])
+- [#3623] Do not set the server_version ([ausi])
+- [#3627] Add the missing dot-env features ([aschempp])
+- [#3607] Ignore routes without root ID instead of throwing an exception ([aschempp])
+- [#3608] Only change the cache header if no response is passed to Twig render() ([aschempp])
+- [#3595] Fix the base path in the asset context ([aschempp])
+- [#3598] Adjust cache headers for Twig responses ([aschempp])
+- [#3599] Move interest-cohort header to response listener ([aschempp])
+
 ## [4.9.22] (2021-10-20)
 
 **Fixed issues:**
@@ -754,6 +781,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.23]: https://github.com/contao/contao/releases/tag/4.9.23
 [4.9.22]: https://github.com/contao/contao/releases/tag/4.9.22
 [4.9.21]: https://github.com/contao/contao/releases/tag/4.9.21
 [4.9.20]: https://github.com/contao/contao/releases/tag/4.9.20
@@ -814,6 +842,28 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#3741]: https://github.com/contao/contao/pull/3741
+[#3732]: https://github.com/contao/contao/pull/3732
+[#3738]: https://github.com/contao/contao/pull/3738
+[#3734]: https://github.com/contao/contao/pull/3734
+[#3470]: https://github.com/contao/contao/pull/3470
+[#3692]: https://github.com/contao/contao/pull/3692
+[#3690]: https://github.com/contao/contao/pull/3690
+[#3699]: https://github.com/contao/contao/pull/3699
+[#3647]: https://github.com/contao/contao/pull/3647
+[#3668]: https://github.com/contao/contao/pull/3668
+[#3601]: https://github.com/contao/contao/pull/3601
+[#3656]: https://github.com/contao/contao/pull/3656
+[#3654]: https://github.com/contao/contao/pull/3654
+[#3665]: https://github.com/contao/contao/pull/3665
+[#3637]: https://github.com/contao/contao/pull/3637
+[#3623]: https://github.com/contao/contao/pull/3623
+[#3627]: https://github.com/contao/contao/pull/3627
+[#3607]: https://github.com/contao/contao/pull/3607
+[#3608]: https://github.com/contao/contao/pull/3608
+[#3595]: https://github.com/contao/contao/pull/3595
+[#3598]: https://github.com/contao/contao/pull/3598
+[#3599]: https://github.com/contao/contao/pull/3599
 [#3585]: https://github.com/contao/contao/pull/3585
 [#3527]: https://github.com/contao/contao/pull/3527
 [#3134]: https://github.com/contao/contao/pull/3134

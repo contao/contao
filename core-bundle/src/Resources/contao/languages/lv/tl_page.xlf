@@ -78,8 +78,8 @@
         <target>Pārsūtīt uz lapu, kas beidzamo reizi apmeklēta</target>
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
-        <source>Redirect the user back to the last page visited instead of the redirect page.</source>
-        <target>Novirzīt lietotāju atpakaļ uz pēdējo apmeklēto lapu, pāradresācijas lapas vietā.</target>
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Pārvirzīt biedru atpakaļ uz pēdējo apmeklēto lapu, nevis uz pāradresēto lapu.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -133,8 +133,8 @@
         <target>Mājas lapas administratora e-pasts</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
-        <source>Auto-generated messages like subscription confirmation e-mails will be sent to this address.</source>
-        <target>Lūdzu ievadiet sistēmas administratora e-pastu.</target>
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Šī e-pasta adrese tiks izmantota, lai sūtītu un saņemtu sistēmas ziņojumus.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -334,6 +334,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Paslēpt lapu, ja biedrs ir pieteicies.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -361,23 +362,25 @@
       </trans-unit>
       <trans-unit id="tl_page.start.0">
         <source>Show from</source>
-        <target>Wrapper sākums</target>
+        <target>Rādīt no</target>
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
-        <target>Wrapper beigas</target>
+        <target>Rādīt līdz</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
+        <target>Divfaktoru autentifikācijas īstenošana</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.1">
         <source>Enforce two-factor authentication for all members.</source>
+        <target>Ieviest divfaktora autentifikāciju visiem biedriem.</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.0">
         <source>Two-factor redirect page</source>
@@ -452,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_page.publish_legend">
         <source>Publish settings</source>
-        <target>Publicēšanas uzstādījumi</target>
+        <target>Publicēšanas iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_page.twoFactor_legend">
         <source>Two-factor authentication</source>

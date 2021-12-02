@@ -231,6 +231,7 @@
       </trans-unit>
       <trans-unit id="tl_module.contextLength.1">
         <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>Prvo polje definira število znakov pred in po vsaki ključni besedi, drugo pa celotno dolžino konteksta za vsak zadetek.</target>
       </trans-unit>
       <trans-unit id="tl_module.minKeywordLength.0">
         <source>Minimum keyword length</source>
