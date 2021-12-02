@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
@@ -181,6 +182,7 @@ class BackendPreviewSwitchController
         }
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
+            /** @var BackendUser $user */
             $user = $this->security->getUser();
 
             $groups = array_map(
