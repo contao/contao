@@ -539,17 +539,20 @@ abstract class Backend extends Controller
 							$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 						}
 
-						$strUrl = $container->get('router')->generate('contao_backend', array
-						(
-							'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
-							'table' => $table,
-							'id' => $objRow->id,
-							'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
-							'rt' => REQUEST_TOKEN,
-						));
+						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
+						{
+							$strUrl = $container->get('router')->generate('contao_backend', array
+							(
+								'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
+								'table' => $table,
+								'id' => $objRow->id,
+								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+								'rt' => REQUEST_TOKEN,
+							));
 
-						// Add object title or name
-						$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, ($objRow->title ?: $objRow->name ?: $objRow->headline));
+							// Add object title or name
+							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
+						}
 					}
 
 					System::loadLanguageFile($ptable);
