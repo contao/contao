@@ -58,7 +58,7 @@ class BackendController extends AbstractController
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->query->has('redirect')) {
-                $uriSigner = $this->get('uri_signer');
+                $uriSigner = $this->container->get('uri_signer');
 
                 // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
                 if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
@@ -200,7 +200,7 @@ class BackendController extends AbstractController
         }
 
         $config = new PickerConfig($request->query->get('context'), $extras, $request->query->get('value'));
-        $picker = $this->get('contao.picker.builder')->create($config);
+        $picker = $this->container->get('contao.picker.builder')->create($config);
 
         if (null === $picker) {
             throw new BadRequestHttpException('Unsupported picker context');

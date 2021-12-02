@@ -70,10 +70,10 @@ class BackendPassword extends Backend
 			// Save the data
 			else
 			{
-				$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(BackendUser::class);
+				$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
 				// Make sure the password has been changed
-				if ($encoder->isPasswordValid($this->User->password, $pw, null))
+				if ($passwordHasher->verify($this->User->password, $pw))
 				{
 					Message::addError($GLOBALS['TL_LANG']['MSC']['pw_change']);
 				}
@@ -103,7 +103,7 @@ class BackendPassword extends Backend
 
 					$objUser = UserModel::findByPk($this->User->id);
 					$objUser->pwChange = '';
-					$objUser->password = $encoder->encodePassword($pw, null);
+					$objUser->password = $passwordHasher->hash($pw);
 					$objUser->save();
 
 					Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
