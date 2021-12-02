@@ -27,13 +27,13 @@ use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental

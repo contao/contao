@@ -17,7 +17,7 @@ use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class CombinedFileDumperTest extends TestCase
 {

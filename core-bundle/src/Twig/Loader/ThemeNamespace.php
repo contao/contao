@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Loader;
 
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ThemeNamespace
 {

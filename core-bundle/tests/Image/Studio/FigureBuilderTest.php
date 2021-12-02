@@ -34,7 +34,7 @@ use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class FigureBuilderTest extends TestCase
 {

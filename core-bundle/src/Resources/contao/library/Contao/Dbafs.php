@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\Filter\SyncExclude;
 use Contao\Model\Collection;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Handles the database assisted file system (DBAFS)

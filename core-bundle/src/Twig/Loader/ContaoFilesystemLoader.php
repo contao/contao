@@ -16,11 +16,11 @@ use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
-use Webmozart\PathUtil\Path;
 
 /**
  * The ContaoFilesystemLoader builds on top of Twig's FilesystemLoader but
@@ -361,7 +361,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
                 $identifier = ContaoTwigUtil::getIdentifier($shortName);
 
                 if (isset($templatesByNamespace[$namespace][$identifier])) {
-                    $basePath = Path::getLongestCommonBasePath($this->paths[$namespace]);
+                    $basePath = Path::getLongestCommonBasePath(...$this->paths[$namespace]);
 
                     throw new \OutOfBoundsException("There cannot be more than one '$identifier' template in '$basePath'.");
                 }
