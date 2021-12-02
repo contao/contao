@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Tu lahko vnesete meta naziv po meri, ki bo prepisal privzetega za spletno stran.</target>
       </trans-unit>
       <trans-unit id="tl_news.robots.0">
         <source>Robots tag</source>
@@ -54,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_news.robots.1">
         <source>Here you can overwrite how search engines handle the news item.</source>
+        <target>Tu lahko določite, naj kako novico obravnavajo iskalniki.</target>
       </trans-unit>
       <trans-unit id="tl_news.description.0">
         <source>Meta description</source>
@@ -61,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Tu lahko vnesete meta opis po meri, ki bo prepisal privzetega za spletno stran.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -204,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite, da se novica ne prikaže pred določenim dnevom/časom, ga vnesite tu. Drugače pustite polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -211,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Če želite, da se novica ne prikaže pred določenim dnevom/časom, ga vnesite tu. Drugače pustite polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>
