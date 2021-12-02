@@ -24,18 +24,18 @@ class MakeServicesPublicPass implements CompilerPassInterface
 {
     private const IDS = [
         'assets.packages',
+        'database_connection',
         'debug.stopwatch',
         'fragment.handler',
         'lexik_maintenance.driver.factory',
         'monolog.logger.contao',
         'security.authentication.trust_resolver',
-        'security.firewall.map',
-        'security.logout_url_generator',
-        'security.helper',
-        'uri_signer',
-        'database_connection',
-        'swiftmailer.mailer',
         'security.encoder_factory',
+        'security.firewall.map',
+        'security.helper',
+        'security.logout_url_generator',
+        'swiftmailer.mailer',
+        'uri_signer',
     ];
 
     public function process(ContainerBuilder $container): void
