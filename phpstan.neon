@@ -36,20 +36,12 @@ parameters:
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
         -
-            # Ignore the forward compatible phpDoc comment of the UsernamePasswordToken constructor
-            message: '#UsernamePasswordToken constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
-
-        -
-            # Ignore forward compatible phpDoc commment of the AbstractToken constructor
-            message: '#Parameter \#1 \$user of method Symfony\\Component\\Security\\Core\\Authentication\\Token\\AbstractToken\:\:setUser\(\) expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
-            path: %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
-        -
-            # Ignore forward compatible phpDoc comment of the TokenInterface::getUser() method
-            message: '#Call to method PHPUnit\\Framework\\Assert::assertSame\(\) with ''anon.'' and Symfony\\Component\\Security\\Core\\User\\UserInterface\|null will always evaluate to false.#'
+            # Ignore the forward compatible phpDoc comment of the Symfony token classes
+            message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
             paths:
-                - %currentWorkingDirectory%/core-bundle/tests/Security/Authentication/FrontendPreviewAuthenticatorTest.php
-                - %currentWorkingDirectory%/core-bundle/tests/Security/Authentication/Token/FrontendPreviewTokenTest.php
+                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
+                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
+
         -
             # Ignore missing return types in interfaces that we can only change in Contao 5
             message: '#has no return type specified#'
