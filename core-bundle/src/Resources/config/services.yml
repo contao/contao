@@ -943,17 +943,18 @@ services:
             - '@contao.routing.response_context_accessor'
 
     # Autowiring aliases
+    # TODO: enable the commented aliases in Contao 5
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
-    Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'
+    # Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'
     Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag.parser'
-    Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
-    Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
-    Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
+    # Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
+    # Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
+    # Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
@@ -1038,6 +1039,14 @@ services:
 
     Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
 
+    Contao\CoreBundle\Image\Studio\Studio:
+        alias: contao.image.studio
+        public: true
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.studio" instead.
+
     Contao\CoreBundle\Image\Studio\FigureRenderer:
         alias: contao.image.studio.figure_renderer
         public: true
@@ -1045,6 +1054,30 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.studio.figure_renderer" instead.
+
+    Contao\CoreBundle\Intl\Countries:
+        alias: contao.intl.countries
+        public: true
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.intl.countries" instead.
+
+    Contao\CoreBundle\Intl\Locales:
+        alias: contao.intl.locales
+        public: true
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.intl.locales" instead.
+
+    Contao\CoreBundle\OptIn\OptIn:
+        alias: contao.opt_in
+        public: true
+        deprecated:
+            package: contao/core-bundle
+            version: 4.13
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.opt_in" instead.
 
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
         alias: contao.routing.response_context_accessor
