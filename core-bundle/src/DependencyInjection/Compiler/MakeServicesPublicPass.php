@@ -22,43 +22,32 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class MakeServicesPublicPass implements CompilerPassInterface
 {
-    private const SERVICES = [
+    private const IDS = [
         'assets.packages',
+        'database_connection',
         'debug.stopwatch',
         'fragment.handler',
         'lexik_maintenance.driver.factory',
         'monolog.logger.contao',
         'security.authentication.trust_resolver',
-        'security.firewall.map',
-        'security.logout_url_generator',
-        'security.helper',
-        'uri_signer',
-    ];
-
-    private const ALIASES = [
-        'database_connection',
-        'swiftmailer.mailer',
         'security.encoder_factory',
+        'security.firewall.map',
+        'security.helper',
+        'security.logout_url_generator',
+        'swiftmailer.mailer',
+        'uri_signer',
     ];
 
     public function process(ContainerBuilder $container): void
     {
-        foreach (self::SERVICES as $service) {
-            if (!$container->hasDefinition($service)) {
-                continue;
+        foreach (self::IDS as $id) {
+            if ($container->hasAlias($id)) {
+                $alias = $container->getAlias($id);
+                $alias->setPublic(true);
+            } elseif ($container->hasDefinition($id)) {
+                $definition = $container->getDefinition($id);
+                $definition->setPublic(true);
             }
-
-            $definition = $container->getDefinition($service);
-            $definition->setPublic(true);
-        }
-
-        foreach (self::ALIASES as $alias) {
-            if (!$container->hasAlias($alias)) {
-                continue;
-            }
-
-            $alias = $container->getAlias($alias);
-            $alias->setPublic(true);
         }
     }
 }
