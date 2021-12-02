@@ -33,7 +33,6 @@ class BackendAccessVoter extends Voter implements ResetInterface
     ];
 
     private ContaoFramework $framework;
-
     private array $pagePermissionsCache = [];
 
     public function __construct(ContaoFramework $framework)
@@ -177,7 +176,6 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $row['cuser'] = false;
             $row['cgroup'] = false;
 
-            /** @var PageModel $parentPage */
             $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
 
             while (null !== $parentPage && false === $row['chmod'] && $pid > 0) {
@@ -193,7 +191,6 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
             // Set default values
             if (false === $row['chmod']) {
-                /** @var Config $config */
                 $config = $this->framework->getAdapter(Config::class);
 
                 $row['chmod'] = $config->get('defaultChmod');

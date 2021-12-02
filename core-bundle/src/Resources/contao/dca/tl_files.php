@@ -307,7 +307,6 @@ class tl_files extends Backend
 		}
 
 		$security = System::getContainer()->get('security.helper');
-
 		$canUpload = $security->isGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES);
 		$canEdit = $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE);
 		$canDeleteOne = $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE);

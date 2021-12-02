@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
@@ -24,15 +23,13 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class BackendAccessVoterTest extends TestCase
 {
-    private ContaoFramework $framework;
     private BackendAccessVoter $voter;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->framework = $this->mockContaoFramework();
-        $this->voter = new BackendAccessVoter($this->framework);
+        $this->voter = new BackendAccessVoter($this->mockContaoFramework());
     }
 
     public function testAbstainsIfTheAttributeIsContaoUser(): void
@@ -409,7 +406,7 @@ class BackendAccessVoterTest extends TestCase
     }
 
     /**
-     * @dataProvider pageAndArticlePermissionsProvider
+     * @dataProvider getPageAndArticlePermissions
      */
     public function testPageAndArticlePermissions(string $attribute, array $chmod, int $cuser, int $cgroup, int $expected): void
     {
@@ -436,7 +433,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame($expected, $this->voter->vote($token, $page, [$attribute]));
     }
 
-    public function pageAndArticlePermissionsProvider(): \Generator
+    public function getPageAndArticlePermissions(): \Generator
     {
         yield 'Denies access if tl_page.chmod is empty' => [
             ContaoCorePermissions::USER_CAN_EDIT_PAGE,
