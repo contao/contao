@@ -48,40 +48,40 @@ class StoreRefererListenerTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend');
-        $request->attributes->set('_contao_referer_id', 'dummyTestRefererId');
+        $request->attributes->set('_contao_referer_id', 'newRefererId');
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $request->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
 
         $requestWithRefInUrl = new Request();
         $requestWithRefInUrl->attributes->set('_route', 'contao_backend');
-        $requestWithRefInUrl->attributes->set('_contao_referer_id', 'dummyTestRefererId');
+        $requestWithRefInUrl->attributes->set('_contao_referer_id', 'newRefererId');
         $requestWithRefInUrl->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
         $requestWithRefInUrl->server->set('REQUEST_URI', '/path/of/contao?having&query&string=1');
-        $requestWithRefInUrl->query->set('ref', 'dummyTestRefererId');
+        $requestWithRefInUrl->query->set('ref', 'existingRefererId');
 
         yield 'Test current referer null returns correct new referer' => [
             $request,
             null,
             [
-                'dummyTestRefererId' => [
-                    'last' => '',
+                'newRefererId' => [
                     'current' => 'path/of/contao?having&query&string=1',
+                    'last' => '',
                 ],
             ],
         ];
 
-        yield 'Test referer returns correct new referer' => [
+        yield 'Test "last" remains untouched if there is no existing refer ID in the URL' => [
             $requestWithRefInUrl,
             [
-                'dummyTestRefererId' => [
-                    'last' => '',
+                'newRefererId' => [
                     'current' => 'hi/I/am/your_current_referer.html',
+                    'last' => '',
                 ],
             ],
             [
-                'dummyTestRefererId' => [
-                    'last' => 'hi/I/am/your_current_referer.html',
+                'newRefererId' => [
                     'current' => 'path/of/contao?having&query&string=1',
+                    'last' => '',
                 ],
             ],
         ];
@@ -89,23 +89,49 @@ class StoreRefererListenerTest extends TestCase
         yield 'Test referers are correctly added to the referers array (see #143)' => [
             $requestWithRefInUrl,
             [
-                'dummyTestRefererId' => [
-                    'last' => '',
+                'existingRefererId' => [
                     'current' => 'hi/I/am/your_current_referer.html',
+                    'last' => '',
                 ],
-                'dummyTestRefererId1' => [
-                    'last' => '',
+                'newRefererId' => [
                     'current' => 'hi/I/am/your_current_referer.html',
+                    'last' => '',
                 ],
             ],
             [
-                'dummyTestRefererId' => [
-                    'last' => 'hi/I/am/your_current_referer.html',
-                    'current' => 'path/of/contao?having&query&string=1',
-                ],
-                'dummyTestRefererId1' => [
-                    'last' => '',
+                'existingRefererId' => [
                     'current' => 'hi/I/am/your_current_referer.html',
+                    'last' => '',
+                ],
+                'newRefererId' => [
+                    'current' => 'path/of/contao?having&query&string=1',
+                    'last' => 'hi/I/am/your_current_referer.html',
+                ],
+            ],
+        ];
+
+        yield 'Test referers are correctly replaced if already present (see #2722)' => [
+            $requestWithRefInUrl,
+            [
+                'existingRefererId' => [
+                    'current' => 'hi/I/am/your_current_referer.html',
+                    'last' => '',
+                    'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=1',
+                ],
+                'newRefererId' => [
+                    'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=2',
+                ],
+            ],
+            [
+                'existingRefererId' => [
+                    'current' => 'hi/I/am/your_current_referer.html',
+                    'last' => '',
+                    'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=1',
+                ],
+                'newRefererId' => [
+                    'current' => 'path/of/contao?having&query&string=1',
+                    'last' => 'hi/I/am/your_current_referer.html',
+                    'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=2',
                 ],
             ],
         ];
