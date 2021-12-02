@@ -253,7 +253,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->mockConnection(),
-            $this->mockSecurity(FrontendUser::class, ['ROLE_MEMBER']),
+            $this->mockSecurity(FrontendUser::class, ['IS_AUTHENTICATED_FULLY', 'ROLE_MEMBER']),
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
@@ -305,7 +305,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return Security&MockObject
      */
-    private function mockSecurity(?string $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER']): Security
+    private function mockSecurity(?string $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER', 'IS_AUTHENTICATED_FULLY']): Security
     {
         $user = null;
 

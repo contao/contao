@@ -103,10 +103,8 @@ class BackendPreviewSwitchController
      */
     public function __invoke(Request $request): Response
     {
-        $user = $this->security->getUser();
-
         if (!$this->security->isGranted('ROLE_USER')) {
-            return new Response('Access Denied', null !== $user ? Response::HTTP_FORBIDDEN : Response::HTTP_UNAUTHORIZED);
+            return new Response('Access Denied', $this->security->isGranted('IS_AUTHENTICATED_FULLY') ? Response::HTTP_FORBIDDEN : Response::HTTP_UNAUTHORIZED);
         }
 
         if (!$request->isXmlHttpRequest()) {
@@ -122,7 +120,7 @@ class BackendPreviewSwitchController
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
-            $data = $this->getMembersDataList($user, $request);
+            $data = $this->getMembersDataList($request);
 
             return new JsonResponse($data);
         }
@@ -175,7 +173,7 @@ class BackendPreviewSwitchController
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 
-    private function getMembersDataList(BackendUser $user, Request $request): array
+    private function getMembersDataList(Request $request): array
     {
         $andWhereGroups = '';
 
@@ -184,6 +182,8 @@ class BackendPreviewSwitchController
         }
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
+            $user = $this->security->getUser();
+
             $groups = array_map(
                 static function ($groupId): string {
                     return '%"'.(int) $groupId.'"%';
