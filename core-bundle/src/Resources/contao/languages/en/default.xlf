@@ -239,11 +239,8 @@
       <trans-unit id="ERR.moduleWithoutColumn">
         <source>Please assign all modules to a column!</source>
       </trans-unit>
-      <trans-unit id="ERR.previewSwitchFailed">
-        <source>Preview settings could not be applied.</source>
-      </trans-unit>
-      <trans-unit id="ERR.previewSwitchFailedUser">
-        <source>Preview settings could not be applied. Please select a valid username.</source>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Preview settings could not be applied: invalid username "%s".</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

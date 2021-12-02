@@ -105,7 +105,11 @@ class BackendPreviewSwitchController
     {
         $user = $this->security->getUser();
 
-        if (!$user instanceof BackendUser || !$request->isXmlHttpRequest()) {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return new Response('Access Denied', null !== $user ? Response::HTTP_FORBIDDEN : Response::HTTP_UNAUTHORIZED);
+        }
+
+        if (!$request->isXmlHttpRequest()) {
             return new Response('Bad Request', Response::HTTP_BAD_REQUEST);
         }
 
@@ -160,12 +164,12 @@ class BackendPreviewSwitchController
 
         if (null !== $frontendUsername) {
             if (!$this->previewAuthenticator->authenticateFrontendUser($frontendUsername, $showUnpublished)) {
-                return new Response($this->translator->trans('ERR.previewSwitchFailedUser', [], 'contao_default'), Response::HTTP_BAD_REQUEST);
+                $message = $this->translator->trans('ERR.previewSwitchInvalidUsername', [$frontendUsername], 'contao_default');
+
+                return new Response($message, Response::HTTP_BAD_REQUEST);
             }
         } else {
-            if (!$this->previewAuthenticator->authenticateFrontendGuest($showUnpublished)) {
-                return new Response($this->translator->trans('ERR.previewSwitchFailed', [], 'contao_default'), Response::HTTP_BAD_REQUEST);
-            }
+            $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }
 
         return new Response('', Response::HTTP_NO_CONTENT);

@@ -238,10 +238,10 @@
                 const formData = new FormData(form);
 
                 request('POST', form.action, formData, function () {
-                    if (204 === this.status) {
-                        location.reload();
-                    } else {
+                    if (400 === this.status) {
                         alert(this.responseText ? this.responseText : 'An unknown error occurred.');
+                    } else {
+                        location.reload();
                     }
                 });
             });

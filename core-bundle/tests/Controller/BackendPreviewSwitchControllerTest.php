@@ -17,6 +17,7 @@ use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ForwardCompatibility\DriverStatement;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -187,7 +188,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->assertSame('ERR.previewSwitchFailedUser', $response->getContent());
+        $this->assertSame('ERR.previewSwitchInvalidUsername', $response->getContent());
     }
 
     public function testReturnsEmptyMemberList(): void
@@ -223,6 +224,48 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame(json_encode([]), $response->getContent());
+    }
+
+    public function testExitsAsUnauthenticatedUser(): void
+    {
+        $controller = new BackendPreviewSwitchController(
+            $this->mockFrontendPreviewAuthenticator(),
+            $this->mockTokenChecker(),
+            $this->mockConnection(),
+            $this->mockSecurity(null, []),
+            $this->getTwigMock(),
+            $this->mockRouter(),
+            $this->mockTokenManager(),
+            'csrf',
+            $this->mockTranslator()
+        );
+
+        $request = $this->createMock(Request::class);
+
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+    }
+
+    public function testExitsAsUnauthorizedUser(): void
+    {
+        $controller = new BackendPreviewSwitchController(
+            $this->mockFrontendPreviewAuthenticator(),
+            $this->mockTokenChecker(),
+            $this->mockConnection(),
+            $this->mockSecurity(FrontendUser::class, ['ROLE_MEMBER']),
+            $this->getTwigMock(),
+            $this->mockRouter(),
+            $this->mockTokenManager(),
+            'csrf',
+            $this->mockTranslator()
+        );
+
+        $request = $this->createMock(Request::class);
+
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
 
     /**
@@ -262,9 +305,13 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return Security&MockObject
      */
-    private function mockSecurity(): Security
+    private function mockSecurity(?string $userClass = BackendUser::class, array $roles = ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_ALLOWED_TO_SWITCH_MEMBER']): Security
     {
-        $user = $this->createMock(BackendUser::class);
+        $user = null;
+
+        if (null !== $userClass) {
+            $user = $this->createMock($userClass);
+        }
 
         $security = $this->createMock(Security::class);
         $security
@@ -275,13 +322,8 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $security
             ->method('isGranted')
             ->willReturnCallback(
-                static function (string $role): bool {
-                    switch ($role) {
-                        case 'ROLE_ALLOWED_TO_SWITCH_MEMBER':
-                        case 'ROLE_ADMIN': return true;
-                    }
-
-                    return false;
+                static function (string $role) use ($roles): bool {
+                    return \in_array($role, $roles, true);
                 }
             )
         ;
