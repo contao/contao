@@ -16,6 +16,7 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
@@ -24,6 +25,8 @@ use Psr\Container\ContainerInterface;
 class LightboxResultTest extends TestCase
 {
     /**
+     * @param ImageInterface|string|null $resource
+     *
      * @dataProvider provideInvalidConfigurations
      */
     public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl($resource, ?string $url): void

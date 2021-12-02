@@ -34,6 +34,8 @@ class WidgetTest extends TestCase
     }
 
     /**
+     * @param array<string>|string $value
+     *
      * @dataProvider postProvider
      */
     public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void

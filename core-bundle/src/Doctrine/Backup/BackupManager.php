@@ -164,6 +164,10 @@ class BackupManager
         }
     }
 
+    /**
+     * @param resource                 $fileHandle
+     * @param \DeflateContext|resource $deflateContext
+     */
     private function writeLine(string $data, $fileHandle, $deflateContext): void
     {
         $data .= PHP_EOL;
@@ -176,6 +180,10 @@ class BackupManager
         fflush($fileHandle);
     }
 
+    /**
+     * @param resource                 $fileHandle
+     * @param \DeflateContext|resource $deflateContext
+     */
     private function finishWriting($fileHandle, $deflateContext): void
     {
         if ($deflateContext) {

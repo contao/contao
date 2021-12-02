@@ -162,7 +162,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertSame('anon.', $token->getUser());
+        $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
         $this->assertSame($showUnpublished, $token->showUnpublished());
     }
 

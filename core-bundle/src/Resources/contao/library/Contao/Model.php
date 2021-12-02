@@ -1191,7 +1191,7 @@ abstract class Model
 	 *
 	 * @param string $strTable The table name
 	 *
-	 * @return string The model class name
+	 * @return class-string<Model> The model class name
 	 */
 	public static function getClassFromTable($strTable)
 	{

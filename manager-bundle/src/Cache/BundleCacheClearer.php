@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
-use Webmozart\PathUtil\Path;
 
 class BundleCacheClearer implements CacheClearerInterface
 {

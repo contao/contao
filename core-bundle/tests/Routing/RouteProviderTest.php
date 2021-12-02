@@ -718,6 +718,8 @@ class RouteProviderTest extends TestCase
     }
 
     /**
+     * @param Adapter<PageModel> $pageAdapter
+     *
      * @return ContaoFramework&MockObject
      */
     private function mockFramework(Adapter $pageAdapter = null): ContaoFramework

@@ -17,10 +17,10 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use Webmozart\PathUtil\Path;
 
 /**
  * A static class to replace insert tags
@@ -477,7 +477,7 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
-						@trigger_error('Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+						trigger_deprecation('contao/core-bundle', '4.9', 'Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.');
 
 						$strUrl = 'javascript:history.go(-1)';
 						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;

@@ -25,8 +25,8 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\TemplateLoader;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Webmozart\PathUtil\Path;
 
 System::loadLanguageFile('tl_files');
 

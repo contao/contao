@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Translation;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Webmozart\PathUtil\Path;
 
 class LanguageResolver
 {

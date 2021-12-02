@@ -28,8 +28,8 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
-use Webmozart\PathUtil\Path;
 
 class ContaoKernelTest extends ContaoTestCase
 {

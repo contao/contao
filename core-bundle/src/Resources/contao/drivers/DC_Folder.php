@@ -22,9 +22,9 @@ use Doctrine\DBAL\Exception\DriverException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Webmozart\PathUtil\Path;
 
 /**
  * Provide methods to modify the file system.
@@ -2221,7 +2221,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Protect or unprotect the folder
-		if (file_exists($this->strRootDir . '/' . $this->intId . '/.public'))
+		if (is_file($this->strRootDir . '/' . $this->intId . '/.public'))
 		{
 			$objFolder = new Folder($this->intId);
 			$objFolder->protect();
@@ -2758,7 +2758,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && \in_array('.public', $content))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}

@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
-use Webmozart\PathUtil\Path;
 
 class ContaoCacheClearer implements CacheClearerInterface
 {
@@ -28,7 +28,7 @@ class ContaoCacheClearer implements CacheClearerInterface
         $this->filesystem = $filesystem;
     }
 
-    public function clear($cacheDir): void
+    public function clear(string $cacheDir): void
     {
         $this->filesystem->remove(Path::join($cacheDir, 'contao/config'));
         $this->filesystem->remove(Path::join($cacheDir, 'contao/dca'));

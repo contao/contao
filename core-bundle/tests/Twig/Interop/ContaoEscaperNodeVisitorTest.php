@@ -124,6 +124,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
+    /**
+     * @return string|false
+     */
     public function executeReplaceInsertTagsCallback(string $tag)
     {
         return 'flavor' === $tag ? 'vanilla' : false;

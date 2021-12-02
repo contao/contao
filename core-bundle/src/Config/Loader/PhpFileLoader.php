@@ -30,14 +30,14 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard as PrettyPrinter;
 use Symfony\Component\Config\Loader\Loader;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Reads PHP files and returns the content without the opening and closing PHP tags.
  */
 class PhpFileLoader extends Loader
 {
-    public function load($resource, $type = null): string
+    public function load($resource, string $type = null): string
     {
         [$code, $namespace] = $this->parseFile((string) $resource);
 
@@ -48,7 +48,7 @@ class PhpFileLoader extends Loader
         return $code;
     }
 
-    public function supports($resource, $type = null): bool
+    public function supports($resource, string $type = null): bool
     {
         return 'php' === Path::getExtension((string) $resource, true);
     }
