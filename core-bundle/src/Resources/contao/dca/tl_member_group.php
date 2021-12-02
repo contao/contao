@@ -224,7 +224,7 @@ class tl_member_group extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_member_group::disable'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_member_group::disable'))
 		{
 			return '';
 		}
@@ -277,7 +277,7 @@ class tl_member_group extends Backend
 		}
 
 		// Check the field access
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_member_group::disable'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_member_group::disable'))
 		{
 			throw new AccessDeniedException('Not enough permissions to activate/deactivate member group ID ' . $intId . '.');
 		}

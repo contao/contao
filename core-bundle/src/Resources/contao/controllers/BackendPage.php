@@ -146,13 +146,15 @@ class BackendPage extends Backend
 		$objTemplate->value = $objSessionBag->get('page_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? null;
 
-		if (System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page'))
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page'))
 		{
 			$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['pageManager'];
 			$objTemplate->managerHref = 'contao/main.php?do=page&amp;popup=1';
 		}
 
-		if (Input::get('switch') && System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))
+		if (Input::get('switch') && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['filePicker'];
 			$objTemplate->switchHref = str_replace('contao/page?', 'contao/file?', StringUtil::ampersand(Environment::get('request')));

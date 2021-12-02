@@ -400,6 +400,7 @@ class tl_comments extends Backend
 
 		// Order deny,allow
 		Cache::set($strKey, false);
+		$security = System::getContainer()->get('security.helper');
 
 		switch ($strSource)
 		{
@@ -409,7 +410,7 @@ class tl_comments extends Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
+				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 				{
 					Cache::set($strKey, true);
 				}
@@ -421,7 +422,7 @@ class tl_comments extends Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
+				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 				{
 					Cache::set($strKey, true);
 				}
@@ -433,7 +434,7 @@ class tl_comments extends Backend
 											 ->execute($intParent);
 
 				// Do not check the access to the news module (see #5174)
-				if ($objArchive->numRows > 0 && System::isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
+				if ($objArchive->numRows > 0 && $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
 				{
 					Cache::set($strKey, true);
 				}
@@ -445,7 +446,7 @@ class tl_comments extends Backend
 											  ->execute($intParent);
 
 				// Do not check the access to the calendar module (see #5174)
-				if ($objCalendar->numRows > 0 && System::isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
+				if ($objCalendar->numRows > 0 && $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
 				{
 					Cache::set($strKey, true);
 				}
@@ -641,7 +642,7 @@ class tl_comments extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
 		{
 			return '';
 		}
@@ -699,7 +700,7 @@ class tl_comments extends Backend
 		}
 
 		// Check the field access
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
 		}

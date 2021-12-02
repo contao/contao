@@ -226,7 +226,7 @@ class tl_image_size_item extends Backend
 			return;
 		}
 
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
@@ -280,7 +280,7 @@ class tl_image_size_item extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_image_size_item::invisible'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_image_size_item::invisible'))
 		{
 			return '';
 		}
@@ -331,7 +331,7 @@ class tl_image_size_item extends Backend
 		}
 
 		// Check the field access
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_image_size_item::invisible'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_image_size_item::invisible'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish image size item ID ' . $intId . '.');
 		}

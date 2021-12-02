@@ -474,7 +474,7 @@ class tl_layout extends Backend
 			return;
 		}
 
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
 		}

@@ -190,7 +190,7 @@ class tl_module_calendar extends Backend
 
 		while ($objCalendars->next())
 		{
-			if (System::isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
+			if (System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
 			{
 				$arrCalendars[$objCalendars->id] = $objCalendars->title;
 			}

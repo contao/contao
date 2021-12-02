@@ -1229,11 +1229,6 @@ abstract class System
 	{
 		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\System::disableModule()" has been deprecated and will no longer work in Contao 5.0. Use Composer to add or remove modules.');
 	}
-
-	public static function isGranted($attributes, $subject = null)
-	{
-		return self::getContainer()->get('security.helper')->isGranted($attributes, $subject);
-	}
 }
 
 class_alias(System::class, 'System');

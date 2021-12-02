@@ -300,9 +300,10 @@ class tl_news_archive extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_news_archive']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions to add archives
-		if (!System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
+		if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
 		{
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCreatable'] = true;
@@ -310,7 +311,7 @@ class tl_news_archive extends Backend
 		}
 
 		// Check permissions to delete calendars
-		if (!System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
+		if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
 		{
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notDeletable'] = true;
 		}
@@ -326,7 +327,7 @@ class tl_news_archive extends Backend
 				break;
 
 			case 'create':
-				if (!System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
+				if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
 				{
 					throw new AccessDeniedException('Not enough permissions to create news archives.');
 				}
@@ -336,7 +337,7 @@ class tl_news_archive extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES)))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archive ID ' . Input::get('id') . '.');
 				}
@@ -348,7 +349,7 @@ class tl_news_archive extends Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Input::get('act') == 'deleteAll' && !System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
+				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -547,7 +548,7 @@ class tl_news_archive extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_news_archive') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_news_archive') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -564,7 +565,7 @@ class tl_news_archive extends Backend
 	 */
 	public function copyArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -581,7 +582,7 @@ class tl_news_archive extends Backend
 	 */
 	public function deleteArchive($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

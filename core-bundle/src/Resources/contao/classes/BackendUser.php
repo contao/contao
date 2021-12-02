@@ -535,7 +535,7 @@ class BackendUser extends User
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
 					// Check access
-					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
+					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
 					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
 
 					if ($blnAccess && !$blnHide)

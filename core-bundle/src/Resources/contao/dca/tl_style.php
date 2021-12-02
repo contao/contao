@@ -576,7 +576,7 @@ class tl_style extends Backend
 			return;
 		}
 
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_STYLE_SHEETS))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_STYLE_SHEETS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}

@@ -320,7 +320,7 @@ abstract class Backend extends Controller
 		unset($arrGroup);
 
 		$this->import(BackendUser::class, 'User');
-		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
+		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
@@ -391,7 +391,7 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if (($v['exclude'] ?? null) && System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $k))
+					if (($v['exclude'] ?? null) && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $k))
 					{
 						if ($strTable == 'tl_user_group')
 						{
@@ -1076,7 +1076,7 @@ abstract class Backend extends Controller
 		}
 
 		// Check whether the node is mounted
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strNode))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strNode))
 		{
 			$objSession->set($strKey, '');
 

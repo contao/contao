@@ -393,7 +393,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
 		{
 			return '';
 		}
@@ -446,7 +446,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Check the field access
-		if (!System::isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish newsletter recipient ID ' . $intId . '.');
 		}
