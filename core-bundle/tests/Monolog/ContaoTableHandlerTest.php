@@ -56,7 +56,7 @@ class ContaoTableHandlerTest extends TestCase
         $statement = $this->createMock(Statement::class);
         $statement
             ->expects($this->once())
-            ->method('execute')
+            ->method('executeStatement')
         ;
 
         $connection = $this->createMock(Connection::class);

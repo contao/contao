@@ -21,7 +21,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_calendar'] = array
 (
@@ -316,7 +315,6 @@ class tl_calendar extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar']['config']['notDeletable'] = true;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check current action
@@ -405,7 +403,6 @@ class tl_calendar extends Backend
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_calendar']) && in_array($insertId, $arrNew['tl_calendar']))
@@ -460,9 +457,7 @@ class tl_calendar extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('calendar_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -509,7 +504,6 @@ class tl_calendar extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

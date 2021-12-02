@@ -46,11 +46,19 @@ class BackendAccessVoter extends Voter implements ResetInterface
         $this->pagePermissionsCache = [];
     }
 
+    /**
+     * @param mixed $attribute
+     * @param mixed $subject
+     */
     protected function supports($attribute, $subject): bool
     {
         return \is_string($attribute) && 0 === strncmp($attribute, 'contao_user.', 12);
     }
 
+    /**
+     * @param mixed $attribute
+     * @param mixed $subject
+     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -88,6 +96,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     /**
      * Checks the user permissions against a field in tl_user(_group).
+     *
+     * @param mixed $subject
      */
     private function hasAccess($subject, string $field, BackendUser $user): bool
     {
@@ -100,6 +110,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     /**
      * Checks if the user has access to a given page (tl_page.includeChmod et al.).
+     *
+     * @param mixed $subject
      */
     private function isAllowed($subject, int $flag, BackendUser $user): bool
     {
@@ -134,6 +146,8 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     /**
      * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
+     *
+     * @param mixed $subject
      */
     private function canEditFieldsOf($table, BackendUser $user): bool
     {

@@ -21,7 +21,6 @@ use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 (
@@ -247,7 +246,6 @@ class tl_newsletter_channel extends Backend
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notDeletable'] = true;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check current action

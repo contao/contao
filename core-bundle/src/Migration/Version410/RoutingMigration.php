@@ -79,7 +79,6 @@ class RoutingMigration extends AbstractMigration
 
         $this->framework->initialize();
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if ($config->get('folderUrl')) {

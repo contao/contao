@@ -166,7 +166,7 @@ class ImageResult
      * Set $absolute to true to return an absolute path instead of a path
      * relative to the project dir.
      */
-    public function getFilePath($absolute = false): string
+    public function getFilePath(bool $absolute = false): string
     {
         $path = $this->filePathOrImageInterface instanceof ImageInterface
             ? $this->filePathOrImageInterface->getPath()
@@ -204,10 +204,10 @@ class ImageResult
             return;
         }
 
-        $resizer = $this->locator->get('contao.image.resizer');
+        $resizer = $this->locator->get('contao.image.legacy_resizer');
 
         if (!$resizer instanceof DeferredResizerInterface) {
-            throw new \RuntimeException('The "contao.image.resizer" service does not support deferred resizing.');
+            throw new \RuntimeException('The "contao.image.legacy_resizer" service does not support deferred resizing.');
         }
 
         foreach ($deferredImages as $deferredImage) {
@@ -217,7 +217,7 @@ class ImageResult
 
     private function imageFactory(): ImageFactoryInterface
     {
-        return $this->locator->get('contao.image.image_factory');
+        return $this->locator->get('contao.image.factory');
     }
 
     private function pictureFactory(): PictureFactoryInterface

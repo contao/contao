@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -148,7 +147,7 @@ class BackendUser extends User
 
 		if ($strUser !== null)
 		{
-			static::$objInstance = static::loadUserByUsername($strUser);
+			static::$objInstance = static::loadUserByIdentifier($strUser);
 
 			return static::$objInstance;
 		}
@@ -514,12 +513,10 @@ class BackendUser extends User
 	 */
 	public function navigation($blnShowAll=false)
 	{
-		/** @var RouterInterface $router */
-		$router = System::getContainer()->get('router');
-
 		$arrModules = array();
 		$arrStatus = System::getContainer()->get('session')->getBag('contao_backend')->get('backend_modules');
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+		$router = System::getContainer()->get('router');
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{

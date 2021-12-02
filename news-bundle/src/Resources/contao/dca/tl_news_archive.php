@@ -21,7 +21,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_news_archive'] = array
 (
@@ -316,7 +315,6 @@ class tl_news_archive extends Backend
 			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notDeletable'] = true;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Check current action
@@ -460,9 +458,7 @@ class tl_news_archive extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('news_feed_updater');
 
 		if (empty($session) || !is_array($session))
@@ -509,7 +505,6 @@ class tl_news_archive extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session

@@ -43,7 +43,6 @@ class LegacyRoutingListener
      */
     public function disableRoutingFields(): void
     {
-        /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
         $renderHelpIcon = fn () => $adapter->getHtml(
@@ -64,6 +63,8 @@ class LegacyRoutingListener
 
     /**
      * @Callback(table="tl_page", target="fields.urlPrefix.load")
+     *
+     * @param mixed $value
      */
     public function overrideUrlPrefix($value, DataContainer $dc): ?string
     {

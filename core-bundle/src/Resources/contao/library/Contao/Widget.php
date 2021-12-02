@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\Database\Result;
 use Doctrine\DBAL\Types\Types;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Generates and validates form fields
@@ -243,7 +242,7 @@ abstract class Widget extends Controller
 				break;
 
 			case 'class':
-				if ($varValue && strpos($this->strClass, $varValue) === false)
+				if ($varValue && strpos($this->strClass ?? '', $varValue) === false)
 				{
 					$this->strClass = trim($this->strClass . ' ' . $varValue);
 				}
@@ -760,7 +759,6 @@ abstract class Widget extends Controller
 
 		if ($this->useRawRequestData === true)
 		{
-			/** @var Request $request */
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 			return $request->request->get($strKey);

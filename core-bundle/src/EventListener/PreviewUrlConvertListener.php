@@ -45,7 +45,6 @@ class PreviewUrlConvertListener
         }
 
         if ($request->query->has('page')) {
-            /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
             if (!$page = $pageAdapter->findWithDetails($request->query->get('page'))) {
@@ -62,7 +61,6 @@ class PreviewUrlConvertListener
             return null;
         }
 
-        /** @var ArticleModel $articleAdapter */
         $articleAdapter = $this->framework->getAdapter(ArticleModel::class);
 
         if (!$article = $articleAdapter->findByAlias($request->query->get('article'))) {

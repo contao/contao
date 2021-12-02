@@ -83,7 +83,6 @@ class RouteProvider extends AbstractPageRouteProvider
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
@@ -106,7 +105,6 @@ class RouteProvider extends AbstractPageRouteProvider
     {
         $this->framework->initialize(true);
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
         if (null === $names) {
@@ -149,7 +147,8 @@ class RouteProvider extends AbstractPageRouteProvider
     private function addRoutesForRootPages(array $pages, array &$routes): void
     {
         foreach ($pages as $page) {
-            $this->addRoutesForRootPage($page, $routes);
+            $route = $this->pageRegistry->getRoute($page);
+            $this->addRoutesForRootPage($route, $routes);
         }
     }
 
@@ -181,22 +180,18 @@ class RouteProvider extends AbstractPageRouteProvider
         $route = $this->pageRegistry->getRoute($page);
         $routes['tl_page.'.$page->id] = $route;
 
-        $this->addRoutesForRootPage($page, $routes);
+        $this->addRoutesForRootPage($route, $routes);
     }
 
-    private function addRoutesForRootPage(PageModel $page, array &$routes): void
+    private function addRoutesForRootPage(PageRoute $route, array &$routes): void
     {
+        $page = $route->getPageModel();
+
         if ('root' !== $page->type && 'index' !== $page->alias && '/' !== $page->alias) {
             return;
         }
 
-        $page->loadDetails();
-        $route = $this->pageRegistry->getRoute($page);
-        $urlPrefix = '';
-
-        if ($route instanceof PageRoute) {
-            $urlPrefix = $route->getUrlPrefix();
-        }
+        $urlPrefix = $route->getUrlPrefix();
 
         $routes['tl_page.'.$page->id.'.root'] = new Route(
             $urlPrefix ? '/'.$urlPrefix.'/' : '/',
@@ -208,7 +203,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getMethods()
         );
 
-        if (!$urlPrefix || (!$this->legacyRouting && $page->disableLanguageRedirect)) {
+        if (!$urlPrefix || (!$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect)) {
             return;
         }
 
@@ -277,7 +272,6 @@ class RouteProvider extends AbstractPageRouteProvider
             && !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
             && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
         ) {
-            /** @var System $system */
             $system = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback) {
@@ -292,7 +286,6 @@ class RouteProvider extends AbstractPageRouteProvider
         $rootPages = [];
         $indexPages = [];
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
 
@@ -301,7 +294,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $rootPages = $pages->getModels();
         }
 
-        $pages = $pageModel->findBy(["tl_page.alias='index' OR tl_page.alias='/'"], null);
+        $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
 
         if ($pages instanceof Collection) {
             /** @var array<PageModel> $indexPages */

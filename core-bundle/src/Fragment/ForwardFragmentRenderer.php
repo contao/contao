@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Fragment;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 
 /**
@@ -30,6 +31,9 @@ class ForwardFragmentRenderer extends InlineFragmentRenderer
         return 'forward';
     }
 
+    /**
+     * @param ControllerReference|string $uri
+     */
     protected function createSubRequest($uri, Request $request): Request
     {
         return $request->duplicate();

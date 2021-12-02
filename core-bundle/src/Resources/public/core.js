@@ -53,7 +53,7 @@ var AjaxRequest =
 	/**
 	 * Toggle the site structure tree
 	 *
-	 * @param {object} el    The DOM lement
+	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
 	 * @param {int}    level The indentation level
 	 * @param {int}    mode  The insert mode
@@ -2594,7 +2594,7 @@ var Backend =
 		var inputs = edit
 			.getElements('input, textarea')
 			.filter(function(item) {
-				return !item.get('disabled') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image';
+				return !item.get('disabled') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
 			});
 
 		if (inputs[0]) inputs[0].focus();

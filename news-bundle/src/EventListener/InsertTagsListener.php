@@ -61,7 +61,6 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var NewsFeedModel $adapter */
         $adapter = $this->framework->getAdapter(NewsFeedModel::class);
 
         if (null === ($feed = $adapter->findByPk($feedId))) {
@@ -75,14 +74,12 @@ class InsertTagsListener
     {
         $this->framework->initialize();
 
-        /** @var NewsModel $adapter */
         $adapter = $this->framework->getAdapter(NewsModel::class);
 
         if (null === ($model = $adapter->findByIdOrAlias($idOrAlias))) {
             return '';
         }
 
-        /** @var News $news */
         $news = $this->framework->getAdapter(News::class);
 
         switch ($insertTag) {

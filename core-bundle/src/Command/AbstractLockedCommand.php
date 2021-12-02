@@ -78,7 +78,7 @@ abstract class AbstractLockedCommand extends Command implements ContainerAwareIn
     private function getTempDir(): string
     {
         $container = $this->getContainer();
-        $tmpDir = Path::join(sys_get_temp_dir(), md5($container->getParameter('kernel.project_dir')));
+        $tmpDir = Path::join(sys_get_temp_dir(), md5((string) $container->getParameter('kernel.project_dir')));
 
         if (!is_dir($tmpDir)) {
             $container->get('filesystem')->mkdir($tmpDir);

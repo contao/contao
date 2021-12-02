@@ -109,6 +109,6 @@ class LocaleUtil
     {
         $locales = static::getFallbacks($languageTag);
 
-        return array_pop($locales);
+        return array_pop($locales) ?? '';
     }
 }

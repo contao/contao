@@ -122,7 +122,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return $this->decodeTargetPath($request);
         }
 
-        /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
         $groups = StringUtil::deserialize($this->user->groups, true);
         $groupPage = $pageModelAdapter->findFirstActiveByMemberGroups($groups);
@@ -144,7 +143,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.');
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
@@ -156,7 +154,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     {
         $targetPath = $request->request->get('_target_path');
 
-        if (null === $targetPath) {
+        if (!\is_string($targetPath)) {
             throw new BadRequestHttpException('Missing form field "_target_path". You probably need to adjust your custom login template.');
         }
 
