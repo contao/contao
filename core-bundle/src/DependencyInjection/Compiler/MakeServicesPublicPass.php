@@ -44,9 +44,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
             if ($container->hasAlias($id)) {
                 $alias = $container->getAlias($id);
                 $alias->setPublic(true);
-            }
-
-            if ($container->hasDefinition($id)) {
+            } elseif ($container->hasDefinition($id)) {
                 $definition = $container->getDefinition($id);
                 $definition->setPublic(true);
             }
