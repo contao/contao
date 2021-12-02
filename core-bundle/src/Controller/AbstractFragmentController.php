@@ -49,7 +49,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): ?PageModel
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if (null === $request || !$request->attributes->has('pageModel')) {
             return null;
@@ -83,11 +83,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $templateName = $this->options['template'];
         }
 
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ($model->customTpl) {
             // Use the custom template unless it is a back end request
-            if (null === $request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+            if (null === $request || !$this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
                 $templateName = $model->customTpl;
             }
         }
@@ -96,12 +96,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         // Current request is the main request (e.g. ESI fragment), so we have to replace
         // insert tags etc. on the template output
-        if ($request === $this->get('request_stack')->getMainRequest()) {
+        if ($request === $this->container->get('request_stack')->getMainRequest()) {
             $templateClass = FrontendTemplate::class;
         }
 
         /** @var Template $template */
-        $template = $this->get('contao.framework')->createInstance($templateClass, [$templateName]);
+        $template = $this->container->get('contao.framework')->createInstance($templateClass, [$templateName]);
         $template->setData($model->row());
 
         return $template;

@@ -140,7 +140,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         yield [404, new NotFoundHttpException('', new PageNotFoundException())];
     }
 
-    public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void
+    public function testHandlesResponseExceptionsWhenForwarding(): void
     {
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
@@ -168,19 +168,34 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame('foo', $event->getResponse()->getContent());
     }
 
-    public function testHandlesExceptionsWhenRenderingAPageHandler(): void
+    public function testReplacesThrowableWhenForwarding(): void
     {
-        $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorException';
+        $errorPage = $this->mockPageWithProperties([
+            'pid' => 1,
+            'type' => 'error_403',
+            'rootLanguage' => '',
+        ]);
+
+        $request = $this->getRequest('frontend');
+        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
+
+        $throwable = new \RuntimeException();
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $httpKernel
+            ->expects($this->once())
+            ->method('handle')
+            ->willThrowException($throwable)
+        ;
 
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
-        $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
+        $event = $this->getResponseEvent($exception, $request);
 
-        $listener = $this->getListener();
+        $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
-
-        unset($GLOBALS['TL_PTY']);
+        $this->assertSame($throwable, $event->getThrowable());
     }
 
     public function testRendersServiceUnavailableHttpExceptions(): void

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick link".
@@ -127,7 +128,16 @@ class ModuleQuicklink extends Module
 						// no break
 
 					default:
-						$href = $objSubpage->getFrontendUrl();
+						try
+						{
+							$href = $objSubpage->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 				}
 

@@ -164,7 +164,7 @@ class PrettyErrorScreenListener
             } catch (ResponseException $e) {
                 $event->setResponse($e->getResponse());
             } catch (\Throwable $e) {
-                return;
+                $event->setThrowable($e);
             }
         } finally {
             $processing = false;

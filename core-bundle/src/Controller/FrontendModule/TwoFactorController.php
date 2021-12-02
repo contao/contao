@@ -39,7 +39,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
     {
-        if (!$this->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->container->get('security.helper')->isGranted('IS_AUTHENTICATED_FULLY')) {
             // TODO: front end users should be able to re-authenticate after REMEMBERME
             return new Response('', Response::HTTP_NO_CONTENT);
         }
@@ -48,7 +48,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         if (
             $this->pageModel instanceof PageModel
-            && $this->get('contao.routing.scope_matcher')->isFrontendRequest($request)
+            && $this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)
         ) {
             $this->pageModel->loadDetails();
         }
@@ -74,7 +74,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
-        $user = $this->get('security.helper')->getUser();
+        $user = $this->container->get('security.helper')->getUser();
 
         if (!$user instanceof FrontendUser) {
             return new Response('', Response::HTTP_NO_CONTENT);
@@ -87,7 +87,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->enforceTwoFactor = $this->pageModel->enforceTwoFactor;
         $template->targetPath = $return;
 
-        $translator = $this->get('translator');
+        $translator = $this->container->get('translator');
 
         // Inform the user if 2FA is enforced
         if ($this->pageModel->enforceTwoFactor) {
@@ -114,16 +114,16 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         if ('tl_two_factor_generate_backup_codes' === $request->request->get('FORM_SUBMIT')) {
             $template->showBackupCodes = true;
-            $template->backupCodes = $this->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
+            $template->backupCodes = $this->container->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $request->request->get('FORM_SUBMIT')) {
-            $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+            $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
         }
 
         $template->isEnabled = (bool) $user->useTwoFactor;
         $template->href = $this->pageModel->getAbsoluteUrl().'?2fa=enable';
-        $template->trustedDevices = $this->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
+        $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
         return new Response($template->parse());
     }
@@ -135,9 +135,9 @@ class TwoFactorController extends AbstractFrontendModuleController
             return null;
         }
 
-        $translator = $this->get('translator');
-        $authenticator = $this->get('contao.security.two_factor.authenticator');
-        $exception = $this->get('security.authentication_utils')->getLastAuthenticationError();
+        $translator = $this->container->get('translator');
+        $authenticator = $this->container->get('contao.security.two_factor.authenticator');
+        $exception = $this->container->get('security.authentication_utils')->getLastAuthenticationError();
 
         if ($exception instanceof InvalidTwoFactorCodeException) {
             $template->message = $translator->trans('ERR.invalidTwoFactor', [], 'contao_default');
@@ -182,7 +182,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $user->save();
 
         // Clear all trusted devices
-        $this->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
+        $this->container->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
         return new RedirectResponse($this->pageModel->getAbsoluteUrl());
     }
