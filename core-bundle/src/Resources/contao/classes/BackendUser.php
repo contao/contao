@@ -289,11 +289,13 @@ class BackendUser extends User
 	 *
 	 * @return boolean
 	 *
-	 * @deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions constants instead.
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the "security.helper" service with the ContaoCorePermissions
+	 *             constants instead.
 	 */
 	public function isAllowed($int, $row)
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated. Use Symfony security and ContaoCorePermissions constants instead.');
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions constants instead.');
 
 		if ($this->isAdmin)
 		{
@@ -364,11 +366,13 @@ class BackendUser extends User
 	 *
 	 * @return boolean
 	 *
-	 * @deprecated since Contao 4.13. Use Symfony security and isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE)
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE
+	 *             constant instead.
 	 */
 	public function canEditFieldsOf($table)
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::canEditFieldsOfTable()" has been deprecated. Use Symfony security and isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE) instead.');
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::canEditFieldsOfTable()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE constant instead.');
 
 		if ($this->isAdmin)
 		{
