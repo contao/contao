@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>Upravljajte s temami, moduli v ospredju, postavitvami stranmi in velikostmi slik.</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -58,6 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
+        <target>Upravljajte uporabniške račune (ospredje)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -65,6 +67,7 @@
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end)</source>
+        <target>Upravljajte skupine članov (ospredje)</target>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
@@ -84,9 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
+        <target>Dvojno potrjevanje (opt-in)</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
+        <target>Upravljajte žetone za dvojno potrjevanje (opt-in)</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -122,6 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Crawl the website or purge generated data</source>
+        <target>Definicije formatov</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -161,6 +167,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_image_size_item">
         <source>Media queries</source>
+        <target>Media queries</target>
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
@@ -172,6 +179,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_style">
         <source>Format definitions</source>
+        <target>Definicija oblik</target>
       </trans-unit>
       <trans-unit id="MOD.tl_style_sheet">
         <source>Style sheets</source>
@@ -287,6 +295,7 @@
       </trans-unit>
       <trans-unit id="FMD.logout.1">
         <source>Automatically logs out a member</source>
+        <target>Samodejno odjavi uporabnika</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
@@ -294,6 +303,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a member's personal data</source>
+        <target>Ustvari obrazec za urejanje osebnih podatkov uporabnika</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
@@ -301,6 +311,7 @@
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a member registration form</source>
+        <target>Ustvari obrazec za registracijo uporabnika</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>
@@ -388,6 +399,7 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+        <target>Ustvari obrazec za nastavitev dvostopenjske prijave</target>
       </trans-unit>
     </body>
   </file>

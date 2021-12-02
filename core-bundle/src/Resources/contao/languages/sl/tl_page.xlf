@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
+        <target>Tu lahko izberete favicon za spletno mesto.</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
@@ -102,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Tu lahko vnesete vsebino datoteke robots.txt po meri. Razširitve lahko samodejno pripnejo zraven še svojo vsebino. </target>
       </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
@@ -133,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Ta naslov elektronske pošte bo uporabljen za pošiljanje in prejemanje sistemskih sporočil.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>

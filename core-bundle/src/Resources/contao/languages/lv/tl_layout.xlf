@@ -308,6 +308,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.head.1">
         <source>Here you can add individual tags to the &amp;lt;head&amp;gt; section of the page.</source>
+        <target>Šeit varat pievienot atsevišķus tagus lapas sadaļai &amp;lt;head&amp;gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.0">
         <source>Include jQuery</source>
@@ -500,13 +501,6 @@
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
         <target>Rediģēt moduli</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_google">
-        <source>Google Analytics</source>
-        <target>Google Analytics</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.analytics_matomo">
-        <source>Matomo</source>
       </trans-unit>
       <trans-unit id="tl_layout.new.0">
         <source>New</source>

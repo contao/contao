@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.inline.1">
         <source>Show the file in the browser instead of opening the download dialog.</source>
+        <target>Parādiet datni pārlūkprogrammā, nevis atveriet lejupielādes dialoglodziņu.</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite meta data</source>
@@ -46,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the meta data from the file manager.</source>
+        <target>Pārrakstīt datņu pārvaldnieka metadatus.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -217,7 +219,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooStart.0">
         <source>Wrapper start</source>
-        <target>Wrapper uzsākšana</target>
+        <target>Ietinēja sākums</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStart.1">
         <source>Marks the beginning of an accordion pane that spans several content elements.</source>
@@ -225,7 +227,7 @@
       </trans-unit>
       <trans-unit id="tl_content.mooStop.0">
         <source>Wrapper stop</source>
-        <target>Wrapper apstādināšna</target>
+        <target>Ietinēja beigas</target>
       </trans-unit>
       <trans-unit id="tl_content.mooStop.1">
         <source>Marks the end of an accordion pane that spans several content elements.</source>
@@ -358,12 +360,12 @@
         <target>Vienību skaitu vienā lapā. Iestatīts uz 0, lai izslēgtu lapošanu.</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
-        <source>Total number of images</source>
-        <target>Kopējais attēlu skaits</target>
+        <source>Total number of items</source>
+        <target>Kopējais vienumu skaits</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
-        <source>Here you can limit the total number of images. Set to 0 to show all.</source>
-        <target>Šeit jūs varat ierobežot kopējo attēlu skaitu. Iestatiet uz 0, lai parādītu visus.</target>
+        <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Šeit varat ierobežot kopējo vienumu skaitu. Iestatiet 0, lai parādītu visus.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -379,6 +381,7 @@
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
         <source>Do not show files without meta data matching the page language.</source>
+        <target>Nerādīt datnes bez metadatiem, kas atbilst lapas valodai.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
@@ -386,12 +389,15 @@
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.1">
         <source>Here you can select a gallery template.</source>
+        <target>Šeit varat izvēlēties galerijas veidni.</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.0">
         <source>Content element template</source>
+        <target>Satura elementa veidne</target>
       </trans-unit>
       <trans-unit id="tl_content.customTpl.1">
         <source>Here you can select the content element template.</source>
+        <target>Šeit varat izvēlēties satura elementa veidni.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSRC.0">
         <source>Video/audio files</source>
@@ -605,14 +611,14 @@
       </trans-unit>
       <trans-unit id="tl_content.start.0">
         <source>Show from</source>
-        <target>Wrapper sākums</target>
+        <target>Rādīt no</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
-        <target>Wrapper beigas</target>
+        <target>Rādīt līdz</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -627,11 +633,11 @@
       </trans-unit>
       <trans-unit id="tl_content.image_legend">
         <source>Image settings</source>
-        <target>Attēla uzstādījumi</target>
+        <target>Attēla iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_content.download_legend">
         <source>Download settings</source>
-        <target>Lejupielādes uzstādījumi</target>
+        <target>Lejupielādes iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -758,8 +764,7 @@
         <source>Play inline (no fullscreen mode)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
-        <source>Auto (preload the entiry video)</source>
-        <target>Automātiski (pirmsielādēt visu video)</target>
+        <source>Auto (preload the entire video)</source>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -798,12 +803,8 @@
         <target>Slēpt YouTube logo</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
-        <source>Do not show related videos at the end</source>
-        <target>Beigās nerādiet saistītos videoklipus</target>
-      </trans-unit>
-      <trans-unit id="tl_content.youtube_showinfo">
-        <source>Hide the top bar in the preview</source>
-        <target>Priekšskatījumā paslēpiet augšējo joslu</target>
+        <source>Limit related videos to the same channel</source>
+        <target>Saistīto videoklipu ierobežošana tajā pašā kanālā</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
