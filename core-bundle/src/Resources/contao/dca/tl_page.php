@@ -38,7 +38,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'onsubmit_callback' => array
 		(
 			array('tl_page', 'scheduleUpdate'),
-			array('tl_page', 'generateArticle')
+			array('tl_page', 'generateArticle'),
+			array('tl_page', 'removeIndexEntry')
 		),
 		'sql' => array
 		(
@@ -1119,6 +1120,23 @@ class tl_page extends Contao\Backend
 		$objSession->set('sitemap_updater', array_unique($session));
 	}
 
+	/**
+	 * Remove already indexed page, if Do not search is checked
+	 */
+	public function removeIndexEntry(Contao\DataContainer $dc)
+	{
+		// Return if there is no ID
+		if (!$dc->activeRecord || !$dc->activeRecord->id) {
+			return;
+		}
+
+		if ($dc->activeRecord->noSearch || $dc->activeRecord->type != 'regular') {
+			$objPage = Contao\PageModel::findById($dc->activeRecord->id);
+			$pageUrl = $objPage->getAbsoluteUrl();
+			Contao\Search::removeEntry($pageUrl);
+		}
+	}
+	
 	/**
 	 * Auto-generate a page alias if it has not been set yet
 	 *
