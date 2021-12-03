@@ -24,7 +24,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeOptions;
 use Psr\Container\ContainerInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageResult
 {
@@ -166,7 +166,7 @@ class ImageResult
      * Set $absolute to true to return an absolute path instead of a path
      * relative to the project dir.
      */
-    public function getFilePath($absolute = false): string
+    public function getFilePath(bool $absolute = false): string
     {
         $path = $this->filePathOrImageInterface instanceof ImageInterface
             ? $this->filePathOrImageInterface->getPath()

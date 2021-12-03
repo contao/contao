@@ -26,7 +26,7 @@ use Contao\StringUtil;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Use the FigureBuilder class to create Figure result objects. The class
@@ -352,7 +352,7 @@ class FigureBuilder
      * Set the value to null to remove it. If you want to explicitly remove an
      * auto-generated value from the results, set the $forceRemove flag to true.
      */
-    public function setLinkAttribute(string $attribute, ?string $value, $forceRemove = false): self
+    public function setLinkAttribute(string $attribute, ?string $value, bool $forceRemove = false): self
     {
         if (null !== $value || $forceRemove) {
             $this->additionalLinkAttributes[$attribute] = $value;

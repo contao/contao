@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
+use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
@@ -36,14 +38,46 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ContentCompositionListenerTest extends TestCase
 {
     private ContentCompositionListener $listener;
-    private $security;
-    private $imageAdapter;
-    private $backendAdapter;
-    private $pageModelAdapter;
-    private $framework;
-    private $pageRegistry;
-    private $connection;
-    private $requestStack;
+
+    /**
+     * @var Security&MockObject
+     */
+    private Security $security;
+
+    /**
+     * @var Adapter<Image>&MockObject
+     */
+    private Adapter $imageAdapter;
+
+    /**
+     * @var Adapter<Backend>&MockObject
+     */
+    private Adapter $backendAdapter;
+
+    /**
+     * @var Adapter<PageModel>&MockObject
+     */
+    private Adapter $pageModelAdapter;
+
+    /**
+     * @var ContaoFramework&MockObject
+     */
+    private ContaoFramework $framework;
+
+    /**
+     * @var PageRegistry&MockObject
+     */
+    private PageRegistry $pageRegistry;
+
+    /**
+     * @var Connection&MockObject
+     */
+    private Connection $connection;
+
+    /**
+     * @var RequestStack&MockObject
+     */
+    private RequestStack $requestStack;
 
     private array $pageRecord = [
         'id' => 17,

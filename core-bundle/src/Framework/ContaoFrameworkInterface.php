@@ -43,9 +43,13 @@ interface ContaoFrameworkInterface extends \Contao\CoreBundle\ContaoFrameworkInt
     /**
      * Returns an adapter class for a given class.
      *
-     * @param string $class
+     * @template T
      *
-     * @return Adapter
+     * @param class-string<T> $class
+     *
+     * @return Adapter<T>&T
+     *
+     * @phpstan-return Adapter<T>
      */
     public function getAdapter($class);
 }

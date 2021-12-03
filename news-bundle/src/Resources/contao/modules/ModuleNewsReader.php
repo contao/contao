@@ -16,13 +16,15 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 
 /**
- * Front end module "news reader".
+ * Front end module "newsreader".
  *
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $news_archives
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @todo Rename to ModuleNewsreader in Contao 5.0
  */
 class ModuleNewsReader extends ModuleNews
 {

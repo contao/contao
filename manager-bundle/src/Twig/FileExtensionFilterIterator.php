@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Twig;
 
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class FileExtensionFilterIterator implements \IteratorAggregate
 {

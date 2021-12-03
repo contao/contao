@@ -54,6 +54,9 @@ class Dumper implements DumperInterface
         yield 'SET FOREIGN_KEY_CHECKS = 1;';
     }
 
+    /**
+     * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
         foreach ($schemaManager->listViews() as $view) {
@@ -105,6 +108,9 @@ class Dumper implements DumperInterface
         }
     }
 
+    /**
+     * @param mixed $value
+     */
     private function formatValueForDump($value, Column $column, Connection $connection): string
     {
         if (null === $value) {
@@ -119,6 +125,8 @@ class Dumper implements DumperInterface
     }
 
     /**
+     * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     *
      * @return array<Table>
      */
     private function getTablesToDump(AbstractSchemaManager $schemaManager, CreateConfig $config): array

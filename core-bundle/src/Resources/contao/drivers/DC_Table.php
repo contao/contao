@@ -1410,7 +1410,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Delete a record of the current table table and save it to tl_undo
+	 * Delete a record of the current table and save it to tl_undo
 	 *
 	 * @param boolean $blnDoNotRedirect
 	 *
@@ -2757,7 +2757,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$objVersions->create();
 					}
 
-					// Post processing
+					// Post-processing
 					if (!$this->noReload)
 					{
 						// Call the onsubmit_callback
@@ -3388,7 +3388,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if ($v)
 				{
-					// Load the DCA configuration so we can check for "dynamicPtable"
+					// Load the DCA configuration, so we can check for "dynamicPtable"
 					$this->loadDataContainer($v);
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
@@ -3923,7 +3923,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 			{
-				$selected = $this->Database->execute("SELECT pid FROM {$this->strTable} WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
+				$selected = $this->Database->execute("SELECT pid FROM $this->strTable WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
 										   ->fetchEach('pid');
 			}
 

@@ -41,6 +41,8 @@ abstract class AbstractInsertTagPickerProvider extends AbstractPickerProvider
 
     /**
      * Returns the value without the surrounding insert tag chunks.
+     *
+     * @return string
      */
     protected function getInsertTagValue(PickerConfig $config)
     {

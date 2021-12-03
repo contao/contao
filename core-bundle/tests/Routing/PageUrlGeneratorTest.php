@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\PageUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -25,7 +26,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class PageUrlGeneratorTest extends TestCase
 {
     private PageUrlGenerator $generator;
-    private $pageRegistry;
+
+    /**
+     * @var PageRegistry&MockObject
+     */
+    private PageRegistry $pageRegistry;
 
     protected function setUp(): void
     {

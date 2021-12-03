@@ -51,6 +51,8 @@ class ImageResultTest extends TestCase
     }
 
     /**
+     * @param class-string<PictureFactoryInterface> $class
+     *
      * @dataProvider providePictureFactories
      */
     public function testGetPictureWithResizeMode(string $class, bool $supportsResizeOptions): void
@@ -506,7 +508,7 @@ class ImageResultTest extends TestCase
     /**
      * @return PictureFactoryInterface&MockObject
      */
-    private function mockPictureFactory($filePathOrImage, $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
+    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory

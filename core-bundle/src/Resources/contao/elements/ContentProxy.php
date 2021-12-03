@@ -14,7 +14,7 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\Model\Collection;
 
 /**
- * Proxy for new content element fragments so they are accessible via $GLOBALS['TL_CTE'].
+ * Proxy for new content element fragments, so they are accessible via $GLOBALS['TL_CTE'].
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */

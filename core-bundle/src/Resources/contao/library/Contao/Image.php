@@ -113,7 +113,7 @@ class Image
 	 *
 	 * @param File $file A file instance of the original image
 	 *
-	 * @throws \InvalidArgumentException If the file does not exists or cannot be processed
+	 * @throws \InvalidArgumentException If the file does not exist or cannot be processed
 	 *
 	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
 	 *             Use the contao.image.factory service instead.
@@ -743,7 +743,7 @@ class Image
 	 * Create an image instance from the given image path and size
 	 *
 	 * @param string|File          $image The image path or File instance
-	 * @param array|integer|string $size  The image size as array (width, height, resize mode) or an tl_image_size ID or a predefined image size key
+	 * @param array|integer|string $size  The image size as array (width, height, resize mode) or a tl_image_size ID or a predefined image size key
 	 *
 	 * @return static The created image instance
 	 *

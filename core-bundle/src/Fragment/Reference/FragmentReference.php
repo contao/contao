@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Controller\ControllerReference;
 
 class FragmentReference extends ControllerReference
 {
-    public function __construct($fragment, array $attributes = [], array $query = [])
+    public function __construct(string $fragment, array $attributes = [], array $query = [])
     {
         parent::__construct($fragment, $attributes, $query);
 

@@ -705,7 +705,7 @@ class SitemapControllerTest extends TestCase
                     static fn ($objectName) => [$objectName],
                     [...array_keys($hooks), ...array_keys($hooks)]
                 ))
-                ->willReturnOnConsecutiveCalls(...[...array_values($hooks), ...array_values($hooks)])
+                ->willReturnOnConsecutiveCalls(...array_values($hooks), ...array_values($hooks))
             ;
         }
 

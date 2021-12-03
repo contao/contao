@@ -297,6 +297,8 @@ class SimpleTokenParserTest extends TestCase
     }
 
     /**
+     * @param bool|int|string|array<string> $value
+     *
      * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
     public function testParsesSimpleTokensWithShorthandIf($value, bool $match): void

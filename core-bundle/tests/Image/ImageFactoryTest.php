@@ -38,7 +38,7 @@ use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageFactoryTest extends TestCase
 {
@@ -524,7 +524,7 @@ class ImageFactoryTest extends TestCase
      * @group legacy
      * @dataProvider getInvalidImportantParts
      */
-    public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
+    public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart(array $invalid, array $expected): void
     {
         $this->expectDeprecation('Since contao/core-bundle 4.8: Defining the important part in absolute pixels has been deprecated %s.');
 

@@ -28,7 +28,7 @@ class ContentMarkdown extends ContentElement
 	protected $strTemplate = 'ce_markdown';
 
 	/**
-	 * Show the raw markdown code in the back end
+	 * Show the raw Markdown code in the back end
 	 *
 	 * @return string
 	 */

@@ -27,6 +27,7 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\View;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class DumperTest extends ContaoTestCase
 {
@@ -167,8 +168,10 @@ class DumperTest extends ContaoTestCase
     /**
      * @param array $tables<Table>
      * @param array $views<View>
+     *
+     * @return Connection&MockObject
      */
-    private function mockConnection(array $tables, array $views, array $queries)
+    private function mockConnection(array $tables, array $views, array $queries): Connection
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
