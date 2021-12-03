@@ -557,7 +557,7 @@ class StyleSheets extends Backend
 
 					$row['gradientColors'] = array_values(array_filter($row['gradientColors']));
 
-					// Add a hash tag to the color values
+					// Add a hashtag to the color values
 					foreach ($row['gradientColors'] as $k=>$v)
 					{
 						$row['gradientColors'][$k] = '#' . $v;
@@ -951,7 +951,7 @@ class StyleSheets extends Backend
 		// Close the format definition
 		if ($blnWriteToFile)
 		{
-			// Remove the last semi-colon (;) before the closing bracket
+			// Remove the last semicolon (;) before the closing bracket
 			if (substr($return, -1) == ';')
 			{
 				$return = substr($return, 0, -1);
@@ -994,7 +994,7 @@ class StyleSheets extends Backend
 			return '#' . $this->shortenHexColor($color);
 		}
 
-		if (!isset($color[1]) || empty($color[1]))
+		if (empty($color[1]))
 		{
 			return '#' . $this->shortenHexColor($color[0]);
 		}
@@ -1355,7 +1355,7 @@ class StyleSheets extends Backend
 
 		if ($objStyleSheet->numRows < 1)
 		{
-			throw new \Exception("Invalid style sheet ID {$dc->id}");
+			throw new \Exception("Invalid style sheet ID $dc->id");
 		}
 
 		$vars = array();
