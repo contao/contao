@@ -45,7 +45,7 @@ class ModuleChangePassword extends Module
 			return $objTemplate->parse();
 		}
 
-		// Return if there is no logged in user
+		// Return if there is no logged-in user
 		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
@@ -197,7 +197,7 @@ class ModuleChangePassword extends Module
 				}
 			}
 
-			// Update the current user so they are not logged out automatically
+			// Update the current user, so they are not logged out automatically
 			$this->User->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page

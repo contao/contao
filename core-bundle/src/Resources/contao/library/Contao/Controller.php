@@ -1198,7 +1198,7 @@ abstract class Controller extends System
 	 * @param string  $strForceLang Force a certain language
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @return string A URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
 	 *             Use PageModel::getFrontendUrl() instead.

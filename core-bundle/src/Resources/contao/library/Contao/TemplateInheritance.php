@@ -377,7 +377,7 @@ trait TemplateInheritance
 			return null;
 		}
 
-		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
+		$templateCandidate = "@Contao/$this->strTemplate.html.twig";
 
 		if (!$twig->getLoader()->exists($templateCandidate))
 		{

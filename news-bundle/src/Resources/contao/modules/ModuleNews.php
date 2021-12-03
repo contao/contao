@@ -270,7 +270,7 @@ abstract class ModuleNews extends Module
 			}
 		}
 
-		// Preload all images in one query so they are loaded into the model registry
+		// Preload all images in one query, so they are loaded into the model registry
 		FilesModel::findMultipleByUuids($uuids);
 
 		foreach ($objArticles as $objArticle)

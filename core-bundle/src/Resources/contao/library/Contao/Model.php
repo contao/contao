@@ -17,7 +17,7 @@ use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
 
 /**
- * Reads objects from and writes them to to the database
+ * Reads objects from and writes them to the database
  *
  * The class allows you to find and automatically join database records and to
  * convert the result into objects. It also supports creating new objects and

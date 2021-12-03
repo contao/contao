@@ -51,7 +51,7 @@ class ModulePersonalData extends Module
 
 		$this->editable = StringUtil::deserialize($this->editable);
 
-		// Return if there are not editable fields or if there is no logged in user
+		// Return if there are no editable fields or if there is no logged-in user
 		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';

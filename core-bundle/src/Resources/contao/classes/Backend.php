@@ -858,7 +858,7 @@ abstract class Backend extends Controller
 
 				if ($objPage->numRows < 1)
 				{
-					// Currently selected page does not exist
+					// The currently selected page does not exist
 					if ($intId == $intNode)
 					{
 						$objSession->set($strKey, 0);
@@ -1034,7 +1034,7 @@ abstract class Backend extends Controller
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// Currently selected folder does not exist
+		// The currently selected folder does not exist
 		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSession->set($strKey, '');

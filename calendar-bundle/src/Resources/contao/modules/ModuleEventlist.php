@@ -281,7 +281,7 @@ class ModuleEventlist extends Events
 			}
 		}
 
-		// Preload all images in one query so they are loaded into the model registry
+		// Preload all images in one query, so they are loaded into the model registry
 		FilesModel::findMultipleByUuids($uuids);
 
 		// Parse events
