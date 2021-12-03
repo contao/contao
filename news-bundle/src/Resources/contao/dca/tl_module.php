@@ -174,7 +174,7 @@ class tl_module_news extends Backend
 	}
 
 	/**
-	 * Get all newsreader modules and return them as array
+	 * Get all news reader modules and return them as array
 	 *
 	 * @return array
 	 */
