@@ -341,19 +341,10 @@ class UserSessionListenerTest extends TestCase
 
     private function getListener(Connection $connection = null, Security $security = null, EventDispatcherInterface $eventDispatcher = null): UserSessionListener
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
-
-        if (null === $security) {
-            $security = $this->createMock(Security::class);
-        }
-
+        $connection ??= $this->createMock(Connection::class);
+        $security ??= $this->createMock(Security::class);
         $scopeMatcher = $this->mockScopeMatcher();
-
-        if (null === $eventDispatcher) {
-            $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        }
+        $eventDispatcher ??= $this->createMock(EventDispatcherInterface::class);
 
         return new UserSessionListener($connection, $security, $scopeMatcher, $eventDispatcher);
     }
@@ -361,10 +352,7 @@ class UserSessionListenerTest extends TestCase
     private function getRequestEvent(Request $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-
-        if (null === $request) {
-            $request = new Request();
-        }
+        $request ??= new Request();
 
         return new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
     }
@@ -372,10 +360,7 @@ class UserSessionListenerTest extends TestCase
     private function getResponseEvent(Request $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-
-        if (null === $request) {
-            $request = new Request();
-        }
+        $request ??= new Request();
 
         return new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response());
     }

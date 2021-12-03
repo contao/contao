@@ -681,13 +681,8 @@ class ContaoFilesystemLoaderTest extends TestCase
 
     private function getContaoFilesystemLoader(AdapterInterface $cacheAdapter = null, TemplateLocator $templateLocator = null): ContaoFilesystemLoader
     {
-        if (null === $cacheAdapter) {
-            $cacheAdapter = new NullAdapter();
-        }
-
-        if (null === $templateLocator) {
-            $templateLocator = $this->createMock(TemplateLocator::class);
-        }
+        $cacheAdapter ??= new NullAdapter();
+        $templateLocator ??= $this->createMock(TemplateLocator::class);
 
         return new ContaoFilesystemLoader($cacheAdapter, $templateLocator, new ThemeNamespace(), '/');
     }

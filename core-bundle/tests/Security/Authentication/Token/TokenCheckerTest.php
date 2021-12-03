@@ -336,9 +336,7 @@ class TokenCheckerTest extends TestCase
      */
     private function mockRequestStack(Request $request = null): RequestStack
     {
-        if (null === $request) {
-            $request = $this->createMock(Request::class);
-        }
+        $request ??= $this->createMock(Request::class);
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack

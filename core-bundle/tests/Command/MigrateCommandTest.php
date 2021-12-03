@@ -441,9 +441,7 @@ class MigrateCommandTest extends TestCase
             ->method('create')
         ;
 
-        if (null === $installer) {
-            $installer = $this->createMock(Installer::class);
-        }
+        $installer ??= $this->createMock(Installer::class);
 
         return new MigrateCommand(
             $migrations,

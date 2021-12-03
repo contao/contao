@@ -135,13 +135,8 @@ class ContaoCacheWarmerTest extends TestCase
 
     private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
+        $connection ??= $this->createMock(Connection::class);
+        $framework ??= $this->mockContaoFramework();
 
         $fixtures = Path::join($this->getFixturesDir(), 'vendor/contao/'.$bundle.'/Resources/contao');
 

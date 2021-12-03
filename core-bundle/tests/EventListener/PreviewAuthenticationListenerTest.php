@@ -106,10 +106,7 @@ class PreviewAuthenticationListenerTest extends TestCase
     private function getRequestEvent(Request $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-
-        if (null === $request) {
-            $request = new Request();
-        }
+        $request ??= new Request();
 
         return new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
     }
