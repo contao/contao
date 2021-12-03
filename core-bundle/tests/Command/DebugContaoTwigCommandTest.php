@@ -185,9 +185,17 @@ class DebugContaoTwigCommandTest extends ContaoTestCase
 
     private function getCommand(TemplateHierarchyInterface $hierarchy = null, ContaoFilesystemLoaderWarmer $cacheWarmer = null): DebugContaoTwigCommand
     {
+        if (null === $hierarchy) {
+            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        }
+
+        if (null === $cacheWarmer) {
+            $cacheWarmer = $this->createMock(ContaoFilesystemLoaderWarmer::class);
+        }
+
         return new DebugContaoTwigCommand(
-            $hierarchy ?? $this->createMock(TemplateHierarchyInterface::class),
-            $cacheWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            $hierarchy,
+            $cacheWarmer,
             new ThemeNamespace(),
             Path::canonicalize(__DIR__.'/../Fixtures/Twig/inheritance')
         );

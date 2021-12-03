@@ -441,13 +441,17 @@ class MigrateCommandTest extends TestCase
             ->method('create')
         ;
 
+        if (null === $installer) {
+            $installer = $this->createMock(Installer::class);
+        }
+
         return new MigrateCommand(
             $migrations,
             $fileLocator,
             $this->getTempDir(),
             $this->createMock(ContaoFramework::class),
             $backupManager,
-            $installer ?? $this->createMock(Installer::class)
+            $installer
         );
     }
 

@@ -101,7 +101,7 @@ class InstallTool
         } catch (\Exception $e) {
         }
 
-        if (null === $name || null === $this->connection) {
+        if (null === $name) {
             return false;
         }
 

@@ -428,8 +428,13 @@ class BackupManagerTest extends ContaoTestCase
 
     private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null): BackupManager
     {
-        $connection = $connection ?? $this->createMock(Connection::class);
-        $dumper = $dumper ?? $this->createMock(DumperInterface::class);
+        if (null === $connection) {
+            $connection = $this->createMock(Connection::class);
+        }
+
+        if (null === $dumper) {
+            $dumper = $this->createMock(DumperInterface::class);
+        }
 
         return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], 5);
     }
