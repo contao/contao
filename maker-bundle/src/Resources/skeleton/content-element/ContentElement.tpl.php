@@ -6,7 +6,7 @@ namespace App\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
-<?php if (PHP_VERSION_ID >= 80000): ?>
+<?php if ($use_attributes): ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 <?php else: ?>
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
@@ -15,7 +15,7 @@ use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-<?php if (PHP_VERSION_ID >= 80000): ?>
+<?php if ($use_attributes): ?>
 #[AsContentElement("<?= $elementName ?>", category: "<?= $category ?>")]
 <?php else: ?>
 /**

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
-<?php if (PHP_VERSION_ID >= 80000): ?>
+<?php if ($use_attributes): ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 <?php else: ?>
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
@@ -15,7 +15,7 @@ use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-<?php if (PHP_VERSION_ID >= 80000): ?>
+<?php if ($use_attributes): ?>
 #[AsFrontendModule("<?= $elementName ?>", category: "<?= $category ?>")]
 <?php else: ?>
 /**

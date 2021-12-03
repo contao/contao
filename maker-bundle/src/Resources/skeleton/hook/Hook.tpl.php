@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-<?php if (PHP_VERSION_ID >= 80000): ?>
+<?php if ($use_attributes): ?>
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 <?php else: ?>
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -13,7 +13,7 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use <?= $use ?>;
 <?php endforeach; ?>
 
-<?php if (PHP_VERSION_ID >= 80000): ?>
+<?php if ($use_attributes): ?>
 #[AsHook("<?= $hook ?>")]
 <?php else: ?>
 /**

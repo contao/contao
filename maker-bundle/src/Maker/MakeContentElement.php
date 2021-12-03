@@ -59,6 +59,7 @@ class MakeContentElement extends AbstractFragmentMaker
                 'className' => $elementDetails->getShortName(),
                 'elementName' => $elementName,
                 'category' => $category,
+                'use_attributes' => $this->phpCompatUtil->canUseAttributes(),
             ],
         ]);
 
