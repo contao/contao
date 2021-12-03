@@ -963,6 +963,9 @@ services:
         alias: contao.opt_in
         public: true # backwards compatibility
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
+    Contao\CoreBundle\Routing\Page\PageRegistry:
+        alias: contao.routing.page_registry
+        public: true # backwards compatibility
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
@@ -1069,14 +1072,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.routing.response_context_factory" instead.
-
-    Contao\CoreBundle\Routing\Page\PageRegistry:
-        alias: contao.routing.page_registry
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.routing.page_registry" instead.
 
     Contao\CoreBundle\Security\TwoFactor\BackupCodeManager:
         alias: contao.security.two_factor.backup_code_manager
