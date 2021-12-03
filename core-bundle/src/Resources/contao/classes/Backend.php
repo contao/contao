@@ -539,6 +539,7 @@ abstract class Backend extends Controller
 							$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
 						}
 
+						// Add object title or name
 						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
 						{
 							$strUrl = $container->get('router')->generate('contao_backend', array
@@ -550,7 +551,6 @@ abstract class Backend extends Controller
 								'rt' => REQUEST_TOKEN,
 							));
 
-							// Add object title or name
 							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
 						}
 					}
