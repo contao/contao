@@ -38,12 +38,14 @@
             <directory>./calendar-bundle/src</directory>
             <directory>./core-bundle/src</directory>
             <directory>./faq-bundle/src</directory>
+            <directory>./maker-bundle/src</directory>
             <directory>./manager-bundle/src</directory>
             <directory>./news-bundle/src</directory>
             <exclude>
                 <directory>./calendar-bundle/src/Resources</directory>
                 <directory>./core-bundle/src/Resources</directory>
                 <directory>./faq-bundle/src/Resources</directory>
+                <directory>./maker-bundle/src/Resources</directory>
                 <directory>./manager-bundle/src/Resources</directory>
                 <directory>./news-bundle/src/Resources</directory>
                 <!-- exclude resources that are exempt from testing -->
