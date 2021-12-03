@@ -4607,7 +4607,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>';
 
 		// Add another panel at the end of the page
-		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 		{
 			$return .= $this->paginationMenu();
 		}
@@ -5086,7 +5086,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 </div>';
 
 			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 			{
 				$return .= $this->paginationMenu();
 			}
