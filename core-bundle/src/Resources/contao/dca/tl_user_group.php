@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'themes' => array
@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'fields' => array
@@ -211,7 +211,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
 			'options_callback' => static function ()
 			{
 				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
@@ -252,7 +252,7 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 			'search'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user_group', 'getExcludedFields'),
-			'eval'                    => array('multiple'=>true, 'size'=>36, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'size'=>36, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'disable' => array

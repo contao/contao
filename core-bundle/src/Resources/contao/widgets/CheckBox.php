@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property array   $options
  * @property array   $unknownOption
  * @property boolean $multiple
- * @property boolean $collapseUncheckedOptionGroups
+ * @property boolean $collapseUncheckedGroups
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -165,16 +165,16 @@ class CheckBox extends Widget
 			$img = 'folPlus.svg';
 			$display = 'none';
 
-			if ($this->collapseUncheckedOptionGroups || !isset($state[$id]) || !empty($state[$id]))
+			if ($this->collapseUncheckedGroups || !isset($state[$id]) || !empty($state[$id]))
 			{
-				$blnIsOpen = !$this->collapseUncheckedOptionGroups && (!isset($state[$id]) || !empty($state[$id]));
+				$blnIsOpen = !$this->collapseUncheckedGroups && (!isset($state[$id]) || !empty($state[$id]));
 
-				if ($this->collapseUncheckedOptionGroups && $blnFirst && empty($this->varValue))
+				if ($this->collapseUncheckedGroups && $blnFirst && empty($this->varValue))
 				{
 					$blnIsOpen = true;
 				}
 
-				if (!$blnIsOpen && $this->collapseUncheckedOptionGroups)
+				if (!$blnIsOpen && $this->collapseUncheckedGroups)
 				{
 					foreach ($arrOption as $v)
 					{

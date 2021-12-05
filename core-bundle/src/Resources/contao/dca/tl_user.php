@@ -292,7 +292,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'themes' => array
@@ -310,7 +310,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'fields' => array
@@ -361,7 +361,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true, 'collapseUncheckedOptionGroups'=>true),
+			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
 			'options_callback' => static function ()
 			{
 				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
