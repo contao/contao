@@ -239,7 +239,7 @@
 
                 request('POST', form.action, formData, function () {
                     if (400 === this.status) {
-                        alert(this.responseText ? this.responseText : 'An unknown error occurred.');
+                        alert(this.responseText || 'An unknown error occurred.');
                     } else {
                         location.reload();
                     }
