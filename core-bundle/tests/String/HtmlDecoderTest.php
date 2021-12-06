@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\String;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -41,7 +43,7 @@ class HtmlDecoderTest extends TestCase
      */
     public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $htmlDecoder = new HtmlDecoder();
+        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($source, $removeInsertTags));
 
@@ -74,7 +76,7 @@ class HtmlDecoderTest extends TestCase
      */
     public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
-        $htmlDecoder = new HtmlDecoder();
+        $htmlDecoder = new HtmlDecoder(new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 

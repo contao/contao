@@ -152,7 +152,6 @@ final class MessageCatalogue implements MessageCatalogueInterface
     {
         $this->framework->initialize();
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
         $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
 

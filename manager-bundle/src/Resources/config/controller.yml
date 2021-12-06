@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    Contao\ManagerBundle\Controller\DebugController:
+        public: true
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '@contao_manager.jwt_manager'

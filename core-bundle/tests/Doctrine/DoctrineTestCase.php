@@ -34,15 +34,13 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * Mocks a Doctrine registry with database connection.
      *
-     * @param Connection|MockObject|null $connection
+     * @param Connection&MockObject $connection
      *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry($connection = null): Registry
+    protected function mockDoctrineRegistry(Connection $connection = null): Registry
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
+        $connection ??= $this->createMock(Connection::class);
 
         if ($connection instanceof MockObject) {
             $connection

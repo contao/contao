@@ -31,8 +31,12 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 {
     private ContaoFramework $framework;
     private SessionInterface $session;
-    private string $userClass;
     private ?LoggerInterface $logger;
+
+    /**
+     * @var class-string<User>
+     */
+    private string $userClass;
 
     /**
      * @throws \RuntimeException
@@ -49,19 +53,32 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         $this->logger = $logger;
     }
 
+    /**
+     * @param mixed $username
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0;
+     *             use ContaoUserProvider::loadUserByIdentifier() instead
+     */
     public function loadUserByUsername($username): User
+    {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using "ContaoUserProvider::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "ContaoUserProvider::loadUserByIdentifier()" instead.');
+
+        return $this->loadUserByIdentifier((string) $username);
+    }
+
+    public function loadUserByIdentifier(string $identifier): User
     {
         $this->framework->initialize();
 
         /** @var User $adapter */
         $adapter = $this->framework->getAdapter($this->userClass);
-        $user = $adapter->loadUserByUsername($username);
+        $user = $adapter->loadUserByIdentifier($identifier);
 
         if (is_a($user, $this->userClass)) {
             return $user;
         }
 
-        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $username));
+        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $identifier));
     }
 
     public function refreshUser(UserInterface $user)
@@ -70,7 +87,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
         }
 
-        $user = $this->loadUserByUsername($user->getUsername());
+        $user = $this->loadUserByIdentifier($user->getUserIdentifier());
 
         $this->validateSessionLifetime($user);
         $this->triggerPostAuthenticateHook($user);
@@ -78,7 +95,10 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         return $user;
     }
 
-    public function supportsClass($class): bool
+    /**
+     * @param class-string<User> $class
+     */
+    public function supportsClass(string $class): bool
     {
         return $this->userClass === $class;
     }
@@ -107,7 +127,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $timeout = (int) $config->get('sessionTimeout');
 
@@ -133,7 +152,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
         trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postAuthenticate" hook has been deprecated and will no longer work in Contao 5.0.');
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {

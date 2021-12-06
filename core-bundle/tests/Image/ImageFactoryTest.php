@@ -36,10 +36,9 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageFactoryTest extends TestCase
 {
@@ -110,7 +109,6 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
 
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
@@ -164,7 +162,6 @@ class ImageFactoryTest extends TestCase
             ->willReturn($imageMock)
         ;
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
@@ -252,7 +249,6 @@ class ImageFactoryTest extends TestCase
             'zoom' => 50,
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -261,7 +257,6 @@ class ImageFactoryTest extends TestCase
 
         $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = 0.5;
         $filesModel->importantPartY = 0.5;
@@ -465,7 +460,6 @@ class ImageFactoryTest extends TestCase
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
         $imageMock = $this->createMock(ImageInterface::class);
 
-        /** @var Filesystem&MockObject $filesystem */
         $filesystem = $this
             ->getMockBuilder(Filesystem::class)
             ->onlyMethods(['exists'])
@@ -515,10 +509,7 @@ class ImageFactoryTest extends TestCase
         ;
 
         $imagine = $this->createMock(ImagineInterface::class);
-
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
-
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
@@ -533,13 +524,12 @@ class ImageFactoryTest extends TestCase
      * @group legacy
      * @dataProvider getInvalidImportantParts
      */
-    public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart($invalid, $expected): void
+    public function testCreatesAnImageObjectFromAnImagePathWithInvalidImportantPart(array $invalid, array $expected): void
     {
         $this->expectDeprecation('Since contao/core-bundle 4.8: Defining the important part in absolute pixels has been deprecated %s.');
 
         $path = Path::join($this->getTempDir(), 'images/dummy.jpg');
 
-        /** @var FilesModel&MockObject $filesModel */
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->importantPartX = $invalid[0];
         $filesModel->importantPartY = $invalid[1];
@@ -654,7 +644,7 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        System::getContainer()->set('contao.image.image_factory', $imageFactory);
+        System::getContainer()->set('contao.image.factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -732,7 +722,7 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        System::getContainer()->set('contao.image.image_factory', $imageFactory);
+        System::getContainer()->set('contao.image.factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'executeResize' => [[static::class, 'executeResizeHookCallback']],
@@ -825,7 +815,7 @@ class ImageFactoryTest extends TestCase
         $imagine = new Imagine();
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, null, $framework);
 
-        System::getContainer()->set('contao.image.image_factory', $imageFactory);
+        System::getContainer()->set('contao.image.factory', $imageFactory);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'emptyHookCallback']],
@@ -846,43 +836,20 @@ class ImageFactoryTest extends TestCase
 
     private function getImageFactory(ResizerInterface $resizer = null, ImagineInterface $imagine = null, ImagineInterface $imagineSvg = null, Filesystem $filesystem = null, ContaoFramework $framework = null, bool $bypassCache = null, array $imagineOptions = null, array $validExtensions = null, string $uploadDir = null): ImageFactory
     {
-        if (null === $resizer) {
-            $resizer = $this->createMock(ResizerInterface::class);
-        }
-
-        if (null === $imagine) {
-            $imagine = $this->createMock(ImagineInterface::class);
-        }
-
-        if (null === $imagineSvg) {
-            $imagineSvg = $this->createMock(ImagineInterface::class);
-        }
-
-        if (null === $filesystem) {
-            $filesystem = new Filesystem();
-        }
-
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFramework::class);
-        }
-
-        if (null === $bypassCache) {
-            $bypassCache = false;
-        }
+        $resizer ??= $this->createMock(ResizerInterface::class);
+        $imagine ??= $this->createMock(ImagineInterface::class);
+        $imagineSvg ??= $this->createMock(ImagineInterface::class);
+        $filesystem ??= new Filesystem();
+        $framework ??= $this->createMock(ContaoFramework::class);
+        $bypassCache ??= false;
+        $validExtensions ??= ['jpg', 'svg'];
+        $uploadDir ??= Path::join($this->getTempDir(), 'images');
 
         if (null === $imagineOptions) {
             $imagineOptions = [
                 'jpeg_quality' => 80,
                 'interlace' => ImagineImageInterface::INTERLACE_PLANE,
             ];
-        }
-
-        if (null === $validExtensions) {
-            $validExtensions = ['jpg', 'svg'];
-        }
-
-        if (null === $uploadDir) {
-            $uploadDir = Path::join($this->getTempDir(), 'images');
         }
 
         return new ImageFactory(

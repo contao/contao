@@ -19,7 +19,7 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
@@ -116,6 +116,8 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
+                ->append($this->addInsertTagsNode())
+                ->append($this->addBackupNode())
             ->end()
         ;
 
@@ -569,6 +571,45 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addInsertTagsNode(): NodeDefinition
+    {
+        return (new TreeBuilder('insert_tags'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_tags')
+                    ->info('A list of allowed insert tags.')
+                    ->example(['*_url', 'request_token'])
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['*'])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addBackupNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backup'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('directory')
+                    ->info('The directory the backups are stored in.')
+                    ->defaultValue('%kernel.project_dir%/var/backups')
+                ->end()
+                ->arrayNode('ignore_tables')
+                    ->info('These tables are ignored by default when creating and restoring backups.')
+                    ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->integerNode('keep_max')
+                    ->info('The maximum number of backups to keep.')
+                    ->defaultValue(5)
                 ->end()
             ->end()
         ;

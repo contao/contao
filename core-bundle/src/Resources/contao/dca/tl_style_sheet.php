@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -18,7 +19,6 @@ use Contao\Message;
 use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\String\UnicodeString;
 
 $GLOBALS['TL_DCA']['tl_style_sheet'] = array
@@ -227,6 +227,8 @@ class tl_style_sheet extends Backend
 	 */
 	public function checkPermission()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The internal CSS editor has been deprecated. Use external style sheets instead.');
+
 		Message::addInfo($GLOBALS['TL_LANG']['MSC']['internalCssEditor']);
 
 		if ($this->User->isAdmin)
@@ -234,7 +236,7 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('css', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_STYLE_SHEETS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the style sheets module.');
 		}
@@ -245,9 +247,7 @@ class tl_style_sheet extends Backend
 	 */
 	public function updateStyleSheet()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('style_sheet_updater');
 
 		if (empty($session) || !is_array($session))
@@ -287,7 +287,6 @@ class tl_style_sheet extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
@@ -369,6 +368,6 @@ class tl_style_sheet extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_style_sheet') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_style_sheet') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

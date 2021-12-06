@@ -127,7 +127,6 @@ class CheckBox extends Widget
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$state = $objSessionBag->get('checkbox_groups');
 
 		// Toggle the checkbox group

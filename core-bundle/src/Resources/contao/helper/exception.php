@@ -8,13 +8,15 @@
  * @license LGPL-3.0-or-later
  */
 
-/**
- * Class UnusedArgumentsException
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
-class UnusedArgumentsException extends Exception
+// Register alias in the global namespace for backwards compatibility
+class_exists(\Contao\UnusedArgumentsException::class);
+
+// Let composer find the deprecated class for autoload backwards compatibility
+if (!class_exists('UnusedArgumentsException', false))
 {
+	class UnusedArgumentsException extends Exception
+	{
+	}
 }
 
 /**

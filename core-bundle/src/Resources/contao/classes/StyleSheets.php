@@ -10,10 +10,17 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\StyleSheets" class has been deprecated and will no longer work in Contao 5.0. Use external stylesheets instead.');
+
 /**
  * Provide methods to handle style sheets.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use external stylesheets instead.
  */
 class StyleSheets extends Backend
 {
@@ -59,7 +66,7 @@ class StyleSheets extends Backend
 		else
 		{
 			$this->writeStyleSheet($objStyleSheet->row());
-			$this->log('Generated style sheet "' . $objStyleSheet->name . '.css"', __METHOD__, TL_CRON);
+			$this->log('Generated style sheet "' . $objStyleSheet->name . '.css"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
@@ -114,7 +121,7 @@ class StyleSheets extends Backend
 		while ($objStyleSheets->next())
 		{
 			$this->writeStyleSheet($objStyleSheets->row());
-			$this->log('Generated style sheet "' . $objStyleSheets->name . '.css"', __METHOD__, TL_CRON);
+			$this->log('Generated style sheet "' . $objStyleSheets->name . '.css"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
@@ -550,7 +557,7 @@ class StyleSheets extends Backend
 
 					$row['gradientColors'] = array_values(array_filter($row['gradientColors']));
 
-					// Add a hash tag to the color values
+					// Add a hashtag to the color values
 					foreach ($row['gradientColors'] as $k=>$v)
 					{
 						$row['gradientColors'][$k] = '#' . $v;
@@ -944,7 +951,7 @@ class StyleSheets extends Backend
 		// Close the format definition
 		if ($blnWriteToFile)
 		{
-			// Remove the last semi-colon (;) before the closing bracket
+			// Remove the last semicolon (;) before the closing bracket
 			if (substr($return, -1) == ';')
 			{
 				$return = substr($return, 0, -1);
@@ -968,7 +975,7 @@ class StyleSheets extends Backend
 		}
 
 		// Replace insert tags (see #5512)
-		return $this->replaceInsertTags($return, false);
+		return System::getContainer()->get('contao.insert_tag.parser')->replaceInline($return);
 	}
 
 	/**
@@ -987,7 +994,7 @@ class StyleSheets extends Backend
 			return '#' . $this->shortenHexColor($color);
 		}
 
-		if (!isset($color[1]) || empty($color[1]))
+		if (empty($color[1]))
 		{
 			return '#' . $this->shortenHexColor($color[0]);
 		}
@@ -1348,7 +1355,7 @@ class StyleSheets extends Backend
 
 		if ($objStyleSheet->numRows < 1)
 		{
-			throw new \Exception("Invalid style sheet ID {$dc->id}");
+			throw new \Exception("Invalid style sheet ID $dc->id");
 		}
 
 		$vars = array();

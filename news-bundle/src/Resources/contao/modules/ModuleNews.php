@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 
@@ -171,7 +170,7 @@ abstract class ModuleNews extends Module
 			}
 
 			$figureBuilder = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($objArticle->singleSRC)
 				->setSize($imgSize)
@@ -271,7 +270,7 @@ abstract class ModuleNews extends Module
 			}
 		}
 
-		// Preload all images in one query so they are loaded into the model registry
+		// Preload all images in one query, so they are loaded into the model registry
 		FilesModel::findMultipleByUuids($uuids);
 
 		foreach ($objArticles as $objArticle)

@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-
 /**
  * Class ModuleFaqPage
  *
@@ -103,7 +101,7 @@ class ModuleFaqPage extends Module
 			if ($objFaq->addImage)
 			{
 				$figure = System::getContainer()
-					->get(Studio::class)
+					->get('contao.image.studio')
 					->createFigureBuilder()
 					->from($objFaq->singleSRC)
 					->setSize($objFaq->size)

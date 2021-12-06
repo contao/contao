@@ -27,7 +27,6 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PictureFactoryTest extends TestCase
 {
@@ -123,7 +122,6 @@ class PictureFactoryTest extends TestCase
             'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -142,7 +140,6 @@ class PictureFactoryTest extends TestCase
             'media' => '(max-width: 900px)',
         ];
 
-        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
         $imageSizeItemModel
             ->method('row')
@@ -208,7 +205,6 @@ class PictureFactoryTest extends TestCase
             'formats' => '',
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -609,6 +605,8 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
+     * @param PictureConfiguration|string|null $size
+     *
      * @dataProvider getResizeOptionsScenarios
      */
     public function testCreatesAPictureWithResizeOptions(?ResizeOptions $resizeOptions, $size, bool $expected): void
@@ -766,17 +764,9 @@ class PictureFactoryTest extends TestCase
 
     private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null): PictureFactory
     {
-        if (null === $pictureGenerator) {
-            $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
-        }
-
-        if (null === $imageFactory) {
-            $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFramework::class);
-        }
+        $pictureGenerator ??= $this->createMock(PictureGeneratorInterface::class);
+        $imageFactory ??= $this->createMock(ImageFactoryInterface::class);
+        $framework ??= $this->createMock(ContaoFramework::class);
 
         return new PictureFactory($pictureGenerator, $imageFactory, $framework, false, []);
     }

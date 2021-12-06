@@ -47,7 +47,7 @@ class UrlGenerator implements UrlGeneratorInterface
         return $this->router->getContext();
     }
 
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): ?string
     {
         $this->framework->initialize();
 
@@ -113,8 +113,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $hasAutoItem = false;
         $autoItems = $this->getAutoItems($parameters);
-
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $parameters['alias'] = preg_replace_callback(

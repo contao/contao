@@ -19,6 +19,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\HttpUtils;
 
+/**
+ * @group legacy
+ */
 class LogoutSuccessHandlerTest extends TestCase
 {
     public function testRedirectsToAGivenUrl(): void

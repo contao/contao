@@ -25,6 +25,7 @@ The monorepo is split into separate packages automatically:
  * [FaqBundle](https://github.com/contao/faq-bundle)
  * [InstallationBundle](https://github.com/contao/installation-bundle)
  * [ListingBundle](https://github.com/contao/listing-bundle)
+ * [MakerBundle](https://github.com/contao/maker-bundle)
  * [ManagerBundle](https://github.com/contao/manager-bundle)
  * [NewsBundle](https://github.com/contao/news-bundle)
  * [NewsletterBundle](https://github.com/contao/newsletter-bundle)

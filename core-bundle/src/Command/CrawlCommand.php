@@ -30,6 +30,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Terminal42\Escargot\CrawlUri;
@@ -40,7 +41,6 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
-use Webmozart\PathUtil\Path;
 
 class CrawlCommand extends Command
 {

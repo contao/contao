@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+
 /**
  * Add system messages to the welcome screen.
  *
@@ -40,7 +42,7 @@ class Messages extends Backend
 	{
 		$this->import(BackendUser::class, 'User');
 
-		if (!$this->User->hasAccess('maintenance', 'modules'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'maintenance'))
 		{
 			return '';
 		}

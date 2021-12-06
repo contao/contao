@@ -18,10 +18,10 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Webmozart\PathUtil\Path;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
@@ -80,7 +80,6 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             return $value;
         }
 
-        /** @var FilesModel $filesAdapter */
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
         $filesModel = $filesAdapter->findByPath(rawurldecode($value));
 
@@ -106,7 +105,6 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function convertValueToPath(string $value): string
     {
-        /** @var FilesModel $filesAdapter */
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
 
         if (Validator::isUuid($value) && ($filesModel = $filesAdapter->findByUuid($value)) instanceof FilesModel) {

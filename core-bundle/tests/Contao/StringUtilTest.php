@@ -12,17 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\NullLogger;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -32,9 +37,11 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/cache');
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.charset', 'UTF-8');
+        $container->setParameter('contao.insert_tags.allowed_tags', ['*']);
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
     }
@@ -176,9 +183,11 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param mixed $string
+     *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
+    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
@@ -282,14 +291,17 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param array|object $value
+     *
      * @group legacy
      *
      * @dataProvider invalidEncodingsProvider
-     *
-     * @expectedDeprecation Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.
      */
     public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
+
+        /** @phpstan-ignore-next-line */
         $result = StringUtil::convertEncoding($value, 'UTF-8');
 
         $this->assertSame('', $result);

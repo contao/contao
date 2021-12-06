@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
@@ -256,7 +257,12 @@ abstract class Module extends Frontend
 	 */
 	protected function getResponseCacheTags(): array
 	{
-		return array('contao.db.tl_module.' . $this->id);
+		if ($this->objModel === null)
+		{
+			return array();
+		}
+
+		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
@@ -367,7 +373,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 							continue 2;
 						}
@@ -380,7 +386,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 							continue 2;
 						}
@@ -537,7 +543,7 @@ abstract class Module extends Frontend
 	 */
 	protected static function getPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
 	{
-		@trigger_error('Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.');
 
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');

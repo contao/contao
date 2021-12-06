@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Config\Dumper;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Combines multiple files into one PHP file.

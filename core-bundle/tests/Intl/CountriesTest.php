@@ -234,7 +234,7 @@ class CountriesTest extends TestCase
 
         $contaoFramework = $this->mockContaoFramework([
             System::class => new class(System::class) extends Adapter {
-                public function importStatic($class)
+                public function importStatic(string $class): object
                 {
                     return new $class();
                 }

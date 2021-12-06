@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Event\AbstractResponseContextEvent;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ResponseContext
@@ -46,9 +45,7 @@ final class ResponseContext
 
     public function addLazy(string $classname, \Closure $factory = null): self
     {
-        if (null === $factory) {
-            $factory = fn () => new $classname($this);
-        }
+        $factory ??= fn () => new $classname($this);
 
         $this->registerService($classname, $factory);
 
@@ -71,12 +68,12 @@ final class ResponseContext
 
     /**
      * @template T
-     * @psalm-param class-string<T> $serviceId
-     * @psalm-return T
      *
-     * @throws ServiceNotFoundException
+     * @param class-string<T> $serviceId
      *
      * @return object
+     *
+     * @phpstan-return T
      */
     public function get(string $serviceId)
     {
@@ -97,11 +94,7 @@ final class ResponseContext
 
     public function getHeaderBag(): PartialResponseHeaderBag
     {
-        if (null === $this->headerBag) {
-            $this->headerBag = new PartialResponseHeaderBag();
-        }
-
-        return $this->headerBag;
+        return $this->headerBag ??= new PartialResponseHeaderBag();
     }
 
     /**

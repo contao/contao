@@ -26,7 +26,7 @@ class SearchIndexerPassTest extends TestCase
 
         $delegatingDefinition = new Definition();
         $delegatingDefinition->addTag('contao.search_indexer');
-        $container->setDefinition('contao.search.indexer.delegating', $delegatingDefinition);
+        $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
 
         $definition = new Definition();
         $definition->addTag('contao.search_indexer');
@@ -38,7 +38,7 @@ class SearchIndexerPassTest extends TestCase
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
-        $methodCalls = $container->findDefinition('contao.search.indexer.delegating')->getMethodCalls();
+        $methodCalls = $container->findDefinition('contao.search.delegating_indexer')->getMethodCalls();
 
         $this->assertCount(1, $methodCalls);
         $this->assertSame('addIndexer', $methodCalls[0][0]);
@@ -56,7 +56,7 @@ class SearchIndexerPassTest extends TestCase
 
         $delegatingDefinition = new Definition();
         $delegatingDefinition->addTag('contao.search_indexer');
-        $container->setDefinition('contao.search.indexer.delegating', $delegatingDefinition);
+        $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
 
         $container->setDefinition('contao.listener.search_index', new Definition());
         $container->setDefinition('contao.crawl.escargot_subscriber.search_index', new Definition());
@@ -64,7 +64,7 @@ class SearchIndexerPassTest extends TestCase
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
-        $this->assertFalse($container->hasDefinition('contao.search.indexer.delegating'));
+        $this->assertFalse($container->hasDefinition('contao.search.delegating_indexer'));
         $this->assertFalse($container->hasDefinition('contao.listener.search_index'));
         $this->assertFalse($container->hasDefinition('contao.crawl.escargot_subscriber.search_index'));
         $this->assertFalse($container->hasAlias('contao.search.indexer'));

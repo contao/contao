@@ -18,12 +18,11 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\UserGroupModel;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class UserCreateCommandTest extends TestCase
 {
@@ -118,7 +117,6 @@ class UserCreateCommandTest extends TestCase
      */
     public function testUpdatesTheDatabaseOnSuccess(string $username, string $name, string $email, string $password): void
     {
-        /** @var Connection&MockObject $connection */
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -145,31 +143,23 @@ class UserCreateCommandTest extends TestCase
         yield ['k.jones', 'Kevin Jones', 'k.jones@example.org', 'kevinjones'];
     }
 
-    /**
-     * @param Connection&MockObject $connection
-     */
     private function getCommand(Connection $connection = null, string $password = null): UserCreateCommand
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
+        $connection ??= $this->createMock(Connection::class);
+        $password ??= '12345678';
 
-        if (null === $password) {
-            $password = '12345678';
-        }
-
-        $encoder = $this->createMock(PasswordEncoderInterface::class);
-        $encoder
-            ->method('encodePassword')
-            ->with($password, null)
+        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher
+            ->method('hash')
+            ->with($password)
             ->willReturn('$argon2id$v=19$m=65536,t=6,p=1$T+WK0xPOk21CQ2dX9AFplw$2uCrfvt7Tby81Dhc8Y7wHQQGP1HnPC3nDEb4FtXsfrQ')
         ;
 
-        $encoderFactory = $this->createMock(EncoderFactoryInterface::class);
-        $encoderFactory
-            ->method('getEncoder')
+        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory
+            ->method('getPasswordHasher')
             ->with(BackendUser::class)
-            ->willReturn($encoder)
+            ->willReturn($passwordHasher)
         ;
 
         $userGroupModelAdapter = $this->mockAdapter(['findAll']);
@@ -184,7 +174,7 @@ class UserCreateCommandTest extends TestCase
             ->willReturn(['en', 'de', 'ru'])
         ;
 
-        $command = new UserCreateCommand($this->mockContaoFramework([UserGroupModel::class => $userGroupModelAdapter]), $connection, $encoderFactory, $locales);
+        $command = new UserCreateCommand($this->mockContaoFramework([UserGroupModel::class => $userGroupModelAdapter]), $connection, $passwordHasherFactory, $locales);
         $command->setApplication(new Application());
 
         return $command;

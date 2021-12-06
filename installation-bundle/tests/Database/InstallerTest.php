@@ -19,7 +19,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class InstallerTest extends TestCase
@@ -520,11 +519,6 @@ class InstallerTest extends TestCase
         $this->assertSame($expected, $commands[$key]);
     }
 
-    /**
-     * Mocks an installer.
-     *
-     * @return Installer&MockObject
-     */
     private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
     {
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
