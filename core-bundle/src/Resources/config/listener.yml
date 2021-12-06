@@ -456,6 +456,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@translator'
             - '@twig'
 
     contao.listener.data_container.undo.jump_to_parent_operation_button:
@@ -463,3 +464,4 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@translator'

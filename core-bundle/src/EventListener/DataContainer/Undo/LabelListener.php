@@ -25,6 +25,7 @@ use Contao\UserModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -39,11 +40,13 @@ class LabelListener
     private Connection $connection;
     private ContaoFramework $framework;
     private Environment $twig;
+    private TranslatorInterface $translator;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, Environment $twig)
+    public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator, Environment $twig)
     {
         $this->framework = $framework;
         $this->connection = $connection;
+        $this->translator = $translator;
         $this->twig = $twig;
     }
 
@@ -77,8 +80,10 @@ class LabelListener
         return [
             'preview' => $this->renderPreview($originalRow, $originalTableDc),
             'user' => $user,
-            'parent' => $parent,
             'row' => $row,
+            'translatedFromTable' => $this->getTranslatedTypeFromTable($table),
+            'parent' => $parent,
+            'translatedParentTable' => ($parent) ? $this->getTranslatedTypeFromTable($table) : null,
             'originalRow' => $originalRow,
             'dateFormat' => $config->get('dateFormat'),
             'timeFormat' => $config->get('timeFormat'),
@@ -131,7 +136,7 @@ class LabelListener
                     $labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('datimFormat'), $arrRow[$v]) : '-';
                 }
             } elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] || ('checkbox' === $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] && !$GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple'])) {
-                $labelValues[$k] = $arrRow[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+                $labelValues[$k] = $arrRow[$v] ? $this->translator->trans('MSC.yes', [], 'contao_default') : $this->translator->trans('MSC.no', [], 'contao_default');
             } else {
                 $row_v = StringUtil::deserialize($arrRow[$v]);
 

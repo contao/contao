@@ -20,6 +20,7 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Callback(target="list.operations.jumpToParent.button", table="tl_undo")
@@ -30,10 +31,13 @@ class JumpToParentOperationButtonListener
 {
     use UndoListenerTrait;
 
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    private TranslatorInterface $translator;
+
+    public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator)
     {
         $this->framework = $framework;
         $this->connection = $connection;
+        $this->translator = $translator;
     }
 
     public function __invoke(array $row, ?string $href = '', string $label = '', string $title = '', string $icon = '', string $attributes = ''): string
@@ -50,7 +54,7 @@ class JumpToParentOperationButtonListener
         }
 
         $newTitle = sprintf(
-            $GLOBALS['TL_LANG']['tl_undo']['parent_modal'],
+            $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
             $this->getTranslatedTypeFromTable($table),
             $originalRow['id']
         );
@@ -62,7 +66,7 @@ class JumpToParentOperationButtonListener
             '<a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\': this.href });return false">%s</a> ',
             $backend->addToUrl($this->getParentLinkParameters($parent, $table)),
             StringUtil::specialchars($newTitle),
-            $newTitle,
+            StringUtil::specialchars($newTitle),
             $image->getHtml($icon, $label)
         );
     }

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -22,6 +23,7 @@ trait UndoListenerTrait
 {
     private Connection $connection;
     private ContaoFramework $framework;
+    private TranslatorInterface $translator;
 
     private function getParentTableForRow(string $table, array $row): ?array
     {
@@ -38,7 +40,9 @@ trait UndoListenerTrait
 
     private function getTranslatedTypeFromTable(string $table): string
     {
-        return isset($GLOBALS['TL_LANG']['TABLES'][$table]) ? $GLOBALS['TL_LANG']['TABLES'][$table][0] : $table;
+        $key = "TABLES.${table}.0";
+        $translatedTable = $this->translator->trans($key, [], 'contao_default');
+        return ($translatedTable !== $key) ? $translatedTable : $table;
     }
 
     private function checkIfParentExists(array $parent): bool
