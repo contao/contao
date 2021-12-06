@@ -101,12 +101,6 @@ class RegisterPagesPass implements CompilerPassInterface
             $pathRegex = $compiledRoute->getRegex();
         }
 
-        if (false === $path) {
-            $attributes['options'] = array_merge([
-                'compiler_class' => UnroutablePageRouteCompiler::class,
-            ], $attributes['options'] ?? []);
-        }
-
         return new Definition(
             RouteConfig::class,
             [

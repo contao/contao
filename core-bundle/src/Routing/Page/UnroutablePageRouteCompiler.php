@@ -14,16 +14,12 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCompiler;
+use Symfony\Component\Routing\RouteCompilerInterface;
 
-class UnroutablePageRouteCompiler extends RouteCompiler
+class UnroutablePageRouteCompiler implements RouteCompilerInterface
 {
     public static function compile(Route $route)
     {
-        if ($route instanceof PageRoute) {
-            throw new RouteNotFoundException(sprintf('Cannot create route for page type "%s"', $route->getPageModel()->type));
-        }
-
-        return parent::compile($route);
+        throw new RouteNotFoundException(sprintf('Cannot create route for page type "%s"', $route->getPageModel()->type));
     }
 }

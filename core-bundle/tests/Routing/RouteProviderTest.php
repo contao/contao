@@ -886,6 +886,10 @@ class RouteProviderTest extends TestCase
 
         if (null === $pageRegistry) {
             $pageRegistry = $this->createMock(PageRegistry::class);
+            $pageRegistry
+                ->method('isRoutable')
+                ->willReturn(true)
+            ;
         }
 
         return new RouteProvider($framework, $candidates, $pageRegistry, false, $prependLocale);

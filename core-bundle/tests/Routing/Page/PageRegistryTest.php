@@ -22,7 +22,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class PageRegistryTest extends TestCase
 {
@@ -412,12 +411,9 @@ class PageRegistryTest extends TestCase
         );
 
         $registry = new PageRegistry($this->createMock(Connection::class));
-        $registry->add('foobar', new RouteConfig(null, null, null, [], ['compiler_class' => UnroutablePageRouteCompiler::class]));
+        $registry->add('foobar', new RouteConfig(false, null, null, []));
 
         $this->assertFalse($registry->isRoutable($pageModel));
-
-        $this->expectException(RouteNotFoundException::class);
-        $registry->getRoute($pageModel);
     }
 
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection
