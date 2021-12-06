@@ -1220,10 +1220,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 
-        if (null === $studio) {
-            $studio = $this->mockStudioForImage($absoluteFilePath);
-        }
-
+        $studio ??= $this->mockStudioForImage($absoluteFilePath);
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
 
         if (null !== $configureBuilderCallback) {

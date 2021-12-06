@@ -783,19 +783,14 @@ class RouteProviderTest extends TestCase
 
     private function getRouteProvider(ContaoFramework $framework = null, PageRegistry $pageRegistry = null, bool $prependLocale = false): RouteProvider
     {
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
-
         $candidates = $this->createMock(CandidatesInterface::class);
         $candidates
             ->method('getCandidates')
             ->willReturn(['foo'])
         ;
 
-        if (null === $pageRegistry) {
-            $pageRegistry = $this->createMock(PageRegistry::class);
-        }
+        $framework ??= $this->mockContaoFramework();
+        $pageRegistry ??= $this->createMock(PageRegistry::class);
 
         return new RouteProvider($framework, $candidates, $pageRegistry, false, $prependLocale);
     }

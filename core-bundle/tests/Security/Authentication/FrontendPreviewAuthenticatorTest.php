@@ -250,10 +250,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     private function getAuthenticator(Security $security = null, SessionInterface $session = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
-        if (null === $security) {
-            $security = $this->createMock(Security::class);
-        }
-
         if (null === $session) {
             $session = $this->createMock(SessionInterface::class);
             $session
@@ -262,13 +258,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ;
         }
 
-        if (null === $userProvider) {
-            $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
-        }
-
-        if (null === $logger) {
-            $logger = $this->createMock(LoggerInterface::class);
-        }
+        $security ??= $this->createMock(Security::class);
+        $userProvider ??= $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $logger ??= $this->createMock(LoggerInterface::class);
 
         return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
     }

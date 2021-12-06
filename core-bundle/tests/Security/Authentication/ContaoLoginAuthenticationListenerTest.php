@@ -151,9 +151,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        if (null === $tokenStorage) {
-            $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        }
+        $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
 
         return new ContaoLoginAuthenticationListener(
             $tokenStorage,
@@ -174,9 +172,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
      */
     private function mockRequest(bool $isPost = true, SessionInterface $session = null): Request
     {
-        if (null === $session) {
-            $session = $this->createMock(SessionInterface::class);
-        }
+        $session ??= $this->createMock(SessionInterface::class);
 
         $request = $this->createMock(Request::class);
         $request

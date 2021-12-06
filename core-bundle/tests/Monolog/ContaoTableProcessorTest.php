@@ -308,13 +308,8 @@ class ContaoTableProcessorTest extends TestCase
 
     private function getContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
     {
-        if (null === $requestStack) {
-            $requestStack = $this->createMock(RequestStack::class);
-        }
-
-        if (null === $tokenStorage) {
-            $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        }
+        $requestStack ??= $this->createMock(RequestStack::class);
+        $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
 
         return new ContaoTableProcessor($requestStack, $tokenStorage, $this->mockScopeMatcher());
     }

@@ -144,11 +144,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     public function getManagerConfig(): ManagerConfig
     {
-        if (null === $this->managerConfig) {
-            $this->managerConfig = new ManagerConfig($this->getProjectDir());
-        }
-
-        return $this->managerConfig;
+        return $this->managerConfig ??= new ManagerConfig($this->getProjectDir());
     }
 
     public function setManagerConfig(ManagerConfig $managerConfig): void
@@ -357,9 +353,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
 
     private static function create(string $projectDir, string $env = null): self
     {
-        if (null === $env) {
-            $env = $_SERVER['APP_ENV'] ?? 'prod';
-        }
+        $env ??= $_SERVER['APP_ENV'] ?? 'prod';
 
         if ('dev' !== $env && 'prod' !== $env) {
             throw new \RuntimeException('The Contao Managed Edition only supports the "dev" and "prod" environments');

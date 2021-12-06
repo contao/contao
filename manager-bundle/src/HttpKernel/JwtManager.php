@@ -34,11 +34,7 @@ class JwtManager
     public function __construct(string $projectDir, Filesystem $filesystem = null, Configuration $config = null)
     {
         $secret = null;
-
-        if (null === $filesystem) {
-            $filesystem = new Filesystem();
-        }
-
+        $filesystem ??= new Filesystem();
         $secretFile = Path::join($projectDir, 'var/jwt_secret');
 
         if ($filesystem->exists($secretFile)) {

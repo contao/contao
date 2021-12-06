@@ -1755,7 +1755,7 @@ abstract class Controller extends System
 		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
-		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
+		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
 	}
 
 	/**

@@ -170,7 +170,7 @@ class TokenCheckerTest extends TestCase
 
         if ($isPreview) {
             $session = $this->mockSessionWithToken($token);
-            $request->attributes->set('_preview', $isPreview);
+            $request->attributes->set('_preview', true);
         } else {
             $session = $this->createMock(SessionInterface::class);
             $session
@@ -336,9 +336,7 @@ class TokenCheckerTest extends TestCase
      */
     private function mockRequestStack(Request $request = null): RequestStack
     {
-        if (null === $request) {
-            $request = $this->createMock(Request::class);
-        }
+        $request ??= $this->createMock(Request::class);
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack

@@ -536,14 +536,12 @@ class ContaoCoreExtensionTest extends TestCase
             ])
         );
 
-        if (null === $params) {
-            $params = [
-                'contao' => [
-                    'encryption_key' => 'foobar',
-                    'localconfig' => ['foo' => 'bar'],
-                ],
-            ];
-        }
+        $params ??= [
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+            ],
+        ];
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);

@@ -136,10 +136,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
     {
         $this->mockContaoFramework()->initialize();
 
-        if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
-        }
-
+        $translator ??= $this->createMock(TranslatorInterface::class);
         $framework = $this->mockContaoFramework($adapters);
 
         return new DisableAppConfiguredSettingsListener($translator, $framework, $localConfig ?: []);
