@@ -38,6 +38,24 @@
       <trans-unit id="MSC.nl_channels">
         <source>Channels</source>
       </trans-unit>
+      <trans-unit id="TABLES.tl_newsletter.0">
+        <source>Newsletter</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_newsletter.1">
+        <source>Newsletters</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_newsletter_channel.0">
+        <source>Newsletter channel</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_newsletter_channel.1">
+        <source>Newsletter channels</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_newsletter_recipients.0">
+        <source>Newsletter recipient</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_newsletter_recipients.1">
+        <source>Newsletter recipients</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

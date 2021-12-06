@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 
@@ -39,11 +38,7 @@ trait UndoListenerTrait
 
     private function getTranslatedTypeFromTable(string $table): string
     {
-        /** @var Controller $controller */
-        $controller = $this->framework->getAdapter(Controller::class);
-        $controller->loadLanguageFile($table);
-
-        return isset($GLOBALS['TL_LANG'][$table]['_type']) ? $GLOBALS['TL_LANG'][$table]['_type'][0] : $table;
+        return isset($GLOBALS['TL_LANG']['TABLES'][$table]) ? $GLOBALS['TL_LANG']['TABLES'][$table][0] : $table;
     }
 
     private function checkIfParentExists(array $parent): bool

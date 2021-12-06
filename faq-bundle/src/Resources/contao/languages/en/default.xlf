@@ -8,6 +8,18 @@
       <trans-unit id="MSC.faqPicker">
         <source>FAQ</source>
       </trans-unit>
+      <trans-unit id="TABLES.tl_faq.0">
+        <source>FAQ</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_faq.1">
+        <source>FAQs</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_faq_category.0">
+        <source>FAQ category</source>
+      </trans-unit>
+      <trans-unit id="TABLES.tl_faq_category.1">
+        <source>FAQ categories</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

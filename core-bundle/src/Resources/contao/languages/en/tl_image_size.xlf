@@ -2,12 +2,6 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_image_size.php" source-language="en">
     <body>
-      <trans-unit id="tl_image_size._type.0">
-        <source>Image size</source>
-      </trans-unit>
-      <trans-unit id="tl_image_size._type.1">
-        <source>Image size</source>
-      </trans-unit>
       <trans-unit id="tl_image_size.name.0">
         <source>Name</source>
       </trans-unit>

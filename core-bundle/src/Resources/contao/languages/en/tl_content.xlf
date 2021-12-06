@@ -2,12 +2,6 @@
 <xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en">
     <body>
-      <trans-unit id="tl_content._type.0">
-        <source>Content Element</source>
-      </trans-unit>
-      <trans-unit id="tl_content._type.1">
-        <source>Content Elements</source>
-      </trans-unit>
       <trans-unit id="tl_content.type.0">
         <source>Element type</source>
       </trans-unit>

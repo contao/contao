@@ -106,7 +106,7 @@ class JumpToParentOperationButtonTest extends TestCase
     {
         $row = $this->setupForDataSetWithParent();
 
-        $GLOBALS['TL_LANG']['tl_content']['_type'] = ['Inhaltselement', 'Inhaltselemente'];
+        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Inhaltselement', 'Inhaltselemente'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -158,7 +158,7 @@ class JumpToParentOperationButtonTest extends TestCase
             'tables' => ['tl_news_archive', 'tl_news'],
         ];
 
-        $GLOBALS['TL_LANG']['tl_content']['_type'] = ['Inhaltselement', 'Inhaltselemente'];
+        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Inhaltselement', 'Inhaltselemente'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -186,7 +186,7 @@ class JumpToParentOperationButtonTest extends TestCase
 
     private function setupForDataSetWithoutParent(): array
     {
-        $GLOBALS['TL_LANG']['tl_form']['_type'] = ['Formular', 'Formulare'];
+        $GLOBALS['TL_LANG']['TABLES']['tl_form'] = ['Formular', 'Formulare'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_form']['config'] = [];

@@ -54,7 +54,6 @@ class LabelListener
         /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
         $controller->loadDataContainer($table);
-        $controller->loadLanguageFile($table);
 
         $dataContainer = $this->framework->getAdapter(DataContainer::class)->getDriverForTable($table);
         $fromTableDc = new $dataContainer($table);
