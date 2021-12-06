@@ -1,0 +1,180 @@
+callbacks:
+    config.onload:
+        return_type: void
+        arguments:
+            dataContainer: Contao\DataContainer
+
+    config.oncreate:
+        return_type: void
+        arguments:
+            table: string
+            insertId: int
+            fields: array
+            dataContainer: Contao\DataContainer
+
+    config.onsubmit:
+        return_type: void
+        # Since there are multiple parameters for multiple calls, we cannot
+        # safely assume the correct parameter names and types
+        arguments: []
+
+    config.ondelete:
+        return_type: void
+        arguments:
+            dataContainer: Contao\DataContainer
+            id: int
+
+    config.oncut:
+        return_type: void
+        arguments:
+            dataContainer: Contao\DataContainer
+
+    config.oncopy:
+        return_type: void
+        arguments:
+            id: int
+            dataContainer: Contao\DataContainer
+
+    config.oncreate_version:
+        return_type: void
+        arguments:
+            table: string
+            pid: int
+            versionNumber: int
+            recordData: array
+
+    config.onrestore_version:
+        return_type: void
+        arguments:
+            table: string
+            pid: int
+            versionNumber: int
+            recordData: array
+
+    config.onundo:
+        return_type: void
+        arguments:
+            table: string
+            recordData: array
+            dataContainer: Contao\DataContainer
+
+    config.oninvalidate_cache_tags:
+        return_type: array
+        arguments:
+            dataContainer: Contao\DataContainer
+            tags: array
+
+    config.onshow:
+        return_type: array
+        arguments:
+            modalData: array
+            recordData: array
+            dataContainer: Contao\DataContainer
+
+    list.sorting.paste_button:
+        return_type: string
+        arguments:
+            dataContainer: Contao\DataContainer
+            recordData: array
+            table: string
+            isCircularReference: bool
+            clipboardData: array
+            children: array
+            previousLabel: string
+            nextLabel: string
+
+    list.sorting.child_record:
+        return_type: string
+        arguments:
+            recordData: array
+
+    list.sorting.header:
+        return_type: array
+        arguments:
+            currentHeaderLabels: array
+            dataContainer: Contao\DataContainer
+
+    list.sorting.panel_callback.subpanel:
+        return_type: string
+        arguments:
+            dataContainer: Contao\DataContainer
+
+    list.label.group:
+        return_type: string
+        arguments:
+            group: string
+            mode: string
+            field: string
+            recordData: array
+            dataContainer: Contao\DataContainer
+
+    list.label.label:
+        return_type: array
+        arguments:
+            recordData: array
+            currentLabel: string
+            dataContainer: Contao\DataContainer
+            # Since there are multiple parameters for multiple calls, we cannot
+            # safely assume the following correct parameter names and types
+
+    list.global_operations.{operation}.button:
+        return_type: string
+        arguments:
+            buttonHref: ?string
+            label: string
+            title: string
+            className: string
+            htmlAttributes: string
+            table: string
+            rootRecordIds: array
+
+    list.operations.{operation}.button:
+        return_type: string
+        arguments:
+            recordData: array
+            buttonHref: ?string
+            label: string
+            title: string
+            icon: ?string
+            htmlAttributes: string
+            table: string
+            rootRecordIds: array
+            childRecordIds: array
+            isCircularReference: bool
+            previousLabel: string
+            nextLabel: string
+            dataContainer: Contao\DataContainer
+
+    fields.{field}.options:
+        return_type: array
+        arguments:
+            dataContainer: Contao\DataContainer
+
+    fields.{field}.input_field:
+        return_type: string
+        arguments:
+            dataContainer: Contao\DataContainer
+
+    fields.{field}.load:
+        return_type: ~
+        arguments:
+            currentValue: ~
+            # Since there are multiple parameters for multiple calls, we cannot
+            # safely assume the following correct parameter names and types
+
+    fields.{field}.save:
+        return_type: ~
+        arguments:
+            currentValue: ~
+            # Since there are multiple parameters for multiple calls, we cannot
+            # safely assume the following correct parameter names and types
+
+    fields.{field}.wizard:
+        return_type: string
+        arguments:
+            dataContainer: Contao\DataContainer
+
+    fields.{field}.xlabel:
+        return_type: string
+        arguments:
+            dataContainer: Contao\DataContainer

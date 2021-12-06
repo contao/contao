@@ -306,10 +306,6 @@ class OptInTokenTest extends ContaoTestCase
 
     private function getToken(OptInModel $model, ContaoFramework $framework = null): OptInTokenInterface
     {
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
-
-        return new OptInToken($model, $framework);
+        return new OptInToken($model, $framework ?? $this->mockContaoFramework());
     }
 }

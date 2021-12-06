@@ -231,13 +231,8 @@ class TranslatorTest extends TestCase
             ;
         }
 
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
-
-        if (null === $resourceFinder) {
-            $resourceFinder = $this->createMock(ResourceFinder::class);
-        }
+        $framework ??= $this->mockContaoFramework();
+        $resourceFinder ??= $this->createMock(ResourceFinder::class);
 
         return new Translator($translator, $framework, $resourceFinder);
     }

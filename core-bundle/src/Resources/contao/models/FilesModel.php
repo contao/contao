@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\File\Metadata;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Reads and writes file entries

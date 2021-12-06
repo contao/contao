@@ -890,7 +890,7 @@ class PageModel extends Model
 	 * @param string $strHost    The hostname
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return PageModel|Model|null The model or null if there is not fallback page
+	 * @return PageModel|Model|null The model or null if there is no fallback page
 	 */
 	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
@@ -1282,7 +1282,7 @@ class PageModel extends Model
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @return string A URL that can be used in the front end
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
 	{

@@ -30,8 +30,7 @@
         "symfony/http-foundation": "^5.4",
         "symfony/http-kernel": "^5.4",
         "symfony/polyfill-mbstring": "^1.0",
-        "symfony/yaml": "^5.4",
-        "webmozart/path-util": "^2.2"
+        "symfony/yaml": "^5.4"
     },
     "conflict": {
         "contao/core": "*",

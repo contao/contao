@@ -674,7 +674,7 @@ class PageRegular extends Frontend
 			$strScripts .= "[[TL_MOOTOOLS_$nonce]]";
 		}
 
-		// Add the framework agnostic JavaScripts
+		// Add the framework-agnostic JavaScripts
 		if ($objLayout->scripts)
 		{
 			$arrScripts = StringUtil::deserialize($objLayout->scripts, true);

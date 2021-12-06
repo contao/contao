@@ -24,6 +24,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -37,7 +38,6 @@ use Twig\NodeTraverser;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Webmozart\PathUtil\Path;
 
 class ContaoExtensionTest extends TestCase
 {
@@ -303,13 +303,8 @@ class ContaoExtensionTest extends TestCase
      */
     private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
-        if (null === $environment) {
-            $environment = $this->createMock(Environment::class);
-        }
-
-        if (null === $hierarchy) {
-            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        }
+        $environment ??= $this->createMock(Environment::class);
+        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
 
         $environment
             ->method('getExtension')

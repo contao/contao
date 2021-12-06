@@ -426,16 +426,10 @@ class AuthenticationSuccessHandlerTest extends TestCase
 
     private function getHandler(ContaoFramework $framework = null, LoggerInterface $logger = null): AuthenticationSuccessHandler
     {
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
-
+        $framework ??= $this->mockContaoFramework();
         $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
         $firewallMap = $this->createMock(FirewallMap::class);
-
-        if (null === $logger) {
-            $logger = $this->createMock(LoggerInterface::class);
-        }
+        $logger ??= $this->createMock(LoggerInterface::class);
 
         return new AuthenticationSuccessHandler($framework, $trustedDeviceManager, $firewallMap, $logger);
     }

@@ -114,9 +114,7 @@ class CrawlCommandTest extends TestCase
      */
     private function mockEscargotFactory(BaseUriCollection $baseUriCollection = null): Factory
     {
-        if (null === $baseUriCollection) {
-            $baseUriCollection = $this->getBaseUriCollection();
-        }
+        $baseUriCollection ??= $this->getBaseUriCollection();
 
         $escargotFactory = $this->createMock(Factory::class);
         $escargotFactory

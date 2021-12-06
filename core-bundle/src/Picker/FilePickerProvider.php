@@ -18,10 +18,10 @@ use Contao\FilesModel;
 use Contao\StringUtil;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Webmozart\PathUtil\Path;
 
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {

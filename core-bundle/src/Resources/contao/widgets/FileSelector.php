@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Webmozart\PathUtil\Path;
 
 trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\FileSelector" class has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
 
