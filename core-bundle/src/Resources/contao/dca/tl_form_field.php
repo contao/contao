@@ -729,10 +729,11 @@ class tl_form_field extends Backend
 	public function getFields()
 	{
 		$fields = array();
+		$security = System::getContainer()->get('security.helper');
 
 		foreach ($GLOBALS['TL_FFL'] as $k=>$v)
 		{
-			if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $k))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $k))
 			{
 				$fields[] = $k;
 			}

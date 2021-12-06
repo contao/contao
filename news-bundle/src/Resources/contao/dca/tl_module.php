@@ -162,10 +162,11 @@ class tl_module_news extends Backend
 
 		$arrArchives = array();
 		$objArchives = $this->Database->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objArchives->next())
 		{
-			if (System::getContainer()->get('security.helper')->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchives->id))
+			if ($security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchives->id))
 			{
 				$arrArchives[$objArchives->id] = $objArchives->title;
 			}

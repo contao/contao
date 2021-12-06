@@ -521,6 +521,7 @@ class BackendUser extends User
 		$arrStatus = System::getContainer()->get('session')->getBag('contao_backend')->get('backend_modules');
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$router = System::getContainer()->get('router');
+		$security = System::getContainer()->get('security.helper');
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
@@ -536,7 +537,7 @@ class BackendUser extends User
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
 					// Check access
-					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
+					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
 					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
 
 					if ($blnAccess && !$blnHide)

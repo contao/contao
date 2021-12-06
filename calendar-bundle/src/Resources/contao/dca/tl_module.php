@@ -187,10 +187,11 @@ class tl_module_calendar extends Backend
 
 		$arrCalendars = array();
 		$objCalendars = $this->Database->execute("SELECT id, title FROM tl_calendar ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objCalendars->next())
 		{
-			if (System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
+			if ($security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
 			{
 				$arrCalendars[$objCalendars->id] = $objCalendars->title;
 			}

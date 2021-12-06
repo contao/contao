@@ -681,10 +681,12 @@ class Versions extends Controller
 								   ->limit(30, $intOffset)
 								   ->execute(...$params);
 
+		$security = System::getContainer()->get('security.helper');
+
 		while ($objVersions->next())
 		{
 			// Hide profile changes if the user does not have access to the "user" module (see #1309)
-			if (!$objUser->isAdmin && $objVersions->fromTable == 'tl_user' && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
+			if (!$objUser->isAdmin && $objVersions->fromTable == 'tl_user' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'user'))
 			{
 				continue;
 			}

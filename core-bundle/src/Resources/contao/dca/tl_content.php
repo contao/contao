@@ -1021,13 +1021,14 @@ class tl_content extends Backend
 	 */
 	public function getContentElements()
 	{
+		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
 				{
 					$groups[$k][] = $kk;
 				}
@@ -1558,10 +1559,11 @@ class tl_content extends Backend
 
 		$arrForms = array();
 		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
 		{
-			if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
