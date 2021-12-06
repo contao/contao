@@ -15,6 +15,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -1007,7 +1008,7 @@ class tl_content extends Backend
 		}
 
 		// Not enough permissions to modify the article
-		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . '.');
 		}
@@ -1020,13 +1021,14 @@ class tl_content extends Backend
 	 */
 	public function getContentElements()
 	{
+		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				if ($this->User->hasAccess($kk, 'elements'))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
 				{
 					$groups[$k][] = $kk;
 				}
@@ -1206,8 +1208,10 @@ class tl_content extends Backend
 			return;
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Return if the user cannot access the layout module (see #6190)
-		if (!$this->User->hasAccess('themes', 'modules') || !$this->User->hasAccess('layout', 'themes'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'themes') || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			return;
 		}
@@ -1555,10 +1559,11 @@ class tl_content extends Backend
 
 		$arrForms = array();
 		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
 		{
-			if ($this->User->hasAccess($objForms->id, 'forms'))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
@@ -1819,7 +1824,7 @@ class tl_content extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1837,7 +1842,7 @@ class tl_content extends Backend
 	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
 	{
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -1980,14 +1985,16 @@ class tl_content extends Backend
 			$this->redirect($this->getReferer());
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Check permissions AFTER checking the cid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
 		{
 			return '';
 		}
 
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -2040,7 +2047,7 @@ class tl_content extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
 		{
 			throw new AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
 		}
@@ -2054,7 +2061,7 @@ class tl_content extends Backend
 			throw new AccessDeniedException('Invalid content element ID ' . $intId . '.');
 		}
 
-		if (!$this->User->hasAccess($objRow->type, 'elements'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $objRow->type))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
 		}

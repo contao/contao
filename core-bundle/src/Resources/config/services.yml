@@ -682,6 +682,10 @@ services:
 
     contao.security.backend_access_voter:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
