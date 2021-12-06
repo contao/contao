@@ -16,7 +16,6 @@ use Contao\CoreBundle\Command\DebugPagesCommand;
 use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
-use Contao\CoreBundle\Routing\Page\UnroutablePageRouteCompiler;
 use Contao\FrontendIndex;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
