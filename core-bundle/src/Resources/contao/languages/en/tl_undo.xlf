@@ -38,9 +38,6 @@
       <trans-unit id="tl_undo.parent_modal">
         <source>Show parent of %s ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_undo.parent">
-        <source>Parent</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

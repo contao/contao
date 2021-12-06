@@ -25,6 +25,7 @@ use Contao\UserModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
+use Twig\Environment;
 
 /**
  * @Callback(target="list.label.label", table="tl_undo")
@@ -37,11 +38,13 @@ class LabelListener
 
     private Connection $connection;
     private ContaoFramework $framework;
+    private Environment $twig;
 
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(ContaoFramework $framework, Connection $connection, Environment $twig)
     {
         $this->framework = $framework;
         $this->connection = $connection;
+        $this->twig = $twig;
     }
 
     public function __invoke(array $row, string $label, DataContainer $dc): string
@@ -55,72 +58,39 @@ class LabelListener
         $controller = $this->framework->getAdapter(Controller::class);
         $controller->loadDataContainer($table);
 
-        $dataContainer = $this->framework->getAdapter(DataContainer::class)->getDriverForTable($table);
-        $fromTableDc = new $dataContainer($table);
-
-        $header = $this->renderHeader($table, $row, $originalRow);
-        $newLabel = $this->renderLabel($originalRow, $fromTableDc);
-
-        if ($GLOBALS['TL_DCA'][$table]['list']['label']['showColumns'] ?? false) {
-            $newLabel = $this->renderColumns($newLabel);
-        }
-
-        return $header.'<div class="tl_undo_preview">'.$newLabel.'</div>';
+        return $this->twig->render(
+            '@ContaoCore/Backend/be_undo_label.html.twig',
+            $this->getTemplateData($table, $row, $originalRow)
+        );
     }
 
-    private function renderHeader(string $table, array $row, array $originalRow): string
+    private function getTemplateData(string $table, array $row, array $originalRow): array
     {
-        /** @var UserModel $userModel */
-        $userModel = $this->framework->getAdapter(UserModel::class);
-        $user = $userModel->findById($row['pid']);
+        $dataContainer = $this->framework->getAdapter(DataContainer::class)->getDriverForTable($table);
+        $originalTableDc = new $dataContainer($table);
         $parent = $this->getParentTableForRow($table, $originalRow);
-        $type = $this->getTranslatedTypeFromTable($table);
+        $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
 
-        $header = '<div class="tl_undo_header">';
+        /** @var Config $config */
+        $config = $this->framework->getAdapter(Config::class);
 
-        $header .= sprintf(
-            '<div class="tl_undo_header_item"><span class="tl_undo_header_label"><span class="date">%s</span> <span class="time">%s</span></span></div>',
-            Date::parse(Config::get('dateFormat'), $row['tstamp']),
-            Date::parse(Config::get('timeFormat'), $row['tstamp']),
-        );
-
-        $header .= sprintf(
-            '<div class="tl_undo_header_item"><span class="tl_undo_header_label">%s</span> <strong>%s</strong></div>',
-            $GLOBALS['TL_LANG']['tl_undo']['pid'][0],
-            $user ? $user->username : $row['pid'],
-        );
-
-        $header .= sprintf(
-            '<div class="tl_undo_header_item"><span class="tl_undo_header_label">%s</span> <strong>%s</strong></div>',
-            $GLOBALS['TL_LANG']['tl_undo']['fromTable'][0],
-            $type,
-        );
-
-        $header .= sprintf(
-            '<div class="tl_undo_header_item"><span class="tl_undo_header_label">ID</span> %s</div>',
-            $originalRow['id'],
-        );
-
-        if ($parent) {
-            $header .= sprintf(
-                '<div class="tl_undo_header_item"><span class="tl_undo_header_label">%s</span> <strong>%s</strong></div>',
-                $GLOBALS['TL_LANG']['tl_undo']['parent'],
-                $this->getTranslatedTypeFromTable($parent['table'])
-            );
-        }
-
-        $header .= '</div>';
-
-        return $header;
+        return [
+            'preview' => $this->renderPreview($originalRow, $originalTableDc),
+            'user' => $user,
+            'parent' => $parent,
+            'row' => $row,
+            'originalRow' => $originalRow,
+            'dateFormat' => $config->get('dateFormat'),
+            'timeFormat' => $config->get('timeFormat'),
+        ];
     }
-
     /**
      * @throws Exception
      * @throws DriverException
      *
      * @return array|string
      */
-    private function renderLabel(array $arrRow, DataContainer $dc)
+    private function renderPreview(array $arrRow, DataContainer $dc)
     {
         $mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
@@ -211,18 +181,5 @@ class LabelListener
         }
 
         return $label ?: (string) $arrRow['id'];
-    }
-
-    private function renderColumns(array $label): string
-    {
-        $html = '<table style="width: 100%;"><tr>';
-
-        foreach ($label as $field) {
-            $html .= '<td>'.$field.'</td>';
-        }
-
-        $html .= '</tr></table>';
-
-        return $html;
     }
 }

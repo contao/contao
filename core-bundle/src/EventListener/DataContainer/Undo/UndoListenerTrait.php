@@ -23,14 +23,14 @@ trait UndoListenerTrait
     private Connection $connection;
     private ContaoFramework $framework;
 
-    private function getParentTableForRow(string $table, array $data): ?array
+    private function getParentTableForRow(string $table, array $row): ?array
     {
         if (isset($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable']) && true === $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable']) {
-            return ['table' => $data['ptable'], 'id' => $data['pid']];
+            return ['table' => $row['ptable'], 'id' => $row['pid']];
         }
 
         if (isset($GLOBALS['TL_DCA'][$table]['config']['ptable'])) {
-            return ['table' => $GLOBALS['TL_DCA'][$table]['config']['ptable'], 'id' => $data['pid']];
+            return ['table' => $GLOBALS['TL_DCA'][$table]['config']['ptable'], 'id' => $row['pid']];
         }
 
         return null;

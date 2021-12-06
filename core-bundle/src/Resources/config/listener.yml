@@ -456,6 +456,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
+            - '@twig'
 
     contao.listener.data_container.undo.jump_to_parent_operation_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationButtonListener
