@@ -17,7 +17,7 @@ use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class RoutingTest extends FunctionalTestCase
 {

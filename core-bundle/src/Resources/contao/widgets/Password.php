@@ -127,9 +127,9 @@ class Password extends Widget
 			$this->blnSubmitInput = true;
 			Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
 
-			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(BackendUser::class);
+			$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(BackendUser::class);
 
-			return $encoder->encodePassword($varInput, null);
+			return $passwordHasher->hash($varInput);
 		}
 
 		return '';

@@ -24,7 +24,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
-        if ($this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+        if ($this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
             return $this->getBackendWildcard($model);
         }
 
@@ -58,12 +58,12 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
 
     protected function getBackendWildcard(ModuleModel $module): Response
     {
-        $href = $this->get('router')->generate(
+        $href = $this->container->get('router')->generate(
             'contao_backend',
             ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $module->id]
         );
 
-        $name = $this->get('translator')->trans('FMD.'.$this->getType().'.0', [], 'contao_modules');
+        $name = $this->container->get('translator')->trans('FMD.'.$this->getType().'.0', [], 'contao_modules');
 
         $template = new BackendTemplate('be_wildcard');
         $template->wildcard = '### '.strtoupper($name).' ###';

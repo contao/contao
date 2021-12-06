@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -473,7 +474,7 @@ class tl_layout extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('layout', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
 		}

@@ -24,10 +24,10 @@ use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
-use Webmozart\PathUtil\Path;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
 {

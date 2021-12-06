@@ -83,7 +83,10 @@ class SitemapController extends AbstractController
 
         $sitemap->appendChild($urlSet);
 
-        $this->get('event_dispatcher')->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds), ContaoCoreEvents::SITEMAP);
+        $this->container
+            ->get('event_dispatcher')
+            ->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds), ContaoCoreEvents::SITEMAP)
+        ;
 
         // Cache the response for a month in the shared cache and tag it for invalidation purposes
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);

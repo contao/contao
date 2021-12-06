@@ -197,7 +197,7 @@ class Calendar extends Frontend
 
 						if ($intStartTime >= $time)
 						{
-							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl);
+							$this->addEvent($objArticle, $intStartTime, $intEndTime, $strUrl, '', true);
 						}
 					}
 				}
@@ -233,12 +233,16 @@ class Calendar extends Frontend
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
 					$objItem = new FeedItem();
-
 					$objItem->title = $event['title'];
 					$objItem->link = $event['link'];
 					$objItem->published = $event['tstamp'];
 					$objItem->begin = $event['startTime'];
 					$objItem->end = $event['endTime'];
+
+					if ($event['isRepeated'] ?? null)
+					{
+						$objItem->guid = $event['link'] . '#' . date('Y-m-d', $event['startTime']);
+					}
 
 					if (($objAuthor = UserModel::findById($event['author'])) !== null)
 					{
@@ -415,8 +419,9 @@ class Calendar extends Frontend
 	 * @param integer             $intEnd
 	 * @param string              $strUrl
 	 * @param string              $strBase
+	 * @param boolean             $isRepeated
 	 */
-	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='')
+	protected function addEvent($objEvent, $intStart, $intEnd, $strUrl, $strBase='', $isRepeated=false)
 	{
 		if ($intEnd < time())
 		{
@@ -498,6 +503,11 @@ class Calendar extends Frontend
 		// Override link and title
 		$arrEvent['link'] = $link;
 		$arrEvent['title'] = $title;
+
+		// Set the current start and end date
+		$arrEvent['startDate'] = $intStart;
+		$arrEvent['endDate'] = $intEnd;
+		$arrEvent['isRepeated'] = $isRepeated;
 
 		// Clean the RTE output
 		$arrEvent['teaser'] = StringUtil::toHtml5($objEvent->teaser);

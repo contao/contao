@@ -26,7 +26,7 @@ use Contao\StringUtil;
 use Contao\Validator;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Use the FigureBuilder class to create Figure result objects. The class

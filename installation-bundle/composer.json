@@ -19,19 +19,18 @@
         "contao/core-bundle": "self.version",
         "doctrine/dbal": "^3.1",
         "psr/log": "^1.0",
-        "symfony/config": "^5.3",
-        "symfony/console": "^5.3",
-        "symfony/dependency-injection": "^5.3",
+        "symfony/config": "^5.4",
+        "symfony/console": "^5.4",
+        "symfony/dependency-injection": "^5.4",
         "symfony/deprecation-contracts": "^2.1",
-        "symfony/event-dispatcher": "^5.3",
-        "symfony/filesystem": "^5.3",
-        "symfony/finder": "^5.3",
-        "symfony/framework-bundle": "^5.3",
-        "symfony/http-foundation": "^5.3",
-        "symfony/http-kernel": "^5.3",
+        "symfony/event-dispatcher": "^5.4",
+        "symfony/filesystem": "^5.4",
+        "symfony/finder": "^5.4",
+        "symfony/framework-bundle": "^5.4",
+        "symfony/http-foundation": "^5.4",
+        "symfony/http-kernel": "^5.4",
         "symfony/polyfill-mbstring": "^1.0",
-        "symfony/yaml": "^5.3",
-        "webmozart/path-util": "^2.2"
+        "symfony/yaml": "^5.4"
     },
     "conflict": {
         "contao/core": "*",
@@ -40,13 +39,13 @@
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "phpunit/phpunit": "^8.5",
-        "symfony/http-client": "^5.3",
-        "symfony/phpunit-bridge": "^5.3"
+        "symfony/http-client": "^5.4",
+        "symfony/phpunit-bridge": "^5.4"
     },
     "extra": {
         "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^5.3"
+            "require": "^5.4"
         }
     },
     "autoload": {

@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
@@ -665,7 +666,7 @@ class tl_module extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('modules', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
 		}
@@ -728,10 +729,11 @@ class tl_module extends Backend
 
 		$arrForms = array();
 		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
 		{
-			if ($this->User->hasAccess($objForms->id, 'forms'))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title;
 			}

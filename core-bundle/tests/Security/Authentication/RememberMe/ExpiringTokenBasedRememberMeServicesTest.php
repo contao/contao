@@ -19,6 +19,7 @@ use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,6 +56,8 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     {
         parent::setUp();
 
+        ClockMock::withClockMock(1142164800);
+
         $this->repository = $this->createMock(RememberMeRepository::class);
 
         $user = $this->createMock(UserInterface::class);
@@ -81,6 +84,13 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             'contao_frontend',
             self::$options
         );
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        ClockMock::withClockMock(false);
     }
 
     public function testExpiresExistingRecordsAndCreatesNewCookieWithNewDatabaseRecord(): void
@@ -118,7 +128,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     public function testUpdatesCookieValueFromDatabaseIfTwoRecordsExist(): void
     {
         $this->expectTableLocking();
-        $this->expectTableReturnsEntities($this->mockEntity('baz'), $this->mockEntity('bar', new \DateTime()));
+        $this->expectTableReturnsEntities($this->mockEntity('baz'), $this->mockEntity('bar', (new \DateTime())->setTimestamp(time())));
 
         $request = $this->mockRequestWithCookie();
         $token = $this->listener->autoLogin($request);
@@ -143,7 +153,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     {
         $this->expectTableLocking();
         $this->expectSeriesIsDeleted();
-        $this->expectTableReturnsEntities($this->mockEntity('bar', null, new \DateTime('-2 years')));
+        $this->expectTableReturnsEntities($this->mockEntity('bar', null, (new \DateTime())->setTimestamp(strtotime('-2 years', time()))));
 
         $request = $this->mockRequestWithCookie();
         $this->listener->autoLogin($request);
@@ -268,7 +278,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $entity
             ->method('getLastUsed')
-            ->willReturn($lastUsed ?: new \DateTime())
+            ->willReturn($lastUsed ?: (new \DateTime())->setTimestamp(time()))
         ;
 
         $entity

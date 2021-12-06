@@ -45,9 +45,7 @@ final class ResponseContext
 
     public function addLazy(string $classname, \Closure $factory = null): self
     {
-        if (null === $factory) {
-            $factory = fn () => new $classname($this);
-        }
+        $factory ??= fn () => new $classname($this);
 
         $this->registerService($classname, $factory);
 
@@ -96,11 +94,7 @@ final class ResponseContext
 
     public function getHeaderBag(): PartialResponseHeaderBag
     {
-        if (null === $this->headerBag) {
-            $this->headerBag = new PartialResponseHeaderBag();
-        }
-
-        return $this->headerBag;
+        return $this->headerBag ??= new PartialResponseHeaderBag();
     }
 
     /**

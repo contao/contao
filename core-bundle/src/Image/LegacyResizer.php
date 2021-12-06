@@ -28,7 +28,7 @@ use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Resizes image objects and executes the legacy hooks.

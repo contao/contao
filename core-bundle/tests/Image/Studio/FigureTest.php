@@ -27,7 +27,7 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {

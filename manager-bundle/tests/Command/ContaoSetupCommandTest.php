@@ -16,9 +16,9 @@ use Contao\ManagerBundle\Command\ContaoSetupCommand;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
-use Webmozart\PathUtil\Path;
 
 class ContaoSetupCommandTest extends ContaoTestCase
 {

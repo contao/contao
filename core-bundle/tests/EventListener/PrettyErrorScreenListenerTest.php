@@ -140,7 +140,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         yield [404, new NotFoundHttpException('', new PageNotFoundException())];
     }
 
-    public function testHandlesResponseExceptionsWhenRenderingAPageHandler(): void
+    public function testHandlesResponseExceptionsWhenForwarding(): void
     {
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
@@ -168,19 +168,34 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame('foo', $event->getResponse()->getContent());
     }
 
-    public function testHandlesExceptionsWhenRenderingAPageHandler(): void
+    public function testReplacesThrowableWhenForwarding(): void
     {
-        $GLOBALS['TL_PTY']['error_403'] = 'Contao\PageErrorException';
+        $errorPage = $this->mockPageWithProperties([
+            'pid' => 1,
+            'type' => 'error_403',
+            'rootLanguage' => '',
+        ]);
+
+        $request = $this->getRequest('frontend');
+        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
+
+        $throwable = new \RuntimeException();
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $httpKernel
+            ->expects($this->once())
+            ->method('handle')
+            ->willThrowException($throwable)
+        ;
 
         $exception = new AccessDeniedHttpException('', new AccessDeniedException());
-        $event = $this->getResponseEvent($exception, $this->getRequest('frontend'));
+        $event = $this->getResponseEvent($exception, $request);
 
-        $listener = $this->getListener();
+        $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
         $listener($event);
 
         $this->assertFalse($event->hasResponse());
-
-        unset($GLOBALS['TL_PTY']);
+        $this->assertSame($throwable, $event->getThrowable());
     }
 
     public function testRendersServiceUnavailableHttpExceptions(): void
@@ -353,13 +368,8 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     private function getListener(bool $isBackendUser = false, bool $expectLogging = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null): PrettyErrorScreenListener
     {
-        if (null === $twig) {
-            $twig = $this->createMock(Environment::class);
-        }
-
-        if (null === $httpKernel) {
-            $httpKernel = $this->createMock(HttpKernelInterface::class);
-        }
+        $twig ??= $this->createMock(Environment::class);
+        $httpKernel ??= $this->createMock(HttpKernelInterface::class);
 
         $adapters = [];
         $pageRegistry = $this->createMock(PageRegistry::class);
@@ -408,14 +418,9 @@ class PrettyErrorScreenListenerTest extends TestCase
     private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-
-        if (null === $request) {
-            $request = $this->getRequest();
-        }
-
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;
 
-        return new ExceptionEvent($kernel, $request, $type, $exception);
+        return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
     }
 
     /**

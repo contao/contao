@@ -16,7 +16,7 @@ use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class BackupTest extends ContaoTestCase
 {

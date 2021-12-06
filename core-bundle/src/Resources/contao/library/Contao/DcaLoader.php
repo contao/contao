@@ -112,7 +112,7 @@ class DcaLoader extends Controller
 		// Set the ptable dynamically
 		$this->setDynamicPTable();
 
-		// HOOK: allow to load custom settings
+		// HOOK: allow loading custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadDataContainer'] as $callback)

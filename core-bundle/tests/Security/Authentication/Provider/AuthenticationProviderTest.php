@@ -296,7 +296,7 @@ class AuthenticationProviderTest extends TestCase
         $user = $this->createPartialMock(BackendUser::class, ['save', 'getUserIdentifier']);
         $user->admin = '1';
 
-        $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend');
 
         $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
         $twoFactorHandler
@@ -322,7 +322,7 @@ class AuthenticationProviderTest extends TestCase
         $user = $this->createPartialMock(BackendUser::class, ['save', 'getUserIdentifier']);
         $user->admin = '1';
 
-        $token = new UsernamePasswordToken($user, 'foo', 'contao_frontend');
+        $token = new UsernamePasswordToken($user, 'contao_frontend');
 
         $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
         $twoFactorHandler
@@ -530,18 +530,9 @@ class AuthenticationProviderTest extends TestCase
         $userChecker = $this->createMock(UserCheckerInterface::class);
         $providerKey = 'contao_frontend';
         $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
-
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFramework::class);
-        }
-
-        if (null === $twoFactorHandler) {
-            $twoFactorHandler = $this->createMock(AuthenticationHandlerInterface::class);
-        }
-
-        if (null === $trustedDeviceManager) {
-            $trustedDeviceManager = $this->createMock(TrustedDeviceManagerInterface::class);
-        }
+        $framework ??= $this->createMock(ContaoFramework::class);
+        $twoFactorHandler ??= $this->createMock(AuthenticationHandlerInterface::class);
+        $trustedDeviceManager ??= $this->createMock(TrustedDeviceManagerInterface::class);
 
         $contextFactory = $this->createMock(AuthenticationContextFactoryInterface::class);
         $contextFactory
@@ -577,14 +568,8 @@ class AuthenticationProviderTest extends TestCase
         $providerKey = 'contao_frontend';
         $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
         $framework = $this->createMock(ContaoFramework::class);
-
-        if (null === $twoFactorAuthenticationProvider) {
-            $twoFactorAuthenticationProvider = $this->createMock(AuthenticationProviderInterface::class);
-        }
-
-        if (null === $userChecker) {
-            $userChecker = $this->createMock(UserCheckerInterface::class);
-        }
+        $twoFactorAuthenticationProvider ??= $this->createMock(AuthenticationProviderInterface::class);
+        $userChecker ??= $this->createMock(UserCheckerInterface::class);
 
         $requestStack = $this->createMock(RequestStack::class);
         $requestStack

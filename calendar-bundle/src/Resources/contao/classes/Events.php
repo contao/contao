@@ -525,7 +525,7 @@ abstract class Events extends Module
 	}
 
 	/**
-	 * Return the begin and end timestamp and an error message as array
+	 * Return the beginning and end timestamp and an error message as array
 	 *
 	 * @param Date   $objDate
 	 * @param string $strFormat
