@@ -85,10 +85,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
-            BundleConfig::create(FlysystemBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
+            BundleConfig::create(FlysystemBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
         ];
 
         // Autoload the legacy modules
