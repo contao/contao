@@ -36,10 +36,10 @@
         <source>News</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_news.0">
-        <source>News</source>
+        <source>News item</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_news.1">
-        <source>News</source>
+        <source>News items</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_news_archive.0">
         <source>News archive</source>

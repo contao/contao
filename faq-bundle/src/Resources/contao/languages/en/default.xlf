@@ -9,10 +9,10 @@
         <source>FAQ</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_faq.0">
-        <source>FAQ</source>
+        <source>FAQ item</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_faq.1">
-        <source>FAQs</source>
+        <source>FAQ items</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_faq_category.0">
         <source>FAQ category</source>

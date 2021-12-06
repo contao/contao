@@ -69,7 +69,7 @@
         <source>Calendar</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_calendar.1">
-        <source>Calendar</source>
+        <source>Calendars</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_calendar_events.0">
         <source>Event</source>
@@ -81,7 +81,7 @@
         <source>Calendar feed</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_calendar_feed.1">
-        <source>Calendar feed</source>
+        <source>Calendar feeds</source>
       </trans-unit>
     </body>
   </file>

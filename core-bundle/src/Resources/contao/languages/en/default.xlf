@@ -2247,7 +2247,7 @@
         <source>Image size</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_image_size.1">
-        <source>Image size</source>
+        <source>Image sizes</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_image_size_item.0">
         <source>Image size item</source>
@@ -2265,7 +2265,7 @@
         <source>Log entry</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_log.1">
-        <source>Log entrys</source>
+        <source>Log entries</source>
       </trans-unit>
       <trans-unit id="TABLES.tl_member.0">
         <source>Member</source>
