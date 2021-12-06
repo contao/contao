@@ -171,7 +171,7 @@ class DbafsTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $connection
-            ->method('fetchAssociative')
+            ->method('fetchAllAssociative')
             ->with(
                 'SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path',
                 ['foo/%'],
