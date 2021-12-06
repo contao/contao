@@ -679,13 +679,10 @@ class ContaoFrameworkTest extends TestCase
             $requestStack->push($request);
         }
 
-        $scopeMatcher ??= $this->mockScopeMatcher();
-        $tokenChecker ??= $this->createMock(TokenChecker::class);
-
         $framework = new ContaoFramework(
             $requestStack,
-            $scopeMatcher,
-            $tokenChecker,
+            $scopeMatcher ?? $this->mockScopeMatcher(),
+            $tokenChecker ?? $this->createMock(TokenChecker::class),
             new Filesystem(),
             $this->getTempDir(),
             error_reporting(),

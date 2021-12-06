@@ -258,9 +258,10 @@ class EntityCacheTagsTest extends DoctrineTestCase
 
     private function getEntityCacheTags(ResponseTagger $responseTagger = null, CacheInvalidator $cacheInvalidator = null): EntityCacheTags
     {
-        $responseTagger ??= $this->createMock(ResponseTagger::class);
-        $cacheInvalidator ??= $this->createMock(CacheInvalidator::class);
-
-        return new EntityCacheTags($this->getTestEntityManager(), $responseTagger, $cacheInvalidator);
+        return new EntityCacheTags(
+            $this->getTestEntityManager(),
+            $responseTagger ?? $this->createMock(ResponseTagger::class),
+            $cacheInvalidator ?? $this->createMock(CacheInvalidator::class)
+        );
     }
 }

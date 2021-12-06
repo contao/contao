@@ -64,10 +64,10 @@ class ThemeTemplatesListenerTest extends TestCase
 
     private function getListener(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer = null, ThemeNamespace $themeNamespace = null, TranslatorInterface $translator = null): ThemeTemplatesListener
     {
-        $filesystemLoaderWarmer ??= $this->createMock(ContaoFilesystemLoaderWarmer::class);
-        $themeNamespace ??= $this->createMock(ThemeNamespace::class);
-        $translator ??= $this->createMock(TranslatorInterface::class);
-
-        return new ThemeTemplatesListener($filesystemLoaderWarmer, $themeNamespace, $translator);
+        return new ThemeTemplatesListener(
+            $filesystemLoaderWarmer ?? $this->createMock(ContaoFilesystemLoaderWarmer::class),
+            $themeNamespace ?? $this->createMock(ThemeNamespace::class),
+            $translator ?? $this->createMock(TranslatorInterface::class)
+        );
     }
 }

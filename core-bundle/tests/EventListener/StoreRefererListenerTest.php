@@ -274,8 +274,7 @@ class StoreRefererListenerTest extends TestCase
     private function getResponseEvent(Request $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $request ??= new Request();
 
-        return new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response());
+        return new ResponseEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST, new Response());
     }
 }

@@ -418,10 +418,9 @@ class PrettyErrorScreenListenerTest extends TestCase
     private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $request ??= $this->getRequest();
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;
 
-        return new ExceptionEvent($kernel, $request, $type, $exception);
+        return new ExceptionEvent($kernel, $request ?? $this->getRequest(), $type, $exception);
     }
 
     /**

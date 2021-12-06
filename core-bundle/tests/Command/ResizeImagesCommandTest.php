@@ -132,10 +132,11 @@ class ResizeImagesCommandTest extends TestCase
 
     private function getCommand(ImageFactoryInterface $factory = null, DeferredResizerInterface $resizer = null, DeferredImageStorageInterface $storage = null): ResizeImagesCommand
     {
-        $factory ??= $this->createMock(ImageFactoryInterface::class);
-        $resizer ??= $this->createMock(DeferredResizerInterface::class);
-        $storage ??= $this->createMock(DeferredImageStorageInterface::class);
-
-        return new ResizeImagesCommand($factory, $resizer, Path::join($this->getTempDir(), 'assets/images'), $storage);
+        return new ResizeImagesCommand(
+            $factory ?? $this->createMock(ImageFactoryInterface::class),
+            $resizer ?? $this->createMock(DeferredResizerInterface::class),
+            Path::join($this->getTempDir(), 'assets/images'),
+            $storage ?? $this->createMock(DeferredImageStorageInterface::class)
+        );
     }
 }

@@ -352,16 +352,14 @@ class UserSessionListenerTest extends TestCase
     private function getRequestEvent(Request $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $request ??= new Request();
 
-        return new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        return new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
     }
 
     private function getResponseEvent(Request $request = null): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
-        $request ??= new Request();
 
-        return new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, new Response());
+        return new ResponseEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST, new Response());
     }
 }
