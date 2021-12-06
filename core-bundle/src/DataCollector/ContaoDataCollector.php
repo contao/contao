@@ -20,10 +20,10 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -181,7 +181,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
                 continue;
             }
 
-            /** @var System $systemAdapter */
             $systemAdapter = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
@@ -244,9 +243,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         /** @var PageModel $objPage */
         $objPage = $GLOBALS['objPage'];
 
-        /** @var LayoutModel $layout */
-        $layout = $this->framework->getAdapter(LayoutModel::class);
-
-        return $layout->findByPk($objPage->layoutId);
+        return $this->framework->getAdapter(LayoutModel::class)->findByPk($objPage->layoutId);
     }
 }

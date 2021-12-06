@@ -16,7 +16,6 @@ use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
-use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
 
 class ProviderTest extends TestCase
@@ -41,7 +40,6 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
 
-        /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties(User::class);
         $user->useTwoFactor = '';
 
@@ -61,7 +59,6 @@ class ProviderTest extends TestCase
     {
         $authenticator = $this->createMock(Authenticator::class);
 
-        /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties(User::class);
         $user->useTwoFactor = '1';
 
@@ -104,7 +101,6 @@ class ProviderTest extends TestCase
 
     public function testValidatesTheAuthenticationCode(): void
     {
-        /** @var User&MockObject $user */
         $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
 
         $authenticator = $this->createMock(Authenticator::class);

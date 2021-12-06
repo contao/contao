@@ -17,7 +17,6 @@ use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\TextNode;
 use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
@@ -67,7 +66,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
                 continue;
             }
 
-            $blockNodes[$name] = new BlockNode($name, new TextNode('[[TL_PARENT]]', 0), 0);
+            $blockNodes[$name] = new BlockNode($name, new PhpTemplateParentReferenceNode(), 0);
         }
 
         $node->setNode('blocks', new Node($blockNodes));

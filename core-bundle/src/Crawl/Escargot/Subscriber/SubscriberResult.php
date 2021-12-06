@@ -57,6 +57,9 @@ class SubscriberResult
         $this->info = $info;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function addInfo(string $key, $value): self
     {
         $this->info[$key] = $value;
@@ -65,7 +68,7 @@ class SubscriberResult
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getInfo(string $key)
     {

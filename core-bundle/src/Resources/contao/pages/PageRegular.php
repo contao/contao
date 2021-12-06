@@ -11,11 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
-use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -59,7 +59,7 @@ class PageRegular extends Frontend
 		$response = $this->Template->getResponse($blnCheckRequest);
 
 		// Finalize the response context so it cannot be used anymore
-		System::getContainer()->get(ResponseContextAccessor::class)->finalizeCurrentContext($response);
+		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
 		return $response;
 	}
@@ -84,7 +84,7 @@ class PageRegular extends Frontend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
 
-		$this->responseContext = $container->get(CoreResponseContextFactory::class)->createContaoWebpageResponseContext($objPage);
+		$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
 
 		System::loadLanguageFile('default');
 
@@ -240,7 +240,7 @@ class PageRegular extends Frontend
 		}
 
 		// Assign the title and description
-		$this->Template->title = strip_tags($this->replaceInsertTags($objLayout->titleTag));
+		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
 		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
 
 		// Body onload and body classes
@@ -266,7 +266,7 @@ class PageRegular extends Frontend
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, ContaoContext::ERROR);
 
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}
@@ -589,14 +589,16 @@ class PageRegular extends Frontend
 			}
 		}
 
+		$nonce = ContaoFramework::getNonce();
+
 		// Add a placeholder for dynamic style sheets (see #4203)
-		$strStyleSheets .= '[[TL_CSS]]';
+		$strStyleSheets .= "[[TL_CSS_$nonce]]";
 
 		// Always add conditional style sheets at the end
 		$strStyleSheets .= $strCcStyleSheets;
 
 		// Add a placeholder for dynamic <head> tags (see #4203)
-		$strHeadTags = '[[TL_HEAD]]';
+		$strHeadTags = "[[TL_HEAD_$nonce]]";
 
 		// Add the analytics scripts
 		if ($objLayout->analytics)
@@ -634,6 +636,7 @@ class PageRegular extends Frontend
 	protected function createFooterScripts($objLayout, $objPage = null)
 	{
 		$strScripts = '';
+		$nonce = ContaoFramework::getNonce();
 
 		// jQuery
 		if ($objLayout->addJQuery)
@@ -650,7 +653,7 @@ class PageRegular extends Frontend
 			}
 
 			// Add a placeholder for dynamic scripts (see #4203)
-			$strScripts .= '[[TL_JQUERY]]';
+			$strScripts .= "[[TL_JQUERY_$nonce]]";
 		}
 
 		// MooTools
@@ -668,10 +671,10 @@ class PageRegular extends Frontend
 			}
 
 			// Add a placeholder for dynamic scripts (see #4203)
-			$strScripts .= '[[TL_MOOTOOLS]]';
+			$strScripts .= "[[TL_MOOTOOLS_$nonce]]";
 		}
 
-		// Add the framework agnostic JavaScripts
+		// Add the framework-agnostic JavaScripts
 		if ($objLayout->scripts)
 		{
 			$arrScripts = StringUtil::deserialize($objLayout->scripts, true);
@@ -687,7 +690,7 @@ class PageRegular extends Frontend
 		}
 
 		// Add a placeholder for dynamic scripts (see #4203, #5583)
-		$strScripts .= '[[TL_BODY]]';
+		$strScripts .= "[[TL_BODY_$nonce]]";
 
 		// Add the external JavaScripts
 		$arrExternalJs = StringUtil::deserialize($objLayout->externalJs);

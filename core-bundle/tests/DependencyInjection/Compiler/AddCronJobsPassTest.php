@@ -30,7 +30,7 @@ class AddCronJobsPassTest extends TestCase
         $container = $this->createMock(ContainerBuilder::class);
         $container
             ->method('hasDefinition')
-            ->with(Cron::class)
+            ->with('contao.cron')
             ->willReturn(false)
         ;
 
@@ -50,7 +50,7 @@ class AddCronJobsPassTest extends TestCase
         $pass = new AddCronJobsPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition(Cron::class);
+        $definition = $container->getDefinition('contao.cron');
 
         $this->assertEmpty($definition->getMethodCalls());
     }
@@ -199,7 +199,7 @@ class AddCronJobsPassTest extends TestCase
     private function getContainerBuilder(): ContainerBuilder
     {
         $container = new ContainerBuilder();
-        $container->setDefinition(Cron::class, new Definition(Cron::class, []));
+        $container->setDefinition('contao.cron', new Definition(Cron::class, []));
 
         return $container;
     }
@@ -209,9 +209,9 @@ class AddCronJobsPassTest extends TestCase
      */
     private function getCronsFromDefinition(ContainerBuilder $container): array
     {
-        $this->assertTrue($container->hasDefinition(Cron::class));
+        $this->assertTrue($container->hasDefinition('contao.cron'));
 
-        $definition = $container->getDefinition(Cron::class);
+        $definition = $container->getDefinition('contao.cron');
         $methodCalls = $definition->getMethodCalls();
 
         $this->assertIsArray($methodCalls);

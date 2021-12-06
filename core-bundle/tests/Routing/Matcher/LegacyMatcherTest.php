@@ -80,6 +80,8 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
+     * @param array $hooks
+     *
      * @group legacy
      * @dataProvider getRequestData
      */
@@ -365,7 +367,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'bar';
 
@@ -423,7 +424,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -484,7 +484,6 @@ class LegacyMatcherTest extends TestCase
                     if ($folderUrlMatched < 2) {
                         $folderUrlMatched = 2;
 
-                        /** @var PageModel&MockObject $pageModel */
                         $pageModel = $this->mockClassWithProperties(PageModel::class);
                         $pageModel->alias = 'foo';
 
@@ -568,6 +567,8 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
+     * @param Adapter<Config> $configAdapter
+     *
      * @return ContaoFramework&MockObject
      */
     private function mockFrameworkWithAdapters(Adapter $configAdapter = null, string $language = null, array $hooks = []): ContaoFramework
@@ -646,6 +647,9 @@ class LegacyMatcherTest extends TestCase
         return $matcher;
     }
 
+    /**
+     * @return Adapter<Config>&MockObject
+     */
     private function mockConfigAdapter(array $config): Adapter
     {
         $configAdapter = $this->mockAdapter(['get']);

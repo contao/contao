@@ -19,7 +19,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Upload extends Widget implements \uploadable
+class Upload extends Widget implements UploadableWidgetInterface
 {
 	/**
 	 * Submit user input

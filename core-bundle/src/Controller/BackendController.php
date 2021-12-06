@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -57,7 +58,7 @@ class BackendController extends AbstractController
 
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             if ($request->query->has('redirect')) {
-                $uriSigner = $this->get('uri_signer');
+                $uriSigner = $this->container->get('uri_signer');
 
                 // We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
                 if ($uriSigner->check($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : ''))) {
@@ -109,9 +110,14 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/file", name="contao_backend_file")
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     *             Use the picker instead.
      */
     public function fileAction(): Response
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
+
         $this->initializeContaoFramework();
 
         $controller = new BackendFile();
@@ -133,9 +139,14 @@ class BackendController extends AbstractController
 
     /**
      * @Route("/page", name="contao_backend_page")
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     *             Use the picker instead.
      */
     public function pageAction(): Response
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
+
         $this->initializeContaoFramework();
 
         $controller = new BackendPage();
@@ -189,7 +200,7 @@ class BackendController extends AbstractController
         }
 
         $config = new PickerConfig($request->query->get('context'), $extras, $request->query->get('value'));
-        $picker = $this->get('contao.picker.builder')->create($config);
+        $picker = $this->container->get('contao.picker.builder')->create($config);
 
         if (null === $picker) {
             throw new BadRequestHttpException('Unsupported picker context');
@@ -203,7 +214,7 @@ class BackendController extends AbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.picker.builder'] = PickerBuilderInterface::class;
-        $services['uri_signer'] = 'uri_signer'; // TODO: adjust this once we are on Symfony 5 only (see https://github.com/symfony/symfony/pull/35298)
+        $services['uri_signer'] = UriSigner::class;
 
         return $services;
     }

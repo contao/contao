@@ -12,22 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
-use Webmozart\PathUtil\Path;
 
 class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if ($container->has(Locales::class)) {
-            $definition = $container->findDefinition(Locales::class);
+        if ($container->has('contao.intl.locales')) {
+            $definition = $container->findDefinition('contao.intl.locales');
 
             // Backwards compatibility for the deprecated contao.locales parameter
             $enabledLocales = $container->getParameter('contao.locales') ?: $this->getEnabledLocales($container);
@@ -42,13 +40,13 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
             }
         }
 
-        if ($container->has(Countries::class)) {
-            $container->findDefinition(Countries::class)->setArgument(3, SymfonyCountries::getCountryCodes());
+        if ($container->has('contao.intl.countries')) {
+            $container->findDefinition('contao.intl.countries')->setArgument(3, SymfonyCountries::getCountryCodes());
         }
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     private function getEnabledLocales(ContainerBuilder $container): array
     {

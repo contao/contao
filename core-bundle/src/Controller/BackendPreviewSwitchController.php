@@ -123,7 +123,7 @@ class BackendPreviewSwitchController
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
         if (null !== $frontendUsername) {
-            $this->previewAuthenticator->authenticateFrontendUser($frontendUsername, $showUnpublished);
+            $this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished);
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }

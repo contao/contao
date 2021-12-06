@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\FragmentTemplate;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
@@ -48,7 +49,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): ?PageModel
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if (null === $request || !$request->attributes->has('pageModel')) {
             return null;
@@ -70,10 +71,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $this->initializeContaoFramework();
 
-        /** @var PageModel $pageAdapter */
-        $pageAdapter = $this->get('contao.framework')->getAdapter(PageModel::class);
-
-        return $pageAdapter->findByPk((int) $pageModel);
+        return $this->getContaoAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 
     /**
@@ -85,16 +83,25 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $templateName = $this->options['template'];
         }
 
-        if ($model->customTpl) {
-            $request = $this->get('request_stack')->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
+        if ($model->customTpl) {
             // Use the custom template unless it is a back end request
-            if (null === $request || !$this->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+            if (null === $request || !$this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
                 $templateName = $model->customTpl;
             }
         }
 
-        $template = $this->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
+        $templateClass = FragmentTemplate::class;
+
+        // Current request is the main request (e.g. ESI fragment), so we have to replace
+        // insert tags etc. on the template output
+        if ($request === $this->container->get('request_stack')->getMainRequest()) {
+            $templateClass = FrontendTemplate::class;
+        }
+
+        /** @var Template $template */
+        $template = $this->container->get('contao.framework')->createInstance($templateClass, [$templateName]);
         $template->setData($model->row());
 
         return $template;

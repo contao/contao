@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\Model\Collection;
 
 /**
@@ -134,7 +133,7 @@ class ModuleFaq extends Frontend
 			'mainEntity' => array(),
 		);
 
-		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 		foreach ($arrFaqs as $objFaq)
 		{

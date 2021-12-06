@@ -13,16 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\VarDumper\VarDumper;
-use Webmozart\PathUtil\Path;
 
 class TemplateTest extends TestCase
 {
@@ -34,7 +36,10 @@ class TemplateTest extends TestCase
 
         (new Filesystem())->mkdir(Path::join($this->getTempDir(), 'templates'));
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -356,7 +361,7 @@ class TemplateTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
-        $container->set(FigureRenderer::class, $figureRenderer);
+        $container->set('contao.image.studio.figure_renderer', $figureRenderer);
 
         System::setContainer($container);
 
@@ -374,7 +379,7 @@ class TemplateTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration($this->getFixturesDir());
-        $container->set(FigureRenderer::class, $figureRenderer);
+        $container->set('contao.image.studio.figure_renderer', $figureRenderer);
 
         System::setContainer($container);
 
@@ -412,11 +417,6 @@ class TemplateTest extends TestCase
                 $this->compile();
 
                 return $this->strBuffer;
-            }
-
-            public static function replaceInsertTags($strBuffer, $blnCache = true)
-            {
-                return $strBuffer; // ignore insert tags
             }
 
             public static function replaceDynamicScriptTags($strBuffer)

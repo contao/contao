@@ -399,6 +399,8 @@ class Figure
 
     /**
      * Evaluates closures to retrieve the value.
+     *
+     * @param mixed $property
      */
     private function resolveIfClosure(&$property): void
     {

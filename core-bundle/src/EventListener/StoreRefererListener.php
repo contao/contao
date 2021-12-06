@@ -75,12 +75,16 @@ class StoreRefererListener
 
         // Move current to last if the referer is in both the URL and the session
         if ('' !== $ref && isset($referers[$ref])) {
-            $referers[$refererId] = array_merge($referers[$refererId], $referers[$ref]);
+            $referers[$refererId] = array_merge($referers[$ref], $referers[$refererId]);
             $referers[$refererId]['last'] = $referers[$ref]['current'];
         }
 
         // Set new current referer
         $referers[$refererId]['current'] = $this->getRelativeRequestUri($request);
+
+        // Makes testing easier
+        ksort($referers[$refererId]);
+        ksort($referers);
 
         $session->set($key, $referers);
     }

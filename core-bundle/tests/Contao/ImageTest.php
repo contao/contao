@@ -24,12 +24,11 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\System;
 use Imagine\Gd\Imagine as ImagineGd;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageTest extends TestCase
 {
@@ -99,7 +98,6 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'foobar']);
         $fileMock
             ->method('exists')
@@ -126,7 +124,6 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -586,7 +583,6 @@ class ImageTest extends TestCase
             'viewHeight' => $arguments[3],
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -766,7 +762,6 @@ class ImageTest extends TestCase
             'viewHeight' => 100,
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -890,7 +885,6 @@ class ImageTest extends TestCase
             'viewHeight' => 200,
         ];
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, $properties);
         $fileMock
             ->method('exists')
@@ -959,7 +953,6 @@ class ImageTest extends TestCase
     {
         $this->expectDeprecation('Since contao/core-bundle 4.3: Using the "Contao\Image" class has been deprecated %s.');
 
-        /** @var File&MockObject $fileMock */
         $fileMock = $this->mockClassWithProperties(File::class, ['extension' => 'jpg']);
         $fileMock
             ->method('exists')
@@ -1455,14 +1448,14 @@ class ImageTest extends TestCase
 
         /** @var DeferredImageInterface $deferredImage */
         $deferredImage = System::getContainer()
-            ->get('contao.image.image_factory')
+            ->get('contao.image.factory')
             ->create(Path::join(
                 System::getContainer()->getParameter('kernel.project_dir'),
                 $imageObj->getResizedPath()
             ))
         ;
 
-        System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($deferredImage);
+        System::getContainer()->get('contao.image.legacy_resizer')->resizeDeferredImage($deferredImage);
 
         $GLOBALS['TL_HOOKS'] = [
             'getImage' => [[static::class, 'getImageHookCallback']],
@@ -1569,8 +1562,8 @@ class ImageTest extends TestCase
             Path::join($container->getParameter('kernel.project_dir'), $container->getParameter('contao.upload_path'))
         );
 
-        $container->set('contao.image.resizer', $resizer);
-        $container->set('contao.image.image_factory', $factory);
+        $container->set('contao.image.legacy_resizer', $resizer);
+        $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
         $container->set('monolog.logger.contao', new NullLogger());
 
