@@ -40,9 +40,7 @@ abstract class DoctrineTestCase extends TestCase
      */
     protected function mockDoctrineRegistry(Connection $connection = null): Registry
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
+        $connection ??= $this->createMock(Connection::class);
 
         if ($connection instanceof MockObject) {
             $connection

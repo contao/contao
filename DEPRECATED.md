@@ -230,7 +230,7 @@ elements, make sure to always set the `ptable` column.
 ## Contao class loader
 
 Even though we are still using the Contao class loader, it has been deprecated
-in favor of the Composer class loader. You should no longer use it and you can
+in favor of the Composer class loader. You should no longer use it, and you can
 no longer use it to override arbitrary core classes.
 
 ## Using $this in configuration files
@@ -293,7 +293,7 @@ if ('contao_backend' === $route) {
 }
 ```
 
-Use the the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
+Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');

@@ -533,7 +533,7 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
 		}
 
-		// HOOK: allow to load custom labels
+		// HOOK: allow loading custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadLanguageFile'] as $callback)
@@ -720,7 +720,7 @@ abstract class System
 		$objCookie->blnSecure   = $blnSecure;
 		$objCookie->blnHttpOnly = $blnHttpOnly;
 
-		// HOOK: allow to add custom logic
+		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
@@ -733,12 +733,12 @@ abstract class System
 	}
 
 	/**
-	 * Convert a byte value into a human readable format
+	 * Convert a byte value into a human-readable format
 	 *
 	 * @param integer $intSize     The size in bytes
 	 * @param integer $intDecimals The number of decimals to show
 	 *
-	 * @return string The human readable size
+	 * @return string The human-readable size
 	 */
 	public static function getReadableSize($intSize, $intDecimals=1)
 	{
@@ -1120,7 +1120,7 @@ abstract class System
 	}
 
 	/**
-	 * Encode the domain in an URL
+	 * Encode the domain in a URL
 	 *
 	 * @param string $strUrl The URL
 	 *

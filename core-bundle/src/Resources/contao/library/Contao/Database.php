@@ -177,7 +177,7 @@ class Database
 	 */
 	public function prepare($strQuery)
 	{
-		$objStatement = new Statement($this->resConnection, $this->blnDisableAutocommit);
+		$objStatement = new Statement($this->resConnection);
 
 		return $objStatement->prepare($strQuery);
 	}
@@ -203,7 +203,7 @@ class Database
 	 */
 	public function query($strQuery)
 	{
-		$objStatement = new Statement($this->resConnection, $this->blnDisableAutocommit);
+		$objStatement = new Statement($this->resConnection);
 
 		return $objStatement->query($strQuery);
 	}

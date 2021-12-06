@@ -145,13 +145,8 @@ class UserCreateCommandTest extends TestCase
 
     private function getCommand(Connection $connection = null, string $password = null): UserCreateCommand
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
-
-        if (null === $password) {
-            $password = '12345678';
-        }
+        $connection ??= $this->createMock(Connection::class);
+        $password ??= '12345678';
 
         $passwordHasher = $this->createMock(PasswordHasherInterface::class);
         $passwordHasher

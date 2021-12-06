@@ -168,7 +168,7 @@ class Form extends Hybrid
 				$arrData['allowHtml'] = $this->allowTags;
 				$arrData['rowClass'] = 'row_' . $row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
 
-				// Increase the row count if its a password field
+				// Increase the row count if it's a password field
 				if ($objField->type == 'password')
 				{
 					++$row;
@@ -558,7 +558,7 @@ class Form extends Hybrid
 			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? Input::postHtml($key, true) : Input::post($key, true);
 		}
 
-		// Store the submit time to invalidate the session later on
+		// Store the submission time to invalidate the session later on
 		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
 
 		$arrFiles = $_SESSION['FILES'];

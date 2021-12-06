@@ -1396,7 +1396,7 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Throw an exception if the current article is selected (circular reference))
+	 * Throw an exception if the current article is selected (circular reference)
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1920,7 +1920,7 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Extract the YouTube ID from an URL
+	 * Extract the YouTube ID from a URL
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1943,7 +1943,7 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Extract the Vimeo ID from an URL
+	 * Extract the Vimeo ID from a URL
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc

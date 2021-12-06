@@ -39,9 +39,7 @@ class PreviewUrlConvertListener
             return;
         }
 
-        $request = $event->getRequest();
-
-        if (null === $request || null === ($eventModel = $this->getEventModel($request))) {
+        if (null === ($eventModel = $this->getEventModel($event->getRequest()))) {
             return;
         }
 

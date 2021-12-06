@@ -662,7 +662,7 @@ class Dbafs
 			$strType = ($objModel->hash != $strHash) ? 'Changed' : 'Unchanged';
 
 			// Add a log entry
-			$objLog->append("[$strType] {$objModel->path}");
+			$objLog->append("[$strType] $objModel->path");
 
 			// Update the record
 			$objModel->found = 1;
@@ -701,7 +701,7 @@ class Dbafs
 					// If another file has been mapped already, delete the entry (see #6008)
 					if (\in_array($objFound->path, $arrMapped))
 					{
-						$objLog->append("[Deleted] {$objFiles->path}");
+						$objLog->append("[Deleted] $objFiles->path");
 						$objFiles->delete();
 						continue;
 					}
@@ -715,7 +715,7 @@ class Dbafs
 					}
 
 					// Add a log entry BEFORE changing the object
-					$objLog->append("[Moved] {$objFiles->path} to {$objFound->path}");
+					$objLog->append("[Moved] $objFiles->path to $objFound->path");
 
 					// Update the original entry
 					$objFiles->pid    = $objFound->pid;
@@ -734,7 +734,7 @@ class Dbafs
 				else
 				{
 					// Add a log entry BEFORE changing the object
-					$objLog->append("[Deleted] {$objFiles->path}");
+					$objLog->append("[Deleted] $objFiles->path");
 
 					// Delete the entry if the resource has gone
 					$objFiles->delete();

@@ -2181,7 +2181,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		if (!empty($bundleTemplatePaths))
 		{
 			// If a bundle template path is changed, the whole container cache needs to
-			// be rebuild because the template paths are added at compile time
+			// be rebuilt because the template paths are added at compile time
 			$cacheItemPool = System::getContainer()->get('cache.system');
 
 			$item = $cacheItemPool->getItem(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG);
@@ -2447,7 +2447,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Save the value if there was no error
 			if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 			{
-				// If the field is a fallback field, empty all other columns
+				// If the field is a fallback field, empty the other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
 				{
 					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");

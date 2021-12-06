@@ -520,9 +520,7 @@ class PageCandidatesTest extends TestCase
      */
     private function mockConnection(QueryBuilder $queryBuilder = null): Connection
     {
-        if (null === $queryBuilder) {
-            $queryBuilder = $this->createMock(QueryBuilder::class);
-        }
+        $queryBuilder ??= $this->createMock(QueryBuilder::class);
 
         $result = $this->createMock(Result::class);
         $result

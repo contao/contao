@@ -524,6 +524,8 @@ abstract class Backend extends Controller
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
+				$container = System::getContainer();
+
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
@@ -540,17 +542,18 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title)
+						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
 						{
-							$trail[] = ' <span>' . $objRow->title . '</span>';
-						}
-						elseif ($objRow->name)
-						{
-							$trail[] = ' <span>' . $objRow->name . '</span>';
-						}
-						elseif ($objRow->headline)
-						{
-							$trail[] = ' <span>' . $objRow->headline . '</span>';
+							$strUrl = $container->get('router')->generate('contao_backend', array
+							(
+								'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
+								'table' => $table,
+								'id' => $objRow->id,
+								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+								'rt' => REQUEST_TOKEN,
+							));
+
+							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
 						}
 					}
 
@@ -860,7 +863,7 @@ abstract class Backend extends Controller
 
 				if ($objPage->numRows < 1)
 				{
-					// Currently selected page does not exist
+					// The currently selected page does not exist
 					if ($intId == $intNode)
 					{
 						$objSession->set($strKey, 0);
@@ -1036,7 +1039,7 @@ abstract class Backend extends Controller
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// Currently selected folder does not exist
+		// The currently selected folder does not exist
 		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSession->set($strKey, '');

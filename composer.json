@@ -99,6 +99,7 @@
         "symfony/intl": "^5.4",
         "symfony/lock": "^5.4",
         "symfony/mailer": "^5.4",
+        "symfony/maker-bundle": "^1.1",
         "symfony/monolog-bridge": "^5.4",
         "symfony/monolog-bundle": "^3.1",
         "symfony/polyfill-mbstring": "^1.0",
@@ -130,6 +131,7 @@
         "contao/faq-bundle": "self.version",
         "contao/installation-bundle": "self.version",
         "contao/listing-bundle": "self.version",
+        "contao/maker-bundle": "self.version",
         "contao/manager-bundle": "self.version",
         "contao/news-bundle": "self.version",
         "contao/newsletter-bundle": "self.version"
@@ -166,6 +168,7 @@
             "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
             "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
             "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",
+            "contao/maker-bundle": "Contao\\MakerBundle\\ContaoManager\\Plugin",
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
@@ -182,6 +185,7 @@
             "Contao\\FaqBundle\\": "faq-bundle/src/",
             "Contao\\InstallationBundle\\": "installation-bundle/src/",
             "Contao\\ListingBundle\\": "listing-bundle/src/",
+            "Contao\\MakerBundle\\": "maker-bundle/src/",
             "Contao\\ManagerBundle\\": "manager-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
             "Contao\\NewsletterBundle\\": "newsletter-bundle/src/"
@@ -235,6 +239,8 @@
             "Contao\\CoreBundle\\Tests\\": "core-bundle/tests/",
             "Contao\\FaqBundle\\Tests\\": "faq-bundle/tests/",
             "Contao\\InstallationBundle\\Tests\\": "installation-bundle/tests/",
+            "Contao\\MakerBundle\\Fixtures\\": "maker-bundle/tests/Fixtures/src/",
+            "Contao\\MakerBundle\\Tests\\": "maker-bundle/tests/",
             "Contao\\ManagerBundle\\Tests\\": "manager-bundle/tests/",
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",

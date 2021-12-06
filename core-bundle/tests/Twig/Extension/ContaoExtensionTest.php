@@ -303,13 +303,8 @@ class ContaoExtensionTest extends TestCase
      */
     private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
-        if (null === $environment) {
-            $environment = $this->createMock(Environment::class);
-        }
-
-        if (null === $hierarchy) {
-            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        }
+        $environment ??= $this->createMock(Environment::class);
+        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
 
         $environment
             ->method('getExtension')
