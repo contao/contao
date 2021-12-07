@@ -29,7 +29,7 @@ use ProxyManager\Proxy\GhostObjectInterface;
 
 /**
  * This Flysystem operator wraps a DBAFS layer around the underlying filesystem
- * adaptor: Listing content will only access the database, operations that can
+ * adapter: Listing content will only access the database, operations that can
  * mutate the filesystem, will automatically trigger a synchronization.
  *
  * Additionally, there is support to directly retrieve the 'extra metadata'
