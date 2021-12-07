@@ -122,9 +122,12 @@ class RouteProvider extends AbstractPageRouteProvider
         }
 
         $routes = [];
-        $pages = array_filter($pages->getModels(), fn (PageModel $page) => $this->pageRegistry->isRoutable($page));
 
-        $this->addRoutesForPages($pages, $routes);
+        /** @var array<PageModel> $pageModels */
+        $pageModels = $pages->getModels();
+        $pageModels = array_filter($pageModels, fn (PageModel $page): bool => $this->pageRegistry->isRoutable($page));
+
+        $this->addRoutesForPages($pageModels, $routes);
         $this->sortRoutes($routes);
 
         return $routes;
