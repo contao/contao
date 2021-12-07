@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class PageRegistry
 {
@@ -40,12 +39,9 @@ class PageRegistry
      */
     private array $contentComposition = [];
 
-    private RequestStack $requestStack;
-
-    public function __construct(Connection $connection, RequestStack $requestStack)
+    public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->requestStack = $requestStack;
     }
 
     /**
@@ -70,7 +66,7 @@ class PageRegistry
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
-        } elseif (!$this->isRoutable($pageModel)) {
+        } elseif (false === $path || \in_array($type, self::DISABLE_ROUTING, true)) {
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         }
@@ -186,11 +182,6 @@ class PageRegistry
      */
     public function isRoutable(PageModel $page): bool
     {
-        // Pages are routable in preview mode, if they support content composition
-        if ($this->supportsContentComposition($page) && null !== ($request = $this->requestStack->getCurrentRequest()) && $request->attributes->get('_preview', false)) {
-            return true;
-        }
-
         $type = $page->type;
 
         // Check for non-routable legacy error pages
@@ -203,7 +194,7 @@ class PageRegistry
             return true;
         }
 
-        // Page is routable if path is not false
+        // Check if page controller is routable
         return false !== $this->routeConfigs[$type]->getPath();
     }
 

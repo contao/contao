@@ -544,7 +544,6 @@ services:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
         arguments:
             - '@database_connection'
-            - '@request_stack'
 
     contao.routing.page_router:
         class: Symfony\Cmf\Component\Routing\DynamicRouter
