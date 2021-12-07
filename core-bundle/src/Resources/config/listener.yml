@@ -12,6 +12,11 @@ services:
         arguments:
             - '@database_connection'
 
+    Contao\CoreBundle\EventListener\DataContainer\PageSearchSettingListener:
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
     Contao\CoreBundle\EventListener\PreviewUrlCreateListener:
         arguments:
             - '@request_stack'
