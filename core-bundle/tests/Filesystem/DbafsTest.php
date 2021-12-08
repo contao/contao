@@ -21,7 +21,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
-use Psr\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DbafsTest extends TestCase
 {
@@ -750,6 +750,6 @@ class DbafsTest extends TestCase
             )
         ;
 
-        return new Dbafs($connection, $eventDispatcher, 'tl_files', );
+        return new Dbafs($connection, $eventDispatcher, 'tl_files', 'md5');
     }
 }

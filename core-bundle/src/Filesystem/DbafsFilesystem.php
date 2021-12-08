@@ -49,12 +49,12 @@ final class DbafsFilesystem implements FilesystemOperator
     private Dbafs $dbafs;
     private LazyLoadingGhostFactory $proxyFactory;
 
-    public function __construct(Dbafs $dbafs, FilesystemAdapter $adapter, LazyLoadingGhostFactory $proxyFactory = null, Config $config = null, PathNormalizer $pathNormalizer = null)
+    public function __construct(Dbafs $dbafs, FilesystemAdapter $adapter, array $config = [], LazyLoadingGhostFactory $proxyFactory = null, PathNormalizer $pathNormalizer = null)
     {
         $this->dbafs = $dbafs;
         $this->adapter = $adapter;
         $this->proxyFactory = $proxyFactory ?? new LazyLoadingGhostFactory();
-        $this->config = $config ?? new Config();
+        $this->config = new Config($config);
         $this->pathNormalizer = $pathNormalizer ?? new WhitespacePathNormalizer();
     }
 

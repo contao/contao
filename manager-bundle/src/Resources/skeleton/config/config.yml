@@ -36,6 +36,22 @@ framework:
 # Contao configuration
 contao:
     preview_script: /preview.php
+    virtual_filesystem:
+        buckets:
+            files:
+                mount_path: files
+                storage:
+                    adapter: local
+                    options:
+                        directory: '%kernel.project_dir%/%contao.upload_path%'
+                dbafs:
+                    enabled: true
+                    table: tl_files
+            image_assets:
+                storage:
+                    adapter: local
+                    options:
+                        directory: '%kernel.project_dir%/assets/images'
 
 # Twig configuration
 twig:
@@ -108,11 +124,3 @@ scheb_two_factor:
         enabled: true
     backup_codes:
         enabled: true
-
-# Flysystem configuration
-flysystem:
-    storages:
-        default_storage:
-            adapter: local
-            options:
-                directory: '%kernel.project_dir%/%contao.upload_path%'

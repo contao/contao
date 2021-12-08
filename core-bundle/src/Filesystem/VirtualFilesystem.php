@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Filesystem;
 
 use League\Flysystem\DirectoryListing;
 use League\Flysystem\FilesystemOperator;
+use League\Flysystem\StorageAttributes;
+use League\Flysystem\UnableToResolveFilesystemMount;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -27,6 +29,8 @@ use Symfony\Component\Filesystem\Path;
  *   calling read('files/media/foo') will issue a call to B->read('foo')
  *   while calling fileExists('files/bar/baz') will issue a call to
  *   A->fileExists('bar/baz') instead.
+ *
+ * todo: handle and rethrow exceptions
  */
 class VirtualFilesystem implements FilesystemOperator
 {
@@ -45,95 +49,176 @@ class VirtualFilesystem implements FilesystemOperator
 
     public function fileExists(string $location): bool
     {
-        // TODO: Implement fileExists() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        return $operator->fileExists($path);
     }
 
     public function read(string $location): string
     {
-        // TODO: Implement read() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        return $operator->read($path);
     }
 
-    public function readStream(string $location): void
+    public function readStream(string $location)
     {
-        // TODO: Implement readStream() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        return $operator->readStream($path);
     }
 
     public function listContents(string $location, bool $deep = self::LIST_SHALLOW): DirectoryListing
     {
-        // TODO: Implement listContents() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path, $prefix] = $this->findOperatorAndPath($location);
+
+        return $operator
+            ->listContents($path)
+            ->map(static fn (StorageAttributes $attributes): StorageAttributes => $attributes->withPath(Path::join($prefix, $attributes->path())))
+        ;
     }
 
     public function lastModified(string $path): int
     {
-        // TODO: Implement lastModified() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($path);
+
+        return $operator->lastModified($path);
     }
 
     public function fileSize(string $path): int
     {
-        // TODO: Implement fileSize() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($path);
+
+        return $operator->fileSize($path);
     }
 
     public function mimeType(string $path): string
     {
-        // TODO: Implement mimeType() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($path);
+
+        return $operator->mimeType($path);
     }
 
     public function visibility(string $path): string
     {
-        // TODO: Implement visibility() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($path);
+
+        return $operator->visibility($path);
     }
 
     public function write(string $location, string $contents, array $config = []): void
     {
-        // TODO: Implement write() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        $operator->write($path, $contents, $config);
     }
 
     public function writeStream(string $location, $contents, array $config = []): void
     {
-        // TODO: Implement writeStream() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        $operator->writeStream($path, $contents, $config);
     }
 
     public function setVisibility(string $path, string $visibility): void
     {
-        // TODO: Implement setVisibility() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($path);
+
+        $operator->setVisibility($path, $visibility);
     }
 
     public function delete(string $location): void
     {
-        // TODO: Implement delete() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        $operator->delete($path);
     }
 
     public function deleteDirectory(string $location): void
     {
-        // TODO: Implement deleteDirectory() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        $operator->deleteDirectory($path);
     }
 
     public function createDirectory(string $location, array $config = []): void
     {
-        // TODO: Implement createDirectory() method.
+        /** @var FilesystemOperator $operator */
+        [$operator, $path] = $this->findOperatorAndPath($location);
+
+        $operator->createDirectory($path, $config);
     }
 
     public function move(string $source, string $destination, array $config = []): void
     {
-        // TODO: Implement move() method.
+        /** @var FilesystemOperator $operatorFrom */
+        [$operatorFrom, $pathFrom] = $this->findOperatorAndPath($source);
+
+        /** @var FilesystemOperator $operatorTo */
+        [$operatorTo, $pathTo] = $this->findOperatorAndPath($destination);
+
+        if ($operatorFrom === $operatorTo) {
+            $operatorFrom->move($pathFrom, $pathTo);
+
+            return;
+        }
+
+        $this->copyAcrossOperators($operatorFrom, $pathFrom, $operatorTo, $pathTo, $config);
+        $operatorFrom->delete($pathFrom);
     }
 
     public function copy(string $source, string $destination, array $config = []): void
     {
-        // TODO: Implement copy() method.
+        /** @var FilesystemOperator $operatorFrom */
+        [$operatorFrom, $pathFrom] = $this->findOperatorAndPath($source);
+
+        /** @var FilesystemOperator $operatorTo */
+        [$operatorTo, $pathTo] = $this->findOperatorAndPath($destination);
+
+        if ($operatorFrom === $operatorTo) {
+            $operatorFrom->copy($pathFrom, $pathTo);
+
+            return;
+        }
+
+        $this->copyAcrossOperators($operatorFrom, $pathFrom, $operatorTo, $pathTo, $config);
     }
 
-    private function findOperator(string $path): ?FilesystemOperator
+    /**
+     * @phpstan-return array{0: FilesystemOperator, 1: string, 2: string}
+     */
+    private function findOperatorAndPath(string $path): array
     {
-        $search = $path;
+        $prefix = Path::canonicalize($path);
 
         // Find operator with the longest (= most specific) matching prefix
-        while ('.' !== ($search = Path::getDirectory($search))) {
-            if (null !== ($operator = $this->operators[$search] ?? null)) {
-                return $operator;
+        while ('.' !== ($prefix = Path::getDirectory($prefix))) {
+            if (null !== ($operator = $this->operators[$prefix] ?? null)) {
+                return [$operator, Path::makeRelative($path, $prefix), $prefix];
             }
         }
 
-        return null;
+        throw new UnableToResolveFilesystemMount(sprintf('No operator was mounted for path "%s". Available mounts: "%s"', $path, implode('", "', array_keys($this->operators))));
+    }
+
+    private function copyAcrossOperators(FilesystemOperator $operatorFrom, string $pathFrom, FilesystemOperator $operatorTo, string $pathTo, array $config): void
+    {
+        $visibility = $config['visibility'] ?? $operatorFrom->visibility($pathFrom);
+
+        $stream = $operatorFrom->readStream($pathFrom);
+        $operatorTo->writeStream($pathTo, $stream, compact('visibility'));
     }
 }

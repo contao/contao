@@ -16,13 +16,17 @@ use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Filesystem\DbafsFilesystem;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
@@ -589,6 +593,90 @@ class ContaoCoreExtensionTest extends TestCase
         $config = $container->getExtensionConfig('monolog');
 
         $this->assertSame([], $config);
+    }
+
+    public function testRegistersTheFilesystemServices(): void
+    {
+        $params = [
+            'contao' => [
+                'virtual_filesystem' => [
+                    'buckets' => [
+                        'files' => [
+                            'mount_path' => 'files',
+                            'storage' => [
+                                'adapter' => 'local',
+                                'options' => [
+                                    'directory' => '%kernel.project_dir%/foo',
+                                ],
+                            ],
+                            'dbafs' => [
+                                'max_file_size' => 1_000_000,
+                                'bulk_insert_size' => 50,
+                            ],
+                        ],
+                        'assets' => [
+                            'mount_path' => null,
+                            'storage' => [
+                                'adapter' => 's3',
+                                'options' => [
+                                    'client' => 'aws_client_service',
+                                    'bucket' => 's3_bucket_name',
+                                    'prefix' => 'optional/path/prefix',
+                                ],
+                                'visibility' => null,
+                                'case_sensitive' => false,
+                                'disable_asserts' => true,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainerBuilder($params);
+
+        // Bucket 'files'
+        $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.files'));
+        $fileAdapterArguments = $container->getDefinition('contao.filesystem.adapter.files')->getArguments();
+        $this->assertSame('%kernel.project_dir%/foo', $fileAdapterArguments[0]);
+
+        $this->assertTrue($container->hasDefinition('contao.filesystem.dbafs.files'));
+        $fileDbafsArguments = $container->getDefinition('contao.filesystem.dbafs.files')->getArguments();
+        $this->assertSame(Connection::class, (string) $fileDbafsArguments[0]);
+        $this->assertSame(EventDispatcherInterface::class, (string) $fileDbafsArguments[1]);
+        $this->assertSame('tl_files', $fileDbafsArguments[2]);
+        $this->assertSame('md5', $fileDbafsArguments[3]);
+
+        $this->assertTrue($container->hasDefinition('contao.filesystem.operator.files'));
+        $fileOperatorArguments = $container->getDefinition('contao.filesystem.operator.files')->getArguments();
+        $this->assertSame('contao.filesystem.dbafs.files', (string) $fileOperatorArguments[0]);
+        $this->assertSame('contao.filesystem.adapter.files', (string) $fileOperatorArguments[1]);
+        $this->assertSame(
+            ['visibility' => null, 'case_sensitive' => true, 'disable_asserts' => false],
+            $fileOperatorArguments[2]
+        );
+
+        // Bucket 'assets'
+        $this->assertTrue($container->hasAlias('contao.filesystem.adapter.assets'));
+
+        $this->assertTrue($container->hasDefinition('contao.filesystem.operator.assets'));
+        $assetOperatorArguments = $container->getDefinition('contao.filesystem.operator.assets')->getArguments();
+        $this->assertSame('contao.filesystem.adapter.assets', (string) $assetOperatorArguments[0]);
+        $this->assertSame(
+            ['visibility' => null, 'case_sensitive' => false, 'disable_asserts' => true],
+            $assetOperatorArguments[1]
+        );
+
+        // Mounting
+        $this->assertSame(
+            ['contao.virtual_filesystem' => [['mount' => 'files']]],
+            $container->getDefinition('contao.filesystem.operator.files')->getTags()
+        );
+        $this->assertEmpty($container->getDefinition('contao.filesystem.operator.assets')->getTags());
+
+        // Automatic dependency injection via arguments
+        $this->assertTrue($container->hasAlias(DbafsFilesystem::class.' $files'));
+        $this->assertTrue($container->hasAlias(FilesystemOperator::class.' $assets'));
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder

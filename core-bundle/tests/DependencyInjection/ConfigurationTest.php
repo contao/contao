@@ -257,6 +257,162 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
+    public function testFailsIfAFilesystemBucketDoesNotDefineAPath(): void
+    {
+        $params = [
+            'contao' => [
+                'virtual_filesystem' => [
+                    'buckets' => [
+                        'foo' => [
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageMatches('/Cannot auto configure the "local" adapter for filesystem bucket "foo"\. You must at least define a "mount_path" or configure a directory under "contao\.virtual_filesystem\.foo\.storage\.options\.directory"/');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    /**
+     * @dataProvider getInvalidFilesystemBucketNames
+     */
+    public function testFailsIfAFilesystemBucketHasAnInvalidName(string $name, string $exception): void
+    {
+        $params = [
+            'contao' => [
+                'virtual_filesystem' => [
+                    'buckets' => [
+                        $name => [
+                            'mount_path' => 'foo',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessageMatches("/$exception/");
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function getInvalidFilesystemBucketNames(): \Generator
+    {
+        yield 'contains only digits' => [
+            '123', 'The filesystem bucket name "123" cannot contain only digits',
+        ];
+
+        yield 'contains invalid characters' => [
+            'foo&bar', 'The filesystem bucket name "foo&bar" must consist of lowercase letters, digits and underscores only',
+        ];
+    }
+
+    public function testSetsTheLocalAdapterDefaultPathForFilesystemBuckets(): void
+    {
+        $params = [
+            'contao' => [
+                'virtual_filesystem' => [
+                    'buckets' => [
+                        'files' => [
+                            'mount_path' => 'foo',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame(
+            [
+                'adapter' => 'local',
+                'options' => [
+                    'directory' => '%kernel.project_dir%/foo',
+                ],
+                'visibility' => null,
+                'case_sensitive' => true,
+                'disable_asserts' => false,
+            ],
+            $configuration['virtual_filesystem']['buckets']['files']['storage']
+        );
+
+        $this->assertSame('foo', $configuration['virtual_filesystem']['buckets']['files']['mount_path']);
+        $this->assertFalse($configuration['virtual_filesystem']['buckets']['files']['dbafs']['enabled']);
+    }
+
+    public function testSetsTheDbafsTableForFilesystemBuckets(): void
+    {
+        $params = [
+            'contao' => [
+                'virtual_filesystem' => [
+                    'buckets' => [
+                        'foobar' => [
+                            'mount_path' => 'files/foobar',
+                            'dbafs' => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame(
+            [
+                'enabled' => true,
+                'table' => 'tl_foobar',
+                'hash_algorithm' => 'md5',
+                'max_file_size' => 2147483648,
+                'bulk_insert_size' => 100,
+            ],
+            $configuration['virtual_filesystem']['buckets']['foobar']['dbafs']
+        );
+    }
+
+    /**
+     * @dataProvider getFileSizes
+     */
+    public function testParsesTheDbafsMaxFileSizeConfiguration(string $value, int $resolvedValue): void
+    {
+        $params = [
+            'contao' => [
+                'virtual_filesystem' => [
+                    'buckets' => [
+                        'foobar' => [
+                            'mount_path' => 'files/foobar',
+                            'dbafs' => [
+                                'enabled' => true,
+                                'max_file_size' => $value,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($resolvedValue, $configuration['virtual_filesystem']['buckets']['foobar']['dbafs']['max_file_size']);
+    }
+
+    public function getFileSizes(): \Generator
+    {
+        yield 'number in bytes' => [
+            '1000000', 1_000_000,
+        ];
+
+        yield 'with m magnitude postfix' => [
+            '40m', 40 * 1000 * 1000,
+        ];
+
+        yield 'with Gi magnitude postfix' => [
+            '1.5Gi', (int) (1.5 * 1024 * 1024 * 1024),
+        ];
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).

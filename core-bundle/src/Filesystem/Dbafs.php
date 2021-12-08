@@ -16,8 +16,8 @@ use Contao\CoreBundle\Event\DbafsMetadataEvent;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -55,17 +55,13 @@ class Dbafs implements ResetInterface
      */
     private array $pathById = [];
 
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, string $table, string $hashAlgorithm = 'md5')
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, string $table, string $hashAlgorithm)
     {
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
 
-        $this->table = $connection->quoteIdentifier($table);
+        $this->table = $table;
         $this->hashAlgorithm = $hashAlgorithm;
-
-        if (!\in_array($hashAlgorithm, $supportedHashAlgorithms = hash_algos(), true)) {
-            throw new \InvalidArgumentException(sprintf("The '%s' hash algorithm isn't available on this system. Try '%s' instead.", $hashAlgorithm, implode("' or '", $supportedHashAlgorithms)));
-        }
     }
 
     /**
@@ -128,15 +124,16 @@ class Dbafs implements ResetInterface
     public function getRecords(string $path, bool $deep = false): \Generator
     {
         $path = Path::join($this->dbPathPrefix, $path);
+        $table = $this->connection->quoteIdentifier($this->table);
 
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
-                "SELECT * FROM {$this->table} WHERE path LIKE ? ORDER BY path",
+                "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
                 ["$path/%"]
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
-                "SELECT * FROM {$this->table} WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
+                "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
                 ["$path/%", "$path/%/%"]
             );
         }
@@ -352,7 +349,7 @@ class Dbafs implements ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            "SELECT * FROM {$this->table} WHERE uuid=?",
+            sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
             [$uuid]
         );
 
@@ -368,7 +365,7 @@ class Dbafs implements ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            "SELECT * FROM {$this->table} WHERE id=?",
+            sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
             [$id]
         );
 
@@ -384,7 +381,7 @@ class Dbafs implements ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            "SELECT * FROM {$this->table} WHERE path=?",
+            sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
             [$this->convertToDatabasePath($path)]
         );
 
@@ -480,7 +477,11 @@ class Dbafs implements ResetInterface
                 $data = array_merge(...$chunk);
 
                 $this->connection->executeQuery(
-                    "INSERT INTO {$this->table} (`uuid`, `pid`, `path`, `hash`, `name`, `extension`, `type`, `tstamp`) VALUES $placeholders",
+                    sprintf(
+                        'INSERT INTO %s (`uuid`, `pid`, `path`, `hash`, `name`, `extension`, `type`, `tstamp`) VALUES %s',
+                        $this->connection->quoteIdentifier($this->table),
+                        $placeholders
+                    ),
                     $data
                 );
             }
@@ -540,7 +541,10 @@ class Dbafs implements ResetInterface
         $allUuidsByPath = [];
 
         $items = $this->connection->fetchAllNumeric(
-            "SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_dir FROM {$this->table}"
+            sprintf(
+                "SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_dir FROM %s",
+                $this->connection->quoteIdentifier($this->table)
+            )
         );
 
         $fullScope = '' === $searchPaths[0];

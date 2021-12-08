@@ -21,13 +21,18 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Filesystem\Dbafs;
+use Contao\CoreBundle\Filesystem\DbafsFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Doctrine\DBAL\Connection;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
+use League\Flysystem\FilesystemOperator;
+use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -37,6 +42,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -76,6 +82,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 ],
             ]);
         }
+
+        // todo: how do I do this correctly?
+        $container->setParameter('contao.upload_path', $config['upload_path']);
     }
 
     public function load(array $configs, ContainerBuilder $container): void
@@ -135,6 +144,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
+        $this->handleVirtualFilesystemConfig($config['virtual_filesystem'], $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -408,6 +418,78 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $container->removeDefinition('contao.image.fallback_preview_provider');
+    }
+
+    /**
+     * Creates adapter and operator services for each configured bucket, tags
+     * them with 'contao.virtual_filesystem' if they should get mounted and
+     * registers automatic dependency injection by argument name.
+     */
+    private function handleVirtualFilesystemConfig(array $mergedConfig, ContainerBuilder $container): void
+    {
+        $definitionFactory = new AdapterDefinitionFactory();
+
+        foreach ($mergedConfig['buckets'] as $name => $config) {
+            // Create adapter definition
+            $adapterType = $config['storage']['adapter'];
+            $adapterName = "contao.filesystem.adapter.$name";
+
+            if ($adapter = $definitionFactory->createDefinition($adapterType, $config['storage']['options'])) {
+                // Native adapter
+                $container->setDefinition($adapterName, $adapter);
+            } else {
+                // Custom adapter
+                $container->setAlias($adapterName, $adapterType);
+            }
+
+            // Create operator definition
+            $operatorName = "contao.filesystem.operator.$name";
+            $storageConfig = [
+                'visibility' => $config['storage']['visibility'],
+                'case_sensitive' => $config['storage']['case_sensitive'],
+                'disable_asserts' => $config['storage']['disable_asserts'],
+            ];
+
+            if ($config['dbafs']['enabled']) {
+                $dbafsDefinition = new Definition(Dbafs::class);
+
+                $dbafsDefinition->setArgument(0, new Reference(Connection::class));
+                $dbafsDefinition->setArgument(1, new Reference(EventDispatcherInterface::class));
+                $dbafsDefinition->setArgument(2, $config['dbafs']['table']);
+                $dbafsDefinition->setArgument(3, $config['dbafs']['hash_algorithm']);
+
+                $dbafsDefinition->addMethodCall('setMaxFileSize', [$config['dbafs']['max_file_size']]);
+                $dbafsDefinition->addMethodCall('setBulkInsertSize', [$config['dbafs']['bulk_insert_size']]);
+
+                // BC
+                if ('tl_files' === $config['dbafs']['table']) {
+                    $dbafsDefinition->addMethodCall('setDatabasePathPrefix', ['files']);
+                }
+
+                $dbafsName = "contao.filesystem.dbafs.$name";
+                $container->setDefinition($dbafsName, $dbafsDefinition);
+
+                $operatorDefinition = new Definition(DbafsFilesystem::class);
+                $operatorDefinition->setArgument(0, new Reference($dbafsName));
+                $operatorDefinition->setArgument(1, new Reference($adapterName));
+                $operatorDefinition->setArgument(2, $storageConfig);
+
+                $container->registerAliasForArgument($operatorName, DbafsFilesystem::class, $name);
+            } else {
+                $operatorDefinition = new Definition(\League\Flysystem\Filesystem::class);
+                $operatorDefinition->setArgument(0, new Reference($adapterName));
+                $operatorDefinition->setArgument(1, $storageConfig);
+
+                $container->registerAliasForArgument($operatorName, FilesystemOperator::class, $name);
+            }
+
+            // Mount operator in the virtual filesystem
+            if (!empty($mountPath = $config['mount_path'])) {
+                $operatorDefinition->addTag('contao.virtual_filesystem', ['mount' => $mountPath]);
+            }
+
+            $container->setDefinition($operatorName, $operatorDefinition);
+        }
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

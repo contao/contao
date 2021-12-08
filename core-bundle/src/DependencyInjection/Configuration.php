@@ -19,8 +19,10 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Comparator\NumberComparator;
 
 class Configuration implements ConfigurationInterface
 {
@@ -119,6 +121,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackendNode())
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
+                ->append($this->addVirtualFilesystemNode())
             ->end()
         ;
 
@@ -662,6 +665,132 @@ class Configuration implements ConfigurationInterface
                     ->thenInvalid('%s')
                     ->end()
                     ->scalarPrototype()->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addVirtualFilesystemNode(): NodeDefinition
+    {
+        $storageSection = static function (): NodeDefinition {
+            return (new TreeBuilder('storage'))
+                ->getRootNode()
+                ->info('Flysystem storage configuration')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->scalarNode('adapter')
+                        ->info('The Flysystem adapter that should be used, e.g. "local" or "aws"')
+                        ->defaultValue('local')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->arrayNode('options')
+                        ->info('Adapter options as key-value-pairs, e.g. for the "local" adapter, set "directory" to the storage\'s root path')
+                        ->variablePrototype()
+                        ->end()
+                        ->defaultValue([])
+                    ->end()
+                    ->scalarNode('visibility')
+                        ->defaultNull()
+                    ->end()
+                    ->booleanNode('case_sensitive')
+                        ->defaultTrue()
+                    ->end()
+                    ->booleanNode('disable_asserts')
+                        ->defaultFalse()
+                    ->end()
+                ->end()
+            ;
+        };
+
+        $dbafsSection = static function (): NodeDefinition {
+            return (new TreeBuilder('dbafs'))
+                ->getRootNode()
+                ->info('DBAFS configuration, automatically enabled when configured.')
+                ->canBeEnabled()
+                ->children()
+                    ->scalarNode('table')
+                        ->info('The database table to use for synchronizing records. Defaults to "tl_<bucket_name>"')
+                        ->cannotBeEmpty()
+                        ->defaultValue('')
+                    ->end()
+                    ->enumNode('hash_algorithm')
+                        ->info('The hash algorithm to use for comparing file contents.')
+                        ->cannotBeEmpty()
+                        ->values(hash_algos())
+                        ->defaultValue('md5')
+                    ->end()
+                    ->integerNode('max_file_size')
+                        ->info('Files with a larger size than configured, won\'t be considered when synchronizing. Set the maximum in bytes - you can also use a magnitude postfix like "400M" or "2Gi".')
+                        ->min(1)
+                        ->defaultValue(2147483648) // 2Gi
+                        ->beforeNormalization()
+                            ->ifString()
+                            ->then(
+                                static fn (string $value): int => (int) (new NumberComparator($value))->getTarget()
+                            )
+                        ->end()
+                    ->end()
+                    ->integerNode('bulk_insert_size')
+                        ->info('We are using bulk inserts to improve the database performance when writing lots of entries. You can fine tune the size here.')
+                        ->min(1)
+                        ->defaultValue(100)
+                    ->end()
+                ->end()
+            ;
+        };
+
+        return (new TreeBuilder('virtual_filesystem'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('buckets')
+                    ->info('Allows to define filesystem buckets. For each bucket, a filesystem operator service will be generated. If you define a mount path, it will also be made accessible via the Contao virtual filesystem service.')
+                    ->useAttributeAsKey('name')
+                    ->validate()
+                        ->always(
+                            static function (array $value): array {
+                                foreach ($value as $name => &$config) {
+                                    if (preg_match('/^\d+$/', (string) $name)) {
+                                        throw new \InvalidArgumentException(sprintf('The filesystem bucket name "%s" cannot contain only digits', $name));
+                                    }
+
+                                    if (preg_match('/[^a-z0-9_]/', (string) $name)) {
+                                        throw new \InvalidArgumentException(sprintf('The filesystem bucket name "%s" must consist of lowercase letters, digits and underscores only', $name));
+                                    }
+
+                                    // If not set, derive a default DBAFS table name from the bucket name
+                                    if (($config['dbafs']['enabled'] ?? false) && empty($config['dbafs']['table'])) {
+                                        $config['dbafs']['table'] = sprintf('tl_%s', Container::underscore($name));
+                                    }
+
+                                    // If not set, derive the directory of the local adapter from the mount path
+                                    if (('local' === ($config['storage']['adapter'] ?? null)) && !isset($config['storage']['options']['directory'])) {
+                                        if (null === ($mountPath = $config['mount_path'] ?? null)) {
+                                            throw new \InvalidArgumentException(sprintf('Cannot auto configure the "local" adapter for filesystem bucket "%s". You must at least define a "mount_path" or configure a directory under "contao.virtual_filesystem.%1$s.storage.options.directory"', $name));
+                                        }
+
+                                        $config['storage']['options']['directory'] = Path::join('%kernel.project_dir%', $mountPath);
+                                    }
+                                }
+
+                                return $value;
+                            }
+                        )
+                    ->end()
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('mount_path')
+                                ->info('The mount path prefix inside the virtual filesystem, e.g. "files/media".')
+                                ->defaultNull()
+                                ->validate()
+                                    ->always(static fn (?string $value): ?string => null !== $value ? Path::canonicalize($value) : null)
+                                ->end()
+                            ->end()
+                            ->append($storageSection())
+                            ->append($dbafsSection())
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ;
