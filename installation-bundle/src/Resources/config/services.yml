@@ -11,6 +11,9 @@ services:
             - '@Contao\CoreBundle\Migration\MigrationCollection'
         public: true
 
+    contao.install_tool_twig_extension:
+        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
+
     contao.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
         arguments:
