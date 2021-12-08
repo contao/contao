@@ -194,6 +194,8 @@ services:
         arguments:
             - '@contao.filesystem.dbafs'
             - '@flysystem.adapter.default_storage'
+        tags:
+            - { name: contao.virtual_filesystem, mount: files }
 
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
@@ -1000,6 +1002,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
+    contao.virtual_filesystem:
+        class: Contao\CoreBundle\Filesystem\VirtualFilesystem
+        arguments:
+            - !tagged_iterator { tag: 'contao.virtual_filesystem', index_by: 'mount' }
+
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
@@ -1031,6 +1038,7 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Filesystem\VirtualFilesystem: '@contao.virtual_filesystem'
 
     # Backwards compatibility
     contao.cache.clear_internal:
