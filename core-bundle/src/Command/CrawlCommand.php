@@ -75,6 +75,7 @@ class CrawlCommand extends Command
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
+            ->addOption('ignore-certificate', null, InputOption::VALUE_NONE, 'Ignore the TLS/SSL certificate of indexed hosts')
             ->setDescription('Crawls the Contao root pages with the desired subscribers')
             ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
@@ -88,16 +89,22 @@ class CrawlCommand extends Command
         $subscribers = $input->getOption('subscribers');
         $queue = new InMemoryQueue();
         $baseUris = $this->escargotFactory->getCrawlUriCollection();
+        $options = [];
 
         if ($baseUris->containsHost('localhost')) {
             $io->warning('You are going to crawl localhost URIs. This is likely not desired and due to a missing domain configuration in your root page settings. You may also configure a fallback request context using "router.request_context.*" if you want to execute all CLI commands with the same request context.');
         }
 
+        if ($input->getOption('ignore-certificate')) {
+            $options['verify_peer'] = false;
+            $options['verify_host'] = false;
+        }
+
         try {
             if ($jobId = $input->getArgument('job')) {
-                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
+                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers, $options);
             } else {
-                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
+                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers, $options);
             }
         } catch (InvalidJobIdException $e) {
             $io->error('Could not find the given job ID.');
