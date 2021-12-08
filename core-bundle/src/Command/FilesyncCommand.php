@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Filesystem\ChangeSet;
-use Contao\CoreBundle\Filesystem\Filesystem;
+use Contao\CoreBundle\Filesystem\DbafsFilesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
@@ -31,10 +31,12 @@ class FilesyncCommand extends Command
 {
     protected static $defaultName = 'contao:filesync';
 
-    private Filesystem $filesystem;
+    private DbafsFilesystem $filesystem;
 
-    public function __construct(Filesystem $filesystem)
+    public function __construct(DbafsFilesystem $filesystem)
     {
+        // todo: consider injecting all dbafs filesystems and letting the user
+        //       chose which one to synchronize
         $this->filesystem = $filesystem;
 
         parent::__construct();

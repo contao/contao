@@ -41,7 +41,7 @@ use ProxyManager\Proxy\GhostObjectInterface;
  *
  * @phpstan-import-type ExtraMetadata from Dbafs
  */
-final class Filesystem implements FilesystemOperator
+final class DbafsFilesystem implements FilesystemOperator
 {
     private FilesystemAdapter $adapter;
     private Config $config;
