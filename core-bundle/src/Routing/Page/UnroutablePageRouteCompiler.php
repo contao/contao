@@ -20,10 +20,6 @@ class UnroutablePageRouteCompiler implements RouteCompilerInterface
 {
     public static function compile(Route $route): void
     {
-        if ($route instanceof PageRoute) {
-            throw new RouteNotFoundException(sprintf('Cannot create route for page type "%s"', $route->getPageModel()->type));
-        }
-
-        throw new \InvalidArgumentException(sprintf('Cannot use UnroutablePageRouteCompiler for routes of type "%s"', \get_class($route)));
+        throw new RouteNotFoundException('This route is not routable');
     }
 }
