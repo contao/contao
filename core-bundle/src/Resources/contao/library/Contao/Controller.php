@@ -807,10 +807,10 @@ abstract class Controller extends System
 
 		if ($blnCache)
 		{
-			return $parser->replace($strBuffer);
+			return $parser->replace((string) $strBuffer);
 		}
 
-		return $parser->replaceInline($strBuffer);
+		return $parser->replaceInline((string) $strBuffer);
 	}
 
 	/**
