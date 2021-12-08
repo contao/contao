@@ -20,6 +20,7 @@
         "doctrine/dbal": "^2.10",
         "patchwork/utf8": "^1.2",
         "psr/log": "^1.0",
+        "sensiolabs/ansi-to-html": "^1.1",
         "symfony/config": "4.4.*",
         "symfony/console": "4.4.*",
         "symfony/dependency-injection": "4.4.*",
