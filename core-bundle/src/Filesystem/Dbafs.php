@@ -12,18 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use Contao\CoreBundle\File\Metadata;
-use Contao\Image\ImportantPart;
-use Contao\StringUtil;
+use Contao\CoreBundle\Event\DbafsMetadataEvent;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * @phpstan-type ExtraMetadata array{importantPart: ImportantPart|null, metadata: array<string, Metadata>}
+ * @phpstan-type ExtraMetadata array<string, mixed>
  * @phpstan-type Record array{isFile: bool, path: string, extra: ExtraMetadata}
  */
 class Dbafs implements ResetInterface
@@ -31,13 +30,14 @@ class Dbafs implements ResetInterface
     public const FILE_MARKER_EXCLUDED = '.nosync';
     public const FILE_MARKER_PUBLIC = '.public';
 
-    private int $maxFileSize = 2147483648; // 2 GiB
-    private int $bulkInsertSize = 100;
-
     private Connection $connection;
+    private EventDispatcherInterface $eventDispatcher;
+
     private string $table;
     private string $hashAlgorithm;
     private string $dbPathPrefix = '';
+    private int $maxFileSize = 2147483648; // 2 GiB
+    private int $bulkInsertSize = 100;
 
     /**
      * @var array<string, array|null>
@@ -55,9 +55,11 @@ class Dbafs implements ResetInterface
      */
     private array $pathById = [];
 
-    public function __construct(Connection $connection, string $table, string $hashAlgorithm)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, string $table, string $hashAlgorithm = 'md5')
     {
         $this->connection = $connection;
+        $this->eventDispatcher = $eventDispatcher;
+
         $this->table = $connection->quoteIdentifier($table);
         $this->hashAlgorithm = $hashAlgorithm;
 
@@ -400,34 +402,17 @@ class Dbafs implements ResetInterface
      */
     private function populateRecord(array $row): void
     {
-        if (
-            null !== ($x = $row['importantPartX'] ?? null)
-            && null !== ($y = $row['importantPartY'] ?? null)
-            && null !== ($width = $row['importantPartWidth'] ?? null)
-            && null !== ($height = $row['importantPartHeight'] ?? null)
-        ) {
-            $importantPart = new ImportantPart((float) $x, (float) $y, (float) $width, (float) $height);
-        } else {
-            $importantPart = null;
-        }
-
-        $metadata = [];
-
-        foreach (StringUtil::deserialize($row['meta'] ?? null, true) as $lang => $data) {
-            $metadata[$lang] = new Metadata(array_merge([Metadata::VALUE_UUID => $row['uuid']], $data));
-        }
-
-        $isFile = 'file' === $row['type'];
         $path = $this->convertToFilesystemPath($row['path']);
+        $isFile = 'file' === $row['type'];
+
+        $event = new DbafsMetadataEvent($this->table, $row);
+        $this->eventDispatcher->dispatch($event);
 
         /** @phpstan-var Record $record */
         $record = [
             'isFile' => $isFile,
             'path' => $path,
-            'extra' => [
-                'importantPart' => $importantPart,
-                'metadata' => $metadata,
-            ],
+            'extra' => $event->getExtraMetadata(),
         ];
 
         $this->records[$path] = $record;

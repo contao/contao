@@ -182,8 +182,8 @@ services:
         class: Contao\CoreBundle\Filesystem\Dbafs
         arguments:
             - '@database_connection'
+            - '@event_dispatcher'
             - tl_files
-            - md5
         calls:
             - [setDatabasePathPrefix, ['%contao.upload_path%']]
 

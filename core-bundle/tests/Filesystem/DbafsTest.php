@@ -12,16 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
-use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Event\DbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Image\ImportantPart;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class DbafsTest extends TestCase
 {
@@ -85,13 +85,6 @@ class DbafsTest extends TestCase
                 'uuid' => '9e41',
                 'path' => 'foo/bar',
                 'type' => 'file',
-                'importantPartX' => 0.1,
-                'importantPartY' => 0.2,
-                'importantPartWidth' => 0.3,
-                'importantPartHeight' => 0.4,
-                'meta' => serialize([
-                    'de' => [Metadata::VALUE_TITLE => 'my title'],
-                ]),
             ])
         ;
 
@@ -102,18 +95,7 @@ class DbafsTest extends TestCase
         $this->assertNotNull($record);
         $this->assertSame('foo/bar', $record['path']);
         $this->assertTrue($record['isFile']);
-
-        $importantPart = $record['extra']['importantPart'];
-        $this->assertInstanceOf(ImportantPart::class, $importantPart);
-        $this->assertSame(0.1, $importantPart->getX());
-        $this->assertSame(0.2, $importantPart->getY());
-        $this->assertSame(0.3, $importantPart->getWidth());
-        $this->assertSame(0.4, $importantPart->getHeight());
-
-        $metadata = $record['extra']['metadata']['de'];
-        $this->assertInstanceOf(Metadata::class, $metadata);
-        $this->assertSame('my title', $metadata->getTitle());
-        $this->assertSame('9e41', $metadata->getUuid());
+        $this->assertSame(['foo' => 'bar'], $record['extra']); // defined via event
     }
 
     public function testGetUnknownRecord(): void
@@ -756,6 +738,18 @@ class DbafsTest extends TestCase
             ;
         }
 
-        return new Dbafs($connection, 'tl_files', 'md5');
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->method('dispatch')
+            ->willReturnCallback(
+                static function (DbafsMetadataEvent $event) {
+                    $event->set('foo', 'bar');
+
+                    return $event;
+                }
+            )
+        ;
+
+        return new Dbafs($connection, $eventDispatcher, 'tl_files', );
     }
 }
