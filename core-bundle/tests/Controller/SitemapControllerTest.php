@@ -18,9 +18,11 @@ use Contao\CoreBundle\Controller\SitemapController;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -61,8 +63,9 @@ class SitemapControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -77,6 +80,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -87,8 +91,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -105,6 +110,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -119,6 +125,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -136,8 +143,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null, 44 => null]);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -160,6 +168,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -173,6 +182,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -193,8 +203,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -212,6 +223,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
             'requireItem' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -225,6 +237,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -245,8 +258,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -264,6 +278,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
             'requireItem' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -277,6 +292,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -297,8 +313,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -315,6 +332,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'error_404',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -328,6 +346,7 @@ class SitemapControllerTest extends TestCase
             'type' => 'regular',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -345,8 +364,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -364,6 +384,7 @@ class SitemapControllerTest extends TestCase
             'protected' => '',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -379,6 +400,7 @@ class SitemapControllerTest extends TestCase
             'protected' => '1',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -394,8 +416,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
         $container = $this->getContainer($framework, [44 => false]);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -418,6 +441,7 @@ class SitemapControllerTest extends TestCase
             'protected' => '',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -435,8 +459,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -454,6 +479,7 @@ class SitemapControllerTest extends TestCase
             'protected' => '',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -471,8 +497,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => [$article1]]);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -490,6 +517,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
             'robots' => 'index,follow',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -505,6 +533,7 @@ class SitemapControllerTest extends TestCase
             'groups' => [],
             'published' => '1',
             'robots' => 'noindex,nofollow',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -521,8 +550,9 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [43 => null]);
         $container = $this->getContainer($framework);
+        $registry = new PageRegistry($this->createMock(Connection::class));
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $controller = new SitemapController($registry);
         $controller->setContainer($container);
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
@@ -543,6 +573,7 @@ class SitemapControllerTest extends TestCase
             'protected' => '',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page1
@@ -558,6 +589,7 @@ class SitemapControllerTest extends TestCase
             'protected' => '',
             'groups' => [],
             'published' => '1',
+            'rootLanguage' => 'en',
         ]);
 
         $page2
@@ -596,12 +628,70 @@ class SitemapControllerTest extends TestCase
             ['FooClass' => $hook1, 'BarClass' => $hook2]
         );
 
-        $controller = new SitemapController($this->mockPageRegistry());
+        $registry = new PageRegistry($this->createMock(Connection::class));
+
+        $controller = new SitemapController($registry);
         $controller->setContainer($this->getContainer($framework));
 
         $this->expectDeprecation('Since contao/core-bundle 4.11: Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
 
         $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+
+        unset($GLOBALS['TL_HOOKS']['getSearchablePages']);
+    }
+
+    public function testSkipsNonHtmlPages(): void
+    {
+        $page1 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 43,
+            'pid' => 42,
+            'type' => 'custom1',
+            'groups' => [],
+            'published' => '1',
+            'rootLanguage' => 'en',
+        ]);
+
+        $page1
+            ->expects($this->never())
+            ->method('getAbsoluteUrl')
+        ;
+
+        $page2 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 44,
+            'pid' => 43,
+            'type' => 'custom2',
+            'groups' => [],
+            'published' => '1',
+            'rootLanguage' => 'en',
+        ]);
+
+        $page2
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com/en/page2.html')
+        ;
+
+        $pages = [
+            42 => [$page1],
+            43 => [$page2],
+            44 => null,
+            21 => null,
+        ];
+
+        $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
+        $container = $this->getContainer($framework);
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry->add('custom1', new RouteConfig(null, null, null, [], [], ['_format' => 'xml'], []));
+        $registry->add('custom2', new RouteConfig());
+
+        $controller = new SitemapController($registry);
+        $controller->setContainer($container);
+        $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
     private function getExpectedSitemapContent(array $urls): string

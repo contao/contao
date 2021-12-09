@@ -28,16 +28,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Route404Provider extends AbstractPageRouteProvider
 {
-    private PageRegistry $pageRegistry;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead
      */
     public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
-        parent::__construct($framework, $candidates);
-
-        $this->pageRegistry = $pageRegistry;
+        parent::__construct($framework, $candidates, $pageRegistry);
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -70,8 +66,8 @@ class Route404Provider extends AbstractPageRouteProvider
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
-        $pageModel = $this->framework->getAdapter(PageModel::class);
-        $page = $pageModel->findByPk($ids[0]);
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $page = $pageAdapter->findByPk($ids[0]);
 
         if (null === $page) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
@@ -80,7 +76,10 @@ class Route404Provider extends AbstractPageRouteProvider
         $routes = [];
 
         $this->addNotFoundRoutesForPage($page, $routes);
-        $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+
+        if ($this->pageRegistry->isRoutable($page)) {
+            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+        }
 
         if (!\array_key_exists($name, $routes)) {
             throw new RouteNotFoundException('Route "'.$name.'" not found');
@@ -111,7 +110,10 @@ class Route404Provider extends AbstractPageRouteProvider
 
         foreach ($pages as $page) {
             $this->addNotFoundRoutesForPage($page, $routes);
-            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+
+            if ($this->pageRegistry->isRoutable($page)) {
+                $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+            }
         }
 
         $this->sortRoutes($routes);

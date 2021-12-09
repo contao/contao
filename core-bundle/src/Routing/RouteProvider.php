@@ -27,7 +27,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
-    private PageRegistry $pageRegistry;
     private bool $legacyRouting;
     private bool $prependLocale;
 
@@ -36,9 +35,8 @@ class RouteProvider extends AbstractPageRouteProvider
      */
     public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
     {
-        parent::__construct($framework, $candidates);
+        parent::__construct($framework, $candidates, $pageRegistry);
 
-        $this->pageRegistry = $pageRegistry;
         $this->legacyRouting = $legacyRouting;
         $this->prependLocale = $prependLocale;
     }
@@ -86,7 +84,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $page = $pageModel->findByPk($ids[0]);
 
-        if (null === $page) {
+        if (null === $page || !$this->pageRegistry->isRoutable($page)) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
         }
 
@@ -125,7 +123,11 @@ class RouteProvider extends AbstractPageRouteProvider
 
         $routes = [];
 
-        $this->addRoutesForPages($pages, $routes);
+        /** @var array<PageModel> $models */
+        $models = $pages->getModels();
+        $models = array_filter($models, fn (PageModel $page): bool => $this->pageRegistry->isRoutable($page));
+
+        $this->addRoutesForPages($models, $routes);
         $this->sortRoutes($routes);
 
         return $routes;
@@ -283,24 +285,25 @@ class RouteProvider extends AbstractPageRouteProvider
             }
         }
 
-        $rootPages = [];
-        $indexPages = [];
+        $models = [];
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
 
         if ($pages instanceof Collection) {
-            /** @var array<PageModel> $rootPages */
-            $rootPages = $pages->getModels();
+            $models = $pages->getModels();
         }
 
         $pages = $pageModel->findBy(['tl_page.alias=? OR tl_page.alias=?'], ['index', '/']);
 
         if ($pages instanceof Collection) {
-            /** @var array<PageModel> $indexPages */
-            $indexPages = $pages->getModels();
+            foreach ($pages as $page) {
+                if ($this->pageRegistry->isRoutable($page)) {
+                    $models[] = $page;
+                }
+            }
         }
 
-        return array_merge($rootPages, $indexPages);
+        return $models;
     }
 }
