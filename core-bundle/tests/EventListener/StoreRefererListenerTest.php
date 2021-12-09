@@ -64,8 +64,8 @@ class StoreRefererListenerTest extends TestCase
             null,
             [
                 'newRefererId' => [
-                    'current' => 'path/of/contao?having&query&string=1',
                     'last' => '',
+                    'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
         ];
@@ -74,14 +74,14 @@ class StoreRefererListenerTest extends TestCase
             $requestWithRefInUrl,
             [
                 'newRefererId' => [
-                    'current' => 'hi/I/am/your_current_referer.html',
                     'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
             ],
             [
                 'newRefererId' => [
-                    'current' => 'path/of/contao?having&query&string=1',
                     'last' => '',
+                    'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
         ];
@@ -90,22 +90,22 @@ class StoreRefererListenerTest extends TestCase
             $requestWithRefInUrl,
             [
                 'existingRefererId' => [
-                    'current' => 'hi/I/am/your_current_referer.html',
                     'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
                 'newRefererId' => [
-                    'current' => 'hi/I/am/your_current_referer.html',
                     'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
             ],
             [
                 'existingRefererId' => [
-                    'current' => 'hi/I/am/your_current_referer.html',
                     'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                 ],
                 'newRefererId' => [
-                    'current' => 'path/of/contao?having&query&string=1',
                     'last' => 'hi/I/am/your_current_referer.html',
+                    'current' => 'path/of/contao?having&query&string=1',
                 ],
             ],
         ];
@@ -114,8 +114,8 @@ class StoreRefererListenerTest extends TestCase
             $requestWithRefInUrl,
             [
                 'existingRefererId' => [
-                    'current' => 'hi/I/am/your_current_referer.html',
                     'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                     'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=1',
                 ],
                 'newRefererId' => [
@@ -124,13 +124,13 @@ class StoreRefererListenerTest extends TestCase
             ],
             [
                 'existingRefererId' => [
-                    'current' => 'hi/I/am/your_current_referer.html',
                     'last' => '',
+                    'current' => 'hi/I/am/your_current_referer.html',
                     'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=1',
                 ],
                 'newRefererId' => [
-                    'current' => 'path/of/contao?having&query&string=1',
                     'last' => 'hi/I/am/your_current_referer.html',
+                    'current' => 'path/of/contao?having&query&string=1',
                     'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=2',
                 ],
             ],
