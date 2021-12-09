@@ -20,7 +20,6 @@ use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PageRegistryTest extends TestCase
 {
