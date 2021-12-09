@@ -118,7 +118,10 @@ final class Page implements ServiceTagInterface
         $this->path = $path;
     }
 
-    public function getPath(): ?string
+    /**
+     * @return string|bool|null
+     */
+    public function getPath()
     {
         return $this->path;
     }
