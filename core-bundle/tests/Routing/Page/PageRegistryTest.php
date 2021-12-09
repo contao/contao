@@ -368,7 +368,6 @@ class PageRegistryTest extends TestCase
      */
     public function testDoesNotGenerateRoutableRoutesForErrorPages(string $type): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
             [
@@ -400,7 +399,6 @@ class PageRegistryTest extends TestCase
 
     public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(
             PageModel::class,
             [

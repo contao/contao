@@ -642,7 +642,6 @@ class SitemapControllerTest extends TestCase
 
     public function testSkipsNonHtmlPages(): void
     {
-        /** @var PageModel&MockObject $page1 */
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
             'pid' => 42,
@@ -657,7 +656,6 @@ class SitemapControllerTest extends TestCase
             ->method('getAbsoluteUrl')
         ;
 
-        /** @var PageModel&MockObject $page2 */
         $page2 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 44,
             'pid' => 43,

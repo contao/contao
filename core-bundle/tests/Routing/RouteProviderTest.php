@@ -706,6 +706,7 @@ class RouteProviderTest extends TestCase
         $this->assertSame($route, $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.17'));
 
         $this->expectException(RouteNotFoundException::class);
+
         $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.18');
     }
 
@@ -880,6 +881,8 @@ class RouteProviderTest extends TestCase
             ->willReturn(['foo'])
         ;
 
+        $framework ??= $this->mockContaoFramework();
+
         if (null === $pageRegistry) {
             $pageRegistry = $this->createMock(PageRegistry::class);
             $pageRegistry
@@ -887,8 +890,6 @@ class RouteProviderTest extends TestCase
                 ->willReturn(true)
             ;
         }
-
-        $framework ??= $this->mockContaoFramework();
 
         return new RouteProvider($framework, $candidates, $pageRegistry, false, $prependLocale);
     }

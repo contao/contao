@@ -27,15 +27,16 @@ final class Page implements ServiceTagInterface
 {
     private ?string $type = null;
     private bool $contentComposition = true;
-    /**
-     * @var string|bool|null
-     */
-    private $path;
     private ?string $urlSuffix = null;
     private array $requirements = [];
     private array $options = [];
     private array $defaults = [];
     private array $methods = [];
+
+    /**
+     * @var string|bool|null
+     */
+    private $path;
 
     public function __construct(array $data)
     {

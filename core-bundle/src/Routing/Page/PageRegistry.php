@@ -55,7 +55,6 @@ class PageRegistry
     public function getRoute(PageModel $pageModel): PageRoute
     {
         $type = $pageModel->type;
-
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
@@ -178,7 +177,7 @@ class PageRegistry
     }
 
     /**
-     * Checks whether this is a routable page type (#3415).
+     * Checks whether this is a routable page type (see #3415).
      */
     public function isRoutable(PageModel $page): bool
     {

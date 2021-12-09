@@ -285,7 +285,6 @@ class RouteProvider extends AbstractPageRouteProvider
             }
         }
 
-        /** @var array<PageModel> $models */
         $models = [];
 
         $pageModel = $this->framework->getAdapter(PageModel::class);

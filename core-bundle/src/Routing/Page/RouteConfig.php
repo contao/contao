@@ -14,16 +14,16 @@ namespace Contao\CoreBundle\Routing\Page;
 
 final class RouteConfig
 {
-    /**
-     * @var string|bool|null;
-     */
-    private $path;
-
     private ?string $pathRegex;
     private ?string $urlSuffix;
     private array $requirements;
     private array $options;
     private array $defaults;
+
+    /**
+     * @var string|bool|null;
+     */
+    private $path;
 
     /**
      * @var array<string>
