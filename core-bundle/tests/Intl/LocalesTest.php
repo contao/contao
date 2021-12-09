@@ -502,9 +502,7 @@ class LocalesTest extends TestCase
             ;
         }
 
-        if (null === $requestStack) {
-            $requestStack = $this->createMock(RequestStack::class);
-        }
+        $requestStack ??= $this->createMock(RequestStack::class);
 
         $contaoFramework = $this->mockContaoFramework([
             System::class => new class(System::class) extends Adapter {
@@ -516,14 +514,8 @@ class LocalesTest extends TestCase
         ]);
 
         $defaultLocales = \ResourceBundle::getLocales('');
-
-        if (null === $defaultEnabledLocales) {
-            $defaultEnabledLocales = ['en', 'de'];
-        }
-
-        if (null === $defaultLocale) {
-            $defaultLocale = 'en';
-        }
+        $defaultEnabledLocales ??= ['en', 'de'];
+        $defaultLocale ??= 'en';
 
         return new Locales($translator, $requestStack, $contaoFramework, $defaultLocales, $defaultEnabledLocales, $configLocales, $configEnabledLocales, $defaultLocale);
     }

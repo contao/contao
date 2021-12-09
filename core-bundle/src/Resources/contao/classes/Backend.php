@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -295,7 +296,7 @@ abstract class Backend extends Controller
 		unset($arrGroup);
 
 		$this->import(BackendUser::class, 'User');
-		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $this->User->hasAccess($module, 'modules');
+		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
@@ -346,6 +347,7 @@ abstract class Backend extends Controller
 		}
 
 		$dc = null;
+		$security = System::getContainer()->get('security.helper');
 
 		// Create the data container object
 		if ($strTable)
@@ -364,7 +366,7 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if (($v['exclude'] ?? null) && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+					if (($v['exclude'] ?? null) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $k))
 					{
 						if ($strTable == 'tl_user_group')
 						{
@@ -498,6 +500,8 @@ abstract class Backend extends Controller
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
+				$container = System::getContainer();
+
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
@@ -514,17 +518,18 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title)
+						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
 						{
-							$trail[] = ' <span>' . $objRow->title . '</span>';
-						}
-						elseif ($objRow->name)
-						{
-							$trail[] = ' <span>' . $objRow->name . '</span>';
-						}
-						elseif ($objRow->headline)
-						{
-							$trail[] = ' <span>' . $objRow->headline . '</span>';
+							$strUrl = $container->get('router')->generate('contao_backend', array
+							(
+								'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
+								'table' => $table,
+								'id' => $objRow->id,
+								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+								'rt' => REQUEST_TOKEN,
+							));
+
+							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
 						}
 					}
 
@@ -834,7 +839,7 @@ abstract class Backend extends Controller
 
 				if ($objPage->numRows < 1)
 				{
-					// Currently selected page does not exist
+					// The currently selected page does not exist
 					if ($intId == $intNode)
 					{
 						$objSession->set($strKey, 0);
@@ -1010,7 +1015,7 @@ abstract class Backend extends Controller
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// Currently selected folder does not exist
+		// The currently selected folder does not exist
 		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSession->set($strKey, '');
@@ -1020,6 +1025,7 @@ abstract class Backend extends Controller
 
 		$objUser  = BackendUser::getInstance();
 		$strPath  = System::getContainer()->getParameter('contao.upload_path');
+		$security = System::getContainer()->get('security.helper');
 		$arrNodes = explode('/', preg_replace('/^' . preg_quote($strPath, '/') . '\//', '', $strNode));
 		$arrLinks = array();
 
@@ -1049,7 +1055,7 @@ abstract class Backend extends Controller
 		}
 
 		// Check whether the node is mounted
-		if (!$objUser->hasAccess($strNode, 'filemounts'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strNode))
 		{
 			$objSession->set($strKey, '');
 

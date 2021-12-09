@@ -47,7 +47,7 @@ class ModuleCloseAccount extends Module
 			return $objTemplate->parse();
 		}
 
-		// Return if there is no logged in user
+		// Return if there is no logged-in user
 		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
@@ -81,10 +81,10 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
-			$encoder = $container->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
+			$passwordHasher = $container->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 			// Validate the password
-			if (!$objWidget->hasErrors() && !$encoder->isPasswordValid($this->User->password, $objWidget->value, null))
+			if (!$objWidget->hasErrors() && !$passwordHasher->verify($this->User->password, $objWidget->value))
 			{
 				$objWidget->value = '';
 				$objWidget->addError($GLOBALS['TL_LANG']['ERR']['invalidPass']);

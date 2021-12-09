@@ -65,11 +65,7 @@ class Document
 
     public function getContentCrawler(): Crawler
     {
-        if (null === $this->crawler) {
-            $this->crawler = new Crawler($this->body);
-        }
-
-        return $this->crawler;
+        return $this->crawler ??= new Crawler($this->body);
     }
 
     public function extractCanonicalUri(): ?UriInterface

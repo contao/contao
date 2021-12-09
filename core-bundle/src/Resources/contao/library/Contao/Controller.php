@@ -807,10 +807,10 @@ abstract class Controller extends System
 
 		if ($blnCache)
 		{
-			return $parser->replace($strBuffer);
+			return $parser->replace((string) $strBuffer);
 		}
 
-		return $parser->replaceInline($strBuffer);
+		return $parser->replaceInline((string) $strBuffer);
 	}
 
 	/**
@@ -1198,7 +1198,7 @@ abstract class Controller extends System
 	 * @param string  $strForceLang Force a certain language
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @return string A URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
 	 *             Use PageModel::getFrontendUrl() instead.
@@ -1755,7 +1755,7 @@ abstract class Controller extends System
 		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
-		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
+		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
 	}
 
 	/**

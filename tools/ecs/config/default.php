@@ -17,6 +17,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::SKIP, [
         '*/Fixtures/system/*',
         '*/Resources/contao/*',
+        'maker-bundle/src/Resources/skeleton/*',
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
             '*/Resources/config/*.php',

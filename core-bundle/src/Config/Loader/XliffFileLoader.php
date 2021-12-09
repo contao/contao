@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Loader;
 
 use Symfony\Component\Config\Loader\Loader;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Reads XLIFF files and converts them into Contao language arrays.

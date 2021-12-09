@@ -21,9 +21,7 @@ abstract class AbstractMigration implements MigrationInterface
 
     protected function createResult(bool $successful, string $message = null): MigrationResult
     {
-        if (null === $message) {
-            $message = $this->getName().' '.($successful ? 'executed successfully' : 'execution failed');
-        }
+        $message ??= $this->getName().' '.($successful ? 'executed successfully' : 'execution failed');
 
         return new MigrationResult($successful, $message);
     }

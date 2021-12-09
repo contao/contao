@@ -121,10 +121,10 @@ security:
                     - contao.security.logout_handler
 
     access_control:
-        - { path: ^%contao.backend.route_prefix%/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^%contao.backend.route_prefix%/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^%contao.backend.route_prefix%/login$, roles: PUBLIC_ACCESS }
+        - { path: ^%contao.backend.route_prefix%/logout$, roles: PUBLIC_ACCESS }
         - { path: ^%contao.backend.route_prefix%(/|$), roles: ROLE_USER }
-        - { path: ^/, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/, roles: [PUBLIC_ACCESS] }
 ```
 
 The Contao core-bundle as well as the installation-bundle are now installed and

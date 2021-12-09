@@ -16,11 +16,11 @@ they are declared as `@internal`.
 
 Template files are explicitely not part of the API and thus can be changed in
 minor and bugfix releases, even if the change might break a customized version
-of the template or require to adjust CSS code to the new markup.
+of the template or require adjusting CSS code to the new markup.
 
 ## Ramifications
 
 Using semantic versioning also means that new major versions might be released
-more often than in the past. 
+more often than in the past.
 
 [1]: https://semver.org

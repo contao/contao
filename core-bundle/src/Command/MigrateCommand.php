@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class MigrateCommand extends Command
 {
@@ -423,7 +423,7 @@ class MigrateCommand extends Command
         if (!$withDrops) {
             foreach ($commands as $hash => $command) {
                 if (
-                    preg_match('/^ALTER TABLE [^ ]+ DROP /', $command, $matches)
+                    preg_match('/^ALTER TABLE [^ ]+ DROP /', $command)
                     || (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
                 ) {
                     unset($commands[$hash]);

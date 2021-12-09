@@ -163,7 +163,7 @@ class FrontendUser extends User
 	}
 
 	/**
-	 * Try to login the current user
+	 * Try to log in the current user
 	 *
 	 * @return boolean True if the user could be logged in
 	 *

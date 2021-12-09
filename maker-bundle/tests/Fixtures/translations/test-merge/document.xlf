@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file>
+    <body>
+      <trans-unit id="1">
+        <source>One</source>
+        <target>Eins</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

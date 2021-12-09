@@ -764,17 +764,9 @@ class PictureFactoryTest extends TestCase
 
     private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null): PictureFactory
     {
-        if (null === $pictureGenerator) {
-            $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
-        }
-
-        if (null === $imageFactory) {
-            $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFramework::class);
-        }
+        $pictureGenerator ??= $this->createMock(PictureGeneratorInterface::class);
+        $imageFactory ??= $this->createMock(ImageFactoryInterface::class);
+        $framework ??= $this->createMock(ContaoFramework::class);
 
         return new PictureFactory($pictureGenerator, $imageFactory, $framework, false, []);
     }

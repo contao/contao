@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\FrontendUser;
 use Contao\Image;
@@ -605,7 +606,7 @@ class tl_member extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_member::disable', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_member::disable'))
 		{
 			return '';
 		}
@@ -658,7 +659,7 @@ class tl_member extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_member::disable', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_member::disable'))
 		{
 			throw new AccessDeniedException('Not enough permissions to activate/deactivate member ID ' . $intId . '.');
 		}

@@ -115,9 +115,7 @@ class LegacyTemplateFunctionsRuntimeTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
+        $framework ??= $this->mockContaoFramework();
 
         return new LegacyTemplateFunctionsRuntime($requestStack, $framework, $this->mockScopeMatcher());
     }

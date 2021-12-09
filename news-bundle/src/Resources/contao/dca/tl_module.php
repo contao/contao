@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\DataContainer;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\System;
 
 // Add a palette selector
@@ -161,10 +162,11 @@ class tl_module_news extends Backend
 
 		$arrArchives = array();
 		$objArchives = $this->Database->execute("SELECT id, title FROM tl_news_archive ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objArchives->next())
 		{
-			if ($this->User->hasAccess($objArchives->id, 'news'))
+			if ($security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchives->id))
 			{
 				$arrArchives[$objArchives->id] = $objArchives->title;
 			}

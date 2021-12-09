@@ -13,9 +13,11 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Mailer\AvailableTransports;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -228,9 +230,10 @@ class tl_newsletter_channel extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_newsletter_channel']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions to add channels
-		if (!$this->User->hasAccess('create', 'newsletterp'))
+		if (!$security->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS))
 		{
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notCreatable'] = true;
@@ -238,7 +241,7 @@ class tl_newsletter_channel extends Backend
 		}
 
 		// Check permissions to delete channels
-		if (!$this->User->hasAccess('delete', 'newsletterp'))
+		if (!$security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS))
 		{
 			$GLOBALS['TL_DCA']['tl_newsletter_channel']['config']['notDeletable'] = true;
 		}
@@ -253,7 +256,7 @@ class tl_newsletter_channel extends Backend
 				break;
 
 			case 'create':
-				if (!$this->User->hasAccess('create', 'newsletterp'))
+				if (!$security->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS))
 				{
 					throw new AccessDeniedException('Not enough permissions to create newsletter channels.');
 				}
@@ -263,7 +266,7 @@ class tl_newsletter_channel extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsletterp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter channel ID ' . Input::get('id') . '.');
 				}
@@ -275,7 +278,7 @@ class tl_newsletter_channel extends Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsletterp'))
+				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -395,7 +398,7 @@ class tl_newsletter_channel extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_newsletter_channel') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_newsletter_channel') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -412,7 +415,7 @@ class tl_newsletter_channel extends Backend
 	 */
 	public function copyChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsletterPermissions::USER_CAN_CREATE_CHANNELS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -429,6 +432,6 @@ class tl_newsletter_channel extends Backend
 	 */
 	public function deleteChannel($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsletterp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsletterPermissions::USER_CAN_DELETE_CHANNELS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

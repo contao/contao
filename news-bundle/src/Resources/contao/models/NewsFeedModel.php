@@ -81,7 +81,7 @@ class NewsFeedModel extends Model
 	protected static $strTable = 'tl_news_feed';
 
 	/**
-	 * Find all feeds which include a certain news archive
+	 * Find all feeds which include a certain news-archive
 	 *
 	 * @param integer $intId      The news archive ID
 	 * @param array   $arrOptions An optional options array

@@ -11,7 +11,9 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
@@ -267,9 +269,10 @@ class tl_faq_category extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_faq_category']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions to add FAQ categories
-		if (!$this->User->hasAccess('create', 'faqp'))
+		if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES))
 		{
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notCreatable'] = true;
@@ -277,7 +280,7 @@ class tl_faq_category extends Backend
 		}
 
 		// Check permissions to delete FAQ categories
-		if (!$this->User->hasAccess('delete', 'faqp'))
+		if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES))
 		{
 			$GLOBALS['TL_DCA']['tl_faq_category']['config']['notDeletable'] = true;
 		}
@@ -292,7 +295,7 @@ class tl_faq_category extends Backend
 				break;
 
 			case 'create':
-				if (!$this->User->hasAccess('create', 'faqp'))
+				if (!$security->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES))
 				{
 					throw new AccessDeniedException('Not enough permissions to create FAQ categories.');
 				}
@@ -302,7 +305,7 @@ class tl_faq_category extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'faqp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' FAQ category ID ' . Input::get('id') . '.');
 				}
@@ -314,7 +317,7 @@ class tl_faq_category extends Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'faqp'))
+				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -434,7 +437,7 @@ class tl_faq_category extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_faq_category') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_faq_category') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -451,7 +454,7 @@ class tl_faq_category extends Backend
 	 */
 	public function copyCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -468,6 +471,6 @@ class tl_faq_category extends Backend
 	 */
 	public function deleteCategory($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'faqp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 }

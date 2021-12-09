@@ -16,37 +16,37 @@ final class ContaoCorePermissions
 {
     /**
      * Access is granted if the current user can edit the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_PAGE = 'contao_user.can_edit_page';
 
     /**
      * Access is granted if the current user can change the hierarchy of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_PAGE_HIERARCHY = 'contao_user.can_edit_page_hierarchy';
 
     /**
      * Access is granted if the current user can can delete the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_DELETE_PAGE = 'contao_user.can_delete_page';
 
     /**
      * Access is granted if the current user can edit articles of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_ARTICLES = 'contao_user.can_edit_articles';
 
     /**
      * Access is granted if the current user can change the hierarchy of articles of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_EDIT_ARTICLE_HIERARCHY = 'contao_user.can_edit_article_hierarchy';
 
     /**
      * Access is granted if the current user can delete articles of the given page.
-     * Subject must be a PageModel or a tl_page record as array.
+     * Subject must be a page ID, a PageModel or a tl_page record as array.
      */
     public const USER_CAN_DELETE_ARTICLES = 'contao_user.can_delete_articles';
 
@@ -111,10 +111,40 @@ final class ContaoCorePermissions
     public const USER_CAN_ACCESS_FIELD_TYPE = 'contao_user.fields';
 
     /**
-     * Access is granted if the current user can access the theme.
-     * Subject must be an ID of table tl_theme.
+     * Access is granted if the current user can access the theme module.
+     * Subject must be theme module name.
      */
     public const USER_CAN_ACCESS_THEME = 'contao_user.themes';
+
+    /**
+     * Access is granted if the current user can access layouts in themes.
+     */
+    public const USER_CAN_ACCESS_LAYOUTS = 'contao_user.themes.layout';
+
+    /**
+     * Access is granted if the current user can access image sizes in themes.
+     */
+    public const USER_CAN_ACCESS_IMAGE_SIZES = 'contao_user.themes.image_sizes';
+
+    /**
+     * Access is granted if the current user can access front end modules in themes.
+     */
+    public const USER_CAN_ACCESS_FRONTEND_MODULES = 'contao_user.themes.modules';
+
+    /**
+     * Access is granted if the current user can access the css editor in themes.
+     */
+    public const USER_CAN_ACCESS_STYLE_SHEETS = 'contao_user.themes.css';
+
+    /**
+     * Access is granted if the current user can import themes.
+     */
+    public const USER_CAN_IMPORT_THEMES = 'contao_user.themes.theme_import';
+
+    /**
+     * Access is granted if the current user can export themes.
+     */
+    public const USER_CAN_EXPORT_THEMES = 'contao_user.themes.theme_export';
 
     /**
      * Access is granted if the current user can access the page type.

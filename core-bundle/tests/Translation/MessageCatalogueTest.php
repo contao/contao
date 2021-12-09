@@ -291,13 +291,8 @@ class MessageCatalogueTest extends TestCase
             ;
         }
 
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
-        }
-
-        if (null === $resourceFinder) {
-            $resourceFinder = $this->createMock(ResourceFinder::class);
-        }
+        $framework ??= $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+        $resourceFinder ??= $this->createMock(ResourceFinder::class);
 
         return new MessageCatalogue($catalogue, $framework, $resourceFinder);
     }
