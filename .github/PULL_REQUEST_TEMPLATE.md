@@ -1,6 +1,6 @@
 | Q                | A               |
 |------------------|-----------------|
-| Fixed issues     | Fixes #...      |
+| Fixed issues     | fixes #...      |
 | Docs PR or issue | contao/docs#... |
 
 <!--
