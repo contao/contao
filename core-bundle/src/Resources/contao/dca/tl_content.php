@@ -1297,7 +1297,7 @@ class tl_content extends Backend
 
 			if (!empty($groupIds))
 			{
-				if (in_array(-1, array_map('intval', $groupIds)))
+				if (in_array(-1, array_map('intval', $groupIds), true))
 				{
 					$groupNames[] = $GLOBALS['TL_LANG']['MSC']['guests'];
 				}
