@@ -609,6 +609,11 @@ class tl_files extends Backend
 		$varValue = str_replace('"', '', $varValue);
 		$chunks = array_filter(explode('/', $varValue));
 
+		if (count($chunks) < 1)
+		{
+			return '';
+		}
+
 		foreach ($chunks as $chunk)
 		{
 			if (preg_match('/\.$/', $chunk))
@@ -617,10 +622,8 @@ class tl_files extends Backend
 			}
 		}
 
-		$varValue = implode('/', $chunks);
-
 		// Check the length without the file extension
-		if ($dc->activeRecord && $varValue)
+		if ($dc->activeRecord)
 		{
 			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'] ?? null;
 
@@ -631,14 +634,17 @@ class tl_files extends Backend
 					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 				}
 
-				if (mb_strlen($varValue) > $intMaxlength)
+				foreach ($chunks as $chunk)
 				{
-					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+					if (mb_strlen($chunk) > $intMaxlength)
+					{
+						throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+					}
 				}
 			}
 		}
 
-		return $varValue;
+		return implode('/', $chunks);
 	}
 
 	/**
