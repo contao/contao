@@ -607,12 +607,17 @@ class tl_files extends Backend
 	public function checkFilename($varValue, DataContainer $dc)
 	{
 		$varValue = str_replace('"', '', $varValue);
-		$varValue = trim($varValue, '/');
+		$chunks = explode('/', $varValue);
 
-		if (preg_match('/\.$/', $varValue))
+		foreach ($chunks as $chunk)
 		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			if (preg_match('/\.$/', $chunk))
+			{
+				throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			}
 		}
+
+		$varValue = implode('/', $chunks);
 
 		// Check the length without the file extension
 		if ($dc->activeRecord && $varValue)
