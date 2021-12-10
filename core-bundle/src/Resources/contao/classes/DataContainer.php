@@ -891,7 +891,8 @@ abstract class DataContainer extends Backend
 			$v = \is_array($v) ? $v : array($v);
 			$title = $label = $k;
 
-			if (isset($v['label'])) {
+			if (isset($v['label']))
+			{
 				$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
 				$title = \is_array($v['label']) ? $v['label'][1] : $v['label'];
 			}
