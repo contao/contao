@@ -607,8 +607,9 @@ class tl_files extends Backend
 	public function checkFilename($varValue, DataContainer $dc)
 	{
 		$varValue = str_replace('"', '', $varValue);
+		$varValue = trim($varValue, '/');
 
-		if (strpos($varValue, '/') !== false || preg_match('/\.$/', $varValue))
+		if (preg_match('/\.$/', $varValue))
 		{
 			throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 		}
