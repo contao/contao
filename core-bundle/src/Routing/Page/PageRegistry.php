@@ -197,6 +197,22 @@ class PageRegistry
         return false !== $this->routeConfigs[$type]->getPath();
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getUnroutableTypes(): array
+    {
+        $types = self::DISABLE_ROUTING;
+
+        foreach ($this->routeConfigs as $type => $config) {
+            if (false === $config->getPath()) {
+                $types[] = $type;
+            }
+        }
+
+        return $types;
+    }
+
     private function initializePrefixAndSuffix(): void
     {
         if (null !== $this->urlPrefixes || null !== $this->urlSuffixes) {
