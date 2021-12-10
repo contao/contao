@@ -7,6 +7,13 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+    contao_news.listener.backend_menu:
+        class: Contao\NewsBundle\EventListener\BackendMenuListener
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: kernel.event_listener, event: contao.backend_menu_build }
+
     contao_news.listener.generate_page:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:
