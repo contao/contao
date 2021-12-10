@@ -140,10 +140,6 @@ class ApplicationTest extends ContaoTestCase
 
     private function getApplication(string $path = null): Application
     {
-        if (null === $path) {
-            $path = $this->getTempDir();
-        }
-
-        return new Application($path);
+        return new Application($path ?? $this->getTempDir());
     }
 }

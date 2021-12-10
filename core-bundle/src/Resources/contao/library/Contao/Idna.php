@@ -172,7 +172,7 @@ class Idna
 	}
 
 	/**
-	 * Encode the domain in an URL
+	 * Encode the domain in a URL
 	 *
 	 * @param string $strUrl The URL
 	 *
@@ -264,7 +264,7 @@ class Idna
 	}
 
 	/**
-	 * Decode the domain in an URL
+	 * Decode the domain in a URL
 	 *
 	 * @param string $strUrl The URL
 	 *

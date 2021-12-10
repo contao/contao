@@ -336,7 +336,7 @@
         <source>Markdown</source>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>

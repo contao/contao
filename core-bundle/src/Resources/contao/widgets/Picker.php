@@ -256,7 +256,6 @@ class Picker extends Widget
 					$dc->id = $objRows->id;
 					$dc->activeRecord = $objRows;
 
-					$arrSet[] = $objRows->id;
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
 				}
 			}

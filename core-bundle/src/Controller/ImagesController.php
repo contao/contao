@@ -18,10 +18,10 @@ use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Exception\FileNotExistsException;
 use Contao\Image\ResizerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal

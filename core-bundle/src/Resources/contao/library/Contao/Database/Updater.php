@@ -586,7 +586,7 @@ class Updater extends Controller
 	 */
 	public function run40Update()
 	{
-		// Adjust the framework agnostic scripts
+		// Adjust the framework-agnostic scripts
 		$this->Database->query("ALTER TABLE `tl_layout` ADD `scripts` text NULL");
 		$objLayout = $this->Database->query("SELECT id, addJQuery, jquery, addMooTools, mootools FROM tl_layout WHERE framework!=''");
 

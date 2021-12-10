@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Idna;
@@ -797,6 +798,7 @@ class tl_page extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
 		if (is_array($session['CURRENT']['IDS'] ?? null))
@@ -810,20 +812,20 @@ class tl_page extends Backend
 										  ->limit(1)
 										  ->execute($id);
 
-				if ($objPage->numRows < 1 || !$this->User->hasAccess($objPage->type, 'alpty'))
+				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
 					continue;
 				}
 
 				$row = $objPage->row();
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row))
 				{
 					$edit_all[] = $id;
 				}
 
 				// Mounted pages cannot be deleted
-				if ($this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
 				{
 					$delete_all[] = $id;
 				}
@@ -843,12 +845,12 @@ class tl_page extends Backend
 										  ->limit(1)
 										  ->execute($id);
 
-				if ($objPage->numRows < 1 || !$this->User->hasAccess($objPage->type, 'alpty'))
+				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
 					continue;
 				}
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 				{
 					$clipboard[] = $id;
 				}
@@ -867,7 +869,7 @@ class tl_page extends Backend
 									  ->limit(1)
 									  ->execute(Input::get('id'));
 
-			if ($objPage->numRows && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
+			if ($objPage->numRows && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 			{
 				$GLOBALS['TL_DCA']['tl_page']['config']['closed'] = true;
 			}
@@ -876,7 +878,7 @@ class tl_page extends Backend
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')
 		{
-			$permission = 0;
+			$permission = null;
 			$cid = CURRENT_ID ?: Input::get('id');
 			$ids = $cid ? array($cid) : array();
 
@@ -885,11 +887,11 @@ class tl_page extends Backend
 			{
 				case 'edit':
 				case 'toggle':
-					$permission = BackendUser::CAN_EDIT_PAGE;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE;
 					break;
 
 				case 'move':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
 					$ids[] = Input::get('sid');
 					break;
 
@@ -898,7 +900,7 @@ class tl_page extends Backend
 				case 'copyAll':
 				case 'cut':
 				case 'cutAll':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
 
 					// Check the parent page in "paste into" mode
 					if (Input::get('mode') == 2)
@@ -917,7 +919,7 @@ class tl_page extends Backend
 					break;
 
 				case 'delete':
-					$permission = BackendUser::CAN_DELETE_PAGE;
+					$permission = ContaoCorePermissions::USER_CAN_DELETE_PAGE;
 					break;
 			}
 
@@ -942,7 +944,7 @@ class tl_page extends Backend
 
 			$pagemounts = array_unique($pagemounts);
 
-			// Do not allow to paste after pages on the root level (pagemounts)
+			// Do not allow pasting after pages on the root level (pagemounts)
 			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 			{
 				throw new AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
@@ -970,7 +972,7 @@ class tl_page extends Backend
 				}
 
 				// Check whether the current user is allowed to access the current page
-				if (Input::get('act') != 'show' && !$this->User->isAllowed($permission, $objPage->row()))
+				if (Input::get('act') != 'show' && ($permission === null || !$security->isGranted($permission, $objPage->row())))
 				{
 					$error = true;
 					break;
@@ -978,7 +980,7 @@ class tl_page extends Backend
 
 				// Check the type of the first page (not the following parent pages)
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
-				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
+				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
 					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, ContaoContext::ERROR);
 
@@ -1422,7 +1424,9 @@ class tl_page extends Backend
 	 */
 	public function editPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1445,7 +1449,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1468,9 +1474,10 @@ class tl_page extends Backend
 			return '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
 		$objSubpages = PageModel::findByPid($row['id']);
 
-		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1487,7 +1494,9 @@ class tl_page extends Backend
 	 */
 	public function cutPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1503,6 +1512,8 @@ class tl_page extends Backend
 	 */
 	public function pastePage(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
 	{
+		$security = System::getContainer()->get('security.helper');
+
 		$disablePA = false;
 		$disablePI = false;
 
@@ -1537,7 +1548,7 @@ class tl_page extends Backend
 			// Disable "paste into" button if there is no permission 2 (move) or 1 (create) for the current page
 			if (!$disablePI)
 			{
-				if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)))
+				if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row) || (Input::get('mode') == 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)))
 				{
 					$disablePI = true;
 				}
@@ -1549,7 +1560,7 @@ class tl_page extends Backend
 				/** @var PageModel $objModel */
 				$objModel = Model::getClassFromTable($table);
 
-				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))))
+				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))))
 				{
 					$disablePA = true;
 				}
@@ -1591,8 +1602,9 @@ class tl_page extends Backend
 	public function deletePage($row, $href, $label, $title, $icon, $attributes)
 	{
 		$root = func_get_arg(7);
+		$security = System::getContainer()->get('security.helper');
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1628,7 +1640,7 @@ class tl_page extends Backend
 	 */
 	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
-		if (!$this->User->hasAccess('tl_page::alias', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::alias'))
 		{
 			return $arrButtons;
 		}
@@ -1718,8 +1730,10 @@ class tl_page extends Backend
 			$this->redirect($this->getReferer());
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_page::published', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::published'))
 		{
 			return '';
 		}
@@ -1731,7 +1745,7 @@ class tl_page extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		if (!$this->User->hasAccess($row['type'], 'alpty') || ($objPage = PageModel::findById($row['id'])) === null || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) || ($objPage = PageModel::findById($row['id'])) === null || !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 		{
 			return Image::getHtml($icon) . ' ';
 		}
@@ -1777,7 +1791,7 @@ class tl_page extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_page::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
 		}

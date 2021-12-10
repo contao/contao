@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Loads and writes the local configuration file

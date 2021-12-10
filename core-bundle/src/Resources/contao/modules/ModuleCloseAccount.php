@@ -47,7 +47,7 @@ class ModuleCloseAccount extends Module
 			return $objTemplate->parse();
 		}
 
-		// Return if there is no logged in user
+		// Return if there is no logged-in user
 		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';

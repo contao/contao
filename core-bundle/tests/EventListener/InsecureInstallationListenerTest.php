@@ -69,10 +69,6 @@ class InsecureInstallationListenerTest extends TestCase
     {
         $kernel = $this->createMock(KernelInterface::class);
 
-        if (null === $request) {
-            $request = new Request();
-        }
-
-        return new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        return new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
     }
 }

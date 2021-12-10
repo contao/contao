@@ -416,6 +416,9 @@ h2.sub_headline {
 	border-bottom:1px solid #ddd;
 	text-align:right;
 }
+.tl_panel .tl_select {
+	text-align:left;
+}
 .tl_version_panel .tl_select {
 	max-width:280px;
 }

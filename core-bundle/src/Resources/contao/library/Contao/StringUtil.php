@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Provides string manipulation methods
