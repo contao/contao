@@ -3838,11 +3838,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		// Must be either visible in the root trail or allowed by permissions (or their children)
-		// In the extended tree view (mode 6) we have to check on the parent table only
-		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
+		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
+		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
+		// tree mode if both $table and $this->strTable point to the child table.
+		$checkIdAllowed = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
 
-		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		if ($checkIdAllowed && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
 			return '';
 		}
@@ -3983,7 +3984,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
-		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
+
+		// Check either the ID (tree mode or parent table) or the parent ID (child table)
+		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -6283,7 +6286,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Fetch all children of the root
-		$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		if ($this->treeView)
+		{
+			$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		}
 	}
 
 	/**
