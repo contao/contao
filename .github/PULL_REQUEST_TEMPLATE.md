@@ -1,4 +1,4 @@
-Fixes #...
+Fixes #
 
 <!--
 Bugfixes should be based on the 4.9 or 4.12 branch and features on the 4.x
