@@ -133,8 +133,8 @@ class Version480Update extends AbstractMigration
                         SELECT id
                         FROM tl_layout
                         WHERE
-                            jquery LIKE '%j_mediaelement%'
-                            OR scripts LIKE '%js_mediaelement%'
+                            jquery LIKE '%\"j_mediaelement\"%'
+                            OR scripts LIKE '%\"js_mediaelement\"%'
                     )
                 ")
                 ->fetchColumn()
@@ -161,7 +161,7 @@ class Version480Update extends AbstractMigration
                             SELECT id
                             FROM tl_layout
                             WHERE
-                                $column LIKE '%$templateName%'
+                                $column LIKE '%\"$templateName\"%'
                         )
                     ")
                     ->fetchColumn()
