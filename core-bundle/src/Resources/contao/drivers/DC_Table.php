@@ -3983,7 +3983,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
-		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
+		$isVisibleRootTrailPage = $needsCheck ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -6283,7 +6283,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Fetch all children of the root
-		$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		if ($this->Database->fieldExists('sorting', $table))
+		{
+			$this->rootChildren = $this->Database->getChildRecords($this->root, $table, true);
+		}
 	}
 
 	/**

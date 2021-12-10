@@ -340,7 +340,7 @@ class tl_files extends Backend
 		$session = $objSession->all();
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS'] ?? null))
 		{
 			if (Input::get('act') == 'editAll')
 			{
