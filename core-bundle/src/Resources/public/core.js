@@ -2873,9 +2873,13 @@ var Backend =
 			}
 		}
 
-		function execRequest() {
+		function execRequest(onlyStatusUpdate) {
+			var onlyStatusUpdate = onlyStatusUpdate || false;
 			new Request({
 				url: window.location.href,
+				headers: {
+					'Only-Status-Update': onlyStatusUpdate
+				},
 				onSuccess: function(responseText) {
 					var response = JSON.decode(responseText);
 
@@ -2888,7 +2892,7 @@ var Backend =
 			}).send();
 		}
 
-		execRequest();
+		execRequest(true);
 	}
 };
 
