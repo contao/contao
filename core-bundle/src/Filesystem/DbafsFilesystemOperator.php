@@ -25,6 +25,7 @@ interface DbafsFilesystemOperator extends FilesystemOperator
 {
     public const SYNCED_ONLY = 0;
     public const BYPASS_DBAFS = 1;
+    public const FORCE_PARTIAL_SYNC = 2;
 
     /**
      * {@inheritdoc}
@@ -145,7 +146,7 @@ interface DbafsFilesystemOperator extends FilesystemOperator
      * @throws UnableToRetrieveMetadata
      * @throws FilesystemException
      */
-    public function extraMetadata($location): array;
+    public function extraMetadata($location, int $accessType = self::SYNCED_ONLY): array;
 
     /**
      * @param string|Uuid $location

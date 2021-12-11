@@ -94,6 +94,10 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             return $this->adapter->listContents($normalizedPath, $deep);
         }
 
+        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+            $this->sync($normalizedPath);
+        }
+
         $recordsIterator = $this->dbafs->getRecords($normalizedPath, $deep);
 
         return (new DirectoryListing($recordsIterator))->map(
@@ -107,6 +111,10 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
 
         if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsLastModified()) {
             return $this->adapter->lastModified($normalizedPath)->lastModified();
+        }
+
+        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+            $this->sync($path);
         }
 
         if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
@@ -128,6 +136,10 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             return $this->adapter->fileSize($normalizedPath)->fileSize();
         }
 
+        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+            $this->sync($path);
+        }
+
         if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
             throw UnableToRetrieveMetadata::fileSize($normalizedPath, 'Resource does not exist in DBAFS.');
         }
@@ -145,6 +157,10 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
 
         if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsMimeType()) {
             return $this->adapter->mimeType($normalizedPath)->mimeType();
+        }
+
+        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+            $this->sync($path);
         }
 
         if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
@@ -239,9 +255,17 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
         }
     }
 
-    public function extraMetadata($location): array
+    public function extraMetadata($location, int $accessType = self::SYNCED_ONLY): array
     {
         $normalizedPath = $this->normalizePath($location);
+
+        if (self::BYPASS_DBAFS === $accessType) {
+            throw new \LogicException('Cannot get extra metadata from DBAFS with DbafsFilesystemOperator::BYPASS_DBAFS.');
+        }
+
+        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+            $this->sync($location);
+        }
 
         $record = $this->dbafs->getRecord($normalizedPath);
 

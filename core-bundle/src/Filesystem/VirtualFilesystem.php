@@ -291,7 +291,7 @@ class VirtualFilesystem implements DbafsFilesystemOperator
         }
     }
 
-    public function extraMetadata($location): array
+    public function extraMetadata($location, int $accessType = self::SYNCED_ONLY): array
     {
         /** @var FilesystemOperator $operator */
         [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
@@ -301,7 +301,7 @@ class VirtualFilesystem implements DbafsFilesystemOperator
         }
 
         try {
-            return $operator->extraMetadata($resolvedLocation);
+            return $operator->extraMetadata($resolvedLocation, $accessType);
         } catch (UnableToRetrieveMetadata $e) {
             throw UnableToRetrieveMetadata::create((string) $location, StorageAttributes::ATTRIBUTE_EXTRA_METADATA, $e->reason(), $e);
         }
