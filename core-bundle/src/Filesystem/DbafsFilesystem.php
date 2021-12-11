@@ -12,20 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use Contao\StringUtil;
-use Contao\Validator;
 use League\Flysystem\Config;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\DirectoryListing;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
-use League\Flysystem\FilesystemOperator;
 use League\Flysystem\InvalidStreamProvided;
 use League\Flysystem\PathNormalizer;
 use League\Flysystem\StorageAttributes;
+use League\Flysystem\UnableToRetrieveMetadata;
 use League\Flysystem\WhitespacePathNormalizer;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\GhostObjectInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * This Flysystem operator wraps a DBAFS layer around the underlying filesystem
@@ -35,21 +34,19 @@ use ProxyManager\Proxy\GhostObjectInterface;
  * Additionally, there is support to directly retrieve the 'extra metadata'
  * from a file's / directory's StorageAttributes via a dedicated method.
  *
- * We widen the FilesystemOperator interface - instead of calling methods with
- * resource paths (string), you can also pass in an ID (int) or UUID of a
- * synchronized DBAFS resource.
- *
- * @phpstan-import-type ExtraMetadata from Dbafs
+ * We use the widened DbafsFilesystemOperator interface - instead of calling
+ * methods with resource paths (string), you can also pass in a UUID of the
+ * encapsulated DbafsInterface.
  */
-final class DbafsFilesystem implements FilesystemOperator
+final class DbafsFilesystem implements DbafsFilesystemOperator
 {
     private FilesystemAdapter $adapter;
     private Config $config;
     private PathNormalizer $pathNormalizer;
-    private Dbafs $dbafs;
+    private DbafsInterface $dbafs;
     private LazyLoadingGhostFactory $proxyFactory;
 
-    public function __construct(Dbafs $dbafs, FilesystemAdapter $adapter, array $config = [], LazyLoadingGhostFactory $proxyFactory = null, PathNormalizer $pathNormalizer = null)
+    public function __construct(DbafsInterface $dbafs, FilesystemAdapter $adapter, array $config = [], LazyLoadingGhostFactory $proxyFactory = null, PathNormalizer $pathNormalizer = null)
     {
         $this->dbafs = $dbafs;
         $this->adapter = $adapter;
@@ -58,220 +55,198 @@ final class DbafsFilesystem implements FilesystemOperator
         $this->pathNormalizer = $pathNormalizer ?? new WhitespacePathNormalizer();
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
-    public function fileExists($location): bool
+    public function fileExists($location, int $accessType = self::SYNCED_ONLY): bool
     {
+        $shouldBypass = self::BYPASS_DBAFS === $accessType;
+
+        if ($location instanceof Uuid && $shouldBypass) {
+            throw new \LogicException('Cannot use a UUID in combination with DbafsFilesystemOperator::BYPASS_DBAFS to check if a file exists.');
+        }
+
         try {
-            $path = $this->resolvePath($location);
-        } catch (\InvalidArgumentException $e) {
+            $normalizedPath = $this->normalizePath($location);
+        } catch (UnableToResolveUuid $e) {
             return false;
         }
 
-        return null !== $this->dbafs->getRecord($path);
+        if ($shouldBypass) {
+            return $this->adapter->fileExists($normalizedPath);
+        }
+
+        return null !== $this->dbafs->getRecord($normalizedPath);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
-    public function write($location, string $contents, array $config = []): void
-    {
-        $path = $this->resolvePath($location);
-
-        $this->adapter->write($path, $contents, $this->mergeConfig($config));
-        $this->sync($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     * @param resource   $contents
-     */
-    public function writeStream($location, $contents, array $config = []): void
-    {
-        $this->assertIsResource($contents);
-        $this->rewindStream($contents);
-
-        $path = $this->resolvePath($location);
-
-        $this->adapter->writeStream($path, $contents, $this->mergeConfig($config));
-        $this->sync($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
     public function read($location): string
     {
-        return $this->adapter->read($this->resolvePath($location));
+        return $this->adapter->read($this->normalizePath($location));
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
     public function readStream($location)
     {
-        return $this->adapter->readStream($this->resolvePath($location));
+        return $this->adapter->readStream($this->normalizePath($location));
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
-    public function delete($location): void
+    public function listContents($location, bool $deep = self::LIST_SHALLOW, int $accessType = self::SYNCED_ONLY): DirectoryListing
     {
-        $path = $this->resolvePath($location);
+        $normalizedPath = $this->normalizePath($location);
 
-        $this->adapter->delete($path);
-        $this->sync($path);
-    }
+        if (self::BYPASS_DBAFS === $accessType) {
+            return $this->adapter->listContents($normalizedPath, $deep);
+        }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
-    public function deleteDirectory($location): void
-    {
-        $path = $this->resolvePath($location);
-
-        $this->adapter->deleteDirectory($path);
-        $this->sync($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
-    public function createDirectory($location, array $config = []): void
-    {
-        $path = $this->resolvePath($location);
-
-        $this->adapter->createDirectory($path, $this->mergeConfig($config));
-        $this->sync($path);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $location
-     */
-    public function listContents($location, bool $deep = self::LIST_SHALLOW): DirectoryListing
-    {
-        $recordsIterator = $this->dbafs->getRecords($this->resolvePath($location), $deep);
+        $recordsIterator = $this->dbafs->getRecords($normalizedPath, $deep);
 
         return (new DirectoryListing($recordsIterator))->map(
             fn (array $record): StorageAttributes => $this->getLazyStorageAttributes($record)
         );
     }
 
-    /**
-     * @param string|int $source
-     * @param string|int $destination
-     *
-     * {@inheritdoc}
-     */
-    public function move($source, $destination, array $config = []): void
+    public function lastModified($path, int $accessType = self::SYNCED_ONLY): int
     {
-        $sourcePath = $this->resolvePath($source);
-        $destinationPath = $this->resolvePath($destination);
+        $normalizedPath = $this->normalizePath($path);
+
+        if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsLastModified()) {
+            return $this->adapter->lastModified($normalizedPath)->lastModified();
+        }
+
+        if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
+            throw UnableToRetrieveMetadata::lastModified($normalizedPath, 'Resource does not exist in DBAFS.');
+        }
+
+        if (null === ($lastModified = $record['lastModified'] ?? null)) {
+            throw new \LogicException(sprintf('The DBAFS class "%s" supports "lastModified" but did not set it in the record.', \get_class($this->dbafs)));
+        }
+
+        return $lastModified;
+    }
+
+    public function fileSize($path, int $accessType = self::SYNCED_ONLY): int
+    {
+        $normalizedPath = $this->normalizePath($path);
+
+        if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsFileSize()) {
+            return $this->adapter->fileSize($normalizedPath)->fileSize();
+        }
+
+        if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
+            throw UnableToRetrieveMetadata::fileSize($normalizedPath, 'Resource does not exist in DBAFS.');
+        }
+
+        if (null === ($fileSize = $record['fileSize'] ?? null)) {
+            throw new \LogicException(sprintf('The DBAFS class "%s" supports "fileSize" but did not set it in the record.', \get_class($this->dbafs)));
+        }
+
+        return $fileSize;
+    }
+
+    public function mimeType($path, int $accessType = self::SYNCED_ONLY): string
+    {
+        $normalizedPath = $this->normalizePath($path);
+
+        if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsMimeType()) {
+            return $this->adapter->mimeType($normalizedPath)->mimeType();
+        }
+
+        if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
+            throw UnableToRetrieveMetadata::mimeType($normalizedPath, 'Resource does not exist in DBAFS.');
+        }
+
+        if (null === ($mimeType = $record['mimeType'] ?? null)) {
+            throw new \LogicException(sprintf('The DBAFS class "%s" supports "mimeType" but did not set it in the record.', \get_class($this->dbafs)));
+        }
+
+        return $mimeType;
+    }
+
+    public function visibility($path): string
+    {
+        return $this->adapter->visibility($this->normalizePath($path))->visibility();
+    }
+
+    public function write($location, string $contents, array $config = []): void
+    {
+        $normalizedPath = $this->normalizePath($location);
+
+        $this->adapter->write($normalizedPath, $contents, $this->mergeConfig($config));
+        $this->sync($normalizedPath);
+    }
+
+    public function writeStream($location, $contents, array $config = []): void
+    {
+        $this->assertIsResource($contents);
+        $this->rewindStream($contents);
+
+        $normalizedPath = $this->normalizePath($location);
+
+        $this->adapter->writeStream($normalizedPath, $contents, $this->mergeConfig($config));
+        $this->sync($normalizedPath);
+    }
+
+    public function setVisibility($path, string $visibility): void
+    {
+        $this->adapter->setVisibility($this->normalizePath($path), $visibility);
+    }
+
+    public function delete($location): void
+    {
+        $normalizedPath = $this->normalizePath($location);
+
+        $this->adapter->delete($normalizedPath);
+        $this->sync($normalizedPath);
+    }
+
+    public function deleteDirectory($location): void
+    {
+        $normalizedPath = $this->normalizePath($location);
+
+        $this->adapter->deleteDirectory($normalizedPath);
+        $this->sync($normalizedPath);
+    }
+
+    public function createDirectory($location, array $config = []): void
+    {
+        $normalizedPath = $this->normalizePath($location);
+
+        $this->adapter->createDirectory($normalizedPath, $this->mergeConfig($config));
+        $this->sync($normalizedPath);
+    }
+
+    public function move($source, string $destination, array $config = []): void
+    {
+        $sourcePath = $this->normalizePath($source);
+        $destinationPath = $this->normalizePath($destination);
 
         $this->adapter->move($sourcePath, $destinationPath, $this->mergeConfig($config));
         $this->sync($sourcePath, $destinationPath);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $source
-     * @param string|int $destination
-     */
-    public function copy($source, $destination, array $config = []): void
+    public function copy($source, string $destination, array $config = []): void
     {
-        $destinationPath = $this->resolvePath($destination);
+        $destinationPath = $this->normalizePath($destination);
 
-        $this->adapter->copy($this->resolvePath($source), $destinationPath, $this->mergeConfig($config));
+        $this->adapter->copy($this->normalizePath($source), $destinationPath, $this->mergeConfig($config));
         $this->sync($destinationPath);
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $path
-     */
-    public function lastModified($path): int
+    public function setExtraMetadata($location, array $metadata): void
     {
-        return $this->adapter->lastModified($this->resolvePath($path))->lastModified();
+        $normalizedPath = $this->normalizePath($location);
+
+        try {
+            $this->dbafs->setExtraMetadata($normalizedPath, $metadata);
+        } catch (\InvalidArgumentException $e) {
+            throw new UnableToSetExtraMetadata((string) $location, $e);
+        }
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $path
-     */
-    public function fileSize($path): int
-    {
-        return $this->adapter->fileSize($this->resolvePath($path))->fileSize();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $path
-     */
-    public function mimeType($path): string
-    {
-        return $this->adapter->mimeType($this->resolvePath($path))->mimeType();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $path
-     */
-    public function setVisibility($path, string $visibility): void
-    {
-        $this->adapter->setVisibility($this->resolvePath($path), $visibility);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param string|int $path
-     */
-    public function visibility($path): string
-    {
-        return $this->adapter->visibility($this->resolvePath($path))->visibility();
-    }
-
-    public function setExtraMetadata(): void
-    {
-        // todo
-    }
-
-    /**
-     * @param string|int $location
-     * @phpstan-return ExtraMetadata
-     */
     public function extraMetadata($location): array
     {
-        $record = $this->dbafs->getRecord($this->resolvePath($location));
+        $normalizedPath = $this->normalizePath($location);
+
+        $record = $this->dbafs->getRecord($normalizedPath);
 
         if (null === $record) {
-            // todo: find the right exception
-            throw new \RuntimeException('');
+            throw UnableToRetrieveMetadata::create($normalizedPath, StorageAttributes::ATTRIBUTE_EXTRA_METADATA, 'Record does not exist in DBAFS.');
         }
 
         return $record['extra'];
@@ -289,31 +264,22 @@ final class DbafsFilesystem implements FilesystemOperator
     }
 
     /**
-     * Resolve DBAFS IDs and UUIDs to paths. If a path was given, normalize it.
+     * Resolve DBAFS UUIDs to paths. If a path was given, normalize it.
      *
-     * @param string|int $identifier
+     * @param string|Uuid $identifier
+     *
+     * @throws UnableToResolveUuid if a provided UUID could not be converted to a path
      */
-    private function resolvePath($identifier): string
+    private function normalizePath($identifier): string
     {
-        if (is_numeric($identifier)) {
-            $path = $this->dbafs->getPathFromId((int) $identifier);
+        if ($identifier instanceof Uuid) {
+            $path = $this->dbafs->getPathFromUuid($identifier);
 
-            if (null === $path && \is_int($identifier)) {
-                // todo: find the right exception
-                throw new \InvalidArgumentException("Could not resolve a filesystem path for ID $identifier.");
+            if (null === $path) {
+                throw new UnableToResolveUuid($identifier);
             }
 
-            return $path ?? $this->pathNormalizer->normalizePath((string) $identifier);
-        }
-
-        $identifier = (string) $identifier;
-
-        if (Validator::isBinaryUuid($identifier)) {
-            return $this->dbafs->getPathFromUuid($identifier) ?? $this->pathNormalizer->normalizePath($identifier);
-        }
-
-        if (Validator::isStringUuid($identifier)) {
-            return $this->dbafs->getPathFromUuid(StringUtil::uuidToBin($identifier)) ?? $this->pathNormalizer->normalizePath($identifier);
+            return $path;
         }
 
         return $this->pathNormalizer->normalizePath($identifier);

@@ -12,20 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use Contao\CoreBundle\Event\DbafsMetadataEvent;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * @phpstan-type ExtraMetadata array<string, mixed>
- * @phpstan-type Record array{isFile: bool, path: string, extra: ExtraMetadata}
+ * @phpstan-import-type Record from DbafsInterface
+ * @phpstan-import-type ExtraMetadata from DbafsInterface
  */
-class Dbafs implements ResetInterface
+class Dbafs implements ResetInterface, DbafsInterface
 {
     public const FILE_MARKER_EXCLUDED = '.nosync';
     public const FILE_MARKER_PUBLIC = '.public';
@@ -84,16 +86,15 @@ class Dbafs implements ResetInterface
         $this->bulkInsertSize = $chunkSize;
     }
 
-    /**
-     * @param string $uuid A UUID in binary form
-     */
-    public function getPathFromUuid(string $uuid): ?string
+    public function getPathFromUuid(Uuid $uuid): ?string
     {
-        if (!\array_key_exists($uuid, $this->pathByUuid)) {
-            $this->loadRecordByUuid($uuid);
+        $uuidBytes = $uuid->toBinary();
+
+        if (!\array_key_exists($uuidBytes, $this->pathByUuid)) {
+            $this->loadRecordByUuid($uuidBytes);
         }
 
-        return $this->pathByUuid[$uuid];
+        return $this->pathByUuid[$uuidBytes];
     }
 
     public function getPathFromId(int $id): ?string
@@ -105,9 +106,6 @@ class Dbafs implements ResetInterface
         return $this->pathById[$id];
     }
 
-    /**
-     * @phpstan-return Record|null
-     */
     public function getRecord(string $path): ?array
     {
         if (!\array_key_exists($path, $this->records)) {
@@ -117,10 +115,6 @@ class Dbafs implements ResetInterface
         return $this->records[$path];
     }
 
-    /**
-     * @return \Generator<array>
-     * @phpstan-return \Generator<Record>
-     */
     public function getRecords(string $path, bool $deep = false): \Generator
     {
         $path = Path::join($this->dbPathPrefix, $path);
@@ -149,6 +143,31 @@ class Dbafs implements ResetInterface
         }
     }
 
+    public function setExtraMetadata(string $path, array $metadata): void
+    {
+        if (null === ($record = $this->getRecord($path))) {
+            throw new \InvalidArgumentException("Record for path $path does not exist.");
+        }
+
+        if (!$record['isFile']) {
+            throw new \InvalidArgumentException("Can only set extra metadata for files, directory given under $path.");
+        }
+
+        $row = [
+            'uuid' => $uuid = $this->pathByUuid[$path],
+            'path' => $path,
+        ];
+
+        $event = new StoreDbafsMetadataEvent($this->table, $row, $metadata);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::STORE_DBAFS_METADATA);
+
+        $this->connection->update(
+            $this->table,
+            $event->getRow(),
+            ['uuid' => $uuid]
+        );
+    }
+
     /**
      * Reset the internal record cache.
      */
@@ -159,12 +178,6 @@ class Dbafs implements ResetInterface
         $this->pathById = [];
     }
 
-    /**
-     * Synchronizes the database with a given filesystem adapter. If a $scope is
-     * provided only a certain file/subdirectory will be synchronized.
-     *
-     * @param string ...$scope relative paths inside the filesystem root
-     */
     public function sync(FilesystemAdapter $filesystem, string ...$scope): ChangeSet
     {
         [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$scope);
@@ -216,6 +229,21 @@ class Dbafs implements ResetInterface
         $filesystemIterator = $this->getFilesystemPaths($filesystem, $searchPaths, $parentPaths);
 
         return $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $filesystemIterator, $searchPaths);
+    }
+
+    public static function supportsLastModified(): bool
+    {
+        return false;
+    }
+
+    public static function supportsFileSize(): bool
+    {
+        return false;
+    }
+
+    public static function supportsMimeType(): bool
+    {
+        return false;
     }
 
     /**
@@ -402,8 +430,8 @@ class Dbafs implements ResetInterface
         $path = $this->convertToFilesystemPath($row['path']);
         $isFile = 'file' === $row['type'];
 
-        $event = new DbafsMetadataEvent($this->table, $row);
-        $this->eventDispatcher->dispatch($event);
+        $event = new RetrieveDbafsMetadataEvent($this->table, $row);
+        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::RETRIEVE_DBAFS_METADATA);
 
         /** @phpstan-var Record $record */
         $record = [
@@ -448,7 +476,7 @@ class Dbafs implements ResetInterface
         $inserts = [];
 
         foreach ($changeSet->getItemsToCreate() as $newValues) {
-            $newUuid = Uuid::uuid1()->getBytes();
+            $newUuid = Uuid::v1()->toBinary();
             $newPath = $newValues[ChangeSet::ATTR_PATH];
             $isDir = '/' === substr($newPath, -1);
 

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Filesystem\DbafsFilesystem;
+use Contao\CoreBundle\Filesystem\DbafsFilesystemOperator;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
@@ -675,8 +676,10 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEmpty($container->getDefinition('contao.filesystem.operator.assets')->getTags());
 
         // Automatic dependency injection via arguments
-        $this->assertTrue($container->hasAlias(DbafsFilesystem::class.' $files'));
-        $this->assertTrue($container->hasAlias(FilesystemOperator::class.' $assets'));
+        $this->assertTrue($container->hasAlias(DbafsFilesystem::class.' $filesStorage'));
+        $this->assertTrue($container->hasAlias(DbafsFilesystemOperator::class.' $filesStorage'));
+        $this->assertTrue($container->hasAlias(FilesystemOperator::class.' $assetsStorage'));
+        $this->assertTrue($container->hasAlias(\League\Flysystem\Filesystem::class.' $assetsStorage'));
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder

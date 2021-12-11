@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
-use Contao\CoreBundle\Event\DbafsMetadataEvent;
+use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Tests\TestCase;
@@ -22,11 +22,15 @@ use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Uid\Uuid;
 
 class DbafsTest extends TestCase
 {
     public function testResolvePaths(): void
     {
+        $uuid1 = $this->generateUuid(1);
+        $uuid2 = $this->generateUuid(2);
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(2))
@@ -34,11 +38,11 @@ class DbafsTest extends TestCase
             ->willReturnMap([
                 [
                     'SELECT * FROM tl_files WHERE id=?', [1], [],
-                    ['id' => 1, 'uuid' => 'b33f', 'path' => 'foo/bar1', 'type' => 'file'],
+                    ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar1', 'type' => 'file'],
                 ],
                 [
-                    'SELECT * FROM tl_files WHERE uuid=?', ['7a56'], [],
-                    ['id' => 2, 'uuid' => '7a56', 'path' => 'foo/bar2', 'type' => 'file'],
+                    'SELECT * FROM tl_files WHERE uuid=?', [$uuid2->toBinary()], [],
+                    ['id' => 2, 'uuid' => $uuid2->toBinary(), 'path' => 'foo/bar2', 'type' => 'file'],
                 ],
             ])
         ;
@@ -46,17 +50,19 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection);
 
         $this->assertSame('foo/bar1', $dbafs->getPathFromId(1));
-        $this->assertSame('foo/bar2', $dbafs->getPathFromUuid('7a56'));
+        $this->assertSame('foo/bar2', $dbafs->getPathFromUuid($uuid2));
 
         // Subsequent calls (no matter which identifier) should be served from cache
         $this->assertSame('foo/bar1', $dbafs->getPathFromId(1));
-        $this->assertSame('foo/bar1', $dbafs->getPathFromUuid('b33f'));
+        $this->assertSame('foo/bar1', $dbafs->getPathFromUuid($uuid1));
         $this->assertSame('foo/bar1', $dbafs->getRecord('foo/bar1')['path']);
         $this->assertSame('foo/bar2', $dbafs->getPathFromId(2));
     }
 
     public function testResolvePathsForUnknownRecords(): void
     {
+        $uuid = $this->generateUuid(1);
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(2))
@@ -67,11 +73,11 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection);
 
         $this->assertNull($dbafs->getPathFromId(1));
-        $this->assertNull($dbafs->getPathFromUuid('7a56'));
+        $this->assertNull($dbafs->getPathFromUuid($uuid));
 
         // Subsequent calls should be short-circuited
         $this->assertNull($dbafs->getPathFromId(1));
-        $this->assertNull($dbafs->getPathFromUuid('7a56'));
+        $this->assertNull($dbafs->getPathFromUuid($uuid));
     }
 
     public function testGetRecord(): void
@@ -82,7 +88,7 @@ class DbafsTest extends TestCase
             ->with('SELECT * FROM tl_files WHERE path=?', ['foo/bar'], [])
             ->willReturn([
                 'id' => 1,
-                'uuid' => '9e41',
+                'uuid' => $this->generateUuid(1)->toBinary(),
                 'path' => 'foo/bar',
                 'type' => 'file',
             ])
@@ -126,9 +132,9 @@ class DbafsTest extends TestCase
                 []
             )
             ->willReturn([
-                ['id' => 1, 'uuid' => 'b33f', 'path' => 'foo/first', 'type' => 'file'],
-                ['id' => 2, 'uuid' => 'a451', 'path' => 'foo/second', 'type' => 'file'],
-                ['id' => 3, 'uuid' => 'd98c', 'path' => 'foo/bar', 'type' => 'folder'],
+                ['id' => 1, 'uuid' => $this->generateUuid(1)->toBinary(), 'path' => 'foo/first', 'type' => 'file'],
+                ['id' => 2, 'uuid' => $this->generateUuid(2)->toBinary(), 'path' => 'foo/second', 'type' => 'file'],
+                ['id' => 3, 'uuid' => $this->generateUuid(3)->toBinary(), 'path' => 'foo/bar', 'type' => 'folder'],
             ])
         ;
 
@@ -189,11 +195,18 @@ class DbafsTest extends TestCase
 
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
     {
+        $uuid = $this->generateUuid(1);
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
             ->with('SELECT * FROM tl_files WHERE path=?', ['files/foo/bar'], [])
-            ->willReturn(['id' => 1, 'uuid' => 'b33f', 'path' => 'files/foo/bar', 'type' => 'file'])
+            ->willReturn([
+                'id' => 1,
+                'uuid' => $uuid->toBinary(),
+                'path' => 'files/foo/bar',
+                'type' => 'file',
+            ])
         ;
 
         $dbafs = $this->getDbafs($connection);
@@ -204,32 +217,35 @@ class DbafsTest extends TestCase
         $this->assertSame('foo/bar', $record['path']);
 
         $this->assertSame('foo/bar', $dbafs->getPathFromId(1));
-        $this->assertSame('foo/bar', $dbafs->getPathFromUuid('b33f'));
+        $this->assertSame('foo/bar', $dbafs->getPathFromUuid($uuid));
     }
 
     public function testResetInternalCache(): void
     {
+        $uuid1 = $this->generateUuid(1);
+        $uuid2 = $this->generateUuid(2);
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAssociative')
             ->with('SELECT * FROM tl_files WHERE id=?', [1], [])
             ->willReturnOnConsecutiveCalls(
-                ['id' => 1, 'uuid' => 'b33f', 'path' => 'foo/bar', 'type' => 'file'],
-                ['id' => 1, 'uuid' => '51d2', 'path' => 'other/path', 'type' => 'file']
+                ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar', 'type' => 'file'],
+                ['id' => 1, 'uuid' => $uuid2->toBinary(), 'path' => 'other/path', 'type' => 'file']
             )
         ;
 
         $dbafs = $this->getDbafs($connection);
 
         $this->assertSame('foo/bar', $dbafs->getPathFromId(1));
-        $this->assertSame('foo/bar', $dbafs->getPathFromUuid('b33f'));
+        $this->assertSame('foo/bar', $dbafs->getPathFromUuid($uuid1));
         $this->assertSame('foo/bar', $dbafs->getRecord('foo/bar')['path']);
 
         $dbafs->reset();
 
         $this->assertSame('other/path', $dbafs->getPathFromId(1));
-        $this->assertSame('other/path', $dbafs->getPathFromUuid('51d2'));
+        $this->assertSame('other/path', $dbafs->getPathFromUuid($uuid2));
         $this->assertSame('other/path', $dbafs->getRecord('other/path')['path']);
     }
 
@@ -265,16 +281,16 @@ class DbafsTest extends TestCase
             ->method('fetchAllNumeric')
             ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_dir FROM tl_files", [], [])
             ->willReturn([
-                ['file1', 'ab54', 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0],
-                ['file2', 'df5q', 'ab86a1e1ef70dff97959067b723c5c24', 0],
-                ['empty-dir', '5681', 'd41d8cd98f00b204e9800998ecf8427e', 1],
-                ['foo', 'ee61', '48a6bbe07d25733e37e2c949ee412d5d', 1],
-                ['foo/file3', '80b0', 'ead99c2fbd1b40a59695567afb14c26c', 0],
-                ['foo/baz', '238a', '1ef7bcc6fe73d58905d2c8d21853663e', 1],
-                ['foo/baz/file4', 'e7a1', '6d4db5ff0c117864a02827bad3c361b9', 0],
-                ['bar', '61ff', '06a182c81a4f9c208a44b66fbb3c1d9f', 1],
-                ['bar/file5a', '25cd', 'd41d8cd98f00b204e9800998ecf8427e', 0],
-                ['bar/file5b', '9f2a', 'd41d8cd98f00b204e9800998ecf8427e', 0],
+                ['file1', $this->generateUuid(1)->toBinary(), 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0],
+                ['file2', $this->generateUuid(2)->toBinary(), 'ab86a1e1ef70dff97959067b723c5c24', 0],
+                ['empty-dir', $this->generateUuid(3)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 1],
+                ['foo', $this->generateUuid(4)->toBinary(), '48a6bbe07d25733e37e2c949ee412d5d', 1],
+                ['foo/file3', $this->generateUuid(5)->toBinary(), 'ead99c2fbd1b40a59695567afb14c26c', 0],
+                ['foo/baz', $this->generateUuid(6)->toBinary(), '1ef7bcc6fe73d58905d2c8d21853663e', 1],
+                ['foo/baz/file4', $this->generateUuid(7)->toBinary(), '6d4db5ff0c117864a02827bad3c361b9', 0],
+                ['bar', $this->generateUuid(8)->toBinary(), '06a182c81a4f9c208a44b66fbb3c1d9f', 1],
+                ['bar/file5a', $this->generateUuid(9)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 0],
+                ['bar/file5b', $this->generateUuid(10)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 0],
             ])
         ;
 
@@ -742,7 +758,7 @@ class DbafsTest extends TestCase
         $eventDispatcher
             ->method('dispatch')
             ->willReturnCallback(
-                static function (DbafsMetadataEvent $event) {
+                static function (RetrieveDbafsMetadataEvent $event) {
                     $event->set('foo', 'bar');
 
                     return $event;
@@ -751,5 +767,22 @@ class DbafsTest extends TestCase
         ;
 
         return new Dbafs($connection, $eventDispatcher, 'tl_files', 'md5');
+    }
+
+    /**
+     * Generate reproducible UUIDs.
+     */
+    private function generateUuid(int $index): Uuid
+    {
+        $hash = md5((string) $index);
+
+        $uuid = sprintf(
+            '%08s-%04s-1%03s-8000-000000000000',
+            substr($hash, -8),
+            substr($hash, -12, 4),
+            substr($hash, -15, 3),
+        );
+
+        return Uuid::fromString($uuid);
     }
 }

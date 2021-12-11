@@ -12,29 +12,47 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Event;
 
-use Contao\CoreBundle\Event\DbafsMetadataEvent;
+use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Uid\Uuid;
 
-class DbafsMetadataEventTest extends TestCase
+class StoreDbafsMetadataEventTest extends TestCase
 {
     public function testSetAndGetValues(): void
     {
+        $uuid = Uuid::v1();
+
         $rowData = [
-            'uuid' => '12345',
+            'uuid' => $uuid->toBinary(),
             'path' => 'foo/bar',
             'baz' => 42,
         ];
 
-        $event = new DbafsMetadataEvent('tl_files', $rowData);
+        $extraMetadata = [
+            'foo' => new Metadata(['some' => 'value']),
+        ];
+
+        $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $extraMetadata);
 
         $this->assertSame('tl_files', $event->getTable());
-        $this->assertSame('12345', $event->getUuid());
+        $this->assertSame($uuid->toBinary(), $event->getUuid()->toBinary());
         $this->assertSame('foo/bar', $event->getPath());
-        $this->assertSame($rowData, $event->getRow());
+        $this->assertSame($extraMetadata, $event->getExtraMetadata());
 
-        $this->assertEmpty($event->getExtraMetadata());
-        $event->set('baz-data', $event->getRow()['baz']);
-        $this->assertSame(['baz-data' => 42], $event->getExtraMetadata());
+        $this->assertSame($rowData, $event->getRow());
+        $event->set('foo', $event->getExtraMetadata()['foo']->all());
+
+        $this->assertSame(
+            [
+                'uuid' => $uuid->toBinary(),
+                'path' => 'foo/bar',
+                'baz' => 42,
+                'foo' => ['some' => 'value'],
+            ],
+            $event->getRow()
+        );
     }
 
     /**
@@ -45,7 +63,7 @@ class DbafsMetadataEventTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedExceptionMessage);
 
-        new DbafsMetadataEvent('tl_foo', $row);
+        new RetrieveDbafsMetadataEvent('tl_foo', $row);
     }
 
     public function provideRowData(): \Generator

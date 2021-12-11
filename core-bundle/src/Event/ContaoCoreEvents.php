@@ -76,4 +76,18 @@ final class ContaoCoreEvents
      * @see SlugValidCharactersEvent
      */
     public const SLUG_VALID_CHARACTERS = 'contao.slug_valid_characters';
+
+    /**
+     * The contao.filesystem.retrieve_dbafs_metadata event is triggered after the contao.filesystem.dbafs service loads metadata from the database.
+     *
+     * @see RetrieveDbafsMetadataEvent
+     */
+    public const RETRIEVE_DBAFS_METADATA = 'contao.filesystem.retrieve_dbafs_metadata';
+
+    /**
+     * The contao.filesystem.retrieve_dbafs_metadata event is triggered before the contao.filesystem.dbafs service stores metadata into the database.
+     *
+     * @see StoreDbafsMetadataEvent
+     */
+    public const STORE_DBAFS_METADATA = 'contao.filesystem.store_dbafs_metadata';
 }

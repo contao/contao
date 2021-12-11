@@ -23,6 +23,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Filesystem\DbafsFilesystem;
+use Contao\CoreBundle\Filesystem\DbafsFilesystemOperator;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
@@ -474,13 +475,15 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 $operatorDefinition->setArgument(1, new Reference($adapterName));
                 $operatorDefinition->setArgument(2, $storageConfig);
 
-                $container->registerAliasForArgument($operatorName, DbafsFilesystem::class, $name);
+                $container->registerAliasForArgument($operatorName, DbafsFilesystem::class, "{$name}Storage");
+                $container->registerAliasForArgument($operatorName, DbafsFilesystemOperator::class, "{$name}Storage");
             } else {
                 $operatorDefinition = new Definition(\League\Flysystem\Filesystem::class);
                 $operatorDefinition->setArgument(0, new Reference($adapterName));
                 $operatorDefinition->setArgument(1, $storageConfig);
 
-                $container->registerAliasForArgument($operatorName, FilesystemOperator::class, $name);
+                $container->registerAliasForArgument($operatorName, \League\Flysystem\Filesystem::class, "{$name}Storage");
+                $container->registerAliasForArgument($operatorName, FilesystemOperator::class, "{$name}Storage");
             }
 
             // Mount operator in the virtual filesystem

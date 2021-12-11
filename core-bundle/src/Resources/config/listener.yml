@@ -159,9 +159,9 @@ services:
             - { name: contao.hook, hook: loadDataContainer }
 
     contao.listener.dbafs_metadata:
-        class: Contao\CoreBundle\EventListener\DbafsMetadataListener
+        class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
         tags:
-            - kernel.event_listener
+            - kernel.event_subscriber
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener

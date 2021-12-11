@@ -12,24 +12,35 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Event;
 
-class DbafsMetadataEvent
+use Symfony\Component\Uid\Uuid;
+
+/**
+ * @internal
+ */
+class AbstractDbafsMetadataEvent
 {
-    private string $table;
+    /**
+     * @var array<string, mixed>
+     */
+    protected array $row;
 
     /**
      * @var array<string, mixed>
      */
-    private array $row;
-
-    private array $extraMetadata = [];
+    protected array $extraMetadata;
+    private string $table;
 
     /**
+     * @internal
+     *
      * @param array<string, mixed> $row
+     * @param array<string, mixed> $extraMetadata
      */
-    public function __construct(string $table, array $row)
+    public function __construct(string $table, array $row, array $extraMetadata = [])
     {
         $this->table = $table;
         $this->row = $row;
+        $this->extraMetadata = $extraMetadata;
 
         foreach (['path', 'uuid'] as $mandatoryKey) {
             if (null === ($value = $row[$mandatoryKey] ?? null)) {
@@ -52,9 +63,9 @@ class DbafsMetadataEvent
         return $this->row['path'];
     }
 
-    public function getUuid(): string
+    public function getUuid(): Uuid
     {
-        return $this->row['uuid'];
+        return Uuid::fromBinary($this->row['uuid']);
     }
 
     /**
@@ -65,16 +76,11 @@ class DbafsMetadataEvent
         return $this->row;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getExtraMetadata(): array
     {
         return $this->extraMetadata;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function set(string $key, $value): void
-    {
-        $this->extraMetadata[$key] = $value;
     }
 }
