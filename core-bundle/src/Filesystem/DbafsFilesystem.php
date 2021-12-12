@@ -94,8 +94,8 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             return $this->adapter->listContents($normalizedPath, $deep);
         }
 
-        if (self::FORCE_PARTIAL_SYNC === $accessType) {
-            $this->sync($normalizedPath);
+        if (self::FORCE_SYNC === $accessType) {
+            $this->sync("$normalizedPath/*");
         }
 
         $recordsIterator = $this->dbafs->getRecords($normalizedPath, $deep);
@@ -113,7 +113,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             return $this->adapter->lastModified($normalizedPath)->lastModified();
         }
 
-        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+        if (self::FORCE_SYNC === $accessType) {
             $this->sync($path);
         }
 
@@ -136,7 +136,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             return $this->adapter->fileSize($normalizedPath)->fileSize();
         }
 
-        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+        if (self::FORCE_SYNC === $accessType) {
             $this->sync($path);
         }
 
@@ -159,7 +159,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             return $this->adapter->mimeType($normalizedPath)->mimeType();
         }
 
-        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+        if (self::FORCE_SYNC === $accessType) {
             $this->sync($path);
         }
 
@@ -263,7 +263,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             throw new \LogicException('Cannot get extra metadata from DBAFS with DbafsFilesystemOperator::BYPASS_DBAFS.');
         }
 
-        if (self::FORCE_PARTIAL_SYNC === $accessType) {
+        if (self::FORCE_SYNC === $accessType) {
             $this->sync($location);
         }
 
@@ -277,8 +277,14 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
     }
 
     /**
-     * Synchronizes the database assisted file system. If a $scope is
-     * provided only a certain file/subdirectory will be synchronized.
+     * Synchronizes the database assisted file system. If $scope paths
+     * are provided only certain files/subdirectories will be synchronized.
+     *
+     * Paths can have the following forms:
+     *
+     *   'foo/bar/baz' = just the single the file/directory foo/bar/baz
+     *   'foo/**' = foo and all resources in all subdirectories
+     *   'foo/*' = foo and only direct child resources of foo
      *
      * @param string ...$scope relative paths inside the filesystem root
      */

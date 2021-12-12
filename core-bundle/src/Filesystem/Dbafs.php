@@ -215,10 +215,8 @@ class Dbafs implements ResetInterface, DbafsInterface
 
     /**
      * Computes the change set between the database and a given filesystem
-     * adapter. If a $scope is provided only a certain file/subdirectory will
-     * be taken into account.
-     *
-     * @param string ...$scope relative paths inside the filesystem root
+     * adapter. @See DbafsInterface::sync() for more details on the $scope
+     * parameter.
      */
     public function computeChangeSet(FilesystemAdapter $filesystem, string ...$scope): ChangeSet
     {
@@ -275,7 +273,9 @@ class Dbafs implements ResetInterface, DbafsInterface
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
 
-        foreach ($filesystemIterator as $path => $hash) {
+        $files = iterator_to_array($filesystemIterator);
+
+        foreach ($files as $path => $hash) {
             $name = basename($path);
             $parentDir = \dirname($path).'/';
 
@@ -286,7 +286,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 // In partial sync we need to manually add child hashes of
                 // items that we do not traverse but which still contribute to
                 // the directory hash
-                if ($isPartialSync && !$this->inPath($path, $searchPaths)) {
+                if ($isPartialSync && !$this->inPath(rtrim($path, '/'), $searchPaths, false)) {
                     $directChildrenPattern = sprintf('@^%s[^/]+[/]?$@', preg_quote($path, '@'));
 
                     foreach ($allDbHashesByPath as $childPath => $childHash) {
@@ -327,6 +327,17 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
 
             unset($itemsToDelete[$path]);
+        }
+
+        // Ignore all children of shallow directories
+        $shallowDirectories = array_filter($searchPaths, static fn (string $path): bool => '//' === substr($path, -2));
+
+        if (!empty($shallowDirectories)) {
+            foreach (array_keys($itemsToDelete) as $item) {
+                if ($this->inPath(rtrim($item, '/'), $shallowDirectories)) {
+                    unset($itemsToDelete[$item]);
+                }
+            }
         }
 
         // Detect moves: If items that should get created can be found in the
@@ -617,7 +628,7 @@ class Dbafs implements ResetInterface, DbafsInterface
     {
         $getHash = fn (string $path): string => hash($this->hashAlgorithm, $filesystem->read($path));
 
-        $traverseRecursively = function (string $directory) use ($getHash, &$traverseRecursively, $filesystem): \Generator {
+        $traverseRecursively = function (string $directory, bool $shallow = false) use ($getHash, &$traverseRecursively, $filesystem): \Generator {
             if ($filesystem->fileExists(Path::join($directory, self::FILE_MARKER_EXCLUDED))) {
                 return;
             }
@@ -626,7 +637,9 @@ class Dbafs implements ResetInterface, DbafsInterface
                 $path = $entry->path();
 
                 if (!$entry instanceof FileAttributes) {
-                    yield from $traverseRecursively($path);
+                    if (!$shallow) {
+                        yield from $traverseRecursively($path);
+                    }
 
                     continue;
                 }
@@ -674,8 +687,15 @@ class Dbafs implements ResetInterface, DbafsInterface
                 return;
             }
 
+            $shallow = false;
+
+            if ('//' === substr($searchPath, -2)) {
+                $searchPath = rtrim($searchPath, '/');
+                $shallow = true;
+            }
+
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                if ($filesystem->fileExists($searchPath)) {
+                if (!$shallow && $filesystem->fileExists($searchPath)) {
                     // Yield file
                     yield $searchPath => $getHash($searchPath);
 
@@ -688,7 +708,7 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
 
             if ($isDir) {
-                yield from $traverseRecursively($searchPath);
+                yield from $traverseRecursively($searchPath, $shallow);
 
                 continue;
             }
@@ -704,27 +724,34 @@ class Dbafs implements ResetInterface, DbafsInterface
 
     /**
      * Returns a normalized list of paths with redundant paths stripped as well
-     * as a list of all parent paths that are not covered by the arguments.
+     * as a list of all parent paths that are not covered by the arguments. To
+     * denote directories of which only the direct children should be read, we
+     * append a double slash (//) as an internal marker.
      *
-     * Example:
-     *   foo/bar/baz/cat.jpg -> [foo/bar/baz/cat.jpg],
-     *                                         [foo/bar/baz, foo/bar, foo]
-     *
-     *   foo/bar/baz/cat.jpg, foo -> [foo],
-     *                                         []
-     *
-     *   foo/from/cat.jpg, foo/to/cat.jpg -> [foo/from/cat.jpg, foo/to/cat.jpg],
-     *                                         [foo/to, foo/from, foo]
-     *
-     *   foo/bar, foo/bar/baz, other -> [foo/bar, other]
-     *                                         [foo]
+     * @see \Contao\CoreBundle\Tests\Filesystem\DbafsTest::testNormalizesSearchPaths()
+     * for examples.
      *
      * @return array<int, array<int, string>>
      * @phpstan-return array{0: array<int, string>, 1: array<int, string>}
      */
     private function getNormalizedSearchPaths(string ...$paths): array
     {
-        $paths = array_map(static fn (string $path): string => Path::canonicalize($path), $paths);
+        $paths = array_map(
+            static function (string $path): string {
+                $path = trim(Path::canonicalize($path));
+
+                if (Path::isAbsolute($path)) {
+                    throw new \InvalidArgumentException("Absolute path '$path' is not allowed when synchronizing.");
+                }
+
+                if (0 === strpos($path, '.')) {
+                    throw new \InvalidArgumentException("Dot path '$path' is not allowed when synchronizing.");
+                }
+
+                return $path;
+            },
+            $paths
+        );
 
         if (0 === \count($paths) || \in_array('', $paths, true)) {
             return [[''], []];
@@ -733,11 +760,34 @@ class Dbafs implements ResetInterface, DbafsInterface
         // Make sure directories appear before their contents
         sort($paths);
 
+        $shallowDirectories = [];
+        $deepDirectories = [];
+
+        // Normalize '/**' and '/*' suffixes
+        $paths = array_map(
+            static function (string $path) use (&$shallowDirectories, &$deepDirectories): string {
+                if (preg_match('@^[^*]+/(\*\*?)@', $path, $matches)) {
+                    $path = rtrim($path, '/*');
+
+                    if ('*' === $matches[1]) {
+                        $shallowDirectories[] = $path;
+                    } else {
+                        $deepDirectories[] = $path;
+                    }
+                }
+
+                return $path;
+            },
+            $paths
+        );
+
+        $shallowDirectories = array_diff($shallowDirectories, $deepDirectories);
+
         $searchPaths = [];
         $parentPaths = [];
 
         foreach ($paths as $path) {
-            foreach ($searchPaths as $scope) {
+            foreach (array_diff($searchPaths, $shallowDirectories) as $scope) {
                 if (Path::isBasePath($scope, $path)) {
                     // Path if already covered
                     continue 2;
@@ -748,7 +798,7 @@ class Dbafs implements ResetInterface, DbafsInterface
             $parentPath = $path;
 
             while ('.' !== ($parentPath = \dirname($parentPath))) {
-                if (\in_array($parentPath, $parentPaths, true)) {
+                if (\in_array($parentPath, $parentPaths, true) || \in_array($parentPath, $shallowDirectories, true)) {
                     // Parent path is already covered
                     break;
                 }
@@ -757,20 +807,43 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
         }
 
+        // Append marker for shallow directories
+        foreach ($shallowDirectories as $directory) {
+            $searchPaths[array_search($directory, $searchPaths, true)] = "$directory//";
+        }
+
         rsort($parentPaths);
 
         return [$searchPaths, $parentPaths];
     }
 
     /**
-     * Returns true if a path is inside any of the given base paths.
+     * Returns true if a path is inside any of the given base paths. All
+     * provided paths are expected to be normalized and may contain a double
+     * slash (//) as suffix.
+     *
+     * If $considerShallowDirectories is set to false, paths that are directly
+     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
+     * truthy result.
      *
      * @param array<int, string> $basePaths
      */
-    private function inPath(string $path, array $basePaths): bool
+    private function inPath(string $path, array $basePaths, bool $considerShallowDirectories = true): bool
     {
         foreach ($basePaths as $basePath) {
-            if (Path::isBasePath($basePath, $path)) {
+            // Any sub path
+            if (0 === mb_strpos($path.'/', $basePath.'/')) {
+                return true;
+            }
+
+            if (!$considerShallowDirectories) {
+                continue;
+            }
+
+            // Direct child of shallow directory
+            $basePath = preg_quote(rtrim($basePath, '/'), '@');
+
+            if ($path === $basePath || 1 === preg_match("@^$basePath/[^/]*(//)?$@", $path)) {
                 return true;
             }
         }

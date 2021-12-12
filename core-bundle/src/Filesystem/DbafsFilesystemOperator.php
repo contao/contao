@@ -25,7 +25,7 @@ interface DbafsFilesystemOperator extends FilesystemOperator
 {
     public const SYNCED_ONLY = 0;
     public const BYPASS_DBAFS = 1;
-    public const FORCE_PARTIAL_SYNC = 2;
+    public const FORCE_SYNC = 2;
 
     /**
      * {@inheritdoc}

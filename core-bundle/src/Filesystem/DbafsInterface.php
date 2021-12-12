@@ -52,8 +52,14 @@ interface DbafsInterface
     public function setExtraMetadata(string $path, array $metadata): void;
 
     /**
-     * Synchronizes the database with a given filesystem adapter. If a $scope is
-     * provided only a certain file/subdirectory will be synchronized.
+     * Synchronizes the database with a given filesystem adapter. If $scope
+     * paths are provided only certain files/directories will be synchronized.
+     *
+     * Paths can have the following forms:
+     *
+     *   'foo/bar/baz' = just the single the file/directory foo/bar/baz
+     *   'foo/**' = foo and all resources in all subdirectories
+     *   'foo/*' = foo and only direct child resources of foo
      *
      * @param string ...$scope relative paths inside the filesystem root
      */

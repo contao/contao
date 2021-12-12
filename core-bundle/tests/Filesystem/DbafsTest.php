@@ -250,6 +250,118 @@ class DbafsTest extends TestCase
     }
 
     /**
+     * @dataProvider provideSearchPaths
+     *
+     * @param array<int, string> $paths
+     * @param array<int, string> $expectedSearchPaths
+     * @param array<int, string> $expectedParentPaths
+     */
+    public function testNormalizesSearchPaths(array $paths, array $expectedSearchPaths, array $expectedParentPaths): void
+    {
+        $dbafs = $this->getDbafs();
+
+        // Due to the complexity of the inner workings, we are testing a method
+        // that isn't part of the API. Normalizing paths is the first isolated
+        // step when synchronizing, but we do not want to expose this functionality.
+        $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
+        $method->setAccessible(true);
+        [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
+
+        $this->assertSame($expectedSearchPaths, $searchPaths, 'search paths');
+        $this->assertSame($expectedParentPaths, $parentPaths, 'parent paths');
+    }
+
+    public function provideSearchPaths(): \Generator
+    {
+        yield 'single file' => [
+            ['foo/bar/baz/cat.jpg'],
+            ['foo/bar/baz/cat.jpg'],
+            ['foo/bar/baz', 'foo/bar', 'foo'],
+        ];
+
+        yield 'parent covering children' => [
+            ['foo/bar/baz/cat.jpg', 'foo/**'],
+            ['foo'],
+            [],
+        ];
+
+        yield 'individual files and (shared) parent folders' => [
+            ['foo/from/cat.jpg', 'foo/to/cat.jpg'],
+            ['foo/from/cat.jpg', 'foo/to/cat.jpg'],
+            ['foo/to', 'foo/from', 'foo'],
+        ];
+
+        yield 'directories and (shared) parent folders' => [
+            ['foo/bar/**', 'foo/bar/baz/**', 'other/**'],
+            ['foo/bar', 'other'],
+            ['foo'],
+        ];
+
+        yield 'parent with direct children not covering sub directories' => [
+            ['foo/bar/baz/sub/**', 'foo/*'],
+            ['foo//', 'foo/bar/baz/sub'],
+            ['foo/bar/baz', 'foo/bar'],
+        ];
+
+        yield 'same directory with shallow and deep sync' => [
+            ['foo/bar/*', 'foo/bar/**', 'foo/bar/*'],
+            ['foo/bar'],
+            ['foo'],
+        ];
+
+        yield 'resource as file and directory' => [
+            ['foo/bar/*', 'foo/bar', 'other/thing', 'other/thing/**'],
+            ['foo/bar//', 'foo/bar', 'other/thing'],
+            ['other', 'foo'],
+        ];
+
+        yield 'various' => [
+            ['foo/bar/baz', 'abc', 'other/thing/**', 'foo/bar/*', 'other/*', 'foo/bar/**'],
+            ['abc', 'foo/bar', 'other//', 'other/thing'],
+            ['foo'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideInvalidSearchPaths
+     *
+     * @param array<int, string> $paths
+     */
+    public function testRejectsInvalidPaths(array $paths, string $expectedException): void
+    {
+        $dbafs = $this->getDbafs();
+        $filesystem = $this->createMock(FilesystemAdapter::class);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expectedException);
+
+        $dbafs->computeChangeSet($filesystem, ...$paths);
+    }
+
+    public function provideInvalidSearchPaths(): \Generator
+    {
+        yield 'absolute path to file' => [
+            ['foo', '/path/to/foo'],
+            "Absolute path '/path/to/foo' is not allowed when synchronizing.",
+        ];
+
+        yield 'absolute path to directory' => [
+            ['foo', '/path/to/foo/**'],
+            "Absolute path '/path/to/foo/**' is not allowed when synchronizing.",
+        ];
+
+        yield 'unresolved relative path to file' => [
+            ['../some/where'],
+            "Dot path '../some/where' is not allowed when synchronizing.",
+        ];
+
+        yield 'unresolved relative path to directory' => [
+            ['../some/where/**'],
+            "Dot path '../some/where/**' is not allowed when synchronizing.",
+        ];
+    }
+
+    /**
      * @dataProvider provideFilesystemsAndExpectedChangeSets
      *
      * @param string|array<int, string> $scope
@@ -348,9 +460,9 @@ class DbafsTest extends TestCase
         $emptyChangeSet = new ChangeSet([], [], []);
 
         yield 'no changes; full sync' => [$adapter1, '', $emptyChangeSet];
-        yield 'no changes; partial sync with directory' => [$adapter1, 'foo', $emptyChangeSet];
+        yield 'no changes; partial sync with directory' => [$adapter1, 'foo/**', $emptyChangeSet];
         yield 'no changes; partial sync with file' => [$adapter1, 'foo/file3', $emptyChangeSet];
-        yield 'no changes; partial sync with multiple' => [$adapter1, ['foo', 'bar'], $emptyChangeSet];
+        yield 'no changes; partial sync with multiple' => [$adapter1, ['foo/*', 'bar/**'], $emptyChangeSet];
 
         $adapter2 = $getFilesystemWithChanges(
             static fn (Filesystem $fs) => $fs->write('bar/new-file', 'new')
@@ -367,9 +479,9 @@ class DbafsTest extends TestCase
         );
 
         yield 'added file; full sync' => [$adapter2, '', $changeSet2];
-        yield 'added file; partial sync with directory' => [$adapter2, 'bar', $changeSet2];
+        yield 'added file; partial sync with directory' => [$adapter2, 'bar/**', $changeSet2];
         yield 'added file; partial sync with file' => [$adapter2, 'bar/new-file', $changeSet2];
-        yield 'added file outside scope' => [$adapter2, 'foo', $emptyChangeSet];
+        yield 'added file outside scope' => [$adapter2, 'foo/**', $emptyChangeSet];
 
         $adapter3 = $getFilesystemWithChanges(
             static fn (Filesystem $fs) => $fs->delete('file1'),
@@ -393,7 +505,7 @@ class DbafsTest extends TestCase
 
         yield 'removed files; partial sync with directory' => [
             $adapter3,
-            'foo',
+            'foo/**',
             new ChangeSet(
                 [],
                 [
@@ -437,7 +549,7 @@ class DbafsTest extends TestCase
 
         yield 'file moved outside scope' => [
             $adapter4,
-            'foo',
+            'foo/**',
             new ChangeSet(
                 [],
                 [
@@ -464,7 +576,7 @@ class DbafsTest extends TestCase
         );
 
         yield 'moved and renamed file (full sync)' => [$adapter5, '', $changeSet5];
-        yield 'moved and renamed file (partial sync)' => [$adapter5, 'foo', $changeSet5];
+        yield 'moved and renamed file (partial sync)' => [$adapter5, 'foo/**', $changeSet5];
 
         $adapter6 = $getFilesystemWithChanges(
             static fn (Filesystem $fs) => $fs->write('file1', 'new-content'),
@@ -487,7 +599,7 @@ class DbafsTest extends TestCase
 
         yield 'changed contents (partial sync)' => [
             $adapter6,
-            'foo',
+            'foo/**',
             new ChangeSet(
                 [],
                 [
@@ -599,7 +711,7 @@ class DbafsTest extends TestCase
 
         yield 'various operations (partial sync)' => [
             $adapter10,
-            'foo',
+            'foo/**',
             new ChangeSet(
                 [],
                 [
@@ -609,6 +721,8 @@ class DbafsTest extends TestCase
                 []
             ),
         ];
+
+        // todo: add a simple case that tests shallow sync
     }
 
     public function testSync(): void
@@ -744,8 +858,10 @@ class DbafsTest extends TestCase
         $dbafs->sync($adapter);
     }
 
-    private function getDbafs(Connection $connection): Dbafs
+    private function getDbafs(Connection $connection = null): Dbafs
     {
+        $connection ??= $this->createMock(Connection::class);
+
         if ($connection instanceof MockObject) {
             $connection
                 ->method('quoteIdentifier')
