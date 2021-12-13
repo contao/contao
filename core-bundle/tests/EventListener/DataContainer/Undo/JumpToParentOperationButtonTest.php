@@ -107,8 +107,8 @@ class JumpToParentOperationButtonTest extends TestCase
         ;
 
         $translationsMap = [
-            [ 'TABLES.tl_content.0', [], 'contao_default', null, 'Content element' ],
-            [ 'tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Show parent of Content element ID 42' ],
+            ['TABLES.tl_content.0', [], 'contao_default', null, 'Content element'],
+            ['tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Show parent of Content element ID 42'],
         ];
 
         $this->translator
@@ -150,7 +150,6 @@ class JumpToParentOperationButtonTest extends TestCase
             ->with('tl_news')
             ->willReturn('tl_news')
         ;
-
 
         $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');

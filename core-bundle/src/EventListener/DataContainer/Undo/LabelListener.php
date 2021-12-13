@@ -83,12 +83,13 @@ class LabelListener
             'row' => $row,
             'translatedFromTable' => $this->getTranslatedTypeFromTable($table),
             'parent' => $parent,
-            'translatedParentTable' => ($parent) ? $this->getTranslatedTypeFromTable($table) : null,
+            'translatedParentTable' => $parent ? $this->getTranslatedTypeFromTable($table) : null,
             'originalRow' => $originalRow,
             'dateFormat' => $config->get('dateFormat'),
             'timeFormat' => $config->get('timeFormat'),
         ];
     }
+
     /**
      * @throws Exception
      * @throws DriverException
@@ -172,7 +173,7 @@ class LabelListener
             $labelValues[$k] = $arrRow[$v];
         }
 
-        $label = ($labelConfig['format']) ? vsprintf($labelConfig['format'], $labelValues) : implode(', ', $labelValues);
+        $label = $labelConfig['format'] ? vsprintf($labelConfig['format'], $labelValues) : implode(', ', $labelValues);
 
         // Remove empty brackets (), [], {}, <> and empty tags from the label
         $label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);

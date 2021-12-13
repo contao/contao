@@ -40,9 +40,10 @@ trait UndoListenerTrait
 
     private function getTranslatedTypeFromTable(string $table): string
     {
-        $key = "TABLES.${table}.0";
+        $key = "TABLES.{$table}.0";
         $translatedTable = $this->translator->trans($key, [], 'contao_default');
-        return ($translatedTable !== $key) ? $translatedTable : $table;
+
+        return $translatedTable !== $key ? $translatedTable : $table;
     }
 
     private function checkIfParentExists(array $parent): bool
