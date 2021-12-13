@@ -211,9 +211,6 @@ class PageUrlListener implements ResetInterface
         }
     }
 
-    /**
-     * @throws DuplicateAliasException
-     */
     private function aliasExists(string $currentAlias, int $currentId, PageModel $currentPage, bool $throw = false): bool
     {
         $currentPage->loadDetails();

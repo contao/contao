@@ -196,9 +196,6 @@ class Factory
         }
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     private function validateSubscribers(array $selectedSubscribers): array
     {
         $msg = sprintf(

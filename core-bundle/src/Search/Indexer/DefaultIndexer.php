@@ -122,9 +122,6 @@ class DefaultIndexer implements IndexerInterface
         $this->connection->executeStatement('TRUNCATE TABLE tl_search_term');
     }
 
-    /**
-     * @throws IndexerException
-     */
     private function throwBecause(string $message, bool $onlyWarning = true): void
     {
         if ($onlyWarning) {

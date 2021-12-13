@@ -76,9 +76,6 @@ class PreviewToolbarListener
         $this->injectToolbar($response, $request);
     }
 
-    /**
-     * @throws TwigError
-     */
     private function injectToolbar(Response $response, Request $request): void
     {
         $content = $response->getContent();

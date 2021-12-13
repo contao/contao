@@ -146,9 +146,6 @@ class PaletteManipulator
         return $this->implode($config);
     }
 
-    /**
-     * @throws PalettePositionException
-     */
     private function validatePosition(string $position): void
     {
         static $positions = [

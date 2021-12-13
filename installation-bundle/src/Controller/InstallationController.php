@@ -130,8 +130,6 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to accept the license.
      *
-     * @throws \RuntimeException
-     *
      * @return Response|RedirectResponse
      */
     private function acceptLicense(): Response
@@ -153,8 +151,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set the install tool password.
-     *
-     * @throws \RuntimeException
      *
      * @return Response|RedirectResponse
      */
@@ -189,8 +185,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to log in.
-     *
-     * @throws \RuntimeException
      *
      * @return Response|RedirectResponse
      */
@@ -291,8 +285,6 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set up the database connection.
      *
-     * @throws \RuntimeException
-     *
      * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
@@ -358,8 +350,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to adjust the database tables.
-     *
-     * @throws \RuntimeException
      */
     private function adjustDatabaseTables(): ?RedirectResponse
     {
@@ -392,8 +382,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to import the example website.
-     *
-     * @throws \RuntimeException
      */
     private function importExampleWebsite(): ?RedirectResponse
     {
@@ -442,9 +430,6 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    /**
-     * @throws \RuntimeException
-     */
     private function createAdminUser(): ?RedirectResponse
     {
         $installTool = $this->container->get('contao_installation.install_tool');
@@ -555,8 +540,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Returns a redirect response to reload the page.
-     *
-     * @throws \RuntimeException
      */
     private function getRedirectResponse(): RedirectResponse
     {
@@ -571,8 +554,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Adds the default values to the context.
-     *
-     * @throws \RuntimeException
      *
      * @return array<string,string>
      */

@@ -118,8 +118,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
     /**
      * Validates the session lifetime and logs the user out if the session has expired.
-     *
-     * @throws UsernameNotFoundException
      */
     private function validateSessionLifetime(User $user): void
     {
