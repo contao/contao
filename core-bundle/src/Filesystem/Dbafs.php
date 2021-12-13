@@ -273,9 +273,7 @@ class Dbafs implements ResetInterface, DbafsInterface
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
 
-        $files = iterator_to_array($filesystemIterator);
-
-        foreach ($files as $path => $hash) {
+        foreach ($filesystemIterator as $path => $hash) {
             $name = basename($path);
             $parentDir = \dirname($path).'/';
 
