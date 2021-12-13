@@ -127,7 +127,10 @@ class LabelListener
                 ;
 
                 $labelValues[$k] = $objRef->rowCount() ? $objRef->{$strField} : '';
-            } elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], [DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC], true)) {
+                continue;
+            }
+
+            if (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], [DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC], true)) {
                 if ('date' === $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp']) {
                     $labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('dateFormat'), $arrRow[$v]) : '-';
                 } elseif ('time' === $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp']) {
@@ -135,37 +138,45 @@ class LabelListener
                 } else {
                     $labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('datimFormat'), $arrRow[$v]) : '-';
                 }
-            } elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] || ('checkbox' === $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] && !$GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple'])) {
-                $labelValues[$k] = $arrRow[$v] ? $this->translator->trans('MSC.yes', [], 'contao_default') : $this->translator->trans('MSC.no', [], 'contao_default');
-            } else {
-                $row_v = StringUtil::deserialize($arrRow[$v]);
-
-                if (\is_array($row_v)) {
-                    $args_k = [];
-
-                    foreach ($row_v as $option) {
-                        $args_k[] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$option] ?: $option;
-                    }
-
-                    $labelValues[$k] = implode(', ', $args_k);
-                } elseif (isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]])) {
-                    $labelValues[$k] = \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]) ? $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]][0] : $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]];
-                } elseif (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]])) {
-                    $labelValues[$k] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]];
-                } else {
-                    $labelValues[$k] = $arrRow[$v];
-                }
+                continue;
             }
+
+            if ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] || ('checkbox' === $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] && !$GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple'])) {
+                $labelValues[$k] = $arrRow[$v] ? $this->translator->trans('MSC.yes', [], 'contao_default') : $this->translator->trans('MSC.no', [], 'contao_default');
+                continue;
+            }
+
+            $row_v = StringUtil::deserialize($arrRow[$v]);
+
+            if (\is_array($row_v)) {
+                $args_k = [];
+
+                foreach ($row_v as $option) {
+                    $args_k[] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$option] ?: $option;
+                }
+
+                $labelValues[$k] = implode(', ', $args_k);
+                continue;
+            }
+
+            if (isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]])) {
+                $labelValues[$k] = \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]) ? $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]][0] : $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]];
+                continue;
+            }
+
+            if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]])) {
+                $labelValues[$k] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]];
+                continue;
+            }
+
+            $labelValues[$k] = $arrRow[$v];
         }
 
-        if ($labelConfig['format']) {
-            $label = vsprintf($labelConfig['format'], $labelValues);
-            // Remove empty brackets (), [], {}, <> and empty tags from the label
-            $label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-            $label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
-        } else {
-            $label = implode(', ', $labelValues);
-        }
+        $label = ($labelConfig['format']) ? vsprintf($labelConfig['format'], $labelValues) : implode(', ', $labelValues);
+
+        // Remove empty brackets (), [], {}, <> and empty tags from the label
+        $label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
+        $label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
 
         if (\is_array($labelConfig['label_callback'] ?? null)) {
             $callable = System::importStatic($labelConfig['label_callback'][0]);
