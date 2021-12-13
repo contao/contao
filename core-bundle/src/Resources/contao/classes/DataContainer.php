@@ -1000,8 +1000,14 @@ abstract class DataContainer extends Backend
 			}
 
 			$v = \is_array($v) ? $v : array($v);
-			$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-			$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
+			$title = $label = $k;
+
+			if (isset($v['label']))
+			{
+				$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
+				$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
+			}
+
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
@@ -1038,7 +1044,7 @@ abstract class DataContainer extends Backend
 
 			if (\is_callable($v['button_callback'] ?? null))
 			{
-				$return .= $v['button_callback']($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $v['button_callback']($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
