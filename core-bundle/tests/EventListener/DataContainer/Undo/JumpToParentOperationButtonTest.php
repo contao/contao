@@ -21,6 +21,7 @@ use Contao\DataContainer;
 use Contao\Image;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JumpToParentOperationButtonTest extends TestCase
 {
@@ -49,6 +50,11 @@ class JumpToParentOperationButtonTest extends TestCase
      */
     private $connection;
 
+    /**
+     * @var TranslatorInterface&MockObject
+     */
+    private $translator;
+
     protected function setUp(): void
     {
         /** @var Backend&MockObject $backendAdapter */
@@ -62,6 +68,10 @@ class JumpToParentOperationButtonTest extends TestCase
         /** @var Image&MockObject $imageAdapter */
         $imageAdapter = $this->mockAdapter(['getHtml']);
         $this->imageAdapter = $imageAdapter;
+
+        /** @var TranslatorInterface&MockObject $translator */
+        $translator = $this->createMock(TranslatorInterface::class);
+        $this->translator = $translator;
 
         $this->framework = $this->mockContaoFramework([
             Backend::class => $this->backendAdapter,
@@ -96,17 +106,27 @@ class JumpToParentOperationButtonTest extends TestCase
             ->willReturn('tl_news')
         ;
 
-        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection);
+        $translationsMap = [
+            [ 'TABLES.tl_content.0', [], 'contao_default', null, 'Content element' ],
+            [ 'tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Show parent of Content element ID 42' ],
+        ];
+
+        $this->translator
+            ->method('trans')
+            ->willReturnMap($translationsMap)
+        ;
+
+        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
 
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');
-        $this->assertSame("<a href=\"\" title=\"Show parent of Inhaltselement ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Inhaltselement ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
+        $this->assertSame("<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
     }
 
     public function testRendersDisabledJumpToParentButtonWhenParentHasBeenDeleted(): void
     {
         $row = $this->setupForDataSetWithParent();
 
-        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Inhaltselement', 'Inhaltselemente'];
+        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Content element', 'Content elements'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -131,7 +151,8 @@ class JumpToParentOperationButtonTest extends TestCase
             ->willReturn('tl_news')
         ;
 
-        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection);
+
+        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
     }
@@ -147,7 +168,7 @@ class JumpToParentOperationButtonTest extends TestCase
             ->willReturn('<img src="parent_.svg">')
         ;
 
-        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection);
+        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row);
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
     }
@@ -158,7 +179,7 @@ class JumpToParentOperationButtonTest extends TestCase
             'tables' => ['tl_news_archive', 'tl_news'],
         ];
 
-        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Inhaltselement', 'Inhaltselemente'];
+        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Content element', 'Content elements'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -186,7 +207,7 @@ class JumpToParentOperationButtonTest extends TestCase
 
     private function setupForDataSetWithoutParent(): array
     {
-        $GLOBALS['TL_LANG']['TABLES']['tl_form'] = ['Formular', 'Formulare'];
+        $GLOBALS['TL_LANG']['TABLES']['tl_form'] = ['Form', 'Forms'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_form']['config'] = [];
