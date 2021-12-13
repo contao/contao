@@ -182,7 +182,10 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		if (Environment::get('isAjaxRequest'))
 		{
 			// Start crawling
-			$escargot->crawl();
+			if ('true' !== Environment::get('httpOnlyStatusUpdate'))
+			{
+				$escargot->crawl();
+			}
 
 			// Commit the result on the lazy queue
 			$queue->commit($jobId);
