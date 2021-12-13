@@ -34,8 +34,6 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
     /**
      * Logs the security exception to the Contao back end.
-     *
-     * @throws \RuntimeException
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
