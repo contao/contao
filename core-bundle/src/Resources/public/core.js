@@ -2875,6 +2875,7 @@ var Backend =
 
 		function execRequest(onlyStatusUpdate) {
 			var onlyStatusUpdate = onlyStatusUpdate || false;
+
 			new Request({
 				url: window.location.href,
 				headers: {
