@@ -362,7 +362,7 @@ class Picker extends Widget
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
-			if (\in_array($mode, array(5, 6)))
+			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
 			{
 				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
 			}
@@ -372,7 +372,7 @@ class Picker extends Widget
 
 		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
-			if (\in_array($mode, array(5, 6)))
+			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
 			{
 				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
 			}
