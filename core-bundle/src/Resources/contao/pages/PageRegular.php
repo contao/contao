@@ -23,6 +23,11 @@ use Symfony\Component\HttpFoundation\Response;
 class PageRegular extends Frontend
 {
 	/**
+	 * @var FrontendTemplate
+	 */
+	protected $Template;
+
+	/**
 	 * Generate a regular page
 	 *
 	 * @param PageModel $objPage
