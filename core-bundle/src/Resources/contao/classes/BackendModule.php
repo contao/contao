@@ -32,6 +32,11 @@ abstract class BackendModule extends Backend
 	protected $objDc;
 
 	/**
+	 * @var Template
+	 */
+	protected $Template;
+
+	/**
 	 * Current record
 	 * @var array
 	 */

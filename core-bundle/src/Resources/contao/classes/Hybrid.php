@@ -63,6 +63,11 @@ abstract class Hybrid extends Frontend
 	protected $objParent;
 
 	/**
+	 * @var Template
+	 */
+	protected $Template;
+
+	/**
 	 * Current record
 	 * @var array
 	 */

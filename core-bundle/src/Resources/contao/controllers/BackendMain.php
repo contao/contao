@@ -31,7 +31,7 @@ class BackendMain extends Backend
 	protected $objAjax;
 
 	/**
-	 * @var BackendTemplate
+	 * @var Template
 	 */
 	protected $Template;
 

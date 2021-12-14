@@ -102,6 +102,11 @@ abstract class Module extends Frontend
 	protected $objModel;
 
 	/**
+	 * @var Template
+	 */
+	protected $Template;
+
+	/**
 	 * Current record
 	 * @var array
 	 */
