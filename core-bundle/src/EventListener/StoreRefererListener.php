@@ -82,10 +82,6 @@ class StoreRefererListener
         // Set new current referer
         $referers[$refererId]['current'] = $this->getRelativeRequestUri($request);
 
-        // Makes testing easier
-        ksort($referers[$refererId]);
-        ksort($referers);
-
         $session->set($key, $referers);
     }
 

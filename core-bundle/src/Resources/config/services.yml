@@ -542,6 +542,7 @@ services:
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
+        public: true
         arguments:
             - '@database_connection'
 

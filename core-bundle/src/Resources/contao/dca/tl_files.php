@@ -262,7 +262,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				(
 					'title'           => 'maxlength="255"',
 					'alt'             => 'maxlength="255"',
-					'link'            => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true),
+					'link'            => array('attributes'=>'maxlength="2048"', 'dcaPicker'=>true),
 					'caption'         => array('type'=>'textarea'),
 					'license'         => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true)
 				)
@@ -340,7 +340,7 @@ class tl_files extends Backend
 		$session = $objSession->all();
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS'] ?? null))
 		{
 			if (Input::get('act') == 'editAll')
 			{

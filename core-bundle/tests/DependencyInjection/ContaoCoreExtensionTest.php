@@ -286,6 +286,7 @@ class ContaoCoreExtensionTest extends TestCase
                 }
             }
 
+            unset($value);
             ksort($array);
         };
 
