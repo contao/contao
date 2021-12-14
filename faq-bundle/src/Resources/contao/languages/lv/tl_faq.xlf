@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
-        <target>Attēla uzstādījumi</target>
+        <target>Attēla iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
-        <target>Publicēšanas uzstādījumi</target>
+        <target>Publicēšanas iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_faq.new.0">
         <source>New</source>

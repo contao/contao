@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.0">
         <source>Show from</source>
-        <target>Wrapper sākums</target>
+        <target>Rādīt no</target>
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
-        <target>Wrapper beigas</target>
+        <target>Rādīt līdz</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
@@ -235,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_news.image_legend">
         <source>Image settings</source>
-        <target>Attēla uzstādījumi</target>
+        <target>Attēla iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
-        <target>Publicēšanas uzstādījumi</target>
+        <target>Publicēšanas iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_news.new.0">
         <source>New</source>

@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Webmozart\PathUtil\Path;
 
 /**
  * Provide methods to handle input field "file tree".
@@ -473,7 +474,7 @@ class FileSelector extends Widget
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && \in_array('.public', $content))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}
@@ -641,7 +642,7 @@ class FileSelector extends Widget
 
 		do
 		{
-			if (file_exists($projectDir . '/' . $path . '/.public'))
+			if (is_file($projectDir . '/' . $path . '/.public'))
 			{
 				return false;
 			}

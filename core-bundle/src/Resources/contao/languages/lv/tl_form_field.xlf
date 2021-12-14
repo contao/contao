@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.extnd.1">
         <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Atļauts viss, izņemot īpašās rakstzīmes, kas parasti tiek kodētas drošības apsvērumu dēļ: #&lt;&gt;()\=</target>
       </trans-unit>
       <trans-unit id="tl_form_field.date.0">
         <source>Date</source>
@@ -174,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.minval.1">
         <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Šeit varat iestatīt minimālo vērtību ciparu laukiem.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.0">
         <source>Maximum value</source>
@@ -181,12 +183,15 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxval.1">
         <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Šeit varat iestatīt maksimālo vērtību ciparu laukiem.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.0">
         <source>Step</source>
+        <target>Solis</target>
       </trans-unit>
       <trans-unit id="tl_form_field.step.1">
         <source>Here you can set the discrete step size of the field.</source>
+        <target>Šeit var iestatīt lauka diskrētā soļa lielumu.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.size.0">
         <source>Rows and columns</source>
@@ -294,9 +299,11 @@
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.0">
         <source>Form field template</source>
+        <target>Veidlapas lauka veidne</target>
       </trans-unit>
       <trans-unit id="tl_form_field.customTpl.1">
         <source>Here you can select the form field template.</source>
+        <target>Šeit varat izvēlēties veidlapas lauka veidni.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.slabel.0">
         <source>Submit button label</source>

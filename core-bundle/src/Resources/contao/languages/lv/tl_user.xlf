@@ -143,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_user.custom.1">
         <source>Only individual permissions are applied.</source>
-        <target>Lietojiet tikai individuālos iestatījumus (grupu uzstādījumi netiek ņemti vērā)</target>
+        <target>Tiek piemērotas tikai individuālas atļaujas.</target>
       </trans-unit>
       <trans-unit id="tl_user.modules.0">
         <source>Back end modules</source>
@@ -167,12 +167,15 @@
       </trans-unit>
       <trans-unit id="tl_user.elements.1">
         <source>Here you can select the allowed content element types.</source>
+        <target>Šeit varat atlasīt atļautos satura elementu tipus.</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.0">
         <source>Form fields</source>
+        <target>Formulāru lauki</target>
       </trans-unit>
       <trans-unit id="tl_user.fields.1">
         <source>Here you can select the allowed form field types.</source>
+        <target>Šeit varat atlasīt atļautos formulāru lauku tipus.</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
@@ -244,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_user.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja vēlaties, lai konts nebūtu aktīvs pirms noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
@@ -251,6 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja vēlaties, lai konts nebūtu aktīvs pēc noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -266,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_user.backend_legend">
         <source>Back end settings</source>
-        <target>Aizmugures uzstādījumi</target>
+        <target>Aizmugures iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_user.theme_legend">
         <source>Back end theme</source>
@@ -274,7 +279,7 @@
       </trans-unit>
       <trans-unit id="tl_user.password_legend">
         <source>Password settings</source>
-        <target>Paroles uzstādījumi</target>
+        <target>Paroles iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_user.admin_legend">
         <source>Administrator</source>
@@ -290,6 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
+        <target>Atļautie elementi</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>
@@ -313,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_user.account_legend">
         <source>Account settings</source>
-        <target>Konta uzstādījumi</target>
+        <target>Konta iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_user.session_legend">
         <source>Clear cache</source>
@@ -329,6 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
+        <target>Koplietošanas kešatmiņa</target>
       </trans-unit>
       <trans-unit id="tl_user.sessionPurged">
         <source>The session data has been purged</source>
@@ -340,6 +347,7 @@
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
+        <target>Koplietošanas kešatmiņa ir iztīrīta</target>
       </trans-unit>
       <trans-unit id="tl_user.FileUpload">
         <source>Default uploader</source>
@@ -347,6 +355,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
+        <target>Izmantojiet divfaktoru autentifikāciju</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New</source>
