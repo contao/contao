@@ -614,6 +614,12 @@ class tl_files extends Backend
 			return '';
 		}
 
+		// Only allow slashes when creating new folders
+		if (count($chunks) > 1 && $dc->value != '__new__')
+		{
+			throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+		}
+
 		foreach ($chunks as $chunk)
 		{
 			if (preg_match('/\.$/', $chunk))
