@@ -567,7 +567,7 @@ class LegacyMatcherTest extends TestCase
     }
 
     /**
-     * @param Adapter<Config> $configAdapter
+     * @phpstan-param Adapter<Config> $configAdapter
      *
      * @return ContaoFramework&MockObject
      */
