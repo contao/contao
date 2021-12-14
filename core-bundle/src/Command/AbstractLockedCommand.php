@@ -70,7 +70,7 @@ abstract class AbstractLockedCommand extends Command implements ContainerAwareIn
     /**
      * @return int
      */
-    abstract protected function executeLocked(InputInterface $input, OutputInterface $output);
+    abstract protected function executeLocked(InputInterface $input, OutputInterface $output)/*: int*/;
 
     /**
      * Creates an installation specific folder in the temporary directory and returns its path.

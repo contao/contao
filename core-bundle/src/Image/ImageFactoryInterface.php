@@ -28,7 +28,7 @@ interface ImageFactoryInterface
      *
      * @return ImageInterface
      */
-    public function create($path, $size = null, $options = null);
+    public function create($path, $size = null, $options = null)/*: ImageInterface*/;
 
     /**
      * Returns the equivalent important part from a legacy resize mode.
@@ -37,5 +37,5 @@ interface ImageFactoryInterface
      *
      * @return ImportantPart
      */
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode);
+    public function getImportantPartFromLegacyMode(ImageInterface $image, /*string */$mode)/*: ImportantPart*/;
 }

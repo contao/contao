@@ -37,7 +37,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     /**
      * @return bool
      */
-    public function hasMessage()
+    public function hasMessage()/*: bool*/
     {
         return !empty($this->messages);
     }
@@ -45,7 +45,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage()/*: string*/
     {
         return implode('', $this->messages);
     }
@@ -55,7 +55,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
      *
      * @return bool
      */
-    abstract public function shouldBeRun();
+    abstract public function shouldBeRun()/*: bool*/;
 
     /**
      * Runs the update.
@@ -65,7 +65,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     /**
      * @param string $message
      */
-    protected function addMessage($message): void
+    protected function addMessage(/*string */$message): void
     {
         $this->messages[] = $message;
     }
@@ -73,7 +73,7 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
     /**
      * @param string $message
      */
-    protected function prependMessage($message): void
+    protected function prependMessage(/*string */$message): void
     {
         array_unshift($this->messages, $message);
     }
