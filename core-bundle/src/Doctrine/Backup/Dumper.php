@@ -55,7 +55,7 @@ class Dumper implements DumperInterface
     }
 
     /**
-     * @phpstan-param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {

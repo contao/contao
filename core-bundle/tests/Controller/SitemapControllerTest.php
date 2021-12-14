@@ -714,6 +714,22 @@ class SitemapControllerTest extends TestCase
     }
 
     /**
+     * @return PageRegistry&MockObject
+     */
+    private function mockPageRegistry(): PageRegistry
+    {
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->method('supportsContentComposition')
+            ->willReturnCallback(
+                static fn (PageModel $pageModel) => empty($pageModel->type) || 'regular' === $pageModel->type
+            )
+        ;
+
+        return $pageRegistry;
+    }
+
+    /**
      * @return ContaoFramework&MockObject
      */
     private function mockFrameworkWithPages(array $pages, array $articles, array $hooks = null): ContaoFramework
