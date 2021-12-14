@@ -41,6 +41,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry(),
             $this->createMock(HttpKernelInterface::class)
         );
+
         $listener($event);
 
         $this->assertSame('/en/content-elements.html', $event->getUrl());
@@ -61,6 +62,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry(),
             $this->createMock(HttpKernelInterface::class)
         );
+
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -76,6 +78,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry(),
             $this->createMock(HttpKernelInterface::class)
         );
+
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -107,6 +110,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry(),
             $this->createMock(HttpKernelInterface::class)
         );
+
         $listener($event);
 
         $this->assertSame('/en/content-elements.html', $event->getUrl());
@@ -128,6 +132,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry(),
             $this->createMock(HttpKernelInterface::class)
         );
+
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -165,6 +170,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry(),
             $this->createMock(HttpKernelInterface::class)
         );
+
         $listener($event);
     }
 
@@ -211,6 +217,7 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
             $this->mockPageRegistry($route),
             $httpKernel
         );
+
         $listener($event);
 
         $this->assertSame($response, $event->getResponse());
