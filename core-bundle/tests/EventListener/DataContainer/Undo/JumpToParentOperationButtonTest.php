@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer\Undo;
 use Contao\Backend;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationButtonListener;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
@@ -26,56 +27,42 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class JumpToParentOperationButtonTest extends TestCase
 {
     /**
-     * @var Image&MockObject
+     * @var Adapter<Image>&MockObject
      */
-    private $imageAdapter;
-
-    /**
-     * @var Backend&MockObject
-     */
-    private $backendAdapter;
-
-    /**
-     * @var Controller&MockObject
-     */
-    private $controllerAdapter;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private $framework;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private $connection;
+    private Adapter $imageAdapter;
 
     /**
      * @var TranslatorInterface&MockObject
      */
-    private $translator;
+    private TranslatorInterface $translator;
+
+    /**
+     * @var ContaoFramework&MockObject
+     */
+    private ContaoFramework $framework;
+
+    /**
+     * @var Connection&MockObject
+     */
+    private Connection $connection;
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);
+    }
 
     protected function setUp(): void
     {
-        /** @var Backend&MockObject $backendAdapter */
-        $backendAdapter = $this->mockAdapter(['addToUrl']);
-        $this->backendAdapter = $backendAdapter;
+        parent::setUp();
 
-        /** @var Controller&MockObject $controllerAdapter */
-        $controllerAdapter = $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']);
-        $this->controllerAdapter = $controllerAdapter;
-
-        /** @var Image&MockObject $imageAdapter */
-        $imageAdapter = $this->mockAdapter(['getHtml']);
-        $this->imageAdapter = $imageAdapter;
-
-        /** @var TranslatorInterface&MockObject $translator */
-        $translator = $this->createMock(TranslatorInterface::class);
-        $this->translator = $translator;
+        $this->imageAdapter = $this->mockAdapter(['getHtml']);
+        $this->translator = $this->createMock(TranslatorInterface::class);
 
         $this->framework = $this->mockContaoFramework([
-            Backend::class => $this->backendAdapter,
-            Controller::class => $this->controllerAdapter,
+            Backend::class => $this->mockAdapter(['addToUrl']),
+            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
             Image::class => $this->imageAdapter,
         ]);
 
@@ -117,8 +104,8 @@ class JumpToParentOperationButtonTest extends TestCase
         ;
 
         $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
-
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');
+
         $this->assertSame("<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
     }
 
@@ -153,6 +140,7 @@ class JumpToParentOperationButtonTest extends TestCase
 
         $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');
+
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
     }
 
@@ -169,6 +157,7 @@ class JumpToParentOperationButtonTest extends TestCase
 
         $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row);
+
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
     }
 

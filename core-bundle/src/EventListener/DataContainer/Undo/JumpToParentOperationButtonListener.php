@@ -31,8 +31,6 @@ class JumpToParentOperationButtonListener
 {
     use UndoListenerTrait;
 
-    private TranslatorInterface $translator;
-
     public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator)
     {
         $this->framework = $framework;
@@ -45,8 +43,6 @@ class JumpToParentOperationButtonListener
         $table = $row['fromTable'];
         $originalRow = StringUtil::deserialize($row['data'])[$table][0];
         $parent = $this->getParentTableForRow($table, $originalRow);
-
-        /** @var Image $image */
         $image = $this->framework->getAdapter(Image::class);
 
         if (!$parent || !$this->checkIfParentExists($parent)) {
@@ -59,7 +55,6 @@ class JumpToParentOperationButtonListener
             $originalRow['id']
         );
 
-        /** @var Backend $backend */
         $backend = $this->framework->getAdapter(Backend::class);
 
         return sprintf(
@@ -79,10 +74,9 @@ class JumpToParentOperationButtonListener
             return $params;
         }
 
-        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
-
         $controller->loadDataContainer($parent['table']);
+
         $module = $this->getModuleForTable($parent['table']);
 
         if (!$module) {
@@ -96,7 +90,7 @@ class JumpToParentOperationButtonListener
             $params .= '&pn='.$parent['id'];
         } elseif ($module['tables'][0] !== $table) {
             // If $table is the main table of a module, we just go to do=$module,
-            // else we append the right table and id
+            // else we append the right table and ID
             $params .= '&table='.$table.'&id='.$parent['id'];
         }
 

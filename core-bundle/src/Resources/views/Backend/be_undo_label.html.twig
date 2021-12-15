@@ -2,14 +2,14 @@
 
 <div class="tl_undo_header">
     <div class="tl_undo_header_item">
-        <span class="tl_undo_header_label"><span class="date">{{ row.tstamp|date(dateFormat) }}</span>
-            <span class="time">{{ row.tstamp|date(timeFormat) }}</span></span>
+        <span class="tl_undo_header_label">
+            <span class="date">{{ row.tstamp|date(dateFormat) }}</span>
+            <span class="time">{{ row.tstamp|date(timeFormat) }}</span>
+        </span>
     </div>
     <div class="tl_undo_header_item">
         <span class="tl_undo_header_label">{{ 'tl_undo.pid.0'|trans({}, 'contao_tl_undo') }}</span>
-        <strong>
-            {% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}
-        </strong>
+        <strong>{% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}</strong>
     </div>
     <div class="tl_undo_header_item">
         <span class="tl_undo_header_label">{{ 'tl_undo.fromTable.0'|trans({}, 'contao_tl_undo') }}</span>

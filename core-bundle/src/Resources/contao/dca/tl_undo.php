@@ -16,7 +16,6 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
@@ -100,9 +99,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'options_callback'        => array(
-				tl_undo::class, 'getFromTableOptions'
-			),
+			'options_callback'        => array('tl_undo', 'getFromTableOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
@@ -227,7 +224,6 @@ class tl_undo extends Backend
 
 	public function getFromTableOptions(DataContainer $dc)
 	{
-		/** @var Connection $connection */
 		$connection = System::getContainer()->get('database_connection');
 		$tables = $connection->executeQuery('SELECT DISTINCT ' . $connection->quoteIdentifier('fromTable') . ' FROM tl_undo');
 

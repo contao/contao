@@ -23,8 +23,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\UserModel;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\Exception as DriverException;
-use Doctrine\DBAL\Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
@@ -37,10 +35,7 @@ class LabelListener
 {
     use UndoListenerTrait;
 
-    private Connection $connection;
-    private ContaoFramework $framework;
     private Environment $twig;
-    private TranslatorInterface $translator;
 
     public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator, Environment $twig)
     {
@@ -57,7 +52,6 @@ class LabelListener
         $table = $row['fromTable'];
         $originalRow = StringUtil::deserialize($row['data'])[$table][0];
 
-        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
         $controller->loadDataContainer($table);
 
@@ -73,8 +67,6 @@ class LabelListener
         $originalTableDc = new $dataContainer($table);
         $parent = $this->getParentTableForRow($table, $originalRow);
         $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
-
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         return [
@@ -91,9 +83,6 @@ class LabelListener
     }
 
     /**
-     * @throws Exception
-     * @throws DriverException
-     *
      * @return array|string
      */
     private function renderPreview(array $arrRow, DataContainer $dc)
