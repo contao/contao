@@ -19,7 +19,7 @@ use League\Flysystem\UnableToRetrieveMetadata;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @phpstan-import-type ExtraMetadata from Dbafs
+ * @phpstan-import-type ExtraMetadata from DbafsInterface
  */
 interface DbafsFilesystemOperator extends FilesystemOperator
 {
@@ -28,7 +28,7 @@ interface DbafsFilesystemOperator extends FilesystemOperator
     public const FORCE_SYNC = 2;
 
     /**
-     * {@inheritdoc}
+     * {@inheritdoc}f
      *
      * @param string|Uuid $location
      */
