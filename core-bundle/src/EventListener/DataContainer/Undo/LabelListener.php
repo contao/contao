@@ -75,7 +75,7 @@ class LabelListener
             'row' => $row,
             'translatedFromTable' => $this->getTranslatedTypeFromTable($table),
             'parent' => $parent,
-            'translatedParentTable' => $parent ? $this->getTranslatedTypeFromTable($table) : null,
+            'translatedParentTable' => $parent ? $this->getTranslatedTypeFromTable($parent['table']) : null,
             'originalRow' => $originalRow,
             'dateFormat' => $config->get('dateFormat'),
             'timeFormat' => $config->get('timeFormat'),
