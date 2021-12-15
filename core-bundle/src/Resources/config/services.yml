@@ -293,13 +293,13 @@ services:
         public: true
         arguments:
             - !service_locator
-                contao.image.studio: '@contao.image.studio'
-                contao.image.picture_factory: '@contao.image.picture_factory'
-                contao.image.factory: '@contao.image.factory'
-                contao.image.legacy_resizer: '@contao.image.legacy_resizer'
-                contao.assets.files_context: '@contao.assets.files_context'
-                contao.framework: '@contao.framework'
-                event_dispatcher: '@event_dispatcher'
+              contao.image.studio: '@contao.image.studio'
+              contao.image.picture_factory: '@contao.image.picture_factory'
+              contao.image.factory: '@contao.image.factory'
+              contao.image.legacy_resizer: '@contao.image.legacy_resizer'
+              contao.assets.files_context: '@contao.assets.files_context'
+              contao.framework: '@contao.framework'
+              event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
             - '%contao.image.valid_extensions%'
