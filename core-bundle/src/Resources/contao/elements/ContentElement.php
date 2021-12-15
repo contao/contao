@@ -135,11 +135,6 @@ abstract class ContentElement extends Frontend
 	protected $objModel;
 
 	/**
-	 * @var Template
-	 */
-	protected $Template;
-
-	/**
 	 * Current record
 	 * @var array
 	 */
