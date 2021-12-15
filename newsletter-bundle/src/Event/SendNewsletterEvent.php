@@ -31,16 +31,16 @@ class SendNewsletterEvent extends Event
         $this->html = $html;
     }
 
+    public function getRecipientAddress(): string
+    {
+        return $this->recipientAddress;
+    }
+
     public function setRecipientAddress(string $recipientAddress): self
     {
         $this->recipientAddress = $recipientAddress;
 
         return $this;
-    }
-
-    public function getRecipientAddress(): string
-    {
-        return $this->recipientAddress;
     }
 
     public function preventsSubmission(): bool
@@ -53,6 +53,11 @@ class SendNewsletterEvent extends Event
         $this->preventSubmission = $preventSubmission;
     }
 
+    public function getText(): string
+    {
+        return $this->text ?? '';
+    }
+
     public function setText(string $text): self
     {
         $this->text = $text;
@@ -60,9 +65,9 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    public function getText(): string
+    public function getHtml(): string
     {
-        return $this->text ?? '';
+        return $this->html ?? '';
     }
 
     public function setHtml(string $html): self
@@ -70,11 +75,6 @@ class SendNewsletterEvent extends Event
         $this->html = $html;
 
         return $this;
-    }
-
-    public function getHtml(): string
-    {
-        return $this->html ?? '';
     }
 
     public function allowsHtml(): bool

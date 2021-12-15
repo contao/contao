@@ -28,7 +28,7 @@ class SendNewsletterEventTest extends TestCase
         $this->assertTrue($event->preventsSubmission());
     }
 
-    public function testGetsAndSetsNewsletterText(): void
+    public function testGetsAndSetsTheNewsletterText(): void
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 
@@ -39,7 +39,7 @@ class SendNewsletterEventTest extends TestCase
         $this->assertSame('Bar', $event->getText());
     }
 
-    public function testGetsAndSetsNewsletterHtml(): void
+    public function testGetsAndSetsTheNewsletterHtml(): void
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo', '<strong>bar</strong>');
 
@@ -50,7 +50,7 @@ class SendNewsletterEventTest extends TestCase
         $this->assertSame('<strong>foo</strong>', $event->getHtml());
     }
 
-    public function testGetsAndSetsRecipientAddress(): void
+    public function testGetsAndSetsTheRecipientAddress(): void
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 
@@ -61,7 +61,7 @@ class SendNewsletterEventTest extends TestCase
         $this->assertSame('bar@baz.foo', $event->getRecipientAddress());
     }
 
-    public function testGetsAndSetsRecipientData(): void
+    public function testGetsAndSetsTheRecipientData(): void
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 
@@ -76,7 +76,7 @@ class SendNewsletterEventTest extends TestCase
         $this->assertSame(42, $event->getRecipientValue('id'));
     }
 
-    public function testGetsAndSetsNewsletterData(): void
+    public function testGetsAndSetsTheNewsletterData(): void
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 

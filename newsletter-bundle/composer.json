@@ -25,7 +25,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0",
+        "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "^4.4",
         "phpunit/phpunit": "^8.5",
         "symfony/http-client": "^5.4",

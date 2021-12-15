@@ -132,7 +132,6 @@ class Newsletter extends Backend
 					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
 				}
 
-				// Redirect
 				$this->redirect($referer);
 			}
 
