@@ -64,6 +64,13 @@ class RouteProviderTest extends TestCase
             ->willReturn($route)
         ;
 
+        $pageRegistry
+            ->expects($this->once())
+            ->method('isRoutable')
+            ->with($page)
+            ->willReturn(true)
+        ;
+
         $framework = $this->mockFramework($pageAdapter);
 
         $this->assertSame($route, $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.17'));
@@ -130,6 +137,13 @@ class RouteProviderTest extends TestCase
             ->willReturnOnConsecutiveCalls(new PageRoute($page1), new PageRoute($page2))
         ;
 
+        $pageRegistry
+            ->expects($this->exactly(2))
+            ->method('isRoutable')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(true)
+        ;
+
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter), $pageRegistry);
         $routes = $provider->getRoutesByNames(['tl_page.17', 'tl_page.21']);
 
@@ -164,6 +178,13 @@ class RouteProviderTest extends TestCase
             ->willReturn($route)
         ;
 
+        $pageRegistry
+            ->expects($this->once())
+            ->method('isRoutable')
+            ->with($page)
+            ->willReturn(true)
+        ;
+
         $framework = $this->mockFramework($pageAdapter);
 
         $this->assertSame($route, $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.17'));
@@ -195,6 +216,13 @@ class RouteProviderTest extends TestCase
             ->method('getRoute')
             ->with($page)
             ->willReturn($route)
+        ;
+
+        $pageRegistry
+            ->expects($this->once())
+            ->method('isRoutable')
+            ->with($page)
+            ->willReturn(true)
         ;
 
         $framework = $this->mockFramework($pageAdapter);
@@ -279,6 +307,13 @@ class RouteProviderTest extends TestCase
             ->method('getRoute')
             ->withConsecutive(...$args)
             ->willReturnOnConsecutiveCalls(...$routes)
+        ;
+
+        $pageRegistry
+            ->expects($this->exactly(\count($pages)))
+            ->method('isRoutable')
+            ->withConsecutive(...$args)
+            ->willReturn(true)
         ;
 
         $provider = $this->getRouteProvider($framework, $pageRegistry);
@@ -610,12 +645,69 @@ class RouteProviderTest extends TestCase
             ->willReturn($route)
         ;
 
+        $pageRegistry
+            ->expects($this->once())
+            ->method('isRoutable')
+            ->with($pageModel)
+            ->willReturn(true)
+        ;
+
         $provider = $this->getRouteProvider($framework, $pageRegistry, $prependLocale);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $collection);
         $this->assertArrayHasKey('tl_page.'.$pageModel->id, $collection->all());
         $this->assertSame($route, $collection->get('tl_page.'.$pageModel->id));
+    }
+
+    public function testDoesNotAddRouteForUnroutablePage(): void
+    {
+        $routablePage = $this->mockClassWithProperties(PageModel::class);
+        $routablePage->id = 17;
+        $routablePage->rootId = 1;
+        $routablePage->urlPrefix = '';
+        $routablePage->language = 'en';
+        $routablePage->rootLanguage = 'en';
+
+        $unroutablePage = $this->mockClassWithProperties(PageModel::class);
+        $unroutablePage->id = 18;
+        $unroutablePage->rootId = 1;
+        $unroutablePage->urlPrefix = '';
+        $unroutablePage->language = 'en';
+        $unroutablePage->rootLanguage = 'en';
+
+        $route = new PageRoute($routablePage);
+
+        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter
+            ->expects($this->exactly(2))
+            ->method('findByPk')
+            ->withConsecutive([17], [18])
+            ->willReturnOnConsecutiveCalls($routablePage, $unroutablePage)
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->with($routablePage)
+            ->willReturn($route)
+        ;
+
+        $pageRegistry
+            ->expects($this->exactly(2))
+            ->method('isRoutable')
+            ->withConsecutive([$routablePage], [$unroutablePage])
+            ->willReturnOnConsecutiveCalls(true, false)
+        ;
+
+        $framework = $this->mockFramework($pageAdapter);
+
+        $this->assertSame($route, $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.17'));
+
+        $this->expectException(RouteNotFoundException::class);
+
+        $this->getRouteProvider($framework, $pageRegistry)->getRouteByName('tl_page.18');
     }
 
     public function getPageRoutes(): \Generator
@@ -790,7 +882,14 @@ class RouteProviderTest extends TestCase
         ;
 
         $framework ??= $this->mockContaoFramework();
-        $pageRegistry ??= $this->createMock(PageRegistry::class);
+
+        if (null === $pageRegistry) {
+            $pageRegistry = $this->createMock(PageRegistry::class);
+            $pageRegistry
+                ->method('isRoutable')
+                ->willReturn(true)
+            ;
+        }
 
         return new RouteProvider($framework, $candidates, $pageRegistry, false, $prependLocale);
     }

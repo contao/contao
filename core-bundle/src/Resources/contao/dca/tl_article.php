@@ -377,7 +377,7 @@ class tl_article extends Backend
 		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS'] ?? null))
 		{
 			$edit_all = array();
 			$delete_all = array();

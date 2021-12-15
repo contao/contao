@@ -44,6 +44,9 @@ services:
         tags:
             - kernel.event_listener
 
+    contao_installation.twig.ansi_extension:
+        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
+
     # Backwards compatibility
     contao.install_tool:
         alias: contao_installation.install_tool

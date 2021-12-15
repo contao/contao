@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
@@ -26,11 +27,13 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
     protected ContaoFramework $framework;
     protected CandidatesInterface $candidates;
+    protected PageRegistry $pageRegistry;
 
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
         $this->framework = $framework;
         $this->candidates = $candidates;
+        $this->pageRegistry = $pageRegistry;
     }
 
     /**
@@ -72,8 +75,10 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return [];
         }
 
-        /** @var array<PageModel> */
-        return $pages->getModels();
+        /** @var array<PageModel> $models */
+        $models = $pages->getModels();
+
+        return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));
     }
 
     /**

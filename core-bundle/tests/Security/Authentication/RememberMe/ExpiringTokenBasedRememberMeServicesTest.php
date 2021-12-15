@@ -153,7 +153,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     {
         $this->expectTableLocking();
         $this->expectSeriesIsDeleted();
-        $this->expectTableReturnsEntities($this->mockEntity('bar', null, (new \DateTime())->setTimestamp(strtotime('-2 years', time()))));
+        $this->expectTableReturnsEntities($this->mockEntity('bar', null, (new \DateTime())->setTimestamp(strtotime('-2 years', ClockMock::time()))));
 
         $request = $this->mockRequestWithCookie();
         $this->listener->autoLogin($request);
