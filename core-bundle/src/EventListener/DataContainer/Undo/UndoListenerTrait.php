@@ -27,7 +27,7 @@ trait UndoListenerTrait
 
     private function getParentTableForRow(string $table, array $row): ?array
     {
-        if (isset($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable']) && true === $GLOBALS['TL_DCA'][$table]['config']['dynamicPtable']) {
+        if (true === ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)) {
             return ['table' => $row['ptable'], 'id' => $row['pid']];
         }
 
