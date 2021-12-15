@@ -48,7 +48,12 @@ class Factory
      */
     private array $subscribers = [];
 
-    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
+    public function __construct(
+        Connection $connection,
+        ContaoFramework $framework,
+        array $additionalUris = [],
+        array $defaultHttpClientOptions = []
+    )
     {
         $this->connection = $connection;
         $this->framework = $framework;
