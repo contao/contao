@@ -68,15 +68,15 @@ interface DbafsInterface
     /**
      * Returns true if this DBAFS sets the key 'lastModified' in the returned records.
      */
-    public static function supportsLastModified(): bool;
+    public function supportsLastModified(): bool;
 
     /**
      * Returns true if this DBAFS sets the key 'fileSize' in the returned records.
      */
-    public static function supportsFileSize(): bool;
+    public function supportsFileSize(): bool;
 
     /**
      * Returns true if this DBAFS sets the key 'mimeType' in the returned records.
      */
-    public static function supportsMimeType(): bool;
+    public function supportsMimeType(): bool;
 }

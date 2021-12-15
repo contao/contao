@@ -22,8 +22,12 @@ interface HashGeneratorInterface
      * If a value for $lastModified is provided, it is allowed to return null
      * instead of a hash. Doing this indicates that the hash has not changed in
      * the meantime and does not need to be recomputed.
+     *
+     * If you know the last modified timestamp (e.g. because you read it from
+     * the filesystem), assign the value to &$fileLastModified. This will prevent
+     * the calling code from reading it (again).
      */
-    public function hashFileContent(FilesystemAdapter $filesystem, string $path, int $lastModified = null): ?string;
+    public function hashFileContent(FilesystemAdapter $filesystem, string $path, int $lastModified = null, int &$fileLastModified = null): ?string;
 
     /**
      * Generate the hash for a string, preferably with the same hash function

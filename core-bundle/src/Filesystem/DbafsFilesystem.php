@@ -109,69 +109,75 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
     {
         $normalizedPath = $this->normalizePath($path);
 
-        if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsLastModified()) {
-            return $this->adapter->lastModified($normalizedPath)->lastModified();
+        if (self::BYPASS_DBAFS !== $accessType && $this->dbafs->supportsLastModified()) {
+            if (self::FORCE_SYNC === $accessType) {
+                $this->sync($path);
+            }
+
+            if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
+                throw UnableToRetrieveMetadata::lastModified($normalizedPath, 'Resource does not exist in DBAFS.');
+            }
+
+            if (!\array_key_exists('lastModified', $record)) {
+                throw new \LogicException(sprintf('The DBAFS class "%s" supports "lastModified" but did not set it in the record.', \get_class($this->dbafs)));
+            }
+
+            if (null !== ($lastModified = $record['lastModified'])) {
+                return $lastModified;
+            }
         }
 
-        if (self::FORCE_SYNC === $accessType) {
-            $this->sync($path);
-        }
-
-        if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
-            throw UnableToRetrieveMetadata::lastModified($normalizedPath, 'Resource does not exist in DBAFS.');
-        }
-
-        if (null === ($lastModified = $record['lastModified'] ?? null)) {
-            throw new \LogicException(sprintf('The DBAFS class "%s" supports "lastModified" but did not set it in the record.', \get_class($this->dbafs)));
-        }
-
-        return $lastModified;
+        return $this->adapter->lastModified($normalizedPath)->lastModified();
     }
 
     public function fileSize($path, int $accessType = self::SYNCED_ONLY): int
     {
         $normalizedPath = $this->normalizePath($path);
 
-        if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsFileSize()) {
-            return $this->adapter->fileSize($normalizedPath)->fileSize();
+        if (self::BYPASS_DBAFS !== $accessType && $this->dbafs->supportsFileSize()) {
+            if (self::FORCE_SYNC === $accessType) {
+                $this->sync($path);
+            }
+
+            if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
+                throw UnableToRetrieveMetadata::fileSize($normalizedPath, 'Resource does not exist in DBAFS.');
+            }
+
+            if (!\array_key_exists('fileSize', $record)) {
+                throw new \LogicException(sprintf('The DBAFS class "%s" supports "fileSize" but did not set it in the record.', \get_class($this->dbafs)));
+            }
+
+            if (null !== ($fileSize = $record['fileSize'])) {
+                return $fileSize;
+            }
         }
 
-        if (self::FORCE_SYNC === $accessType) {
-            $this->sync($path);
-        }
-
-        if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
-            throw UnableToRetrieveMetadata::fileSize($normalizedPath, 'Resource does not exist in DBAFS.');
-        }
-
-        if (null === ($fileSize = $record['fileSize'] ?? null)) {
-            throw new \LogicException(sprintf('The DBAFS class "%s" supports "fileSize" but did not set it in the record.', \get_class($this->dbafs)));
-        }
-
-        return $fileSize;
+        return $this->adapter->fileSize($normalizedPath)->fileSize();
     }
 
     public function mimeType($path, int $accessType = self::SYNCED_ONLY): string
     {
         $normalizedPath = $this->normalizePath($path);
 
-        if (self::BYPASS_DBAFS === $accessType || !$this->dbafs::supportsMimeType()) {
-            return $this->adapter->mimeType($normalizedPath)->mimeType();
+        if (self::BYPASS_DBAFS !== $accessType && $this->dbafs->supportsMimeType()) {
+            if (self::FORCE_SYNC === $accessType) {
+                $this->sync($path);
+            }
+
+            if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
+                throw UnableToRetrieveMetadata::mimeType($normalizedPath, 'Resource does not exist in DBAFS.');
+            }
+
+            if (!\array_key_exists('mimeType', $record)) {
+                throw new \LogicException(sprintf('The DBAFS class "%s" supports "mimeType" but did not set it in the record.', \get_class($this->dbafs)));
+            }
+
+            if (null !== ($mimeType = $record['mimeType'])) {
+                return $mimeType;
+            }
         }
 
-        if (self::FORCE_SYNC === $accessType) {
-            $this->sync($path);
-        }
-
-        if (null === ($record = $this->dbafs->getRecord($normalizedPath))) {
-            throw UnableToRetrieveMetadata::mimeType($normalizedPath, 'Resource does not exist in DBAFS.');
-        }
-
-        if (null === ($mimeType = $record['mimeType'] ?? null)) {
-            throw new \LogicException(sprintf('The DBAFS class "%s" supports "mimeType" but did not set it in the record.', \get_class($this->dbafs)));
-        }
-
-        return $mimeType;
+        return $this->adapter->mimeType($normalizedPath)->mimeType();
     }
 
     public function visibility($path): string

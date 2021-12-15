@@ -392,18 +392,18 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_dir FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
-                ['file1', $this->generateUuid(1)->toBinary(), 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0],
-                ['file2', $this->generateUuid(2)->toBinary(), 'ab86a1e1ef70dff97959067b723c5c24', 0],
-                ['empty-dir', $this->generateUuid(3)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 1],
-                ['foo', $this->generateUuid(4)->toBinary(), '48a6bbe07d25733e37e2c949ee412d5d', 1],
-                ['foo/file3', $this->generateUuid(5)->toBinary(), 'ead99c2fbd1b40a59695567afb14c26c', 0],
-                ['foo/baz', $this->generateUuid(6)->toBinary(), '1ef7bcc6fe73d58905d2c8d21853663e', 1],
-                ['foo/baz/file4', $this->generateUuid(7)->toBinary(), '6d4db5ff0c117864a02827bad3c361b9', 0],
-                ['bar', $this->generateUuid(8)->toBinary(), '06a182c81a4f9c208a44b66fbb3c1d9f', 1],
-                ['bar/file5a', $this->generateUuid(9)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 0],
-                ['bar/file5b', $this->generateUuid(10)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 0],
+                ['file1', $this->generateUuid(1)->toBinary(), 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
+                ['file2', $this->generateUuid(2)->toBinary(), 'ab86a1e1ef70dff97959067b723c5c24', 0, null],
+                ['empty-dir', $this->generateUuid(3)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 1, null],
+                ['foo', $this->generateUuid(4)->toBinary(), '48a6bbe07d25733e37e2c949ee412d5d', 1, null],
+                ['foo/file3', $this->generateUuid(5)->toBinary(), 'ead99c2fbd1b40a59695567afb14c26c', 0, null],
+                ['foo/baz', $this->generateUuid(6)->toBinary(), '1ef7bcc6fe73d58905d2c8d21853663e', 1, null],
+                ['foo/baz/file4', $this->generateUuid(7)->toBinary(), '6d4db5ff0c117864a02827bad3c361b9', 0, null],
+                ['bar', $this->generateUuid(8)->toBinary(), '06a182c81a4f9c208a44b66fbb3c1d9f', 1, null],
+                ['bar/file5a', $this->generateUuid(9)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 0, null],
+                ['bar/file5b', $this->generateUuid(10)->toBinary(), 'd41d8cd98f00b204e9800998ecf8427e', 0, null],
             ])
         ;
 
@@ -772,10 +772,10 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_dir FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
-                ['files/foo', 'ee61', '48a6bbe07d25733e37e2c949ee412d5d', 1],
-                ['files/bar.file', 'ab54', 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0],
+                ['files/foo', 'ee61', '48a6bbe07d25733e37e2c949ee412d5d', 1, null],
+                ['files/bar.file', 'ab54', 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
             ])
         ;
 
@@ -797,12 +797,12 @@ class DbafsTest extends TestCase
                         $expectedParameters = [
                             [
                                 // foo/file2.dat
-                                1 => 'ee61', // pid
-                                2 => 'files/foo/file2.dat', // path
-                                3 => 'c13d88cb4cb02003daedb8a84e5d272a', // hash
-                                4 => 'file2.dat', // name
-                                5 => 'dat', // extension
-                                6 => 'file', // type
+                                1 => 'ee61',
+                                2 => 'files/foo/file2.dat',
+                                3 => 'c13d88cb4cb02003daedb8a84e5d272a',
+                                4 => 'file2.dat',
+                                5 => 'dat',
+                                6 => 'file',
 
                                 // foo/file1.txt
                                 9 => 'ee61', // pid

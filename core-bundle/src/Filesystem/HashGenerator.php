@@ -25,10 +25,8 @@ class HashGenerator implements HashGeneratorInterface
         $this->useLastModified = $useLastModified;
     }
 
-    public function hashFileContent(FilesystemAdapter $filesystem, string $path, int $lastModified = null): ?string
+    public function hashFileContent(FilesystemAdapter $filesystem, string $path, int $lastModified = null, int &$fileLastModified = null): ?string
     {
-        $fileLastModified = null;
-
         if ($this->useLastModified) {
             $fileLastModified = $filesystem->lastModified($path)->lastModified();
 

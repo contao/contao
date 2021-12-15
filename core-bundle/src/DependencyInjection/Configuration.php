@@ -736,6 +736,10 @@ class Configuration implements ConfigurationInterface
                         ->min(1)
                         ->defaultValue(100)
                     ->end()
+                    ->booleanNode('use_last_modified')
+                        ->info('When enabled, rehashing a file might be skipped if it has not changed since the last time. Note, that the DBAFS service requires a "lastModified" column in the database in this case. All hashes will initially be rewritten to include the file time.')
+                        ->defaultFalse()
+                    ->end()
                 ->end()
             ;
         };

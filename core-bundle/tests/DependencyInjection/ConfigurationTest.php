@@ -367,6 +367,7 @@ class ConfigurationTest extends TestCase
                 'hash_algorithm' => 'md5',
                 'max_file_size' => 2147483648,
                 'bulk_insert_size' => 100,
+                'use_last_modified' => false,
             ],
             $configuration['virtual_filesystem']['buckets']['foobar']['dbafs']
         );

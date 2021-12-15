@@ -52,6 +52,7 @@ class Dbafs implements ResetInterface, DbafsInterface
     private string $dbPathPrefix = '';
     private int $maxFileSize = 2147483648; // 2 GiB
     private int $bulkInsertSize = 100;
+    private bool $useLastModified = false;
 
     /**
      * @var array<string, array|null>
@@ -96,6 +97,11 @@ class Dbafs implements ResetInterface, DbafsInterface
     public function setBulkInsertSize(int $chunkSize): void
     {
         $this->bulkInsertSize = $chunkSize;
+    }
+
+    public function useLastModified(bool $enable): void
+    {
+        $this->useLastModified = $enable;
     }
 
     public function getPathFromUuid(Uuid $uuid): ?string
@@ -195,11 +201,11 @@ class Dbafs implements ResetInterface, DbafsInterface
         [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$scope);
 
         // Gather all needed information from the database and filesystem
-        [$dbPaths, $allDbHashesByPath, $allUuidsByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
+        [$dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $allUuidsByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
         $filesystemIterator = $this->getFilesystemPaths($filesystem, $searchPaths, $parentPaths);
 
-        $changeSet = $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $filesystemIterator, $filesystem, $searchPaths);
-        $this->applyChangeSet($changeSet, $allUuidsByPath);
+        $changeSet = $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $filesystem, $searchPaths);
+        $this->applyChangeSet($changeSet, $allUuidsByPath, $allLastModifiedByPath);
 
         // Update previously cached items
         foreach ($changeSet->getItemsToUpdate() as $path => $changes) {
@@ -235,23 +241,23 @@ class Dbafs implements ResetInterface, DbafsInterface
         [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$scope);
 
         // Gather all needed information from the database and filesystem
-        [$dbPaths, $allDbHashesByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
+        [$dbPaths, $allDbHashesByPath, $allLastModifiedByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
         $filesystemIterator = $this->getFilesystemPaths($filesystem, $searchPaths, $parentPaths);
 
-        return $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $filesystemIterator, $filesystem, $searchPaths);
+        return $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $filesystem, $searchPaths);
     }
 
-    public static function supportsLastModified(): bool
+    public function supportsLastModified(): bool
+    {
+        return $this->useLastModified;
+    }
+
+    public function supportsFileSize(): bool
     {
         return false;
     }
 
-    public static function supportsFileSize(): bool
-    {
-        return false;
-    }
-
-    public static function supportsMimeType(): bool
+    public function supportsMimeType(): bool
     {
         return false;
     }
@@ -259,13 +265,14 @@ class Dbafs implements ResetInterface, DbafsInterface
     /**
      * @param array<string, int>      $dbPaths
      * @param array<string, string>   $allDbHashesByPath
+     * @param array<string, int|null> $allLastModifiedByPath
      * @param \Generator<string, int> $filesystemIterator
      * @param array<string>           $searchPaths
      *
      * @phpstan-param DatabasePaths $dbPaths
      * @phpstan-param FilesystemPaths $filesystemIterator
      */
-    private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, \Generator $filesystemIterator, FilesystemAdapter $filesystem, array $searchPaths): ChangeSet
+    private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array &$allLastModifiedByPath, \Generator $filesystemIterator, FilesystemAdapter $filesystem, array $searchPaths): ChangeSet
     {
         // We're identifying items by their (old) path and store any detected
         // changes as an array of attributes
@@ -288,12 +295,36 @@ class Dbafs implements ResetInterface, DbafsInterface
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
 
+        $getFileContentHash = function (string $path) use ($filesystem, $allDbHashesByPath, &$allLastModifiedByPath): string {
+            if ($this->useLastModified) {
+                $oldHash = $allDbHashesByPath[$path] ?? null;
+                $lastModified = null !== $oldHash ? ($allLastModifiedByPath[$path] ?? null) : null;
+
+                // Allow falling back to the existing hash if we've already got
+                // an existing hash and timestamp
+                $hash = $this->hashGenerator->hashFileContent($filesystem, $path, $lastModified, $fileLastModified) ?? $oldHash;
+
+                // Update last modified reference
+                $allLastModifiedByPath[$path] = $fileLastModified ?? $filesystem->lastModified($path)->lastModified();
+
+                return $hash;
+            }
+
+            $hash = $this->hashGenerator->hashFileContent($filesystem, $path);
+
+            if (null === $hash) {
+                throw new \LogicException('A hash generator may not return null if $lastModified was not set.');
+            }
+
+            return $hash;
+        };
+
         foreach ($filesystemIterator as $path => $type) {
             $name = basename($path);
             $parentDir = \dirname($path);
 
             if (self::RESOURCE_FILE === $type) {
-                $hash = $this->hashGenerator->hashFileContent($filesystem, $path);
+                $hash = $getFileContentHash($path);
             } elseif (self::RESOURCE_DIRECTORY === $type) {
                 $childHashes = $dirHashesParts[$path] ?? [];
 
@@ -475,6 +506,10 @@ class Dbafs implements ResetInterface, DbafsInterface
             'extra' => $event->getExtraMetadata(),
         ];
 
+        if ($this->useLastModified) {
+            $record['lastModified'] = $row['lastModified'];
+        }
+
         $this->records[$path] = $record;
         $this->pathByUuid[$row['uuid']] = $path;
         $this->pathById[$row['id']] = $path;
@@ -484,9 +519,10 @@ class Dbafs implements ResetInterface, DbafsInterface
      * Updates the database from a given change set. We're using chunked inserts
      * for better performance.
      *
-     * @param array<string, string> $allUuidsByPath
+     * @param array<string, string>   $allUuidsByPath
+     * @param array<string, int|null> $allLastModifiedByPath
      */
-    private function applyChangeSet(ChangeSet $changeSet, array $allUuidsByPath): void
+    private function applyChangeSet(ChangeSet $changeSet, array $allUuidsByPath, array $allLastModifiedByPath): void
     {
         if ($changeSet->isEmpty()) {
             return;
@@ -531,21 +567,34 @@ class Dbafs implements ResetInterface, DbafsInterface
                 'tstamp' => $currentTime,
             ];
 
-            $inserts[] = array_values($dataToInsert);
+            // BC
+            if ('tl_files' === $this->table) {
+                $dataToInsert['name'] = basename($newPath);
+                $dataToInsert['extension'] = !$isDir ? Path::getExtension($newPath) : '';
+                $dataToInsert['tstamp'] = $currentTime;
+            }
+
+            if ($this->useLastModified) {
+                $dataToInsert['lastModified'] = $allLastModifiedByPath[$newPath] ?? null;
+            }
+
+            $inserts[] = $dataToInsert;
         }
 
         if (!empty($inserts)) {
-            foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
-                $placeholders = implode(', ', array_fill(0, \count($chunk), '(?, ?, ?, ?, ?, ?, ?, ?)'));
-                $data = array_merge(...$chunk);
+            $table = $this->connection->quoteIdentifier($this->table);
+            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // `uuid`, `pid`, …
+            $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
+            foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
                 $this->connection->executeQuery(
                     sprintf(
-                        'INSERT INTO %s (`uuid`, `pid`, `path`, `hash`, `name`, `extension`, `type`, `tstamp`) VALUES %s',
-                        $this->connection->quoteIdentifier($this->table),
-                        $placeholders
+                        'INSERT INTO %s (%s) VALUES %s',
+                        $table,
+                        $columns,
+                        implode(', ', array_fill(0, \count($chunk), $placeholders))
                     ),
-                    $data
+                    array_merge(...array_map('array_values', $chunk))
                 );
             }
         }
@@ -563,6 +612,10 @@ class Dbafs implements ResetInterface, DbafsInterface
 
             if (null !== ($newHash = $changedValues[ChangeSet::ATTR_HASH] ?? null)) {
                 $dataToUpdate['hash'] = $newHash;
+            }
+
+            if ($this->useLastModified && null !== ($lastModified = $allLastModifiedByPath[$pathIdentifier] ?? null)) {
+                $dataToUpdate['lastModified'] = $lastModified;
             }
 
             $this->connection->update(
@@ -591,31 +644,33 @@ class Dbafs implements ResetInterface, DbafsInterface
      * his includes all parent directories and - in case of directories - all
      * resources that reside in it.
      *
-     * This method also builds lookup tables for hashes and UUIDs of the entire
-     * table.
+     * This method also builds lookup tables for hashes, 'last modified' timestamps
+     * and UUIDs of the entire table.
      *
      * @param array<string> $searchPaths       non-empty list of search paths
      * @param array<string> $parentDirectories parent directories to consider
      *
-     * @return array<array<string, string|int>>
-     * @phpstan-return array{0: DatabasePaths, 1: array<string, string>, 2: array<string, string>}
+     * @return array<array<string, string|int|null>>
+     * @phpstan-return array{0: DatabasePaths, 1: array<string, string>, 2: array<string, int|null>, 3: array<string, string>}
      */
     private function getDatabaseEntries(array $searchPaths, array $parentDirectories): array
     {
         $dbPaths = [];
         $allHashesByPath = [];
+        $allLastModifiedByPath = [];
         $allUuidsByPath = [];
 
         $items = $this->connection->fetchAllNumeric(
             sprintf(
-                "SELECT path, uuid, hash, IF(type='folder', 1, 0) AS is_dir FROM %s",
-                $this->connection->quoteIdentifier($this->table)
+                "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
+                $this->useLastModified ? 'lastModified' : 'NULL',
+                $this->connection->quoteIdentifier($this->table),
             )
         );
 
         $fullScope = '' === $searchPaths[0];
 
-        foreach ($items as [$path, $uuid, $hash, $isDir]) {
+        foreach ($items as [$path, $uuid, $hash, $isDir, $lastModified]) {
             $path = $this->convertToFilesystemPath($path);
 
             // Include a path if it is either inside the search paths or is a
@@ -625,10 +680,11 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
 
             $allHashesByPath[$path] = $hash;
+            $allLastModifiedByPath[$path] = (int) $lastModified;
             $allUuidsByPath[$path] = $uuid;
         }
 
-        return [$dbPaths, $allHashesByPath, $allUuidsByPath];
+        return [$dbPaths, $allHashesByPath, $allLastModifiedByPath, $allUuidsByPath];
     }
 
     /**

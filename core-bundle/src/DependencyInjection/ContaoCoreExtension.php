@@ -453,8 +453,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ];
 
             if ($config['dbafs']['enabled']) {
+                $useLastModified = $config['dbafs']['use_last_modified'];
+
                 $hashGeneratorDefinition = new Definition(HashGenerator::class);
                 $hashGeneratorDefinition->setArgument(0, $config['dbafs']['hash_algorithm']);
+                $hashGeneratorDefinition->setArgument(1, $useLastModified);
 
                 $hashGeneratorName = "contao.filesystem.dbafs_hash_generator.$name";
                 $container->setDefinition($hashGeneratorName, $hashGeneratorDefinition);
@@ -467,6 +470,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
                 $dbafsDefinition->addMethodCall('setMaxFileSize', [$config['dbafs']['max_file_size']]);
                 $dbafsDefinition->addMethodCall('setBulkInsertSize', [$config['dbafs']['bulk_insert_size']]);
+                $dbafsDefinition->addMethodCall('useLastModified', [$useLastModified]);
 
                 // BC
                 if ('tl_files' === $config['dbafs']['table']) {
