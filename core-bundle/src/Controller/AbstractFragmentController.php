@@ -37,7 +37,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * @return array<string>
      */
-    public static function getSubscribedServices()
+    public static function getSubscribedServices()/*: array*/
     {
         $services = parent::getSubscribedServices();
 
