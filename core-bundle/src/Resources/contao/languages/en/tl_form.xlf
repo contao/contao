@@ -108,7 +108,7 @@
         <source>Target table</source>
       </trans-unit>
       <trans-unit id="tl_form.targetTable.1">
-        <source>The target table must contain a column for every form field.</source>
+        <source>The target table must contain a column of the same name for every form field. More in the docs.</source>
       </trans-unit>
       <trans-unit id="tl_form.method.0">
         <source>Submission method</source>
