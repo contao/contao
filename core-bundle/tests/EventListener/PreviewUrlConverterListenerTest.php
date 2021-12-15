@@ -16,9 +16,16 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class PreviewUrlConverterListenerTest extends ContaoTestCase
 {
@@ -29,7 +36,12 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
+        $listener = new PreviewUrlConvertListener(
+            $this->mockContaoFramework(),
+            $this->mockPageRegistry(),
+            $this->createMock(HttpKernelInterface::class)
+        );
+
         $listener($event);
 
         $this->assertSame('/en/content-elements.html', $event->getUrl());
@@ -45,7 +57,12 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlConvertEvent(new Request());
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener(
+            $framework,
+            $this->mockPageRegistry(),
+            $this->createMock(HttpKernelInterface::class)
+        );
+
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -56,7 +73,12 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $request = new Request();
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($this->mockContaoFramework());
+        $listener = new PreviewUrlConvertListener(
+            $this->mockContaoFramework(),
+            $this->mockPageRegistry(),
+            $this->createMock(HttpKernelInterface::class)
+        );
+
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -83,7 +105,12 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener(
+            $framework,
+            $this->mockPageRegistry(),
+            $this->createMock(HttpKernelInterface::class)
+        );
+
         $listener($event);
 
         $this->assertSame('/en/content-elements.html', $event->getUrl());
@@ -100,7 +127,12 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener(
+            $framework,
+            $this->mockPageRegistry(),
+            $this->createMock(HttpKernelInterface::class)
+        );
+
         $listener($event);
 
         $this->assertNull($event->getUrl());
@@ -133,7 +165,84 @@ class PreviewUrlConverterListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlConvertEvent($request);
 
-        $listener = new PreviewUrlConvertListener($framework);
+        $listener = new PreviewUrlConvertListener(
+            $framework,
+            $this->mockPageRegistry(),
+            $this->createMock(HttpKernelInterface::class)
+        );
+
         $listener($event);
+    }
+
+    public function testForwardsToControllerIfPreviewUrlThrowsException(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['rootLanguage' => 'en']);
+        $pageModel
+            ->expects($this->once())
+            ->method('getPreviewUrl')
+            ->willThrowException(new RouteNotFoundException())
+        ;
+
+        $subRequest = new Request();
+        $route = new PageRoute($pageModel);
+
+        $request = $this->createMock(Request::class);
+        $request->query = new ParameterBag(['page' => '9']);
+        $request
+            ->expects($this->once())
+            ->method('duplicate')
+            ->with(null, null, $route->getDefaults())
+            ->willReturn($subRequest)
+        ;
+
+        $response = new Response();
+
+        $adapters = [
+            PageModel::class => $this->mockConfiguredAdapter(['findWithDetails' => $pageModel]),
+        ];
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $httpKernel
+            ->expects($this->once())
+            ->method('handle')
+            ->with($subRequest, HttpKernelInterface::SUB_REQUEST)
+            ->willReturn($response)
+        ;
+
+        $framework = $this->mockContaoFramework($adapters);
+        $event = new PreviewUrlConvertEvent($request);
+
+        $listener = new PreviewUrlConvertListener(
+            $framework,
+            $this->mockPageRegistry($route),
+            $httpKernel
+        );
+
+        $listener($event);
+
+        $this->assertSame($response, $event->getResponse());
+    }
+
+    /**
+     * @return PageRegistry&MockObject
+     */
+    private function mockPageRegistry(PageRoute $route = null): PageRegistry
+    {
+        $pageRegistry = $this->createMock(PageRegistry::class);
+
+        if (null === $route) {
+            $pageRegistry
+                ->expects($this->never())
+                ->method('getRoute')
+            ;
+        } else {
+            $pageRegistry
+                ->expects($this->once())
+                ->method('getRoute')
+                ->willReturn($route)
+            ;
+        }
+
+        return $pageRegistry;
     }
 }
