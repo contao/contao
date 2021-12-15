@@ -178,25 +178,6 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
-    # todo: remove, this will get defined by the ContaoCoreExtension, controlled by config
-    contao.filesystem.dbafs.files:
-        class: Contao\CoreBundle\Filesystem\Dbafs
-        arguments:
-            - '@database_connection'
-            - '@event_dispatcher'
-            - tl_files
-        calls:
-            - [setDatabasePathPrefix, ['%contao.upload_path%']]
-
-    # todo: remove, this will get defined by the ContaoCoreExtension, controlled by config
-    contao.filesystem.operator.files:
-        class: Contao\CoreBundle\Filesystem\DbafsFilesystem
-        arguments:
-            - '@contao.filesystem.dbafs'
-            - '@flysystem.adapter.default_storage'
-        tags:
-            - { name: contao.virtual_filesystem, mount: files }
-
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -1005,7 +986,7 @@ services:
     contao.virtual_filesystem:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystem
         arguments:
-            - !tagged_iterator { tag: 'contao.virtual_filesystem', index_by: 'mount' }
+            - !tagged_iterator { tag: contao.virtual_filesystem, index_by: mount }
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
