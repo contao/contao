@@ -68,6 +68,10 @@ services:
         tags:
             - { name: contao.frontend_module, category: user }
 
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModuleController:
+        tags:
+            - { name: contao.frontend_module, category: miscellaneous }
+
     Contao\CoreBundle\Controller\ImagesController:
         public: true
         arguments:
