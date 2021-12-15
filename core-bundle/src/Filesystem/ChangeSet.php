@@ -12,34 +12,45 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+/**
+ * @phpstan-type CreateItemDefinition array{hash: string, path: string, type: self::TYPE_*}
+ * @phpstan-type UpdateItemDefinition array{hash: string}|array{path: string}|array{hash: string, path: string}
+ * @phpstan-type DeleteItemDefinition self::TYPE_*
+ */
 class ChangeSet
 {
     public const ATTR_HASH = 'hash';
     public const ATTR_PATH = 'path';
+    public const ATTR_TYPE = 'type';
+
+    public const TYPE_FILE = 0;
+    public const TYPE_FOLDER = 1;
 
     /**
-     * @var array<int, array<string, string>>
-     * @phpstan-var array<int, array<self::ATTR_*, string>>
+     * @var array<array<string, string|int>>
+     * @phpstan-var array<CreateItemDefinition>
      */
     private array $itemsToCreate;
 
     /**
      * @var array<string, array<string, string>>
-     * @phpstan-var array<string, array<self::ATTR_*, string>>
+     * @phpstan-var array<string, UpdateItemDefinition>
      */
     private array $itemsToUpdate;
 
     /**
-     * @var array<int, string>
+     * @var array<string, int>
+     * @phpstan-var array<string, self::TYPE_*>
      */
     private array $itemsToDelete;
 
     /**
-     * @param array<int, array<string, string>>    $itemsToCreate
-     * @param array<string, array<string, string>> $itemsToUpdate
-     * @param array<int, string>                   $itemsToDelete
-     * @phpstan-param array<int, array<self::ATTR_*, string>> $itemsToCreate
-     * @phpstan-param array<string, array<self::ATTR_*, string>> $itemsToUpdate
+     * @param array<array<string, string|int>>         $itemsToCreate
+     * @param array<string, array<string, string|int>> $itemsToUpdate
+     * @param array<string, int>                       $itemsToDelete
+     * @phpstan-param array<CreateItemDefinition> $itemsToCreate
+     * @phpstan-param array<string, UpdateItemDefinition> $itemsToUpdate
+     * @phpstan-param array<string, DeleteItemDefinition> $itemsToDelete
      *
      * @internal
      */
@@ -56,8 +67,8 @@ class ChangeSet
     }
 
     /**
-     * @return array<int, array<string, string>>
-     * @phpstan-return array<int, array<self::ATTR_*, string>>
+     * @return array<array<string, string>>
+     * @phpstan-return array<CreateItemDefinition>
      */
     public function getItemsToCreate(): array
     {
@@ -65,8 +76,8 @@ class ChangeSet
     }
 
     /**
-     * @return array<string, array<string, string>>
-     * @phpstan-return array<string, array<self::ATTR_*, string>>
+     * @return array<string, array<string, string|int>>
+     * @phpstan-return array<string, UpdateItemDefinition>>
      */
     public function getItemsToUpdate(): array
     {
@@ -74,7 +85,8 @@ class ChangeSet
     }
 
     /**
-     * @return array<int, string>
+     * @return array<string, int>
+     * @phpstan-return array<string, DeleteItemDefinition>
      */
     public function getItemsToDelete(): array
     {

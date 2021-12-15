@@ -102,7 +102,7 @@ class FilesyncCommand extends Command
             $table->addRow([$action, $change]);
         }
 
-        foreach ($changeSet->getItemsToDelete() as $path) {
+        foreach (array_keys($changeSet->getItemsToDelete()) as $path) {
             $table->addRow(['delete', "<oldpath>$path</oldpath>"]);
         }
 
