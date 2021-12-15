@@ -26,15 +26,17 @@ class LegacyRouteProviderTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    private LegacyRouteProvider $provider;
+
     /**
      * @var FrontendLoader&MockObject
      */
-    private $frontendLoader;
-
-    private LegacyRouteProvider $provider;
+    private FrontendLoader $frontendLoader;
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->frontendLoader = $this->createMock(FrontendLoader::class);
         $this->provider = new LegacyRouteProvider($this->frontendLoader);
     }

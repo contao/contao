@@ -18,8 +18,8 @@ use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ForwardCompatibility\Result;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Result;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -520,15 +520,13 @@ class PageCandidatesTest extends TestCase
      */
     private function mockConnection(QueryBuilder $queryBuilder = null): Connection
     {
+        $queryBuilder ??= $this->createMock(QueryBuilder::class);
+
         $result = $this->createMock(Result::class);
         $result
             ->method('fetchFirstColumn')
             ->willReturn([15])
         ;
-
-        if (null === $queryBuilder) {
-            $queryBuilder = $this->createMock(QueryBuilder::class);
-        }
 
         $queryBuilder
             ->expects($this->once())
@@ -545,7 +543,7 @@ class PageCandidatesTest extends TestCase
         ;
 
         $queryBuilder
-            ->method('execute')
+            ->method('executeQuery')
             ->willReturn($result)
         ;
 

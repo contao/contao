@@ -120,6 +120,7 @@ Rimuove i file &lt;code&gt;.css&lt;/code&gt; e &lt;code&gt;.js&lt;/code&gt; gene
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Ricrea i symlinks nella cartella pubblica (root del documento).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>

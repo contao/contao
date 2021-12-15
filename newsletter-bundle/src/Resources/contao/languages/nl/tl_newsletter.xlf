@@ -74,6 +74,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Mailer transport</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>

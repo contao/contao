@@ -18,6 +18,9 @@ use Contao\CoreBundle\Tests\TestCase;
 class GlobalsMapListenerTest extends TestCase
 {
     /**
+     * @param array|string|null $existing
+     * @param array|string      $new
+     *
      * @dataProvider getValuesData
      *
      * @runInSeparateProcess

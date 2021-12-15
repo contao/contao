@@ -17,9 +17,8 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "contao/core-bundle": "self.version",
-        "patchwork/utf8": "^1.3.2",
         "symfony/deprecation-contracts": "^2.1",
-        "symfony/http-kernel": "^5.3"
+        "symfony/http-kernel": "^5.4"
     },
     "conflict": {
         "contao/core": "*",
@@ -27,15 +26,15 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "symfony/http-client": "^5.3",
         "contao/test-case": "^4.4",
         "phpunit/phpunit": "^8.5",
-        "symfony/phpunit-bridge": "^5.3"
+        "symfony/http-client": "^5.4",
+        "symfony/phpunit-bridge": "^5.4"
     },
     "extra": {
         "contao-manager-plugin": "Contao\\NewsletterBundle\\ContaoManager\\Plugin",
         "symfony": {
-            "require": "^5.3"
+            "require": "^5.4"
         }
     },
     "autoload": {

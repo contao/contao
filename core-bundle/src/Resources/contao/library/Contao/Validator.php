@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Patchwork\Utf8;
-
 /**
  * Validates arbitrary data
  *
@@ -133,7 +131,7 @@ class Validator
 	{
 		/*
 		 * The regex below is based on a regex by Michael Rushton adjusted by
-		 * Rasmus Lerdorf to to only consider routeable addresses as valid. We
+		 * Rasmus Lerdorf to only consider routeable addresses as valid. We
 		 * have also added Unicode support for the local part.
 		 *
 		 * Michael's regex carries this copyright:
@@ -382,7 +380,7 @@ class Validator
 		}
 
 		// Must not be longer than 255 characters
-		if (Utf8::strlen($strName) > 255)
+		if (mb_strlen($strName) > 255)
 		{
 			return false;
 		}

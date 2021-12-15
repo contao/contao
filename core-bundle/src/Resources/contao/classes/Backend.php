@@ -12,7 +12,9 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -21,7 +23,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Provide methods to manage back end controllers.
@@ -265,7 +266,7 @@ abstract class Backend extends Controller
 				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
 			}
 
-			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, TL_GENERAL);
+			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, ContaoContext::GENERAL);
 		}
 
 		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
@@ -319,7 +320,7 @@ abstract class Backend extends Controller
 		unset($arrGroup);
 
 		$this->import(BackendUser::class, 'User');
-		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || $this->User->hasAccess($module, 'modules');
+		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
@@ -333,9 +334,7 @@ abstract class Backend extends Controller
 			throw new \InvalidArgumentException('Back end module "' . $module . '" is not defined in the BE_MOD array');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$arrTables = (array) ($arrModule['tables'] ?? array());
 		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
 		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
@@ -372,6 +371,7 @@ abstract class Backend extends Controller
 		}
 
 		$dc = null;
+		$security = System::getContainer()->get('security.helper');
 
 		// Create the data container object
 		if ($strTable)
@@ -390,7 +390,7 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if (($v['exclude'] ?? null) && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+					if (($v['exclude'] ?? null) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $k))
 					{
 						if ($strTable == 'tl_user_group')
 						{
@@ -405,7 +405,7 @@ abstract class Backend extends Controller
 			// Fabricate a new data container object
 			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
-				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, TL_ERROR);
+				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
@@ -484,7 +484,7 @@ abstract class Backend extends Controller
 
 			if (!$act || $act == 'paste' || $act == 'select')
 			{
-				$act = ($dc instanceof \listable) ? 'showAll' : 'edit';
+				$act = ($dc instanceof ListableDataContainerInterface) ? 'showAll' : 'edit';
 			}
 
 			switch ($act)
@@ -493,9 +493,9 @@ abstract class Backend extends Controller
 				case 'show':
 				case 'showAll':
 				case 'undo':
-					if (!$dc instanceof \listable)
+					if (!$dc instanceof ListableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, TL_ERROR);
+						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, ContaoContext::ERROR);
 						trigger_error('The current data container is not listable', E_USER_ERROR);
 					}
 					break;
@@ -507,9 +507,9 @@ abstract class Backend extends Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
-					if (!$dc instanceof \editable)
+					if (!$dc instanceof EditableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, TL_ERROR);
+						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, ContaoContext::ERROR);
 						trigger_error('The current data container is not editable', E_USER_ERROR);
 					}
 					break;
@@ -524,7 +524,9 @@ abstract class Backend extends Controller
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(5, 6)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				$container = System::getContainer();
+
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -540,17 +542,18 @@ abstract class Backend extends Controller
 						}
 
 						// Add object title or name
-						if ($objRow->title)
+						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
 						{
-							$trail[] = ' <span>' . $objRow->title . '</span>';
-						}
-						elseif ($objRow->name)
-						{
-							$trail[] = ' <span>' . $objRow->name . '</span>';
-						}
-						elseif ($objRow->headline)
-						{
-							$trail[] = ' <span>' . $objRow->headline . '</span>';
+							$strUrl = $container->get('router')->generate('contao_backend', array
+							(
+								'do' => $container->get('request_stack')->getCurrentRequest()->query->get('do'),
+								'table' => $table,
+								'id' => $objRow->id,
+								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+								'rt' => REQUEST_TOKEN,
+							));
+
+							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
 						}
 					}
 
@@ -860,7 +863,7 @@ abstract class Backend extends Controller
 
 				if ($objPage->numRows < 1)
 				{
-					// Currently selected page does not exist
+					// The currently selected page does not exist
 					if ($intId == $intNode)
 					{
 						$objSession->set($strKey, 0);
@@ -873,20 +876,14 @@ abstract class Backend extends Controller
 
 				$arrIds[] = $intId;
 
-				// No link for the active page
-				if ($objPage->id == $intNode)
+				// No link for the active page or pages in the trail
+				if ($objPage->id == $intNode || !$objUser->hasAccess($objPage->id, 'pagemounts'))
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' ' . $objPage->title;
 				}
 				else
 				{
 					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
-				}
-
-				// Do not show the mounted pages
-				if (!$objUser->isAdmin && $objUser->hasAccess($objPage->id, 'pagemounts'))
-				{
-					break;
 				}
 
 				$intId = $objPage->pid;
@@ -901,8 +898,9 @@ abstract class Backend extends Controller
 			throw new AccessDeniedException('Page ID ' . $intNode . ' is not mounted.');
 		}
 
-		// Limit tree
+		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
@@ -927,10 +925,11 @@ abstract class Backend extends Controller
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
+	 * @param boolean       $isVisibleRootTrailPage
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{
@@ -952,8 +951,15 @@ abstract class Backend extends Controller
 			$label = '<strong>' . $label . '</strong>';
 		}
 
-		// Add the breadcrumb link
-		$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		// Add the breadcrumb link if you have access to that page
+		if (!$isVisibleRootTrailPage)
+		{
+			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+		}
+		else
+		{
+			$label = '<span>' . $label . '</span>';
+		}
 
 		// Return the image
 		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
@@ -1033,7 +1039,7 @@ abstract class Backend extends Controller
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// Currently selected folder does not exist
+		// The currently selected folder does not exist
 		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSession->set($strKey, '');
@@ -1043,6 +1049,7 @@ abstract class Backend extends Controller
 
 		$objUser  = BackendUser::getInstance();
 		$strPath  = System::getContainer()->getParameter('contao.upload_path');
+		$security = System::getContainer()->get('security.helper');
 		$arrNodes = explode('/', preg_replace('/^' . preg_quote($strPath, '/') . '\//', '', $strNode));
 		$arrLinks = array();
 
@@ -1072,7 +1079,7 @@ abstract class Backend extends Controller
 		}
 
 		// Check whether the node is mounted
-		if (!$objUser->hasAccess($strNode, 'filemounts'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $strNode))
 		{
 			$objSession->set($strKey, '');
 

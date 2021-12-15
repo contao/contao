@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
@@ -232,7 +233,7 @@ class BackendMain extends Backend
 		$objSession = $container->get('session');
 
 		// File picker reference (backwards compatibility)
-		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && $this->User->hasAccess('page', 'modules')) || (Input::get('do') == 'files' && $this->User->hasAccess('files', 'modules'))))
+		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page')) || (Input::get('do') == 'files' && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))))
 		{
 			$this->Template->managerHref = StringUtil::ampersand($objSession->get('filePickerRef'));
 			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];

@@ -11,11 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\Exception\LockedException;
-use Patchwork\Utf8;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
@@ -54,7 +52,7 @@ class ModuleLogin extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['login'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['login'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -71,7 +69,6 @@ class ModuleLogin extends Module
 		}
 		elseif ($this->redirectBack && $request && $request->query->has('redirect'))
 		{
-			/** @var UriSigner $uriSigner */
 			$uriSigner = System::getContainer()->get('uri_signer');
 
 			// We cannot use $request->getUri() here as we want to work with the original URI (no query string reordering)
@@ -96,6 +93,8 @@ class ModuleLogin extends Module
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$exception = null;
 		$lastUsername = '';
+
+		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getFrontendTokenValue();
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
 		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))

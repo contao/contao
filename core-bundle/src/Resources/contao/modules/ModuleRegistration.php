@@ -11,9 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\Util\SimpleTokenParser;
-use Patchwork\Utf8;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Front end module "registration".
@@ -40,7 +38,7 @@ class ModuleRegistration extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['registration'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['registration'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -197,14 +195,14 @@ class ModuleRegistration extends Module
 				$arrData['eval']['unique'] = false;
 			}
 
-			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'] ?? null, '', '', $this));
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $arrData['default'] ?? null, $field, 'tl_member', $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
-			// Increase the row count if its a password field
+			// Increase the row count if it's a password field
 			if ($objWidget instanceof FormPassword)
 			{
 				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
@@ -216,10 +214,10 @@ class ModuleRegistration extends Module
 				$objWidget->validate();
 
 				$varValue = $objWidget->value;
-				$encoder = System::getContainer()->get('security.encoder_factory')->getEncoder(FrontendUser::class);
+				$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $encoder->isPasswordValid($varValue, $username, null))
+				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $passwordHasher->verify($varValue, $username))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
@@ -299,7 +297,7 @@ class ModuleRegistration extends Module
 				}
 			}
 
-			if ($objWidget instanceof \uploadable)
+			if ($objWidget instanceof UploadableWidgetInterface)
 			{
 				$hasUpload = true;
 			}
@@ -360,6 +358,8 @@ class ModuleRegistration extends Module
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
+
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 
 	/**
@@ -469,8 +469,7 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendActivationMail($arrData)
 	{
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
@@ -515,7 +514,7 @@ class ModuleRegistration extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_text, $arrTokenData)
+			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_text, $arrTokenData)
 		);
 	}
 
@@ -527,8 +526,7 @@ class ModuleRegistration extends Module
 		$this->strTemplate = 'mod_message';
 		$this->Template = new FrontendTemplate($this->strTemplate);
 
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
@@ -571,7 +569,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Log activity
-		$this->log('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, TL_ACCESS);
+		$this->log('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, ContaoContext::ACCESS);
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
@@ -600,8 +598,7 @@ class ModuleRegistration extends Module
 		$this->strTemplate = 'mod_message';
 		$this->Template = new FrontendTemplate($this->strTemplate);
 
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = null;
 		$models = OptInModel::findByRelatedTableAndIds('tl_member', array($objMember->id));
 
@@ -663,7 +660,7 @@ class ModuleRegistration extends Module
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
-		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, TL_ACCESS);
+		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, ContaoContext::ACCESS);
 	}
 }
 

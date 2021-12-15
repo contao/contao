@@ -20,7 +20,6 @@ use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 
 class CronTest extends TestCase
@@ -78,7 +77,6 @@ class CronTest extends TestCase
 
     public function testUpdatesCronEntities(): void
     {
-        /** @var CronJobEntity&MockObject $entity */
         $entity = $this->createMock(CronJobEntity::class);
         $entity
             ->method('getName')

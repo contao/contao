@@ -345,6 +345,10 @@
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
         <target>&quot;cache:clear&quot;コマンドを実行するか、Contao Managerを使用してアプリケーションキャッシュを再構築してください。 </target>
       </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>テンプレートのパス: &quot;%s&quot;に以下の文字を含めてはなりません: %s</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>

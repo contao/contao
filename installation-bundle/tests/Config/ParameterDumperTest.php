@@ -15,7 +15,7 @@ namespace Contao\InstallationBundle\Tests\Config;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ParameterDumperTest extends TestCase
 {

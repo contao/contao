@@ -12,9 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao\Database;
 
-use Contao\CoreBundle\Tests\Fixtures\Database\DoctrineArrayStatement;
 use Contao\Database\Result;
-use Doctrine\DBAL\ForwardCompatibility\Result as ForwardCompatibilityResult;
+use Doctrine\DBAL\Cache\ArrayResult;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result as DoctrineResult;
 use PHPUnit\Framework\Error\Notice;
 use PHPUnit\Framework\Error\Warning;
 use PHPUnit\Framework\TestCase;
@@ -170,11 +171,7 @@ class ResultTest extends TestCase
 
     public function testResultStatementInterface(): void
     {
-        if (!class_exists(ForwardCompatibilityResult::class)) {
-            $this->markTestSkipped('The forward compatibility layer is not available in doctrine/dbal <2.13.');
-        }
-
-        $resultStatement = $this->createMock(ForwardCompatibilityResult::class);
+        $resultStatement = $this->createMock(DoctrineResult::class);
         $resultStatement
             ->expects($this->exactly(3))
             ->method('fetchAssociative')
@@ -187,6 +184,8 @@ class ResultTest extends TestCase
     }
 
     /**
+     * @param string|array|object $statement
+     *
      * @dataProvider getInvalidStatements
      */
     public function testInvalidStatements($statement): void
@@ -211,15 +210,12 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
-        $resultObjects = [
-            new Result(new DoctrineArrayStatement($data), 'SELECT * FROM test'),
+        return [
+            new Result(
+                new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
+                'SELECT * FROM test'
+            ),
             new Result($data, 'SELECT * FROM test'),
         ];
-
-        if (class_exists(ForwardCompatibilityResult::class)) {
-            $resultObjects[] = new Result(new ForwardCompatibilityResult(new DoctrineArrayStatement($data)), 'SELECT * FROM test');
-        }
-
-        return $resultObjects;
     }
 }

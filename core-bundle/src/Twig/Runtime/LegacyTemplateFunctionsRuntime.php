@@ -86,7 +86,6 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
             return '';
         }
 
-        /** @var BackendCustom $controller */
         $controller = $this->framework->createInstance(BackendCustom::class);
         $template = $controller->getTemplateObject();
 

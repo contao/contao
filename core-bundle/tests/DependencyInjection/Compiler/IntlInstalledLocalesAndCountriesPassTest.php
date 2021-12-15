@@ -28,7 +28,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $container
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive([Locales::class], [Countries::class])
+            ->withConsecutive(['contao.intl.locales'], ['contao.intl.countries'])
             ->willReturn(false)
         ;
 
@@ -39,7 +39,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
     public function testAddsLocalesArguments(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition(Locales::class, new Definition(Locales::class, []));
+        $container->setDefinition('contao.intl.locales', new Definition(Locales::class, []));
         $container->setParameter('contao.locales', []);
         $container->setParameter('kernel.project_dir', __DIR__);
         $container->setParameter('kernel.default_locale', 'en');
@@ -47,8 +47,8 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableLocales = $container->getDefinition(Locales::class)->getArgument(3);
-        $enabledLocales = $container->getDefinition(Locales::class)->getArgument(4);
+        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(3);
+        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(4);
 
         $this->assertIsArray($availableLocales);
         $this->assertNotEmpty($availableLocales);
@@ -70,12 +70,12 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
     public function testAddsCountriesArguments(): void
     {
         $container = new ContainerBuilder();
-        $container->setDefinition(Countries::class, new Definition(Countries::class, []));
+        $container->setDefinition('contao.intl.countries', new Definition(Countries::class, []));
 
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableCountries = $container->getDefinition(Countries::class)->getArgument(3);
+        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(3);
 
         $this->assertIsArray($availableCountries);
         $this->assertNotEmpty($availableCountries);

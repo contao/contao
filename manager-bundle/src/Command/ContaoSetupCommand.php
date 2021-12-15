@@ -15,9 +15,9 @@ namespace Contao\ManagerBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -67,7 +67,10 @@ class ContaoSetupCommand extends Command
             throw new \RuntimeException('The php executable could not be found.');
         }
 
-        $php = [$this->phpPath];
+        $php = [
+            $this->phpPath,
+            '-dmemory_limit='.ini_get('memory_limit'),
+        ];
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {
             $php[] = '-ddisplay_errors=-1';

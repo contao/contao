@@ -12,11 +12,9 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
-use Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener;
-use Contao\CoreBundle\EventListener\DataContainer\PageUrlListener;
-use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Idna;
@@ -30,7 +28,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_page'] = array
 (
@@ -82,7 +79,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 5,
+			'mode'                    => DataContainer::MODE_TREE,
+			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
 			'panelLayout'             => 'filter;search'
@@ -177,11 +175,11 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,alias,type',
-		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'regular'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description,serpPreview;{canonical_legend:hide},canonicalLink,canonicalKeepParams;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests,requireItem;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'forward'                     => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'redirect'                    => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},adminEmail,mailerTransport,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'root'                        => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
+		'rootfallback'                => '{title_legend},title,alias,type;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'logout'                      => '{title_legend},title,alias,type;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
 		'error_401'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_403'                   => '{title_legend},title,alias,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
@@ -333,8 +331,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50 clr'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'target' => array
 		(
@@ -365,7 +363,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
@@ -377,7 +375,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'trailingSlash'=>false, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'url', 'trailingSlash'=>false, 'tl_class'=>'w50'),
 			'save_callback' => array
 			(
 				array('tl_page', 'checkStaticUrl')
@@ -421,6 +419,29 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'enableCanonical' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'default'                 => true,
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'canonicalLink' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
+		),
+		'canonicalKeepParams' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'adminEmail' => array
@@ -750,9 +771,7 @@ class tl_page extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 
 		// Set the default page user and group
@@ -770,6 +789,7 @@ class tl_page extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
 		if (is_array($session['CURRENT']['IDS'] ?? null))
@@ -783,20 +803,20 @@ class tl_page extends Backend
 										  ->limit(1)
 										  ->execute($id);
 
-				if ($objPage->numRows < 1 || !$this->User->hasAccess($objPage->type, 'alpty'))
+				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
 					continue;
 				}
 
 				$row = $objPage->row();
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row))
 				{
 					$edit_all[] = $id;
 				}
 
 				// Mounted pages cannot be deleted
-				if ($this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && !$this->User->hasAccess($id, 'pagemounts'))
 				{
 					$delete_all[] = $id;
 				}
@@ -816,12 +836,12 @@ class tl_page extends Backend
 										  ->limit(1)
 										  ->execute($id);
 
-				if ($objPage->numRows < 1 || !$this->User->hasAccess($objPage->type, 'alpty'))
+				if ($objPage->numRows < 1 || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
 					continue;
 				}
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 				{
 					$clipboard[] = $id;
 				}
@@ -840,7 +860,7 @@ class tl_page extends Backend
 									  ->limit(1)
 									  ->execute(Input::get('id'));
 
-			if ($objPage->numRows && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
+			if ($objPage->numRows && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()))
 			{
 				$GLOBALS['TL_DCA']['tl_page']['config']['closed'] = true;
 			}
@@ -849,7 +869,7 @@ class tl_page extends Backend
 		// Check current action
 		if (Input::get('act') && Input::get('act') != 'paste')
 		{
-			$permission = 0;
+			$permission = null;
 			$cid = CURRENT_ID ?: Input::get('id');
 			$ids = $cid ? array($cid) : array();
 
@@ -858,11 +878,11 @@ class tl_page extends Backend
 			{
 				case 'edit':
 				case 'toggle':
-					$permission = BackendUser::CAN_EDIT_PAGE;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE;
 					break;
 
 				case 'move':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
 					$ids[] = Input::get('sid');
 					break;
 
@@ -871,7 +891,7 @@ class tl_page extends Backend
 				case 'copyAll':
 				case 'cut':
 				case 'cutAll':
-					$permission = BackendUser::CAN_EDIT_PAGE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
 
 					// Check the parent page in "paste into" mode
 					if (Input::get('mode') == 2)
@@ -890,7 +910,7 @@ class tl_page extends Backend
 					break;
 
 				case 'delete':
-					$permission = BackendUser::CAN_DELETE_PAGE;
+					$permission = ContaoCorePermissions::USER_CAN_DELETE_PAGE;
 					break;
 			}
 
@@ -915,7 +935,7 @@ class tl_page extends Backend
 
 			$pagemounts = array_unique($pagemounts);
 
-			// Do not allow to paste after pages on the root level (pagemounts)
+			// Do not allow pasting after pages on the root level (pagemounts)
 			if (Input::get('mode') == 1 && (Input::get('act') == 'cut' || Input::get('act') == 'cutAll') && in_array(Input::get('pid'), $this->eliminateNestedPages($this->User->pagemounts)))
 			{
 				throw new AccessDeniedException('Not enough permissions to paste page ID ' . Input::get('id') . ' after mounted page ID ' . Input::get('pid') . ' (root level).');
@@ -928,7 +948,7 @@ class tl_page extends Backend
 			{
 				if (!in_array($id, $pagemounts))
 				{
-					$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, TL_ERROR);
+					$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, ContaoContext::ERROR);
 
 					$error = true;
 					break;
@@ -943,7 +963,7 @@ class tl_page extends Backend
 				}
 
 				// Check whether the current user is allowed to access the current page
-				if (Input::get('act') != 'show' && !$this->User->isAllowed($permission, $objPage->row()))
+				if (Input::get('act') != 'show' && ($permission === null || !$security->isGranted($permission, $objPage->row())))
 				{
 					$error = true;
 					break;
@@ -951,9 +971,9 @@ class tl_page extends Backend
 
 				// Check the type of the first page (not the following parent pages)
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
-				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$this->User->hasAccess($objPage->type, 'alpty'))
+				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
-					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, TL_ERROR);
+					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, ContaoContext::ERROR);
 
 					$error = true;
 					break;
@@ -1033,47 +1053,51 @@ class tl_page extends Backend
 	/**
 	 * Return the SERP URL
 	 *
-	 * @param PageModel $model
+	 * @param PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getSerpUrl(PageModel $model)
+	public function getSerpUrl(PageModel $page)
 	{
-		return $model->getAbsoluteUrl();
+		return $page->getAbsoluteUrl();
 	}
 
 	/**
 	 * Return the title tag from the associated page layout
 	 *
-	 * @param PageModel $model
+	 * @param PageModel $page
 	 *
 	 * @return string
 	 */
-	public function getTitleTag(PageModel $model)
+	public function getTitleTag(PageModel $page)
 	{
-		$model->loadDetails();
+		$page->loadDetails();
 
 		/** @var LayoutModel $layout */
-		if (!$layout = $model->getRelated('layout'))
+		if (!$layout = $page->getRelated('layout'))
 		{
 			return '';
 		}
 
-		global $objPage;
+		$origObjPage = $GLOBALS['objPage'] ?? null;
 
-		// Set the global page object so we can replace the insert tags
-		$objPage = $model;
+		// Override the global page object, so we can replace the insert tags
+		$GLOBALS['objPage'] = $page;
 
-		return implode(
+		$title = implode(
 			'%s',
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
 		);
+
+		$GLOBALS['objPage'] = $origObjPage;
+
+		return $title;
 	}
 
 	/**
@@ -1127,7 +1151,6 @@ class tl_page extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Store the ID in the session
@@ -1151,7 +1174,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(PageUrlListener::class)
+			->get('contao.listener.data_container.page_url')
 			->generateAlias($varValue, $dc)
 		;
 	}
@@ -1168,7 +1191,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->generateArticleForPage($dc)
 		;
 	}
@@ -1185,7 +1208,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get(PageUrlListener::class)
+			->get('contao.listener.data_container.page_url')
 			->purgeSearchIndex((int) $dc->id)
 		;
 	}
@@ -1333,7 +1356,7 @@ class tl_page extends Backend
 	{
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.');
 
-		return System::getContainer()->get(PageTypeOptionsListener::class)($dc);
+		return System::getContainer()->get('contao.listener.data_container.page_type_options')($dc);
 	}
 
 	/**
@@ -1369,12 +1392,13 @@ class tl_page extends Backend
 	 * @param string        $imageAttribute
 	 * @param boolean       $blnReturnImage
 	 * @param boolean       $blnProtected
+	 * @param boolean       $isVisibleRootTrailPage
 	 *
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
-		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
+		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage);
 	}
 
 	/**
@@ -1391,7 +1415,9 @@ class tl_page extends Backend
 	 */
 	public function editPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1414,7 +1440,9 @@ class tl_page extends Backend
 			return '';
 		}
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1437,9 +1465,10 @@ class tl_page extends Backend
 			return '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
 		$objSubpages = PageModel::findByPid($row['id']);
 
-		return ($objSubpages !== null && $objSubpages->count() > 0 && $this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($objSubpages !== null && $objSubpages->count() > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1456,7 +1485,9 @@ class tl_page extends Backend
 	 */
 	public function cutPage($row, $href, $label, $title, $icon, $attributes)
 	{
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		$security = System::getContainer()->get('security.helper');
+
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1472,6 +1503,8 @@ class tl_page extends Backend
 	 */
 	public function pastePage(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
 	{
+		$security = System::getContainer()->get('security.helper');
+
 		$disablePA = false;
 		$disablePI = false;
 
@@ -1506,7 +1539,7 @@ class tl_page extends Backend
 			// Disable "paste into" button if there is no permission 2 (move) or 1 (create) for the current page
 			if (!$disablePI)
 			{
-				if (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $row) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $row)))
+				if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $row) || (Input::get('mode') == 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $row)))
 				{
 					$disablePI = true;
 				}
@@ -1518,7 +1551,7 @@ class tl_page extends Backend
 				/** @var PageModel $objModel */
 				$objModel = Model::getClassFromTable($table);
 
-				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))))
+				if (($objPage = $objModel::findById($row['pid'])) !== null && (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, $objPage->row()) || (Input::get('mode') == 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))))
 				{
 					$disablePA = true;
 				}
@@ -1560,8 +1593,9 @@ class tl_page extends Backend
 	public function deletePage($row, $href, $label, $title, $icon, $attributes)
 	{
 		$root = func_get_arg(7);
+		$security = System::getContainer()->get('security.helper');
 
-		return ($this->User->hasAccess($row['type'], 'alpty') && $this->User->isAllowed(BackendUser::CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1582,7 +1616,7 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
 		;
 	}
@@ -1597,7 +1631,7 @@ class tl_page extends Backend
 	 */
 	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
-		if (!$this->User->hasAccess('tl_page::alias', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::alias'))
 		{
 			return $arrButtons;
 		}
@@ -1605,9 +1639,7 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
-			/** @var SessionInterface $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -1689,8 +1721,10 @@ class tl_page extends Backend
 			$this->redirect($this->getReferer());
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_page::published', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::published'))
 		{
 			return '';
 		}
@@ -1702,7 +1736,7 @@ class tl_page extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		if (!$this->User->hasAccess($row['type'], 'alpty') || ($objPage = PageModel::findById($row['id'])) === null || !$this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) || ($objPage = PageModel::findById($row['id'])) === null || !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 		{
 			return Image::getHtml($icon) . ' ';
 		}
@@ -1748,7 +1782,7 @@ class tl_page extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_page::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
 		}

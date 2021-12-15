@@ -24,9 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\PathUtil\Path;
 
 /**
  * Symlinks the public resources into the web directory.
@@ -152,7 +152,7 @@ class SymlinksCommand extends Command
                 continue;
             }
 
-            $this->symlink($path, Path::join('system/themes', Path::getFilename($path)));
+            $this->symlink($path, Path::join('system/themes', basename($path)));
         }
     }
 

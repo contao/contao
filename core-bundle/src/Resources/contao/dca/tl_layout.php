@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -47,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('name'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'headerFields'            => array('name', 'author', 'tstamp'),
@@ -137,7 +138,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -263,7 +264,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
@@ -287,7 +288,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -473,7 +474,7 @@ class tl_layout extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('layout', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
 		}

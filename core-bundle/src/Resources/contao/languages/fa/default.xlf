@@ -111,19 +111,19 @@
       </trans-unit>
       <trans-unit id="ERR.filename">
         <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
-        <target>نام دست‌کم یک از پرونده‌های بارگزاری شده نامعتبر یا از طول بیشینه‌ی ۲۵۵ نویسه تجاوز کرده است!</target>
+        <target>نام دست‌کم یک از پرونده‌های بارگذاری شده نامعتبر یا از طول بیشینه‌ی 255 نویسه تجاوز کرده است!</target>
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
-        <target>بیشترین حجم مجاز برای بارگزاری پرونده %s می‌باشد (تنظیمات کنتائو یا php.ini)!</target>
+        <target>بیشترین حجم مجاز برای بارگذاری پرونده %s می‌باشد (تنظیمات کنتائو یا php.ini)!</target>
       </trans-unit>
       <trans-unit id="ERR.filetype">
         <source>File type &quot;%s&quot; is not allowed to be uploaded!</source>
-        <target>نوع پرونده %s برای بارگزاری مجاز نمی‌باشد!</target>
+        <target>نوع پرونده %s برای بارگذاری مجاز نمی‌باشد!</target>
       </trans-unit>
       <trans-unit id="ERR.filepartial">
         <source>File %s was only partially uploaded!</source>
-        <target>پرونده %s به صورت ناقص بارگزاری شد!</target>
+        <target>پرونده %s به صورت ناقص بارگذاری شد!</target>
       </trans-unit>
       <trans-unit id="ERR.filewidth">
         <source>File %s exceeds the maximum image width of %d pixels!</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="ERR.fileerror">
         <source>Error %s occurred when uploading file %s!</source>
-        <target>خطای %s هنگام بارگزاری پرونده %s رخ داد!</target>
+        <target>خطای %s هنگام بارگذاری پرونده %s رخ داد!</target>
       </trans-unit>
       <trans-unit id="ERR.filetarget">
         <source>Cannot move %s to %s because the target exists!</source>
@@ -159,7 +159,7 @@
       </trans-unit>
       <trans-unit id="ERR.accountLocked">
         <source>This account has been locked! You can log in again in %d minutes.</source>
-        <target>حساب کاربری شما قفل شده است! لطفا %s دقیقه دیگر مجددا سعی نمایید.</target>
+        <target>حساب کاربری شما قفل شده است! لطفا %d دقیقه دیگر مجددا سعی نمایید.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidLogin">
         <source>Login failed (note that usernames and passwords are case-sensitive)!</source>
@@ -259,9 +259,11 @@
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
         <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <target>هیچ کدام از برگه‌های ریشه وب‌سایت برای &lt;strong&gt;%s&lt;/strong&gt; گزینه‌ی تنظیم زبان جایگزین ندارند.</target>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
+        <target>شما فقط می‌توانید یک برگه ریشه وب‌سایت را به عنوان زبان جایگزین برای هر دامنه تعریف کنید.</target>
       </trans-unit>
       <trans-unit id="ERR.topLevelRoot">
         <source>Top-level pages must be website root pages!</source>
@@ -269,6 +271,7 @@
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
         <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <target>برگه‌های سطح بالایی در ساختار سایت وجود دارد که برگه‌های ریشه وب‌سایت نیستند.</target>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -276,6 +279,7 @@
       </trans-unit>
       <trans-unit id="ERR.formCookieWarning">
         <source>You will not be able to send this form, because you have disabled cookies in your browser.</source>
+        <target>شما قادر به ارسال این فرم نخواهید بود، زیرا شما کوکی‌ها را در مرورگر خود غیرفعال کرده‌اید.</target>
       </trans-unit>
       <trans-unit id="ERR.captcha">
         <source>Please answer the security question!</source>
@@ -303,6 +307,7 @@
       </trans-unit>
       <trans-unit id="ERR.largeImage">
         <source>Image exceeds the maximum dimensions of %sx%s.</source>
+        <target>تصویر از ابعاد بیشینه %sx%s تجاوز کرده است.</target>
       </trans-unit>
       <trans-unit id="ERR.invalidTwoFactor">
         <source>Invalid verification code!</source>
@@ -338,6 +343,11 @@
       </trans-unit>
       <trans-unit id="ERR.applicationCache">
         <source>Please run the &quot;cache:clear&quot; command or use the Contao Manager to rebuild your application cache.</source>
+        <target>لطفا دستور &quot;cache:clear&quot; را اجرا کنید یا از Contao Manager برای بازسازی کش برنامه‌تان استفاده کنید.</target>
+      </trans-unit>
+      <trans-unit id="ERR.invalidThemeTemplatePath">
+        <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>مسیر قالب &quot;%s&quot; نباید شامل نویسه‌های ذیل باشد: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -353,7 +363,7 @@
       </trans-unit>
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
-        <target>عنصرهای متنی</target>
+        <target>المان‌های متنی</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -669,11 +679,11 @@
       </trans-unit>
       <trans-unit id="FFL.upload.0">
         <source>File upload</source>
-        <target>بارگزاری پرونده</target>
+        <target>بارگذاری پرونده</target>
       </trans-unit>
       <trans-unit id="FFL.upload.1">
         <source>A single-line input field to upload a local file to the server.</source>
-        <target>فیلد ورودی تک خط برای بارگزاری پرونده محلی در سرور</target>
+        <target>فیلد ورودی تک خط برای بارگذاری پرونده محلی در سرور</target>
       </trans-unit>
       <trans-unit id="FFL.range.0">
         <source>Range slider</source>
@@ -681,6 +691,7 @@
       </trans-unit>
       <trans-unit id="FFL.range.1">
         <source>A range slider to select a value or range of values between a specified min and max.</source>
+        <target>اسلایدر رنج برای انتخاب یک مقدار یا مقادیر بین مقدار کمینه و بیشینه.</target>
       </trans-unit>
       <trans-unit id="FFL.hidden.0">
         <source>Hidden field</source>
@@ -712,7 +723,7 @@
       </trans-unit>
       <trans-unit id="PTY.regular.1">
         <source>A regular page contains articles and content elements. It is the default page type.</source>
-        <target>برگه عادی شامل مقاله‌ها و عنصرهای محتوایی می‌باشد. این نوع برگه پیش‌فرض است.</target>
+        <target>برگه عادی شامل مقاله‌ها و المان‌های محتوایی می‌باشد. این نوع برگه پیش‌فرض است.</target>
       </trans-unit>
       <trans-unit id="PTY.redirect.0">
         <source>External redirect</source>
@@ -748,24 +759,27 @@
       </trans-unit>
       <trans-unit id="PTY.error_401.0">
         <source>401 Not authenticated</source>
-        <target>۴۰۱ تایید نشده</target>
+        <target>401 احراز هویت نشده</target>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
         <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <target>اگر بازدیدکننده‌ای برگه‌ی حفاظت‌شده‌ای را بدون احراز هویت درخواست کند برگه‌ی خطای 401 در عوض بارگذاری خواهد شد.</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
-        <target>۴۰۳ دسترسی ممنوع است</target>
+        <target>403 دسترسی ممنوع است</target>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
         <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <target>اگر بازدیدکننده‌ای برگه‌ی حفاظت‌شده‌ای را بدون احراز مجوز درخواست کند برگه‌ی خطای 403 در عوض بارگذاری خواهد شد.</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
-        <target>۴۰۴ برگه پیدا نشد</target>
+        <target>404 برگه پیدا نشد</target>
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+        <target>اگر بازدیدکننده‌ای برگه‌ای که وجود ندارد را درخواست کند برگه‌ی خطای 404 در عوض بارگذاری خواهد شد.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -777,7 +791,7 @@
       </trans-unit>
       <trans-unit id="FOP.f1">
         <source>Upload files to the server</source>
-        <target>بارگزاری پرونده‌ها در سرور</target>
+        <target>بارگذاری پرونده‌ها در سرور</target>
       </trans-unit>
       <trans-unit id="FOP.f2">
         <source>Edit, copy or move files and folders</source>
@@ -833,7 +847,7 @@
       </trans-unit>
       <trans-unit id="CHMOD.cworld">
         <source>Everybody</source>
-        <target>هر کسی</target>
+        <target>همه</target>
       </trans-unit>
       <trans-unit id="DATE.a">
         <source>am</source>
@@ -1053,7 +1067,7 @@
       </trans-unit>
       <trans-unit id="MSC.weekOffset">
         <source>0</source>
-        <target>6</target>
+        <target>0</target>
       </trans-unit>
       <trans-unit id="MSC.titleFormat">
         <source>%B %d%o, %Y</source>
@@ -1097,7 +1111,7 @@
       </trans-unit>
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
-        <target>لطفا پرونده‌های CSVای که باید وارد شوند را بارگزاری نمایید.</target>
+        <target>لطفا پرونده‌های CSVای که باید وارد شوند را بارگذاری نمایید.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1437,7 +1451,7 @@
       </trans-unit>
       <trans-unit id="MSC.all.1">
         <source>Edit multiple elements at once</source>
-        <target>ویرایش چند المنت هم زمان</target>
+        <target>ویرایش هم‌زمان چند المان</target>
       </trans-unit>
       <trans-unit id="MSC.all_override.0">
         <source>Override multiple</source>
@@ -1445,7 +1459,7 @@
       </trans-unit>
       <trans-unit id="MSC.all_override.1">
         <source>Override multiple elements at once</source>
-        <target>رونویسی هم‌زمان چند المنت</target>
+        <target>رونویسی هم‌زمان چند المان</target>
       </trans-unit>
       <trans-unit id="MSC.all_fields.0">
         <source>Available fields</source>
@@ -1541,6 +1555,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>با یادگیری استفاده از &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;میانبرهای صفحه‌کلید&lt;/a&gt; سرعت کار خود را افزایش دهید.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1644,6 +1659,7 @@
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
+        <target>آیا مطمئن هستید که می‌خواهید المان شناسه‌ی %s را حذف کنید؟</target>
       </trans-unit>
       <trans-unit id="MSC.delAllConfirm">
         <source>Do you really want to delete the selected records?</source>
@@ -2111,6 +2127,7 @@
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
         <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <target>به نظر می‌رسد که شما JavaScript را در مرورگر خود غیرفعال کرده‌اید. بخش مدیریت کنتائو بدون JavaScript به درستی کار نخواهد کرد.</target>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -2250,7 +2267,7 @@
       </trans-unit>
       <trans-unit id="MSC.selectNewPosition">
         <source>Next, please choose the (new) position of the element</source>
-        <target>سپس، جایگاه (جدید) المان را انتخاب نمایید</target>
+        <target>بعد، جایگاه (جدید) المان را انتخاب نمایید</target>
       </trans-unit>
       <trans-unit id="MSC.go">
         <source>Go</source>
@@ -2306,6 +2323,7 @@
       </trans-unit>
       <trans-unit id="MSC.sKeywordHint">
         <source>Note that keywords shorter than %s characters and without a modifier have been ignored.</source>
+        <target>توجه داشته باشید که کلیدواژه‌های کوتاه‌تر از %s نویسه و بدون اصلاح‌کننده نادیده گرفته خواهند شد.</target>
       </trans-unit>
       <trans-unit id="MSC.seconds">
         <source>seconds</source>
@@ -2345,7 +2363,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileUploaded">
         <source>File %s uploaded successfully.</source>
-        <target>پرونده %s با موفقیت بارگزاری شد.</target>
+        <target>پرونده %s با موفقیت بارگذاری شد.</target>
       </trans-unit>
       <trans-unit id="MSC.fileExceeds">
         <source>Image %s is too big to be resized automatically.</source>
@@ -2485,9 +2503,11 @@
       </trans-unit>
       <trans-unit id="MSC.versionConflict1">
         <source>Another user has created version %s while you were editing version %s of this record.</source>
+        <target>کاربر دیگری نسخه‌ی %s را ایجاد کرده است در حالی که شما نسخه‌ی %s را ویرایش می‌کردید.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict2">
         <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+        <target>تغییرات شما حالا به عنوان نسخه‌ی %s ذخیره شده‌اند و به طور بالقوه نسخه‌ی %s رونویسی کرده‌اند، بنابراین لطفا نسخه‌های زیر را مقایسه کنید:</target>
       </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
@@ -2507,6 +2527,7 @@
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
         <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <target>شما بایستی یک برگه ریشه در ساختار سایت برای وارد کردن پرونده فراداده اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -2562,6 +2583,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
         <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <target>اینجا می‌توانید احراز هویت دو مرحله‌ای را فعال کنید، که یک لایه اضافی امنیتی به حساب کاربری شما اضافه می‌کند. علاوه بر این نام کاربری و گذرواژه، شما بایستی یک کد تایید تولیدشده توسط برنامه two-factor مانند1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator یا هر برنامه TOTP دیگر وارد کنید.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
@@ -2585,9 +2607,11 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
         <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <target>کدهای پشتیبان می‌توانند برای دسترسی به حساب کاربری استفاده شوند اگر شما ابزار احراز هویت را گم کرده باشید و دیگر نتوانید کدهای two-factor را تولید کنید. از این کدهای پشتیبان همانند گذرواژه‌تان نگهداری کنید! توصیه می‌شود آنها را توسط یک برنامه گذرواژه مانند Lastpass، 1Password یا Keeper ذخیره کنید.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>
+        <target>مطمئن شوید که کدها را همین حالا کپی کنید. بعدا دوباره قادر به مشاهده آن‌ها نخواهید بود.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesGenerate">
         <source>Generate backup codes</source>
@@ -2599,6 +2623,7 @@
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesRegenerateInfo">
         <source>When you regenerate the backup codes, your old codes will not work anymore.</source>
+        <target>وقتی کدهای پشتیبان جدید بازتولید می‌کنید، کدهای قدیمی شما دگر کار نخواهند کرد.</target>
       </trans-unit>
       <trans-unit id="MSC.twoFactorTrustDevice">
         <source>Trust this device</source>
@@ -2606,18 +2631,23 @@
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
         <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>حداقل یک کاربر معمولی با دسترسی به ویرایشگر قالب وجود دارد. از آنجایی که قالب‌ها فایل PHP هستند، این کاربران به طور ضمن کنترل کامل ی روی سیستم دارند!</target>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
         <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری به ویرایشگر قالب دسترسی دارد. از آنجایی که قالب‌ها فایل PHP هستند، کاربران این گروه‌ها به طور ضمن کنترل کامل ی روی سیستم دارند!</target>
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
         <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <target>حداقل یک کاربر با مجوزی وارد کردن پوسته‌ها وجود دارد. از آنجا که پوسته‌ها دارای قالب‌های اختیاری هستند و قالب‌ها پرونده‌های PHP هستند، این کاربران به طور ضمنی دسترسی کامل به سیستم را دارند!</target>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
         <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری مجوزی دسترسی به وارد کردن پوسته‌ها را دارد. از آنجا که پوسته‌ها دارای قالب‌های اختیاری هستند و قالب‌ها پرونده‌های PHP هستند، کاربران این گروه‌ها به طور ضمنی دسترسی کامل به سیستم را دارند!</target>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>حداقل یک گروه کاربری مجوز دسترسی به ماژول «فهرست» و فیلدهای «list_» را دارد. از آنجا که آنها می‌توانند شامل کوئری‌های SQL اختیاری هستند، کاربران این گروه‌ها کنترل کاملی روی سیستم دارند!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2629,6 +2659,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>ویرایشگر CSS داخلی منسوخ شده است و در یکی از نسخه‌ی آینده کنتائو حذف خواهد شد. لطفا استخراج برگ‌های سبک موجود را در نظر بگیری و آن‌ها را به صورت برگه‌های سبک خارجی به چیدمان برگه اضافه کنید.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2636,6 +2667,7 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <target>اینجا می‌توانید فراداده را در نتایج جستجوی گوگل از قبل ببینید. موتورهای جستجوی دیگر شاید متن‌های طولانی‌تری نمایش دهند یا در موقعیت متفاوتی کوتاه کنند.</target>
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.0">
         <source>Number of items</source>
@@ -2643,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>اینجا می‌توانید تعداد کل آیتم‌ها را محدود کنید. برای مشاهده همه روی 0 تنظیم کنید.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2678,6 +2711,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
+        <target>آدرس URL پیش‌نمایش نمی‌تواند تولید شود، زیرا مسیر پارامترهای الزامی نیاز دارد.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -2761,7 +2795,7 @@
       </trans-unit>
       <trans-unit id="DP.week">
         <source>Wk</source>
-        <target>هف</target>
+        <target>Wk</target>
       </trans-unit>
       <trans-unit id="COLS.header">
         <source>Header</source>
@@ -2789,11 +2823,11 @@
       </trans-unit>
       <trans-unit id="SECTIONS.before">
         <source>After the page header</source>
-        <target>بعد از سربرگ صفحه</target>
+        <target>بعد از سربرگ برگه</target>
       </trans-unit>
       <trans-unit id="SECTIONS.main">
         <source>Inside the main column</source>
-        <target>در ستون مرکزی</target>
+        <target>در ستون اصلی</target>
       </trans-unit>
       <trans-unit id="SECTIONS.after">
         <source>Before the page footer</source>
@@ -2813,7 +2847,7 @@
       </trans-unit>
       <trans-unit id="DCA.all.1">
         <source>Edit multiple elements at once</source>
-        <target>ویرایش هم‌زمان چند المنت</target>
+        <target>ویرایش هم‌زمان چند المان</target>
       </trans-unit>
       <trans-unit id="DCA.toggleNodes.0">
         <source>Toggle all</source>
@@ -2829,43 +2863,43 @@
       </trans-unit>
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
-        <target>ایجاد یک المنت جدید</target>
+        <target>ایجاد یک المان جدید</target>
       </trans-unit>
       <trans-unit id="DCA.show">
         <source>Show the details of element ID %s</source>
-        <target>نمایش جزئیات المنت شناسه‌ی %s</target>
+        <target>نمایش جزئیات المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.edit">
         <source>Edit element ID %s</source>
-        <target>ویرایش المنت شناسه‌ی %s</target>
+        <target>ویرایش المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.cut">
         <source>Move element ID %s</source>
-        <target>جابجایی المنت شناسه‌ی %s</target>
+        <target>جابجایی المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.copy">
         <source>Duplicate element ID %s</source>
-        <target>دو نسخه کردن المنت‌ شناسه‌ی %s</target>
+        <target>دو نسخه کردن المان‌ شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.delete">
         <source>Delete element ID %s</source>
-        <target>حذف المنت شناسه‌ی %s</target>
+        <target>حذف المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
-        <target>کشیدن المنت شناسه‌ی %s</target>
+        <target>کشیدن المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.0">
         <source>Edit the element settings</source>
-        <target>ویرایش تنظیمات المنت</target>
+        <target>ویرایش تنظیمات المان</target>
       </trans-unit>
       <trans-unit id="DCA.editheader.1">
         <source>Edit the settings of element ID %s</source>
-        <target>ویرایش تنظیمات المنت شناسه‌ی %s</target>
+        <target>ویرایش تنظیمات المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
-        <target>انتشار/عدم انتشار المنت شناسه‌ی %s</target>
+        <target>انتشار/عدم انتشار المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.0">
         <source>Paste at the top</source>
@@ -2873,7 +2907,7 @@
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
-        <target>جاگذاری به المنت شناسه‌ی %s</target>
+        <target>جاگذاری به المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
         <source>Paste at the top</source>
@@ -2881,24 +2915,27 @@
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
-        <target>جاگذاری بعد از المنت شناسه‌ی %s</target>
+        <target>جاگذاری بعد از المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.0">
         <source>Create a new element at the top</source>
-        <target>ایجاد یک المنت جدید در بالا</target>
+        <target>ایجاد یک المان جدید در بالا</target>
       </trans-unit>
       <trans-unit id="DCA.pastenew.1">
         <source>Create a new element after element ID %s</source>
-        <target>ایجاد یک المنت جدید بعد از المنت شناسه‌ی %s</target>
+        <target>ایجاد یک المان جدید بعد از المان شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
+        <target>%d URI با موفقیت فهرست شد. %d ناموفق بود.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
         <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <target>%d URL نادیده گرفته شدند (اگر چیزی را از دست داده‌اید، گزارش خطایابی را بررسی کنید).</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
+        <target>%d لینک با موفقیت بررسی د. %d شکسته بودند.</target>
       </trans-unit>
     </body>
   </file>

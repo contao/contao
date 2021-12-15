@@ -41,15 +41,18 @@ class DisableAppConfiguredSettingsListener
                 continue;
             }
 
+            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['xlabel'][] = [
+                'contao.listener.data_container.disable_app_configured_settings',
+                'renderHelpIcon',
+            ];
+
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['helpwizard'] = false;
-            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['xlabel'][] = [self::class, 'renderHelpIcon'];
         }
     }
 
     public function renderHelpIcon(): string
     {
-        /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
         return $adapter->getHtml(

@@ -43,9 +43,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.0">
         <source>Overwrite metadata</source>
+        <target>Přepsat meta data</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the metadata from the file manager.</source>
+        <target>Přepsat meta informace z Manažera souborů.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -289,9 +291,11 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.0">
         <source>Markdown source</source>
+        <target>Zdroj markdownu</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.1">
         <source>Please choose the Markdown source.</source>
+        <target>Zvolte zdroj markdownu</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceText">
         <source>Text</source>
@@ -299,6 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
+        <target>Soubor</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -382,9 +387,11 @@
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.0">
         <source>Ignore files without metadata</source>
+        <target>Ignorovat soubory bez meta údajů</target>
       </trans-unit>
       <trans-unit id="tl_content.metaIgnore.1">
         <source>Do not show files without metadata matching the page language.</source>
+        <target>Nezobrazovat soubory bez meta údajů odpovídajících jazyku stránky.</target>
       </trans-unit>
       <trans-unit id="tl_content.galleryTpl.0">
         <source>Gallery template</source>
@@ -780,6 +787,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Automatické přehrání (přednačtení zadaného videa)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -819,6 +827,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
+        <target>Omezit zobrazení videí ze stejného kanálu.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

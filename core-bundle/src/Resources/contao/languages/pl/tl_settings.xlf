@@ -83,12 +83,15 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
+        <target>Dozwolone atrybuty HTML</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Lista dozwolonych atrybutów HTML, które nie zostaną wyczyszczone. Nazwa znacznika lub atrybutu &lt;code&gt;*&lt;/code&gt; oznacza wszystkie znaczniki lub atrybuty. Gwiazdka (*) może być użyta dla atrybutów z myślnikiem, takich jak &lt;code&gt;data-*&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Zezwolenie dla atrybutów &lt;code&gt;*&lt;/code&gt; może być wykorzystane do ataków XSS. Rób to tylko, jeśli wszyscy użytkownicy panelu są zaufani!</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -168,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
         <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Tu możesz wybrać grupę użytkowników, która będzie domyślnym właścicielem strony.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

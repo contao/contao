@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication\RememberMe;
 
 use Contao\CoreBundle\Entity\RememberMe;
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserInterface;
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +27,6 @@ use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CookieTheftException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
 class ExpiringTokenBasedRememberMeServicesTest extends TestCase
@@ -32,6 +34,11 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private const SECRET = 'foobar';
 
     private ExpiringTokenBasedRememberMeServices $listener;
+
+    /**
+     * @var RememberMeRepository&MockObject
+     */
+    private RememberMeRepository $repository;
 
     private static array $options = [
         'name' => 'REMEMBERME',
@@ -45,13 +52,12 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
         'remember_me_parameter' => 'autologin',
     ];
 
-    /**
-     * @var RememberMeRepository&MockObject
-     */
-    private $repository;
-
     protected function setUp(): void
     {
+        parent::setUp();
+
+        ClockMock::withClockMock(1142164800);
+
         $this->repository = $this->createMock(RememberMeRepository::class);
 
         $user = $this->createMock(UserInterface::class);
@@ -60,14 +66,14 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             ->willReturn([])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
             ->method('supportsClass')
             ->willReturn(true)
         ;
 
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -78,6 +84,13 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             'contao_frontend',
             self::$options
         );
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        ClockMock::withClockMock(false);
     }
 
     public function testExpiresExistingRecordsAndCreatesNewCookieWithNewDatabaseRecord(): void
@@ -115,7 +128,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     public function testUpdatesCookieValueFromDatabaseIfTwoRecordsExist(): void
     {
         $this->expectTableLocking();
-        $this->expectTableReturnsEntities($this->mockEntity('baz'), $this->mockEntity('bar', new \DateTime()));
+        $this->expectTableReturnsEntities($this->mockEntity('baz'), $this->mockEntity('bar', (new \DateTime())->setTimestamp(time())));
 
         $request = $this->mockRequestWithCookie();
         $token = $this->listener->autoLogin($request);
@@ -140,7 +153,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     {
         $this->expectTableLocking();
         $this->expectSeriesIsDeleted();
-        $this->expectTableReturnsEntities($this->mockEntity('bar', null, new \DateTime('-2 years')));
+        $this->expectTableReturnsEntities($this->mockEntity('bar', null, (new \DateTime())->setTimestamp(strtotime('-2 years', ClockMock::time()))));
 
         $request = $this->mockRequestWithCookie();
         $this->listener->autoLogin($request);
@@ -193,10 +206,10 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $response = new Response();
 
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createMock(ForwardCompatibilityUserInterface::class);
         $user
             ->expects($this->once())
-            ->method('getUsername')
+            ->method('getUserIdentifier')
             ->willReturn('foo')
         ;
 
@@ -258,7 +271,6 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
     private function mockEntity(string $value, \DateTime $expires = null, \DateTime $lastUsed = null): RememberMe
     {
         $entity = $this->createMock(RememberMe::class);
-
         $entity
             ->method('getValue')
             ->willReturn($value)
@@ -266,7 +278,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $entity
             ->method('getLastUsed')
-            ->willReturn($lastUsed ?: new \DateTime())
+            ->willReturn($lastUsed ?: (new \DateTime())->setTimestamp(time()))
         ;
 
         $entity

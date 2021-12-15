@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental
@@ -34,7 +34,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $this->environment = $environment;
     }
 
-    public function warmUp($cacheDir = null): array
+    public function warmUp(string $cacheDir = null): array
     {
         // Theme paths
         $themePaths = $this->templateLocator->findThemeDirectories();

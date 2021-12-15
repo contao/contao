@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Cache;
+use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
@@ -18,6 +19,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Email;
@@ -25,10 +27,10 @@ use Contao\Environment;
 use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_comments'] = array
 (
@@ -67,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 2,
+			'mode'                    => DataContainer::MODE_SORTABLE,
 			'fields'                  => array('date'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
@@ -156,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'flag'                    => 8,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -305,9 +307,7 @@ class tl_comments extends Backend
 			case 'editAll':
 			case 'deleteAll':
 			case 'overrideAll':
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
-
 				$session = $objSession->all();
 
 				if (empty($session['CURRENT']['IDS']) || !is_array($session['CURRENT']['IDS']))
@@ -397,6 +397,7 @@ class tl_comments extends Backend
 
 		// Order deny,allow
 		Cache::set($strKey, false);
+		$security = System::getContainer()->get('security.helper');
 
 		switch ($strSource)
 		{
@@ -406,7 +407,7 @@ class tl_comments extends Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 				{
 					Cache::set($strKey, true);
 				}
@@ -418,7 +419,7 @@ class tl_comments extends Backend
 										  ->execute($intParent);
 
 				// Do not check whether the page is mounted (see #5174)
-				if ($objPage->numRows > 0 && $this->User->isAllowed(BackendUser::CAN_EDIT_PAGE, $objPage->row()))
+				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 				{
 					Cache::set($strKey, true);
 				}
@@ -430,7 +431,7 @@ class tl_comments extends Backend
 											 ->execute($intParent);
 
 				// Do not check the access to the news module (see #5174)
-				if ($objArchive->numRows > 0 && $this->User->hasAccess($objArchive->pid, 'news'))
+				if ($objArchive->numRows > 0 && $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
 				{
 					Cache::set($strKey, true);
 				}
@@ -442,7 +443,7 @@ class tl_comments extends Backend
 											  ->execute($intParent);
 
 				// Do not check the access to the calendar module (see #5174)
-				if ($objCalendar->numRows > 0 && $this->User->hasAccess($objCalendar->pid, 'calendars'))
+				if ($objCalendar->numRows > 0 && $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
 				{
 					Cache::set($strKey, true);
 				}
@@ -638,7 +639,7 @@ class tl_comments extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
 		{
 			return '';
 		}
@@ -696,7 +697,7 @@ class tl_comments extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_comments::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_comments::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish comment ID ' . $intId . '.');
 		}

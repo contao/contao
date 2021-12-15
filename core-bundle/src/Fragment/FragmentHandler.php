@@ -41,7 +41,7 @@ class FragmentHandler extends BaseFragmentHandler
         parent::__construct($requestStack, [], $debug);
     }
 
-    public function render($uri, $renderer = 'inline', array $options = []): ?string
+    public function render($uri, string $renderer = 'inline', array $options = []): ?string
     {
         if (!$uri instanceof FragmentReference) {
             return $this->fragmentHandler->render($uri, $renderer, $options);

@@ -13,10 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Patchwork\Utf8;
 
 /**
  * Front end module "event reader".
@@ -50,7 +47,7 @@ class ModuleEventReader extends Events
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['eventreader'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['eventreader'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -129,13 +126,14 @@ class ModuleEventReader extends Events
 				throw new InternalServerErrorException('Empty target URL');
 		}
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+		// Overwrite the page metadata (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objEvent->pageTitle)
 			{
@@ -143,16 +141,16 @@ class ModuleEventReader extends Events
 			}
 			elseif ($objEvent->title)
 			{
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objEvent->title));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objEvent->title));
 			}
 
 			if ($objEvent->description)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($objEvent->description));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($objEvent->description));
 			}
 			elseif ($objEvent->teaser)
 			{
-				$htmlHeadBag->setMetaDescription(StringUtil::htmlToPlainText($objEvent->teaser));
+				$htmlHeadBag->setMetaDescription($htmlDecoder->htmlToPlainText($objEvent->teaser));
 			}
 
 			if ($objEvent->robots)
@@ -248,6 +246,7 @@ class ModuleEventReader extends Events
 		$objTemplate->until = $until;
 		$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 		$objTemplate->calendar = $objEvent->getRelated('pid');
+		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
 		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
@@ -315,7 +314,7 @@ class ModuleEventReader extends Events
 			}
 
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($objEvent->singleSRC)
 				->setSize($imgSize)

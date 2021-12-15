@@ -19,7 +19,7 @@ use Contao\NewBundle\ContaoNewBundle;
 use Contao\TestBundle\ContaoTestBundle;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class AddResourcesPathsPassTest extends TestCase
 {

@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\Image\ResizeConfiguration;
-use FOS\HttpCacheBundle\CacheManager;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -35,6 +34,101 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  */
 abstract class DataContainer extends Backend
 {
+	/**
+	 * Records are not sorted
+	 */
+	public const MODE_UNSORTED = 0;
+
+	/**
+	 * Records are sorted by a fixed field
+	 */
+	public const MODE_SORTED = 1;
+
+	/**
+	 * Records are sorted by a switchable field
+	 */
+	public const MODE_SORTABLE = 2;
+
+	/**
+	 * Records are sorted by the parent table
+	 */
+	public const MODE_SORTED_PARENT = 3;
+
+	/**
+	 * Displays the child records of a parent record (see content elements)
+	 */
+	public const MODE_PARENT = 4;
+
+	/**
+	 * Records are displayed as tree (see site structure)
+	 */
+	public const MODE_TREE = 5;
+
+	/**
+	 * Displays the child records within a tree structure (see articles module)
+	 */
+	public const MODE_TREE_EXTENDED = 6;
+
+	/**
+	 * Sort by initial letter ascending
+	 */
+	public const SORT_INITIAL_LETTER_ASC = 1;
+
+	/**
+	 * Sort by initial letter descending
+	 */
+	public const SORT_INITIAL_LETTER_DESC = 2;
+
+	/**
+	 * Sort by initial two letters ascending
+	 */
+	public const SORT_INITIAL_LETTERS_ASC = 3;
+
+	/**
+	 * Sort by initial two letters descending
+	 */
+	public const SORT_INITIAL_LETTERS_DESC = 4;
+
+	/**
+	 * Sort by day ascending
+	 */
+	public const SORT_DAY_ASC = 5;
+
+	/**
+	 * Sort by day descending
+	 */
+	public const SORT_DAY_DESC = 6;
+
+	/**
+	 * Sort by month ascending
+	 */
+	public const SORT_MONTH_ASC = 7;
+
+	/**
+	 * Sort by month descending
+	 */
+	public const SORT_MONTH_DESC = 8;
+
+	/**
+	 * Sort by year ascending
+	 */
+	public const SORT_YEAR_ASC = 9;
+
+	/**
+	 * Sort by year descending
+	 */
+	public const SORT_YEAR_DESC = 10;
+
+	/**
+	 * Sort ascending
+	 */
+	public const SORT_ASC = 11;
+
+	/**
+	 * Sort descending
+	 */
+	public const SORT_DESC = 12;
+
 	/**
 	 * Current ID
 	 * @var integer|string
@@ -72,10 +166,22 @@ abstract class DataContainer extends Backend
 	protected $strPalette;
 
 	/**
-	 * IDs of all root records
+	 * IDs of all root records (permissions)
 	 * @var array
 	 */
-	protected $root;
+	protected $root = array();
+
+	/**
+	 * IDs of children of root records (permissions)
+	 * @var array
+	 */
+	protected $rootChildren = array();
+
+	/**
+	 * IDs of visible parents of the root records
+	 * @var array
+	 */
+	protected $visibleRootTrails = array();
 
 	/**
 	 * WHERE clause of the database query
@@ -276,7 +382,7 @@ abstract class DataContainer extends Backend
 
 		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
 
-		// Return if the widget class does not exists
+		// Return if the widget class does not exist
 		if (!class_exists($strClass))
 		{
 			return '';
@@ -539,7 +645,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Set correct form enctype
-		if ($objWidget instanceof \uploadable)
+		if ($objWidget instanceof UploadableWidgetInterface)
 		{
 			$this->blnUploadable = true;
 		}
@@ -639,7 +745,7 @@ abstract class DataContainer extends Backend
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
-					$image = rawurldecode($container->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
+					$image = rawurldecode($container->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(699, 524, ResizeConfiguration::MODE_BOX))->getUrl($projectDir));
 				}
 				else
 				{
@@ -894,8 +1000,14 @@ abstract class DataContainer extends Backend
 			}
 
 			$v = \is_array($v) ? $v : array($v);
-			$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-			$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
+			$title = $label = $k;
+
+			if (isset($v['label']))
+			{
+				$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
+				$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
+			}
+
 			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
 
 			// Custom icon (see #5541)
@@ -932,7 +1044,7 @@ abstract class DataContainer extends Backend
 
 			if (\is_callable($v['button_callback'] ?? null))
 			{
-				$return .= $v['button_callback']($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $v['button_callback']($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1155,7 +1267,6 @@ abstract class DataContainer extends Backend
 		{
 			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 			$data = $objSessionBag->all();
 
 			unset(
@@ -1327,9 +1438,7 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		/** @var CacheManager $cacheManager */
-		$cacheManager = System::getContainer()->get('fos_http_cache.cache_manager');
-		$cacheManager->invalidateTags($tags);
+		System::getContainer()->get('fos_http_cache.cache_manager')->invalidateTags($tags);
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)

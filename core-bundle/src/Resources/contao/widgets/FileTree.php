@@ -454,7 +454,7 @@ class FileTree extends Widget
 			else
 			{
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-				$image = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir);
+				$image = System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir);
 			}
 		}
 		else

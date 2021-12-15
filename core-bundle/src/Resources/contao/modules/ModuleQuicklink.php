@@ -11,7 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Patchwork\Utf8;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick link".
@@ -38,7 +38,7 @@ class ModuleQuicklink extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['quicklink'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['quicklink'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -128,7 +128,16 @@ class ModuleQuicklink extends Module
 						// no break
 
 					default:
-						$href = $objSubpage->getFrontendUrl();
+						try
+						{
+							$href = $objSubpage->getFrontendUrl();
+						}
+						catch (ExceptionInterface $exception)
+						{
+							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+							continue 2;
+						}
 						break;
 				}
 
@@ -147,6 +156,7 @@ class ModuleQuicklink extends Module
 		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 }
 
