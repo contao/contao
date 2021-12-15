@@ -45,7 +45,7 @@ services:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
             - !service_locator
-                contao.cron: '@contao.cron'
+              contao.cron: '@contao.cron'
             - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
