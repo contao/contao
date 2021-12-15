@@ -11,7 +11,6 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentModuleListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
