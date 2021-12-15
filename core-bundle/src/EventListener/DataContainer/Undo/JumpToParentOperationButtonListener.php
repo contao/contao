@@ -103,7 +103,7 @@ class JumpToParentOperationButtonListener
 
         foreach ($GLOBALS['BE_MOD'] as $group) {
             foreach ($group as $name => $config) {
-                if (\is_array($config['tables']) && \in_array($table, $config['tables'], true)) {
+                if (\is_array($config['tables'] ?? null) && \in_array($table, $config['tables'], true)) {
                     $module = $config;
                     $module['_module_name'] = $name;
                 }
