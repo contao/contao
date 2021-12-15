@@ -44,11 +44,11 @@ class Dbafs implements ResetInterface, DbafsInterface
     private const RESOURCE_DOES_NOT_EXIST = -1;
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
+    private HashGeneratorInterface $hashGenerator;
     private Connection $connection;
     private EventDispatcherInterface $eventDispatcher;
 
     private string $table;
-    private string $hashAlgorithm;
     private string $dbPathPrefix = '';
     private int $maxFileSize = 2147483648; // 2 GiB
     private int $bulkInsertSize = 100;
@@ -69,13 +69,13 @@ class Dbafs implements ResetInterface, DbafsInterface
      */
     private array $pathById = [];
 
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, string $table, string $hashAlgorithm)
+    public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher, string $table)
     {
+        $this->hashGenerator = $hashGenerator;
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
 
         $this->table = $table;
-        $this->hashAlgorithm = $hashAlgorithm;
     }
 
     /**
@@ -293,7 +293,7 @@ class Dbafs implements ResetInterface, DbafsInterface
             $parentDir = \dirname($path);
 
             if (self::RESOURCE_FILE === $type) {
-                $hash = $this->getHashForFile($filesystem, $path);
+                $hash = $this->hashGenerator->hashFileContent($filesystem, $path);
             } elseif (self::RESOURCE_DIRECTORY === $type) {
                 $childHashes = $dirHashesParts[$path] ?? [];
 
@@ -317,7 +317,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 // Compute directory hash
                 $childHashes = array_filter($childHashes);
                 ksort($childHashes);
-                $hash = hash($this->hashAlgorithm, implode("\0", $childHashes));
+                $hash = $this->hashGenerator->hashString(implode("\0", $childHashes));
 
                 unset($dirHashesParts[$path]);
             } else {
@@ -629,11 +629,6 @@ class Dbafs implements ResetInterface, DbafsInterface
         }
 
         return [$dbPaths, $allHashesByPath, $allUuidsByPath];
-    }
-
-    private function getHashForFile(FilesystemAdapter $filesystem, string $path): string
-    {
-        return hash($this->hashAlgorithm, $filesystem->read($path));
     }
 
     /**

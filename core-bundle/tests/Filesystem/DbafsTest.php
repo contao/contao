@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs;
+use Contao\CoreBundle\Filesystem\HashGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\Filesystem;
@@ -903,7 +904,7 @@ class DbafsTest extends TestCase
             )
         ;
 
-        return new Dbafs($connection, $eventDispatcher, 'tl_files', 'md5');
+        return new Dbafs(new HashGenerator('md5'), $connection, $eventDispatcher, 'tl_files');
     }
 
     /**

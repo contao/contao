@@ -641,12 +641,15 @@ class ContaoCoreExtensionTest extends TestCase
         $fileAdapterArguments = $container->getDefinition('contao.filesystem.adapter.files')->getArguments();
         $this->assertSame('%kernel.project_dir%/foo', $fileAdapterArguments[0]);
 
+        $this->assertTrue($container->hasDefinition('contao.filesystem.dbafs_hash_generator.files'));
+        $this->assertSame('md5', $container->getDefinition('contao.filesystem.dbafs_hash_generator.files')->getArgument(0));
+
         $this->assertTrue($container->hasDefinition('contao.filesystem.dbafs.files'));
         $fileDbafsArguments = $container->getDefinition('contao.filesystem.dbafs.files')->getArguments();
-        $this->assertSame(Connection::class, (string) $fileDbafsArguments[0]);
-        $this->assertSame(EventDispatcherInterface::class, (string) $fileDbafsArguments[1]);
-        $this->assertSame('tl_files', $fileDbafsArguments[2]);
-        $this->assertSame('md5', $fileDbafsArguments[3]);
+        $this->assertSame('contao.filesystem.dbafs_hash_generator.files', (string) $fileDbafsArguments[0]);
+        $this->assertSame(Connection::class, (string) $fileDbafsArguments[1]);
+        $this->assertSame(EventDispatcherInterface::class, (string) $fileDbafsArguments[2]);
+        $this->assertSame('tl_files', $fileDbafsArguments[3]);
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.operator.files'));
         $fileOperatorArguments = $container->getDefinition('contao.filesystem.operator.files')->getArguments();
