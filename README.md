@@ -17,7 +17,7 @@ information.
 The purpose of this package is to develop the Contao bundles. Use it if you
 e.g. want to create a pull request or if you want to report an issue.
 
-The monorepo is split into separate packages automatically:
+The monorepo is automatically split into separate packages:
 
  * [CalendarBundle](https://github.com/contao/calendar-bundle)
  * [CommentsBundle](https://github.com/contao/comments-bundle)
@@ -48,12 +48,12 @@ Edition in (use `.` for the current one). Replace `<branch>` with `4.x-dev` if
 you want to add a new feature or with `<lts-version>.x-dev` (currently
 `4.9.x-dev`) if you want to fix a bug.
 
-Then adjust the `require` section in your `composer.json` file so Composer
+Then adjust the `require` section in your `composer.json` file, so Composer
 loads the monorepo instead of the individual bundles:
 
 ```json
 "require": {
-    "php": "^7.2",
+    "php": "^7.4 || ^8.0",
     "contao/contao": "4.x-dev"
 },
 ```
@@ -79,17 +79,25 @@ you can submit your pull request directly from within your application.
 First install the code quality tools:
 
 ```bash
-composer bin all update
+composer bin all install
 ```
 
 Then run the code quality scripts via Composer:
 
 ```bash
 composer run all
+```
+
+You can also run the scripts separately:
+
+```bash
 composer run unit-tests
+composer run functional-tests
 composer run cs-fixer
+composer run service-linter
 composer run phpstan
 composer run psalm
+composer run monorepo-tools
 ```
 
 If you want to pass additional flags to the underlying commands, you can use
@@ -102,7 +110,7 @@ composer run cs-fixer -- --clear-cache
 
 ## Functional tests
 
-To set up functional tests, create a database named `contao_test`:
+To set up the functional tests, create a database named `contao_test`:
 
 ```bash
 mysql -e "CREATE DATABASE contao_test"
