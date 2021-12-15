@@ -17,16 +17,34 @@ use League\Flysystem\FilesystemAdapter;
 class HashGenerator implements HashGeneratorInterface
 {
     private string $hashAlgorithm;
+    private bool $useLastModified;
 
-    public function __construct(string $hashAlgorithm)
+    public function __construct(string $hashAlgorithm, bool $useLastModified = false)
     {
         $this->hashAlgorithm = $hashAlgorithm;
+        $this->useLastModified = $useLastModified;
     }
 
-    public function hashFileContent(FilesystemAdapter $filesystem, string $path): string
+    public function hashFileContent(FilesystemAdapter $filesystem, string $path, int $lastModified = null): ?string
     {
+        $fileLastModified = null;
+
+        if ($this->useLastModified) {
+            $fileLastModified = $filesystem->lastModified($path)->lastModified();
+
+            // Skip generating hashes if possible
+            if (null !== $lastModified && $fileLastModified === $lastModified) {
+                return null;
+            }
+        }
+
         $context = hash_init($this->hashAlgorithm);
         hash_update_stream($context, $filesystem->readStream($path));
+
+        if (null !== $fileLastModified) {
+            // Include file time in hash
+            hash_update($context, sprintf("\0%s", $fileLastModified ?: ''));
+        }
 
         return hash_final($context);
     }
