@@ -107,7 +107,7 @@ class RootPageDependentModuleListener
         $statement = $this->connection->executeQuery(
             "SELECT m.id, m.name
             FROM tl_module m
-            WHERE m.type <> 'root_page_dependent_module' AND 
+            WHERE m.type <> 'root_page_dependent_module' AND
                   m.pid = ?
             ORDER BY m.name",
             [$dc->activeRecord->pid]
@@ -118,7 +118,7 @@ class RootPageDependentModuleListener
                 "SELECT m.id, m.name
                     FROM tl_module m
                     WHERE m.type IN (?) AND
-                          m.type <> 'root_page_dependent_module' AND 
+                          m.type <> 'root_page_dependent_module' AND
                           m.pid = ?
                     ORDER BY m.name",
                 [$types, $dc->activeRecord->pid],
@@ -135,7 +135,10 @@ class RootPageDependentModuleListener
         return $options;
     }
 
-    public function onSaveCallback($value, DataContainer $dataContainer)
+    /**
+     * @param mixed $value
+     */
+    public function onSaveCallback($value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
 

@@ -641,14 +641,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'rootPageDependentModule',
-			'options_callback'        => array(RootPageDependentModuleListener::class, 'onOptionsCallback'),
+			'options_callback'        => array('contao.listener.data_container.root_page_dependent_module', 'onOptionsCallback'),
 			'save_callback'           => array
 			(
-				array(RootPageDependentModuleListener::class, 'onSaveCallback')
+				array('contao.listener.data_container.root_page_dependent_module', 'onSaveCallback')
 			),
 			'wizard'                  => array
 			(
-				array(RootPageDependentModuleListener::class, 'onEditModule')
+				array('contao.listener.data_container.root_page_dependent_module', 'onEditModule')
 			),
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true),
 			'sql'                     => 'blob NULL'
