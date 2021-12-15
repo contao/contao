@@ -302,6 +302,7 @@ class Dbafs implements ResetInterface, DbafsInterface
 
                 // Allow falling back to the existing hash if we've already got
                 // an existing hash and timestamp
+                $fileLastModified = null;
                 $hash = $this->hashGenerator->hashFileContent($filesystem, $path, $lastModified, $fileLastModified) ?? $oldHash;
 
                 // Update last modified reference
