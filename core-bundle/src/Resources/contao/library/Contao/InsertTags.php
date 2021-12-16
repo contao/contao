@@ -12,12 +12,14 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use Webmozart\PathUtil\Path;
 
 /**
  * A static class to replace insert tags
@@ -295,6 +297,32 @@ class InsertTags extends Controller
 						break;
 					}
 
+					if ($keys[0] == 'LNG' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
+					if ($keys[0] == 'CNT' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
 					$file = $keys[0];
 
 					// Map the key (see #7217)
@@ -448,7 +476,7 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
-						@trigger_error('Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+						trigger_deprecation('contao/core-bundle', '4.9', 'Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.');
 
 						$strUrl = 'javascript:history.go(-1)';
 						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;
@@ -685,6 +713,8 @@ class InsertTags extends Controller
 
 				// Request token
 				case 'request_token':
+					trigger_deprecation('contao/core-bundle', '4.13', 'Using the request_token insert tag has been deprecated and will no longer work in Contao 5.0.');
+
 					$arrCache[$strTag] = REQUEST_TOKEN;
 					break;
 
@@ -702,7 +732,7 @@ class InsertTags extends Controller
 						// Skip everything until the next tag
 						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							// Case insensitive match for iflng/ifnlng optionally followed by "::" or "|"
+							// Case-insensitive match for iflng/ifnlng optionally followed by "::" or "|"
 							if (1 === preg_match('/^' . preg_quote($elements[0], '/') . '(?:$|::|\|)/i', $tags[$_rit+3] ?? ''))
 							{
 								$tags[$_rit+2] = '';
@@ -777,7 +807,7 @@ class InsertTags extends Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -989,7 +1019,7 @@ class InsertTags extends Controller
 						if (strtolower($elements[0]) == 'image')
 						{
 							$dimensions = '';
-							$src = $container->get('contao.image.image_factory')->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
+							$src = $container->get('contao.image.factory')->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
 							$objFile = new File(rawurldecode($src));
 
 							// Add the image dimensions

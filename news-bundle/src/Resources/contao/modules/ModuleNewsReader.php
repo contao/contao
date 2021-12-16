@@ -132,7 +132,7 @@ class ModuleNewsReader extends ModuleNews
 		$this->Template->articles = $arrArticle;
 
 		// Overwrite the page metadata (see #2853, #4955 and #87)
-		$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{

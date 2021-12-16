@@ -131,7 +131,7 @@ class Validator
 	{
 		/*
 		 * The regex below is based on a regex by Michael Rushton adjusted by
-		 * Rasmus Lerdorf to to only consider routeable addresses as valid. We
+		 * Rasmus Lerdorf to only consider routeable addresses as valid. We
 		 * have also added Unicode support for the local part.
 		 *
 		 * Michael's regex carries this copyright:

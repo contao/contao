@@ -46,7 +46,7 @@ class TranslationDataCollectorPassTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->setDefinition('translator.data_collector', new Definition());
-        $container->setDefinition('contao.translation.translator.data_collector', new Definition());
+        $container->setDefinition('contao.translation.data_collector_translator', new Definition());
         $container->setDefinition('data_collector.translation', $definition);
 
         $pass = new TranslationDataCollectorPass();
@@ -54,9 +54,9 @@ class TranslationDataCollectorPassTest extends TestCase
 
         $dataCollector = $container->getDefinition('data_collector.translation');
 
-        $this->assertSame('contao.translation.translator.data_collector', (string) $dataCollector->getArgument(0));
+        $this->assertSame('contao.translation.data_collector_translator', (string) $dataCollector->getArgument(0));
 
-        $contaoDataCollector = $container->getDefinition('contao.translation.translator.data_collector');
+        $contaoDataCollector = $container->getDefinition('contao.translation.data_collector_translator');
 
         $this->assertSame(['translator', null, 0], $contaoDataCollector->getDecoratedService());
     }

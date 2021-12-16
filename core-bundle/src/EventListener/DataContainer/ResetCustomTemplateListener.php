@@ -33,6 +33,10 @@ class ResetCustomTemplateListener
 
     /**
      * Resets the custom template if the element type changes.
+     *
+     * @param mixed $varValue
+     *
+     * @return mixed
      */
     public function __invoke($varValue, DataContainer $dc)
     {

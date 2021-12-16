@@ -23,8 +23,8 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Path;
 use Twig\Error\LoaderError;
-use Webmozart\PathUtil\Path;
 
 class ContaoFilesystemLoaderTest extends TestCase
 {
@@ -664,7 +664,7 @@ class ContaoFilesystemLoaderTest extends TestCase
                     namespace %s;
 
                     function filemtime(string $filename) {
-                        if (null !== ($mtime = unserialize('%s')[\Webmozart\PathUtil\Path::canonicalize($filename)] ?? null)) {
+                        if (null !== ($mtime = unserialize('%s')[\Symfony\Component\Filesystem\Path::canonicalize($filename)] ?? null)) {
                             return $mtime;
                         }
 

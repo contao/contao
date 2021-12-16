@@ -201,7 +201,7 @@ class ModuleRegistration extends Module
 			$objWidget->storeValues = true;
 			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 
-			// Increase the row count if its a password field
+			// Increase the row count if it's a password field
 			if ($objWidget instanceof FormPassword)
 			{
 				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
@@ -213,10 +213,10 @@ class ModuleRegistration extends Module
 				$objWidget->validate();
 
 				$varValue = $objWidget->value;
-				$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
+				$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 				// Check whether the password matches the username
-				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $encoder->isPasswordValid($varValue, $username, null))
+				if ($objWidget instanceof FormPassword && ($username = Input::post('username')) && $passwordHasher->verify($varValue, $username))
 				{
 					$objWidget->addError($GLOBALS['TL_LANG']['ERR']['passwordName']);
 				}
@@ -357,6 +357,8 @@ class ModuleRegistration extends Module
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
+
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 
 	/**

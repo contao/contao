@@ -63,6 +63,8 @@ class LegacyRoutingListener
 
     /**
      * @Callback(table="tl_page", target="fields.urlPrefix.load")
+     *
+     * @param mixed $value
      */
     public function overrideUrlPrefix($value, DataContainer $dc): ?string
     {

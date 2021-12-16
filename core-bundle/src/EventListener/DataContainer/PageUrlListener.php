@@ -145,6 +145,10 @@ class PageUrlListener implements ResetInterface
 
     /**
      * @Callback(table="tl_page", target="fields.urlSuffix.save")
+     *
+     * @param mixed $value
+     *
+     * @return mixed
      */
     public function validateUrlSuffix($value, DataContainer $dc)
     {

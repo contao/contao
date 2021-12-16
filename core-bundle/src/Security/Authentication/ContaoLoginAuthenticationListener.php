@@ -48,7 +48,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
-            && 0 === strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8);
+            && 0 === strncmp((string) $request->request->get('FORM_SUBMIT'), 'tl_login', 8);
     }
 
     protected function attemptAuthentication(Request $request): ?TokenInterface
@@ -56,7 +56,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
         $currentToken = $this->tokenStorage->getToken();
 
         if ($currentToken instanceof TwoFactorTokenInterface) {
-            $authCode = $request->request->get('verify');
+            $authCode = (string) $request->request->get('verify');
 
             return $this->authenticationManager->authenticate($currentToken->createWithCredentials($authCode));
         }

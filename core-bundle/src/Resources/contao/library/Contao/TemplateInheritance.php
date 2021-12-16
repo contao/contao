@@ -10,7 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Twig\Interop\ContextHelper;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -151,7 +153,7 @@ trait TemplateInheritance
 		}
 
 		// Replace insert tags
-		$strBuffer = System::getContainer()->get('contao.insert_tag_parser')->replace($strBuffer);
+		$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 
 		// Add start and end markers in debug mode
 		if ($blnDebug)
@@ -185,7 +187,9 @@ trait TemplateInheritance
 	 */
 	public function parent()
 	{
-		echo '[[TL_PARENT]]';
+		$nonce = ContaoFramework::getNonce();
+
+		echo "[[TL_PARENT_$nonce]]";
 	}
 
 	/**
@@ -198,6 +202,7 @@ trait TemplateInheritance
 	public function block($name)
 	{
 		$this->arrBlockNames[] = $name;
+		$nonce = ContaoFramework::getNonce();
 
 		// Root template
 		if ($this->strParent === null)
@@ -205,27 +210,27 @@ trait TemplateInheritance
 			// Register the block name
 			if (!isset($this->arrBlocks[$name]))
 			{
-				$this->arrBlocks[$name] = '[[TL_PARENT]]';
+				$this->arrBlocks[$name] = "[[TL_PARENT_$nonce]]";
 			}
 
 			// Combine the contents of the child blocks
 			elseif (\is_array($this->arrBlocks[$name]))
 			{
-				$callback = static function ($current, $parent)
+				$callback = static function ($current, $parent) use ($nonce)
 				{
-					return str_replace('[[TL_PARENT]]', $parent, $current);
+					return str_replace("[[TL_PARENT_$nonce]]", $parent, $current);
 				};
 
-				$this->arrBlocks[$name] = array_reduce($this->arrBlocks[$name], $callback, '[[TL_PARENT]]');
+				$this->arrBlocks[$name] = array_reduce($this->arrBlocks[$name], $callback, "[[TL_PARENT_$nonce]]");
 			}
 
 			// Handle nested blocks
-			if ($this->arrBlocks[$name] != '[[TL_PARENT]]')
+			if ($this->arrBlocks[$name] != "[[TL_PARENT_$nonce]]")
 			{
 				// Output everything before the first TL_PARENT tag
-				if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false)
+				if (strpos($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]") !== false)
 				{
-					list($content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
+					list($content) = explode("[[TL_PARENT_$nonce]]", $this->arrBlocks[$name], 2);
 					echo $content;
 				}
 
@@ -272,13 +277,15 @@ trait TemplateInheritance
 		// Root template
 		if ($this->strParent === null)
 		{
+			$nonce = ContaoFramework::getNonce();
+
 			// Handle nested blocks
-			if ($this->arrBlocks[$name] != '[[TL_PARENT]]')
+			if ($this->arrBlocks[$name] != "[[TL_PARENT_$nonce]]")
 			{
 				// Output everything after the first TL_PARENT tag
-				if (strpos($this->arrBlocks[$name], '[[TL_PARENT]]') !== false)
+				if (strpos($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]") !== false)
 				{
-					list(, $content) = explode('[[TL_PARENT]]', $this->arrBlocks[$name], 2);
+					list(, $content) = explode("[[TL_PARENT_$nonce]]", $this->arrBlocks[$name], 2);
 					echo $content;
 				}
 
@@ -356,19 +363,28 @@ trait TemplateInheritance
 	 */
 	protected function renderTwigSurrogateIfExists(): ?string
 	{
-		if (!$this instanceof Template || null === ($twig = System::getContainer()->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		$container = System::getContainer();
+
+		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
 		{
 			return null;
 		}
 
-		$templateCandidate = "@Contao/{$this->strTemplate}.html.twig";
+		$templateCandidate = "@Contao/$this->strTemplate.html.twig";
 
-		if ($twig->getLoader()->exists($templateCandidate))
+		if (!$twig->getLoader()->exists($templateCandidate))
 		{
-			return $twig->render($templateCandidate, ContextHelper::fromContaoTemplate($this));
+			return null;
 		}
 
-		return null;
+		$contextFactory = $container->get('contao.twig.interop.context_factory');
+
+		$context = $this instanceof Template ?
+			$contextFactory->fromContaoTemplate($this) :
+			$contextFactory->fromClass($this)
+		;
+
+		return $twig->render($templateCandidate, $context);
 	}
 }
 

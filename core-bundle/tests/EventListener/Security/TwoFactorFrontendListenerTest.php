@@ -478,10 +478,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
     private function mockToken(string $class, bool $withFrontendUser = false, FrontendUser $user = null)
     {
         $token = $this->createMock($class);
-
-        if (null === $user) {
-            $user = $this->createMock(FrontendUser::class);
-        }
+        $user ??= $this->createMock(FrontendUser::class);
 
         if ($withFrontendUser) {
             $token
@@ -505,9 +502,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
         $request = new Request();
         $request->attributes->set('pageModel', null);
 
-        if (null === $pageModel) {
-            $pageModel = $this->createMock(PageModel::class);
-        }
+        $pageModel ??= $this->createMock(PageModel::class);
 
         if ($withPageModel) {
             $request->attributes->set('pageModel', $pageModel);
@@ -552,12 +547,7 @@ class TwoFactorFrontendListenerTest extends ContaoTestCase
     private function getRequestEvent(Request $request = null, Response $response = null): RequestEvent
     {
         $kernel = $this->createMock(Kernel::class);
-
-        if (null === $request) {
-            $request = new Request();
-        }
-
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+        $event = new RequestEvent($kernel, $request ?? new Request(), HttpKernelInterface::MAIN_REQUEST);
 
         if (null !== $response) {
             $event->setResponse($response);

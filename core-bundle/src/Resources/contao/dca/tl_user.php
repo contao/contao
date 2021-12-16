@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
 use Contao\Image;
@@ -290,7 +291,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'themes' => array
@@ -308,7 +309,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_user', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
-			'eval'                    => array('multiple'=>true, 'helpwizard'=>true),
+			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'fields' => array
@@ -359,10 +360,10 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('multiple'=>true),
+			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+				return System::getContainer()->get('contao.image.sizes')->getAllOptions();
 			},
 			'sql'                     => "blob NULL"
 		),
@@ -963,7 +964,7 @@ class tl_user extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_user::disable'))
 		{
 			return '';
 		}
@@ -1028,7 +1029,7 @@ class tl_user extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_user::disable', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_user::disable'))
 		{
 			throw new AccessDeniedException('Not enough permissions to activate/deactivate user ID ' . $intId . '.');
 		}

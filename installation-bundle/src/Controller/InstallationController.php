@@ -22,15 +22,15 @@ use Doctrine\DBAL\Exception;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Webmozart\PathUtil\Path;
 
 /**
- * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route("%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true})
  *
  * @internal
  */
@@ -237,7 +237,7 @@ class InstallationController implements ContainerAwareInterface
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
         $ref = new \ReflectionObject($this->container);
-        $containerDir = Path::getFilename(Path::getDirectory($ref->getFileName()));
+        $containerDir = basename(Path::getDirectory($ref->getFileName()));
 
         /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()
@@ -365,7 +365,7 @@ class InstallationController implements ContainerAwareInterface
     {
         $this->container->get('contao_installation.install_tool')->handleRunOnce();
 
-        $installer = $this->container->get('contao_installation.installer');
+        $installer = $this->container->get('contao_installation.database.installer');
 
         $this->context['sql_form'] = $installer->getCommands();
 

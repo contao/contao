@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
@@ -47,6 +48,11 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends System
 {
+	/**
+	 * @var Template
+	 */
+	protected $Template;
+
 	/**
 	 * @var array
 	 */
@@ -800,14 +806,14 @@ abstract class Controller extends System
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		$parser = System::getContainer()->get('contao.insert_tag_parser');
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
 
 		if ($blnCache)
 		{
-			return $parser->replace($strBuffer);
+			return $parser->replace((string) $strBuffer);
 		}
 
-		return $parser->replaceInline($strBuffer);
+		return $parser->replaceInline((string) $strBuffer);
 	}
 
 	/**
@@ -837,7 +843,9 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_JQUERY']));
 		}
 
-		$arrReplace['[[TL_JQUERY]]'] = $strScripts;
+		$nonce = ContaoFramework::getNonce();
+
+		$arrReplace["[[TL_JQUERY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal MooTools scripts
@@ -846,7 +854,7 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_MOOTOOLS']));
 		}
 
-		$arrReplace['[[TL_MOOTOOLS]]'] = $strScripts;
+		$arrReplace["[[TL_MOOTOOLS_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal <body> tags
@@ -861,7 +869,7 @@ abstract class Controller extends System
 		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
-		$arrReplace['[[TL_BODY]]'] = $strScripts;
+		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		$objCombiner = new Combiner();
@@ -928,7 +936,7 @@ abstract class Controller extends System
 			}
 		}
 
-		$arrReplace['[[TL_CSS]]'] = $strScripts;
+		$arrReplace["[[TL_CSS_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal scripts
@@ -998,7 +1006,7 @@ abstract class Controller extends System
 			}
 		}
 
-		$arrReplace['[[TL_HEAD]]'] = $strScripts;
+		$arrReplace["[[TL_HEAD_$nonce]]"] = $strScripts;
 
 		return str_replace(array_keys($arrReplace), $arrReplace, $strBuffer);
 	}
@@ -1193,7 +1201,7 @@ abstract class Controller extends System
 	 * @param string  $strForceLang Force a certain language
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @return string A URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
 	 *             Use PageModel::getFrontendUrl() instead.
@@ -1563,7 +1571,7 @@ abstract class Controller extends System
 			return new Metadata(array(
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag_parser')->replaceInline($rowData['imageUrl'] ?? ''),
+				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag.parser')->replaceInline($rowData['imageUrl'] ?? ''),
 				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
 			));
 		};
@@ -1669,7 +1677,7 @@ abstract class Controller extends System
 
 				/** @var BoxInterface $originalSize */
 				$originalSize = $container
-					->get('contao.image.image_factory')
+					->get('contao.image.factory')
 					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
 					->getDimensions()
 					->getSize();
@@ -1744,7 +1752,7 @@ abstract class Controller extends System
 		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
-		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
+		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
 	}
 
 	/**

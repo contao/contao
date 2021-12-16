@@ -19,7 +19,7 @@ interface PickerBuilderInterface
      *
      * @return PickerInterface|null
      */
-    public function create(PickerConfig $config);
+    public function create(PickerConfig $config)/*: ?PickerInterface*/;
 
     /**
      * Returns a picker object from encoded URL data.
@@ -28,7 +28,7 @@ interface PickerBuilderInterface
      *
      * @return PickerInterface|null
      */
-    public function createFromData($data);
+    public function createFromData(/*string */$data)/*: ?PickerInterface*/;
 
     /**
      * Returns whether the given context is supported.
@@ -37,7 +37,7 @@ interface PickerBuilderInterface
      *
      * @return bool
      */
-    public function supportsContext($context, array $allowed = null);
+    public function supportsContext(/*string */$context, array $allowed = null)/*: bool*/;
 
     /**
      * Returns the picker URL for the given context and configuration.
@@ -47,5 +47,5 @@ interface PickerBuilderInterface
      *
      * @return string
      */
-    public function getUrl($context, array $extras = [], $value = '');
+    public function getUrl(/*string */$context, array $extras = [], /*string */$value = '')/*: string*/;
 }

@@ -27,7 +27,7 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
@@ -328,7 +328,7 @@ class FigureTest extends TestCase
         );
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 

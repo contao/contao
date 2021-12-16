@@ -16,6 +16,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\LocaleSubscriber;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -140,7 +141,10 @@ class LocaleSubscriberTest extends TestCase
         $listener->setTranslatorLocale($event);
     }
 
-    private function mockLocales(array $locales)
+    /**
+     * @return Locales&MockObject
+     */
+    private function mockLocales(array $locales): Locales
     {
         $localesService = $this->createMock(Locales::class);
         $localesService

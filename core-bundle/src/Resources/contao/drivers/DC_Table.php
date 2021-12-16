@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -1408,7 +1409,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Delete a record of the current table table and save it to tl_undo
+	 * Delete a record of the current table and save it to tl_undo
 	 *
 	 * @param boolean $blnDoNotRedirect
 	 *
@@ -2755,7 +2756,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$objVersions->create();
 					}
 
-					// Post processing
+					// Post-processing
 					if (!$this->noReload)
 					{
 						// Call the onsubmit_callback
@@ -3386,7 +3387,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if ($v)
 				{
-					// Load the DCA configuration so we can check for "dynamicPtable"
+					// Load the DCA configuration, so we can check for "dynamicPtable"
 					$this->loadDataContainer($v);
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
@@ -3835,11 +3836,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		// Must be either visible in the root trail or allowed by permissions (or their children)
-		// In the extended tree view (mode 6) we have to check on the parent table only
-		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
+		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
+		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
+		// tree mode if both $table and $this->strTable point to the child table.
+		$checkIdAllowed = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
 
-		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		if ($checkIdAllowed && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
 			return '';
 		}
@@ -3921,7 +3923,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 			{
-				$selected = $this->Database->execute("SELECT pid FROM {$this->strTable} WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
+				$selected = $this->Database->execute("SELECT pid FROM $this->strTable WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
 										   ->fetchEach('pid');
 			}
 
@@ -3980,7 +3982,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
-		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
+
+		// Check either the ID (tree mode or parent table) or the parent ID (child table)
+		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -4206,7 +4210,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '
 <div class="tl_content_right">' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? '
-<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteAfter[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>' : ((!($GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] ?? null) && $this->User->canEditFieldsOf($this->ptable)) ? '
+<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteAfter[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>' : ((!($GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] ?? null) && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $this->ptable)) ? '
 <a href="' . preg_replace('/&(amp;)?table=[^& ]*/i', ($this->ptable ? '&amp;table=' . $this->ptable : ''), $this->addToUrl('act=edit' . (Input::get('nb') ? '&amp;nc=1' : ''))) . '" class="edit" title="' . StringUtil::specialchars(sprintf(\is_array($labelEditHeader) ? $labelEditHeader[1] : $labelEditHeader, $objParent->id)) . '">' . $imageEditHeader . '</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)) ? '
 <a href="' . $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId) . '" title="' . StringUtil::specialchars($labelPasteNew[0]) . '">' . $imagePasteNew . '</a>' : ''))) . '
 </div>';
@@ -4590,7 +4594,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		// Add another panel at the end of the page
-		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 		{
 			$return .= $this->paginationMenu();
 		}
@@ -5069,7 +5073,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 			{
 				$return .= $this->paginationMenu();
 			}
@@ -5297,7 +5301,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+<select name="tl_field" class="tl_select tl_chosen' . ($active ? ' active' : '') . '">
 ' . implode("\n", $options_sorter) . '
 </select>
 <span>=</span>
@@ -5404,7 +5408,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<select name="tl_sort" id="tl_sort" class="tl_select">
+<select name="tl_sort" id="tl_sort" class="tl_select tl_chosen">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>';
@@ -5537,7 +5541,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$fields = '
-<select name="tl_limit" class="tl_select' . (($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage') ? ' active' : '') . '" onchange="this.form.submit()">
+<select name="tl_limit" class="tl_select tl_chosen' . (($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage') ? ' active' : '') . '" onchange="this.form.submit()">
   <option value="tl_limit">' . $GLOBALS['TL_LANG']['MSC']['filterRecords'] . '</option>' . $options . '
 </select> ';
 		}
@@ -5774,7 +5778,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
+<select name="' . $field . '" id="' . $field . '" class="tl_select tl_chosen' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
   <option value="tl_' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</option>
   <option value="tl_' . $field . '">---</option>';
 
@@ -6280,7 +6284,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Fetch all children of the root
-		$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		if ($this->treeView)
+		{
+			$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		}
 	}
 
 	/**

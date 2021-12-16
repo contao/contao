@@ -118,7 +118,7 @@ class Comments extends Frontend
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
-					$objPartial->reply = System::getContainer()->get('contao.insert_tag_parser')->replace($objComments->reply);
+					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
 
 					// Clean the RTE output
@@ -146,6 +146,7 @@ class Comments extends Frontend
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
 		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
+		$objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);

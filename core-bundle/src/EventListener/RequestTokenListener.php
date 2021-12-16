@@ -108,7 +108,7 @@ class RequestTokenListener
     private function getTokenFromRequest(Request $request): ?string
     {
         if ($request->request->has('REQUEST_TOKEN')) {
-            return $request->request->get('REQUEST_TOKEN');
+            return (string) $request->request->get('REQUEST_TOKEN');
         }
 
         // Look for the token inside the root level arrays as they would be in named Symfony forms

@@ -282,10 +282,7 @@ class ContaoUserProviderTest extends TestCase
 
     private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
-
+        $framework ??= $this->mockContaoFramework();
         $session = $this->createMock(SessionInterface::class);
         $logger = $this->createMock(LoggerInterface::class);
 

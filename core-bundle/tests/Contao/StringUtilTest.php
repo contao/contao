@@ -20,11 +20,14 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Psr\Log\NullLogger;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,7 +41,7 @@ class StringUtilTest extends TestCase
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
-        $container->set('contao.insert_tag_parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
     }
@@ -180,9 +183,11 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param mixed $string
+     *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, $expected, $fromEncoding = null): void
+    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
@@ -286,14 +291,17 @@ class StringUtilTest extends TestCase
     }
 
     /**
+     * @param array|object $value
+     *
      * @group legacy
      *
      * @dataProvider invalidEncodingsProvider
-     *
-     * @expectedDeprecation Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.
      */
     public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
+
+        /** @phpstan-ignore-next-line */
         $result = StringUtil::convertEncoding($value, 'UTF-8');
 
         $this->assertSame('', $result);

@@ -297,6 +297,8 @@ class SimpleTokenParserTest extends TestCase
     }
 
     /**
+     * @param bool|int|string|array<string> $value
+     *
      * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
     public function testParsesSimpleTokensWithShorthandIf($value, bool $match): void
@@ -642,10 +644,6 @@ class SimpleTokenParserTest extends TestCase
 
     private function getParser(SimpleTokenExpressionLanguage $expressionLanguage = null): SimpleTokenParser
     {
-        if (null === $expressionLanguage) {
-            $expressionLanguage = new SimpleTokenExpressionLanguage();
-        }
-
-        return new SimpleTokenParser($expressionLanguage);
+        return new SimpleTokenParser($expressionLanguage ?? new SimpleTokenExpressionLanguage());
     }
 }

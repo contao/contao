@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Translation;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -22,6 +23,10 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
 {
     private ContaoFramework $framework;
     private ResourceFinder $resourceFinder;
+
+    /**
+     * @var \SplObjectStorage<MessageCatalogueInterface, MessageCatalogue>
+     */
     private \SplObjectStorage $catalogues;
 
     /**

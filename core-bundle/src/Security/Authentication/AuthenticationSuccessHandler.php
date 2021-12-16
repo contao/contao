@@ -154,7 +154,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     {
         $targetPath = $request->request->get('_target_path');
 
-        if (null === $targetPath) {
+        if (!\is_string($targetPath)) {
             throw new BadRequestHttpException('Missing form field "_target_path". You probably need to adjust your custom login template.');
         }
 

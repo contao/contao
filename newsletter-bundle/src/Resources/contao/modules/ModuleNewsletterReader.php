@@ -91,7 +91,7 @@ class ModuleNewsletterReader extends Module
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if ($objNewsletter->subject)
 		{
-			$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
@@ -120,7 +120,7 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Parse simple tokens and insert tags
-		$strContent = System::getContainer()->get('contao.insert_tag_parser')->replace($strContent);
+		$strContent = System::getContainer()->get('contao.insert_tag.parser')->replace($strContent);
 		$strContent = System::getContainer()->get('contao.string.simple_token_parser')->parse($strContent, array());
 
 		// Encode e-mail addresses

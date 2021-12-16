@@ -322,7 +322,7 @@ class PageModel extends Model
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
 
-			$responseContext = System::getContainer()->get('contao.response_context.accessor')->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if (!$responseContext)
 			{
@@ -487,7 +487,8 @@ class PageModel extends Model
 	public static function findFirstPublishedByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -528,6 +529,34 @@ class PageModel extends Model
 		}
 
 		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+	}
+
+	/**
+	 * Find the first published page by its type and parent ID
+	 *
+	 * @param string  $strType    The page type
+	 * @param integer $intPid     The parent page's ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return PageModel|null The model or null if there is no published regular page
+	 */
+	public static function findFirstPublishedByTypeAndPid($strType, $intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=? AND $t.type=?");
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findOneBy($arrColumns, array($intPid, $strType), $arrOptions);
 	}
 
 	/**
@@ -689,14 +718,15 @@ class PageModel extends Model
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
-		@trigger_error('Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedByPid() instead and filter the guests pages yourself.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedByPid() instead and filter the guests pages yourself.');
 
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
 		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 											  ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -723,7 +753,8 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (empty($arrOptions['includeRoot']))
 		{
@@ -765,7 +796,8 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (empty($arrOptions['includeRoot']))
 		{
@@ -802,7 +834,8 @@ class PageModel extends Model
 	public static function findPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -834,7 +867,8 @@ class PageModel extends Model
 		trigger_deprecation('contao/core-bundle', '4.12', 'Using PageModel::findPublishedRegularWithoutGuestsByPid() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findPublishedRegularByPid() instead.');
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
@@ -861,7 +895,7 @@ class PageModel extends Model
 	 * @param string $strHost    The hostname
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return PageModel|Model|null The model or null if there is not fallback page
+	 * @return PageModel|Model|null The model or null if there is no fallback page
 	 */
 	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
@@ -1253,7 +1287,7 @@ class PageModel extends Model
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @return string A URL that can be used in the front end
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
 	{

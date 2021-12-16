@@ -32,7 +32,7 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @dataProvider getInjectToolbarData
      */
-    public function testInjectsTheToolbarBeforeTheClosingBodyTag($content, $expected): void
+    public function testInjectsTheToolbarBeforeTheClosingBodyTag(string $content, string $expected): void
     {
         $listener = new PreviewToolbarListener(
             $this->mockScopeMatcher(),
@@ -40,11 +40,10 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockRouterWithContext()
         );
 
-        $m = new \ReflectionMethod($listener, 'injectToolbar');
-        $m->setAccessible(true);
-
         $response = new Response($content);
 
+        $m = new \ReflectionMethod($listener, 'injectToolbar');
+        $m->setAccessible(true);
         $m->invoke($listener, $response, Request::create('/'));
 
         $this->assertSame($expected, $response->getContent());

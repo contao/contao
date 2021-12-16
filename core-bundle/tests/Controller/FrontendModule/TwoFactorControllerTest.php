@@ -486,7 +486,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('security.authentication_utils', $authenticationUtils);
         $container->set('contao.security.two_factor.backup_code_manager', $this->createMock(BackupCodeManager::class));
         $container->set('security.helper', $security);
-        $container->set('contao.cache.entity_cache_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($container);
 

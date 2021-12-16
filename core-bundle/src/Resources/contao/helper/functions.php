@@ -310,7 +310,7 @@ function nl2br_pre($str, $xhtml=false)
 }
 
 /**
- * Compare two file names using a case insensitive "natural order" algorithm
+ * Compare two file names using a case-insensitive "natural order" algorithm
  *
  * @param string $a
  * @param string $b
@@ -327,7 +327,7 @@ function basename_natcasecmp($a, $b)
 }
 
 /**
- * Compare two file names using a case insensitive, reverse "natural order" algorithm
+ * Compare two file names using a case-insensitive, reverse "natural order" algorithm
  *
  * @param string $a
  * @param string $b
@@ -344,7 +344,7 @@ function basename_natcasercmp($a, $b)
 }
 
 /**
- * Sort an array by keys using a case insensitive "natural order" algorithm
+ * Sort an array by keys using a case-insensitive "natural order" algorithm
  *
  * @param array $arrArray
  *

@@ -577,6 +577,8 @@ class RoutingTest extends ContaoTestCase
     }
 
     /**
+     * @param Adapter<PageModel> $pageAdapter
+     *
      * @return ContaoFramework&MockObject
      */
     private function mockFrameworkWithPageAdapter(Adapter $pageAdapter = null): ContaoFramework

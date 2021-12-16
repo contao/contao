@@ -108,6 +108,7 @@ class Form extends Hybrid
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 
 		$this->initializeSession($formId);
 		$arrLabels = array();
@@ -165,7 +166,7 @@ class Form extends Hybrid
 				$arrData['allowHtml'] = $this->allowTags;
 				$arrData['rowClass'] = 'row_' . $row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
 
-				// Increase the row count if its a password field
+				// Increase the row count if it's a password field
 				if ($objField->type == 'password')
 				{
 					++$row;
@@ -243,7 +244,7 @@ class Form extends Hybrid
 
 				if ($objWidget->name && $objWidget->label)
 				{
-					$arrLabels[$objWidget->name] = System::getContainer()->get('contao.insert_tag_parser')->replaceInline($objWidget->label); // see #4268
+					$arrLabels[$objWidget->name] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objWidget->label); // see #4268
 				}
 
 				$this->Template->fields .= $objWidget->parse();
@@ -257,6 +258,30 @@ class Form extends Hybrid
 			$this->processFormData($arrSubmitted, $arrLabels, $arrFields);
 		}
 
+		// Remove any uploads, if form did not validate (#1185)
+		if ($doNotSubmit && $hasUpload && !empty($_SESSION['FILES']))
+		{
+			foreach ($_SESSION['FILES'] as $field => $upload)
+			{
+				if (empty($arrFields[$field]))
+				{
+					continue;
+				}
+
+				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
+				{
+					$file->delete();
+				}
+
+				if (is_file($upload['tmp_name']))
+				{
+					unlink($upload['tmp_name']);
+				}
+
+				unset($_SESSION['FILES'][$field]);
+			}
+		}
+
 		// Add a warning to the page title
 		if ($doNotSubmit && !Environment::get('isAjaxRequest'))
 		{
@@ -265,7 +290,6 @@ class Form extends Hybrid
 
 			$title = $objPage->pageTitle ?: $objPage->title;
 			$objPage->pageTitle = $GLOBALS['TL_LANG']['ERR']['form'] . ' - ' . $title;
-			$_SESSION['FILES'] = array(); // see #3007
 		}
 
 		$strAttributes = '';
@@ -400,7 +424,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag_parser')->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
+				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
 			}
 
 			// Send copy to sender
@@ -532,7 +556,7 @@ class Form extends Hybrid
 			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? Input::postHtml($key, true) : Input::post($key, true);
 		}
 
-		// Store the submit time to invalidate the session later on
+		// Store the submission time to invalidate the session later on
 		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
 
 		$arrFiles = $_SESSION['FILES'];

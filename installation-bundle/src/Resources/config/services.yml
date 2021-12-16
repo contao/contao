@@ -17,6 +17,13 @@ services:
         arguments:
             - '%kernel.project_dir%/var/install_lock'
 
+    contao_installation.database.installer:
+        class: Contao\InstallationBundle\Database\Installer
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.schema_provider'
+
     contao_installation.install_tool:
         class: Contao\InstallationBundle\InstallTool
         public: true
@@ -24,7 +31,7 @@ services:
             - '@database_connection'
             - '%kernel.project_dir%'
             - '@logger'
-            - '@contao.migration.migration_collection'
+            - '@contao.migration.collection'
 
     contao_installation.install_tool_user:
         class: Contao\InstallationBundle\InstallToolUser
@@ -32,17 +39,13 @@ services:
         arguments:
             - '@session'
 
-    contao_installation.installer:
-        class: Contao\InstallationBundle\Database\Installer
-        public: true
-        arguments:
-            - '@database_connection'
-            - '@contao.doctrine.schema_provider'
-
     contao_installation.listener.initialize_application:
         class: Contao\InstallationBundle\EventListener\InitializeApplicationListener
         tags:
             - kernel.event_listener
+
+    contao_installation.twig.ansi_extension:
+        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
 
     # Backwards compatibility
     contao.install_tool:
@@ -62,9 +65,9 @@ services:
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_installation.install_tool_user" instead.
 
     contao.installer:
-        alias: contao_installation.installer
+        alias: contao_installation.database.installer
         public: true
         deprecated:
             package: contao/installation-bundle
             version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_installation.installer" instead.
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_installation.database.installer" instead.

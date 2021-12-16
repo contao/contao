@@ -30,11 +30,11 @@ use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Service\ResetInterface;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal Do not use this class in your code; use the "contao.framework" service instead
@@ -44,6 +44,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     use ContainerAwareTrait;
 
     private static bool $initialized = false;
+    private static string $nonce = '';
 
     private RequestStack $requestStack;
     private ScopeMatcher $scopeMatcher;
@@ -72,6 +73,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+        self::$nonce = '';
 
         if (!$this->isInitialized()) {
             return;
@@ -122,13 +124,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $class
      *
      * @return T
-     *
-     * @phpstan-return object
      */
     public function createInstance($class, $args = [])
     {
@@ -146,17 +146,22 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @param class-string<T> $class
      *
-     * @return T
+     * @return Adapter<T>&T
      *
      * @phpstan-return Adapter<T>
      */
     public function getAdapter($class): Adapter
     {
-        if (!isset($this->adapterCache[$class])) {
-            $this->adapterCache[$class] = new Adapter($class);
+        return $this->adapterCache[$class] ??= new Adapter($class);
+    }
+
+    public static function getNonce(): string
+    {
+        if ('' === self::$nonce) {
+            self::$nonce = bin2hex(random_bytes(16));
         }
 
-        return $this->adapterCache[$class];
+        return self::$nonce;
     }
 
     /**

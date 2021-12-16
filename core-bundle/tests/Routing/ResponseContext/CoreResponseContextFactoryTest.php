@@ -117,7 +117,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
-        $pageModel->enableCanonical = true;
+        $pageModel->enableCanonical = '1';
         $pageModel->canonicalLink = '{{link_url::42}}';
 
         $factory = new CoreResponseContextFactory(
@@ -161,7 +161,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag_parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
 

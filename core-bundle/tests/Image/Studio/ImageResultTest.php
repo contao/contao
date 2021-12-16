@@ -51,6 +51,8 @@ class ImageResultTest extends TestCase
     }
 
     /**
+     * @param class-string<PictureFactoryInterface> $class
+     *
      * @dataProvider providePictureFactories
      */
     public function testGetPictureWithResizeMode(string $class, bool $supportsResizeOptions): void
@@ -231,7 +233,7 @@ class ImageResultTest extends TestCase
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with('contao.image.image_factory')
+            ->with('contao.image.factory')
             ->willReturn($imageFactory)
         ;
 
@@ -337,7 +339,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $deferredResizer],
+                ['contao.image.legacy_resizer', $deferredResizer],
             ])
         ;
 
@@ -453,14 +455,14 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $nonDeferredResizer],
+                ['contao.image.legacy_resizer', $nonDeferredResizer],
             ])
         ;
 
         $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('The "contao.image.resizer" service does not support deferred resizing.');
+        $this->expectExceptionMessage('The "contao.image.legacy_resizer" service does not support deferred resizing.');
 
         $imageResult->createIfDeferred();
     }
@@ -495,7 +497,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $nonDeferredResizer],
+                ['contao.image.legacy_resizer', $nonDeferredResizer],
             ])
         ;
 
@@ -506,7 +508,7 @@ class ImageResultTest extends TestCase
     /**
      * @return PictureFactoryInterface&MockObject
      */
-    private function mockPictureFactory($filePathOrImage, $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
+    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory

@@ -57,7 +57,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 	 */
 	public function run()
 	{
-		if (!System::getContainer()->has('contao.crawl.escargot_factory'))
+		if (!System::getContainer()->has('contao.crawl.escargot.factory'))
 		{
 			return '';
 		}
@@ -73,7 +73,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			$blnMaintenance = false;
 		}
 
-		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
+		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = null;
@@ -182,7 +182,10 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		if (Environment::get('isAjaxRequest'))
 		{
 			// Start crawling
-			$escargot->crawl();
+			if ('true' !== Environment::get('httpOnlyStatusUpdate'))
+			{
+				$escargot->crawl();
+			}
 
 			// Commit the result on the lazy queue
 			$queue->commit($jobId);

@@ -202,7 +202,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		$clearer = $container->get('contao.cache.clear_internal');
+		$clearer = $container->get('contao.cache.clearer');
 		$clearer->clear($container->getParameter('kernel.cache_dir'));
 
 		System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Purged the internal cache');
@@ -373,7 +373,7 @@ class Automator extends System
 	{
 		$container = System::getContainer();
 
-		$warmer = $container->get('contao.cache.warm_internal');
+		$warmer = $container->get('contao.cache.warmer');
 		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
 
 		System::getContainer()->get('contao.monolog.logger')->asContaoCron()->log('Generated the internal cache');

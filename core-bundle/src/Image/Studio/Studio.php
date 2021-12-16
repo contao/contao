@@ -42,7 +42,8 @@ class Studio
     }
 
     /**
-     * @param string|ImageInterface $filePathOrImage
+     * @param string|ImageInterface                      $filePathOrImage
+     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      */
     public function createImage($filePathOrImage, $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
     {
