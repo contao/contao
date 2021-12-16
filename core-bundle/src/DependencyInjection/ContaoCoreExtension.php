@@ -24,7 +24,7 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Filesystem\DbafsFilesystem;
 use Contao\CoreBundle\Filesystem\DbafsFilesystemOperator;
-use Contao\CoreBundle\Filesystem\HashGenerator;
+use Contao\CoreBundle\Filesystem\Hashing\HashGenerator;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs;
-use Contao\CoreBundle\Filesystem\HashGenerator;
+use Contao\CoreBundle\Filesystem\Hashing\HashGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\Filesystem;

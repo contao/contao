@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Filesystem;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\Hashing\Context;
+use Contao\CoreBundle\Filesystem\Hashing\HashGeneratorInterface;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
@@ -298,47 +300,27 @@ class Dbafs implements ResetInterface, DbafsInterface
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
 
-        $getFileContentHash = function (string $path) use ($filesystem, $allDbHashesByPath, $allLastModifiedByPath, &$lastModifiedUpdates): string {
-            if ($this->useLastModified) {
-                $oldHash = $allDbHashesByPath[$path] ?? null;
-                $oldLastModified = $allLastModifiedByPath[$path] ?? null;
-
-                // Allow falling back to the existing hash if we've already got
-                // an existing hash and timestamp
-                $fileLastModified = null;
-                $hash = $this->hashGenerator->hashFileContent(
-                    $filesystem,
-                    $path,
-                    null !== $oldHash ? $oldLastModified : null,
-                    $fileLastModified
-                ) ?? $oldHash
-                ;
-
-                // Update last modified if there are changes
-                $newLastModified = $fileLastModified ?? $filesystem->lastModified($path)->lastModified();
-
-                if ($oldLastModified !== $newLastModified) {
-                    $lastModifiedUpdates[$path] = $newLastModified;
-                }
-
-                return $hash;
-            }
-
-            $hash = $this->hashGenerator->hashFileContent($filesystem, $path);
-
-            if (null === $hash) {
-                throw new \LogicException('A hash generator may not return null if $lastModified was not set.');
-            }
-
-            return $hash;
-        };
-
         foreach ($filesystemIterator as $path => $type) {
             $name = basename($path);
             $parentDir = \dirname($path);
 
             if (self::RESOURCE_FILE === $type) {
-                $hash = $getFileContentHash($path);
+                $oldHash = $allDbHashesByPath[$path] ?? null;
+                $oldLastModified = $allLastModifiedByPath[$path] ?? null;
+
+                // Allow falling back (= skip hashing) to the existing hash if
+                // useLastModified is enabled, and we already got an existing
+                // timestamp
+                $fallback = $this->useLastModified && null !== $oldLastModified ? $oldHash : null;
+
+                $hashContext = new Context($fallback, $oldLastModified);
+                $this->hashGenerator->hashFileContent($filesystem, $path, $hashContext);
+
+                if ($this->useLastModified && $hashContext->hasLastModifiedChanged()) {
+                    $lastModifiedUpdates[$path] = $hashContext->getLastModified();
+                }
+
+                $hash = $hashContext->getResult();
             } elseif (self::RESOURCE_DIRECTORY === $type) {
                 $childHashes = $dirHashesParts[$path] ?? [];
 
