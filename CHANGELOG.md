@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.5] (2021-12-16)
+
+**Fixed issues:**
+
+- [#3673] Fix undefined array key "panelLayout" ([markocupic])
+
 ## [4.12.4] (2021-12-02)
 
 **Fixed issues:**
@@ -182,6 +188,7 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.5]: https://github.com/contao/contao/releases/tag/4.12.5
 [4.12.4]: https://github.com/contao/contao/releases/tag/4.12.4
 [4.12.3]: https://github.com/contao/contao/releases/tag/4.12.3
 [4.12.2]: https://github.com/contao/contao/releases/tag/4.12.2
@@ -201,9 +208,11 @@ This project adheres to [Semantic Versioning].
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[markocupic]: https://github.com/markocupic
 [qzminski]: https://github.com/qzminski
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Toflar]: https://github.com/Toflar
+[#3673]: https://github.com/contao/contao/pull/3673
 [#3757]: https://github.com/contao/contao/pull/3757
 [#3755]: https://github.com/contao/contao/pull/3755
 [#3754]: https://github.com/contao/contao/pull/3754
