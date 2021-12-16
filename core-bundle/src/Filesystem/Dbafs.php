@@ -277,7 +277,7 @@ class Dbafs implements ResetInterface, DbafsInterface
     private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, FilesystemAdapter $filesystem, array $searchPaths): ChangeSet
     {
         // We're identifying items by their (old) path and store any detected
-        // changes as an array of attributes
+        // changes as an array of definitions
         /** @phpstan-var array<string, CreateItemDefinition> $itemsToCreate */
         $itemsToCreate = [];
 
@@ -303,9 +303,9 @@ class Dbafs implements ResetInterface, DbafsInterface
         foreach ($filesystemIterator as $path => $type) {
             $name = basename($path);
             $parentDir = \dirname($path);
+            $oldHash = $allDbHashesByPath[$path] ?? null;
 
             if (self::RESOURCE_FILE === $type) {
-                $oldHash = $allDbHashesByPath[$path] ?? null;
                 $oldLastModified = $allLastModifiedByPath[$path] ?? null;
 
                 // Allow falling back (= skip hashing) to the existing hash if
@@ -357,12 +357,10 @@ class Dbafs implements ResetInterface, DbafsInterface
             $dirHashesParts[$parentDir][$name] = $hash.$name;
 
             // Detect changes
-            $hash2 = $allDbHashesByPath[$path] ?? null;
-
-            if (null === $hash2) {
+            if (null === $oldHash) {
                 // Resource was not found; create a new record (we're detecting moves further down)
                 $itemsToCreate[$path] = [ChangeSet::ATTR_HASH => $hash, ChangeSet::ATTR_PATH => $path, ChangeSet::ATTR_TYPE => $type];
-            } elseif ($hash !== $hash2) {
+            } elseif ($hash !== $oldHash) {
                 if ($dbPaths[$path] !== $type) {
                     // Type has changed; create a new record and delete the current one
                     $itemsToCreate[$path] = [ChangeSet::ATTR_HASH => $hash, ChangeSet::ATTR_PATH => $path, ChangeSet::ATTR_TYPE => $type];
