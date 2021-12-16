@@ -58,16 +58,19 @@ class PageUrlListener implements ResetInterface
         }
 
         $this->addInputToPage($pageModel);
+        $isRoutable = $this->pageRegistry->isRoutable($pageModel);
 
         if ('' !== $value) {
             if (preg_match('/^[1-9]\d*$/', $value)) {
                 throw new \RuntimeException($this->translator->trans('ERR.aliasNumeric', [], 'contao_default'));
             }
 
-            try {
-                $this->aliasExists($value, (int) $pageModel->id, $pageModel, true);
-            } catch (DuplicateAliasException $exception) {
-                throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
+            if ($isRoutable) {
+                try {
+                    $this->aliasExists($value, (int) $pageModel->id, $pageModel, true);
+                } catch (DuplicateAliasException $exception) {
+                    throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
+                }
             }
 
             return $value;
@@ -77,7 +80,7 @@ class PageUrlListener implements ResetInterface
         $value = $this->slug->generate(
             $dc->activeRecord->title,
             $dc->activeRecord->id,
-            fn ($alias) => $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel)
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel)
         );
 
         // Generate folder URL aliases (see #4933)
@@ -190,10 +193,6 @@ class PageUrlListener implements ResetInterface
      */
     private function aliasExists(string $currentAlias, int $currentId, PageModel $currentPage, bool $throw = false): bool
     {
-        if (!$this->pageRegistry->isRoutable($currentPage)) {
-            return false;
-        }
-
         $currentPage->loadDetails();
 
         $currentDomain = $currentPage->domain;
