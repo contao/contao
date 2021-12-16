@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Back end custom controller.
  *
- * @property BackendTemplate $Template
- *
  * @author Jim Schmid <https://github.com/sheeep>
  */
 class BackendCustom extends BackendMain
@@ -29,7 +27,8 @@ class BackendCustom extends BackendMain
 	{
 		parent::__construct();
 
-		// Initialize the template in the constructor so it is available in the getTemplateObject() method
+		// Initialize the template in the constructor, so it is available in
+		// the getTemplateObject() method
 		$this->Template = new BackendTemplate('be_main');
 	}
 
