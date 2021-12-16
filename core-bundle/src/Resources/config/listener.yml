@@ -112,6 +112,7 @@ services:
             - '@contao.slug'
             - '@translator'
             - '@database_connection'
+            - '@contao.routing.page_registry'
 
     contao.listener.data_container.page_use_ssl_default:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUseSslDefaultListener
