@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
 /**
  * Class FormFileUpload
  *
@@ -26,7 +28,7 @@ namespace Contao;
  *
  * @todo Rename to FormUpload in Contao 5.0
  */
-class FormFileUpload extends Widget implements \uploadable
+class FormFileUpload extends Widget implements UploadableWidgetInterface
 {
 	/**
 	 * Template
@@ -298,7 +300,7 @@ class FormFileUpload extends Widget implements \uploadable
 					);
 
 					// Add a log entry
-					$this->log('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded', __METHOD__, TL_FILES);
+					$this->log('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded', __METHOD__, ContaoContext::FILES);
 				}
 			}
 		}

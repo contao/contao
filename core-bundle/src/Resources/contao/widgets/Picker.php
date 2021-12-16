@@ -256,7 +256,6 @@ class Picker extends Widget
 					$dc->id = $objRows->id;
 					$dc->activeRecord = $objRows;
 
-					$arrSet[] = $objRows->id;
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
 				}
 			}
@@ -273,9 +272,9 @@ class Picker extends Widget
 
 	protected function renderLabel(array $arrRow, DataContainer $dc)
 	{
-		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? 1;
+		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
-		if ($mode === 4)
+		if ($mode === DataContainer::MODE_PARENT)
 		{
 			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
@@ -308,7 +307,7 @@ class Picker extends Widget
 
 				$labelValues[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(5, 6, 7, 8, 9, 10)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC)))
 			{
 				if ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'date')
 				{
@@ -363,7 +362,7 @@ class Picker extends Widget
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
-			if (\in_array($mode, array(5, 6)))
+			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
 			{
 				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
 			}
@@ -373,7 +372,7 @@ class Picker extends Widget
 
 		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
-			if (\in_array($mode, array(5, 6)))
+			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
 			{
 				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
 			}

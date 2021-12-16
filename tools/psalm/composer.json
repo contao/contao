@@ -3,5 +3,8 @@
         "psalm/plugin-phpunit": "^0.15",
         "psalm/plugin-symfony": "^3.0",
         "vimeo/psalm": "^4.1"
+    },
+    "conflict": {
+        "symfony/framework-bundle": ">=6"
     }
 }

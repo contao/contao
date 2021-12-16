@@ -21,8 +21,8 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
-use Webmozart\PathUtil\Path;
 
 /**
  * Integration tests.

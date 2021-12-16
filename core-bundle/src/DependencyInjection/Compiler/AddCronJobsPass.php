@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Cron\CronJob;
 use Cron\CronExpression;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
@@ -25,12 +24,12 @@ class AddCronJobsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (!$container->has(Cron::class)) {
+        if (!$container->has('contao.cron')) {
             return;
         }
 
         $serviceIds = $container->findTaggedServiceIds('contao.cronjob');
-        $definition = $container->findDefinition(Cron::class);
+        $definition = $container->findDefinition('contao.cron');
 
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {

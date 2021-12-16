@@ -14,10 +14,7 @@ namespace Contao\CoreBundle\Fragment;
 
 class FragmentRegistry implements FragmentRegistryInterface
 {
-    /**
-     * @var array
-     */
-    private $fragments = [];
+    private array $fragments = [];
 
     public function add(string $identifier, FragmentConfig $config): FragmentRegistryInterface
     {

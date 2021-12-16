@@ -79,4 +79,15 @@ tl_news_archive:
     - id: 1
       tstamp: 1539616536
       title: Test
-      jumpTo: 3
+      jumpTo: 333
+
+tl_page:
+    - id: 333
+      pid: 1
+      tstamp: 1636915068
+      sorting: 512
+      title: News reader
+      alias: news-reader
+      type: regular
+      published: '1'
+      requireItem: '1'

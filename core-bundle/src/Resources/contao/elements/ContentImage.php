@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-
 /**
  * Front end content element "image".
  *
@@ -62,7 +60,7 @@ class ContentImage extends ContentElement
 	protected function compile()
 	{
 		$figure = System::getContainer()
-			->get(Studio::class)
+			->get('contao.image.studio')
 			->createFigureBuilder()
 			->from($this->objFilesModel)
 			->setSize($this->size)

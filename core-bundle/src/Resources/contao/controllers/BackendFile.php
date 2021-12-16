@@ -11,14 +11,19 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\BackendFile" class has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
 
 /**
  * Back end file picker.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the picker instead.
  */
 class BackendFile extends Backend
 {
@@ -57,7 +62,6 @@ class BackendFile extends Backend
 	 */
 	public function run()
 	{
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		$objTemplate = new BackendTemplate('be_picker');
@@ -156,13 +160,15 @@ class BackendFile extends Backend
 		$objTemplate->value = $objSessionBag->get('file_selector_search');
 		$objTemplate->breadcrumb = $GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? null;
 
-		if ($this->User->hasAccess('files', 'modules'))
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))
 		{
 			$objTemplate->manager = $GLOBALS['TL_LANG']['MSC']['fileManager'];
 			$objTemplate->managerHref = 'contao/main.php?do=files&amp;popup=1';
 		}
 
-		if (Input::get('switch') && $this->User->hasAccess('page', 'modules'))
+		if (Input::get('switch') && $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page'))
 		{
 			$objTemplate->switch = $GLOBALS['TL_LANG']['MSC']['pagePicker'];
 			$objTemplate->switchHref = str_replace('contao/file?', 'contao/page?', StringUtil::ampersand(Environment::get('request')));

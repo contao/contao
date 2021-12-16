@@ -336,7 +336,13 @@
         <source>Markdown</source>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -1995,7 +2001,7 @@
         <source>Disable</source>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

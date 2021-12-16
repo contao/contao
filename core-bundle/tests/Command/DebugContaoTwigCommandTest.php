@@ -18,7 +18,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class DebugContaoTwigCommandTest extends ContaoTestCase
 {

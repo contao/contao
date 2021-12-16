@@ -21,7 +21,6 @@ use Contao\NewsFeedModel;
 use Contao\PageModel;
 use Contao\Template;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class GeneratePageListenerTest extends ContaoTestCase
 {
@@ -29,7 +28,6 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        /** @var NewsFeedModel&MockObject $newsFeedModel */
         $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class);
         $newsFeedModel->feedBase = 'http://localhost/';
         $newsFeedModel->alias = 'news';
@@ -44,7 +42,6 @@ class GeneratePageListenerTest extends ContaoTestCase
             Template::class => new Adapter(Template::class),
         ];
 
-        /** @var LayoutModel&MockObject $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 
@@ -61,7 +58,6 @@ class GeneratePageListenerTest extends ContaoTestCase
     {
         $GLOBALS['TL_HEAD'] = [];
 
-        /** @var LayoutModel&MockObject $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
@@ -79,7 +75,6 @@ class GeneratePageListenerTest extends ContaoTestCase
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
         ];
 
-        /** @var LayoutModel&MockObject $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = 'a:1:{i:0;i:3;}';
 

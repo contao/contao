@@ -41,7 +41,7 @@ class ModuleMaintenance extends BackendModule
 		{
 			$this->import($callback);
 
-			if (!$this->$callback instanceof \executable)
+			if (!$this->$callback instanceof MaintenanceModuleInterface)
 			{
 				throw new \Exception("$callback is not an executable class");
 			}

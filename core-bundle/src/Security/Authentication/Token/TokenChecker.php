@@ -80,7 +80,7 @@ class TokenChecker
             return null;
         }
 
-        return $token->getUser()->getUsername();
+        return $token->getUser()->getUserIdentifier();
     }
 
     /**
@@ -94,7 +94,7 @@ class TokenChecker
             return null;
         }
 
-        return $token->getUser()->getUsername();
+        return $token->getUser()->getUserIdentifier();
     }
 
     /**

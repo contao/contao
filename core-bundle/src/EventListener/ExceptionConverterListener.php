@@ -24,6 +24,7 @@ use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ServiceUnavailableException as ContaoServiceUnavailableException;
+use Contao\UnusedArgumentsException;
 use Lexik\Bundle\MaintenanceBundle\Exception\ServiceUnavailableException;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -51,7 +52,7 @@ class ExceptionConverterListener
         PageNotFoundException::class => 'NotFoundHttpException',
         ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
         ContaoServiceUnavailableException::class => 'ServiceUnavailableHttpException',
-        \UnusedArgumentsException::class => 'NotFoundHttpException',
+        UnusedArgumentsException::class => 'NotFoundHttpException',
     ];
 
     /**

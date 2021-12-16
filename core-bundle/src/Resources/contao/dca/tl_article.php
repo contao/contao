@@ -13,8 +13,8 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -23,7 +23,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $this->loadDataContainer('tl_page');
 
@@ -357,9 +356,7 @@ class tl_article extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->all();
 
 		// Set the default page user and group
@@ -377,9 +374,10 @@ class tl_article extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS']))
+		if (is_array($session['CURRENT']['IDS'] ?? null))
 		{
 			$edit_all = array();
 			$delete_all = array();
@@ -397,12 +395,12 @@ class tl_article extends Backend
 
 				$row = $objArticle->row();
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $row))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $row))
 				{
 					$edit_all[] = $id;
 				}
 
-				if ($this->User->isAllowed(BackendUser::CAN_DELETE_ARTICLES, $row))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, $row))
 				{
 					$delete_all[] = $id;
 				}
@@ -427,7 +425,7 @@ class tl_article extends Backend
 					continue;
 				}
 
-				if ($this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objArticle->row()))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objArticle->row()))
 				{
 					$clipboard[] = $id;
 				}
@@ -436,7 +434,7 @@ class tl_article extends Backend
 			$session['CLIPBOARD']['tl_article']['id'] = $clipboard;
 		}
 
-		$permission = 0;
+		$permission = null;
 
 		// Overwrite the session
 		$objSession->replace($session);
@@ -456,11 +454,11 @@ class tl_article extends Backend
 			{
 				case 'edit':
 				case 'toggle':
-					$permission = BackendUser::CAN_EDIT_ARTICLES;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLES;
 					break;
 
 				case 'move':
-					$permission = BackendUser::CAN_EDIT_ARTICLE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
 					$ids[] = Input::get('sid');
 					break;
 
@@ -470,7 +468,7 @@ class tl_article extends Backend
 				case 'copyAll':
 				case 'cut':
 				case 'cutAll':
-					$permission = BackendUser::CAN_EDIT_ARTICLE_HIERARCHY;
+					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
 
 					// Insert into a page
 					if (Input::get('mode') == 2)
@@ -499,7 +497,7 @@ class tl_article extends Backend
 					break;
 
 				case 'delete':
-					$permission = BackendUser::CAN_DELETE_ARTICLES;
+					$permission = ContaoCorePermissions::USER_CAN_DELETE_ARTICLES;
 					break;
 			}
 
@@ -533,10 +531,8 @@ class tl_article extends Backend
 					continue;
 				}
 
-				$objPage = PageModel::findById($id);
-
 				// Check whether the current user has permission for the current page
-				if ($objPage !== null && !$this->User->isAllowed($permission, $objPage->row()))
+				if ($permission === null || !$security->isGranted($permission, $id))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (Input::get('id') ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
 				}
@@ -690,7 +686,7 @@ class tl_article extends Backend
 	{
 		$objPage = PageModel::findById($row['pid']);
 
-		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -707,14 +703,16 @@ class tl_article extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (!$this->User->canEditFieldsOf('tl_article'))
+		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_article'))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
 		$objPage = PageModel::findById($row['pid']);
 
-		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -739,7 +737,7 @@ class tl_article extends Backend
 
 		$objPage = PageModel::findById($row['pid']);
 
-		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -758,7 +756,7 @@ class tl_article extends Backend
 	{
 		$objPage = PageModel::findById($row['pid']);
 
-		return $this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -779,7 +777,7 @@ class tl_article extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_article::pasteArticle()" has been deprecated and will no longer work in Contao 5.0.');
 
 		return System::getContainer()
-			->get(ContentCompositionListener::class)
+			->get('contao.listener.data_container.content_composition')
 			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
 		;
 	}
@@ -800,7 +798,7 @@ class tl_article extends Backend
 	{
 		$objPage = PageModel::findById($row['pid']);
 
-		return $this->User->isAllowed(BackendUser::CAN_DELETE_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -812,7 +810,7 @@ class tl_article extends Backend
 	 */
 	public function addAliasButton($arrButtons)
 	{
-		if (!$this->User->hasAccess('tl_article::alias', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::alias'))
 		{
 			return $arrButtons;
 		}
@@ -820,9 +818,7 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
-			/** @var SessionInterface $objSession */
 			$objSession = System::getContainer()->get('session');
-
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
@@ -884,8 +880,10 @@ class tl_article extends Backend
 			$this->redirect($this->getReferer());
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_article::published', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::published'))
 		{
 			return '';
 		}
@@ -899,7 +897,7 @@ class tl_article extends Backend
 
 		$objPage = PageModel::findById($row['pid']);
 
-		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 		{
 			if ($row['published'])
 			{
@@ -950,7 +948,7 @@ class tl_article extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_article::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish article ID "' . $intId . '".');
 		}

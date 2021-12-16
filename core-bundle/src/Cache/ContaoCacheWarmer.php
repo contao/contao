@@ -24,10 +24,10 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use Webmozart\PathUtil\Path;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
@@ -40,7 +40,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private array $locales;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.cache.warm_internal" service instead
+     * @internal Do not inherit from this class; decorate the "contao.cache.warmer" service instead
      */
     public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, Locales $locales)
     {
@@ -53,7 +53,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->locales = $locales->getEnabledLocaleIds();
     }
 
-    public function warmUp($cacheDir): array
+    public function warmUp(string $cacheDir): array
     {
         if (!$this->isCompleteInstallation()) {
             return [];

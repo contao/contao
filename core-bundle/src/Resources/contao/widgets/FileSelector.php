@@ -12,7 +12,10 @@ namespace Contao;
 
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\FileSelector" class has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
 
 /**
  * Provide methods to handle input field "file tree".
@@ -25,6 +28,9 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string  $extensions
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the picker instead.
  */
 class FileSelector extends Widget
 {
@@ -372,7 +378,6 @@ class FileSelector extends Widget
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
 
 		$flag = substr($this->strField, 0, 2);
@@ -471,7 +476,7 @@ class FileSelector extends Widget
 			$blnIsOpen = (!empty($arrFound) || $session[$node][$tid] == 1 || \count(preg_grep('/^' . preg_quote($currentFolder, '/') . '\//', $this->varValue)) > 0);
 			$return .= "\n    " . '<li class="' . $folderClass . ' toggle_select hover-div"><div class="tl_left" style="padding-left:' . $intMargin . 'px">';
 
-			// Add a toggle button if there are childs
+			// Add a toggle button if there are children
 			if ($countFiles > 0)
 			{
 				$folderAttribute = '';
@@ -483,7 +488,7 @@ class FileSelector extends Widget
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && \in_array('.public', $content))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}
@@ -557,12 +562,12 @@ class FileSelector extends Widget
 				if ($objFile->isImage && $objFile->viewHeight > 0 && Config::get('thumbnails') && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
 				{
 					$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir), '', 'style="margin:0 0 2px -18px"');
-					$importantPart = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+					$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir), '', 'style="margin:0 0 2px -18px"');
+					$importantPart = System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 					if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 					{
-						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($projectDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
+						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($projectDir), '', 'style="margin:0 0 2px 0;vertical-align:bottom"');
 					}
 				}
 
@@ -651,7 +656,7 @@ class FileSelector extends Widget
 
 		do
 		{
-			if (file_exists($projectDir . '/' . $path . '/.public'))
+			if (is_file($projectDir . '/' . $path . '/.public'))
 			{
 				return false;
 			}

@@ -92,7 +92,7 @@ class FrontendPreviewAuthenticator
     private function loadFrontendUser(string $username): ?FrontendUser
     {
         try {
-            $frontendUser = $this->userProvider->loadUserByUsername($username);
+            $frontendUser = $this->userProvider->loadUserByIdentifier($username);
 
             // Make sure the user provider returned a front end user
             if (!$frontendUser instanceof FrontendUser) {

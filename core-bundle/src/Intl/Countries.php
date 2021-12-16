@@ -123,7 +123,10 @@ class Countries
         return $countries;
     }
 
-    private function applyLegacyHook(array $return)
+    /**
+     * @return array<string,string>
+     */
+    private function applyLegacyHook(array $return): array
     {
         trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getCountries" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', __CLASS__);
 
@@ -133,8 +136,10 @@ class Countries
         $return = array_combine(array_map('strtolower', array_keys($return)), $return);
         $countries = array_combine(array_map('strtolower', array_keys($countries)), $countries);
 
+        $system = $this->contaoFramework->getAdapter(System::class);
+
         foreach ($GLOBALS['TL_HOOKS']['getCountries'] as $callback) {
-            $this->contaoFramework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}($return, $countries);
+            $system->importStatic($callback[0])->{$callback[1]}($return, $countries);
         }
 
         return array_combine(array_map('strtoupper', array_keys($return)), $return);

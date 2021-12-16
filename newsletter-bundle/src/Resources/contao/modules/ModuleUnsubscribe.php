@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\SimpleTokenParser;
-
 /**
  * Front end module "newsletter unsubscribe".
  *
@@ -149,6 +147,7 @@ class ModuleUnsubscribe extends Module
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 
 	/**
@@ -280,7 +279,7 @@ class ModuleUnsubscribe extends Module
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'];
 		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['nl_subject'], Idna::decode(Environment::get('host')));
-		$objEmail->text = System::getContainer()->get(SimpleTokenParser::class)->parse($this->nl_unsubscribe, $arrData);
+		$objEmail->text = System::getContainer()->get('contao.string.simple_token_parser')->parse($this->nl_unsubscribe, $arrData);
 		$objEmail->sendTo($strEmail);
 
 		// Redirect to the jumpTo page

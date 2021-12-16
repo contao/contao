@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick navigation".
@@ -70,7 +71,7 @@ class ModuleQuicknav extends Module
 			$this->rootPage = $objPage->rootId;
 		}
 
-		// Overwrite the domain and language if the reference page belongs to a differnt root page (see #3765)
+		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
 		else
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
@@ -87,6 +88,7 @@ class ModuleQuicknav extends Module
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicknav'];
 		$this->Template->items = $this->getQuicknavPages($this->rootPage, 1, $host);
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
 	}
 
 	/**
@@ -142,11 +144,22 @@ class ModuleQuicknav extends Module
 				// Check hidden pages
 				if (!$objSubpage->hide || $this->showHidden)
 				{
+					try
+					{
+						$href = $objSubpage->getFrontendUrl();
+					}
+					catch (ExceptionInterface $exception)
+					{
+						System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+
+						continue;
+					}
+
 					$arrPages[] = array
 					(
 						'level' => ($level - 2),
 						'title' => StringUtil::specialchars(StringUtil::stripInsertTags($objSubpage->pageTitle ?: $objSubpage->title)),
-						'href' => $objSubpage->getFrontendUrl(),
+						'href' => $href,
 						'link' => StringUtil::stripInsertTags($objSubpage->title),
 						'active' => ($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo))
 					);

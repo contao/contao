@@ -49,7 +49,6 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\HttpKernel\DependencyInjection\FragmentRendererPass;
 
 class ContaoCoreBundle extends Bundle
 {
@@ -107,7 +106,6 @@ class ContaoCoreBundle extends Bundle
             )
         );
 
-        $container->addCompilerPass(new FragmentRendererPass('contao.fragment.handler'));
         $container->addCompilerPass(new RemembermeServicesPass('contao_frontend'));
         $container->addCompilerPass(new DataContainerCallbackPass());
         $container->addCompilerPass(new TranslationDataCollectorPass());

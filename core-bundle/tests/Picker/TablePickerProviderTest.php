@@ -31,12 +31,16 @@ class TablePickerProviderTest extends ContaoTestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
+
         $GLOBALS['TL_DCA'] = [];
         $GLOBALS['BE_MOD'] = [];
     }
 
     protected function tearDown(): void
     {
+        parent::tearDown();
+
         unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
@@ -460,9 +464,6 @@ class TablePickerProviderTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @param ItemInterface&MockObject $menu
-     */
     private function createMenuTableProvider(array $modules, string $current, ItemInterface $menu = null): TablePickerProvider
     {
         $expectedItems = [];
@@ -497,7 +498,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->expects($this->exactly(\count($expectedItems)))
             ->method('createItem')
             ->withConsecutive(...$expectedItems)
-            ->willReturn($menu ?? $this->createMock(ItemInterface::class))
+            ->willReturn($menu)
         ;
 
         return new TablePickerProvider(
@@ -611,6 +612,8 @@ class TablePickerProviderTest extends ContaoTestCase
     }
 
     /**
+     * @param array|false $data
+     *
      * @return Connection&MockObject
      */
     private function mockConnectionForQuery(string $table, int $id, $data, bool $dynamicPtable = false): Connection

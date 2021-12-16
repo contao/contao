@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -227,6 +228,7 @@ class ModuleBreadcrumb extends Module
 			);
 
 			$position = 0;
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			foreach ($items as $item)
 			{
@@ -235,7 +237,7 @@ class ModuleBreadcrumb extends Module
 					'position' => ++$position,
 					'item' => array(
 						'@id' => $item['href'] ?: './',
-						'name' => StringUtil::inputEncodedToPlainText($item['link'])
+						'name' => $htmlDecoder->inputEncodedToPlainText($item['link'])
 					)
 				);
 			}
@@ -254,7 +256,7 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 
 			return '';
 		}

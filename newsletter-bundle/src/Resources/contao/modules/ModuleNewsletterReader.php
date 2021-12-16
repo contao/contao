@@ -13,8 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\Util\SimpleTokenParser;
 
 /**
  * Front end module "newsletter reader".
@@ -90,16 +88,18 @@ class ModuleNewsletterReader extends Module
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
+		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if ($objNewsletter->subject)
 		{
-			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($objNewsletter->subject));
+				$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($objNewsletter->subject));
 			}
 		}
 
@@ -120,8 +120,8 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Parse simple tokens and insert tags
-		$strContent = $this->replaceInsertTags($strContent);
-		$strContent = System::getContainer()->get(SimpleTokenParser::class)->parse($strContent, array());
+		$strContent = System::getContainer()->get('contao.insert_tag.parser')->replace($strContent);
+		$strContent = System::getContainer()->get('contao.string.simple_token_parser')->parse($strContent, array());
 
 		// Encode e-mail addresses
 		$strContent = StringUtil::encodeEmail($strContent);

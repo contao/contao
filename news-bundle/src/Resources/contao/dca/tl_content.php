@@ -14,7 +14,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\Input;
 use Contao\News;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 // Dynamically add the permission check and other callbacks
 if (Input::get('do') == 'news')
@@ -86,7 +85,6 @@ class tl_content_news extends Backend
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
 										 ->execute(CURRENT_ID);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -149,9 +147,7 @@ class tl_content_news extends Backend
 	 */
 	public function generateFeed()
 	{
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
-
 		$session = $objSession->get('news_feed_updater');
 
 		if (empty($session) || !is_array($session))

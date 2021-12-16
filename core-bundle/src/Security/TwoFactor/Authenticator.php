@@ -43,7 +43,7 @@ class Authenticator
         return sprintf(
             'otpauth://totp/%s:%s?secret=%s&issuer=%s',
             $issuer,
-            rawurlencode($user->getUsername()).'@'.$issuer,
+            rawurlencode($user->getUserIdentifier()).'@'.$issuer,
             $this->getUpperUnpaddedSecretForUser($user),
             $issuer
         );
