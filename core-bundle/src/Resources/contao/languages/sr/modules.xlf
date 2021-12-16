@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.0">
         <source>File manager</source>
-        <target>Менаџер фајлова - File manager</target>
+        <target>Управљање фајловима</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>

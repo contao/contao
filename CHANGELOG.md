@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.24] (2021-12-16)
+
+**Fixed issues:**
+
+- [#3822] Add a Template property to the Controller class ([leofeyer])
+- [#3815] Enable image lazy loading in file manager ([fritzmg])
+- [#3803] Fix infinite 4.8.0 migration when custom templates are present ([fritzmg])
+- [#3792] Fix more PHP8 warnings ([aschempp])
+- [#3788] Clarify internal style sheets deprecation ([fritzmg])
+- [#3787] Do not sort the referrers ([leofeyer])
+- [#3781] Fix unknown "ansi_to_html" filter error ([fritzmg])
+- [#3759] Unify the MakeServicesPublicPass ([bytehead])
+- [#3758] Add transitive dependency on symfony/twig-bridge ([richardhj])
+
 ## [4.9.23] (2021-12-02)
 
 **Fixed issues:**
@@ -781,6 +795,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.24]: https://github.com/contao/contao/releases/tag/4.9.24
 [4.9.23]: https://github.com/contao/contao/releases/tag/4.9.23
 [4.9.22]: https://github.com/contao/contao/releases/tag/4.9.22
 [4.9.21]: https://github.com/contao/contao/releases/tag/4.9.21
@@ -842,6 +857,15 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#3822]: https://github.com/contao/contao/pull/3822
+[#3815]: https://github.com/contao/contao/pull/3815
+[#3803]: https://github.com/contao/contao/pull/3803
+[#3792]: https://github.com/contao/contao/pull/3792
+[#3788]: https://github.com/contao/contao/pull/3788
+[#3787]: https://github.com/contao/contao/pull/3787
+[#3781]: https://github.com/contao/contao/pull/3781
+[#3759]: https://github.com/contao/contao/pull/3759
+[#3758]: https://github.com/contao/contao/pull/3758
 [#3741]: https://github.com/contao/contao/pull/3741
 [#3732]: https://github.com/contao/contao/pull/3732
 [#3738]: https://github.com/contao/contao/pull/3738
