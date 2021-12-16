@@ -29,14 +29,14 @@ class ChangeSetTest extends TestCase
         $changeSet = new ChangeSet(
             [
                 [ChangeSet::ATTR_HASH => 'a5e6', ChangeSet::ATTR_PATH => 'foo/new1', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
-                [ChangeSet::ATTR_HASH => 'd821', ChangeSet::ATTR_PATH => 'foo/new2', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FOLDER],
+                [ChangeSet::ATTR_HASH => 'd821', ChangeSet::ATTR_PATH => 'foo/new2', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_DIRECTORY],
             ],
             [
                 'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path'],
                 'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127'],
             ],
             [
-                'baz' => ChangeSet::TYPE_FOLDER,
+                'baz' => ChangeSet::TYPE_DIRECTORY,
                 'baz/deleted1' => ChangeSet::TYPE_FILE,
                 'baz/deleted2' => ChangeSet::TYPE_FILE,
             ]
@@ -45,7 +45,7 @@ class ChangeSetTest extends TestCase
         $this->assertSame(
             [
                 [ChangeSet::ATTR_HASH => 'a5e6', ChangeSet::ATTR_PATH => 'foo/new1', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE],
-                [ChangeSet::ATTR_HASH => 'd821', ChangeSet::ATTR_PATH => 'foo/new2', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FOLDER],
+                [ChangeSet::ATTR_HASH => 'd821', ChangeSet::ATTR_PATH => 'foo/new2', ChangeSet::ATTR_TYPE => ChangeSet::TYPE_DIRECTORY],
             ],
             $changeSet->getItemsToCreate(),
             'items to create'
@@ -62,7 +62,7 @@ class ChangeSetTest extends TestCase
 
         $this->assertSame(
             [
-                'baz' => ChangeSet::TYPE_FOLDER,
+                'baz' => ChangeSet::TYPE_DIRECTORY,
                 'baz/deleted1' => ChangeSet::TYPE_FILE,
                 'baz/deleted2' => ChangeSet::TYPE_FILE,
             ],

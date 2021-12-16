@@ -39,11 +39,6 @@ class HashGenerator implements HashGeneratorInterface
         $context = hash_init($this->hashAlgorithm);
         hash_update_stream($context, $filesystem->readStream($path));
 
-        if (null !== $fileLastModified) {
-            // Include file time in hash
-            hash_update($context, sprintf("\0%s", $fileLastModified ?: ''));
-        }
-
         return hash_final($context);
     }
 

@@ -627,7 +627,7 @@ class DbafsTest extends TestCase
                 ],
                 [],
                 [
-                    'bar' => ChangeSet::TYPE_FOLDER,
+                    'bar' => ChangeSet::TYPE_DIRECTORY,
                     'bar/file5a' => ChangeSet::TYPE_FILE,
                     'bar/file5b' => ChangeSet::TYPE_FILE,
                 ]
@@ -687,7 +687,7 @@ class DbafsTest extends TestCase
             '',
             new ChangeSet(
                 [
-                    ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'path' => 'foo/file3', 'type' => ChangeSet::TYPE_FOLDER],
+                    ['hash' => 'd41d8cd98f00b204e9800998ecf8427e', 'path' => 'foo/file3', 'type' => ChangeSet::TYPE_DIRECTORY],
                 ],
                 [
                     'foo' => ['hash' => '5d93d7dddf717617c820c623e9b3168c'],
@@ -715,7 +715,7 @@ class DbafsTest extends TestCase
             '',
             new ChangeSet(
                 [
-                    ['hash' => 'db8dc8bdfe4ed260523b7dc8a7082145', 'path' => 'new', 'type' => ChangeSet::TYPE_FOLDER],
+                    ['hash' => 'db8dc8bdfe4ed260523b7dc8a7082145', 'path' => 'new', 'type' => ChangeSet::TYPE_DIRECTORY],
                     ['hash' => '900150983cd24fb0d6963f7d28e17f72', 'path' => 'new/thing', 'type' => ChangeSet::TYPE_FILE],
                 ],
                 [
@@ -787,7 +787,7 @@ class DbafsTest extends TestCase
             ->with(
                 $this->callback(
                     function (string $query): bool {
-                        $this->assertStringStartsWith('INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `name`, `extension`, `type`, `tstamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', $query);
+                        $this->assertStringStartsWith('INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `type`, `name`, `extension`, `tstamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', $query);
 
                         return true;
                     }
@@ -797,29 +797,29 @@ class DbafsTest extends TestCase
                         $expectedParameters = [
                             [
                                 // foo/file2.dat
-                                1 => 'ee61',
-                                2 => 'files/foo/file2.dat',
-                                3 => 'c13d88cb4cb02003daedb8a84e5d272a',
-                                4 => 'file2.dat',
-                                5 => 'dat',
-                                6 => 'file',
+                                1 => 'ee61', // pid
+                                2 => 'files/foo/file2.dat', // path
+                                3 => 'c13d88cb4cb02003daedb8a84e5d272a', // hash
+                                4 => 'file', // type
+                                5 => 'file2.dat', // name
+                                6 => 'dat', // extension
 
                                 // foo/file1.txt
                                 9 => 'ee61', // pid
                                 10 => 'files/foo/file1.txt', // path
                                 11 => '22af645d1859cb5ca6da0c484f1f37ea', // hash
-                                12 => 'file1.txt', // name
-                                13 => 'txt', // extension
-                                14 => 'file', // type
+                                12 => 'file', // type
+                                13 => 'file1.txt', // name
+                                14 => 'txt', // extension
                             ],
                             [
                                 // foo/sub/
                                 1 => 'ee61', // pid
                                 2 => 'files/foo/sub', // path
                                 3 => 'd41d8cd98f00b204e9800998ecf8427e', // hash
-                                4 => 'sub', // name
-                                5 => '', // extension
-                                6 => 'folder', // type
+                                4 => 'folder', // type
+                                5 => 'sub', // name
+                                6 => '', // extension
                             ],
                         ];
 

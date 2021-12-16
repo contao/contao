@@ -40,7 +40,7 @@ class Dbafs implements ResetInterface, DbafsInterface
     public const FILE_MARKER_PUBLIC = '.public';
 
     private const RESOURCE_FILE = ChangeSet::TYPE_FILE;
-    private const RESOURCE_DIRECTORY = ChangeSet::TYPE_FOLDER;
+    private const RESOURCE_DIRECTORY = ChangeSet::TYPE_DIRECTORY;
     private const RESOURCE_DOES_NOT_EXIST = -1;
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
@@ -205,7 +205,7 @@ class Dbafs implements ResetInterface, DbafsInterface
         $filesystemIterator = $this->getFilesystemPaths($filesystem, $searchPaths, $parentPaths);
 
         $changeSet = $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $filesystem, $searchPaths);
-        $this->applyChangeSet($changeSet, $allUuidsByPath, $allLastModifiedByPath);
+        $this->applyChangeSet($changeSet, $allUuidsByPath);
 
         // Update previously cached items
         foreach ($changeSet->getItemsToUpdate() as $path => $changes) {
@@ -272,7 +272,7 @@ class Dbafs implements ResetInterface, DbafsInterface
      * @phpstan-param DatabasePaths $dbPaths
      * @phpstan-param FilesystemPaths $filesystemIterator
      */
-    private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array &$allLastModifiedByPath, \Generator $filesystemIterator, FilesystemAdapter $filesystem, array $searchPaths): ChangeSet
+    private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, FilesystemAdapter $filesystem, array $searchPaths): ChangeSet
     {
         // We're identifying items by their (old) path and store any detected
         // changes as an array of attributes
@@ -293,20 +293,33 @@ class Dbafs implements ResetInterface, DbafsInterface
         /** @var array<string, array<string>> $dirHashesParts */
         $dirHashesParts = [];
 
+        /** @var array<string, int|null> $lastModifiedUpdates */
+        $lastModifiedUpdates = [];
+
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
 
-        $getFileContentHash = function (string $path) use ($filesystem, $allDbHashesByPath, &$allLastModifiedByPath): string {
+        $getFileContentHash = function (string $path) use ($filesystem, $allDbHashesByPath, $allLastModifiedByPath, &$lastModifiedUpdates): string {
             if ($this->useLastModified) {
                 $oldHash = $allDbHashesByPath[$path] ?? null;
-                $lastModified = null !== $oldHash ? ($allLastModifiedByPath[$path] ?? null) : null;
+                $oldLastModified = $allLastModifiedByPath[$path] ?? null;
 
                 // Allow falling back to the existing hash if we've already got
                 // an existing hash and timestamp
                 $fileLastModified = null;
-                $hash = $this->hashGenerator->hashFileContent($filesystem, $path, $lastModified, $fileLastModified) ?? $oldHash;
+                $hash = $this->hashGenerator->hashFileContent(
+                    $filesystem,
+                    $path,
+                    null !== $oldHash ? $oldLastModified : null,
+                    $fileLastModified
+                ) ?? $oldHash
+                ;
 
-                // Update last modified reference
-                $allLastModifiedByPath[$path] = $fileLastModified ?? $filesystem->lastModified($path)->lastModified();
+                // Update last modified if there are changes
+                $newLastModified = $fileLastModified ?? $filesystem->lastModified($path)->lastModified();
+
+                if ($oldLastModified !== $newLastModified) {
+                    $lastModifiedUpdates[$path] = $newLastModified;
+                }
 
                 return $hash;
             }
@@ -437,7 +450,8 @@ class Dbafs implements ResetInterface, DbafsInterface
         return new ChangeSet(
             array_reverse(array_values($itemsToCreate)),
             $itemsToUpdate,
-            $itemsToDelete
+            $itemsToDelete,
+            $lastModifiedUpdates
         );
     }
 
@@ -520,12 +534,11 @@ class Dbafs implements ResetInterface, DbafsInterface
      * Updates the database from a given change set. We're using chunked inserts
      * for better performance.
      *
-     * @param array<string, string>   $allUuidsByPath
-     * @param array<string, int|null> $allLastModifiedByPath
+     * @param array<string, string> $allUuidsByPath
      */
-    private function applyChangeSet(ChangeSet $changeSet, array $allUuidsByPath, array $allLastModifiedByPath): void
+    private function applyChangeSet(ChangeSet $changeSet, array $allUuidsByPath): void
     {
-        if ($changeSet->isEmpty()) {
+        if ($changeSet->isEmpty($this->useLastModified)) {
             return;
         }
 
@@ -541,6 +554,8 @@ class Dbafs implements ResetInterface, DbafsInterface
             throw new \RuntimeException("No parent entry found for non-root resource '$path'.");
         };
 
+        $allLastModifiedUpdatesByPath = $changeSet->getLastModifiedUpdates();
+
         $this->connection->beginTransaction();
 
         // Inserts
@@ -550,7 +565,7 @@ class Dbafs implements ResetInterface, DbafsInterface
         foreach ($changeSet->getItemsToCreate() as $newValues) {
             $newUuid = Uuid::v1()->toBinary();
             $newPath = $newValues[ChangeSet::ATTR_PATH];
-            $isDir = ChangeSet::TYPE_FOLDER === $newValues[ChangeSet::ATTR_TYPE];
+            $isDir = ChangeSet::TYPE_DIRECTORY === $newValues[ChangeSet::ATTR_TYPE];
 
             if ($isDir) {
                 // Add new UUID to lookup, so that child entries will be able to reference it
@@ -562,10 +577,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 'pid' => $getParentUuid($newPath),
                 'path' => $this->convertToDatabasePath($newPath),
                 'hash' => $newValues[ChangeSet::ATTR_HASH],
-                'name' => basename($newPath),
-                'extension' => !$isDir ? Path::getExtension($newPath) : '',
                 'type' => $isDir ? 'folder' : 'file',
-                'tstamp' => $currentTime,
             ];
 
             // BC
@@ -576,7 +588,7 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
 
             if ($this->useLastModified) {
-                $dataToInsert['lastModified'] = $allLastModifiedByPath[$newPath] ?? null;
+                $dataToInsert['lastModified'] = $allLastModifiedUpdatesByPath[$newPath] ?? null;
             }
 
             $inserts[] = $dataToInsert;
@@ -601,7 +613,7 @@ class Dbafs implements ResetInterface, DbafsInterface
         }
 
         // Updates
-        foreach ($changeSet->getItemsToUpdate() as $pathIdentifier => $changedValues) {
+        foreach ($changeSet->getItemsToUpdate($this->useLastModified) as $pathIdentifier => $changedValues) {
             $dataToUpdate = [
                 'tstamp' => $currentTime,
             ];
@@ -615,8 +627,8 @@ class Dbafs implements ResetInterface, DbafsInterface
                 $dataToUpdate['hash'] = $newHash;
             }
 
-            if ($this->useLastModified && null !== ($lastModified = $allLastModifiedByPath[$pathIdentifier] ?? null)) {
-                $dataToUpdate['lastModified'] = $lastModified;
+            if (false !== ($newLastModified = $changedValues[ChangeSet::ATTR_LAST_MODIFIED] ?? false)) {
+                $dataToUpdate['lastModified'] = $newLastModified;
             }
 
             $this->connection->update(
