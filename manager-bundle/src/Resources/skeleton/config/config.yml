@@ -47,6 +47,7 @@ contao:
                 dbafs:
                     enabled: true
                     table: tl_files
+                    use_last_modified: true
             image_assets:
                 storage:
                     adapter: local
