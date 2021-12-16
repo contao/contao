@@ -19,9 +19,14 @@ class ChangeSetTest extends TestCase
 {
     public function testIsEmpty(): void
     {
-        $changeSet = new ChangeSet([], [], []);
+        $changeSet1 = new ChangeSet([], [], [], ['foo' => 123450]);
+        $changeSet2 = new ChangeSet([], [], [], []);
 
-        $this->assertTrue($changeSet->isEmpty());
+        $this->assertTrue($changeSet1->isEmpty());
+        $this->assertFalse($changeSet1->isEmpty(true));
+
+        $this->assertTrue($changeSet2->isEmpty());
+        $this->assertTrue($changeSet2->isEmpty(true));
     }
 
     public function testGetItems(): void
@@ -68,6 +73,31 @@ class ChangeSetTest extends TestCase
             ],
             $changeSet->getItemsToDelete(),
             'items to delete'
+        );
+    }
+
+    public function testGetUpdatesWithLastModified(): void
+    {
+        $changeSet = new ChangeSet(
+            [],
+            [
+                'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path'],
+                'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127'],
+            ],
+            [],
+            [
+                'bar/file_that_changes' => 123450,
+                'foo/touched' => 234560,
+            ]
+        );
+
+        $this->assertSame(
+            [
+                'foo/touched' => [ChangeSet::ATTR_LAST_MODIFIED => 234560],
+                'bar/old_path' => [ChangeSet::ATTR_PATH => 'bar/updated_path'],
+                'bar/file_that_changes' => [ChangeSet::ATTR_HASH => 'e127', ChangeSet::ATTR_LAST_MODIFIED => 123450],
+            ],
+            $changeSet->getItemsToUpdate(true),
         );
     }
 }

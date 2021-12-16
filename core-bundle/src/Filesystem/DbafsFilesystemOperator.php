@@ -152,7 +152,7 @@ interface DbafsFilesystemOperator extends FilesystemOperator
      * @param string|Uuid $location
      * @phpstan-param ExtraMetadata $metadata
      *
-     * @throws UnableToSetExtraMetadata
+     * @throws UnableToSetExtraMetadataException
      * @throws FilesystemException
      */
     public function setExtraMetadata($location, array $metadata): void;

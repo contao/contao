@@ -316,7 +316,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 $hashContext = new Context($fallback, $oldLastModified);
                 $this->hashGenerator->hashFileContent($filesystem, $path, $hashContext);
 
-                if ($this->useLastModified && $hashContext->hasLastModifiedChanged()) {
+                if ($this->useLastModified && $hashContext->lastModifiedChanged()) {
                     $lastModifiedUpdates[$path] = $hashContext->getLastModified();
                 }
 

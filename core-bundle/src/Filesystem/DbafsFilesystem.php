@@ -65,7 +65,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
 
         try {
             $normalizedPath = $this->normalizePath($location);
-        } catch (UnableToResolveUuid $e) {
+        } catch (UnableToResolveUuidException $e) {
             return false;
         }
 
@@ -257,7 +257,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
         try {
             $this->dbafs->setExtraMetadata($normalizedPath, $metadata);
         } catch (\InvalidArgumentException $e) {
-            throw new UnableToSetExtraMetadata((string) $location, $e);
+            throw new UnableToSetExtraMetadataException((string) $location, $e);
         }
     }
 
@@ -304,7 +304,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
      *
      * @param string|Uuid $identifier
      *
-     * @throws UnableToResolveUuid if a provided UUID could not be converted to a path
+     * @throws UnableToResolveUuidException if a provided UUID could not be converted to a path
      */
     private function normalizePath($identifier): string
     {
@@ -312,7 +312,7 @@ final class DbafsFilesystem implements DbafsFilesystemOperator
             $path = $this->dbafs->getPathFromUuid($identifier);
 
             if (null === $path) {
-                throw new UnableToResolveUuid($identifier);
+                throw new UnableToResolveUuidException($identifier);
             }
 
             return $path;

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Filesystem;
 use League\Flysystem\FilesystemException;
 use Symfony\Component\Uid\Uuid;
 
-class UnableToResolveUuid extends \RuntimeException implements FilesystemException
+class UnableToResolveUuidException extends \RuntimeException implements FilesystemException
 {
     private Uuid $uuid;
 
@@ -28,7 +28,7 @@ class UnableToResolveUuid extends \RuntimeException implements FilesystemExcepti
         );
     }
 
-    public function uuid(): Uuid
+    public function getUuid(): Uuid
     {
         return $this->uuid;
     }

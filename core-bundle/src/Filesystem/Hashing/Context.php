@@ -16,7 +16,7 @@ final class Context
 {
     private ?string $oldHash;
     private ?int $oldLastModified;
-    private ?int $newLastModified = null;
+    private ?int $newLastModified;
 
     /**
      * @var string|false|null
@@ -29,7 +29,7 @@ final class Context
     public function __construct(string $fallback = null, int $oldLastModified = null)
     {
         $this->oldHash = $fallback;
-        $this->oldLastModified = $oldLastModified;
+        $this->oldLastModified = $this->newLastModified = $oldLastModified;
     }
 
     public function canSkipHashing(): bool
@@ -61,15 +61,15 @@ final class Context
         $this->newLastModified = $lastModified;
     }
 
-    public function hasLastModifiedChanged(): bool
+    public function lastModifiedChanged(): bool
     {
-        return $this->oldLastModified === $this->newLastModified;
+        return $this->oldLastModified !== $this->newLastModified;
     }
 
     public function getResult(): string
     {
         if (false === $this->result) {
-            throw new \RuntimeException('No result has been set for this hashing context.');
+            throw new \LogicException('No result has been set for this hashing context.');
         }
 
         return $this->result ?? $this->oldHash;

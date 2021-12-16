@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Filesystem;
 
 use League\Flysystem\FilesystemException;
 
-class UnableToSetExtraMetadata extends \RuntimeException implements FilesystemException
+class UnableToSetExtraMetadataException extends \RuntimeException implements FilesystemException
 {
     public function __construct(string $location, \Throwable $previous)
     {

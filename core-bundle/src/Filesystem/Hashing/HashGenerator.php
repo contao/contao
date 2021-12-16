@@ -31,7 +31,7 @@ class HashGenerator implements HashGeneratorInterface
             $context->updateLastModified($filesystem->lastModified($path)->lastModified());
 
             // Skip generating hashes if possible
-            if ($context->canSkipHashing() && $context->hasLastModifiedChanged()) {
+            if ($context->canSkipHashing() && !$context->lastModifiedChanged()) {
                 $context->skipHashing();
 
                 return;

@@ -318,8 +318,8 @@ class VirtualFilesystem implements DbafsFilesystemOperator
 
         try {
             $operator->setExtraMetadata($resolvedLocation, $metadata);
-        } catch (UnableToSetExtraMetadata $e) {
-            throw new UnableToSetExtraMetadata((string) $location, $e);
+        } catch (UnableToSetExtraMetadataException $e) {
+            throw new UnableToSetExtraMetadataException((string) $location, $e);
         }
     }
 
@@ -327,7 +327,7 @@ class VirtualFilesystem implements DbafsFilesystemOperator
      * @param string|Uuid $location
      * @phpstan-return array{0: FilesystemOperator, 1: string|Uuid, 2: string|null}
      *
-     * @throws UnableToResolveUuid
+     * @throws UnableToResolveUuidException
      */
     private function findOperatorAndLocation($location): array
     {
@@ -342,7 +342,7 @@ class VirtualFilesystem implements DbafsFilesystemOperator
                 }
             }
 
-            throw new UnableToResolveUuid($location, sprintf('Searched in DBAFS-capable mounts: "%s"', implode('", "', array_keys($this->dbafsOperators))));
+            throw new UnableToResolveUuidException($location, sprintf('Searched in DBAFS-capable mounts: "%s"', implode('", "', array_keys($this->dbafsOperators))));
         }
 
         $prefix = Path::canonicalize($location);
