@@ -65,9 +65,13 @@ class LabelListener
     {
         $dataContainer = $this->framework->getAdapter(DataContainer::class)->getDriverForTable($table);
         $originalTableDc = new $dataContainer($table);
-        $parent = $this->getParentTableForRow($table, $originalRow);
         $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
         $config = $this->framework->getAdapter(Config::class);
+        $parent = null;
+
+        if (true === ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)) {
+            $parent = ['table' => $originalRow['ptable'], 'id' => $originalRow['pid']];
+        }
 
         return [
             'preview' => $this->renderPreview($originalRow, $originalTableDc),
