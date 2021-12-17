@@ -30,14 +30,15 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
 {
     private RequestStack $requestStack;
     private ContaoCsrfTokenManager $csrfTokenManager;
-    private TranslatorInterface $translator;
     private ?JwtManager $jwtManager;
 
-    public function __construct(RequestStack $requestStack, ContaoCsrfTokenManager $csrfTokenManager, TranslatorInterface $translator, JwtManager $jwtManager = null)
+    /**
+     * @internal Do not inherit from this class; decorate the "Contao\ManagerBundle\Controller\MaintenanceLoginController" service instead
+     */
+    public function __construct(RequestStack $requestStack, ContaoCsrfTokenManager $csrfTokenManager, JwtManager $jwtManager = null)
     {
         $this->requestStack = $requestStack;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->translator = $translator;
         $this->jwtManager = $jwtManager;
     }
 
@@ -55,6 +56,7 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
         $template->formId = $formId;
         $template->requestToken = $this->csrfTokenManager->getFrontendTokenValue();
         $template->disabled = null === $this->jwtManager;
+        $template->invalidLogin = false;
 
         if ($this->isLoggedIn($request)) {
             if ($request->request->get('FORM_SUBMIT') === $formId) {
@@ -67,7 +69,11 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
         }
 
         if ($request->request->get('FORM_SUBMIT') === $formId) {
-            $this->login($request, $model, $template);
+            if ($response = $this->login($request, $model)) {
+                return $response;
+            }
+
+            $template->invalidLogin = true;
         }
 
         $template->username = StringUtil::specialchars($request->request->get('username', ''));
@@ -103,7 +109,7 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
         return (bool) ($data['bypass_maintenance'] ?? false);
     }
 
-    private function login(Request $request, ModuleModel $model, Template $template): void
+    private function login(Request $request, ModuleModel $model): ?Response
     {
         if (
             $request->request->get('username') === $model->maintenanceUsername
@@ -112,12 +118,15 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
             $data = $this->jwtManager->parseRequest($request);
 
             $response = new RedirectResponse($request->getUri());
-            $this->jwtManager->addResponseCookie($response, ['bypass_maintenance' => true, 'debug' => $data['debug'] ?? false]);
+            $this->jwtManager->addResponseCookie($response, [
+                'bypass_maintenance' => true,
+                'debug' => $data['debug'] ?? false,
+            ]);
 
-            throw new ResponseException($response);
+            return $response;
         }
 
-        $template->message = $this->translator->trans('ERR.invalidLogin', [], 'contao_default');
+        return null;
     }
 
     private function logout(Request $request): void

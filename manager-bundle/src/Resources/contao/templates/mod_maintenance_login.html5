@@ -4,8 +4,8 @@
 
   <form id="<?= $this->formId ?>" method="post">
     <div class="formbody">
-      <?php if ($this->message): ?>
-        <p class="error"><?= $this->message ?></p>
+      <?php if ($this->invalidLogin): ?>
+        <p class="error"><?= $this->trans('ERR.invalidLogin') ?></p>
       <?php endif; ?>
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
       <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
