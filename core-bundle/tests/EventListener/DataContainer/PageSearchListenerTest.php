@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PageSearchListenerTest extends TestCase
 {
@@ -38,7 +37,6 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -71,7 +69,6 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -107,7 +104,6 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -140,7 +136,6 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -173,7 +168,6 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -209,7 +203,6 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -242,7 +235,6 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -310,7 +302,6 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
@@ -340,7 +331,6 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
