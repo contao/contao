@@ -95,7 +95,7 @@ class MaintenanceLoginControllerTest extends TestCase
 
         $controller($request, $this->mockClassWithProperties(ModuleModel::class), 'main');
 
-        $this->assertSame(true, $template->disabled);
+        $this->assertTrue($template->disabled);
     }
 
     /**

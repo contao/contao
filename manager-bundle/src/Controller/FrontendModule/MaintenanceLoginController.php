@@ -17,14 +17,12 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\ModuleModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MaintenanceLoginController extends AbstractFrontendModuleController
 {
