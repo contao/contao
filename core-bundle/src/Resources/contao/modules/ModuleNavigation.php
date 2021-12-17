@@ -69,7 +69,6 @@ class ModuleNavigation extends Module
 			$level = ($this->levelOffset > 0) ? $this->levelOffset : 0;
 		}
 
-		$lang = null;
 		$host = null;
 
 		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
@@ -77,14 +76,13 @@ class ModuleNavigation extends Module
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
-			$lang = $objRootPage->rootLanguage;
 			$host = $objRootPage->domain;
 		}
 
 		$this->Template->request = StringUtil::ampersand(Environment::get('indexFreeRequest'));
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
-		$this->Template->items = $this->renderNavigation($trail[$level], 1, $host, $lang);
+		$this->Template->items = $this->renderNavigation($trail[$level], 1, $host);
 	}
 }
 
