@@ -1589,12 +1589,10 @@ class PageUrlListenerTest extends TestCase
             ->willReturnCallback(static fn (int $pid) => $pagesByPid[$pid] ?? null)
         ;
 
-        $inputAdapter = $this->mockInputAdapter($inputData);
-
         return $this->mockContaoFramework(
             [
                 PageModel::class => $pageAdapter,
-                Input::class => $inputAdapter,
+                Input::class => $this->mockInputAdapter($inputData),
             ]
         );
     }
@@ -1605,7 +1603,6 @@ class PageUrlListenerTest extends TestCase
     private function mockInputAdapter(array $inputData): Adapter
     {
         $inputAdapter = $this->mockAdapter(['post']);
-
         $inputAdapter
             ->method('post')
             ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)
@@ -1669,7 +1666,6 @@ class PageUrlListenerTest extends TestCase
     private function mockPageRegistry(array $isRoutable = [true]): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
             ->method('isRoutable')
             ->willReturn(...$isRoutable)
