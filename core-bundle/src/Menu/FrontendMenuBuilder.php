@@ -83,20 +83,12 @@ class FrontendMenuBuilder
             }
 
             if ($page->tabindex > 0) {
-                trigger_deprecation(
-                    'contao/core-bundle',
-                    '4.12',
-                    'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.'
-                );
+                trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
             }
 
             // Hide the page if it is not protected and only visible to guests (backwards compatibility)
             if ($page->guests && !$page->protected && $isMember) {
-                trigger_deprecation(
-                    'contao/core-bundle',
-                    '4.12',
-                    'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.'
-                );
+                trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
                 continue;
             }
 
