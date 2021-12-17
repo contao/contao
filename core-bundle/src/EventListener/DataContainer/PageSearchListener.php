@@ -42,7 +42,7 @@ class PageSearchListener
     /**
      * @Callback(table="tl_page", target="fields.alias.save")
      */
-    public function purgeSearchIndexOnAliasChange(string $value, DataContainer $dc): string
+    public function onSaveAlias(string $value, DataContainer $dc): string
     {
         if ($value === $dc->activeRecord->alias) {
             return $value;
@@ -54,9 +54,37 @@ class PageSearchListener
     }
 
     /**
+     * @Callback(table="tl_page", target="fields.noSearch.save")
+     */
+    public function onSaveNoSearch(string $value, DataContainer $dc): string
+    {
+        if (!$value || $value === $dc->activeRecord->noSearch) {
+            return $value;
+        }
+
+        $this->purgeSearchIndex((int) $dc->id);
+
+        return $value;
+    }
+
+    /**
+     * @Callback(table="tl_page", target="fields.robots.save")
+     */
+    public function onSaveRobots(string $value, DataContainer $dc): string
+    {
+        if ($value === $dc->activeRecord->robots || 0 !== strncmp($value, 'noindex', 7)) {
+            return $value;
+        }
+
+        $this->purgeSearchIndex((int) $dc->id);
+
+        return $value;
+    }
+
+    /**
      * @Callback(table="tl_page", target="config.ondelete", priority=16)
      */
-    public function purgeSearchIndexOnDelete(DataContainer $dc): void
+    public function onDelete(DataContainer $dc): void
     {
         if (!$dc->id) {
             return;
@@ -65,7 +93,7 @@ class PageSearchListener
         $this->purgeSearchIndex((int) $dc->id);
     }
 
-    public function purgeSearchIndex(int $pageId): void
+    private function purgeSearchIndex(int $pageId): void
     {
         $urls = $this->connection->fetchFirstColumn(
             'SELECT url FROM tl_search WHERE pid=:pageId',

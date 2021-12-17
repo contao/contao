@@ -54,7 +54,7 @@ class PageSearchListenerTest extends TestCase
             $connection
         );
 
-        $listener->purgeSearchIndexOnAliasChange('bar', $dc);
+        $listener->onSaveAlias('bar', $dc);
     }
 
     public function testDoesNotPurgeTheSearchIndexWithUnchangedAlias(): void
@@ -87,7 +87,211 @@ class PageSearchListenerTest extends TestCase
             $connection
         );
 
-        $listener->purgeSearchIndexOnAliasChange('foo', $dc);
+        $listener->onSaveAlias('foo', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnNoSearchChange(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
+            ->willReturn(['uri'])
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->once())
+            ->method('removeEntry')
+            ->with('uri')
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 17,
+                'activeRecord' => (object) [
+                    'noSearch' => '',
+                ],
+            ]
+        );
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection
+        );
+
+        $listener->onSaveNoSearch('1', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexIfNoSearchIsDisabled(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 17,
+                'activeRecord' => (object) [
+                    'noSearch' => '1',
+                ],
+            ]
+        );
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection
+        );
+
+        $listener->onSaveNoSearch('0', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexWithUnchangedNoSearch(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 17,
+                'activeRecord' => (object) [
+                    'noSearch' => '1',
+                ],
+            ]
+        );
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection
+        );
+
+        $listener->onSaveNoSearch('1', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChange(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
+            ->willReturn(['uri'])
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->once())
+            ->method('removeEntry')
+            ->with('uri')
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 17,
+                'activeRecord' => (object) [
+                    'robots' => 'index,follow',
+                ],
+            ]
+        );
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection
+        );
+
+        $listener->onSaveRobots('noindex,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexIfRobotsIsIndex(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 17,
+                'activeRecord' => (object) [
+                    'robots' => 'noindex,follow',
+                ],
+            ]
+        );
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        /** @var MockObject&DataContainer $dc */
+        $dc = $this->mockClassWithProperties(
+            DataContainer::class,
+            [
+                'id' => 17,
+                'activeRecord' => (object) [
+                    'robots' => 'noindex,follow',
+                ],
+            ]
+        );
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection
+        );
+
+        $listener->onSaveRobots('noindex,follow', $dc);
     }
 
     public function testPurgesTheSearchIndexOnDelete(): void
@@ -120,7 +324,7 @@ class PageSearchListenerTest extends TestCase
             $connection
         );
 
-        $listener->purgeSearchIndexOnDelete($dc);
+        $listener->onDelete($dc);
     }
 
     public function testDoesNotPurgeTheSearchIndexWithoutId(): void
@@ -150,6 +354,6 @@ class PageSearchListenerTest extends TestCase
             $connection
         );
 
-        $listener->purgeSearchIndexOnDelete($dc);
+        $listener->onDelete($dc);
     }
 }

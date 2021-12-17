@@ -1208,8 +1208,8 @@ class tl_page extends Backend
 		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.');
 
 		System::getContainer()
-			->get('contao.listener.data_container.page_url')
-			->purgeSearchIndex((int) $dc->id)
+			->get('contao.listener.data_container.page_search')
+			->onDelete($dc)
 		;
 	}
 
