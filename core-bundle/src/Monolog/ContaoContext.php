@@ -67,15 +67,6 @@ class ContaoContext
         return $this->func;
     }
 
-    public function setFunc(string $func): void
-    {
-        if ('' === $func) {
-            throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
-        }
-
-        $this->func = $func;
-    }
-
     public function getAction(): ?string
     {
         return $this->action;
