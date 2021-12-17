@@ -34,7 +34,6 @@ class LoggerChannelPass implements CompilerPassInterface
         'forms',
         'email',
         'configuration',
-        'newsletter',
     ];
 
     private array $loggers = [];

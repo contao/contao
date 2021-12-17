@@ -625,7 +625,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('default_channels')
                     ->info('For each channel a decorated logger service with the ID monolog.logger.contao.[action] will be defined.')
                     ->scalarPrototype()->end()
-                    ->defaultValue(['access', 'configuration', 'cron', 'error', 'files', 'forms', 'general'])
+                    ->defaultValue(['access', 'configuration', 'cron', 'email', 'error', 'files', 'forms', 'general'])
                 ->end()
             ->end()
         ;

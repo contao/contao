@@ -155,7 +155,6 @@ class LoggerChannelPassTest extends TestCase
             ['forms', 'FORMS'],
             ['email', 'EMAIL'],
             ['configuration', 'CONFIGURATION'],
-            ['newsletter', 'NEWSLETTER'],
         ];
     }
 }

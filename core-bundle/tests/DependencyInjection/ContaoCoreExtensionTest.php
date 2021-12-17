@@ -542,7 +542,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $actions = $container->getParameter('contao.monolog.default_channels');
 
-        $this->assertSame(['access', 'configuration', 'cron', 'error', 'files', 'forms', 'general'], $actions);
+        $this->assertSame(['access', 'configuration', 'cron', 'email', 'error', 'files', 'forms', 'general'], $actions);
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder
