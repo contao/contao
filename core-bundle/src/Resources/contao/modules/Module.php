@@ -419,19 +419,19 @@ abstract class Module extends Frontend
 	 *
 	 * @return array
 	 */
-	private function compileMenuItem(ItemInterface $item, $subitems)
+	private function compileMenuItem(ItemInterface $menuItem, string $subitems): array
 	{
-		$row = $item->getExtras();
+		$item = $menuItem->getExtras();
 
-		$row['subitems'] = $subitems;
-		$row['title'] = $item->getLinkAttribute('title');
-		$row['link'] = $item->getExtra('title');
-		$row['href'] = $item->getUri();
-		$row['nofollow'] = (strncmp($item->getLinkAttribute('rel', ''), 'noindex,nofollow', 16) === 0); // backwards compatibility
-		$row['target'] = ($v = $item->getLinkAttribute('target')) ? " target=\"$v\"" : '';
-		$row['rel'] = ($v = $item->getLinkAttribute('rel')) ? " rel=\"$v\"" : '';
+		$item['subitems'] = $subitems;
+		$item['title'] = $menuItem->getLinkAttribute('title');
+		$item['link'] = $menuItem->getExtra('title');
+		$item['href'] = $menuItem->getUri();
+		$item['nofollow'] = (strncmp($menuItem->getLinkAttribute('rel', ''), 'noindex,nofollow', 16) === 0); // backwards compatibility
+		$item['target'] = ($v = $menuItem->getLinkAttribute('target')) ? " target=\"$v\"" : '';
+		$item['rel'] = ($v = $menuItem->getLinkAttribute('rel')) ? " rel=\"$v\"" : '';
 
-		return $row;
+		return $item;
 	}
 
 	/**
