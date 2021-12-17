@@ -14,8 +14,10 @@ namespace Monolog;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\SystemLogger;
+use PHPUnit\Framework\Constraint\Callback;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 class SystemLoggerTest extends TestCase
 {
@@ -28,26 +30,12 @@ class SystemLoggerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $action = 'foo';
 
-        $expectedContext = new ContaoContext(__METHOD__, $action);
-
         $logger
             ->expects($this->once())
             ->method($method)
             ->with(
                 $message,
-                $this->callback(
-                    function (array $context) use ($expectedContext) {
-                        /** @var ContaoContext $contaoContext */
-                        $contaoContext = $context['contao'] ?? null;
-
-                        $this->assertInstanceOf(ContaoContext::class, $contaoContext);
-                        $this->assertSame($expectedContext->getAction(), $contaoContext->getAction());
-                        $this->assertSame($expectedContext->getFunc(), $contaoContext->getFunc());
-                        $this->assertSame($expectedContext->getUsername(), $contaoContext->getUsername());
-
-                        return true;
-                    }
-                )
+                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action))
             )
         ;
 
@@ -68,5 +56,47 @@ class SystemLoggerTest extends TestCase
             ['info'],
             ['debug'],
         ];
+    }
+
+    public function testSetsContaoContextForLog(): void
+    {
+        $message = 'Log message';
+        $action = 'foo';
+        $level = LogLevel::INFO;
+        $logger = $this->createMock(LoggerInterface::class);
+
+        $logger
+            ->expects($this->once())
+            ->method('log')
+            ->with(
+                $level,
+                $message,
+                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action))
+            )
+        ;
+
+        (new SystemLogger($logger, $action))
+            ->log($level, $message)
+        ;
+    }
+
+    /**
+     * @return Callback<array>
+     */
+    private function assertExpectedContaoContext(ContaoContext $expectedContext): Callback
+    {
+        return $this->callback(
+            function (array $context) use ($expectedContext) {
+                /** @var ContaoContext $contaoContext */
+                $contaoContext = $context['contao'] ?? null;
+
+                $this->assertInstanceOf(ContaoContext::class, $contaoContext);
+                $this->assertSame($expectedContext->getAction(), $contaoContext->getAction());
+                $this->assertSame($expectedContext->getFunc(), $contaoContext->getFunc());
+                $this->assertSame($expectedContext->getUsername(), $contaoContext->getUsername());
+
+                return true;
+            }
+        );
     }
 }
