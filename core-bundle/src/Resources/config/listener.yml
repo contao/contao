@@ -313,6 +313,8 @@ services:
         class: Contao\CoreBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
+            - '@contao.routing.page_registry'
+            - '@http_kernel'
         tags:
             - kernel.event_listener
 

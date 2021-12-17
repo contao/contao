@@ -16,12 +16,15 @@ use Contao\CoreBundle\Tests\Fixtures\Twig\ChildClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Template;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Loader\ArrayLoader;
 
 class ContextFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testCreateContextFromTemplate(): void
     {
         $object = new \stdClass();
@@ -80,8 +83,15 @@ class ContextFactoryTest extends TestCase
         $this->assertSame($expectedOutput, $output);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreateContextFromClass(): void
     {
+        if (\PHP_VERSION_ID >= 80200) {
+            $this->expectDeprecation('Unsilenced deprecation: Creation of dynamic property %s is deprecated');
+        }
+
         $object = new ChildClassWithMembersStub();
         $context = (new ContextFactory())->fromClass($object);
 

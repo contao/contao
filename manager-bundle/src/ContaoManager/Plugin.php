@@ -450,7 +450,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
     {
         foreach ($extensionConfigs as $config) {
-            if (isset($config['mailer']) && (isset($config['mailer']['transports']) || $config['mailer']['dsn'])) {
+            if (isset($config['mailer']) && (isset($config['mailer']['transports']) || isset($config['mailer']['dsn']))) {
                 return $extensionConfigs;
             }
         }

@@ -61,13 +61,13 @@ class PageRegistry
         $options = $config->getOptions();
         $path = $config->getPath();
 
-        if (null === $path) {
+        if (false === $path || \in_array($type, self::DISABLE_ROUTING, true)) {
+            $path = '';
+            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
+        } elseif (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
-        } elseif (false === $path || \in_array($type, self::DISABLE_ROUTING, true)) {
-            $path = '';
-            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
@@ -195,6 +195,22 @@ class PageRegistry
 
         // Check if page controller is routable
         return false !== $this->routeConfigs[$type]->getPath();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getUnroutableTypes(): array
+    {
+        $types = self::DISABLE_ROUTING;
+
+        foreach ($this->routeConfigs as $type => $config) {
+            if (false === $config->getPath()) {
+                $types[] = $type;
+            }
+        }
+
+        return $types;
     }
 
     private function initializePrefixAndSuffix(): void

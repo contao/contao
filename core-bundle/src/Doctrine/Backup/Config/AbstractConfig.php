@@ -46,7 +46,7 @@ abstract class AbstractConfig
     /**
      * @return static
      */
-    public function withGzCompression(bool $enable)
+    public function withGzCompression(bool $enable)/*: static*/
     {
         $new = clone $this;
         $new->gzCompression = $enable;
@@ -57,7 +57,7 @@ abstract class AbstractConfig
     /**
      * @return static
      */
-    public function withTablesToIgnore(array $tablesToIgnore)
+    public function withTablesToIgnore(array $tablesToIgnore)/*: static*/
     {
         $new = clone $this;
         $new->tablesToIgnore = $this->filterTablesToIgnore($new->tablesToIgnore, $tablesToIgnore);
@@ -68,7 +68,7 @@ abstract class AbstractConfig
     /**
      * @return static
      */
-    public function withFilePath(string $filePath)
+    public function withFilePath(string $filePath)/*: static*/
     {
         $new = clone $this;
         $new->backup = new Backup($filePath);
