@@ -35,6 +35,8 @@ class PaletteManipulator
      *
      * @param string|array $parent
      * @param bool         $hide
+     *
+     * @throws PalettePositionException
      */
     public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, $hide = false): self
     {
@@ -146,6 +148,9 @@ class PaletteManipulator
         return $this->implode($config);
     }
 
+    /**
+     * @throws PalettePositionException
+     */
     private function validatePosition(string $position): void
     {
         static $positions = [

@@ -68,6 +68,8 @@ class FrontendController extends AbstractController
      * Symfony will un-authenticate the user automatically by calling this route.
      *
      * @Route("/_contao/logout", name="contao_frontend_logout")
+     *
+     * @return never
      */
     public function logoutAction(): void
     {
