@@ -14,13 +14,13 @@ namespace Contao\ManagerBundle\Tests\Controller\FrontendModule;
 
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\ManagerBundle\Controller\FrontendModule\MaintenanceLoginController;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MaintenanceLoginControllerTest extends TestCase
+class MaintenanceLoginControllerTest extends ContaoTestCase
 {
     public function testReturnsEmptyResponseWithoutJwtManager(): void
     {
