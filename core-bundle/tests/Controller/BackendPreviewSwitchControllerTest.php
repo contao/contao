@@ -85,11 +85,20 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame('CONTAO', $response->getContent());
     }
 
-    public function testProcessesAuthentication(): void
+    /**
+     * @dataProvider getAuthenticationScenarios
+     */
+    public function testProcessesAuthentication(?string $username, string $authenticateMethod): void
     {
+        $frontendPreviewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
+        $frontendPreviewAuthenticator
+            ->expects($this->once())
+            ->method($authenticateMethod)
+        ;
+
         $controller = new BackendPreviewSwitchController(
-            $this->createMock(FrontendPreviewAuthenticator::class),
-            $this->mockTokenChecker(),
+            $frontendPreviewAuthenticator,
+            $this->mockTokenChecker($username),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->getTwigMock(),
@@ -100,7 +109,10 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $request = new Request(
             [],
-            ['FORM_SUBMIT' => 'tl_switch'],
+            [
+                'FORM_SUBMIT' => 'tl_switch',
+                'user' => $username,
+            ],
             [],
             [],
             [],
@@ -110,6 +122,13 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    public function getAuthenticationScenarios(): \Generator
+    {
+        yield [null, 'authenticateFrontendGuest'];
+        yield ['', 'authenticateFrontendGuest'];
+        yield ['k.jones', 'authenticateFrontendUser'];
     }
 
     public function testReturnsEmptyMemberList(): void
