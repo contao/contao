@@ -34,18 +34,13 @@ class LoggerChannelPassTest extends TestCase
         $pass = new LoggerChannelPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
+        $this->assertTrue($container->hasDefinition('contao._logger.contao.dummy_service'));
 
-        $logger = $container->getDefinition('contao.dummy_service');
+        $decorator = $container->getDefinition('contao._logger.contao.dummy_service');
 
-        $this->assertSame(SystemLogger::class, $logger->getClass());
-        $this->assertSame('foo', $logger->getArgument(1));
-
-        $inner = $logger->getArgument(0);
-
-        $this->assertInstanceOf(ChildDefinition::class, $inner);
-        $this->assertSame('monolog.logger_prototype', $inner->getParent());
-        $this->assertSame('contao.foo', $inner->getArgument(0));
+        $this->assertSame(SystemLogger::class, $decorator->getClass());
+        $this->assertSame('contao.dummy_service', $decorator->getDecoratedService()[0]);
+        $this->assertSame('foo', $decorator->getArgument(1));
     }
 
     public function testDoesNotChangeServicesWithLoggersNotUsingContaoChannel(): void
@@ -60,13 +55,7 @@ class LoggerChannelPassTest extends TestCase
         $pass = new LoggerChannelPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
-
-        $logger = $container->getDefinition('contao.dummy_service');
-
-        $this->assertInstanceOf(ChildDefinition::class, $logger);
-        $this->assertSame('monolog.logger_prototype', $logger->getParent());
-        $this->assertSame('foo.bar', $logger->getArgument(0));
+        $this->assertFalse($container->hasDefinition('contao._logger.contao.dummy_service'));
     }
 
     public function testDoesNothingIfNoMonologLogger(): void
@@ -80,13 +69,7 @@ class LoggerChannelPassTest extends TestCase
         $pass = new LoggerChannelPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
-
-        $logger = $container->getDefinition('contao.dummy_service');
-
-        $this->assertInstanceOf(ChildDefinition::class, $logger);
-        $this->assertSame('monolog.logger_prototype', $logger->getParent());
-        $this->assertSame('contao.foo', $logger->getArgument(0));
+        $this->assertFalse($container->hasDefinition('contao._logger.contao.dummy_service'));
     }
 
     public function testDefinesLoggersForConfiguredDefaultActions(): void
@@ -129,15 +112,13 @@ class LoggerChannelPassTest extends TestCase
         $pass = new LoggerChannelPass();
         $pass->process($container);
 
-        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
+        $this->assertTrue($container->hasDefinition('contao._logger.contao.dummy_service'));
 
+        $decorator = $container->getDefinition('contao._logger.contao.dummy_service');
         $logger = $container->getDefinition('contao.dummy_service');
 
-        $this->assertSame($transformed, $logger->getArgument(1), 'The action name should be transformed.');
-
-        $inner = $logger->getArgument(0);
-
-        $this->assertSame('contao.'.$action, $inner->getArgument(0), 'The channel name should not be transformed.');
+        $this->assertSame($transformed, $decorator->getArgument(1), 'The action name should be transformed.');
+        $this->assertSame('contao.'.$action, $logger->getArgument(0), 'The channel name should not be transformed.');
     }
 
     /**

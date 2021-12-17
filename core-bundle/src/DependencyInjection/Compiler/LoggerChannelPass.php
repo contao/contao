@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @internal
@@ -63,10 +64,11 @@ class LoggerChannelPass implements CompilerPassInterface
 
         foreach ($container->getDefinitions() as $id => $definition) {
             if (!\in_array($id, $this->loggers, true) && $this->isContaoChannelLoggerDefinition($definition)) {
-                $container->setDefinition(
-                    $id,
-                    new Definition(SystemLogger::class, [$definition, $this->getContaoActionFromChannel($definition->getArgument(0))])
-                );
+                $container
+                    ->register("contao._logger.$id", SystemLogger::class)
+                    ->setDecoratedService($id)
+                    ->setArguments([new Reference("contao._logger.$id.inner"), $this->getContaoActionFromChannel($definition->getArgument(0))])
+                ;
             }
         }
     }
