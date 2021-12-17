@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Monolog\SystemLogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -57,6 +58,8 @@ class LoggerChannelPass implements CompilerPassInterface
                         // Public service for legacy use without dependency injection
                         ->setPublic(true)
                 );
+
+                $container->registerAliasForArgument($id, LoggerInterface::class, 'contao.'.$action.'.logger');
 
                 $this->loggers[] = $id;
             }
