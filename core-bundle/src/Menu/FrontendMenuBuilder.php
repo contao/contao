@@ -134,6 +134,25 @@ class FrontendMenuBuilder
     }
 
     /**
+     * Get all published pages by their IDs.
+     *
+     * @return array<array{page:PageModel,hasSubpages:bool}>|null
+     */
+    protected function findPagesByIds(array $pageIds): ?array
+    {
+        // Get all active pages and also include root pages if the language is added to the URL (see #72)
+        $pages = PageModel::findPublishedRegularByIds($pageIds, ['includeRoot' => true]);
+
+        return array_map(
+            static fn (PageModel $page): array => [
+                'page' => $page,
+                'hasSubpages' => false,
+            ],
+            iterator_to_array($pages)
+        );
+    }
+
+    /**
      * Get all published pages by their parent ID and add the "hasSubpages" property.
      *
      * @return array<array{page:PageModel,hasSubpages:bool}>|null
@@ -167,6 +186,10 @@ class FrontendMenuBuilder
 
     private function getPages(int $pid, array $options): ?array
     {
+        if ($options['isCustomNav'] ?? false) {
+            return $this->findPagesByIds($options['pages']);
+        }
+
         return $this->findPagesByPid($pid, (bool) $options['showHidden']);
     }
 

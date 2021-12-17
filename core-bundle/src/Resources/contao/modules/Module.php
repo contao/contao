@@ -419,7 +419,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array
 	 */
-	private function compileMenuItem(ItemInterface $menuItem, string $subitems): array
+	protected function compileMenuItem(ItemInterface $menuItem, string $subitems = ''): array
 	{
 		$item = $menuItem->getExtras();
 
