@@ -89,6 +89,13 @@ services:
             - '@database_connection'
             - '@translator'
 
+    contao.listener.data_container.page_search:
+        class: Contao\CoreBundle\EventListener\DataContainer\PageSearchListener
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
     contao.listener.data_container.page_type_options:
         class: Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener
         public: true
