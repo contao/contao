@@ -126,54 +126,8 @@ class FrontendMenuBuilder
                 }
             }
 
-            switch ($page->type) {
-                case 'redirect':
-                    $href = $page->url;
-
-                    if (0 === strncasecmp($href, 'mailto:', 7)) {
-                        $href = StringUtil::encodeEmail($href);
-                    }
-
-                    break;
-
-                case 'root':
-                    // Overwrite the alias to link to the empty URL or language URL (see #1641)
-                    $page->alias = 'index';
-                    $href = $page->getFrontendUrl();
-                    break;
-
-                case 'forward':
-                    if ($page->jumpTo) {
-                        $jumpTo = PageModel::findPublishedById($page->jumpTo);
-                    } else {
-                        $jumpTo = PageModel::findFirstPublishedRegularByPid($page->id);
-                    }
-
-                    // Hide the link if the target page is invisible
-                    if (!$jumpTo instanceof PageModel || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->hasBackendUser())) {
-                        $item->setDisplay(false);
-                    }
-
-                    try {
-                        $href = $jumpTo->getFrontendUrl();
-                    } catch (ExceptionInterface $exception) {
-                        $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $page->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
-
-                        continue 2;
-                    }
-
-                    break;
-
-                default:
-                    try {
-                        $href = $page->getFrontendUrl();
-                    } catch (ExceptionInterface $exception) {
-                        $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $page->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
-
-                        continue 2;
-                    }
-
-                    break;
+            if (null === $href = $this->generateUri($page, $item)) {
+                continue;
             }
 
             $this->populateMenuItem($item, $requestPage, $page, $href, $options);
@@ -222,6 +176,55 @@ class FrontendMenuBuilder
     private function getPages(int $pid, array $options): ?array
     {
         return $this->findPagesByPid($pid, (bool) $options['showHidden']);
+    }
+
+    private function generateUri(PageModel $pageModel, ItemInterface $menuItem): ?string
+    {
+        switch ($pageModel->type) {
+            case 'redirect':
+                $href = $pageModel->url;
+
+                if (0 === strncasecmp($href, 'mailto:', 7)) {
+                    $href = StringUtil::encodeEmail($href);
+                }
+
+                return $href;
+
+            case 'root':
+                // Overwrite the alias to link to the empty URL or language URL (see #1641)
+                $pageModel->alias = 'index';
+
+                return $pageModel->getFrontendUrl();
+
+            case 'forward':
+                if ($pageModel->jumpTo) {
+                    $jumpTo = PageModel::findPublishedById($pageModel->jumpTo);
+                } else {
+                    $jumpTo = PageModel::findFirstPublishedRegularByPid($pageModel->id);
+                }
+
+                // Hide the link if the target page is invisible
+                if (!$jumpTo instanceof PageModel || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->hasBackendUser())) {
+                    $menuItem->setDisplay(false);
+                }
+
+                try {
+                    return $jumpTo->getFrontendUrl();
+                } catch (ExceptionInterface $exception) {
+                    $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $pageModel->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
+
+                    return null;
+                }
+
+            default:
+                try {
+                    return $pageModel->getFrontendUrl();
+                } catch (ExceptionInterface $exception) {
+                    $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $pageModel->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
+
+                    return null;
+                }
+        }
     }
 
     private function populateMenuItem(MenuItem $item, PageModel $requestPage, PageModel $page, ?string $href, array $options = []): void
