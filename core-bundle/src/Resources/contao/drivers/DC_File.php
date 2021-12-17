@@ -33,7 +33,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Could not load data container configuration for "' . $strTable . '"');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -456,11 +456,11 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
 				{
-					System::getContainer()->get('contao.monolog.logger')->asContaoConfiguration()->info('The global configuration variable "' . $this->strField . '" has been changed');
+					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed');
 				}
 				else
 				{
-					System::getContainer()->get('contao.monolog.logger')->asContaoConfiguration()->info('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"');
+					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"');
 				}
 			}
 

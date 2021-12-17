@@ -526,6 +526,25 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
+    public function testConfiguresTheMonologChannelActions(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+                'kernel.charset' => 'UTF-8',
+            ])
+        );
+
+        $container->setParameter('kernel.bundles', ['MonologBundle' => 'Foo']);
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
+        $actions = $container->getParameter('contao.monolog.default_channels');
+
+        $this->assertSame(['access', 'configuration', 'cron', 'error', 'files', 'forms', 'general'], $actions);
+    }
+
     private function getContainerBuilder(array $params = null): ContainerBuilder
     {
         $container = new ContainerBuilder(

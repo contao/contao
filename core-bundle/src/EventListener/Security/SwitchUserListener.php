@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Security;
 
-use Contao\CoreBundle\Monolog\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
@@ -46,9 +46,6 @@ class SwitchUserListener
         $sourceUser = $token->getUserIdentifier();
         $targetUser = $event->getTargetUser()->getUserIdentifier();
 
-        $this->logger
-            ->asContaoAccess()
-            ->info(sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser))
-        ;
+        $this->logger->info(sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
     }
 }

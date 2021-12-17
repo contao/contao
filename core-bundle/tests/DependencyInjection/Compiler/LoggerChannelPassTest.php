@@ -1,0 +1,180 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
+
+use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
+use Contao\CoreBundle\Monolog\SystemLogger;
+use Contao\CoreBundle\Tests\TestCase;
+use Monolog\Logger;
+use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+
+class LoggerChannelPassTest extends TestCase
+{
+    public function testDecoratesServicesWithLoggersUsingContaoChannel(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition());
+
+        $definition = new ChildDefinition('monolog.logger_prototype');
+        $definition->setArgument(0, 'contao.foo');
+        $container->setDefinition('contao.dummy_service', $definition);
+
+        $pass = new LoggerChannelPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
+
+        $logger = $container->getDefinition('contao.dummy_service');
+
+        $this->assertSame(SystemLogger::class, $logger->getClass());
+        $this->assertSame('foo', $logger->getArgument(1));
+
+        $inner = $logger->getArgument(0);
+
+        $this->assertInstanceOf(ChildDefinition::class, $inner);
+        $this->assertSame('monolog.logger_prototype', $inner->getParent());
+        $this->assertSame('contao.foo', $inner->getArgument(0));
+    }
+
+    public function testDoesNotChangeServicesWithLoggersNotUsingContaoChannel(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition());
+
+        $definition = new ChildDefinition('monolog.logger_prototype');
+        $definition->setArgument(0, 'foo.bar');
+        $container->setDefinition('contao.dummy_service', $definition);
+
+        $pass = new LoggerChannelPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
+
+        $logger = $container->getDefinition('contao.dummy_service');
+
+        $this->assertInstanceOf(ChildDefinition::class, $logger);
+        $this->assertSame('monolog.logger_prototype', $logger->getParent());
+        $this->assertSame('foo.bar', $logger->getArgument(0));
+    }
+
+    public function testDoesNothingIfNoMonologLogger(): void
+    {
+        $container = new ContainerBuilder();
+
+        $definition = new ChildDefinition('monolog.logger_prototype');
+        $definition->setArgument(0, 'contao.foo');
+        $container->setDefinition('contao.dummy_service', $definition);
+
+        $pass = new LoggerChannelPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
+
+        $logger = $container->getDefinition('contao.dummy_service');
+
+        $this->assertInstanceOf(ChildDefinition::class, $logger);
+        $this->assertSame('monolog.logger_prototype', $logger->getParent());
+        $this->assertSame('contao.foo', $logger->getArgument(0));
+    }
+
+    public function testDefinesLoggersForConfiguredDefaultActions(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition(Logger::class, ['app']));
+        $container->setParameter('contao.monolog.default_channels', ['foo']);
+
+        $pass = new LoggerChannelPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('monolog.logger.contao.foo'));
+
+        $logger = $container->getDefinition('monolog.logger.contao.foo');
+
+        $this->assertTrue($logger->isPublic());
+
+        $this->assertSame(SystemLogger::class, $logger->getClass());
+        $this->assertSame('foo', $logger->getArgument(1));
+
+        $inner = $logger->getArgument(0);
+
+        $this->assertInstanceOf(Definition::class, $inner);
+        $this->assertSame(Logger::class, $inner->getClass());
+        $this->assertSame('contao.foo', $inner->getArgument(0));
+    }
+
+    /**
+     * @dataProvider legacyActionNamesProvider
+     */
+    public function testTransformsLegacyActionNamesForLoggersUsingContaoChannel(string $action, string $transformed): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition());
+
+        $definition = new ChildDefinition('monolog.logger_prototype');
+        $definition->setArgument(0, 'contao.'.$action);
+        $container->setDefinition('contao.dummy_service', $definition);
+
+        $pass = new LoggerChannelPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('contao.dummy_service'));
+
+        $logger = $container->getDefinition('contao.dummy_service');
+
+        $this->assertSame($transformed, $logger->getArgument(1), 'The action name should be transformed.');
+
+        $inner = $logger->getArgument(0);
+
+        $this->assertSame('contao.'.$action, $inner->getArgument(0), 'The channel name should not be transformed.');
+    }
+
+    /**
+     * @dataProvider legacyActionNamesProvider
+     */
+    public function testTransformsLegacyActionNamesForConfiguredDefaultActions(string $action, string $transformed): void
+    {
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition(Logger::class, ['app']));
+        $container->setParameter('contao.monolog.default_channels', [$action]);
+
+        $pass = new LoggerChannelPass();
+        $pass->process($container);
+
+        $this->assertTrue($container->hasDefinition('monolog.logger.contao.'.$action));
+
+        $logger = $container->getDefinition('monolog.logger.contao.'.$action);
+        $this->assertSame($transformed, $logger->getArgument(1), 'The action name should be transformed.');
+
+        $inner = $logger->getArgument(0);
+
+        $this->assertInstanceOf(Definition::class, $inner);
+        $this->assertSame('contao.'.$action, $inner->getArgument(0), 'The channel name should not be transformed.');
+    }
+
+    public function legacyActionNamesProvider(): array
+    {
+        return [
+            ['error', 'ERROR'],
+            ['access', 'ACCESS'],
+            ['general', 'GENERAL'],
+            ['files', 'FILES'],
+            ['cron', 'CRON'],
+            ['forms', 'FORMS'],
+            ['email', 'EMAIL'],
+            ['configuration', 'CONFIGURATION'],
+            ['newsletter', 'NEWSLETTER'],
+        ];
+    }
+}

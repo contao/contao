@@ -383,6 +383,7 @@ services:
             - '@logger'
         tags:
             - kernel.event_listener
+            - {name: 'monolog.logger', channel: 'contao.access' }
 
     contao.listener.security.two_factor_frontend:
         class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener

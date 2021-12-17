@@ -19,10 +19,10 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Monolog\LoggerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\System;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -318,11 +318,6 @@ class ControllerTest extends TestCase
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('asContaoError')
-            ->willReturnSelf()
-        ;
 
         $logger
             ->expects($this->once())
@@ -347,7 +342,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
-        $container->set('contao.monolog.logger', $logger);
+        $container->set('contao.monolog.logger.error', $logger);
 
         System::setContainer($container);
 

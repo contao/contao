@@ -390,12 +390,6 @@ services:
         tags:
             - { name: monolog.logger, channel: contao }
 
-    contao.monolog.logger:
-        class: Contao\CoreBundle\Monolog\Logger
-        public: true
-        arguments:
-            - '@logger'
-
     contao.monolog.processor:
         class: Contao\CoreBundle\Monolog\ContaoTableProcessor
         arguments:
@@ -970,7 +964,6 @@ services:
     Contao\CoreBundle\Intl\Locales:
         alias: contao.intl.locales
         public: true # backwards compatibility
-    Contao\CoreBundle\Monolog\LoggerInterface: '@contao.monolog.logger'
     Contao\CoreBundle\OptIn\OptIn:
         alias: contao.opt_in
         public: true # backwards compatibility

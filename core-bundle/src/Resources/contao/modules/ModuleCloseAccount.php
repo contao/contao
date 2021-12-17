@@ -114,7 +114,7 @@ class ModuleCloseAccount extends Module
 
 					$objMember->delete();
 
-					System::getContainer()->get('contao.monolog.logger')->asContaoAccess()->info('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted');
+					System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted');
 				}
 				// Deactivate the account
 				else
@@ -123,7 +123,7 @@ class ModuleCloseAccount extends Module
 					$objMember->tstamp = time();
 					$objMember->save();
 
-					System::getContainer()->get('contao.monolog.logger')->asContaoAccess()->info('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated');
+					System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated');
 				}
 
 				// Log out the user (see #93)

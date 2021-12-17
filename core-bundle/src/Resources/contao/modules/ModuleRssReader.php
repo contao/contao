@@ -76,7 +76,7 @@ class ModuleRssReader extends Module
 
 		if (!$this->objFeed->init())
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Error importing RSS feed "' . $this->rss_feed . '"');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Error importing RSS feed "' . $this->rss_feed . '"');
 
 			return '';
 		}

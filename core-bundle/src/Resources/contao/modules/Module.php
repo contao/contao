@@ -372,7 +372,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
+							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
 
 							continue 2;
 						}
@@ -385,7 +385,7 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
+							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
 
 							continue 2;
 						}

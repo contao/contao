@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
-use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -113,7 +111,7 @@ trait TemplateInheritance
 				}
 				else
 				{
-					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Invalid template path: ' . StringUtil::stripRootDir($strParent));
+					System::getContainer()->get('monolog.logger.contao.error')->error('Invalid template path: ' . StringUtil::stripRootDir($strParent));
 				}
 
 				// Capture the output of the root template

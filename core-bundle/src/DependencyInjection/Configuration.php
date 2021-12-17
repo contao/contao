@@ -118,6 +118,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackendNode())
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
+                ->append($this->addMonologNode())
             ->end()
         ;
 
@@ -610,6 +611,21 @@ class Configuration implements ConfigurationInterface
                 ->integerNode('keep_max')
                     ->info('The maximum number of backups to keep.')
                     ->defaultValue(5)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addMonologNode(): NodeDefinition
+    {
+        return (new TreeBuilder('monolog'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('default_channels')
+                    ->info('For each channel a decorated logger service with the ID monolog.logger.contao.[action] will be defined.')
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['access', 'configuration', 'cron', 'error', 'files', 'forms', 'general'])
                 ->end()
             ->end()
         ;

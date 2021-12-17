@@ -134,7 +134,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Could not load the data container configuration for "' . $strTable . '"');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load the data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
@@ -666,7 +666,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				System::getContainer()->get('contao.monolog.logger')->logInfo('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
+				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
 
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
@@ -963,7 +963,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				System::getContainer()->get('contao.monolog.logger')->logInfo('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
+				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
 
 				// Switch to edit mode
 				if (!$blnDoNotRedirect)
@@ -1530,7 +1530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
 			{
-				System::getContainer()->get('contao.monolog.logger')->logInfo('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id']);
+				System::getContainer()->get('monolog.logger.contao.general')->info('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id']);
 			}
 		}
 
@@ -1698,7 +1698,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add log entry and delete record from tl_undo if there was no error
 		if (!$error)
 		{
-			System::getContainer()->get('contao.monolog.logger')->logInfo('Undone ' . $query);
+			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
 			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)

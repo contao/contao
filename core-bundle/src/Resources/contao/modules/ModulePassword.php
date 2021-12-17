@@ -325,7 +325,7 @@ class ModulePassword extends Module
 			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 
-		System::getContainer()->get('contao.monolog.logger')->asContaoAccess()->info('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')');
+		System::getContainer()->get('monolog.logger.contao.access')->info('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')');
 
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

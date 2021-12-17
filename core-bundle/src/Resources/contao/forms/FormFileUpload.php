@@ -295,7 +295,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 						'uuid'     => $strUuid
 					);
 
-					System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded');
+					System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded');
 				}
 			}
 		}

@@ -1233,7 +1233,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Page ID "' . $this->id . '" does not belong to a root page');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
 			throw new NoRootPageFoundException('No root page found');
 		}

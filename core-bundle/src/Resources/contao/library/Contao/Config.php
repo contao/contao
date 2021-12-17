@@ -313,7 +313,7 @@ class Config
 		// Make sure the file has been written (see #4483)
 		if (!filesize($strTemp))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('The local configuration file could not be written. Have you reached your quota limit?');
+			System::getContainer()->get('monolog.logger.contao.error')->error('The local configuration file could not be written. Have you reached your quota limit?');
 
 			return;
 		}

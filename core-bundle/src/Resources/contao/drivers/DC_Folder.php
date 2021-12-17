@@ -152,7 +152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Could not load data container configuration for "' . $strTable . '"');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -761,7 +761,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
+			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
 		}
 
 		// Redirect
@@ -926,7 +926,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
+		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1048,7 +1048,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			Dbafs::deleteResource($source);
 		}
 
-		System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File or folder "' . $source . '" has been deleted');
+		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -2225,7 +2225,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('Folder "' . $this->intId . '" has been protected');
+			System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->intId . '" has been protected');
 		}
 		else
 		{
@@ -2235,7 +2235,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('The protection from folder "' . $this->intId . '" has been removed');
+			System::getContainer()->get('monolog.logger.contao.files')->info('The protection from folder "' . $this->intId . '" has been removed');
 		}
 
 		$this->redirect($this->getReferer());
@@ -2315,7 +2315,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
-				System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
+				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
 			}
 			else
 			{
@@ -2339,7 +2339,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					}
 				}
 
-				System::getContainer()->get('contao.monolog.logger')->asContaoFiles()->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
+				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
 			}
 
 			$strWebDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));

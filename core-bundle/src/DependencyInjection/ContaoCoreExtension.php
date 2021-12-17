@@ -117,6 +117,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
+        $container->setParameter('contao.monolog.default_channels', $config['monolog']['default_channels']);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)

@@ -22,6 +22,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
@@ -118,5 +119,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RewireTwigPathsPass());
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
+        $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
     }
 }

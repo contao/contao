@@ -395,7 +395,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist');
 
 			return '';
 		}
@@ -577,7 +577,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist');
 
 			return '';
 		}
@@ -652,7 +652,7 @@ abstract class Controller extends System
 
 		if (!class_exists($strClass))
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Form class "' . $strClass . '" does not exist');
+			System::getContainer()->get('monolog.logger.contao.error')->error('Form class "' . $strClass . '" does not exist');
 
 			return '';
 		}
@@ -1737,7 +1737,7 @@ abstract class Controller extends System
 
 		if (null === $figure)
 		{
-			System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
+			System::getContainer()->get('contao.monolog.logger.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
 
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)

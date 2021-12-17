@@ -13,7 +13,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
@@ -948,7 +947,7 @@ class tl_page extends Backend
 			{
 				if (!in_array($id, $pagemounts))
 				{
-					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Page ID ' . $id . ' was not mounted');
+					System::getContainer()->get('monolog.logger.contao.error')->error('Page ID ' . $id . ' was not mounted');
 
 					$error = true;
 					break;
@@ -973,7 +972,7 @@ class tl_page extends Backend
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
 				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
-					System::getContainer()->get('contao.monolog.logger')->asContaoError()->error('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages');
+					System::getContainer()->get('monolog.logger.contao.error')->error('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages');
 
 					$error = true;
 					break;
