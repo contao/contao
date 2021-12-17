@@ -345,6 +345,8 @@ abstract class Module extends Frontend
 	 */
 	protected function compileNavigationRow(PageModel $objPage, PageModel $objSubpage, $subitems, $href)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using Module::compileNavigationRow() has been deprecated and will no longer work Contao 5.0.');
+
 		$row = $objSubpage->row();
 		$trail = \in_array($objSubpage->id, $objPage->trail);
 
