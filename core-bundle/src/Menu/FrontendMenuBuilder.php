@@ -186,7 +186,7 @@ class FrontendMenuBuilder
 
     private function getPages(int $pid, array $options): ?array
     {
-        if ($options['isCustomNav'] ?? false) {
+        if (0 === $pid && $options['pages']) {
             return $this->findPagesByIds($options['pages']);
         }
 
