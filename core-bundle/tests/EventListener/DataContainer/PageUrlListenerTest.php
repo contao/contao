@@ -1255,7 +1255,7 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findWithDetails')
             ->with(1)
             ->willReturn(null)
         ;
@@ -1486,7 +1486,7 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter = $this->mockAdapter(['findByPk']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findWithDetails')
             ->with(1)
             ->willReturn(null)
         ;

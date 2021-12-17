@@ -115,7 +115,7 @@ class PageUrlListener implements ResetInterface
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findByPk($dc->id);
+        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
         if (null === $rootPage) {
             return $value;
@@ -146,7 +146,7 @@ class PageUrlListener implements ResetInterface
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findByPk($dc->id);
+        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
         if (null === $rootPage) {
             return $value;
