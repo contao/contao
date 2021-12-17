@@ -28,16 +28,17 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
-    public function testAddsBackendContext(): void
+    public function testAddsAndMergesBackendContext(): void
     {
         $controller = new class() extends AbstractBackendController {
             public function fooAction(): Response
             {
-                return $this->render('custom_be.html.twig', ['foo' => 'bar']);
+                return $this->render('custom_be.html.twig', ['foo' => 'bar', 'version' => 'my version']);
             }
         };
 
         // Legacy setup
+        \Contao\Environment::reset();
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         $GLOBALS['TL_LANG']['MSC'] = [
@@ -48,16 +49,20 @@ class AbstractBackendControllerTest extends TestCase
         ];
         $GLOBALS['TL_LANGUAGE'] = 'en';
         $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
-        \define('TL_FILES_URL', '');
+        $_SERVER['HTTP_HOST'] = 'localhost';
+
+        if (!\defined('TL_FILES_URL')) {
+            \define('TL_FILES_URL', '');
+        }
 
         $expectedContext = [
-            'version' => 'version 4.x-dev',
+            'version' => 'my version',
             'headline' => 'dashboard',
             'title' => '',
             'theme' => 'flexible',
-            'base' => 'http:///',
+            'base' => 'http://localhost/',
             'language' => 'en',
-            'host' => '',
+            'host' => 'localhost',
             'charset' => 'UTF-8',
             'home' => 'home',
             'isPopup' => null,
@@ -75,7 +80,7 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
 
         // Cleanup
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $_SERVER['HTTP_USER_AGENT']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_HOST']);
     }
 
     private function getContainerWithDefaultConfiguration(array $expectedContext): ContainerBuilder
