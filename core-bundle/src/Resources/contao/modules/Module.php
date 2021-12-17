@@ -10,10 +10,9 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Menu\FrontendMenuBuilder;
 use Contao\Model\Collection;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Knp\Menu\ItemInterface;
 
 /**
  * Parent class for front end modules.
@@ -275,19 +274,21 @@ abstract class Module extends Frontend
 	 *
 	 * @return string
 	 */
-	protected function renderNavigation($pid, $level=1, $host=null, $language=null)
+	protected function renderNavigation($pid, $level=1, $host=null/*, $language=null*/)
 	{
-		// Get all active subpages
-		$arrSubpages = static::getPublishedSubpagesByPid($pid, $this->showHidden, $this instanceof ModuleSitemap);
+		/** @var FrontendMenuBuilder $menuBuilder */
+		$menuBuilder = System::getContainer()->get('contao.menu.frontend_builder');
+		$root = System::getContainer()->get('knp_menu.factory')->createItem('root');
 
-		if ($arrSubpages === null)
+		$options = $this->arrData;
+		$options += array('isSitemap' => $this instanceof ModuleSitemap);
+
+		$menu = $menuBuilder->getMenu($root, $pid, $level, $host, $options);
+
+		if (!$menu->count())
 		{
 			return '';
 		}
-
-		$items = array();
-		$security = System::getContainer()->get('security.helper');
-		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
@@ -296,105 +297,24 @@ abstract class Module extends Frontend
 		$objTemplate->level = 'level_' . $level++;
 		$objTemplate->module = $this; // see #155
 
-		/** @var PageModel $objPage */
-		global $objPage;
+		$items = array();
 
 		// Browse subpages
-		foreach ($arrSubpages as list('page' => $objSubpage, 'hasSubpages' => $blnHasSubpages))
+		/** @var ItemInterface $menuItem */
+		foreach ($menu as $menuItem)
 		{
-			// Skip hidden sitemap pages
-			if ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_never')
-			{
-				continue;
-			}
-
-			$objSubpage->loadDetails();
-
-			// Override the domain (see #3765)
-			if ($host !== null)
-			{
-				$objSubpage->domain = $host;
-			}
-
-			if ($objSubpage->tabindex > 0)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-			}
-
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			$subitems = '';
 
-			// PageModel->groups is an array after calling loadDetails()
-			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
-			{
-				// Check whether there will be subpages
-				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
-				{
-					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
-				}
-
-				// Get href
-				switch ($objSubpage->type)
-				{
-					case 'redirect':
-						$href = $objSubpage->url;
-
-						if (strncasecmp($href, 'mailto:', 7) === 0)
-						{
-							$href = StringUtil::encodeEmail($href);
-						}
-						break;
-
-					case 'forward':
-						if ($objSubpage->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-						}
-
-						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
-						{
-							continue 2;
-						}
-
-						try
-						{
-							$href = $objNext->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
-
-							continue 2;
-						}
-						break;
-
-					default:
-						try
-						{
-							$href = $objSubpage->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
-
-							continue 2;
-						}
-						break;
-				}
-
-				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
+			// Check whether there will be subpages
+			if (
+				$menuItem->hasChildren()
+				&& $menuItem->getDisplayChildren()
+				&& null !== $pageModel = $menuItem->getExtra('pageModel')
+			) {
+				$subitems = $this->renderNavigation($pageModel->id, $level, $host);
 			}
+
+			$items[] = $this->compileMenuItem($menuItem, $subitems);
 		}
 
 		// Add classes first and last
@@ -420,6 +340,8 @@ abstract class Module extends Frontend
 	 * @param string    $href
 	 *
 	 * @return array
+	 *
+	 * @deprecated Will be removed in Contao 5.0
 	 */
 	protected function compileNavigationRow(PageModel $objPage, PageModel $objSubpage, $subitems, $href)
 	{
@@ -491,6 +413,26 @@ abstract class Module extends Frontend
 	}
 
 	/**
+	 * Prepare menu item for usage in nav_* templates.
+	 *
+	 * @return array
+	 */
+	private function compileMenuItem(ItemInterface $item, $subitems)
+	{
+		$row = $item->getExtras();
+
+		$row['subitems'] = $subitems;
+		$row['title'] = $item->getLinkAttribute('title');
+		$row['link'] = $item->getExtra('title');
+		$row['href'] = $item->getUri();
+		$row['nofollow'] = (strncmp($item->getLinkAttribute('rel', ''), 'noindex,nofollow', 16) === 0); // backwards compatibility
+		$row['target'] = ($v = $item->getLinkAttribute('target')) ? " target=\"$v\"" : '';
+		$row['rel'] = ($v = $item->getLinkAttribute('rel')) ? " rel=\"$v\"" : '';
+
+		return $row;
+	}
+
+	/**
 	 * Get all published pages by their parent ID and add the "hasSubpages" property
 	 *
 	 * @param integer $intPid        The parent page's ID
@@ -498,9 +440,13 @@ abstract class Module extends Frontend
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
+	 *
+	 * @deprecated Will be removed in Contao 5.0
 	 */
 	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using Module::getPublishedSubpagesByPid() has been deprecated and will no longer work Contao 5.0.');
+
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();

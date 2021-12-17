@@ -20,6 +20,12 @@
       <trans-unit id="tl_module.type.1">
         <source>Please choose the type of module.</source>
       </trans-unit>
+      <trans-unit id="tl_module.menuAlias.0">
+        <target>Menu alias</target>
+      </trans-unit>
+      <trans-unit id="tl_module.menuAlias.1">
+        <target>The alias allows you to reference this navigation module as KnpMenu instance in Twig templates.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
       </trans-unit>

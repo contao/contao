@@ -373,6 +373,17 @@ services:
         arguments:
             - '@contao.menu.matcher'
 
+    contao.menu.frontend_builder:
+        class: Contao\CoreBundle\Menu\FrontendMenuBuilder
+        arguments: ['@Knp\Menu\FactoryInterface', '@request_stack', '@event_dispatcher', '@database_connection', '@contao.routing.page_registry', '@contao.security.token_checker', '@security.helper', '@logger']
+        public: true
+
+    contao.menu.navigation_module_provider:
+        class: Contao\CoreBundle\Menu\NavigationModuleProvider
+        arguments: ['@Knp\Menu\FactoryInterface', '@contao.menu.frontend_builder',  '@contao.framework', '@request_stack']
+        tags:
+            - { name: knp_menu.provider }
+
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
         arguments:
