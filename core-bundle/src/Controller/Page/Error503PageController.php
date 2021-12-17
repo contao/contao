@@ -19,7 +19,7 @@ use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Page("error_503")
+ * @Page("error_503", path=false)
  */
 class Error503PageController extends AbstractController
 {
