@@ -82,7 +82,7 @@
 
       <?php $this->block('main'); ?>
         <main id="main" aria-labelledby="main_headline">
-          <h1 id="main_headline"><?php $this->block('main_headline'); ?><?= $this->headline ?><?php $this->endblock(); ?></h1>
+          <h1 id="main_headline"><?= $this->headline ?></h1>
           <div class="content">
             <?php if ($this->pickerMenu): ?>
               <div id="picker-menu">

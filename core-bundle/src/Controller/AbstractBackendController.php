@@ -20,7 +20,7 @@ use Contao\Environment;
 use Contao\Input;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class AbstractCustomBackendController extends AbstractController
+abstract class AbstractBackendController extends AbstractController
 {
     /**
      * Render a Twig template with additional context for `@Contao/be_main`.
@@ -39,9 +39,7 @@ abstract class AbstractCustomBackendController extends AbstractController
                     $this->objAjax->executePreActions();
                 }
 
-                $this->output();
-
-                return $this->Template->getData();
+                return $this->compileTemplateData($this->Template->getData());
             }
         })();
 
