@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $title
  * @property string                 $alias
  * @property string                 $type
+ * @property string|integer         $routePriority
  * @property string                 $pageTitle
  * @property string                 $language
  * @property string                 $robots
@@ -316,6 +317,9 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
+	private static ?array $prefixes = null;
+	private static ?array $suffixes = null;
+
 	public function __set($strKey, $varValue)
 	{
 		// Deprecate setting dynamic page attributes if they are set on the global $objPage
@@ -369,6 +373,12 @@ class PageModel extends Model
 		}
 
 		parent::__set($strKey, $varValue);
+	}
+
+	public static function reset()
+	{
+		self::$prefixes = null;
+		self::$suffixes = null;
 	}
 
 	/**
@@ -681,6 +691,21 @@ class PageModel extends Model
 		}
 
 		return static::findBy($arrColumns, null, $arrOptions);
+	}
+
+	/**
+	 * Find pages that have a similar alias
+	 *
+	 * @return Collection|PageModel[]|null A collection of models or null if there are no pages
+	 */
+	public static function findSimilarByAlias(PageModel $pageModel)
+	{
+		$t = static::$strTable;
+		$pageModel->loadDetails();
+
+		$alias = '%'.self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix).'%';
+
+		return static::findBy(["$t.alias LIKE ?", "$t.id!=?"], [$alias, $pageModel->id]);
 	}
 
 	/**
@@ -1428,6 +1453,65 @@ class PageModel extends Model
 		}
 
 		return $strUrl;
+	}
+
+	private static function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string
+	{
+		if (null === self::$prefixes || null === self::$suffixes) {
+			self::$prefixes = [];
+			self::$suffixes = [];
+
+			$rows = Database::getInstance()->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")->fetchAllAssoc();
+
+			if (0 === ($prefixLength = \strlen($urlPrefix))) {
+				self::$prefixes = array_column($rows, 'urlPrefix');
+			} else {
+				foreach (array_column($rows, 'urlPrefix') as $prefix) {
+					if (0 === substr_compare($prefix, $urlPrefix, 0, $prefixLength, true)) {
+						$prefix = trim(substr($prefix, $prefixLength), '/');
+
+						if ('' !== $prefix) {
+							self::$prefixes[] = $prefix.'/';
+						}
+					}
+				}
+			}
+
+			if (0 === ($suffixLength = \strlen($urlSuffix))) {
+				self::$suffixes = array_column($rows, 'urlSuffix');
+			} else {
+				foreach (array_column($rows, 'urlSuffix') as $suffix) {
+					if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, $suffixLength, true)) {
+						self::$suffixes[] = substr($suffix, 0, -$suffixLength);
+					}
+				}
+			}
+		}
+
+		if (null !== ($prefixRegex = self::regexArray(self::$prefixes))) {
+			$alias = preg_replace('/^'.$prefixRegex.'/i', '', $alias);
+		}
+
+		if (null !== ($suffixRegex = self::regexArray(self::$suffixes))) {
+			$alias = preg_replace('/'.$suffixRegex.'$/i', '', $alias);
+		}
+
+		return $alias;
+	}
+
+	private static function regexArray(array $data): ?string
+	{
+		$data = array_filter(array_unique($data));
+
+		if (0 === \count($data)) {
+			return null;
+		}
+
+		foreach ($data as $k => $v) {
+			$data[$k] = preg_quote($v, '/');
+		}
+
+		return '('.implode('|', $data).')';
 	}
 }
 
