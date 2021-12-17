@@ -12,25 +12,55 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
-use Contao\Controller;
+use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 
 class InsertTagRuntimeTest extends TestCase
 {
-    public function testReplacesInsertTag(): void
+    public function testRenderInsertTag(): void
     {
-        $controller = $this->mockAdapter(['replaceInsertTags']);
-        $controller
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
             ->expects($this->once())
-            ->method('replaceInsertTags')
-            ->with('{{tag}}', false)
+            ->method('render')
+            ->with('tag')
             ->willReturn('replaced-tag')
         ;
 
-        $framework = $this->mockContaoFramework([Controller::class => $controller]);
-        $runtime = new InsertTagRuntime($framework);
+        $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('replaced-tag', $runtime->replace('tag'));
+        $this->assertSame('replaced-tag', $runtime->renderInsertTag('tag'));
+    }
+
+    public function testReplaceInsertTags(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with('foo {{tag}}')
+            ->willReturn('foo replaced-tag')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame('foo replaced-tag', $runtime->replaceInsertTags('foo {{tag}}'));
+    }
+
+    public function testReplaceInsertTagsChunkedRaw(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->once())
+            ->method('replaceChunked')
+            ->with('{{tag}} foo')
+            ->willReturn(new ChunkedText(['', '<replaced-tag>', ' foo']))
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame('<replaced-tag> foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo'));
     }
 }

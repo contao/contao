@@ -27,7 +27,6 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class PictureFactoryTest extends TestCase
 {
@@ -46,6 +45,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->with(
                 $this->callback(
@@ -77,6 +77,9 @@ class PictureFactoryTest extends TestCase
                         $this->assertSame('50vw', $sizeItem->getSizes());
                         $this->assertSame('(max-width: 900px)', $sizeItem->getMedia());
 
+                        $this->assertSame(['webp', 'gif'], $pictureConfig->getFormats()['gif']);
+                        $this->assertSame(['webp', 'png', 'jpg'], $pictureConfig->getFormats()['webp']);
+
                         return true;
                     }
                 )
@@ -86,6 +89,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->once())
             ->method('create')
             ->with(
                 $this->callback(
@@ -115,9 +119,9 @@ class PictureFactoryTest extends TestCase
             'densities' => '1x, 2x',
             'cssClass' => 'my-size',
             'lazyLoading' => true,
+            'formats' => serialize(['gif:webp,gif', 'webp:webp,png', 'webp:webp,jpg']),
         ];
 
-        /** @var ImageSizeModel&MockObject $imageSizeModel */
         $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
         $imageSizeModel
             ->method('row')
@@ -136,7 +140,6 @@ class PictureFactoryTest extends TestCase
             'media' => '(max-width: 900px)',
         ];
 
-        /** @var ImageSizeItemModel&MockObject $imageSizeItemModel */
         $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class, $imageSizeItemProperties);
         $imageSizeItemModel
             ->method('row')
@@ -159,6 +162,67 @@ class PictureFactoryTest extends TestCase
         $this->assertSame($imageMock, $picture->getImg()['src']);
         $this->assertSame('my-size', $picture->getImg()['class']);
         $this->assertSame('lazy', $picture->getImg()['loading']);
+    }
+
+    public function testCorrectlyHandlesEmptyImageFormats(): void
+    {
+        $path = $this->getTempDir().'/images/dummy.jpg';
+        $imageMock = $this->createMock(ImageInterface::class);
+        $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
+
+        $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
+        $pictureGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with(
+                $this->anything(),
+                $this->callback(
+                    function (PictureConfiguration $pictureConfig): bool {
+                        $this->assertSame([PictureConfiguration::FORMAT_DEFAULT => [PictureConfiguration::FORMAT_DEFAULT]], $pictureConfig->getFormats());
+
+                        return true;
+                    }
+                )
+            )
+            ->willReturn($pictureMock)
+        ;
+
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->willReturn($imageMock)
+        ;
+
+        $imageSizeProperties = [
+            'width' => 100,
+            'height' => 200,
+            'resizeMode' => ResizeConfiguration::MODE_BOX,
+            'zoom' => 50,
+            'sizes' => '100vw',
+            'densities' => '1x, 2x',
+            'cssClass' => 'my-size',
+            'lazyLoading' => true,
+            'formats' => '',
+        ];
+
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class, $imageSizeProperties);
+        $imageSizeModel
+            ->method('row')
+            ->willReturn($imageSizeProperties)
+        ;
+
+        $imageSizeAdapter = $this->mockConfiguredAdapter(['findByPk' => $imageSizeModel]);
+        $imageSizeItemAdapter = $this->mockConfiguredAdapter(['findVisibleByPid' => null]);
+
+        $adapters = [
+            ImageSizeModel::class => $imageSizeAdapter,
+            ImageSizeItemModel::class => $imageSizeItemAdapter,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $framework);
+        $pictureFactory->create($path, 1);
     }
 
     public function testCreatesAPictureObjectFromAnImageObjectWithAPredefinedImageSize(): void
@@ -191,12 +255,12 @@ class PictureFactoryTest extends TestCase
             ],
         ];
 
-        $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);
         $pictureMock = new Picture(['src' => $imageMock, 'srcset' => []], []);
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->with(
                 $this->callback(
@@ -244,29 +308,7 @@ class PictureFactoryTest extends TestCase
             ->willReturn($pictureMock)
         ;
 
-        $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $imageFactory
-            ->method('create')
-            ->with(
-                $this->callback(
-                    function (string $imagePath) use ($path): bool {
-                        $this->assertSame($path, $imagePath);
-
-                        return true;
-                    }
-                ),
-                $this->callback(
-                    function (?ResizeConfiguration $size): bool {
-                        $this->assertNull($size);
-
-                        return true;
-                    }
-                )
-            )
-            ->willReturn($imageMock)
-        ;
-
-        $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory, $this->mockContaoFramework());
+        $pictureFactory = $this->getPictureFactory($pictureGenerator);
         $pictureFactory->setPredefinedSizes($predefinedSizes);
 
         $picture = $pictureFactory->create($imageMock, [null, null, 'foobar']);
@@ -311,6 +353,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->with(
                 $this->callback(
@@ -348,9 +391,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('generate')
             ->with(
-                $this->callback(
-                    static fn (): bool => true
-                ),
+                $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (PictureConfiguration $config): bool {
                         $this->assertSame($config->getSizeItems(), []);
@@ -364,9 +405,7 @@ class PictureFactoryTest extends TestCase
                         return true;
                     }
                 ),
-                $this->callback(
-                    static fn (): bool => true
-                )
+                $this->callback(static fn (): bool => true)
             )
             ->willReturn($pictureMock)
         ;
@@ -389,9 +428,7 @@ class PictureFactoryTest extends TestCase
             ->expects($this->exactly(2))
             ->method('getImportantPartFromLegacyMode')
             ->with(
-                $this->callback(
-                    static fn (): bool => true
-                ),
+                $this->callback(static fn (): bool => true),
                 $this->callback(
                     function (string $mode): bool {
                         $this->assertSame('left_top', $mode);
@@ -419,6 +456,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->exactly(2))
             ->method('generate')
             ->with(
                 $this->callback(
@@ -458,6 +496,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->exactly(2))
             ->method('create')
             ->with(
                 $this->callback(
@@ -499,6 +538,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->exactly(2))
             ->method('generate')
             ->with(
                 $this->callback(
@@ -531,6 +571,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->exactly(2))
             ->method('create')
             ->with(
                 $this->callback(
@@ -564,6 +605,8 @@ class PictureFactoryTest extends TestCase
     }
 
     /**
+     * @param PictureConfiguration|string|null $size
+     *
      * @dataProvider getResizeOptionsScenarios
      */
     public function testCreatesAPictureWithResizeOptions(?ResizeOptions $resizeOptions, $size, bool $expected): void
@@ -573,6 +616,7 @@ class PictureFactoryTest extends TestCase
 
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->willReturnCallback(
                 function (ImageInterface $image, PictureConfiguration $config, ResizeOptions $options) use ($imageMock, $expected) {
@@ -585,6 +629,7 @@ class PictureFactoryTest extends TestCase
 
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
+            ->expects($this->once())
             ->method('create')
             ->willReturn($imageMock)
         ;
@@ -667,6 +712,7 @@ class PictureFactoryTest extends TestCase
         $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
 
         $pictureGenerator
+            ->expects($this->once())
             ->method('generate')
             ->willReturnCallback(
                 static fn (ImageInterface $image, PictureConfiguration $config): Picture => new Picture(
@@ -718,17 +764,9 @@ class PictureFactoryTest extends TestCase
 
     private function getPictureFactory(PictureGeneratorInterface $pictureGenerator = null, ImageFactoryInterface $imageFactory = null, ContaoFramework $framework = null): PictureFactory
     {
-        if (null === $pictureGenerator) {
-            $pictureGenerator = $this->createMock(PictureGeneratorInterface::class);
-        }
-
-        if (null === $imageFactory) {
-            $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->createMock(ContaoFramework::class);
-        }
+        $pictureGenerator ??= $this->createMock(PictureGeneratorInterface::class);
+        $imageFactory ??= $this->createMock(ImageFactoryInterface::class);
+        $framework ??= $this->createMock(ContaoFramework::class);
 
         return new PictureFactory($pictureGenerator, $imageFactory, $framework, false, []);
     }

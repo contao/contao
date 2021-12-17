@@ -11,14 +11,16 @@
 namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
-use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
-use Webmozart\PathUtil\Path;
 
 /**
  * A static class to replace insert tags
@@ -32,10 +34,22 @@ use Webmozart\PathUtil\Path;
  */
 class InsertTags extends Controller
 {
+	private const MAX_NESTING_LEVEL = 64;
+
+	/**
+	 * @var int
+	 */
+	private static $intRecursionCount = 0;
+
 	/**
 	 * @var array
 	 */
 	protected static $arrItCache = array();
+
+	/**
+	 * @var ?string
+	 */
+	protected static $strAllowedTagsRegex;
 
 	/**
 	 * Make the constructor public
@@ -46,79 +60,125 @@ class InsertTags extends Controller
 	}
 
 	/**
+	 * Reset the insert tag cache
+	 */
+	public static function reset()
+	{
+		static::$arrItCache = array();
+		static::$strAllowedTagsRegex = null;
+	}
+
+	/**
 	 * Recursively replace insert tags with their values
 	 *
 	 * @param string  $strBuffer The text with the tags to be replaced
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
 	 *
 	 * @return string The text with the replaced tags
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the InsertTagParser service instead.
 	 */
 	public function replace($strBuffer, $blnCache=true)
 	{
-		$strBuffer = $this->doReplace($strBuffer, $blnCache);
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		// Run the replacement recursively (see #8172)
-		while (strpos($strBuffer, '{{') !== false && ($strTmp = $this->doReplace($strBuffer, $blnCache)) != $strBuffer)
+		return (string) $this->replaceInternal((string) $strBuffer, (bool) $blnCache);
+	}
+
+	/**
+	 * @internal
+	 */
+	public function replaceInternal(string $strBuffer, bool $blnCache): ChunkedText
+	{
+		if (self::$intRecursionCount > self::MAX_NESTING_LEVEL)
 		{
-			$strBuffer = $strTmp;
+			throw new \RuntimeException(sprintf('Maximum insert tag nesting level of %s reached', self::MAX_NESTING_LEVEL));
 		}
 
-		return $strBuffer;
+		++self::$intRecursionCount;
+
+		try
+		{
+			return $this->executeReplace($strBuffer, $blnCache);
+		}
+		finally
+		{
+			--self::$intRecursionCount;
+		}
 	}
 
 	/**
-	 * Reset the insert tag cache
+	 * @internal
 	 */
-	public static function reset()
-	{
-		static::$arrItCache = array();
-	}
-
-	/**
-	 * Replace insert tags with their values
-	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
-	 */
-	protected function doReplace($strBuffer, $blnCache)
+	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
 
+		$container = System::getContainer();
+
+		// Backwards compatibility
 		// Preserve insert tags
-		if (Config::get('disableInsertTags'))
+		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
-			return StringUtil::restoreBasicEntities($strBuffer);
+			$return = StringUtil::restoreBasicEntities($strBuffer);
+
+			return new ChunkedText(array($return));
 		}
 
-		$strBuffer = self::encodeHtmlAttributes($strBuffer);
+		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
 
-		// The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
-		$tags = preg_split('~{{([a-zA-Z0-9\x80-\xFF][^{}]*)}}~', $strBuffer, -1, PREG_SPLIT_DELIM_CAPTURE);
+		$strRegExpStart = '{{'           // Starts with two opening curly braces
+			. '('                        // Match the contents fo the tag
+				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
+				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
+		;
+
+		$strRegExpEnd = ')*)}}';         // Ends with two closing curly braces
+
+		$tags = preg_split(
+			'(' . $strRegExpStart . str_repeat('{{(?:' . substr($strRegExpStart, 3), 9) . str_repeat($strRegExpEnd, 10) . ')',
+			$strBuffer,
+			-1,
+			PREG_SPLIT_DELIM_CAPTURE
+		);
 
 		if (\count($tags) < 2)
 		{
-			return StringUtil::restoreBasicEntities($strBuffer);
+			$return = StringUtil::restoreBasicEntities($strBuffer);
+
+			return new ChunkedText(array($return));
 		}
 
-		$strBuffer = '';
-		$container = System::getContainer();
+		$arrBuffer = array();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
+
+		if (static::$strAllowedTagsRegex === null)
+		{
+			static::$strAllowedTagsRegex = '(' . implode('|', array_map(
+				static function ($allowedTag)
+				{
+					return '^' . implode('.+', array_map('preg_quote', explode('*', $allowedTag))) . '$';
+				},
+				$container->getParameter('contao.insert_tags.allowed_tags')
+			)) . ')';
+		}
 
 		// Create one cache per cache setting (see #7700)
 		$arrCache = &static::$arrItCache[$blnCache];
 
 		for ($_rit=0, $_cnt=\count($tags); $_rit<$_cnt; $_rit+=2)
 		{
-			$strBuffer .= $tags[$_rit];
+			$arrBuffer[$_rit] = $tags[$_rit];
 
 			// Skip empty tags
-			if (empty($tags[$_rit+1]))
+			if (!isset($tags[$_rit+1]))
 			{
-				continue;
+				break;
 			}
+
+			$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -128,7 +188,13 @@ class InsertTags extends Controller
 			// Load the value from cache
 			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
 			{
-				$strBuffer .= $arrCache[$strTag];
+				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
+				continue;
+			}
+
+			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
+			{
+				$arrBuffer[$_rit+1] = '{{' . $strTag . '}}';
 				continue;
 			}
 
@@ -150,7 +216,7 @@ class InsertTags extends Controller
 						$attributes['_scope'] = $scope;
 					}
 
-					$strBuffer .= $fragmentHandler->render(
+					$arrBuffer[$_rit+1] = $fragmentHandler->render(
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,
@@ -232,6 +298,32 @@ class InsertTags extends Controller
 						break;
 					}
 
+					if ($keys[0] == 'LNG' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
+					if ($keys[0] == 'CNT' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
 					$file = $keys[0];
 
 					// Map the key (see #7217)
@@ -291,7 +383,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						$this->log('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+						$this->log('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
 					}
 
 					if (\count($keys) == 2)
@@ -385,8 +477,10 @@ class InsertTags extends Controller
 					// Back link
 					if ($elements[1] == 'back')
 					{
+						trigger_deprecation('contao/core-bundle', '4.9', 'Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.');
+
 						$strUrl = 'javascript:history.go(-1)';
-						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'];
+						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;
 
 						// No language files if the page is cached
 						if (!$strTitle)
@@ -473,6 +567,11 @@ class InsertTags extends Controller
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
 
+					if (!$strTarget && \in_array('blank', \array_slice($elements, 2), true))
+					{
+						$strTarget = ' target="_blank" rel="noreferrer noopener"';
+					}
+
 					// Replace the tag
 					switch (strtolower($elements[0]))
 					{
@@ -549,16 +648,17 @@ class InsertTags extends Controller
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
 					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
 					{
 						case 'article':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $objArticle->title);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
 							break;
 
 						case 'article_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s">', $strUrl, StringUtil::specialcharsAttribute($objArticle->title));
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
 							break;
 
 						case 'article_url':
@@ -614,6 +714,8 @@ class InsertTags extends Controller
 
 				// Request token
 				case 'request_token':
+					trigger_deprecation('contao/core-bundle', '4.13', 'Using the request_token insert tag has been deprecated and will no longer work in Contao 5.0.');
+
 					$arrCache[$strTag] = REQUEST_TOKEN;
 					break;
 
@@ -631,7 +733,7 @@ class InsertTags extends Controller
 						// Skip everything until the next tag
 						for (; $_rit<$_cnt; $_rit+=2)
 						{
-							// Case insensitive match for iflng/ifnlng optionally followed by "::" or "|"
+							// Case-insensitive match for iflng/ifnlng optionally followed by "::" or "|"
 							if (1 === preg_match('/^' . preg_quote($elements[0], '/') . '(?:$|::|\|)/i', $tags[$_rit+3] ?? ''))
 							{
 								$tags[$_rit+2] = '';
@@ -642,6 +744,7 @@ class InsertTags extends Controller
 
 					// Does not output anything and the cache must not be used
 					unset($arrCache[$strTag]);
+					$arrBuffer[$_rit+1] = '';
 					continue 2;
 
 				// Environment
@@ -705,7 +808,7 @@ class InsertTags extends Controller
 						$elements[1] = 'mainTitle';
 					}
 
-					$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -737,6 +840,8 @@ class InsertTags extends Controller
 
 				// User agent
 				case 'ua':
+					trigger_deprecation('contao/core-bundle', '4.13', 'Using the "ua" insert tag has been deprecated and will no longer work in Contao 5.0.');
+
 					$flags[] = 'attr';
 					$ua = Environment::get('agent');
 
@@ -780,7 +885,7 @@ class InsertTags extends Controller
 					unset($configuration['size'], $configuration['template']);
 
 					// Render the figure
-					$figureRenderer = $container->get(FigureRenderer::class);
+					$figureRenderer = $container->get('contao.image.studio.figure_renderer');
 
 					try
 					{
@@ -915,7 +1020,7 @@ class InsertTags extends Controller
 						if (strtolower($elements[0]) == 'image')
 						{
 							$dimensions = '';
-							$src = $container->get('contao.image.image_factory')->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
+							$src = $container->get('contao.image.factory')->create($container->getParameter('kernel.project_dir') . '/' . rawurldecode($strFile), array($width, $height, $mode))->getUrl($container->getParameter('kernel.project_dir'));
 							$objFile = new File(rawurldecode($src));
 
 							// Add the image dimensions
@@ -1036,7 +1141,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$this->log('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
+					$this->log('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, ContaoContext::ERROR);
 					break;
 			}
 
@@ -1151,16 +1256,23 @@ class InsertTags extends Controller
 								}
 							}
 
-							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, TL_ERROR);
+							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, ContaoContext::ERROR);
 							break;
 					}
 				}
 			}
 
-			$strBuffer .= $arrCache[$strTag] ?? '';
+			if (isset($arrCache[$strTag]))
+			{
+				$arrCache[$strTag] = (string) $this->replaceInternal($arrCache[$strTag], $blnCache);
+			}
+
+			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
 		}
 
-		return StringUtil::restoreBasicEntities($strBuffer);
+		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
+
+		return new ChunkedText($arrBuffer);
 	}
 
 	/**
@@ -1168,8 +1280,8 @@ class InsertTags extends Controller
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
-		// Restore [&]
-		$url = str_replace('[&]', '&', $url);
+		// Restore [&] and &amp;
+		$url = str_replace(array('[&]', '&amp;'), '&', $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
@@ -1344,12 +1456,16 @@ class InsertTags extends Controller
 			// Add the urlattr insert tags flag in URL attributes
 			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
 			{
-				$attributesResult .= preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
+				$matches[0][0] = preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
+
+				// Backwards compatibility
+				if (trim($matches[0][0]) === 'href="{{link_url::back|urlattr}}"')
+				{
+					$matches[0][0] = str_replace('{{link_url::back|urlattr}}', '{{link_url::back}}', $matches[0][0]);
+				}
 			}
-			else
-			{
-				$attributesResult .= $matches[0][0];
-			}
+
+			$attributesResult .= $matches[0][0];
 		}
 
 		$attributesResult .= substr($attributes, $offset);

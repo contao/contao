@@ -68,7 +68,7 @@ class DebugPagesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $rows = [];
-        $types = array_keys($GLOBALS['TL_PTY']);
+        $types = array_unique(array_merge(array_keys($GLOBALS['TL_PTY']), $this->pageRegistry->keys()));
         natsort($types);
 
         foreach ($types as $type) {
@@ -79,8 +79,8 @@ class DebugPagesCommand extends Command
 
             $rows[] = [
                 $type,
-                $config ? $config->getPath() : '*',
-                $config ? $config->getUrlSuffix() : '*',
+                $config && $config->getPath() ? $config->getPath() : '*',
+                $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $this->pageRegistry->supportsContentComposition($page) ? 'yes' : 'no',
                 isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',
@@ -102,7 +102,7 @@ class DebugPagesCommand extends Command
             static function ($carry, $item): int {
                 $length = \strlen($item);
 
-                return $carry > $length ? $carry : $length;
+                return max($carry, $length);
             },
             0
         );
@@ -114,9 +114,9 @@ class DebugPagesCommand extends Command
                 $v = $v ? 'true' : 'false';
             }
 
-            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), (string) $v);
+            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
         }
 
-        return implode("\n", $return);
+        return !empty($return) ? implode("\n", $return) : '-';
     }
 }

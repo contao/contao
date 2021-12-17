@@ -109,7 +109,6 @@ class ApplicationTest extends ContaoTestCase
         /** @var array $commands */
         $commands = $application->all();
 
-        $this->assertCount(4, $commands);
         $this->assertArrayHasKey('config:get', $commands);
     }
 
@@ -141,10 +140,6 @@ class ApplicationTest extends ContaoTestCase
 
     private function getApplication(string $path = null): Application
     {
-        if (null === $path) {
-            $path = $this->getTempDir();
-        }
-
-        return new Application($path);
+        return new Application($path ?? $this->getTempDir());
     }
 }

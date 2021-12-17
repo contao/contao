@@ -295,7 +295,7 @@
       </trans-unit>
       <trans-unit id="tl_user.elements_legend">
         <source>Allowed elements</source>
-        <target>المنت‌های مجاز</target>
+        <target>المان‌های مجاز</target>
       </trans-unit>
       <trans-unit id="tl_user.pagemounts_legend">
         <source>Pagemounts</source>

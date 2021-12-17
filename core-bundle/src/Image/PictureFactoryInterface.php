@@ -26,7 +26,7 @@ interface PictureFactoryInterface
      *
      * @return static
      */
-    public function setDefaultDensities($densities);
+    public function setDefaultDensities(/*string */$densities)/*: static*/;
 
     /**
      * Creates a Picture object.
@@ -37,5 +37,5 @@ interface PictureFactoryInterface
      *
      * @return PictureInterface
      */
-    public function create($path, $size = null/*, ResizeOptions $options = null*/);
+    public function create($path, $size = null/*, ResizeOptions $options = null*/)/*: PictureInterface*/;
 }

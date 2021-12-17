@@ -35,7 +35,7 @@ class Installer extends Controller
 	}
 
 	/**
-	 * Generate a HTML form with queries and return it as string
+	 * Generate an HTML form with queries and return it as string
 	 *
 	 * @return string The form HTML markup
 	 *

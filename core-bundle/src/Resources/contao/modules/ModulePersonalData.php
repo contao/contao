@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Patchwork\Utf8;
 
 /**
  * Front end module "personal data".
@@ -41,7 +40,7 @@ class ModulePersonalData extends Module
 		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['personalData'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['personalData'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -52,7 +51,7 @@ class ModulePersonalData extends Module
 
 		$this->editable = StringUtil::deserialize($this->editable);
 
-		// Return if there are not editable fields or if there is no logged in user
+		// Return if there are no editable fields or if there is no logged-in user
 		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
@@ -298,7 +297,7 @@ class ModulePersonalData extends Module
 				}
 			}
 
-			if ($objWidget instanceof \uploadable)
+			if ($objWidget instanceof UploadableWidgetInterface)
 			{
 				$hasUpload = true;
 			}

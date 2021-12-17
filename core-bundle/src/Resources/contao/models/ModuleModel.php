@@ -65,6 +65,7 @@ use Contao\Model\Collection;
  * @property string|boolean    $reg_allowLogin
  * @property string|boolean    $reg_skipName
  * @property string            $reg_close
+ * @property string|boolean    $reg_deleteDir
  * @property string|boolean    $reg_assignDir
  * @property string|null       $reg_homeDir
  * @property string|boolean    $reg_activate
@@ -133,6 +134,7 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByReg_allowLogin($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_skipName($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_close($val, array $opt=array())
+ * @method static ModuleModel|null findOneByReg_deleteDir($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_assignDir($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_homeDir($val, array $opt=array())
  * @method static ModuleModel|null findOneByReg_activate($val, array $opt=array())
@@ -195,6 +197,7 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_allowLogin($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_skipName($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_close($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_deleteDir($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_assignDir($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_homeDir($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_activate($val, array $opt=array())
@@ -261,6 +264,7 @@ use Contao\Model\Collection;
  * @method static integer countByReg_allowLogin($val, array $opt=array())
  * @method static integer countByReg_skipName($val, array $opt=array())
  * @method static integer countByReg_close($val, array $opt=array())
+ * @method static integer countByReg_deleteDir($val, array $opt=array())
  * @method static integer countByReg_assignDir($val, array $opt=array())
  * @method static integer countByReg_homeDir($val, array $opt=array())
  * @method static integer countByReg_activate($val, array $opt=array())

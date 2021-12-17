@@ -27,7 +27,7 @@ use Contao\StringUtil;
 use Imagine\Image\ImagineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
@@ -44,7 +44,7 @@ class ImageFactory implements ImageFactoryInterface
     private ?LoggerInterface $logger;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.image_factory" service instead
+     * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
      */
     public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, LoggerInterface $logger = null)
     {
@@ -198,7 +198,6 @@ class ImageFactory implements ImageFactoryInterface
         if (isset($size[2])) {
             // Database record
             if (is_numeric($size[2])) {
-                /** @var ImageSizeModel $imageModel */
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
@@ -274,7 +273,6 @@ class ImageFactory implements ImageFactoryInterface
             throw new \RuntimeException('Contao framework was not initialized');
         }
 
-        /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 

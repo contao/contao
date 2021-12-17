@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -24,6 +25,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     private Configuration $configuration;
 
     protected function setUp(): void
@@ -67,10 +70,14 @@ class ConfigurationTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider getPaths
      */
     public function testResolvesThePaths(string $unix, string $windows): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.');
+
         $params = [
             'contao' => [
                 'web_dir' => $unix,

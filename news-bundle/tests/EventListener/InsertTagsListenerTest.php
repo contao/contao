@@ -17,13 +17,11 @@ use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
     public function testReplacesTheNewsFeedTag(): void
     {
-        /** @var NewsFeedModel&MockObject $feedModel */
         $feedModel = $this->mockClassWithProperties(NewsFeedModel::class);
         $feedModel->feedBase = 'http://localhost/';
         $feedModel->alias = 'news';
@@ -42,7 +40,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testReplacesTheNewsTags(): void
     {
-        /** @var NewsModel&MockObject $newsModel */
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
         $newsModel->teaser = '<p>Foo does not equal bar.</p>';
@@ -74,8 +71,28 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
+            $listener('news::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
             '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
             $listener('news_open::2', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            $listener('news_open::2::blank', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            $listener('news_open::2::absolute::blank', false, null, [])
+        );
+
+        $this->assertSame(
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            $listener('news_open::2::blank::absolute', false, null, [])
         );
 
         $this->assertSame(
@@ -94,6 +111,11 @@ class InsertTagsListenerTest extends ContaoTestCase
         );
 
         $this->assertSame(
+            'http://domain.tld/news/foo-is-not-bar.html',
+            $listener('news_url::2::blank::absolute', false, null, [])
+        );
+
+        $this->assertSame(
             '&quot;Foo&quot; is not &quot;bar&quot;',
             $listener('news_title::2', false, null, [])
         );
@@ -106,7 +128,6 @@ class InsertTagsListenerTest extends ContaoTestCase
 
     public function testHandlesEmptyUrls(): void
     {
-        /** @var NewsModel&MockObject $newsModel */
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
         $newsModel->teaser = '<p>Foo does not equal bar.</p>';

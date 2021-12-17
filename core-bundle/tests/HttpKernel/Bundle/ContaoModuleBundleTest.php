@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\HttpKernel\Bundle;
 
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ContaoModuleBundleTest extends TestCase
 {

@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Zde můžete přepsat, jak mají tuto stránku vnímat vyhledávače.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -150,7 +151,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.recurrences.1">
         <source>Set to 0 for unlimited recurrences.</source>
-        <target>Prosím nastavte počet opakování (0 = nekonečno).</target>
+        <target>Nastavte na 0 pro neomezené opakování.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.repeatEnd">
         <source>End of recurring event</source>
@@ -234,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
-        <target>Sem můžete zadat více tříd kaskádovitých stylů CSS (class)</target>
+        <target>Zde můžete zadat jednu nebo více tříd.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.noComments.0">
         <source>Disable comments</source>
@@ -246,9 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>Zvýraznit příspěvek</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>Zobrazit událost v seznamu doporučených událostí.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -316,6 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
         <source>Metadata</source>
+        <target>Metadata</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -375,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
+        <target>ID zvýrazněné/nezvýrazněné události %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>

@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -22,6 +24,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -33,8 +36,8 @@ use Twig\Node\Node;
 use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Source;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Webmozart\PathUtil\Path;
 
 class ContaoExtensionTest extends TestCase
 {
@@ -68,7 +71,7 @@ class ContaoExtensionTest extends TestCase
             'include' => ['all'],
             'contao_figure' => ['html'],
             'picture_config' => [],
-            'insert_tag' => ['html'],
+            'insert_tag' => [],
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
@@ -83,6 +86,25 @@ class ContaoExtensionTest extends TestCase
             $name = $function->getName();
             $this->assertArrayHasKey($name, $expectedFunctions);
             $this->assertSame($expectedFunctions[$name], $function->getSafe($node), $name);
+        }
+    }
+
+    public function testAddsTheFilters(): void
+    {
+        $filters = $this->getContaoExtension()->getFilters();
+
+        $this->assertCount(4, $filters);
+
+        $expectedFilters = [
+            'escape',
+            'e',
+            'insert_tag',
+            'insert_tag_raw',
+        ];
+
+        foreach ($filters as $filter) {
+            $this->assertInstanceOf(TwigFilter::class, $filter);
+            $this->assertContains($filter->getName(), $expectedFilters);
         }
     }
 
@@ -186,9 +208,13 @@ class ContaoExtensionTest extends TestCase
     {
         $extension = $this->getContaoExtension();
 
-        System::setContainer($this->getContainerWithContaoConfiguration(
+        $container = $this->getContainerWithContaoConfiguration(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
-        ));
+        );
+
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+
+        System::setContainer($container);
 
         $output = $extension->renderLegacyTemplate(
             'foo.html5',
@@ -203,13 +229,20 @@ class ContaoExtensionTest extends TestCase
     {
         $extension = $this->getContaoExtension();
 
-        System::setContainer($this->getContainerWithContaoConfiguration(
+        $container = $this->getContainerWithContaoConfiguration(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
-        ));
+        );
+
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+
+        System::setContainer($container);
+
+        $framework = new \ReflectionClass(ContaoFramework::class);
+        $framework->setStaticPropertyValue('nonce', '<nonce>');
 
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
-            ['B' => "root before B\n[[TL_PARENT]]root after B"],
+            ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
             ['foo' => 'bar']
         );
 
@@ -241,6 +274,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
 
@@ -267,15 +301,10 @@ class ContaoExtensionTest extends TestCase
     /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension($environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
-        if (null === $environment) {
-            $environment = $this->createMock(Environment::class);
-        }
-
-        if (null === $hierarchy) {
-            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        }
+        $environment ??= $this->createMock(Environment::class);
+        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
 
         $environment
             ->method('getExtension')

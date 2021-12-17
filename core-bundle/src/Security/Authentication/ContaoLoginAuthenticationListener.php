@@ -29,12 +29,13 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the new authenticator system instead.
+ */
 class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
     public function __construct(TokenStorageInterface $tokenStorage, AuthenticationManagerInterface $authenticationManager, SessionAuthenticationStrategyInterface $sessionStrategy, HttpUtils $httpUtils, string $providerKey, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, array $options, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null)
     {
@@ -47,7 +48,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
-            && 0 === strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8);
+            && 0 === strncmp((string) $request->request->get('FORM_SUBMIT'), 'tl_login', 8);
     }
 
     protected function attemptAuthentication(Request $request): ?TokenInterface
@@ -55,7 +56,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
         $currentToken = $this->tokenStorage->getToken();
 
         if ($currentToken instanceof TwoFactorTokenInterface) {
-            $authCode = $request->request->get('verify');
+            $authCode = (string) $request->request->get('verify');
 
             return $this->authenticationManager->authenticate($currentToken->createWithCredentials($authCode));
         }

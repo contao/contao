@@ -21,7 +21,7 @@ interface ResourceFinderInterface
      *
      * @return Finder
      */
-    public function find();
+    public function find()/*: Finder*/;
 
     /**
      * Appends the subpath to the resource paths and returns a Finder object.
@@ -30,5 +30,5 @@ interface ResourceFinderInterface
      *
      * @return Finder
      */
-    public function findIn($subpath);
+    public function findIn(/*string */$subpath)/*: Finder*/;
 }

@@ -14,7 +14,7 @@ namespace Contao;
  * Converts dates and date format string
  *
  * The class converts arbitrary date strings to Unix timestamps and provides
- * extended information like the begin or end of the day, week, month or year.
+ * extended information like the beginning or end of the day, week, month or year.
  *
  * Usage:
  *
@@ -161,7 +161,7 @@ class Date
 	}
 
 	/**
-	 * Return the begin of the week as timestamp
+	 * Return the beginning of the week as timestamp
 	 *
 	 * @param integer $intStartDay The week start day
 	 *

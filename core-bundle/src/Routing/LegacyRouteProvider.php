@@ -42,14 +42,14 @@ class LegacyRouteProvider implements RouteProviderInterface
 
     public function getRouteByName($name): Route
     {
-        $route = $this->loadRoute($name);
+        $route = $this->loadRoute((string) $name);
 
         trigger_deprecation('contao/core-bundle', '4.10', sprintf('The "%s" route has been deprecated and is only available in legacy routing mode.', $name));
 
         return $route;
     }
 
-    private function loadRoute($name): Route
+    private function loadRoute(string $name): Route
     {
         if ('contao_frontend' === $name || 'contao_index' === $name) {
             return $this->frontendLoader->load('.', 'contao_frontend')->get($name);

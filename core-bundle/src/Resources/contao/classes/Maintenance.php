@@ -15,7 +15,7 @@ namespace Contao;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class Maintenance extends Backend implements \executable
+class Maintenance extends Backend implements MaintenanceModuleInterface
 {
 	/**
 	 * Return true if the module is active

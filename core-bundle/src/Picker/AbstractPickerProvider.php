@@ -32,12 +32,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->translator = $translator;
     }
 
-    public function getUrl(PickerConfig $config)
+    public function getUrl(PickerConfig $config)/*: ?string*/
     {
         return $this->generateUrl($config, false);
     }
 
-    public function createMenuItem(PickerConfig $config)
+    public function createMenuItem(PickerConfig $config)/*: ItemInterface*/
     {
         $name = $this->getName();
 
@@ -70,7 +70,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function isCurrent(PickerConfig $config)
+    public function isCurrent(PickerConfig $config)/*: bool*/
     {
         return $config->getCurrent() === $this->getName();
     }
@@ -111,7 +111,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return array<string,string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null);
+    abstract protected function getRouteParameters(PickerConfig $config = null)/*: array*/;
 
     /**
      * Generates the URL for the picker.

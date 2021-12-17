@@ -294,10 +294,6 @@ class MergeHttpHeadersListenerTest extends TestCase
     {
         $kernel = $this->createMock(KernelInterface::class);
 
-        if (null === $response) {
-            $response = new Response();
-        }
-
-        return new ResponseEvent($kernel, new Request(), HttpKernelInterface::MAIN_REQUEST, $response);
+        return new ResponseEvent($kernel, new Request(), HttpKernelInterface::MAIN_REQUEST, $response ?? new Response());
     }
 }

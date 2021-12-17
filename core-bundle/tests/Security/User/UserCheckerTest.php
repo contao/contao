@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Exception\LockedException;
 use Contao\CoreBundle\Security\User\UserChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -58,7 +57,6 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheAccountIsLocked(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
         $user->locked = time() + 5;
@@ -73,7 +71,6 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheAccountIsDisabled(): void
     {
-        /** @var BackendUser&MockObject $user */
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
@@ -89,7 +86,6 @@ class UserCheckerTest extends TestCase
 
     public function testThrowsAnExceptionIfTheUserIsNotAllowedToLogin(): void
     {
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
@@ -108,7 +104,6 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('tomorrow');
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;
@@ -129,7 +124,6 @@ class UserCheckerTest extends TestCase
     {
         $time = strtotime('yesterday');
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->username = 'foo';
         $user->locked = 0;

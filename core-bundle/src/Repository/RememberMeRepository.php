@@ -19,6 +19,8 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
+ * @template-extends ServiceEntityRepository<RememberMe>
+ *
  * @internal
  */
 class RememberMeRepository extends ServiceEntityRepository
