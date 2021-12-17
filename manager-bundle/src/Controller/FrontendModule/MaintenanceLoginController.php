@@ -89,13 +89,7 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
             return false;
         }
 
-        $rootPage = PageModel::findByPk($pageModel->rootId);
-
-        if (null === $rootPage) {
-            return false;
-        }
-
-        return (bool) $rootPage->maintenanceMode;
+        return (bool) $pageModel->loadDetails()->maintenanceMode;
     }
 
     private function isLoggedIn(Request $request): bool
