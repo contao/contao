@@ -275,7 +275,6 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        /** @var MockObject&DataContainer $dc */
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [

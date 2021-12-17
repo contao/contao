@@ -100,7 +100,6 @@ class PageSearchListener
             ['pageId' => $pageId]
         );
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
         foreach ($urls as $url) {
