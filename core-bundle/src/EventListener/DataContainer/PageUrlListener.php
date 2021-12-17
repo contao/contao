@@ -19,11 +19,13 @@ use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
-use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class PageUrlListener implements ResetInterface
 {
     private ContaoFramework $framework;
@@ -76,32 +78,6 @@ class PageUrlListener implements ResetInterface
         }
 
         return $value;
-    }
-
-    /**
-     * @Callback(table="tl_page", target="fields.alias.save")
-     */
-    public function purgeSearchIndexOnAliasChange(string $value, DataContainer $dc): string
-    {
-        if ($value === $dc->activeRecord->alias) {
-            return $value;
-        }
-
-        $this->purgeSearchIndex((int) $dc->id);
-
-        return $value;
-    }
-
-    /**
-     * @Callback(table="tl_page", target="config.ondelete", priority=16)
-     */
-    public function purgeSearchIndexOnDelete(DataContainer $dc): void
-    {
-        if (!$dc->id) {
-            return;
-        }
-
-        $this->purgeSearchIndex((int) $dc->id);
     }
 
     /**
@@ -176,20 +152,6 @@ class PageUrlListener implements ResetInterface
     {
         $this->prefixes = null;
         $this->suffixes = null;
-    }
-
-    public function purgeSearchIndex(int $pageId): void
-    {
-        $urls = $this->connection->fetchFirstColumn(
-            'SELECT url FROM tl_search WHERE pid=:pageId',
-            ['pageId' => $pageId]
-        );
-
-        $search = $this->framework->getAdapter(Search::class);
-
-        foreach ($urls as $url) {
-            $search->removeEntry($url);
-        }
     }
 
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
