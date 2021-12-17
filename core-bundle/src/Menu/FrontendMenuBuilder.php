@@ -172,50 +172,53 @@ class FrontendMenuBuilder
 
     private function generateUri(PageModel $pageModel, ItemInterface $menuItem): ?string
     {
-        switch ($pageModel->type) {
-            case 'redirect':
-                $href = $pageModel->url;
+        if ('redirect' === $pageModel->type) {
+            $href = $pageModel->url;
 
-                if (0 === strncasecmp($href, 'mailto:', 7)) {
-                    $href = StringUtil::encodeEmail($href);
-                }
+            if (0 === strncasecmp($href, 'mailto:', 7)) {
+                return StringUtil::encodeEmail($href);
+            }
 
-                return $href;
+            return $href;
+        }
 
-            case 'root':
-                // Overwrite the alias to link to the empty URL or language URL (see #1641)
-                $pageModel->alias = 'index';
+        if ('root' === $pageModel->type) {
+            // Overwrite the alias to link to the empty URL or language URL (see #1641)
+            $pageModel->alias = 'index';
 
-                return $pageModel->getFrontendUrl();
+            return $pageModel->getFrontendUrl();
+        }
 
-            case 'forward':
-                if ($pageModel->jumpTo) {
-                    $jumpTo = PageModel::findPublishedById($pageModel->jumpTo);
-                } else {
-                    $jumpTo = PageModel::findFirstPublishedRegularByPid($pageModel->id);
-                }
+        if ('forward' === $pageModel->type) {
+            if ($pageModel->jumpTo) {
+                $jumpTo = PageModel::findPublishedById($pageModel->jumpTo);
+            } else {
+                $jumpTo = PageModel::findFirstPublishedRegularByPid($pageModel->id);
+            }
 
-                // Hide the link if the target page is invisible
-                if (!$jumpTo instanceof PageModel || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->hasBackendUser())) {
-                    $menuItem->setDisplay(false);
-                }
+            // Hide the link if the target page is invisible
+            if (
+                !$jumpTo instanceof PageModel
+                || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->hasBackendUser())
+            ) {
+                $menuItem->setDisplay(false);
+            }
 
-                try {
-                    return $jumpTo->getFrontendUrl();
-                } catch (ExceptionInterface $exception) {
-                    $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $pageModel->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
+            try {
+                return $jumpTo->getFrontendUrl();
+            } catch (ExceptionInterface $exception) {
+                $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $pageModel->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
 
-                    return null;
-                }
+                return null;
+            }
+        }
 
-            default:
-                try {
-                    return $pageModel->getFrontendUrl();
-                } catch (ExceptionInterface $exception) {
-                    $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $pageModel->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
+        try {
+            return $pageModel->getFrontendUrl();
+        } catch (ExceptionInterface $exception) {
+            $this->logger->log(LogLevel::ERROR, sprintf('Unable to generate URL for page ID %s: %s', $pageModel->id, $exception->getMessage()), ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]);
 
-                    return null;
-                }
+            return null;
         }
     }
 
