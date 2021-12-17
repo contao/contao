@@ -11,8 +11,9 @@ services:
 
     Contao\ManagerBundle\Controller\FrontendModule\MaintenanceLoginController:
         arguments:
+            - '@request_stack'
             - '@contao.csrf.token_manager'
             - '@translator'
-            - '@contao_manager.jwt_manager'
+            - '@?contao_manager.jwt_manager'
         tags:
             - { name: contao.frontend_module, category: application }

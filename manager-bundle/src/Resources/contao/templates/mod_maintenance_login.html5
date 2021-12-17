@@ -12,20 +12,20 @@
       <?php if ($this->logout): ?>
         <p class="message"><?= $this->trans('MSC.maintenanceLogout') ?></p>
         <div class="widget widget-submit">
-          <button type="submit" class="submit"><?= $this->trans('MSC.logout', [], 'contao_default') ?></button>
+          <button type="submit" class="submit"<?php if ($this->disabled): ?> disabled<?php endif; ?>><?= $this->trans('MSC.logout', [], 'contao_default') ?></button>
         </div>
       <?php else: ?>
         <p class="message"><?= $this->trans('MSC.maintenanceEnabled') ?></p>
         <div class="widget widget-text">
           <label for="username"><?= $this->trans('MSC.username') ?></label>
-          <input type="text" name="username" id="username" class="text" value="<?= $this->username ?>" autocapitalize="off" autocomplete="username" required>
+          <input type="text" name="username" id="username" class="text" value="<?= $this->username ?>" autocapitalize="off" autocomplete="username" required<?php if ($this->disabled): ?> disabled<?php endif; ?>>
         </div>
         <div class="widget widget-password">
           <label for="password"><?= $this->trans('MSC.password.0') ?></label>
-          <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>
+          <input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required<?php if ($this->disabled): ?> disabled<?php endif; ?>>
         </div>
         <div class="widget widget-submit">
-          <button type="submit" class="submit"><?= $this->trans('MSC.login', [], 'contao_default') ?></button>
+          <button type="submit" class="submit"<?php if ($this->disabled): ?> disabled<?php endif; ?>><?= $this->trans('MSC.login', [], 'contao_default') ?></button>
         </div>
       <?php endif; ?>
     </div>
