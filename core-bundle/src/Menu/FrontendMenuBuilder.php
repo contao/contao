@@ -133,12 +133,19 @@ class FrontendMenuBuilder
         return $root;
     }
 
+    private function getPages(int $pid, array $options): ?array
+    {
+        if (0 === $pid && $options['pages']) {
+            return $this->findPagesByIds($options['pages']);
+        }
+
+        return $this->findPagesByPid($pid, (bool) $options['showHidden']);
+    }
+
     /**
-     * Get all published pages by their IDs.
-     *
      * @return array<array{page:PageModel,hasSubpages:bool}>|null
      */
-    protected function findPagesByIds(array $pageIds): ?array
+    private function findPagesByIds(array $pageIds): ?array
     {
         // Get all active pages and also include root pages if the language is added to the URL (see #72)
         $pages = PageModel::findPublishedRegularByIds($pageIds, ['includeRoot' => true]);
@@ -153,11 +160,9 @@ class FrontendMenuBuilder
     }
 
     /**
-     * Get all published pages by their parent ID and add the "hasSubpages" property.
-     *
      * @return array<array{page:PageModel,hasSubpages:bool}>|null
      */
-    protected function findPagesByPid(int $pid, bool $showHidden = false, bool $isSitemap = false): ?array
+    private function findPagesByPid(int $pid, bool $showHidden = false, bool $isSitemap = false): ?array
     {
         $time = Date::floorToMinute();
         $blnBeUserLoggedIn = $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode();
@@ -182,15 +187,6 @@ class FrontendMenuBuilder
             ],
             $pages
         );
-    }
-
-    private function getPages(int $pid, array $options): ?array
-    {
-        if (0 === $pid && $options['pages']) {
-            return $this->findPagesByIds($options['pages']);
-        }
-
-        return $this->findPagesByPid($pid, (bool) $options['showHidden']);
     }
 
     private function generateUri(PageModel $pageModel, ItemInterface $menuItem): ?string
