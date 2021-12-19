@@ -56,8 +56,10 @@ class FrontendMenuBuilder
         $this->logger = $logger;
     }
 
-    public function getMenu(ItemInterface $root, int $pid, int $level = 1, string $host = null, array $options = []): ItemInterface
+    public function getMenu(int $pid, int $level = 1, string $host = null, array $options = []): ItemInterface
     {
+        $root = $this->factory->createItem('root');
+
         if (null === ($pages = $this->getPages($pid, $options))) {
             return $root;
         }
@@ -105,7 +107,7 @@ class FrontendMenuBuilder
 
             // Check whether there will be subpages
             if ($hasSubpages) {
-                $this->getMenu($item, (int) $page->id, $level, $host, $options);
+                $this->getMenu((int) $page->id, $level, $host, $options);
 
                 $childRecords = Database::getInstance()->getChildRecords($page->id, 'tl_page');
 

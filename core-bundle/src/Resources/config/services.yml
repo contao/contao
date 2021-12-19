@@ -389,7 +389,6 @@ services:
     contao.menu.navigation_module_provider:
         class: Contao\CoreBundle\Menu\NavigationModuleProvider
         arguments:
-            - '@Knp\Menu\FactoryInterface'
             - '@contao.menu.frontend_builder'
             - '@contao.framework'
             - '@request_stack'

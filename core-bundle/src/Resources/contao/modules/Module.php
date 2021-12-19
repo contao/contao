@@ -278,12 +278,11 @@ abstract class Module extends Frontend
 	{
 		/** @var FrontendMenuBuilder $menuBuilder */
 		$menuBuilder = System::getContainer()->get('contao.menu.frontend_builder');
-		$root = System::getContainer()->get('knp_menu.factory')->createItem('root');
 
 		$options = $this->arrData;
 		$options += array('isSitemap' => $this instanceof ModuleSitemap);
 
-		$menu = $menuBuilder->getMenu($root, $pid, $level, $host, $options);
+		$menu = $menuBuilder->getMenu($pid, $level, $host, $options);
 
 		if (!$menu->count())
 		{
