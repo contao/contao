@@ -32,9 +32,6 @@ class ContaoContext
     private ?string $browser;
     private ?string $source;
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
     {
         if ('' === $func) {

@@ -124,8 +124,6 @@ class XliffFileLoader extends Loader
 
     /**
      * Returns a string representation of the global PHP language array.
-     *
-     * @throws \OutOfBoundsException
      */
     private function getStringRepresentation(array $chunks, string $value): string
     {
