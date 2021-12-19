@@ -135,7 +135,10 @@ class ServiceUnavailableListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockEvent(Request $request, bool $isMainRequest = true)
+    /**
+     * @return RequestEvent&MockObject
+     */
+    private function mockEvent(Request $request, bool $isMainRequest = true): RequestEvent
     {
         $event = $this->createMock(RequestEvent::class);
 
