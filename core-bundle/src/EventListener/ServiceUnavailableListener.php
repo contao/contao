@@ -24,8 +24,6 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ServiceUnavailableListener
 {
-    public const JWT_ATTRIBUTE = 'bypass_maintenance';
-
     private ScopeMatcher $scopeMatcher;
     private ?JwtManager $jwtManager;
 
@@ -68,6 +66,6 @@ class ServiceUnavailableListener
 
         $data = $this->jwtManager->parseRequest($request);
 
-        return (bool) ($data[self::JWT_ATTRIBUTE] ?? false);
+        return (bool) ($data['bypass_maintenance'] ?? false);
     }
 }

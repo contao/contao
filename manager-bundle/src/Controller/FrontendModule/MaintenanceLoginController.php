@@ -14,7 +14,6 @@ namespace Contao\ManagerBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\ModuleModel;
 use Contao\StringUtil;
@@ -56,9 +55,13 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
         $template->disabled = null === $this->jwtManager;
         $template->invalidLogin = false;
 
+        if (null === $this->jwtManager) {
+            return $template->getResponse();
+        }
+
         if ($this->isLoggedIn($request)) {
             if ($request->request->get('FORM_SUBMIT') === $formId) {
-                $this->logout($request);
+                return $this->logout($request);
             }
 
             $template->logout = true;
@@ -121,11 +124,11 @@ class MaintenanceLoginController extends AbstractFrontendModuleController
         return null;
     }
 
-    private function logout(Request $request): void
+    private function logout(Request $request): Response
     {
         $response = new RedirectResponse($request->getUri());
         $this->jwtManager->clearResponseCookie($response);
 
-        throw new ResponseException($response);
+        return $response;
     }
 }

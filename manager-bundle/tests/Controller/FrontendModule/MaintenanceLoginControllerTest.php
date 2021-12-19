@@ -98,6 +98,184 @@ class MaintenanceLoginControllerTest extends ContaoTestCase
         $this->assertTrue($template->disabled);
     }
 
+    public function testPassesTheUsernameFromRequestToTemplate(): void
+    {
+        $pageModel = $this->mockPageModel(['maintenanceMode' => '1']);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+        $request->request->set('username', 'foobar');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $template = $this->mockTemplate();
+
+        $container = $this->getContainerWithFrameworkTemplate($template);
+        $container->set('request_stack', $requestStack);
+
+        $jwtManager = $this->createMock(JwtManager::class);
+
+        $controller = new MaintenanceLoginController($requestStack, $this->mockTokenManager(true), $jwtManager);
+        $controller->setContainer($container);
+
+        $controller($request, $this->mockClassWithProperties(ModuleModel::class), 'main');
+
+        $this->assertSame('foobar', $template->username);
+    }
+
+    public function testAddsResponseCookieOnLogin(): void
+    {
+        $pageModel = $this->mockPageModel(['maintenanceMode' => '1']);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+        $request->request->set('FORM_SUBMIT', 'tl_maintenance_login_42');
+        $request->request->set('username', 'foo');
+        $request->request->set('password', 'bar');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $template = $this->mockTemplate(false);
+
+        $container = $this->getContainerWithFrameworkTemplate($template);
+        $container->set('request_stack', $requestStack);
+
+        $jwtManager = $this->mockJwtManager([]);
+        $jwtManager
+            ->expects($this->once())
+            ->method('addResponseCookie')
+            ->with($this->isInstanceOf(Response::class), ['bypass_maintenance' => true, 'debug' => false])
+        ;
+
+        $controller = new MaintenanceLoginController($requestStack, $this->mockTokenManager(true), $jwtManager);
+        $controller->setContainer($container);
+
+        $moduleModel = $this->mockClassWithProperties(
+            ModuleModel::class,
+            [
+                'id' => '42',
+                'maintenanceUsername' => 'foo',
+                'maintenancePassword' => 'bar',
+            ]
+        );
+
+        $controller($request, $moduleModel, 'main');
+    }
+
+    public function testDoesNotAddResponseCookieOnInvalidLogin(): void
+    {
+        $pageModel = $this->mockPageModel(['maintenanceMode' => '1']);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+        $request->request->set('FORM_SUBMIT', 'tl_maintenance_login_42');
+        $request->request->set('username', 'bar');
+        $request->request->set('password', 'foo');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $template = $this->mockTemplate();
+
+        $container = $this->getContainerWithFrameworkTemplate($template);
+        $container->set('request_stack', $requestStack);
+
+        $jwtManager = $this->mockJwtManager([]);
+        $jwtManager
+            ->expects($this->never())
+            ->method('addResponseCookie')
+        ;
+
+        $controller = new MaintenanceLoginController($requestStack, $this->mockTokenManager(true), $jwtManager);
+        $controller->setContainer($container);
+
+        $moduleModel = $this->mockClassWithProperties(
+            ModuleModel::class,
+            [
+                'id' => '42',
+                'maintenanceUsername' => 'foo',
+                'maintenancePassword' => 'bar',
+            ]
+        );
+
+        $controller($request, $moduleModel, 'main');
+
+        $this->assertTrue($template->invalidLogin);
+    }
+
+    public function testKeepsDebugModeEnabledOnLogin(): void
+    {
+        $pageModel = $this->mockPageModel(['maintenanceMode' => '1']);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+        $request->request->set('FORM_SUBMIT', 'tl_maintenance_login_42');
+        $request->request->set('username', 'foo');
+        $request->request->set('password', 'bar');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $template = $this->mockTemplate(false);
+
+        $container = $this->getContainerWithFrameworkTemplate($template);
+        $container->set('request_stack', $requestStack);
+
+        $jwtManager = $this->mockJwtManager(['debug' => true]);
+        $jwtManager
+            ->expects($this->once())
+            ->method('addResponseCookie')
+            ->with($this->isInstanceOf(Response::class), ['bypass_maintenance' => true, 'debug' => true])
+        ;
+
+        $controller = new MaintenanceLoginController($requestStack, $this->mockTokenManager(true), $jwtManager);
+        $controller->setContainer($container);
+
+        $moduleModel = $this->mockClassWithProperties(
+            ModuleModel::class,
+            [
+                'id' => '42',
+                'maintenanceUsername' => 'foo',
+                'maintenancePassword' => 'bar',
+            ]
+        );
+
+        $controller($request, $moduleModel, 'main');
+    }
+
+    public function testClearsTheCookieOnLogout(): void
+    {
+        $pageModel = $this->mockPageModel(['maintenanceMode' => '1']);
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+        $request->request->set('FORM_SUBMIT', 'tl_maintenance_login_42');
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $template = $this->mockTemplate(false);
+
+        $container = $this->getContainerWithFrameworkTemplate($template);
+        $container->set('request_stack', $requestStack);
+
+        $jwtManager = $this->mockJwtManager(['bypass_maintenance' => true]);
+        $jwtManager
+            ->expects($this->once())
+            ->method('clearResponseCookie')
+            ->with($this->isInstanceOf(Response::class))
+        ;
+
+        $controller = new MaintenanceLoginController($requestStack, $this->mockTokenManager(true), $jwtManager);
+        $controller->setContainer($container);
+
+        $moduleModel = $this->mockClassWithProperties(ModuleModel::class, ['id' => '42']);
+
+        $controller($request, $moduleModel, 'main');
+    }
+
     /**
      * @return ContaoCsrfTokenManager&MockObject
      */
@@ -168,5 +346,21 @@ class MaintenanceLoginControllerTest extends ContaoTestCase
         ;
 
         return $pageModel;
+    }
+
+    /**
+     * @return JwtManager&MockObject
+     */
+    private function mockJwtManager(array $cookieData): JwtManager
+    {
+        $jwtManager = $this->createMock(JwtManager::class);
+
+        $jwtManager
+            ->expects($this->atLeastOnce())
+            ->method('parseRequest')
+            ->willReturn($cookieData)
+        ;
+
+        return $jwtManager;
     }
 }
