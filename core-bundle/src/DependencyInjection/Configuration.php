@@ -121,27 +121,11 @@ class Configuration implements ConfigurationInterface
                         )
                     ->end()
                 ->end()
-                ->arrayNode('allowed_protocols')
-                    ->prototype('scalar')->end()
-                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data'])
-                    ->validate()
-                        ->always(
-                            static function (array $protocols): array {
-                                foreach ($protocols as $protocol) {
-                                    if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
-                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
-                                    }
-                                }
-
-                                return $protocols;
-                            }
-                        )
-                    ->end()
-                ->end()
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
+                ->append($this->addSanitizerNode())
             ->end()
         ;
 
@@ -429,6 +413,33 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addSanitizerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('sanitizer'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_url_protocols')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data'])
+                    ->validate()
+                        ->always(
+                            static function (array $protocols): array {
+                                foreach ($protocols as $protocol) {
+                                    if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
+                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                    }
+                                }
+
+                                return $protocols;
+                            }
+                        )
+                    ->end()
                 ->end()
             ->end()
         ;

@@ -1049,11 +1049,11 @@ class StringUtil
 			. ');?'               // Optional semicolon
 		. ')i';
 
-		$arrAllowedProtocols = System::getContainer()->getParameter('contao.allowed_protocols');
+		$arrAllowedUrlProtocols = System::getContainer()->getParameter('contao.sanitizer.allowed_url_protocols');
 
 		// URL-encode colon to prevent disallowed protocols
 		if (
-			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedProtocols)) . '):)i', self::decodeEntities($strString))
+			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
 			$strString = preg_replace($colonRegEx, '%3A', $strString);
