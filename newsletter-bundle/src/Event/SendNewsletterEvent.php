@@ -19,8 +19,8 @@ class SendNewsletterEvent extends Event
     private string $recipientAddress;
     private string $text;
     private string $html;
-    private bool $preventSubmission = false;
-    private bool $allowHtml = true;
+    private bool $submissionPrevented = false;
+    private bool $htmlAllowed = true;
     private array $recipientData = [];
     private array $newsletterData = [];
 
@@ -43,14 +43,14 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    public function preventsSubmission(): bool
+    public function isSubmissionPrevented(): bool
     {
-        return $this->preventSubmission;
+        return $this->submissionPrevented;
     }
 
-    public function setPreventSubmission(bool $preventSubmission): void
+    public function setSubmissionPrevented(bool $submissionPrevented): void
     {
-        $this->preventSubmission = $preventSubmission;
+        $this->submissionPrevented = $submissionPrevented;
     }
 
     public function getText(): string
@@ -77,14 +77,14 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    public function allowsHtml(): bool
+    public function isHtmlAllowed(): bool
     {
-        return $this->allowHtml;
+        return $this->htmlAllowed;
     }
 
-    public function setAllowHtml(bool $allowHtml): self
+    public function setHtmlAllowed(bool $htmlAllowed): self
     {
-        $this->allowHtml = $allowHtml;
+        $this->htmlAllowed = $htmlAllowed;
 
         return $this;
     }
@@ -101,11 +101,17 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getRecipientValue(string $key)
     {
         return $this->recipientData[$key] ?? null;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setRecipientValue(string $key, $value): self
     {
         $this->recipientData[$key] = $value;
@@ -125,11 +131,17 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getNewsletterValue(string $key)
     {
         return $this->newsletterData[$key] ?? null;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setNewsletterValue(string $key, $value): self
     {
         $this->newsletterData[$key] = $value;

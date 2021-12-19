@@ -21,11 +21,11 @@ class SendNewsletterEventTest extends TestCase
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 
-        $this->assertFalse($event->preventsSubmission());
+        $this->assertFalse($event->isSubmissionPrevented());
 
-        $event->setPreventSubmission(true);
+        $event->setSubmissionPrevented(true);
 
-        $this->assertTrue($event->preventsSubmission());
+        $this->assertTrue($event->isSubmissionPrevented());
     }
 
     public function testGetsAndSetsTheNewsletterText(): void
@@ -95,10 +95,10 @@ class SendNewsletterEventTest extends TestCase
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 
-        $this->assertTrue($event->allowsHtml());
+        $this->assertTrue($event->isHtmlAllowed());
 
-        $event->setAllowHtml(false);
+        $event->setHtmlAllowed(false);
 
-        $this->assertFalse($event->allowsHtml());
+        $this->assertFalse($event->isHtmlAllowed());
     }
 }

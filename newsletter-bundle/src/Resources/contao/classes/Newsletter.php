@@ -416,19 +416,19 @@ class Newsletter extends Backend
 		}
 
 		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
-			->setAllowHtml($objNewsletter->sendText != 1)
+			->setHtmlAllowed($objNewsletter->sendText != 1)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
 
 		System::getContainer()->get('event_dispatcher')->dispatch($event);
 
-		if ($event->preventsSubmission())
+		if ($event->isSubmissionPrevented())
 		{
 			return false;
 		}
 
 		$objEmail->text = $event->getText();
-		$objEmail->html = $event->allowsHtml() ? $event->getHtml() : '';
+		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
 		// Deactivate invalid addresses
