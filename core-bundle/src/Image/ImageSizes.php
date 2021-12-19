@@ -24,38 +24,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizes implements ResetInterface
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private EventDispatcherInterface $eventDispatcher;
+    private ContaoFramework $framework;
+    private TranslatorInterface $translator;
+    private array $predefinedSizes = [];
+    private ?array $options = null;
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var array
-     */
-    private $predefinedSizes = [];
-
-    /**
-     * @var array|null
-     */
-    private $options;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.image.image_sizes" service instead
+     * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
      */
     public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, TranslatorInterface $translator)
     {
@@ -102,9 +79,7 @@ class ImageSizes implements ResetInterface
             $event = new ImageSizesEvent($this->options, $user);
         } else {
             $options = array_map(
-                static function ($val) {
-                    return is_numeric($val) ? (int) $val : $val;
-                },
+                static fn ($val) => is_numeric($val) ? (int) $val : $val,
                 StringUtil::deserialize($user->imageSizes, true)
             );
 
@@ -133,7 +108,17 @@ class ImageSizes implements ResetInterface
         // The framework is required to have the TL_CROP options available
         $this->framework->initialize();
 
+        // Backwards compatibility
         $this->options = $GLOBALS['TL_CROP'] ?? [];
+
+        if (
+            3 !== \count($this->options)
+            || 0 !== \count($this->options['image_sizes'] ?? [])
+            || 2 !== \count($this->options['relative'] ?? [])
+            || 10 !== \count($this->options['exact'] ?? [])
+        ) {
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using $GLOBALS[\'TL_CROP\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.image.sizes" service instead.');
+        }
 
         $rows = $this->connection->fetchAllAssociative(
             'SELECT

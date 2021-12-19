@@ -18,17 +18,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal
  */
 class GetDotEnvCommand extends Command
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     public function __construct(Application $application)
     {
@@ -56,13 +53,8 @@ class GetDotEnvCommand extends Command
             return 0;
         }
 
-        if (method_exists(Dotenv::class, 'usePutenv')) {
-            $dotenv = new Dotenv();
-            $dotenv->usePutenv(false);
-        } else {
-            // Backwards compatibility with symfony/dotenv <5.0
-            $dotenv = new Dotenv(false);
-        }
+        $dotenv = new Dotenv();
+        $dotenv->usePutenv(false);
 
         $vars = $dotenv->parse(file_get_contents($path));
         $key = $input->getArgument('key');

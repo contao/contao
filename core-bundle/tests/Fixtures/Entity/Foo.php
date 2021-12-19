@@ -21,11 +21,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Foo
 {
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    public int $id;
 }

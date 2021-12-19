@@ -160,7 +160,7 @@ class SerpPreview extends Widget
 		}
 		elseif (\is_callable($this->url_callback))
 		{
-			$url = \call_user_func($this->url_callback, $tempModel);
+			$url = ($this->url_callback)($tempModel);
 		}
 		else
 		{
@@ -184,7 +184,7 @@ class SerpPreview extends Widget
 
 		if (\is_callable($this->title_tag_callback))
 		{
-			return \call_user_func($this->title_tag_callback, $model);
+			return ($this->title_tag_callback)($model);
 		}
 
 		return '';

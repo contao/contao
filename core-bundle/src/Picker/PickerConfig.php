@@ -14,25 +14,14 @@ namespace Contao\CoreBundle\Picker;
 
 class PickerConfig implements \JsonSerializable
 {
-    /**
-     * @var string
-     */
-    private $context;
-
-    /**
-     * @var array
-     */
-    private $extras;
+    private string $context;
+    private array $extras;
+    private string $current;
 
     /**
      * @var string|int
      */
     private $value;
-
-    /**
-     * @var string
-     */
-    private $current;
 
     /**
      * @param string|int $value
@@ -73,17 +62,25 @@ class PickerConfig implements \JsonSerializable
 
     /**
      * Returns an extra value for a given provider or the general extra value.
+     *
+     * @return mixed
      */
     public function getExtraForProvider(string $name, string $provider)
     {
         return $this->extras[$provider][$name] ?? $this->getExtra($name);
     }
 
+    /**
+     * @return mixed
+     */
     public function getExtra(string $name)
     {
         return $this->extras[$name] ?? null;
     }
 
+    /**
+     * @param mixed $value
+     */
     public function setExtra(string $name, $value): void
     {
         $this->extras[$name] = $value;

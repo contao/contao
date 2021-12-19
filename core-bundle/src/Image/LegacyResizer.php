@@ -28,7 +28,7 @@ use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Resizes image objects and executes the legacy hooks.
@@ -37,19 +37,16 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var LegacyImage|null
-     */
-    private $legacyImage;
+    private ?LegacyImage $legacyImage = null;
 
     public function resize(ImageInterface $image, ResizeConfiguration $config, ResizeOptions $options): ImageInterface
     {
         $this->framework->initialize(true);
 
-        $projectDir = System::getContainer()->getParameter('kernel.project_dir');
+        $projectDir = (string) System::getContainer()->getParameter('kernel.project_dir');
 
         if ($this->hasExecuteResizeHook() || $this->hasGetImageHook()) {
-            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "executeResize" and "getImage" hooks has been deprecated and will no longer work in Contao 5.0. Replace the "contao.image.resizer" service instead.');
+            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "executeResize" and "getImage" hooks has been deprecated and will no longer work in Contao 5.0. Replace the "contao.image.legacy_resizer" service instead.');
 
             $this->legacyImage = null;
             $legacyPath = $image->getPath();
@@ -130,7 +127,6 @@ class LegacyResizer extends ImageResizer implements FrameworkAwareInterface
         if ($image->getImagine() instanceof GdImagine) {
             $dimensions = $image->getDimensions();
 
-            /** @var Config $config */
             $config = $this->framework->getAdapter(Config::class);
             $gdMaxImgWidth = $config->get('gdMaxImgWidth');
             $gdMaxImgHeight = $config->get('gdMaxImgHeight');

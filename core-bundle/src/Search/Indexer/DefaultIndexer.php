@@ -19,23 +19,12 @@ use Doctrine\DBAL\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private bool $indexProtected;
 
     /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var bool
-     */
-    private $indexProtected;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.search.indexer.default" service instead
+     * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
      */
     public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
     {
@@ -52,6 +41,10 @@ class DefaultIndexer implements IndexerInterface
 
         if ('' === $document->getBody()) {
             $this->throwBecause('Cannot index empty response.');
+        }
+
+        if (($canonical = $document->extractCanonicalUri()) && ((string) $canonical !== (string) $document->getUri())) {
+            $this->throwBecause(sprintf('Ignored because canonical URI "%s" does not match document URI.', $canonical));
         }
 
         try {
@@ -96,7 +89,6 @@ class DefaultIndexer implements IndexerInterface
 
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
 
         try {
@@ -119,7 +111,6 @@ class DefaultIndexer implements IndexerInterface
     {
         $this->framework->initialize();
 
-        /** @var Search $search */
         $search = $this->framework->getAdapter(Search::class);
         $search->removeEntry((string) $document->getUri());
     }
@@ -132,7 +123,7 @@ class DefaultIndexer implements IndexerInterface
     }
 
     /**
-     * @throws IndexerException
+     * @return never
      */
     private function throwBecause(string $message, bool $onlyWarning = true): void
     {
@@ -154,7 +145,7 @@ class DefaultIndexer implements IndexerInterface
                 $this->throwBecause('No JSON-LD found.');
             }
 
-            @trigger_error('Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.9', 'Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
         }
 
         // Merge all entries to one meta array (the latter overrides the former)

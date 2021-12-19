@@ -21,20 +21,9 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 final class MessageCatalogue implements MessageCatalogueInterface
 {
-    /**
-     * @var MessageCatalogueInterface
-     */
-    private $parent;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ResourceFinder
-     */
-    private $resourceFinder;
+    private MessageCatalogueInterface $parent;
+    private ContaoFramework $framework;
+    private ResourceFinder $resourceFinder;
 
     /**
      * @internal Do not instantiate this class; use Translator::getCatalogue() instead
@@ -163,7 +152,6 @@ final class MessageCatalogue implements MessageCatalogueInterface
     {
         $this->framework->initialize();
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
         $system->loadLanguageFile(substr($domain, 7), $this->getLocale());
 

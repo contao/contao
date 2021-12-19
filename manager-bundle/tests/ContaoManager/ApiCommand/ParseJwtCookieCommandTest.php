@@ -16,20 +16,12 @@ use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\ParseJwtCookieCommand;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ParseJwtCookieCommandTest extends ContaoTestCase
 {
-    /**
-     * @var JwtManager&MockObject
-     */
+    private ParseJwtCookieCommand $command;
     private $jwtManager;
-
-    /**
-     * @var ParseJwtCookieCommand
-     */
-    private $command;
 
     protected function setUp(): void
     {

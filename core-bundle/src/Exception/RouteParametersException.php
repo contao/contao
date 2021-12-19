@@ -13,24 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Exception;
 
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Route;
 
-class RouteParametersException extends \InvalidArgumentException implements ExceptionInterface
+class RouteParametersException extends InvalidParameterException
 {
-    /**
-     * @var Route
-     */
-    private $route;
-
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    /**
-     * @var int
-     */
-    private $referenceType;
+    private Route $route;
+    private array $parameters;
+    private int $referenceType;
 
     public function __construct(Route $route, array $parameters, int $referenceType, ExceptionInterface $previous)
     {

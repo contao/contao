@@ -22,15 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class Version447Update extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private Connection $connection;
+    private TranslatorInterface $translator;
 
     public function __construct(Connection $connection, TranslatorInterface $translator)
     {
@@ -45,7 +38,7 @@ class Version447Update extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_newsletter_recipients'])) {
             return false;
@@ -58,7 +51,7 @@ class Version447Update extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         // Back up the existing subscriptions
         if (!$schemaManager->tablesExist(['tl_newsletter_recipients_backup'])) {

@@ -31,10 +31,7 @@ class DebugDcaCommand extends Command
 {
     protected static $defaultName = 'debug:dca';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {

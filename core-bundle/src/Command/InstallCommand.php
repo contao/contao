@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Installs the required Contao directories.
@@ -29,35 +29,12 @@ class InstallCommand extends Command
 {
     protected static $defaultName = 'contao:install';
 
-    /**
-     * @var Filesystem
-     */
-    private $fs;
-
-    /**
-     * @var array
-     */
-    private $rows = [];
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $uploadPath;
-
-    /**
-     * @var string
-     */
-    private $imageDir;
-
-    /**
-     * @var string
-     */
-    private $webDir;
+    private ?Filesystem $fs = null;
+    private array $rows = [];
+    private string $projectDir;
+    private string $uploadPath;
+    private string $imageDir;
+    private ?string $webDir;
 
     public function __construct(string $projectDir, string $uploadPath, string $imageDir)
     {

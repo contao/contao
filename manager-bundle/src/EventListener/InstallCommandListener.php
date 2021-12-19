@@ -15,17 +15,14 @@ namespace Contao\ManagerBundle\EventListener;
 use Contao\CoreBundle\Command\InstallCommand;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal
  */
 class InstallCommandListener
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     public function __construct(string $projectDir)
     {

@@ -28,10 +28,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_calendar.picker.event_provider" service instead
@@ -113,7 +110,6 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
      */
     private function getCalendarId($id): ?int
     {
-        /** @var CalendarEventsModel $eventAdapter */
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 
         if (!($calendarEventsModel = $eventAdapter->findById($id)) instanceof CalendarEventsModel) {

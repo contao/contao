@@ -16,20 +16,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PreviewUrlCreateEvent extends Event
 {
-    /**
-     * @var string
-     */
-    private $key;
+    private string $key;
+    private ?string $query = null;
 
     /**
-     * @var int
+     * @var string|int
      */
     private $id;
-
-    /**
-     * @var string
-     */
-    private $query;
 
     /**
      * @param string|int $id

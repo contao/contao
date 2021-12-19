@@ -12,20 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Translation;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Webmozart\PathUtil\Path;
 
 class LanguageResolver
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $translationsDir;
+    private RequestStack $requestStack;
+    private string $translationsDir;
 
     public function __construct(RequestStack $requestStack, string $translationsDir)
     {

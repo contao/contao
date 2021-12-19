@@ -14,32 +14,17 @@ namespace Contao\CoreBundle\Config\Dumper;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Combines multiple files into one PHP file.
  */
 class CombinedFileDumper implements DumperInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var string
-     */
-    private $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
+    private Filesystem $filesystem;
+    private LoaderInterface $loader;
+    private string $cacheDir;
+    private string $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
     public function __construct(Filesystem $filesystem, LoaderInterface $loader, string $cacheDir)
     {

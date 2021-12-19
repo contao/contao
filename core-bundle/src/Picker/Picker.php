@@ -17,25 +17,14 @@ use Knp\Menu\ItemInterface;
 
 class Picker implements PickerInterface
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $menuFactory;
+    private FactoryInterface $menuFactory;
+    private PickerConfig $config;
+    private ?ItemInterface $menu = null;
 
     /**
      * @var array<PickerProviderInterface>
      */
-    private $providers;
-
-    /**
-     * @var PickerConfig
-     */
-    private $config;
-
-    /**
-     * @var ItemInterface
-     */
-    private $menu;
+    private array $providers;
 
     /**
      * @param array<PickerProviderInterface> $providers

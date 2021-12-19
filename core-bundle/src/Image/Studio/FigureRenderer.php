@@ -23,20 +23,9 @@ use Twig\Environment;
 
 class FigureRenderer
 {
-    /**
-     * @var Studio
-     */
-    private $studio;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var PropertyAccessor
-     */
-    private $propertyAccessor;
+    private Studio $studio;
+    private Environment $twig;
+    private PropertyAccessor $propertyAccessor;
 
     public function __construct(Studio $studio, Environment $twig)
     {

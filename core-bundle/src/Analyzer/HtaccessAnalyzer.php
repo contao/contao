@@ -14,10 +14,7 @@ namespace Contao\CoreBundle\Analyzer;
 
 class HtaccessAnalyzer
 {
-    /**
-     * @var \SplFileInfo
-     */
-    private $file;
+    private \SplFileInfo $file;
 
     /**
      * @throws \InvalidArgumentException

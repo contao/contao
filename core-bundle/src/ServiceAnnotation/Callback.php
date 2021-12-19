@@ -30,20 +30,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class Callback implements ServiceTagInterface
 {
-    /**
-     * @var string
-     */
-    public $table;
-
-    /**
-     * @var string
-     */
-    public $target;
-
-    /**
-     * @var int
-     */
-    public $priority;
+    public string $table;
+    public string $target;
+    public ?int $priority = null;
 
     public function getName(): string
     {
@@ -57,7 +46,7 @@ final class Callback implements ServiceTagInterface
             'target' => $this->target,
         ];
 
-        if ($this->priority) {
+        if (null !== $this->priority) {
             $attributes['priority'] = $this->priority;
         }
 

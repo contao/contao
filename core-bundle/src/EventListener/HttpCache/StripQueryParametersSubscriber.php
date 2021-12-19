@@ -48,15 +48,8 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         'utm_[a-z]+',
     ];
 
-    /**
-     * @var array
-     */
-    private $allowList;
-
-    /**
-     * @var array
-     */
-    private $removeFromDenyList = [];
+    private array $allowList;
+    private array $removeFromDenyList = [];
 
     public function __construct(array $allowList = [])
     {

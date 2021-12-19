@@ -27,69 +27,26 @@ use Contao\StringUtil;
 use Imagine\Image\ImagineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
-    /**
-     * @var ResizerInterface
-     */
-    private $resizer;
+    private ResizerInterface $resizer;
+    private ImagineInterface $imagine;
+    private ImagineInterface $imagineSvg;
+    private ContaoFramework $framework;
+    private Filesystem $filesystem;
+    private bool $bypassCache;
+    private array $imagineOptions;
+    private array $validExtensions;
+    private string $uploadDir;
+    private array $predefinedSizes = [];
+    private ?LoggerInterface $logger;
 
     /**
-     * @var ImagineInterface
+     * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
      */
-    private $imagine;
-
-    /**
-     * @var ImagineInterface
-     */
-    private $imagineSvg;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var bool
-     */
-    private $bypassCache;
-
-    /**
-     * @var array
-     */
-    private $imagineOptions;
-
-    /**
-     * @var array
-     */
-    private $validExtensions;
-
-    /**
-     * @var string
-     */
-    private $uploadDir;
-
-    /**
-     * @var array
-     */
-    private $predefinedSizes = [];
-
-    /**
-     * @var ?LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.image.image_factory" service instead
-     */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, ?LoggerInterface $logger = null)
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, LoggerInterface $logger = null)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -241,7 +198,6 @@ class ImageFactory implements ImageFactoryInterface
         if (isset($size[2])) {
             // Database record
             if (is_numeric($size[2])) {
-                /** @var ImageSizeModel $imageModel */
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
                 if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
@@ -317,7 +273,6 @@ class ImageFactory implements ImageFactoryInterface
             throw new \RuntimeException('Contao framework was not initialized');
         }
 
-        /** @var FilesModel $filesModel */
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 

@@ -20,20 +20,9 @@ use Symfony\Component\Security\Core\Security;
 
 class DebugController
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var JwtManager
-     */
-    private $jwtManager;
-
-    /**
-     * @var Security
-     */
-    private $security;
+    private RequestStack $requestStack;
+    private JwtManager $jwtManager;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "Contao\ManagerBundle\Controller\DebugController" service instead

@@ -21,20 +21,9 @@ use Symfony\Component\Routing\RequestContext;
 
 class UrlGenerator implements UrlGeneratorInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private UrlGeneratorInterface $router;
+    private ContaoFramework $framework;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.url_generator" service instead
@@ -58,7 +47,7 @@ class UrlGenerator implements UrlGeneratorInterface
         return $this->router->getContext();
     }
 
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): ?string
     {
         $this->framework->initialize();
 
@@ -113,8 +102,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Adds the parameters to the alias.
-     *
-     * @throws MissingMandatoryParametersException
      */
     private function prepareAlias(string $alias, array &$parameters): void
     {
@@ -124,8 +111,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
         $hasAutoItem = false;
         $autoItems = $this->getAutoItems($parameters);
-
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $parameters['alias'] = preg_replace_callback(

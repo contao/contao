@@ -17,12 +17,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\InputBag;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -51,7 +50,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager = $this->mockAuthenticationManager($requiresAuthentication ? 'foo' : null, 'foobar');
 
         $listener = $this->createListener($authenticationManager);
-        $listener($this->mockRequestEvent($request));
+        $listener($this->getRequestEvent($request));
     }
 
     public function requiresAuthenticationProvider(): \Generator
@@ -61,21 +60,6 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         yield 'no authentication without POST' => [false, 'tl_login', false];
         yield 'no authentication without form submit' => [true, null, false];
         yield 'no authentication with invalid form submit' => [true, 'tl_foobar', false];
-    }
-
-    public function testThrowsExceptionIfUsernameIsNotAString(): void
-    {
-        $request = $this->mockRequest();
-        $request->request->set('FORM_SUBMIT', 'tl_login');
-        $request->request->set('username', ['foo']);
-        $request->request->set('password', 'foobar');
-
-        $authenticationManager = $this->mockAuthenticationManager(null);
-        $listener = $this->createListener($authenticationManager);
-
-        $this->expectException(BadRequestHttpException::class);
-
-        $listener($this->mockRequestEvent($request));
     }
 
     public function testTrimsTheUsername(): void
@@ -88,7 +72,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager = $this->mockAuthenticationManager('foo', 'foobar');
 
         $listener = $this->createListener($authenticationManager);
-        $listener($this->mockRequestEvent($request));
+        $listener($this->getRequestEvent($request));
     }
 
     public function testFailsAuthenticationIfUsernameIsTooLong(): void
@@ -101,7 +85,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager = $this->mockAuthenticationManager(null);
 
         $listener = $this->createListener($authenticationManager);
-        $listener($this->mockRequestEvent($request));
+        $listener($this->getRequestEvent($request));
     }
 
     public function testStoresLastUsernameInSession(): void
@@ -121,7 +105,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $authenticationManager = $this->mockAuthenticationManager('foo', 'foobar');
 
         $listener = $this->createListener($authenticationManager);
-        $listener($this->mockRequestEvent($request));
+        $listener($this->getRequestEvent($request));
     }
 
     public function testHandlesTwoFactorAuthentication(): void
@@ -156,7 +140,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
         $request->request->set('verify', '123456');
 
         $listener = $this->createListener($authenticationManager, $tokenStorage);
-        $listener($this->mockRequestEvent($request));
+        $listener($this->getRequestEvent($request));
     }
 
     private function createListener(AuthenticationManagerInterface $authenticationManager, TokenStorageInterface $tokenStorage = null): ContaoLoginAuthenticationListener
@@ -167,9 +151,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        if (null === $tokenStorage) {
-            $tokenStorage = $this->createMock(TokenStorageInterface::class);
-        }
+        $tokenStorage ??= $this->createMock(TokenStorageInterface::class);
 
         return new ContaoLoginAuthenticationListener(
             $tokenStorage,
@@ -190,9 +172,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
      */
     private function mockRequest(bool $isPost = true, SessionInterface $session = null): Request
     {
-        if (null === $session) {
-            $session = $this->createMock(SessionInterface::class);
-        }
+        $session ??= $this->createMock(SessionInterface::class);
 
         $request = $this->createMock(Request::class);
         $request
@@ -217,17 +197,19 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
             ->willReturn($isPost)
         ;
 
-        /** @phpstan-ignore-next-line */
-        $request->request = class_exists(InputBag::class) ? new InputBag() : new ParameterBag();
+        $request->request = new InputBag();
 
         return $request;
     }
 
-    private function mockRequestEvent(Request $request): RequestEvent
+    private function getRequestEvent(Request $request): RequestEvent
     {
-        return new RequestEvent($this->createMock(KernelInterface::class), $request, KernelInterface::MASTER_REQUEST);
+        return new RequestEvent($this->createMock(KernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
+    /**
+     * @return AuthenticationManagerInterface&MockObject
+     */
     private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface
     {
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);

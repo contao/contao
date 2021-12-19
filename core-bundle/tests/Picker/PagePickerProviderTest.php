@@ -207,11 +207,7 @@ class PagePickerProviderTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
         $router
             ->method('generate')
-            ->willReturnCallback(
-                static function (string $name, array $params): string {
-                    return $name.'?'.http_build_query($params);
-                }
-            )
+            ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);

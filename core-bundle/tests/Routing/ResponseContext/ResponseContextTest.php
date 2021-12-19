@@ -45,7 +45,7 @@ class ResponseContextTest extends TestCase
 
         $this->assertFalse($context->has(HtmlHeadBag::class));
 
-        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
+        $context->addLazy(HtmlHeadBag::class, static fn () => new HtmlHeadBag());
 
         $this->assertTrue($context->has(HtmlHeadBag::class));
         $this->assertInstanceOf(HtmlHeadBag::class, $context->get(HtmlHeadBag::class));
@@ -54,7 +54,7 @@ class ResponseContextTest extends TestCase
     public function testLazyServicesAreNotDuplicated(): void
     {
         $context = new ResponseContext();
-        $context->addLazy(ResponseHeaderBag::class, static function () { return new ResponseHeaderBag(); });
+        $context->addLazy(ResponseHeaderBag::class, static fn () => new ResponseHeaderBag());
 
         $this->assertTrue($context->has(ResponseHeaderBag::class));
         $this->assertTrue($context->has(HeaderBag::class));
@@ -73,8 +73,8 @@ class ResponseContextTest extends TestCase
 
         $this->assertFalse($context->has(ParameterBag::class));
 
-        $context->addLazy(ServerBag::class, static function () { return new ServerBag(); });
-        $context->addLazy(InputBag::class, static function () { return new InputBag(); });
+        $context->addLazy(ServerBag::class, static fn () => new ServerBag());
+        $context->addLazy(InputBag::class, static fn () => new InputBag());
 
         $this->assertInstanceOf(ServerBag::class, $context->get(ServerBag::class));
         $this->assertInstanceOf(InputBag::class, $context->get(ParameterBag::class));
@@ -93,7 +93,7 @@ class ResponseContextTest extends TestCase
         $context = new ResponseContext();
         $this->assertFalse($context->isInitialized(HtmlHeadBag::class));
 
-        $context->addLazy(HtmlHeadBag::class, static function () { return new HtmlHeadBag(); });
+        $context->addLazy(HtmlHeadBag::class, static fn () => new HtmlHeadBag());
         $this->assertFalse($context->isInitialized(HtmlHeadBag::class));
 
         $context->get(HtmlHeadBag::class);

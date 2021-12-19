@@ -18,29 +18,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
  */
 class InstallWebDirCommand extends Command
 {
-    /**
-     * @var Filesystem
-     */
-    private $fs;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ?Filesystem $fs = null;
+    private ?SymfonyStyle $io = null;
+    private string $projectDir;
 
     public function __construct(string $projectDir)
     {

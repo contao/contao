@@ -18,17 +18,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal
  */
 class RemoveDotEnvCommand extends Command
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private string $projectDir;
 
     public function __construct(Application $application)
     {

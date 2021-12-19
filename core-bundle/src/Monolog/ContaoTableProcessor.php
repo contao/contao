@@ -21,20 +21,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ContaoTableProcessor implements ProcessorInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private RequestStack $requestStack;
+    private TokenStorageInterface $tokenStorage;
+    private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.monolog.processor" service instead
@@ -57,7 +46,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $context = $record['context']['contao'];
         $request = $this->requestStack->getCurrentRequest();
-        $level = $record['level'] ?? 0;
+        $level = $record['level'];
 
         $this->updateAction($context, $level);
         $this->updateBrowser($context, $request);
@@ -100,7 +89,7 @@ class ContaoTableProcessor implements ProcessorInterface
 
         $token = $this->tokenStorage->getToken();
 
-        $context->setUsername(null === $token ? 'N/A' : $token->getUsername());
+        $context->setUsername(null === $token ? 'N/A' : $token->getUserIdentifier());
     }
 
     private function updateSource(ContaoContext $context, Request $request = null): void

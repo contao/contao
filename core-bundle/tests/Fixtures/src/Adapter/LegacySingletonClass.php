@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Fixtures\Adapter;
 
 class LegacySingletonClass
 {
-    public $constructorArgs = [];
+    public array $constructorArgs = [];
 
     private function __construct($arg1 = null, $arg2 = null)
     {

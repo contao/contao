@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Routing\Matcher;
 
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
@@ -23,25 +24,10 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class LegacyMatcher implements RequestMatcherInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $requestMatcher;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
-
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private ContaoFramework $framework;
+    private RequestMatcherInterface $requestMatcher;
+    private string $urlSuffix;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.legacy_matcher" service instead
@@ -75,7 +61,7 @@ class LegacyMatcher implements RequestMatcherInterface
         try {
             $match = $this->requestMatcher->matchRequest($request);
             $fragments = $this->createFragmentsFromMatch($match);
-            $locale = $match['_locale'] ?? null;
+            $locale = isset($match['_locale']) ? LocaleUtil::formatAsLanguageTag($match['_locale']) : null;
         } catch (ResourceNotFoundException $e) {
             // continue and parse fragments from path
         }
@@ -90,7 +76,6 @@ class LegacyMatcher implements RequestMatcherInterface
                 throw new ResourceNotFoundException('Locale is missing');
             }
 
-            /** @var Input $input */
             $input = $this->framework->getAdapter(Input::class);
             $input->setGet('language', $locale);
         }
@@ -116,9 +101,8 @@ class LegacyMatcher implements RequestMatcherInterface
             return [$page->alias];
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
-        $fragments = array_merge([$page->alias], explode('/', substr($parameters, 1)));
+        $fragments = [...[$page->alias], ...explode('/', substr($parameters, 1))];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if ($config->get('useAutoItem') && 0 === \count($fragments) % 2) {
@@ -130,7 +114,6 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function createFragmentsFromPath(string $pathInfo): array
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', $pathInfo);
 
@@ -144,7 +127,6 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function executeLegacyHook(array $fragments): array
     {
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         foreach ($GLOBALS['TL_HOOKS']['getPageIdFromUrl'] as $callback) {
@@ -161,7 +143,6 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function createPathFromFragments(array $fragments, ?string $locale): string
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if (isset($fragments[1]) && 'auto_item' === $fragments[1] && $config->get('useAutoItem')) {

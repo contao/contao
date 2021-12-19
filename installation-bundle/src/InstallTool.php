@@ -22,34 +22,19 @@ use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Webmozart\PathUtil\Path;
 
 class InstallTool
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private string $projectDir;
+    private LoggerInterface $logger;
+    private MigrationCollection $migrations;
 
     /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var MigrationCollection
-     */
-    private $migrations;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.install_tool" service instead
+     * @internal Do not inherit from this class; decorate the "contao_installation.install_tool" service instead
      */
     public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
     {
@@ -116,7 +101,7 @@ class InstallTool
         } catch (\Exception $e) {
         }
 
-        if (null === $name || null === $this->connection) {
+        if (null === $name) {
             return false;
         }
 
@@ -143,7 +128,7 @@ class InstallTool
 
     public function hasTable(string $name): bool
     {
-        return $this->connection->getSchemaManager()->tablesExist([$name]);
+        return $this->connection->createSchemaManager()->tablesExist([$name]);
     }
 
     public function isFreshInstallation(): bool
@@ -334,7 +319,7 @@ class InstallTool
     public function importTemplate(string $template, bool $preserveData = false): void
     {
         if (!$preserveData) {
-            $tables = $this->connection->getSchemaManager()->listTableNames();
+            $tables = $this->connection->createSchemaManager()->listTableNames();
 
             foreach ($tables as $table) {
                 if (0 === strncmp($table, 'tl_', 3)) {

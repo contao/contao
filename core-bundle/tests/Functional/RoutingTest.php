@@ -17,16 +17,13 @@ use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class RoutingTest extends FunctionalTestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @var array
-     */
-    private static $lastImport;
+    private static ?array $lastImport = null;
 
     public static function setUpBeforeClass(): void
     {
@@ -389,7 +386,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        self::$container
+        self::getContainer()
             ->get('doctrine')
             ->getConnection()
             ->executeStatement('UPDATE tl_page SET urlPrefix=language')
@@ -728,7 +725,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        self::$container
+        self::getContainer()
             ->get('doctrine')
             ->getConnection()
             ->executeStatement("UPDATE tl_page SET urlSuffix=''")
@@ -1078,7 +1075,7 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles($fixtures);
 
-        self::$container
+        self::getContainer()
             ->get('doctrine')
             ->getConnection()
             ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
@@ -1370,9 +1367,7 @@ class RoutingTest extends FunctionalTestCase
         self::$lastImport = $fileNames;
 
         static::loadFixtures(array_map(
-            static function ($file) {
-                return __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml';
-            },
+            static fn ($file) => __DIR__.'/../Fixtures/Functional/Routing/'.$file.'.yml',
             $fileNames
         ));
     }

@@ -21,7 +21,6 @@ use Contao\Input;
 use Contao\NewsletterChannelModel;
 use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter'] = array
 (
@@ -51,7 +50,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sent', 'date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'sender'),
 			'panelLayout'             => 'filter;sort,search,limit',
@@ -137,7 +136,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -246,7 +245,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -259,7 +258,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'eval'                    => array('doNotCopy'=>true, 'isBoolean'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
@@ -267,7 +266,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 8,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'eval'                    => array('rgxp'=>'datim'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		)
@@ -372,7 +371,6 @@ class tl_newsletter extends Backend
 				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
 											 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();

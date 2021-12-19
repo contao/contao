@@ -89,7 +89,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                         'disabled' => true,
                         'helpwizard' => false,
                     ],
-                    'xlabel' => [[DisableAppConfiguredSettingsListener::class, 'renderHelpIcon']],
+                    'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
                 'dateFormat' => [
                     'inputType' => 'text',
@@ -101,7 +101,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                         'disabled' => true,
                     ],
                     'explanation' => 'dateFormat',
-                    'xlabel' => [[DisableAppConfiguredSettingsListener::class, 'renderHelpIcon']],
+                    'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
             ],
             $GLOBALS['TL_DCA']['tl_settings']['fields']
@@ -132,14 +132,11 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         );
     }
 
-    private function createListener(array $localConfig = null, ?TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
+    private function createListener(array $localConfig = null, TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
 
-        if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
-        }
-
+        $translator ??= $this->createMock(TranslatorInterface::class);
         $framework = $this->mockContaoFramework($adapters);
 
         return new DisableAppConfiguredSettingsListener($translator, $framework, $localConfig ?: []);

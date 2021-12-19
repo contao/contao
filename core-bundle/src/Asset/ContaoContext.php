@@ -22,25 +22,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContaoContext implements ContextInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var string
-     */
-    private $field;
-
-    /**
-     * @var bool
-     */
-    private $debug;
+    private RequestStack $requestStack;
+    private ContaoFramework $framework;
+    private string $field;
+    private bool $debug;
 
     public function __construct(RequestStack $requestStack, ContaoFramework $framework, string $field, bool $debug = false)
     {
@@ -52,14 +37,12 @@ class ContaoContext implements ContextInterface
 
     public function getBasePath(): string
     {
-        if ($this->debug) {
+        if (null === ($request = $this->requestStack->getMainRequest())) {
             return '';
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request || '' === ($staticUrl = $this->getFieldValue($this->getPageModel()))) {
-            return '';
+        if ($this->debug || '' === ($staticUrl = $this->getFieldValue($this->getPageModel()))) {
+            return $request->getBasePath();
         }
 
         $protocol = $this->isSecure() ? 'https' : 'http';
@@ -76,7 +59,7 @@ class ContaoContext implements ContextInterface
             return (bool) $page->loadDetails()->rootUseSSL;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request) {
             return false;
@@ -99,7 +82,7 @@ class ContaoContext implements ContextInterface
 
     private function getPageModel(): ?PageModel
     {
-        $request = $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request || !$request->attributes->has('pageModel')) {
             if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
@@ -125,10 +108,7 @@ class ContaoContext implements ContextInterface
 
         $this->framework->initialize();
 
-        /** @var PageModel $pageAdapter */
-        $pageAdapter = $this->framework->getAdapter(PageModel::class);
-
-        return $pageAdapter->findByPk((int) $pageModel);
+        return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
     }
 
     /**

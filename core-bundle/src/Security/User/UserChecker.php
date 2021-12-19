@@ -24,10 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.user_checker" service instead
@@ -53,9 +50,6 @@ class UserChecker implements UserCheckerInterface
     {
     }
 
-    /**
-     * @throws LockedException
-     */
     private function checkIfAccountIsLocked(User $user): void
     {
         $lockedSeconds = $user->locked - time();
@@ -87,7 +81,7 @@ class UserChecker implements UserCheckerInterface
     }
 
     /**
-     * Checks wether login is allowed (front end only).
+     * Checks whether login is allowed (front end only).
      */
     private function checkIfLoginIsAllowed(User $user): void
     {
@@ -106,7 +100,6 @@ class UserChecker implements UserCheckerInterface
      */
     private function checkIfAccountIsActive(User $user): void
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $start = (int) $user->start;

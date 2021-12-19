@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-use Patchwork\Utf8;
-
 /**
  * Class ModuleFaqPage
  *
@@ -40,7 +37,7 @@ class ModuleFaqPage extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['faqpage'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['faqpage'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -104,7 +101,7 @@ class ModuleFaqPage extends Module
 			if ($objFaq->addImage)
 			{
 				$figure = System::getContainer()
-					->get(Studio::class)
+					->get('contao.image.studio')
 					->createFigureBuilder()
 					->from($objFaq->singleSRC)
 					->setSize($objFaq->size)

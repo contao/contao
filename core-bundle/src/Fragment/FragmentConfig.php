@@ -14,20 +14,9 @@ namespace Contao\CoreBundle\Fragment;
 
 class FragmentConfig
 {
-    /**
-     * @var string
-     */
-    private $controller;
-
-    /**
-     * @var string
-     */
-    private $renderer;
-
-    /**
-     * @var array
-     */
-    private $options;
+    private string $controller;
+    private string $renderer;
+    private array $options;
 
     /**
      * @see \Symfony\Component\HttpKernel\Fragment\FragmentHandler::render()
@@ -78,11 +67,17 @@ class FragmentConfig
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getOption(string $name)
     {
         return $this->options[$name] ?? null;
     }
 
+    /**
+     * @param mixed $option
+     */
     public function setOption(string $name, $option): self
     {
         $this->options[$name] = $option;

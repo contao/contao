@@ -16,6 +16,7 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
+use Monolog\Logger as BaseLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Bridge\Monolog\Logger;
@@ -29,6 +30,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\HttpClient\ChunkInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Terminal42\Escargot\CrawlUri;
@@ -39,26 +41,14 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
 use Terminal42\Escargot\Queue\InMemoryQueue;
 use Terminal42\Escargot\Subscriber\FinishedCrawlingSubscriberInterface;
 use Terminal42\Escargot\Subscriber\SubscriberInterface;
-use Webmozart\PathUtil\Path;
 
 class CrawlCommand extends Command
 {
     protected static $defaultName = 'contao:crawl';
 
-    /**
-     * @var Factory
-     */
-    private $escargotFactory;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var Escargot
-     */
-    private $escargot;
+    private Factory $escargotFactory;
+    private Filesystem $filesystem;
+    private ?Escargot $escargot = null;
 
     public function __construct(Factory $escargotFactory, Filesystem $filesystem)
     {
@@ -171,7 +161,7 @@ class CrawlCommand extends Command
                 $this->filesystem->remove($input->getOption('debug-csv-path'));
             }
 
-            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Logger::DEBUG);
+            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), BaseLogger::DEBUG);
             $handlers[] = $csvDebugHandler;
         }
 
@@ -204,10 +194,7 @@ class CrawlCommand extends Command
         return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
             use EscargotAwareTrait;
 
-            /**
-             * @var ProgressBar
-             */
-            private $progressBar;
+            private ?ProgressBar $progressBar;
 
             public function __construct(ProgressBar $progressBar)
             {

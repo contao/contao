@@ -31,9 +31,6 @@ use Contao\ManagerPlugin\Config\ExtensionPluginInterface;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\DBAL\DBALException as DoctrineDbalDbalException;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception as DoctrineDbalException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -47,6 +44,7 @@ use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -54,27 +52,13 @@ use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
-    /**
-     * @var string|null
-     */
-    private static $autoloadModules;
-
-    /**
-     * @var callable
-     */
-    private $dbalConnectionFactory;
-
-    public function __construct(callable $dbalConnectionFactory = null)
-    {
-        $this->dbalConnectionFactory = $dbalConnectionFactory ?: [DriverManager::class, 'getConnection'];
-    }
+    private static ?string $autoloadModules = null;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -199,6 +183,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         return [
             'dot-env' => [
+                'APP_SECRET',
+                'APP_ENV',
+                'COOKIE_WHITELIST',
+                'DATABASE_URL',
+                'DISABLE_HTTP_CACHE',
+                'MAILER_URL',
+                'MAILER_DSN',
+                'TRACE_LEVEL',
                 'TRUSTED_PROXIES',
                 'TRUSTED_HOSTS',
             ],
@@ -250,11 +242,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
             case 'doctrine':
                 if (!isset($_SERVER['DATABASE_URL'])) {
-                    $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container));
+                    $container->setParameter('env(DATABASE_URL)', $this->getDatabaseUrl($container, $extensionConfigs));
                 }
 
-                $extensionConfigs = $this->addDefaultServerVersion($extensionConfigs, $container);
-                $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs);
+                $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
 
                 return $this->addDefaultDoctrineMapping($extensionConfigs, $container);
         }
@@ -289,74 +280,44 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Adds the database server version to the Doctrine DBAL configuration.
-     *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
-     */
-    private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
-    {
-        $params = [];
-
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['dbal']['connections']['default'])) {
-                $params[] = $extensionConfig['dbal']['connections']['default'];
-            }
-        }
-
-        if (!empty($params)) {
-            $params = array_merge(...$params);
-        }
-
-        $parameterBag = $container->getParameterBag();
-
-        foreach ($params as $key => $value) {
-            $params[$key] = $parameterBag->unescapeValue($container->resolveEnvPlaceholders($value, true));
-        }
-
-        // If there are no DB credentials yet (install tool), we have to set
-        // the server version to prevent a DBAL exception (see #1422)
-        try {
-            $connection = \call_user_func($this->dbalConnectionFactory, $params);
-            $connection->connect();
-            $connection->executeQuery('SHOW TABLES');
-            $connection->close();
-        } catch (DoctrineDbalException | DoctrineDbalDbalException | \mysqli_sql_exception $e) {
-            $extensionConfigs[] = [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        return $extensionConfigs;
-    }
-
-    /**
      * Sets the PDO driver options if applicable (#2459).
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
-    private function addDefaultPdoDriverOptions(array $extensionConfigs): array
+    private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
         // Do not add PDO options if the constant does not exist
         if (!\defined('PDO::MYSQL_ATTR_MULTI_STATEMENTS')) {
             return $extensionConfigs;
         }
 
+        $driver = null;
+        $url = null;
+
         foreach ($extensionConfigs as $extensionConfig) {
-            // Do not add PDO options if the selected driver is not pdo_mysql
-            if (isset($extensionConfig['dbal']['connections']['default']['driver']) && 'pdo_mysql' !== $extensionConfig['dbal']['connections']['default']['driver']) {
+            // Do not add PDO options if custom options have been defined
+            // Since this is merged recursively, we don't need to check other configs
+            if (isset($extensionConfig['dbal']['connections']['default']['options'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
                 return $extensionConfigs;
             }
 
-            // Do not add PDO options if custom options have been defined
-            if (isset($extensionConfig['dbal']['connections']['default']) && \array_key_exists('options', $extensionConfig['dbal']['connections']['default'])) {
-                return $extensionConfigs;
+            if (isset($extensionConfig['dbal']['connections']['default']['driver'])) {
+                $driver = $extensionConfig['dbal']['connections']['default']['driver'];
             }
+
+            if (isset($extensionConfig['dbal']['connections']['default']['url'])) {
+                $url = $container->resolveEnvPlaceholders($extensionConfig['dbal']['connections']['default']['url'], true);
+            }
+        }
+
+        // If URL is set it overrides the driver option
+        if (null !== $url) {
+            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
+        }
+
+        // Do not add PDO options if the selected driver is not mysql
+        if (null !== $driver && !\in_array($driver, ['pdo_mysql', 'mysql', 'mysql2'], true)) {
+            return $extensionConfigs;
         }
 
         $extensionConfigs[] = [
@@ -489,7 +450,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
     {
         foreach ($extensionConfigs as $config) {
-            if (isset($config['mailer']) && (isset($config['mailer']['transports']) || $config['mailer']['dsn'])) {
+            if (isset($config['mailer']) && (isset($config['mailer']['transports']) || isset($config['mailer']['dsn']))) {
                 return $extensionConfigs;
             }
         }
@@ -503,8 +464,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $extensionConfigs;
     }
 
-    private function getDatabaseUrl(ContainerBuilder $container): string
+    private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
     {
+        $driver = 'mysql';
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            // Loop over all configs so the last one wins
+            $driver = $extensionConfig['dbal']['connections']['default']['driver'] ?? $driver;
+        }
+
         $userPassword = '';
 
         if ($user = $container->getParameter('database_user')) {
@@ -524,7 +492,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return sprintf(
-            'mysql://%s%s:%s%s',
+            '%s://%s%s:%s%s',
+            str_replace('_', '-', $driver),
             $userPassword,
             $container->getParameter('database_host'),
             (int) $container->getParameter('database_port'),

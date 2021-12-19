@@ -18,15 +18,8 @@ use Contao\OptInModel;
 
 class OptInToken implements OptInTokenInterface
 {
-    /**
-     * @var OptInModel
-     */
-    private $model;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private OptInModel $model;
+    private ContaoFramework $framework;
 
     public function __construct(OptInModel $model, ContaoFramework $framework)
     {
@@ -70,7 +63,6 @@ class OptInToken implements OptInTokenInterface
             return;
         }
 
-        /** @var OptInModel $adapter */
         $adapter = $this->framework->getAdapter(OptInModel::class);
         $prefix = strtok($this->getIdentifier(), '-');
 
@@ -108,9 +100,6 @@ class OptInToken implements OptInTokenInterface
         return $this->model->confirmedOn > 0;
     }
 
-    /**
-     * @throws \LogicException
-     */
     public function send(string $subject = null, string $text = null): void
     {
         if ($this->isConfirmed()) {
@@ -131,10 +120,11 @@ class OptInToken implements OptInTokenInterface
             $this->model->save();
         }
 
-        /** @var Email $email */
         $email = $this->framework->createInstance(Email::class);
         $email->subject = $this->model->emailSubject;
         $email->text = $this->model->emailText;
+        $email->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
+        $email->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
         $email->sendTo($this->model->email);
     }
 

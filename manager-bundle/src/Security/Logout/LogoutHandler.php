@@ -20,10 +20,7 @@ use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
 
 class LogoutHandler implements LogoutHandlerInterface
 {
-    /**
-     * @var JwtManager|null
-     */
-    private $jwtManager;
+    private ?JwtManager $jwtManager;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.security.logout_handler" service instead

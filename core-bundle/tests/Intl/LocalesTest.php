@@ -274,9 +274,7 @@ class LocalesTest extends TestCase
 
         // Remove regions
         $expected = array_values(array_unique(array_map(
-            static function ($localeId) {
-                return preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId);
-            },
+            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId),
             $expected
         )));
 
@@ -504,13 +502,11 @@ class LocalesTest extends TestCase
             ;
         }
 
-        if (null === $requestStack) {
-            $requestStack = $this->createMock(RequestStack::class);
-        }
+        $requestStack ??= $this->createMock(RequestStack::class);
 
         $contaoFramework = $this->mockContaoFramework([
             System::class => new class(System::class) extends Adapter {
-                public function importStatic($class)
+                public function importStatic(string $class): object
                 {
                     return new $class();
                 }
@@ -518,14 +514,8 @@ class LocalesTest extends TestCase
         ]);
 
         $defaultLocales = \ResourceBundle::getLocales('');
-
-        if (null === $defaultEnabledLocales) {
-            $defaultEnabledLocales = ['en', 'de'];
-        }
-
-        if (null === $defaultLocale) {
-            $defaultLocale = 'en';
-        }
+        $defaultEnabledLocales ??= ['en', 'de'];
+        $defaultLocale ??= 'en';
 
         return new Locales($translator, $requestStack, $contaoFramework, $defaultLocales, $defaultEnabledLocales, $configLocales, $configEnabledLocales, $defaultLocale);
     }

@@ -30,10 +30,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
-use Webmozart\PathUtil\Path;
 
 /**
  * Resize deferred images that have not been processed yet.
@@ -44,50 +44,15 @@ class ResizeImagesCommand extends Command
 {
     protected static $defaultName = 'contao:resize-images';
 
-    /**
-     * @var ImageFactoryInterface
-     */
-    private $imageFactory;
-
-    /**
-     * @var ?DeferredResizerInterface
-     */
-    private $resizer;
-
-    /**
-     * @var string
-     */
-    private $targetDir;
-
-    /**
-     * @var DeferredImageStorageInterface
-     */
-    private $storage;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var int
-     */
-    private $terminalWidth;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
-     * @var ConsoleSectionOutput
-     */
-    private $tableOutput;
-
-    /**
-     * @var Table
-     */
-    private $table;
+    private ImageFactoryInterface $imageFactory;
+    private ?DeferredResizerInterface $resizer;
+    private string $targetDir;
+    private DeferredImageStorageInterface $storage;
+    private Filesystem $filesystem;
+    private int $terminalWidth;
+    private ?SymfonyStyle $io = null;
+    private ?ConsoleSectionOutput $tableOutput = null;
+    private ?Table $table = null;
 
     public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage, Filesystem $filesystem = null)
     {
@@ -246,7 +211,7 @@ class ResizeImagesCommand extends Command
                 if ($timeLimit && microtime(true) - $startTime + $sleep > $timeLimit) {
                     $this->io->writeln('Time limit of '.$timeLimit.' seconds reached.');
 
-                    return 0;
+                    break;
                 }
 
                 usleep((int) ($sleep * 1000000));

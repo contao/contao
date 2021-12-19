@@ -13,25 +13,22 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cache;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheClearer\CacheClearerInterface;
-use Webmozart\PathUtil\Path;
 
 class ContaoCacheClearer implements CacheClearerInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.cache.clear_internal" service instead
+     * @internal Do not inherit from this class; decorate the "contao.cache.clearer" service instead
      */
     public function __construct(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
     }
 
-    public function clear($cacheDir): void
+    public function clear(string $cacheDir): void
     {
         $this->filesystem->remove(Path::join($cacheDir, 'contao/config'));
         $this->filesystem->remove(Path::join($cacheDir, 'contao/dca'));

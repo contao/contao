@@ -110,9 +110,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            static function () use ($uri) {
-                return isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel'];
-            }
+            static fn () => isset($uri->attributes['pageModel']) && 42 === $uri->attributes['pageModel']
         );
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
@@ -132,9 +130,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentRegistry->add('foo.bar', new FragmentConfig('foo.bar', 'inline', ['foo' => 'bar']));
 
         $callback = $this->callback(
-            static function () use ($uri) {
-                return isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel'];
-            }
+            static fn () => isset($uri->attributes['pageModel']) && 99 === $uri->attributes['pageModel']
         );
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
@@ -208,25 +204,11 @@ class FragmentHandlerTest extends TestCase
 
     private function getFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
-        if (null === $registry) {
-            $registry = new FragmentRegistry();
-        }
-
-        if (null === $renderers) {
-            $renderers = new ServiceLocator([]);
-        }
-
-        if (null === $preHandlers) {
-            $preHandlers = new ServiceLocator([]);
-        }
-
-        if (null === $request) {
-            $request = new Request();
-        }
-
-        if (null === $fragmentHandler) {
-            $fragmentHandler = $this->createMock(BaseFragmentHandler::class);
-        }
+        $registry ??= new FragmentRegistry();
+        $renderers ??= new ServiceLocator([]);
+        $preHandlers ??= new ServiceLocator([]);
+        $request ??= new Request();
+        $fragmentHandler ??= $this->createMock(BaseFragmentHandler::class);
 
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -254,11 +236,7 @@ class FragmentHandlerTest extends TestCase
             $method = \call_user_func_array([$method, 'with'], $with);
         }
 
-        if (null === $response) {
-            $response = new Response();
-        }
-
-        $method->willReturn($response);
+        $method->willReturn($response ?? new Response());
 
         return $this->mockServiceLocator($name, $renderer);
     }

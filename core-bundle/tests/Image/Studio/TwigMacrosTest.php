@@ -23,11 +23,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
-use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
-use Webmozart\PathUtil\Path;
 
 class TwigMacrosTest extends TestCase
 {
@@ -121,7 +120,6 @@ class TwigMacrosTest extends TestCase
      */
     public function testImgMacro(array $imageData, ?Metadata $metadata, string $expected): void
     {
-        /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
         $image
             ->method('getImg')
@@ -198,7 +196,6 @@ class TwigMacrosTest extends TestCase
      */
     public function testImgMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
-        /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
         $image
             ->method('getImg')
@@ -253,7 +250,6 @@ class TwigMacrosTest extends TestCase
      */
     public function testPictureMacro(array $sources, string $expected): void
     {
-        /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
         $image
             ->method('getSources')
@@ -320,7 +316,6 @@ class TwigMacrosTest extends TestCase
      */
     public function testPictureMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
-        /** @var ImageResult&MockObject $image */
         $image = $this->createMock(ImageResult::class);
         $image
             ->method('getSources')
@@ -427,7 +422,6 @@ class TwigMacrosTest extends TestCase
             '<figure><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
 
-        /** @var LightboxResult&MockObject $lightbox */
         $lightbox = $this->createMock(LightboxResult::class);
         $lightbox
             ->method('getLinkHref')
@@ -466,7 +460,6 @@ class TwigMacrosTest extends TestCase
      */
     public function testFigureMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
-        /** @var LightboxResult&MockObject $lightbox */
         $lightbox = $this->createMock(LightboxResult::class);
         $lightbox
             ->method('getLinkHref')
@@ -600,15 +593,11 @@ class TwigMacrosTest extends TestCase
         $environment = new Environment(new ArrayLoader($templates));
         $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
 
-        if (null === $responseContextAccessor) {
-            $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
-        }
+        $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
-                SchemaOrgRuntime::class => static function () use ($responseContextAccessor) {
-                    return new SchemaOrgRuntime($responseContextAccessor);
-                },
+                SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
             ])
         );
 

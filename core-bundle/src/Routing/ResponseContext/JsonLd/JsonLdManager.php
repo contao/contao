@@ -23,15 +23,12 @@ class JsonLdManager
     public const SCHEMA_ORG = 'https://schema.org';
     public const SCHEMA_CONTAO = 'https://schema.contao.org';
 
-    /**
-     * @var ResponseContext
-     */
-    private $responseContext;
+    private ResponseContext $responseContext;
 
     /**
      * @var array<Graph>
      */
-    private $graphs = [];
+    private array $graphs = [];
 
     public function __construct(ResponseContext $responseContext)
     {

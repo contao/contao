@@ -19,15 +19,8 @@ use Doctrine\DBAL\Connection;
 
 class PurgeExpiredDataCron
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private ContaoFramework $framework;
+    private Connection $connection;
 
     public function __construct(ContaoFramework $framework, Connection $connection)
     {
@@ -42,7 +35,6 @@ class PurgeExpiredDataCron
     {
         $this->framework->initialize();
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $this->cleanTable('tl_undo', (int) $config->get('undoPeriod'));

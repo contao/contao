@@ -373,7 +373,7 @@ class FileTree extends Widget
         e.preventDefault();
         Backend.openModalSelector({
           "id": "tl_listing",
-          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0]) . ',
+          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
             new Request.Contao({
@@ -454,7 +454,7 @@ class FileTree extends Widget
 			else
 			{
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-				$image = System::getContainer()->get('contao.image.image_factory')->create($projectDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir);
+				$image = System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($projectDir);
 			}
 		}
 		else

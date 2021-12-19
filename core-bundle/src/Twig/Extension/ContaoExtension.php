@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
+use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -26,32 +27,22 @@ use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental
  */
 final class ContaoExtension extends AbstractExtension
 {
-    /**
-     * @var Environment
-     */
-    private $environment;
-
-    /**
-     * @var TemplateHierarchyInterface
-     */
-    private $hierarchy;
-
-    /**
-     * @var array
-     */
-    private $contaoEscaperFilterRules = [];
+    private Environment $environment;
+    private TemplateHierarchyInterface $hierarchy;
+    private array $contaoEscaperFilterRules = [];
 
     public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
     {
@@ -91,9 +82,7 @@ final class ContaoExtension extends AbstractExtension
             // Enables the 'contao_twig' escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
-                function () {
-                    return $this->contaoEscaperFilterRules;
-                }
+                fn () => $this->contaoEscaperFilterRules
             ),
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
@@ -139,8 +128,7 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'insert_tag',
-                [InsertTagRuntime::class, 'replace'],
-                ['is_safe' => ['html']]
+                [InsertTagRuntime::class, 'renderInsertTag'],
             ),
             new TwigFunction(
                 'add_schema_org',
@@ -164,6 +152,46 @@ final class ContaoExtension extends AbstractExtension
         ];
     }
 
+    public function getFilters(): array
+    {
+        $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
+            if ($string instanceof ChunkedText) {
+                $parts = [];
+
+                foreach ($string as [$type, $chunk]) {
+                    $parts[] = ChunkedText::TYPE_RAW === $type ?
+                        $chunk : twig_escape_filter($env, $chunk, $strategy, $charset);
+                }
+
+                return implode('', $parts);
+            }
+
+            return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+        };
+
+        return [
+            // Overwrite the 'escape'/'e' filter to additionally support chunked text
+            new TwigFilter(
+                'escape',
+                $escaperFilter,
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+            ),
+            new TwigFilter(
+                'e',
+                $escaperFilter,
+                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe']
+            ),
+            new TwigFilter(
+                'insert_tag',
+                [InsertTagRuntime::class, 'replaceInsertTags']
+            ),
+            new TwigFilter(
+                'insert_tag_raw',
+                [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
+            ),
+        ];
+    }
+
     /**
      * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode
      * @see \Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor
@@ -180,12 +208,7 @@ final class ContaoExtension extends AbstractExtension
 
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = array_map(
-                    static function ($block) {
-                        return \is_array($block) ? $block : [$block];
-                    },
-                    $blocks
-                );
+                $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
             }
 
             public function parse(): string

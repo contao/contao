@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FaqCategoryModel;
@@ -23,7 +24,6 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 System::loadLanguageFile('tl_content');
 
@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	(
 		'sorting' => array
 		(
-			'mode'                    => 4,
+			'mode'                    => DataContainer::MODE_PARENT,
 			'fields'                  => array('sorting'),
 			'panelLayout'             => 'filter;sort,search,limit',
 			'headerFields'            => array('title', 'headline', 'jumpTo', 'tstamp', 'allowComments'),
@@ -140,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sorting'],
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'tstamp' => array
@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'long'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -176,7 +176,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'sorting'                 => true,
-			'flag'                    => 11,
+			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.name',
 			'eval'                    => array('doNotCopy'=>true, 'chosen'=>true, 'mandatory'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
@@ -276,7 +276,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -295,8 +295,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'fullsize' => array
 		(
@@ -351,7 +351,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 		(
 			'exclude'                 => true,
 			'filter'                  => true,
-			'flag'                    => 2,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -386,7 +386,7 @@ class tl_faq extends Backend
 		if (!isset($bundles['ContaoCommentsBundle']))
 		{
 			$key = array_search('allowComments', $GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'] ?? array());
-			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key]);
+			unset($GLOBALS['TL_DCA']['tl_faq']['list']['sorting']['headerFields'][$key], $GLOBALS['TL_DCA']['tl_faq']['fields']['noComments']);
 		}
 
 		if ($this->User->isAdmin)
@@ -501,7 +501,6 @@ class tl_faq extends Backend
 				$objFaq = $this->Database->prepare("SELECT id FROM tl_faq WHERE pid=?")
 										 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -652,7 +651,7 @@ class tl_faq extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_faq::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_faq::published'))
 		{
 			return '';
 		}
@@ -705,7 +704,7 @@ class tl_faq extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_faq::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_faq::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
 		}

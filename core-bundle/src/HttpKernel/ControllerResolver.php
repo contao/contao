@@ -18,15 +18,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
 class ControllerResolver implements ControllerResolverInterface
 {
-    /**
-     * @var ControllerResolverInterface
-     */
-    private $resolver;
-
-    /**
-     * @var FragmentRegistry
-     */
-    private $registry;
+    private ControllerResolverInterface $resolver;
+    private FragmentRegistry $registry;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.controller_resolver" service instead
@@ -53,7 +46,7 @@ class ControllerResolver implements ControllerResolverInterface
         return $this->resolver->getController($request);
     }
 
-    public function getArguments(Request $request, $controller): array
+    public function getArguments(Request $request, callable $controller): array
     {
         if (!method_exists($this->resolver, 'getArguments')) {
             return [];

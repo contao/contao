@@ -20,7 +20,7 @@ use Doctrine\DBAL\ParameterType;
  */
 class DoctrineArrayStatement extends ArrayStatement
 {
-    private $rowCount;
+    private int $rowCount;
 
     public function __construct(array $data)
     {

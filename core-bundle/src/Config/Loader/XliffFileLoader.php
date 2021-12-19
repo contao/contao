@@ -13,22 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Config\Loader;
 
 use Symfony\Component\Config\Loader\Loader;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Reads XLIFF files and converts them into Contao language arrays.
  */
 class XliffFileLoader extends Loader
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var bool
-     */
-    private $addToGlobals;
+    private string $projectDir;
+    private bool $addToGlobals;
 
     public function __construct(string $projectDir, bool $addToGlobals = false)
     {
@@ -36,12 +29,12 @@ class XliffFileLoader extends Loader
         $this->addToGlobals = $addToGlobals;
     }
 
-    public function load($resource, $type = null): string
+    public function load($resource, string $type = null): string
     {
         return $this->convertXlfToPhp((string) $resource, $type ?: 'en');
     }
 
-    public function supports($resource, $type = null): bool
+    public function supports($resource, string $type = null): bool
     {
         return 'xlf' === Path::getExtension((string) $resource, true);
     }
@@ -131,10 +124,8 @@ class XliffFileLoader extends Loader
 
     /**
      * Returns a string representation of the global PHP language array.
-     *
-     * @throws \OutOfBoundsException
      */
-    private function getStringRepresentation(array $chunks, $value): string
+    private function getStringRepresentation(array $chunks, string $value): string
     {
         switch (\count($chunks)) {
             case 2:
@@ -171,7 +162,7 @@ class XliffFileLoader extends Loader
     /**
      * Adds the labels to the global PHP language array.
      */
-    private function addGlobal(array $chunks, $value): void
+    private function addGlobal(array $chunks, string $value): void
     {
         if (false === $this->addToGlobals) {
             return;

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\File;
 
-use Contao\Controller;
 use Contao\FilesModel;
+use Contao\System;
 
 /**
  * @property string $overwriteMeta
@@ -45,9 +45,9 @@ trait ModelMetadataTrait
 
         unset($data['imageTitle'], $data['imageUrl']);
 
-        // Make sure we resolve insert tags pointing to files.
+        // Make sure we resolve insert tags pointing to files
         if (isset($data[Metadata::VALUE_URL])) {
-            $data[Metadata::VALUE_URL] = Controller::replaceInsertTags($data[Metadata::VALUE_URL]);
+            $data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL]);
         }
 
         // Strip superfluous fields by intersecting with tl_files.meta.eval.metaFields

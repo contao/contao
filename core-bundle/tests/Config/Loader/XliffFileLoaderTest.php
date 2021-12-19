@@ -17,10 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class XliffFileLoaderTest extends TestCase
 {
-    /**
-     * @var XliffFileLoader
-     */
-    private $loader;
+    private XliffFileLoader $loader;
 
     protected function setUp(): void
     {

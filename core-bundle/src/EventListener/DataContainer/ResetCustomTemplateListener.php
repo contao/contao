@@ -24,10 +24,7 @@ use Doctrine\DBAL\Connection;
  */
 class ResetCustomTemplateListener
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -36,6 +33,10 @@ class ResetCustomTemplateListener
 
     /**
      * Resets the custom template if the element type changes.
+     *
+     * @param mixed $varValue
+     *
+     * @return mixed
      */
     public function __invoke($varValue, DataContainer $dc)
     {

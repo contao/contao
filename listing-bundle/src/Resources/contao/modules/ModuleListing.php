@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Patchwork\Utf8;
 
 /**
  * Provide methods to render content element "listing".
@@ -55,7 +54,7 @@ class ModuleListing extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
-			$objTemplate->wildcard = '### ' . Utf8::strtoupper($GLOBALS['TL_LANG']['FMD']['listing'][0]) . ' ###';
+			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['listing'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -78,8 +77,8 @@ class ModuleListing extends Module
 
 		$this->strTemplate = $this->list_layout ?: 'list_default';
 
-		$this->list_where = $this->replaceInsertTags($this->list_where, false);
-		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
+		$this->list_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_where);
+		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
 		return parent::generate();
 	}
@@ -366,7 +365,7 @@ class ModuleListing extends Module
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		$this->list_info = StringUtil::deserialize($this->list_info);
-		$this->list_info_where = $this->replaceInsertTags($this->list_info_where, false);
+		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
 		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)

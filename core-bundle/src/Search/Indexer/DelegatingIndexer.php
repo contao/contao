@@ -19,7 +19,7 @@ class DelegatingIndexer implements IndexerInterface
     /**
      * @var array<IndexerInterface>
      */
-    private $indexers = [];
+    private array $indexers = [];
 
     public function addIndexer(IndexerInterface $indexer): self
     {

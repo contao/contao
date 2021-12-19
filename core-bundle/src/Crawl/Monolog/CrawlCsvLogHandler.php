@@ -19,10 +19,7 @@ class CrawlCsvLogHandler extends StreamHandler
 {
     public const DATETIME_FORMAT = 'Y-m-d H:i:s.u';
 
-    /**
-     * @var string
-     */
-    private $filterSource;
+    private ?string $filterSource = null;
 
     public function getFilterSource(): string
     {

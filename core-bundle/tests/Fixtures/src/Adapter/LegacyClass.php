@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Fixtures\Adapter;
 
 class LegacyClass
 {
-    public $constructorArgs = [];
+    public array $constructorArgs = [];
 
     public function __construct($arg1 = null, $arg2 = null)
     {

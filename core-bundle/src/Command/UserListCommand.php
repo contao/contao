@@ -30,10 +30,7 @@ class UserListCommand extends Command
 {
     protected static $defaultName = 'contao:user:list';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -65,7 +62,7 @@ class UserListCommand extends Command
 
         switch ($input->getOption('format')) {
             case 'text':
-                if (null === $users) {
+                if (0 === $users->count()) {
                     $io->note('No accounts found.');
 
                     return 0;
@@ -89,11 +86,10 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): ?Collection
+    private function getUsers(bool $onlyAdmins = false): Collection
     {
         $this->framework->initialize();
 
-        /** @var UserModel $userModel */
         $userModel = $this->framework->getAdapter(UserModel::class);
 
         if ($onlyAdmins) {
@@ -144,9 +140,7 @@ class UserListCommand extends Command
         foreach ($users->fetchAll() as $user) {
             $data[] = array_filter(
                 $user,
-                static function ($key) use ($columns) {
-                    return \in_array($key, $columns, true);
-                },
+                static fn ($key) => \in_array($key, $columns, true),
                 ARRAY_FILTER_USE_KEY
             );
         }

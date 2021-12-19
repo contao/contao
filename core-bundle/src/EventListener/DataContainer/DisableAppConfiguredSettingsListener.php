@@ -23,20 +23,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DisableAppConfiguredSettingsListener
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var array
-     */
-    private $localConfig;
+    private TranslatorInterface $translator;
+    private ContaoFramework $framework;
+    private array $localConfig;
 
     public function __construct(TranslatorInterface $translator, ContaoFramework $framework, array $localConfig)
     {
@@ -52,15 +41,18 @@ class DisableAppConfiguredSettingsListener
                 continue;
             }
 
+            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['xlabel'][] = [
+                'contao.listener.data_container.disable_app_configured_settings',
+                'renderHelpIcon',
+            ];
+
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['helpwizard'] = false;
-            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['xlabel'][] = [self::class, 'renderHelpIcon'];
         }
     }
 
     public function renderHelpIcon(): string
     {
-        /** @var Image $adapter */
         $adapter = $this->framework->getAdapter(Image::class);
 
         return $adapter->getHtml(

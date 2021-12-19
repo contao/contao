@@ -230,6 +230,12 @@
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
       </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this->data&lt;/code&gt; in the template.</source>
+      </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
       </trans-unit>
@@ -640,6 +646,9 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

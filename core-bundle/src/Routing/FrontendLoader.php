@@ -19,15 +19,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 class FrontendLoader extends Loader
 {
-    /**
-     * @var bool
-     */
-    private $prependLocale;
-
-    /**
-     * @var string
-     */
-    private $urlSuffix;
+    private bool $prependLocale;
+    private string $urlSuffix;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.frontend_loader" service instead
@@ -40,7 +33,7 @@ class FrontendLoader extends Loader
         $this->urlSuffix = $urlSuffix;
     }
 
-    public function load($resource, $type = null): RouteCollection
+    public function load($resource, string $type = null): RouteCollection
     {
         $routes = new RouteCollection();
 
@@ -56,7 +49,7 @@ class FrontendLoader extends Loader
         return $routes;
     }
 
-    public function supports($resource, $type = null): bool
+    public function supports($resource, string $type = null): bool
     {
         return 'contao_frontend' === $type;
     }

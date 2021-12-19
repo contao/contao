@@ -42,16 +42,17 @@ class ImageResultTest extends TestCase
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $sizeConfiguration = [100, 200, 'crop'];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory);
         $imageResult = new ImageResult($locator, '/project/dir', $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($picture, $imageResult->getPicture());
     }
 
     /**
+     * @param class-string<PictureFactoryInterface> $class
+     *
      * @dataProvider providePictureFactories
      */
     public function testGetPictureWithResizeMode(string $class, bool $supportsResizeOptions): void
@@ -79,7 +80,7 @@ class ImageResultTest extends TestCase
         ;
 
         $imageResult = new ImageResult(
-            $this->getLocatorMock($pictureFactory),
+            $this->mockLocator($pictureFactory),
             'any/project/dir',
             'foo/bar/foobar.png',
             [100, 200, 'crop'],
@@ -123,7 +124,6 @@ class ImageResultTest extends TestCase
         $sources = ['sources result'];
         $img = ['img result'];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -139,8 +139,8 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory, $staticUrl);
         $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame($sources, $imageResult->getSources());
@@ -157,7 +157,6 @@ class ImageResultTest extends TestCase
 
         $img = ['src' => 'https://static.url/foo/bar/foobar.png', 'other' => 'bar'];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -166,8 +165,8 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory, $staticUrl);
         $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame('https://static.url/foo/bar/foobar.png', $imageResult->getImageSrc());
@@ -195,7 +194,6 @@ class ImageResultTest extends TestCase
             ),
         ];
 
-        /** @var PictureInterface&MockObject $picture */
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -204,8 +202,8 @@ class ImageResultTest extends TestCase
             ->willReturn($img)
         ;
 
-        $pictureFactory = $this->getPictureFactoryMock($filePathOrImage, $sizeConfiguration, $picture);
-        $locator = $this->getLocatorMock($pictureFactory, $staticUrl);
+        $pictureFactory = $this->mockPictureFactory($filePathOrImage, $sizeConfiguration, $picture);
+        $locator = $this->mockLocator($pictureFactory, $staticUrl);
         $imageResult = new ImageResult($locator, $projectDir, $filePathOrImage, $sizeConfiguration);
 
         $this->assertSame('foo/bar/foobar.png', $imageResult->getImageSrc(true));
@@ -216,7 +214,6 @@ class ImageResultTest extends TestCase
         $filePathOrImage = '/project/dir/foo/bar/foobar.png';
         $dimensions = $this->createMock(ImageDimensions::class);
 
-        /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $image
             ->expects($this->once())
@@ -224,7 +221,6 @@ class ImageResultTest extends TestCase
             ->willReturn($dimensions)
         ;
 
-        /** @var ImageFactoryInterface&MockObject $imageFactory */
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $imageFactory
             ->expects($this->once())
@@ -233,12 +229,11 @@ class ImageResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var ContainerInterface&MockObject $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with('contao.image.image_factory')
+            ->with('contao.image.factory')
             ->willReturn($imageFactory)
         ;
 
@@ -254,7 +249,6 @@ class ImageResultTest extends TestCase
     {
         $dimensions = $this->createMock(ImageDimensions::class);
 
-        /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $image
             ->expects($this->once())
@@ -262,7 +256,7 @@ class ImageResultTest extends TestCase
             ->willReturn($dimensions)
         ;
 
-        $locator = $this->getLocatorMock();
+        $locator = $this->mockLocator();
         $imageResult = new ImageResult($locator, 'any/project/dir', $image);
 
         $this->assertSame($dimensions, $imageResult->getOriginalDimensions());
@@ -273,7 +267,7 @@ class ImageResultTest extends TestCase
         $projectDir = 'project/dir';
         $filePath = 'project/dir/file/path';
 
-        $locator = $this->getLocatorMock();
+        $locator = $this->mockLocator();
         $imageResult = new ImageResult($locator, $projectDir, $filePath);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
@@ -285,7 +279,6 @@ class ImageResultTest extends TestCase
         $projectDir = 'project/dir';
         $filePath = 'project/dir/file/path';
 
-        /** @var ImageInterface&MockObject $image */
         $image = $this->createMock(ImageInterface::class);
         $image
             ->expects($this->exactly(2))
@@ -293,7 +286,7 @@ class ImageResultTest extends TestCase
             ->willReturn($filePath)
         ;
 
-        $locator = $this->getLocatorMock();
+        $locator = $this->mockLocator();
         $imageResult = new ImageResult($locator, $projectDir, $image);
 
         $this->assertSame('file/path', $imageResult->getFilePath());
@@ -346,7 +339,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $deferredResizer],
+                ['contao.image.legacy_resizer', $deferredResizer],
             ])
         ;
 
@@ -462,14 +455,14 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $nonDeferredResizer],
+                ['contao.image.legacy_resizer', $nonDeferredResizer],
             ])
         ;
 
         $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('The "contao.image.resizer" service does not support deferred resizing.');
+        $this->expectExceptionMessage('The "contao.image.legacy_resizer" service does not support deferred resizing.');
 
         $imageResult->createIfDeferred();
     }
@@ -504,7 +497,7 @@ class ImageResultTest extends TestCase
             ->method('get')
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $nonDeferredResizer],
+                ['contao.image.legacy_resizer', $nonDeferredResizer],
             ])
         ;
 
@@ -515,7 +508,7 @@ class ImageResultTest extends TestCase
     /**
      * @return PictureFactoryInterface&MockObject
      */
-    private function getPictureFactoryMock($filePathOrImage, $sizeConfiguration, PictureInterface $picture)
+    private function mockPictureFactory(string $filePathOrImage, array $sizeConfiguration, PictureInterface $picture): PictureFactoryInterface
     {
         $pictureFactory = $this->createMock(PictureFactoryInterface::class);
         $pictureFactory
@@ -531,7 +524,7 @@ class ImageResultTest extends TestCase
     /**
      * @return ContainerInterface&MockObject
      */
-    private function getLocatorMock(?PictureFactoryInterface $pictureFactory = null, string $staticUrl = null)
+    private function mockLocator(PictureFactoryInterface $pictureFactory = null, string $staticUrl = null): ContainerInterface
     {
         $locator = $this->createMock(ContainerInterface::class);
         $context = null;

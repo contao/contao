@@ -21,20 +21,9 @@ class PaletteManipulator
     public const POSITION_PREPEND = 'prepend';
     public const POSITION_APPEND = 'append';
 
-    /**
-     * @var array
-     */
-    private $legends = [];
-
-    /**
-     * @var array
-     */
-    private $fields = [];
-
-    /**
-     * @var array
-     */
-    private $removes = [];
+    private array $legends = [];
+    private array $fields = [];
+    private array $removes = [];
 
     public static function create(): self
     {
@@ -46,8 +35,10 @@ class PaletteManipulator
      *
      * @param string|array $parent
      * @param bool         $hide
+     *
+     * @throws PalettePositionException
      */
-    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, $hide = false): self
+    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, /*bool */$hide = false): self
     {
         $this->validatePosition($position);
 
@@ -71,7 +62,7 @@ class PaletteManipulator
      *
      * @throws PalettePositionException
      */
-    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND): self
+    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 

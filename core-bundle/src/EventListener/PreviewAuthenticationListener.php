@@ -24,25 +24,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class PreviewAuthenticationListener
 {
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var UriSigner
-     */
-    private $uriSigner;
+    private ScopeMatcher $scopeMatcher;
+    private TokenChecker $tokenChecker;
+    private UrlGeneratorInterface $router;
+    private UriSigner $uriSigner;
 
     public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner)
     {
@@ -64,11 +49,18 @@ class PreviewAuthenticationListener
             return;
         }
 
+        $context = $this->router->getContext();
+        $baseUrl = $context->getBaseUrl();
+
+        $context->setBaseUrl('');
+
         $url = $this->router->generate(
             'contao_backend_login',
             ['redirect' => $request->getUri()],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
+        $context->setBaseUrl($baseUrl);
 
         $event->setResponse(new RedirectResponse($this->uriSigner->sign($url)));
     }

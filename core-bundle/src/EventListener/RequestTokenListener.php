@@ -28,30 +28,11 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class RequestTokenListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var ContaoCsrfTokenManager
-     */
-    private $csrfTokenManager;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
-
-    /**
-     * @var string
-     */
-    private $csrfCookiePrefix;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
+    private ContaoCsrfTokenManager $csrfTokenManager;
+    private string $csrfTokenName;
+    private string $csrfCookiePrefix;
 
     public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
     {
@@ -62,13 +43,10 @@ class RequestTokenListener
         $this->csrfCookiePrefix = $csrfCookiePrefix;
     }
 
-    /**
-     * @throws InvalidRequestTokenException
-     */
     public function __invoke(RequestEvent $event): void
     {
-        // Don't do anything if it's not the master request
-        if (!$event->isMasterRequest()) {
+        // Don't do anything if it's not the main request
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -89,7 +67,6 @@ class RequestTokenListener
             return;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if (\defined('BYPASS_TOKEN_CHECK')) {
@@ -128,7 +105,7 @@ class RequestTokenListener
     private function getTokenFromRequest(Request $request): ?string
     {
         if ($request->request->has('REQUEST_TOKEN')) {
-            return $request->request->get('REQUEST_TOKEN');
+            return (string) $request->request->get('REQUEST_TOKEN');
         }
 
         // Look for the token inside the root level arrays as they would be in named Symfony forms

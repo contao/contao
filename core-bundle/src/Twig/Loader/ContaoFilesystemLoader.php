@@ -12,14 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\Service\ResetInterface;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 use Twig\Source;
-use Webmozart\PathUtil\Path;
 
 /**
  * The ContaoFilesystemLoader builds on top of Twig's FilesystemLoader but
@@ -46,37 +47,32 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cachePool;
-
-    /**
-     * @var TemplateLocator
-     */
-    private $templateLocator;
+    private CacheItemPoolInterface $cachePool;
+    private TemplateLocator $templateLocator;
+    private ThemeNamespace $themeNamespace;
 
     /**
      * @var array<string,string>
      */
-    private $trackedTemplatesPaths = [];
+    private array $trackedTemplatesPaths = [];
 
     /**
      * @var array<string,array<string,string>>|null
      */
-    private $inheritanceChains;
+    private ?array $inheritanceChains = null;
 
     /**
      * @var string|false|null
      */
     private $currentThemeSlug;
 
-    public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, string $rootPath = null)
+    public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, ThemeNamespace $themeNamespace, string $rootPath = null)
     {
         parent::__construct([], $rootPath);
 
         $this->cachePool = $cachePool;
         $this->templateLocator = $templateLocator;
+        $this->themeNamespace = $themeNamespace;
 
         // Restore paths from cache
         $pathsItem = $cachePool->getItem(self::CACHE_KEY_PATHS);
@@ -102,7 +98,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
-    public function addPath($path, $namespace = 'Contao', bool $trackTemplates = false): void
+    public function addPath(string $path, string $namespace = 'Contao', bool $trackTemplates = false): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
@@ -128,7 +124,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param string $path      A path where to look for templates
      * @param string $namespace A "Contao" or "Contao_*" path namespace
      */
-    public function prependPath($path, $namespace = 'Contao'): void
+    public function prependPath(string $path, string $namespace = 'Contao'): void
     {
         if (null === ContaoTwigUtil::parseContaoName("@$namespace")) {
             throw new LoaderError("Tried to register an invalid Contao namespace '$namespace'.");
@@ -141,7 +137,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         }
     }
 
-    public function getPaths($namespace = 'Contao'): array
+    public function getPaths(string $namespace = 'Contao'): array
     {
         return parent::getPaths($namespace);
     }
@@ -179,11 +175,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @param string $name The name of the template to load
      *
-     * @throws LoaderError When $name is not found
-     *
      * @return string The cache key
      */
-    public function getCacheKey($name): string
+    public function getCacheKey(string $name): string
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
@@ -197,10 +191,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * the template exists, its source context will be returned instead.
      *
      * @param string $name The template logical name
-     *
-     * @throws LoaderError When $name is not found
      */
-    public function getSourceContext($name): Source
+    public function getSourceContext(string $name): Source
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
         $source = parent::getSourceContext($templateName);
@@ -245,7 +237,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      *
      * @return bool If the template source code is handled by this loader or not
      */
-    public function exists($name): bool
+    public function exists(string $name): bool
     {
         if (parent::exists($name)) {
             return true;
@@ -269,11 +261,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @param int    $time Timestamp of the last modification time of the
      *                     cached template
      *
-     * @throws LoaderError When $name is not found
-     *
      * @return bool true if the template is fresh, false otherwise
      */
-    public function isFresh($name, $time): bool
+    public function isFresh(string $name, int $time): bool
     {
         if ((null !== ($themeTemplate = $this->getThemeTemplateName($name))) && !parent::isFresh($themeTemplate, $time)) {
             return false;
@@ -300,9 +290,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $this->currentThemeSlug = null;
     }
 
-    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeAlias = null): string
+    public function getDynamicParent(string $shortNameOrIdentifier, string $sourcePath, string $themeSlug = null): string
     {
-        $hierarchy = $this->getInheritanceChains($themeAlias);
+        $hierarchy = $this->getInheritanceChains($themeSlug);
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
@@ -320,10 +310,10 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $next;
     }
 
-    public function getFirst(string $shortNameOrIdentifier, string $themeAlias = null): string
+    public function getFirst(string $shortNameOrIdentifier, string $themeSlug = null): string
     {
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
-        $hierarchy = $this->getInheritanceChains($themeAlias);
+        $hierarchy = $this->getInheritanceChains($themeSlug);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
             throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
@@ -332,7 +322,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         return $chain[array_key_first($chain)];
     }
 
-    public function getInheritanceChains(string $themeAlias = null): array
+    public function getInheritanceChains(string $themeSlug = null): array
     {
         if (null === $this->inheritanceChains) {
             $this->buildInheritanceChains();
@@ -342,8 +332,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         foreach ($chains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
-                // Filter out theme paths that do not match the given alias.
-                if (1 === preg_match('%^@Contao_Theme_([a-zA-Z0-9_-]+)/%', $name, $matches) && $matches[1] !== $themeAlias) {
+                // Filter out theme paths that do not match the given slug.
+                if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
                     unset($chains[$identifier][$path]);
                 }
             }
@@ -371,7 +361,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
                 $identifier = ContaoTwigUtil::getIdentifier($shortName);
 
                 if (isset($templatesByNamespace[$namespace][$identifier])) {
-                    $basePath = Path::getLongestCommonBasePath($this->paths[$namespace]);
+                    $basePath = Path::getLongestCommonBasePath(...$this->paths[$namespace]);
 
                     throw new \OutOfBoundsException("There cannot be more than one '$identifier' template in '$basePath'.");
                 }
@@ -398,15 +388,9 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     /**
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
-     *
-     * @todo Re-add the string typehint to argument in 4.13 and remove the string check (see #3343)
      */
-    private function getThemeTemplateName($name): ?string
+    private function getThemeTemplateName(string $name): ?string
     {
-        if (!\is_string($name)) {
-            return null;
-        }
-
         $parts = ContaoTwigUtil::parseContaoName($name);
 
         if ('Contao' !== ($parts[0] ?? null)) {
@@ -417,7 +401,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return null;
         }
 
-        $template = "@Contao_Theme_$themeSlug/$parts[1]";
+        $namespace = $this->themeNamespace->getFromSlug($themeSlug);
+        $template = "$namespace/$parts[1]";
 
         return $this->exists($template) ? $template : null;
     }
@@ -433,6 +418,13 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $this->currentThemeSlug = false;
         }
 
-        return $this->currentThemeSlug = TemplateLocator::createDirectorySlug(Path::makeRelative($path, 'templates'));
+        // TODO: remove try/catch block in Contao 5.0
+        try {
+            $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
+        } catch (InvalidThemePathException $e) {
+            $slug = false;
+        }
+
+        return $this->currentThemeSlug = $slug;
     }
 }

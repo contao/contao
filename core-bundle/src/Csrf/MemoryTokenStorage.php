@@ -18,17 +18,10 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
 {
-    /**
-     * @var array|null
-     */
-    private $tokens;
+    private ?array $tokens = null;
+    private array $usedTokens = [];
 
-    /**
-     * @var array
-     */
-    private $usedTokens = [];
-
-    public function getToken($tokenId): string
+    public function getToken(string $tokenId): string
     {
         $this->assertInitialized();
 
@@ -41,7 +34,7 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         return $this->tokens[$tokenId];
     }
 
-    public function setToken($tokenId, $token): void
+    public function setToken(string $tokenId, string $token): void
     {
         $this->assertInitialized();
 
@@ -49,14 +42,14 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         $this->tokens[$tokenId] = $token;
     }
 
-    public function hasToken($tokenId): bool
+    public function hasToken(string $tokenId): bool
     {
         $this->assertInitialized();
 
         return !empty($this->tokens[$tokenId]);
     }
 
-    public function removeToken($tokenId): ?string
+    public function removeToken(string $tokenId): ?string
     {
         $this->assertInitialized();
 
@@ -92,9 +85,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         $this->usedTokens = [];
     }
 
-    /**
-     * @throws \LogicException
-     */
     private function assertInitialized(): void
     {
         if (null === $this->tokens) {

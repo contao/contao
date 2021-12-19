@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Confirm an invalid token URL.
@@ -51,7 +50,6 @@ class BackendConfirm extends Backend
 	 */
 	public function run()
 	{
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Redirect to the back end home page
@@ -129,7 +127,11 @@ class BackendConfirm extends Backend
 				$arrInfo['act'] = $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['mode']][0];
 			}
 		}
-		else
+		elseif ($arrInfo['act'] == 'select' && isset($GLOBALS['TL_LANG']['MSC']['all']))
+		{
+			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG']['MSC']['all']) ? $GLOBALS['TL_LANG']['MSC']['all'][0] : $GLOBALS['TL_LANG']['MSC']['all'];
+		}
+		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]))
 		{
 			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']] ?? null) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : ($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']] ?? null);
 		}

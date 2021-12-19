@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
@@ -22,6 +24,8 @@ use Twig\Error\RuntimeError;
 class ContaoEscaperTest extends TestCase
 {
     /**
+     * @param string|int $input
+     *
      * @dataProvider provideHtmlInput
      */
     public function testEscapesHtml($input, string $expectedOutput): void
@@ -71,12 +75,13 @@ class ContaoEscaperTest extends TestCase
     /**
      * @dataProvider provideHtmlAttributeInput
      */
-    public function testEscapesHtmlAttributes($input, string $expectedOutput): void
+    public function testEscapesHtmlAttributes(string $input, string $expectedOutput): void
     {
         $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
 
         System::setContainer($container);
 
@@ -101,6 +106,9 @@ class ContaoEscaperTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
+    /**
+     * @return string|false
+     */
     public function executeReplaceInsertTagsCallback(string $tag, bool $cache)
     {
         if ('bar' !== $tag) {
@@ -130,11 +138,6 @@ class ContaoEscaperTest extends TestCase
             'A&amp;B',
             'A&amp;B',
         ];
-
-        yield 'replacing insert tags beforehand' => [
-            'foo{{bar}}',
-            'foobaz',
-        ];
     }
 
     public function testEscapeHtmlThrowsErrorIfCharsetIsNotUtf8(): void
@@ -153,6 +156,9 @@ class ContaoEscaperTest extends TestCase
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
     }
 
+    /**
+     * @param string|int $input
+     */
     private function invokeEscapeHtml($input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtml(
@@ -162,6 +168,9 @@ class ContaoEscaperTest extends TestCase
         );
     }
 
+    /**
+     * @param string|int $input
+     */
     private function invokeEscapeHtmlAttr($input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtmlAttr(

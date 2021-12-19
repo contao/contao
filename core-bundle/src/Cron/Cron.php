@@ -23,25 +23,14 @@ class Cron
     public const SCOPE_WEB = 'web';
     public const SCOPE_CLI = 'cli';
 
-    /**
-     * @var CronJobRepository
-     */
-    private $repository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private CronJobRepository $repository;
+    private EntityManagerInterface $entityManager;
+    private ?LoggerInterface $logger;
 
     /**
      * @var array<CronJob>
      */
-    private $cronJobs = [];
+    private array $cronJobs = [];
 
     public function __construct(CronJobRepository $repository, EntityManagerInterface $entityManager, LoggerInterface $logger = null)
     {

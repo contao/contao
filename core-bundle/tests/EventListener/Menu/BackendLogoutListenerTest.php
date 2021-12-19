@@ -113,8 +113,14 @@ class BackendLogoutListenerTest extends ContaoTestCase
 
     public function getLogoutData(): \Generator
     {
+        $switchUserToken = $this->createMock(SwitchUserToken::class);
+        $switchUserToken
+            ->method('getOriginalToken')
+            ->willReturn($this->createMock(UsernamePasswordToken::class))
+        ;
+
         yield [$this->createMock(UsernamePasswordToken::class), 'MSC.logoutBT', '/contao/logout'];
-        yield [$this->createMock(SwitchUserToken::class), 'MSC.switchBT', '/contao?do=user&_switch_user=_exit'];
+        yield [$switchUserToken, 'MSC.switchBT', '/contao?do=user&_switch_user=_exit'];
     }
 
     public function testDoesNotAddTheLogoutButtonIfTheUserRoleIsNotGranted(): void
@@ -212,11 +218,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnCallback(
-                static function (string $id): string {
-                    return $id;
-                }
-            )
+            ->willReturnCallback(static fn (string $id): string => $id)
         ;
 
         return $translator;

@@ -20,25 +20,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    /**
-     * @var FactoryInterface
-     */
-    private $menuFactory;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private FactoryInterface $menuFactory;
+    private RouterInterface $router;
+    private ?TranslatorInterface $translator;
+    private ?TokenStorageInterface $tokenStorage = null;
 
     public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
     {
@@ -47,12 +32,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->translator = $translator;
     }
 
-    public function getUrl(PickerConfig $config)
+    public function getUrl(PickerConfig $config)/*: ?string*/
     {
         return $this->generateUrl($config, false);
     }
 
-    public function createMenuItem(PickerConfig $config)
+    public function createMenuItem(PickerConfig $config)/*: ItemInterface*/
     {
         $name = $this->getName();
 
@@ -85,7 +70,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function isCurrent(PickerConfig $config)
+    public function isCurrent(PickerConfig $config)/*: bool*/
     {
         return $config->getCurrent() === $this->getName();
     }
@@ -126,7 +111,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return array<string,string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null);
+    abstract protected function getRouteParameters(PickerConfig $config = null)/*: array*/;
 
     /**
      * Generates the URL for the picker.

@@ -20,16 +20,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ValidateCustomRgxpListener
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
+    /**
+     * @param mixed $input
+     *
+     * @return mixed
+     */
     public function __invoke($input)
     {
         // preg_match() returns false if the regular expression is invalid

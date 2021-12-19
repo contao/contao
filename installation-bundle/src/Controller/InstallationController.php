@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
@@ -20,19 +19,18 @@ use Contao\InstallationBundle\Event\ContaoInstallationEvents;
 use Contao\InstallationBundle\Event\InitializeApplicationEvent;
 use Contao\Validator;
 use Doctrine\DBAL\Exception;
-use Patchwork\Utf8;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Webmozart\PathUtil\Path;
 
 /**
- * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
+ * @Route("%contao.backend.route_prefix%", defaults={"_scope" = "backend", "_token_check" = true})
  *
  * @internal
  */
@@ -40,10 +38,7 @@ class InstallationController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var array
-     */
-    private $context = [
+    private array $context = [
         'has_admin' => false,
         'hide_admin' => false,
         'sql_message' => '',
@@ -62,7 +57,7 @@ class InstallationController implements ContainerAwareInterface
             $this->container->get('contao.framework')->initialize();
         }
 
-        $installTool = $this->container->get('contao.install_tool');
+        $installTool = $this->container->get('contao_installation.install_tool');
 
         if ($installTool->isLocked()) {
             return $this->render('locked.html.twig');
@@ -80,7 +75,7 @@ class InstallationController implements ContainerAwareInterface
             return $this->setPassword();
         }
 
-        if (!$this->container->get('contao.install_tool_user')->isAuthenticated()) {
+        if (!$this->container->get('contao_installation.install_tool_user')->isAuthenticated()) {
             return $this->login();
         }
 
@@ -135,8 +130,6 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to accept the license.
      *
-     * @throws \RuntimeException
-     *
      * @return Response|RedirectResponse
      */
     private function acceptLicense(): Response
@@ -151,15 +144,13 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('license.html.twig');
         }
 
-        $this->container->get('contao.install_tool')->persistConfig('licenseAccepted', true);
+        $this->container->get('contao_installation.install_tool')->persistConfig('licenseAccepted', true);
 
         return $this->getRedirectResponse();
     }
 
     /**
      * Renders a form to set the install tool password.
-     *
-     * @throws \RuntimeException
      *
      * @return Response|RedirectResponse
      */
@@ -176,26 +167,24 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $password = $request->request->get('password');
-        $installTool = $this->container->get('contao.install_tool');
+        $installTool = $this->container->get('contao_installation.install_tool');
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The password is too short
-        if (Utf8::strlen($password) < $minlength) {
+        if (mb_strlen($password) < $minlength) {
             return $this->render('password.html.twig', [
                 'error' => sprintf($this->trans('password_too_short'), $minlength),
             ]);
         }
 
         $installTool->persistConfig('installPassword', password_hash($password, PASSWORD_DEFAULT));
-        $this->container->get('contao.install_tool_user')->setAuthenticated(true);
+        $this->container->get('contao_installation.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
     }
 
     /**
      * Renders a form to log in.
-     *
-     * @throws \RuntimeException
      *
      * @return Response|RedirectResponse
      */
@@ -211,7 +200,7 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('login.html.twig');
         }
 
-        $installTool = $this->container->get('contao.install_tool');
+        $installTool = $this->container->get('contao_installation.install_tool');
 
         $verified = password_verify(
             $request->request->get('password'),
@@ -227,7 +216,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $installTool->resetLoginCount();
-        $this->container->get('contao.install_tool_user')->setAuthenticated(true);
+        $this->container->get('contao_installation.install_tool_user')->setAuthenticated(true);
 
         return $this->getRedirectResponse();
     }
@@ -242,7 +231,7 @@ class InstallationController implements ContainerAwareInterface
         $filesystem = new Filesystem();
         $cacheDir = $this->getContainerParameter('kernel.cache_dir');
         $ref = new \ReflectionObject($this->container);
-        $containerDir = Path::getFilename(Path::getDirectory($ref->getFileName()));
+        $containerDir = basename(Path::getDirectory($ref->getFileName()));
 
         /** @var array<SplFileInfo> $finder */
         $finder = Finder::create()
@@ -296,8 +285,6 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to set up the database connection.
      *
-     * @throws \RuntimeException
-     *
      * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
@@ -334,7 +321,7 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
-        $installTool = $this->container->get('contao.install_tool');
+        $installTool = $this->container->get('contao_installation.install_tool');
         $installTool->setConnection(ConnectionFactory::create($parameters));
 
         if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
@@ -357,20 +344,18 @@ class InstallationController implements ContainerAwareInterface
     {
         $this->context['sql_message'] = implode(
             '<br>',
-            array_map('htmlspecialchars', $this->container->get('contao.install_tool')->runMigrations())
+            array_map('htmlspecialchars', $this->container->get('contao_installation.install_tool')->runMigrations())
         );
     }
 
     /**
      * Renders a form to adjust the database tables.
-     *
-     * @throws \RuntimeException
      */
     private function adjustDatabaseTables(): ?RedirectResponse
     {
-        $this->container->get('contao.install_tool')->handleRunOnce();
+        $this->container->get('contao_installation.install_tool')->handleRunOnce();
 
-        $installer = $this->container->get('contao.installer');
+        $installer = $this->container->get('contao_installation.database.installer');
 
         $this->context['sql_form'] = $installer->getCommands();
 
@@ -397,12 +382,10 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to import the example website.
-     *
-     * @throws \RuntimeException
      */
     private function importExampleWebsite(): ?RedirectResponse
     {
-        $installTool = $this->container->get('contao.install_tool');
+        $installTool = $this->container->get('contao_installation.install_tool');
         $templates = $installTool->getTemplates();
 
         $this->context['templates'] = $templates;
@@ -447,12 +430,9 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    /**
-     * @throws \RuntimeException
-     */
     private function createAdminUser(): ?RedirectResponse
     {
-        $installTool = $this->container->get('contao.install_tool');
+        $installTool = $this->container->get('contao_installation.install_tool');
 
         if (!$installTool->hasTable('tl_user')) {
             $this->context['hide_admin'] = true;
@@ -517,7 +497,7 @@ class InstallationController implements ContainerAwareInterface
         $minlength = $installTool->getConfig('minPasswordLength');
 
         // The password is too short
-        if (Utf8::strlen($password) < $minlength) {
+        if (mb_strlen($password) < $minlength) {
             $this->context['admin_password_error'] = sprintf($this->trans('password_too_short'), $minlength);
 
             return null;
@@ -560,8 +540,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Returns a redirect response to reload the page.
-     *
-     * @throws \RuntimeException
      */
     private function getRedirectResponse(): RedirectResponse
     {
@@ -577,8 +555,6 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Adds the default values to the context.
      *
-     * @throws \RuntimeException
-     *
      * @return array<string,string>
      */
     private function addDefaultsToContext(array $context): array
@@ -593,6 +569,7 @@ class InstallationController implements ContainerAwareInterface
             $context['language'] = $this->container->get('translator')->getLocale();
         }
 
+        // Backwards compatibility
         if (!isset($context['ua'])) {
             $context['ua'] = $this->getUserAgentString();
         }
@@ -619,7 +596,7 @@ class InstallationController implements ContainerAwareInterface
             return '';
         }
 
-        return $this->container->get(ContaoCsrfTokenManager::class)->getToken($tokenName)->getValue();
+        return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
     /**

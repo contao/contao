@@ -38,8 +38,10 @@ class Adapter
 
     /**
      * Calls a method of the adapted class.
+     *
+     * @return mixed
      */
-    public function __call(string $name, array $arguments = [])
+    public function __call(string $name, array $arguments)
     {
         return \call_user_func_array([$this->class, $name], $arguments);
     }

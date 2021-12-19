@@ -23,15 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PreviewUrlCreateListener
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private RequestStack $requestStack;
+    private ContaoFramework $framework;
 
     public function __construct(RequestStack $requestStack, ContaoFramework $framework)
     {
@@ -41,8 +34,6 @@ class PreviewUrlCreateListener
 
     /**
      * Adds the calendar ID to the front end preview URL.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
@@ -61,7 +52,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (null === ($eventModel = $this->getEventModel($this->getId($event, $request)))) {
+        if ((!$id = $this->getId($event, $request)) || (!$eventModel = $this->getEventModel($id))) {
             return;
         }
 
@@ -86,9 +77,6 @@ class PreviewUrlCreateListener
      */
     private function getEventModel($id): ?CalendarEventsModel
     {
-        /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
-
-        return $adapter->findByPk($id);
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($id);
     }
 }

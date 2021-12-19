@@ -32,7 +32,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal
@@ -41,15 +41,8 @@ class DebugPluginsCommand extends Command
 {
     protected static $defaultName = 'debug:plugins';
 
-    /**
-     * @var ContaoKernel
-     */
-    private $kernel;
-
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private ContaoKernel $kernel;
+    private ?SymfonyStyle $io = null;
 
     public function __construct(ContaoKernel $kernel)
     {

@@ -16,21 +16,13 @@ use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpFoundation\Cookie;
 
 class GenerateJwtCookieCommandTest extends ContaoTestCase
 {
-    /**
-     * @var JwtManager&MockObject
-     */
+    private GenerateJwtCookieCommand $command;
     private $jwtManager;
-
-    /**
-     * @var GenerateJwtCookieCommand
-     */
-    private $command;
 
     protected function setUp(): void
     {

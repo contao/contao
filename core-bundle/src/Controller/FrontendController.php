@@ -67,9 +67,9 @@ class FrontendController extends AbstractController
     /**
      * Symfony will un-authenticate the user automatically by calling this route.
      *
-     * @throws LogoutException
-     *
      * @Route("/_contao/logout", name="contao_frontend_logout")
+     *
+     * @return never
      */
     public function logoutAction(): void
     {
@@ -108,16 +108,10 @@ class FrontendController extends AbstractController
      */
     public function requestTokenScriptAction(): Response
     {
-        $token = $this
-            ->get(ContaoCsrfTokenManager::class)
-            ->getToken($this->getParameter('contao.csrf_token_name'))
-            ->getValue()
-        ;
-
-        $token = json_encode($token);
+        $tokenValue = json_encode($this->container->get('contao.csrf.token_manager')->getFrontendTokenValue());
 
         $response = new Response();
-        $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$token.'})');
+        $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$tokenValue.'})');
         $response->headers->set('Content-Type', 'application/javascript; charset=UTF-8');
         $response->headers->addCacheControlDirective('no-store');
         $response->headers->addCacheControlDirective('must-revalidate');
@@ -129,7 +123,7 @@ class FrontendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services[] = ContaoCsrfTokenManager::class;
+        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
 
         return $services;
     }

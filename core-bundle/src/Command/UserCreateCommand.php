@@ -19,7 +19,6 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\UserGroupModel;
 use Contao\Validator;
 use Doctrine\DBAL\Connection;
-use Patchwork\Utf8;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 /**
  * Creates a new Contao back end user.
@@ -39,31 +38,16 @@ class UserCreateCommand extends Command
 {
     protected static $defaultName = 'contao:user:create';
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
+    private Connection $connection;
+    private PasswordHasherFactoryInterface $passwordHasherFactory;
+    private array $locales;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var EncoderFactoryInterface
-     */
-    private $encoderFactory;
-
-    /**
-     * @var array
-     */
-    private $locales;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, EncoderFactoryInterface $encoderFactory, Locales $locales)
+    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory, Locales $locales)
     {
         $this->framework = $framework;
         $this->connection = $connection;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->locales = $locales->getEnabledLocaleIds();
 
         parent::__construct();
@@ -120,7 +104,6 @@ class UserCreateCommand extends Command
             $input->setOption('language', $language);
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $minLength = $config->get('minPasswordLength');
         $username = $input->getOption('username');
@@ -130,7 +113,7 @@ class UserCreateCommand extends Command
                 throw new \RuntimeException('The password cannot be empty');
             }
 
-            if (Utf8::strlen($value) < $minLength) {
+            if (mb_strlen($value) < $minLength) {
                 throw new \RuntimeException(sprintf('Please use at least %d characters.', $minLength));
             }
 
@@ -262,7 +245,6 @@ class UserCreateCommand extends Command
     {
         $this->framework->initialize();
 
-        /** @var UserGroupModel $userGroupModel */
         $userGroupModel = $this->framework->getAdapter(UserGroupModel::class);
         $groups = $userGroupModel->findAll();
 
@@ -276,7 +258,7 @@ class UserCreateCommand extends Command
     private function persistUser(string $username, string $name, string $email, string $password, string $language, bool $isAdmin = false, array $groups = null, bool $pwChange = false): void
     {
         $time = time();
-        $hash = $this->encoderFactory->getEncoder(BackendUser::class)->encodePassword($password, null);
+        $hash = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class)->hash($password);
 
         $data = [
             'tstamp' => $time,

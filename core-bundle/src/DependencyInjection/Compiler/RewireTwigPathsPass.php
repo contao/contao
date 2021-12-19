@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -33,9 +32,7 @@ class RewireTwigPathsPass implements CompilerPassInterface
 
         $calls = array_filter(
             $original->getMethodCalls(),
-            static function (array $call): bool {
-                return 'addPath' === $call[0];
-            }
+            static fn (array $call): bool => 'addPath' === $call[0]
         );
 
         if (empty($calls)) {
@@ -44,7 +41,7 @@ class RewireTwigPathsPass implements CompilerPassInterface
 
         $original->removeMethodCall('addPath');
 
-        $replaced = $container->getDefinition(FailTolerantFilesystemLoader::class);
+        $replaced = $container->getDefinition('contao.twig.fail_tolerant_filesystem_loader');
 
         foreach ($calls as $call) {
             $replaced->addMethodCall(...$call);

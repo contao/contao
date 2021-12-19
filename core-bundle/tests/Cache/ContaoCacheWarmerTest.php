@@ -22,7 +22,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ContaoCacheWarmerTest extends TestCase
 {
@@ -135,13 +135,8 @@ class ContaoCacheWarmerTest extends TestCase
 
     private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
-        }
+        $connection ??= $this->createMock(Connection::class);
+        $framework ??= $this->mockContaoFramework();
 
         $fixtures = Path::join($this->getFixturesDir(), 'vendor/contao/'.$bundle.'/Resources/contao');
 

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\TwoFactor;
 
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
@@ -24,20 +25,9 @@ use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var TrustedDeviceTokenStorage
-     */
-    private $trustedTokenStorage;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private RequestStack $requestStack;
+    private TrustedDeviceTokenStorage $trustedTokenStorage;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager)
     {
@@ -52,7 +42,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return;
         }
 
-        $userAgent = $this->requestStack->getMasterRequest()->headers->get('User-Agent');
+        $userAgent = $this->requestStack->getMainRequest()->headers->get('User-Agent');
 
         /** @var Parser&AbstractParser $parser */
         $parser = Parser::create();
@@ -96,6 +86,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $user->save();
     }
 
+    /**
+     * @return Collection<int, TrustedDevice>
+     */
     public function getTrustedDevices(User $user)
     {
         return $this->entityManager

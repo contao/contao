@@ -29,35 +29,12 @@ class TokenChecker
     private const FRONTEND_FIREWALL = 'contao_frontend';
     private const BACKEND_FIREWALL = 'contao_backend';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var FirewallMapInterface
-     */
-    private $firewallMap;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var AuthenticationTrustResolverInterface
-     */
-    private $trustResolver;
-
-    /**
-     * @var VoterInterface
-     */
-    private $roleVoter;
+    private RequestStack $requestStack;
+    private FirewallMapInterface $firewallMap;
+    private TokenStorageInterface $tokenStorage;
+    private SessionInterface $session;
+    private AuthenticationTrustResolverInterface $trustResolver;
+    private VoterInterface $roleVoter;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
@@ -103,7 +80,7 @@ class TokenChecker
             return null;
         }
 
-        return $token->getUser()->getUsername();
+        return $token->getUser()->getUserIdentifier();
     }
 
     /**
@@ -117,7 +94,7 @@ class TokenChecker
             return null;
         }
 
-        return $token->getUser()->getUsername();
+        return $token->getUser()->getUserIdentifier();
     }
 
     /**
@@ -125,7 +102,7 @@ class TokenChecker
      */
     public function isPreviewMode(): bool
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (null === $request || !$request->attributes->get('_preview', false)) {
             return false;
@@ -157,7 +134,7 @@ class TokenChecker
 
     private function getTokenFromStorage(string $context): ?TokenInterface
     {
-        $request = $this->requestStack->getMasterRequest();
+        $request = $this->requestStack->getMainRequest();
 
         if (!$this->firewallMap instanceof FirewallMap || null === $request) {
             return null;
@@ -175,7 +152,7 @@ class TokenChecker
     private function getTokenFromSession(string $sessionKey): ?TokenInterface
     {
         if (!$this->session->isStarted()) {
-            $request = $this->requestStack->getMasterRequest();
+            $request = $this->requestStack->getMainRequest();
 
             if (!$request || !$request->hasPreviousSession()) {
                 return null;

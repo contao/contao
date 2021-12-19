@@ -19,15 +19,8 @@ use Contao\StringUtil;
 
 class Slug
 {
-    /**
-     * @var SlugGeneratorInterface
-     */
-    private $slugGenerator;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private SlugGeneratorInterface $slugGenerator;
+    private ContaoFramework $framework;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.slug" service instead
@@ -44,7 +37,6 @@ class Slug
     public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
-            /** @var PageModel $pageAdapter */
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
             if (null !== ($page = $pageAdapter->findWithDetails((int) $options))) {

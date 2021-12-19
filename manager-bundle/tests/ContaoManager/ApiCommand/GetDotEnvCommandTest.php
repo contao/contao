@@ -20,25 +20,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class GetDotEnvCommandTest extends ContaoTestCase
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $tempdir;
-
-    /**
-     * @var string
-     */
-    private $tempfile;
-
-    /**
-     * @var GetDotEnvCommand
-     */
-    private $command;
+    private Filesystem $filesystem;
+    private string $tempdir;
+    private string $tempfile;
+    private GetDotEnvCommand $command;
 
     protected function setUp(): void
     {

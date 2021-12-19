@@ -403,11 +403,7 @@ class BackendMenuListenerTest extends ContaoTestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
-            ->willReturnCallback(
-                static function (string $id): string {
-                    return $id;
-                }
-            )
+            ->willReturnCallback(static fn (string $id): string => $id)
         ;
 
         return $translator;

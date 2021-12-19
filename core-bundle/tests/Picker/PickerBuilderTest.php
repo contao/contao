@@ -24,10 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PickerBuilderTest extends ContaoTestCase
 {
-    /**
-     * @var PickerBuilder
-     */
-    private $builder;
+    private PickerBuilder $builder;
 
     protected function setUp(): void
     {

@@ -16,26 +16,14 @@ use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Api\Command\VersionCommand;
 use Contao\ManagerPlugin\Api\ApiPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class VersionCommandTest extends TestCase
 {
-    /**
-     * @var Application&MockObject
-     */
+    private VersionCommand $command;
     private $application;
-
-    /**
-     * @var PluginLoader&MockObject
-     */
     private $pluginLoader;
-
-    /**
-     * @var VersionCommand
-     */
-    private $command;
 
     protected function setUp(): void
     {

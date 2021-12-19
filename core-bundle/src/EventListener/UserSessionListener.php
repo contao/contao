@@ -29,25 +29,10 @@ use Symfony\Component\Security\Core\Security;
  */
 class UserSessionListener
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private Connection $connection;
+    private Security $security;
+    private ScopeMatcher $scopeMatcher;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(Connection $connection, Security $security, ScopeMatcher $scopeMatcher, EventDispatcherInterface $eventDispatcher)
     {
@@ -62,7 +47,7 @@ class UserSessionListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
         }
 
@@ -89,7 +74,7 @@ class UserSessionListener
      */
     public function write(ResponseEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMasterRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
             return;
         }
 
@@ -108,8 +93,6 @@ class UserSessionListener
 
     /**
      * Returns the session bag.
-     *
-     * @throws \RuntimeException
      */
     private function getSessionBag(Request $request): SessionBagInterface
     {

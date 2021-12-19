@@ -30,7 +30,7 @@ class RefererIdListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener($event);
@@ -45,7 +45,7 @@ class RefererIdListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener($event);
@@ -73,7 +73,7 @@ class RefererIdListenerTest extends TestCase
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
 
         $kernel = $this->createMock(KernelInterface::class);
-        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $listener = new RefererIdListener($this->mockTokenGenerator(), $this->mockScopeMatcher());
         $listener($event);

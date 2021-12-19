@@ -34,10 +34,7 @@ class PictureTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private Filesystem $filesystem;
 
     public static function setUpBeforeClass(): void
     {
@@ -354,7 +351,7 @@ class PictureTest extends TestCase
             $container->getParameter('contao.image.imagine_options')
         );
 
-        $container->set('contao.image.image_factory', $imageFactory);
+        $container->set('contao.image.factory', $imageFactory);
         $container->set('contao.image.picture_generator', $pictureGenerator);
         $container->set('contao.image.picture_factory', $pictureFactory);
 

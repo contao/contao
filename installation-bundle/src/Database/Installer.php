@@ -20,28 +20,13 @@ use Doctrine\DBAL\Schema\Table;
 
 class Installer
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private ?array $commands = null;
+    private array $commandOrder;
+    private SchemaProvider $schemaProvider;
 
     /**
-     * @var array
-     */
-    private $commands;
-
-    /**
-     * @var array
-     */
-    private $commandOrder;
-
-    /**
-     * @var SchemaProvider
-     */
-    private $schemaProvider;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.installer" service instead
+     * @internal Do not inherit from this class; decorate the "contao_installation.database.installer" service instead
      */
     public function __construct(Connection $connection, SchemaProvider $schemaProvider)
     {
@@ -122,7 +107,7 @@ class Installer
         $order = [];
 
         // Create the from and to schema
-        $fromSchema = $this->connection->getSchemaManager()->createSchema();
+        $fromSchema = $this->connection->createSchemaManager()->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
         $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());

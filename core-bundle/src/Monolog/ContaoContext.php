@@ -25,39 +25,13 @@ class ContaoContext
     public const NEWSLETTER = 'NEWSLETTER';
     public const REPOSITORY = 'REPOSITORY';
 
-    /**
-     * @var string
-     */
-    private $func;
+    private string $func;
+    private ?string $action;
+    private ?string $username;
+    private ?string $ip;
+    private ?string $browser;
+    private ?string $source;
 
-    /**
-     * @var string|null
-     */
-    private $action;
-
-    /**
-     * @var string|null
-     */
-    private $username;
-
-    /**
-     * @var string|null
-     */
-    private $ip;
-
-    /**
-     * @var string|null
-     */
-    private $browser;
-
-    /**
-     * @var string|null
-     */
-    private $source;
-
-    /**
-     * @throws \InvalidArgumentException
-     */
     public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
     {
         if ('' === $func) {

@@ -23,10 +23,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PickerTest extends TestCase
 {
-    /**
-     * @var Picker
-     */
-    private $picker;
+    private Picker $picker;
 
     protected function setUp(): void
     {

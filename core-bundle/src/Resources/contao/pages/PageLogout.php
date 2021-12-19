@@ -10,9 +10,8 @@
 
 namespace Contao;
 
-use League\Uri\Components\Query;
-use League\Uri\Http;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
@@ -50,20 +49,27 @@ class PageLogout extends Frontend
 		$container = System::getContainer();
 		$token = $container->get('security.helper')->getToken();
 
-		// Redirect immediately if there is no logged in user (see #2388)
+		// Redirect immediately if there is no logged-in user (see #2388)
 		if ($token === null || $token instanceof AnonymousToken)
 		{
 			return new RedirectResponse($strRedirect);
 		}
 
+		$pairs = array();
 		$strLogoutUrl = $container->get('security.logout_url_generator')->getLogoutUrl();
-		$uri = Http::createFromString($strLogoutUrl);
+		$request = Request::create($strLogoutUrl);
+
+		if ($request->server->has('QUERY_STRING'))
+		{
+			parse_str($request->server->get('QUERY_STRING'), $pairs);
+		}
 
 		// Add the redirect= parameter to the logout URL
-		$query = new Query($uri->getQuery());
-		$query = $query->merge('redirect=' . $strRedirect);
+		$pairs['redirect'] = $strRedirect;
 
-		return new RedirectResponse((string) $uri->withQuery((string) $query), Response::HTTP_TEMPORARY_REDIRECT);
+		$uri = $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo() . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+
+		return new RedirectResponse($uri, Response::HTTP_TEMPORARY_REDIRECT);
 	}
 }
 

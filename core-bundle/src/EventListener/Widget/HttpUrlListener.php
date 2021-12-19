@@ -24,16 +24,16 @@ class HttpUrlListener
 {
     public const RGXP_NAME = 'httpurl';
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
+    /**
+     * @param mixed $input
+     */
     public function __invoke(string $regexp, $input, Widget $widget): bool
     {
         if (self::RGXP_NAME !== $regexp) {

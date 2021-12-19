@@ -28,15 +28,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MemoryTokenStorage
-     */
-    private $tokenStorage;
-
-    /**
-     * @var string
-     */
-    private $cookiePrefix;
+    private MemoryTokenStorage $tokenStorage;
+    private string $cookiePrefix;
 
     public function __construct(MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
     {
@@ -49,7 +42,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
      */
     public function onKernelRequest(RequestEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -61,7 +54,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
@@ -187,6 +180,10 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return $tokens;
     }
 
+    /**
+     * @param mixed $key
+     * @param mixed $value
+     */
     private function isCsrfCookie($key, $value): bool
     {
         if (!\is_string($key)) {

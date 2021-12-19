@@ -12,34 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Webmozart\PathUtil\Path;
 
 /**
  * @experimental
  */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var ContaoFilesystemLoader
-     */
-    private $loader;
-
-    /**
-     * @var TemplateLocator
-     */
-    private $templateLocator;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $environment;
+    private ContaoFilesystemLoader $loader;
+    private TemplateLocator $templateLocator;
+    private string $projectDir;
+    private string $environment;
 
     public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $environment)
     {
@@ -49,7 +34,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         $this->environment = $environment;
     }
 
-    public function warmUp($cacheDir = null): array
+    public function warmUp(string $cacheDir = null): array
     {
         // Theme paths
         $themePaths = $this->templateLocator->findThemeDirectories();
@@ -61,13 +46,13 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         // Global templates path
         $globalTemplatesPath = Path::join($this->projectDir, 'templates');
 
-        $this->loader->addPath($globalTemplatesPath, 'Contao');
+        $this->loader->addPath($globalTemplatesPath);
         $this->loader->addPath($globalTemplatesPath, 'Contao_Global', true);
 
         // Bundle paths (including App)
         foreach ($this->templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
             foreach ($resourcesPaths as $path) {
-                $this->loader->addPath($path, 'Contao');
+                $this->loader->addPath($path);
                 $this->loader->addPath($path, "Contao_$name", true);
             }
         }

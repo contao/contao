@@ -17,10 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class PhpFileLoaderTest extends TestCase
 {
-    /**
-     * @var PhpFileLoader
-     */
-    private $loader;
+    private PhpFileLoader $loader;
 
     protected function setUp(): void
     {

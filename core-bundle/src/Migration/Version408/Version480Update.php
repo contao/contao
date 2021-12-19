@@ -21,37 +21,22 @@ use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\IntegerType;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal
  */
 class Version480Update extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private Connection $connection;
+    private Filesystem $filesystem;
+    private ContaoFramework $framework;
+    private string $projectDir;
 
     /**
      * @var array<string>
      */
-    private $resultMessages = [];
+    private array $resultMessages = [];
 
     public function __construct(Connection $connection, Filesystem $filesystem, ContaoFramework $framework, string $projectDir)
     {
@@ -115,7 +100,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunMediaelement(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout'])) {
             return false;
@@ -133,8 +118,8 @@ class Version480Update extends AbstractMigration
                     SELECT id
                     FROM tl_layout
                     WHERE
-                        jquery LIKE '%j_mediaelement%'
-                        OR scripts LIKE '%js_mediaelement%'
+                        jquery LIKE '%\"j_mediaelement\"%'
+                        OR scripts LIKE '%\"js_mediaelement\"%'
                 )
             ")
         ) {
@@ -144,7 +129,6 @@ class Version480Update extends AbstractMigration
 
         $this->framework->initialize();
 
-        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
 
         foreach (['jquery' => 'j_mediaelement', 'scripts' => 'js_mediaelement'] as $column => $templateName) {
@@ -159,7 +143,7 @@ class Version480Update extends AbstractMigration
                         SELECT id
                         FROM tl_layout
                         WHERE
-                            $column LIKE '%$templateName%'
+                            $column LIKE '%\"$templateName\"%'
                     )
                 ")
             ) {
@@ -174,9 +158,7 @@ class Version480Update extends AbstractMigration
     {
         $this->framework->initialize();
 
-        /** @var Controller $controller */
         $controller = $this->framework->getAdapter(Controller::class);
-
         $jTemplateExists = \array_key_exists('j_mediaelement', $controller->getTemplateGroup('j_'));
         $jsTemplateExists = \array_key_exists('js_mediaelement', $controller->getTemplateGroup('js_'));
 
@@ -231,7 +213,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunSkipIfDimensionsMatch(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_image_size'])) {
             return false;
@@ -262,7 +244,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunImportantPart(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_files'])) {
             return false;
@@ -304,7 +286,7 @@ class Version480Update extends AbstractMigration
         $compareValue = 1;
 
         // If the columns are of type integer, we can safely convert all images even if they are only set to 1
-        if ($this->connection->getSchemaManager()->listTableColumns('tl_files')['importantpartx']->getType() instanceof IntegerType) {
+        if ($this->connection->createSchemaManager()->listTableColumns('tl_files')['importantpartx']->getType() instanceof IntegerType) {
             $compareValue = 0;
         }
 
@@ -407,7 +389,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunMinKeywordLength(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_module'])) {
             return false;
@@ -440,7 +422,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunContextLength(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_module'])) {
             return false;
@@ -495,7 +477,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunDefaultImageDensities(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_layout', 'tl_theme'])) {
             return false;
@@ -527,7 +509,7 @@ class Version480Update extends AbstractMigration
 
     public function shouldRunRememberMe(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_remember_me'])) {
             return false;
@@ -543,7 +525,7 @@ class Version480Update extends AbstractMigration
         // Since rememberme is broken in Contao 4.7 and there are no valid
         // cookies out there, we can simply drop the old table here and let the
         // install tool create the new one
-        if ($this->connection->getSchemaManager()->tablesExist(['tl_remember_me'])) {
+        if ($this->connection->createSchemaManager()->tablesExist(['tl_remember_me'])) {
             $this->connection->executeStatement('DROP TABLE tl_remember_me');
         }
     }

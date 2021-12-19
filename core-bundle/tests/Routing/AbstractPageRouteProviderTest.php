@@ -259,25 +259,13 @@ class AbstractPageRouteProviderTest extends TestCase
         $sorting = 0;
 
         $routes = array_map(
-            function ($language) use ($sorting) {
-                return new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]);
-            },
+            fn ($language) => new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]),
             $pageLanguages
         );
 
-        usort(
-            $routes,
-            static function ($a, $b) use ($method, $instance, $preferredLanguages) {
-                return $method->invoke($instance, $a, $b, $preferredLanguages);
-            }
-        );
+        usort($routes, static fn ($a, $b) => $method->invoke($instance, $a, $b, $preferredLanguages));
 
-        $result = array_map(
-            static function (Route $route) {
-                return $route->getDefault('pageModel')->rootLanguage;
-            },
-            $routes
-        );
+        $result = array_map(static fn (Route $route) => $route->getDefault('pageModel')->rootLanguage, $routes);
 
         $this->assertSame($expected, $result);
     }
@@ -423,7 +411,6 @@ class AbstractPageRouteProviderTest extends TestCase
      */
     private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): PageModel
     {
-        /** @var PageModel&MockObject $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->type = $root ? 'root' : 'regular';
         $pageModel->rootLanguage = $language;

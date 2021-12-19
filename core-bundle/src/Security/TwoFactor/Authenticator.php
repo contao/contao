@@ -26,7 +26,7 @@ class Authenticator
     /**
      * Validates the code which was entered by the user.
      */
-    public function validateCode(User $user, string $code, ?int $timestamp = null): bool
+    public function validateCode(User $user, string $code, int $timestamp = null): bool
     {
         $totp = TOTP::create($this->getUpperUnpaddedSecretForUser($user));
 
@@ -43,7 +43,7 @@ class Authenticator
         return sprintf(
             'otpauth://totp/%s:%s?secret=%s&issuer=%s',
             $issuer,
-            rawurlencode($user->getUsername()).'@'.$issuer,
+            rawurlencode($user->getUserIdentifier()).'@'.$issuer,
             $this->getUpperUnpaddedSecretForUser($user),
             $issuer
         );

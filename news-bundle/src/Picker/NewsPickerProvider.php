@@ -28,10 +28,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
 {
     use FrameworkAwareTrait;
 
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
@@ -113,7 +110,6 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function getNewsArchiveId($id): ?int
     {
-        /** @var NewsModel $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
 
         if (!($newsModel = $newsAdapter->findById($id)) instanceof NewsModel) {

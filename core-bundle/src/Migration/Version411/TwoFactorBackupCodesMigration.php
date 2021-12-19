@@ -21,10 +21,7 @@ use Doctrine\DBAL\Connection;
  */
 class TwoFactorBackupCodesMigration extends AbstractMigration
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(Connection $connection)
     {
@@ -33,7 +30,7 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->getSchemaManager();
+        $schemaManager = $this->connection->createSchemaManager();
 
         if (!$schemaManager->tablesExist(['tl_user', 'tl_member'])) {
             return false;

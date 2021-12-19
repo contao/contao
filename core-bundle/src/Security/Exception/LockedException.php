@@ -16,10 +16,7 @@ use Symfony\Component\Security\Core\Exception\LockedException as BaseLockedExcep
 
 class LockedException extends BaseLockedException
 {
-    /**
-     * @var int
-     */
-    private $lockedSeconds;
+    private int $lockedSeconds;
 
     public function __construct(int $lockedSeconds, string $message = '', int $code = 0, \Throwable $previous = null)
     {

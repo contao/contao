@@ -21,15 +21,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
-    /**
-     * @var UriInterface
-     */
-    private $uri;
-
-    /**
-     * @var int
-     */
-    private $statusCode;
+    private UriInterface $uri;
+    private int $statusCode;
+    private string $body;
+    private ?Crawler $crawler = null;
+    private ?array $jsonLds = null;
 
     /**
      * The key is the header name in lowercase letters and the value is again
@@ -37,22 +33,7 @@ class Document
      *
      * @var array<string,array>
      */
-    private $headers;
-
-    /**
-     * @var string
-     */
-    private $body;
-
-    /**
-     * @var Crawler
-     */
-    private $crawler;
-
-    /**
-     * @var array|null
-     */
-    private $jsonLds;
+    private array $headers;
 
     public function __construct(UriInterface $uri, int $statusCode, array $headers = [], string $body = '')
     {
@@ -84,11 +65,7 @@ class Document
 
     public function getContentCrawler(): Crawler
     {
-        if (null === $this->crawler) {
-            $this->crawler = new Crawler($this->body);
-        }
-
-        return $this->crawler;
+        return $this->crawler ??= new Crawler($this->body);
     }
 
     public function extractCanonicalUri(): ?UriInterface

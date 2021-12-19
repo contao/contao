@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
@@ -37,30 +36,11 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     use TargetPathTrait;
 
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var TrustedDeviceManagerInterface
-     */
-    private $trustedDeviceManager;
-
-    /**
-     * @var FirewallMap
-     */
-    private $firewallMap;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
-
-    /**
-     * @var User|UserInterface
-     */
-    private $user;
+    private ContaoFramework $framework;
+    private TrustedDeviceManagerInterface $trustedDeviceManager;
+    private FirewallMap $firewallMap;
+    private ?LoggerInterface $logger;
+    private ?User $user = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
@@ -129,13 +109,8 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $this->triggerPostLoginHook();
 
-        if ($request->hasSession()) {
-            // Backwards compatibility with symfony/security <5.2
-            if (method_exists($token, 'getFirewallName')) {
-                $this->removeTargetPath($request->getSession(), $token->getFirewallName());
-            } elseif (method_exists($token, 'getProviderKey')) {
-                $this->removeTargetPath($request->getSession(), $token->getProviderKey());
-            }
+        if ($request->hasSession() && method_exists($token, 'getFirewallName')) {
+            $this->removeTargetPath($request->getSession(), $token->getFirewallName());
         }
 
         return $response;
@@ -147,7 +122,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             return $this->decodeTargetPath($request);
         }
 
-        /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
         $groups = StringUtil::deserialize($this->user->groups, true);
         $groupPage = $pageModelAdapter->findFirstActiveByMemberGroups($groups);
@@ -169,7 +143,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.');
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
@@ -181,7 +154,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
     {
         $targetPath = $request->request->get('_target_path');
 
-        if (null === $targetPath) {
+        if (!\is_string($targetPath)) {
             throw new BadRequestHttpException('Missing form field "_target_path". You probably need to adjust your custom login template.');
         }
 

@@ -18,36 +18,26 @@ use Doctrine\DBAL\Connection;
 class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
+    private const DISABLE_ROUTING = ['error_401', 'error_403', 'error_404'];
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    private ?array $urlPrefixes = null;
+    private ?array $urlSuffixes = null;
 
     /**
      * @var array<RouteConfig>
      */
-    private $routeConfigs = [];
+    private array $routeConfigs = [];
 
     /**
      * @var array<DynamicRouteInterface>
      */
-    private $routeEnhancers = [];
+    private array $routeEnhancers = [];
 
     /**
      * @var array<ContentCompositionInterface|bool>
      */
-    private $contentComposition = [];
-
-    /**
-     * @var array<string>|null
-     */
-    private $urlPrefixes;
-
-    /**
-     * @var array<string>|null
-     */
-    private $urlSuffixes;
+    private array $contentComposition = [];
 
     public function __construct(Connection $connection)
     {
@@ -68,15 +58,19 @@ class PageRegistry
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
+        $options = $config->getOptions();
         $path = $config->getPath();
 
-        if (null === $path) {
+        if (false === $path || \in_array($type, self::DISABLE_ROUTING, true)) {
+            $path = '';
+            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
+        } elseif (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
         }
 
-        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $config->getOptions(), $config->getMethods());
+        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
 
         if (null !== $config->getUrlSuffix()) {
             $route->setUrlSuffix($config->getUrlSuffix());
@@ -182,6 +176,43 @@ class PageRegistry
         return array_keys($this->routeConfigs);
     }
 
+    /**
+     * Checks whether this is a routable page type (see #3415).
+     */
+    public function isRoutable(PageModel $page): bool
+    {
+        $type = $page->type;
+
+        // Check for non-routable legacy error pages
+        if (\in_array($type, self::DISABLE_ROUTING, true)) {
+            return false;
+        }
+
+        // Any legacy page without route config is routable by default
+        if (!isset($this->routeConfigs[$type])) {
+            return true;
+        }
+
+        // Check if page controller is routable
+        return false !== $this->routeConfigs[$type]->getPath();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getUnroutableTypes(): array
+    {
+        $types = self::DISABLE_ROUTING;
+
+        foreach ($this->routeConfigs as $type => $config) {
+            if (false === $config->getPath()) {
+                $types[] = $type;
+            }
+        }
+
+        return $types;
+    }
+
     private function initializePrefixAndSuffix(): void
     {
         if (null !== $this->urlPrefixes || null !== $this->urlSuffixes) {
@@ -193,9 +224,7 @@ class PageRegistry
         $urlSuffixes = [
             array_column($results, 'urlSuffix'),
             array_filter(array_map(
-                static function (RouteConfig $config) {
-                    return $config->getUrlSuffix();
-                },
+                static fn (RouteConfig $config) => $config->getUrlSuffix(),
                 $this->routeConfigs
             )),
         ];

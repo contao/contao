@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Crawl\Monolog;
 
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
+use Monolog\Logger;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\Monolog\Logger;
 use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandlerTest extends TestCase

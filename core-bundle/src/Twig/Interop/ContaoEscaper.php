@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
-use Contao\Controller;
 use Contao\StringUtil;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -31,6 +30,8 @@ final class ContaoEscaper
     /**
      * This implementation is a clone of Twig's html escape strategy but calls
      * htmlspecialchars with the double_encode parameter set to false.
+     *
+     * @param mixed $string
      *
      * @see twig_escape_filter
      */
@@ -56,6 +57,8 @@ final class ContaoEscaper
      * This implementation is a clone of Twig's html_attr escape strategy but
      * replaces insert tags and decodes entities beforehand.
      *
+     * @param mixed $string
+     *
      * @see twig_escape_filter
      */
     public function escapeHtmlAttr(Environment $environment, $string, ?string $charset): string
@@ -65,9 +68,6 @@ final class ContaoEscaper
         }
 
         $string = (string) $string;
-
-        // Replace insert tags before '{' and '}' get encoded
-        $string = Controller::replaceInsertTags($string, false);
         $string = StringUtil::decodeEntities($string);
 
         // Original logic
@@ -76,7 +76,7 @@ final class ContaoEscaper
         }
 
         return preg_replace_callback(
-            '#[^a-zA-Z0-9,\.\-_]#Su',
+            '#[^a-zA-Z0-9,.\-_]#Su',
             static function ($matches) {
                 /**
                  * This function is adapted from code coming from Zend Framework.

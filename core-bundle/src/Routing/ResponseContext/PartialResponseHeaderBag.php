@@ -29,10 +29,7 @@ class PartialResponseHeaderBag extends ResponseHeaderBag
         $this->remove('date');
     }
 
-    /**
-     * @param string $key
-     */
-    public function remove($key): void
+    public function remove(string $key): void
     {
         parent::remove($key);
 

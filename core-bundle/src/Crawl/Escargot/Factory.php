@@ -17,8 +17,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
@@ -34,30 +34,19 @@ class Factory
 {
     public const USER_AGENT = 'contao/crawler';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private Connection $connection;
+    private ContaoFramework $framework;
+    private array $defaultHttpClientOptions;
 
     /**
      * @var array<string>
      */
-    private $additionalUris;
-
-    /**
-     * @var array
-     */
-    private $defaultHttpClientOptions;
+    private array $additionalUris;
 
     /**
      * @var array<EscargotSubscriberInterface>
      */
-    private $subscribers = [];
+    private array $subscribers = [];
 
     public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
     {
@@ -85,9 +74,7 @@ class Factory
 
         return array_filter(
             $this->subscribers,
-            static function (EscargotSubscriberInterface $subscriber) use ($selectedSubscribers): bool {
-                return \in_array($subscriber->getName(), $selectedSubscribers, true);
-            }
+            static fn (EscargotSubscriberInterface $subscriber): bool => \in_array($subscriber->getName(), $selectedSubscribers, true)
         );
     }
 
@@ -97,9 +84,7 @@ class Factory
     public function getSubscriberNames(): array
     {
         return array_map(
-            static function (EscargotSubscriberInterface $subscriber): string {
-                return $subscriber->getName();
-            },
+            static fn (EscargotSubscriberInterface $subscriber): string => $subscriber->getName(),
             $this->subscribers
         );
     }
@@ -108,13 +93,7 @@ class Factory
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue(
-                $this->connection,
-                static function (): string {
-                    return Uuid::uuid4()->toString();
-                },
-                'tl_crawl_queue'
-            )
+            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue')
         );
     }
 
@@ -145,7 +124,6 @@ class Factory
 
         $collection = new BaseUriCollection();
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $rootPages = $pageModel->findPublishedRootPages();
 
@@ -160,9 +138,6 @@ class Factory
         return $collection;
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
         $escargot = Escargot::create($baseUris, $queue)->withHttpClient($this->createHttpClient($clientOptions));
@@ -174,7 +149,6 @@ class Factory
     }
 
     /**
-     * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
@@ -218,9 +192,6 @@ class Factory
         }
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     private function validateSubscribers(array $selectedSubscribers): array
     {
         $msg = sprintf(

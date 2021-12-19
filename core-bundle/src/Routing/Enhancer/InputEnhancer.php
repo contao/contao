@@ -23,10 +23,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancer implements RouteEnhancerInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
@@ -46,7 +43,6 @@ class InputEnhancer implements RouteEnhancerInterface
 
         $this->framework->initialize(true);
 
-        /** @var Input $input */
         $input = $this->framework->getAdapter(Input::class);
 
         if (!empty($page->urlPrefix)) {
@@ -57,7 +53,6 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];

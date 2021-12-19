@@ -22,20 +22,13 @@ class DebugFragmentsCommand extends Command
 {
     protected static $defaultName = 'debug:fragments';
 
-    /**
-     * @var array
-     */
-    private $identifiers = [];
+    private array $identifiers = [];
+    private array $attributes = [];
 
     /**
      * @var array<FragmentConfig>
      */
-    private $configs = [];
-
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private array $configs = [];
 
     public function add(string $identifier, FragmentConfig $config, array $attributes): void
     {
@@ -85,7 +78,7 @@ class DebugFragmentsCommand extends Command
             static function ($carry, $item): int {
                 $length = \strlen($item);
 
-                return $carry > $length ? $carry : $length;
+                return max($carry, $length);
             },
             0
         );
@@ -97,7 +90,7 @@ class DebugFragmentsCommand extends Command
                 $v = $v ? 'true' : 'false';
             }
 
-            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), (string) $v);
+            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
         }
 
         return implode("\n", $return);

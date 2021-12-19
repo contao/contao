@@ -16,10 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseException extends \RuntimeException
 {
-    /**
-     * @var Response
-     */
-    private $response;
+    private Response $response;
 
     public function __construct(Response $response, \Exception $previous = null)
     {

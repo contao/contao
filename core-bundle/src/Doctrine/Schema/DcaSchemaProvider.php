@@ -15,29 +15,18 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
 class DcaSchemaProvider
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
+    private Registry $doctrine;
+    private SchemaProvider $schemaProvider;
 
     /**
-     * @var Registry
-     */
-    private $doctrine;
-
-    /**
-     * @var SchemaProvider
-     */
-    private $schemaProvider;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
+     * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
      */
     public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
     {
@@ -216,27 +205,27 @@ class DcaSchemaProvider
                 break;
 
             case 'tinytext':
-                $length = MySqlPlatform::LENGTH_LIMIT_TINYTEXT;
+                $length = MySQLPlatform::LENGTH_LIMIT_TINYTEXT;
                 break;
 
             case 'text':
-                $length = MySqlPlatform::LENGTH_LIMIT_TEXT;
+                $length = MySQLPlatform::LENGTH_LIMIT_TEXT;
                 break;
 
             case 'mediumtext':
-                $length = MySqlPlatform::LENGTH_LIMIT_MEDIUMTEXT;
+                $length = MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT;
                 break;
 
             case 'tinyblob':
-                $length = MySqlPlatform::LENGTH_LIMIT_TINYBLOB;
+                $length = MySQLPlatform::LENGTH_LIMIT_TINYBLOB;
                 break;
 
             case 'blob':
-                $length = MySqlPlatform::LENGTH_LIMIT_BLOB;
+                $length = MySQLPlatform::LENGTH_LIMIT_BLOB;
                 break;
 
             case 'mediumblob':
-                $length = MySqlPlatform::LENGTH_LIMIT_MEDIUMBLOB;
+                $length = MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB;
                 break;
 
             case 'tinyint':
@@ -298,7 +287,6 @@ class DcaSchemaProvider
     {
         $this->framework->initialize();
 
-        /** @var Installer $installer */
         $installer = $this->framework->createInstance(Installer::class);
         $sqlTarget = $installer->getFromDca();
         $sqlLegacy = $installer->getFromFile();

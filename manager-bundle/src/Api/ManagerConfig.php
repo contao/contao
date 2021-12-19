@@ -13,28 +13,17 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Api;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Yaml\Yaml;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
  */
 class ManagerConfig
 {
-    /**
-     * @var string
-     */
-    private $configFile;
-
-    /**
-     * @var Filesystem|null
-     */
-    private $filesystem;
-
-    /**
-     * @var array
-     */
-    private $config;
+    private string $configFile;
+    private Filesystem $filesystem;
+    private ?array $config = null;
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {

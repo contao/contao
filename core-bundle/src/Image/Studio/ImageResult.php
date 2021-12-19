@@ -24,14 +24,13 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeOptions;
 use Psr\Container\ContainerInterface;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ImageResult
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $locator;
+    private ContainerInterface $locator;
+    private ?ResizeOptions $resizeOptions;
+    private string $projectDir;
 
     /**
      * @var string|ImageInterface
@@ -44,28 +43,14 @@ class ImageResult
     private $sizeConfiguration;
 
     /**
-     * @var ResizeOptions|null
-     */
-    private $resizeOptions;
-
-    /**
      * Cached picture.
-     *
-     * @var PictureInterface|null
      */
-    private $picture;
+    private ?PictureInterface $picture = null;
 
     /**
      * Cached image dimensions.
-     *
-     * @var ImageDimensions|null
      */
-    private $originalDimensions;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ?ImageDimensions $originalDimensions = null;
 
     /**
      * @param string|ImageInterface                      $filePathOrImage
@@ -181,7 +166,7 @@ class ImageResult
      * Set $absolute to true to return an absolute path instead of a path
      * relative to the project dir.
      */
-    public function getFilePath($absolute = false): string
+    public function getFilePath(bool $absolute = false): string
     {
         $path = $this->filePathOrImageInterface instanceof ImageInterface
             ? $this->filePathOrImageInterface->getPath()
@@ -212,19 +197,17 @@ class ImageResult
 
         $deferredImages = array_filter(
             $candidates,
-            static function ($image): bool {
-                return $image instanceof DeferredImageInterface;
-            }
+            static fn ($image): bool => $image instanceof DeferredImageInterface
         );
 
         if (empty($deferredImages)) {
             return;
         }
 
-        $resizer = $this->locator->get('contao.image.resizer');
+        $resizer = $this->locator->get('contao.image.legacy_resizer');
 
         if (!$resizer instanceof DeferredResizerInterface) {
-            throw new \RuntimeException('The "contao.image.resizer" service does not support deferred resizing.');
+            throw new \RuntimeException('The "contao.image.legacy_resizer" service does not support deferred resizing.');
         }
 
         foreach ($deferredImages as $deferredImage) {
@@ -234,7 +217,7 @@ class ImageResult
 
     private function imageFactory(): ImageFactoryInterface
     {
-        return $this->locator->get('contao.image.image_factory');
+        return $this->locator->get('contao.image.factory');
     }
 
     private function pictureFactory(): PictureFactoryInterface

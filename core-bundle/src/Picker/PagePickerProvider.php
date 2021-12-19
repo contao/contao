@@ -19,10 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
-    /**
-     * @var Security
-     */
-    private $security;
+    private Security $security;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
@@ -94,6 +91,11 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return string|int
+     */
     public function convertDcaValue(PickerConfig $config, $value)
     {
         if ('page' === $config->getContext()) {

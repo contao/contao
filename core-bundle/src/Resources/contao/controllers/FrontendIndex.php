@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
@@ -162,7 +163,7 @@ class FrontendIndex extends Frontend
 		// Throw a 500 error if the result is still ambiguous
 		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
-			$this->log('More than one page matches ' . Environment::get('base') . Environment::get('request'), __METHOD__, TL_ERROR);
+			$this->log('More than one page matches ' . Environment::get('base') . Environment::get('request'), __METHOD__, ContaoContext::ERROR);
 
 			throw new \LogicException('More than one page found: ' . Environment::get('uri'));
 		}
@@ -255,7 +256,7 @@ class FrontendIndex extends Frontend
 		// Check whether there are domain name restrictions
 		if ($objPage->domain && $objPage->domain != Environment::get('host'))
 		{
-			$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, TL_ERROR);
+			$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, ContaoContext::ERROR);
 
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
@@ -276,7 +277,7 @@ class FrontendIndex extends Frontend
 
 				if ($user instanceof FrontendUser)
 				{
-					$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, TL_ERROR);
+					$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, ContaoContext::ERROR);
 				}
 
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
@@ -291,57 +292,32 @@ class FrontendIndex extends Frontend
 
 		try
 		{
-			// Generate the page
-			switch ($objPage->type)
+			$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
+			$objHandler = new $pageType();
+
+			// Backwards compatibility
+			if (!method_exists($objHandler, 'getResponse'))
 			{
-				case 'error_401':
-					$objHandler = new $GLOBALS['TL_PTY']['error_401']();
+				ob_start();
 
-					/** @var PageError401 $objHandler */
-					return $objHandler->getResponse($objPage->rootId);
+				try
+				{
+					$objHandler->generate($objPage, true);
+					$objResponse = new Response(ob_get_contents(), http_response_code());
+				}
+				finally
+				{
+					ob_end_clean();
+				}
 
-				case 'error_403':
-					$objHandler = new $GLOBALS['TL_PTY']['error_403']();
-
-					/** @var PageError403 $objHandler */
-					return $objHandler->getResponse($objPage->rootId);
-
-				case 'error_404':
-					$objHandler = new $GLOBALS['TL_PTY']['error_404']();
-
-					/** @var PageError404 $objHandler */
-					return $objHandler->getResponse();
-
-				default:
-					$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
-					$objHandler = new $pageType();
-
-					// Backwards compatibility
-					if (!method_exists($objHandler, 'getResponse'))
-					{
-						ob_start();
-
-						try
-						{
-							/** @var PageRegular $objHandler */
-							$objHandler->generate($objPage, true);
-							$objResponse = new Response(ob_get_contents(), http_response_code());
-						}
-						finally
-						{
-							ob_end_clean();
-						}
-
-						return $objResponse;
-					}
-
-					/** @var PageRegular $objHandler */
-					return $objHandler->getResponse($objPage, true);
+				return $objResponse;
 			}
+
+			return $objHandler->getResponse($objPage, true);
 		}
 
 		// Render the error page (see #5570)
-		catch (\UnusedArgumentsException $e)
+		catch (UnusedArgumentsException $e)
 		{
 			// Restore the globals (see #7659)
 			$GLOBALS['TL_HEAD'] = $arrHead;

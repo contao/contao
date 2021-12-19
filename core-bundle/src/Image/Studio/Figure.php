@@ -29,10 +29,7 @@ use Contao\Template;
  */
 class Figure
 {
-    /**
-     * @var ImageResult
-     */
-    private $image;
+    private ImageResult $image;
 
     /**
      * @var Metadata|(\Closure(self):Metadata|null)|null
@@ -60,7 +57,6 @@ class Figure
      * All arguments but the main image result can also be set via a Closure
      * that only returns the value on demand.
      *
-     * @param ImageResult                                                                 $image          Main image
      * @param Metadata|(\Closure(self):Metadata|null)|null                                $metadata       Metadata container
      * @param array<string, string|null>|(\Closure(self):array<string, string|null>)|null $linkAttributes Link attributes
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
@@ -199,9 +195,7 @@ class Figure
         // Allow removing attributes by setting them to null
         $linkAttributes = array_filter(
             $this->linkAttributes,
-            static function ($attribute): bool {
-                return null !== $attribute;
-            }
+            static fn ($attribute): bool => null !== $attribute
         );
 
         // Optionally strip the href attribute
@@ -317,18 +311,22 @@ class Figure
             $templateData['href'] = $href;
             $templateData['attributes'] = ''; // always define attributes key if href is set
 
-            // Map "imageTitle" to "linkTitle"
-            $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
-            unset($templateData['imageTitle']);
+            // Use link "title" attribute for "linkTitle" as it is already output explicitly in image.html5 (see #3385)
+            if (\array_key_exists('title', $linkAttributes)) {
+                $templateData['linkTitle'] = $linkAttributes['title'];
+                unset($linkAttributes['title']);
+            } else {
+                // Map "imageTitle" to "linkTitle"
+                $templateData['linkTitle'] = ($templateData['imageTitle'] ?? null) ?? StringUtil::specialchars($metadata->getTitle());
+                unset($templateData['imageTitle']);
+            }
         } elseif ($metadata->has(Metadata::VALUE_TITLE)) {
             $templateData['picture']['title'] = StringUtil::specialchars($metadata->getTitle());
         }
 
         if (!empty($linkAttributes)) {
             $htmlAttributes = array_map(
-                static function (string $attribute, string $value) {
-                    return sprintf('%s="%s"', $attribute, $value);
-                },
+                static fn (string $attribute, string $value) => sprintf('%s="%s"', $attribute, $value),
                 array_keys($linkAttributes),
                 $linkAttributes
             );
@@ -401,6 +399,8 @@ class Figure
 
     /**
      * Evaluates closures to retrieve the value.
+     *
+     * @param mixed $property
      */
     private function resolveIfClosure(&$property): void
     {

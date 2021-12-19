@@ -35,15 +35,8 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
     public const TAG_SKIP = 'skip-broken-link-checker';
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var array
-     */
-    private $stats = ['ok' => 0, 'error' => 0];
+    private TranslatorInterface $translator;
+    private array $stats = ['ok' => 0, 'error' => 0];
 
     public function __construct(TranslatorInterface $translator)
     {

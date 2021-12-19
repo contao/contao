@@ -18,10 +18,11 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
-use OutOfBoundsException;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
-use Webmozart\PathUtil\Path;
 
 /**
  * Integration tests.
@@ -69,7 +70,7 @@ class InheritanceTest extends TestCase
     {
         $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle');
 
-        $this->expectException(OutOfBoundsException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage("There cannot be more than one 'foo' template in '$bundlePath/templates'.");
 
         $this->getDemoEnvironment(['InvalidBundle' => ['path' => $bundlePath]]);
@@ -79,7 +80,7 @@ class InheritanceTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundlesMetadata = $bundlesMetadata ?? [
+        $bundlesMetadata ??= [
             'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
             'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
             'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
@@ -91,8 +92,16 @@ class InheritanceTest extends TestCase
             array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class)
         );
 
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata);
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $projectDir);
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchFirstColumn')
+            ->willReturn(['templates/my/theme'])
+        ;
+
+        $themeNamespace = new ThemeNamespace();
+
+        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
+        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
 
         $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
         $warmer->warmUp('');

@@ -16,18 +16,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class InstallToolUser
 {
-    /**
-     * @var Session
-     */
-    private $session;
+    private Session $session;
+    private int $timeout = 300;
 
     /**
-     * @var int
-     */
-    private $timeout = 300;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.install_tool_user" service instead
+     * @internal Do not inherit from this class; decorate the "contao_installation.install_tool_user" service instead
      */
     public function __construct(Session $session)
     {

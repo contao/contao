@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
+        <target>Zde můžete přepsat výchozí předlohu e-mailu kanálu.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -74,9 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Přenašeč mailů</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>
+        <target>Zde můžete přepsat výchozí přenašeč e-mailů tohoto kanálu.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>

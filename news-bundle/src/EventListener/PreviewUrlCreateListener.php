@@ -23,15 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PreviewUrlCreateListener
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private RequestStack $requestStack;
+    private ContaoFramework $framework;
 
     public function __construct(RequestStack $requestStack, ContaoFramework $framework)
     {
@@ -41,8 +34,6 @@ class PreviewUrlCreateListener
 
     /**
      * Adds the news ID to the front end preview URL.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
@@ -61,7 +52,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        if (null === ($newsModel = $this->getNewsModel($this->getId($event, $request)))) {
+        if ((!$id = $this->getId($event, $request)) || (!$newsModel = $this->getNewsModel($id))) {
             return;
         }
 
@@ -86,9 +77,6 @@ class PreviewUrlCreateListener
      */
     private function getNewsModel($id): ?NewsModel
     {
-        /** @var NewsModel $adapter */
-        $adapter = $this->framework->getAdapter(NewsModel::class);
-
-        return $adapter->findByPk($id);
+        return $this->framework->getAdapter(NewsModel::class)->findByPk($id);
     }
 }

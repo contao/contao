@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Database\Result;
-use Patchwork\Utf8;
 
 /**
  * Creates and queries the search index
@@ -200,7 +199,7 @@ class Search
 
 		if ($objIndex->numRows)
 		{
-			// The new URL is more canonical (shorter and/or less fragments)
+			// The new URL is more canonical (shorter and/or fewer fragments)
 			if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
 			{
 				self::removeEntry($arrSet['url']);
@@ -244,7 +243,7 @@ class Search
 		unset($arrSet);
 
 		// Split words
-		$arrWords = self::splitIntoWords(Utf8::strtolower($strText), $arrData['language']);
+		$arrWords = self::splitIntoWords(mb_strtolower($strText), $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
@@ -329,7 +328,7 @@ class Search
 			$arrRandomIds = $objDatabase->query("SELECT id FROM tl_search")->fetchEach('id');
 		}
 
-		// Otherwise we select approximately 100 random documents that get updated
+		// Otherwise, we select approximately 100 random documents that get updated
 		else
 		{
 			$arrRandomIds = array();
@@ -433,7 +432,7 @@ class Search
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
-		$strKeywords = Utf8::strtolower($strKeywords);
+		$strKeywords = mb_strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))

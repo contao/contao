@@ -30,7 +30,7 @@ class FrontendTemplate extends Template
 	use FrontendTemplateTrait;
 
 	/**
-	 * Unsued $_GET check
+	 * Unused $_GET check
 	 * @var boolean
 	 */
 	protected $blnCheckRequest = false;
@@ -50,7 +50,7 @@ class FrontendTemplate extends Template
 			foreach ($GLOBALS['TL_HOOKS']['parseFrontendTemplate'] as $callback)
 			{
 				$this->import($callback[0]);
-				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate);
+				$strBuffer = $this->{$callback[0]}->{$callback[1]}($strBuffer, $this->strTemplate, $this);
 			}
 		}
 
@@ -97,13 +97,15 @@ class FrontendTemplate extends Template
 	/**
 	 * Compile the template
 	 *
-	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
+	 * @throws UnusedArgumentsException If there are unused $_GET parameters
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function compile()
 	{
 		$this->keywords = '';
+
+		// Backwards compatibility
 		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS'] ?? '');
 
 		// Add the meta keywords
@@ -125,8 +127,6 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		// Replace insert tags
-		$this->strBuffer = $this->replaceInsertTags($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)
@@ -142,7 +142,7 @@ class FrontendTemplate extends Template
 		// Check whether all $_GET parameters have been used (see #4277)
 		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
-			throw new \UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
+			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
 		}
 
 		/** @var PageModel|null $objPage */
@@ -217,11 +217,7 @@ class FrontendTemplate extends Template
 			}
 
 			// Tag the page (see #2137)
-			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-			{
-				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
-			}
+			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objPage);
 		}
 
 		return $response;

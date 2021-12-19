@@ -16,10 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LegacyCandidates extends AbstractCandidates
 {
-    /**
-     * @var bool
-     */
-    private $prependLocale;
+    private bool $prependLocale;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.candidates" service instead

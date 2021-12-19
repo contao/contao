@@ -40,30 +40,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class InitializeController
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var HttpKernelInterface
-     */
-    private $httpKernel;
-
-    /**
-     * @var KernelInterface
-     */
-    private $kernel;
+    private ContaoFramework $framework;
+    private RequestStack $requestStack;
+    private EventDispatcherInterface $eventDispatcher;
+    private HttpKernelInterface $httpKernel;
+    private KernelInterface $kernel;
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, HttpKernelInterface $httpKernel, KernelInterface $kernel)
     {
@@ -76,24 +57,22 @@ class InitializeController
 
     /**
      * Initializes the Contao framework.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(): InitializeControllerResponse
     {
         trigger_deprecation('contao/core-bundle', '4.0', 'Using custom entry points has been deprecated and will no longer work in Contao 5.0.');
 
-        $masterRequest = $this->requestStack->getMasterRequest();
+        $mainRequest = $this->requestStack->getMainRequest();
 
-        if (null === $masterRequest) {
-            throw new \RuntimeException('The request stack did not contain a master request.');
+        if (null === $mainRequest) {
+            throw new \RuntimeException('The request stack did not contain a main request.');
         }
 
         $realRequest = Request::createFromGlobals();
-        $realRequest->setLocale($masterRequest->getLocale());
+        $realRequest->setLocale($mainRequest->getLocale());
 
-        if ($masterRequest->hasSession()) {
-            $realRequest->setSession($masterRequest->getSession());
+        if ($mainRequest->hasSession()) {
+            $realRequest->setSession($mainRequest->getSession());
         }
 
         if (!\defined('TL_SCRIPT')) {
@@ -108,9 +87,9 @@ class InitializeController
             );
         }
 
-        $realRequest->attributes->replace($masterRequest->attributes->all());
+        $realRequest->attributes->replace($mainRequest->attributes->all());
 
-        // Empty the request stack to make our real request the master
+        // Empty the request stack to make our real request the main
         do {
             $pop = $this->requestStack->pop();
         } while ($pop);
@@ -119,9 +98,9 @@ class InitializeController
         $this->requestStack->push($realRequest);
         $this->framework->initialize();
 
-        // Add the master request again. When Kernel::handle() is finished,
+        // Add the main request again. When Kernel::handle() is finished,
         // it will pop the current request, resulting in the real request being active.
-        $this->requestStack->push($masterRequest);
+        $this->requestStack->push($mainRequest);
 
         set_exception_handler(
             function ($e) use ($realRequest): void {
@@ -167,7 +146,7 @@ class InitializeController
      */
     private function handleException(\Throwable $e, Request $request): void
     {
-        $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $e);
+        $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $e);
         $this->eventDispatcher->dispatch($event, KernelEvents::EXCEPTION);
 
         // A listener might have replaced the exception
@@ -195,12 +174,12 @@ class InitializeController
         }
 
         try {
-            $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+            $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
             $response = $event->getResponse();
 
             $this->eventDispatcher->dispatch(
-                new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST),
+                new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST),
                 KernelEvents::FINISH_REQUEST
             );
 
@@ -223,7 +202,7 @@ class InitializeController
      */
     private function handleResponse(Request $request, Response $response): void
     {
-        $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+        $event = new ResponseEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
         try {
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
@@ -232,7 +211,7 @@ class InitializeController
         }
 
         $this->eventDispatcher->dispatch(
-            new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST),
+            new FinishRequestEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST),
             KernelEvents::FINISH_REQUEST
         );
 

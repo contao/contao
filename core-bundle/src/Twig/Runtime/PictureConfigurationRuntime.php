@@ -21,10 +21,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
-    /**
-     * @var PropertyAccessor
-     */
-    private $propertyAccessor;
+    private PropertyAccessor $propertyAccessor;
 
     public function __construct()
     {
@@ -44,7 +41,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         // Group main configuration
         $config['size'] = $this->createPictureConfigurationItem($config);
 
-        // Append size items configuration keys
+        // Append the size item configuration keys
         $config['sizeItems'] = array_map(
             function (array $itemConfig): PictureConfigurationItem {
                 $sizeItem = $this->createPictureConfigurationItem($itemConfig);
@@ -112,12 +109,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 
         // Prepend prefix
         if (null !== $prefix) {
-            $keys = array_map(
-                static function (string $v) use ($prefix): string {
-                    return "$prefix.$v";
-                },
-                $keys
-            );
+            $keys = array_map(static fn (string $v): string => "$prefix.$v", $keys);
         }
 
         throw new \InvalidArgumentException(sprintf('Could not map picture configuration key(s) "%s".', implode('", "', $keys)));

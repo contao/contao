@@ -19,14 +19,13 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
+ * @template-extends ServiceEntityRepository<RememberMe>
+ *
  * @internal
  */
 class RememberMeRepository extends ServiceEntityRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(ManagerRegistry $registry)
     {

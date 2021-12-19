@@ -19,20 +19,9 @@ use webignition\RobotsTxt\File\File;
 
 class RobotsTxtEvent extends Event
 {
-    /**
-     * @var File
-     */
-    private $file;
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * @var PageModel
-     */
-    private $rootPage;
+    private File $file;
+    private Request $request;
+    private PageModel $rootPage;
 
     public function __construct(File $file, Request $request, PageModel $rootPage)
     {

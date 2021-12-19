@@ -24,15 +24,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
+    private array $messages = [];
+
     /**
      * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
      */
     private $translator;
-
-    /**
-     * @var array
-     */
-    private $messages = [];
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -59,15 +56,6 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         $this->collectMessage($this->getLocale(), (string) $domain, $id, $translated, $parameters);
 
         return $translated;
-    }
-
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
-    {
-        if (!method_exists($this->translator, 'transChoice')) {
-            return $this->trans($id, $parameters, $domain, $locale);
-        }
-
-        return $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
     }
 
     public function setLocale($locale): void

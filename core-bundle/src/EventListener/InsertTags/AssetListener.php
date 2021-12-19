@@ -19,10 +19,7 @@ use Symfony\Component\Asset\Packages;
  */
 class AssetListener
 {
-    /**
-     * @var Packages
-     */
-    private $packages;
+    private Packages $packages;
 
     public function __construct(Packages $packages)
     {

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -32,45 +33,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
+    private Security $security;
+    private PageRegistry $pageRegistry;
+    private TranslatorInterface $translator;
+    private Connection $connection;
+    private RequestStack $requestStack;
 
     /**
-     * @var Security
+     * @var Adapter<Image>
      */
-    private $security;
+    private Adapter $image;
 
     /**
-     * @var PageRegistry
+     * @var Adapter<Backend>
      */
-    private $pageRegistry;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var Image
-     */
-    private $image;
-
-    /**
-     * @var Backend
-     */
-    private $backend;
+    private Adapter $backend;
 
     public function __construct(ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
     {
@@ -80,14 +58,8 @@ class ContentCompositionListener
         $this->translator = $translator;
         $this->connection = $connection;
         $this->requestStack = $requestStack;
-
-        /** @var Image $image */
-        $image = $this->framework->getAdapter(Image::class);
-        $this->image = $image;
-
-        /** @var Backend $backend */
-        $backend = $this->framework->getAdapter(Backend::class);
-        $this->backend = $backend;
+        $this->image = $this->framework->getAdapter(Image::class);
+        $this->backend = $this->framework->getAdapter(Backend::class);
     }
 
     /**
@@ -217,7 +189,6 @@ class ContentCompositionListener
 
     private function renderArticlePasteAfterButton(DataContainer $dc, array $row, bool $cr, array $clipboard = null): string
     {
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pageModel = $pageAdapter->findByPk($row['pid']);
 

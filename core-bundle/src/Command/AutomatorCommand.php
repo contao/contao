@@ -31,15 +31,8 @@ class AutomatorCommand extends Command
 {
     protected static $defaultName = 'contao:automator';
 
-    /**
-     * @var array
-     */
-    private $commands = [];
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private array $commands = [];
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {

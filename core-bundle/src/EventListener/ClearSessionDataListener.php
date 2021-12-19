@@ -27,7 +27,7 @@ class ClearSessionDataListener
      */
     public function __invoke(ResponseEvent $event): void
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

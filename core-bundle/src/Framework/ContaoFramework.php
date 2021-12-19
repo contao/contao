@@ -30,11 +30,11 @@ use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\Service\ResetInterface;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal Do not use this class in your code; use the "contao.framework" service instead
@@ -43,65 +43,20 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var bool
-     */
-    private static $initialized = false;
+    private static bool $initialized = false;
+    private static string $nonce = '';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var int
-     */
-    private $errorLevel;
-
-    /**
-     * @var bool
-     */
-    private $legacyRouting;
-
-    /**
-     * @var Request|null
-     */
-    private $request;
-
-    /**
-     * @var bool
-     */
-    private $isFrontend = false;
-
-    /**
-     * @var array
-     */
-    private $adapterCache = [];
-
-    /**
-     * @var array
-     */
-    private $hookListeners = [];
+    private RequestStack $requestStack;
+    private ScopeMatcher $scopeMatcher;
+    private TokenChecker $tokenChecker;
+    private Filesystem $filesystem;
+    private string $projectDir;
+    private int $errorLevel;
+    private bool $legacyRouting;
+    private ?Request $request = null;
+    private bool $isFrontend = false;
+    private array $adapterCache = [];
+    private array $hookListeners = [];
 
     public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel, bool $legacyRouting)
     {
@@ -118,6 +73,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     {
         $this->adapterCache = [];
         $this->isFrontend = false;
+        self::$nonce = '';
 
         if (!$this->isInitialized()) {
             return;
@@ -152,7 +108,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         $this->isFrontend = $isFrontend;
-        $this->request = $this->requestStack->getMasterRequest();
+        $this->request = $this->requestStack->getMainRequest();
 
         $this->setConstants();
         $this->initializeFramework();
@@ -167,6 +123,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         $this->hookListeners = $hookListeners;
     }
 
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $class
+     *
+     * @return T
+     */
     public function createInstance($class, $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
@@ -183,15 +146,22 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      *
      * @param class-string<T> $class
      *
-     * @return Adapter<T>
+     * @return Adapter<T>&T
+     *
+     * @phpstan-return Adapter<T>
      */
     public function getAdapter($class): Adapter
     {
-        if (!isset($this->adapterCache[$class])) {
-            $this->adapterCache[$class] = new Adapter($class);
+        return $this->adapterCache[$class] ??= new Adapter($class);
+    }
+
+    public static function getNonce(): string
+    {
+        if ('' === self::$nonce) {
+            self::$nonce = bin2hex(random_bytes(16));
         }
 
-        return $this->adapterCache[$class];
+        return self::$nonce;
     }
 
     /**
@@ -285,7 +255,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         // Set the container
         System::setContainer($this->container);
 
-        /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
         // Preload the configuration (see #5872)
@@ -384,17 +353,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
-        /** @var Config $config */
-        $config = $this->getAdapter(Config::class);
-
-        if (!$config->isComplete()) {
+        if (!$this->getAdapter(Config::class)->isComplete()) {
             throw new RedirectResponseException('/contao/install');
         }
     }
 
     private function setTimezone(): void
     {
-        /** @var Config $config */
         $config = $this->getAdapter(Config::class);
 
         $this->iniSet('date.timezone', (string) $config->get('timeZone'));
@@ -421,7 +386,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     private function handleRequestToken(): void
     {
-        /** @var RequestToken $requestToken */
         $requestToken = $this->getAdapter(RequestToken::class);
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0

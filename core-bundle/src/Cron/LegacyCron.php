@@ -18,10 +18,7 @@ use Contao\System;
 
 class LegacyCron
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -79,7 +76,6 @@ class LegacyCron
             return;
         }
 
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         // Load the default language file (see #8719)

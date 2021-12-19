@@ -24,25 +24,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
-    /**
-     * @var Security
-     */
-    private $security;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
-
-    /**
-     * @var LoggerInterface|null
-     */
-    private $logger;
+    private Security $security;
+    private SessionInterface $session;
+    private UserProviderInterface $userProvider;
+    private ?LoggerInterface $logger;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
@@ -107,7 +92,7 @@ class FrontendPreviewAuthenticator
     private function loadFrontendUser(string $username): ?FrontendUser
     {
         try {
-            $frontendUser = $this->userProvider->loadUserByUsername($username);
+            $frontendUser = $this->userProvider->loadUserByIdentifier($username);
 
             // Make sure the user provider returned a front end user
             if (!$frontendUser instanceof FrontendUser) {

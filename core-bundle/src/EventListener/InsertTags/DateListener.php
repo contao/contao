@@ -60,15 +60,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class DateListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private ContaoFramework $framework;
+    private RequestStack $requestStack;
 
     public function __construct(ContaoFramework $framework, RequestStack $requestStack)
     {
@@ -109,7 +102,6 @@ class DateListener
             return $tag[1];
         }
 
-        /** @var Date $date */
         $date = $this->framework->getAdapter(Date::class);
 
         return $date->parse($this->getDateFormat($tag[2] ?? 'datim'), $timestamp);
@@ -130,7 +122,6 @@ class DateListener
             return $tag[1];
         }
 
-        /** @var Date $date */
         $date = $this->framework->getAdapter(Date::class);
 
         return $date->parse($this->getDateFormat($tag[3]), $parsedDate->getTimestamp());
@@ -156,9 +147,6 @@ class DateListener
             }
         }
 
-        /** @var Config $config */
-        $config = $this->framework->getAdapter(Config::class);
-
-        return $config->get($key);
+        return $this->framework->getAdapter(Config::class)->get($key);
     }
 }

@@ -18,16 +18,15 @@ use Doctrine\DBAL\Connection;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
- * @internal
+ * @template-extends ServiceEntityRepository<CronJob>
  *
  * @method object|null findOneByName(string $name)
+ *
+ * @internal
  */
 class CronJobRepository extends ServiceEntityRepository
 {
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     public function __construct(ManagerRegistry $registry)
     {

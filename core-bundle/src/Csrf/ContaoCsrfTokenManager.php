@@ -21,20 +21,15 @@ use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class ContaoCsrfTokenManager extends CsrfTokenManager
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
+    private string $csrfCookiePrefix;
+    private ?string $frontendTokenName;
 
-    /**
-     * @var string
-     */
-    private $csrfCookiePrefix;
-
-    public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null)
+    public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null, string $frontendTokenName = null)
     {
         $this->requestStack = $requestStack;
         $this->csrfCookiePrefix = $csrfCookiePrefix;
+        $this->frontendTokenName = $frontendTokenName;
 
         parent::__construct($generator, $storage, $namespace);
     }
@@ -42,7 +37,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
     public function isTokenValid(CsrfToken $token): bool
     {
         if (
-            ($request = $this->requestStack->getMasterRequest())
+            ($request = $this->requestStack->getMainRequest())
             && 'POST' === $request->getRealMethod()
             && $this->canSkipTokenValidation($request, $this->csrfCookiePrefix.$token->getId())
         ) {
@@ -66,5 +61,14 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
             )
             && !($request->hasSession() && $request->getSession()->isStarted())
         ;
+    }
+
+    public function getFrontendTokenValue(): string
+    {
+        if (null === $this->frontendTokenName) {
+            throw new \RuntimeException('The Contao CSRF token manager was not initialized with a frontend token name.');
+        }
+
+        return $this->getToken($this->frontendTokenName)->getValue();
     }
 }

@@ -25,20 +25,9 @@ use Twig\Extension\RuntimeExtensionInterface;
  */
 final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private RequestStack $requestStack;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal
@@ -97,7 +86,6 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
             return '';
         }
 
-        /** @var BackendCustom $controller */
         $controller = $this->framework->createInstance(BackendCustom::class);
         $template = $controller->getTemplateObject();
 

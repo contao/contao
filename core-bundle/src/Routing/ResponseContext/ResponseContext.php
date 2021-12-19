@@ -13,27 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
 use Contao\CoreBundle\Event\AbstractResponseContextEvent;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class ResponseContext
 {
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
-    /**
-     * @var array
-     */
-    private $services = [];
-
-    /**
-     * @var array
-     */
-    private $current = [];
-
-    /**
-     * @var PartialResponseHeaderBag|null
-     */
-    private $headerBag;
+    private array $services = [];
+    private array $current = [];
+    private ?PartialResponseHeaderBag $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void
     {
@@ -57,11 +45,7 @@ final class ResponseContext
 
     public function addLazy(string $classname, \Closure $factory = null): self
     {
-        if (null === $factory) {
-            $factory = function () use ($classname) {
-                return new $classname($this);
-            };
-        }
+        $factory ??= fn () => new $classname($this);
 
         $this->registerService($classname, $factory);
 
@@ -84,12 +68,12 @@ final class ResponseContext
 
     /**
      * @template T
-     * @psalm-param class-string<T> $serviceId
-     * @psalm-return T
      *
-     * @throws ServiceNotFoundException
+     * @param class-string<T> $serviceId
      *
      * @return object
+     *
+     * @phpstan-return T
      */
     public function get(string $serviceId)
     {
@@ -110,11 +94,7 @@ final class ResponseContext
 
     public function getHeaderBag(): PartialResponseHeaderBag
     {
-        if (null === $this->headerBag) {
-            $this->headerBag = new PartialResponseHeaderBag();
-        }
-
-        return $this->headerBag;
+        return $this->headerBag ??= new PartialResponseHeaderBag();
     }
 
     /**

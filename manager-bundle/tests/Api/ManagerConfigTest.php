@@ -19,25 +19,10 @@ use Symfony\Component\Yaml\Yaml;
 
 class ManagerConfigTest extends ContaoTestCase
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $tempdir;
-
-    /**
-     * @var string
-     */
-    private $tempfile;
-
-    /**
-     * @var ManagerConfig
-     */
-    private $config;
+    private Filesystem $filesystem;
+    private string $tempdir;
+    private string $tempfile;
+    private ManagerConfig $config;
 
     protected function setUp(): void
     {

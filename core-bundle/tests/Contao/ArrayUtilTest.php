@@ -24,72 +24,32 @@ class ArrayUtilTest extends TestCase
     {
         $this->assertSame($expected, ArrayUtil::sortByOrderField($items, $order));
 
-        $itemArrays = array_map(
-            static function ($item): array {
-                return ['uuid' => $item];
-            },
-            $items
-        );
-        $expectedArrays = array_map(
-            static function ($item): array {
-                return ['uuid' => $item];
-            },
-            $expected
-        );
+        $itemArrays = array_map(static fn ($item): array => ['uuid' => $item], $items);
+        $expectedArrays = array_map(static fn ($item): array => ['uuid' => $item], $expected);
 
         $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, $order));
         $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, serialize($order)));
 
-        $itemArrays = array_map(
-            static function ($item): array {
-                return ['id' => $item];
-            },
-            $items
-        );
-        $expectedArrays = array_map(
-            static function ($item): array {
-                return ['id' => $item];
-            },
-            $expected
-        );
+        $itemArrays = array_map(static fn ($item): array => ['id' => $item], $items);
+        $expectedArrays = array_map(static fn ($item): array => ['id' => $item], $expected);
 
         $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, $order, 'id'));
         $this->assertSame($expectedArrays, ArrayUtil::sortByOrderField($itemArrays, serialize($order), 'id'));
 
-        $itemObjects = array_map(
-            static function ($item): \stdClass {
-                return (object) ['uuid' => $item];
-            },
-            $items
-        );
-        $expectedObjects = array_map(
-            static function ($item): \stdClass {
-                return (object) ['uuid' => $item];
-            },
-            $expected
-        );
+        $itemObjects = array_map(static fn ($item): \stdClass => (object) ['uuid' => $item], $items);
+        $expectedObjects = array_map(static fn ($item): \stdClass => (object) ['uuid' => $item], $expected);
 
         $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, $order)));
         $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, serialize($order))));
 
-        $itemObjects = array_map(
-            static function ($item): \stdClass {
-                return (object) ['id' => $item];
-            },
-            $items
-        );
-        $expectedObjects = array_map(
-            static function ($item): \stdClass {
-                return (object) ['id' => $item];
-            },
-            $expected
-        );
+        $itemObjects = array_map(static fn ($item): \stdClass => (object) ['id' => $item], $items);
+        $expectedObjects = array_map(static fn ($item): \stdClass => (object) ['id' => $item], $expected);
 
         $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, $order, 'id')));
         $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, serialize($order), 'id')));
 
-        $itemFlipped = array_map(static function () { return 'X'; }, array_flip($items));
-        $expectedFlipped = array_map(static function () { return 'X'; }, array_flip($expected));
+        $itemFlipped = array_map(static fn () => 'X', array_flip($items));
+        $expectedFlipped = array_map(static fn () => 'X', array_flip($expected));
 
         $this->assertSame($expectedFlipped, ArrayUtil::sortByOrderField($itemFlipped, $order, null, true));
         $this->assertSame($expectedFlipped, ArrayUtil::sortByOrderField($itemFlipped, serialize($order), null, true));

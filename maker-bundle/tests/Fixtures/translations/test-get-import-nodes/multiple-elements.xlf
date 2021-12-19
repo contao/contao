@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+  <file>
+    <body>
+      <trans-unit id="foo.0">
+        <source>Foo</source>
+      </trans-unit>
+      <trans-unit id="foo.1">
+        <source>Foo (long)</source>
+      </trans-unit>
+      <trans-unit id="bar.0">
+        <source>Bar</source>
+      </trans-unit>
+      <trans-unit id="bar.1">
+        <source>Bar (long)</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

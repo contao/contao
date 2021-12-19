@@ -22,15 +22,8 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolver implements ArgumentValueResolverInterface
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
-
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
+    private ContaoFramework $framework;
+    private ScopeMatcher $scopeMatcher;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.model_argument_resolver" service instead
@@ -73,8 +66,9 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
             return null;
         }
 
-        $value = $request->attributes->get($name);
+        /** @var class-string<Model> $type */
         $type = $argument->getType();
+        $value = $request->attributes->get($name);
 
         if ($type && $value instanceof $type) {
             return $value;
@@ -91,7 +85,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         }
 
         /** @var Model $model */
-        $model = $this->framework->getAdapter($argument->getType());
+        $model = $this->framework->getAdapter($type);
 
         return $model->findByPk((int) $value);
     }
