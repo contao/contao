@@ -49,6 +49,10 @@ services:
         tags:
             - { name: contao.content_element, category: includes }
 
+    Contao\CoreBundle\Controller\Page\Error4xxPageController:
+        arguments:
+            - '@contao.framework'
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
