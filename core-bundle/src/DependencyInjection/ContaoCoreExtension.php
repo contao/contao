@@ -128,16 +128,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->addTag('contao.migration')
         ;
 
-        $container
-            ->registerForAutoconfiguration(DynamicRouteInterface::class)
-            ->addTag('contao.page')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(ContentCompositionInterface::class)
-            ->addTag('contao.page')
-        ;
-
         $container->registerAttributeForAutoconfiguration(
             AsContentElement::class,
             static function (ChildDefinition $definition, AsContentElement $attribute): void {
