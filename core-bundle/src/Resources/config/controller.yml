@@ -37,6 +37,7 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
+            - '%contao.backend%'
         tags:
             - controller.service_arguments
 
