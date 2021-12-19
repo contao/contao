@@ -168,6 +168,8 @@ class PageModelTest extends ContaoTestCase
     }
 
     /**
+     * @param bool|string $expectedLayout
+     *
      * @dataProvider layoutInheritanceParentPagesProvider
      */
     public function testInheritingLayoutFromParentsInLoadDetails(array $parents, $expectedLayout): void
