@@ -226,6 +226,24 @@ class BackupManagerTest extends ContaoTestCase
                 'backup__20211112133600.sql.gz',
             ],
         ];
+
+        yield 'Test keepMax configured to 0 does not clean up at all' => [
+            [
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-15T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-14T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
+            ],
+            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
+            new RetentionPolicy(0),
+            [
+                'backup__20211116133600.sql.gz',
+                'backup__20211115133600.sql.gz',
+                'backup__20211114133600.sql.gz',
+                'backup__20211113133600.sql.gz',
+                'backup__20211112133600.sql.gz',
+            ],
+        ];
     }
 
     public function testDirectoryIsNotCleanedUpAfterUnsuccessfulCreate(): void

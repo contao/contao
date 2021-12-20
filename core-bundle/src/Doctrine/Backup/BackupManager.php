@@ -237,7 +237,7 @@ class BackupManager
         $keepMax = $this->retentionPolicy->getKeepMax();
 
         foreach ($this->listBackups() as $backup) {
-            if ($i >= $keepMax) {
+            if ($keepMax > 0 && $i >= $keepMax) {
                 (new Filesystem())->remove($backup->getFilepath());
             }
 

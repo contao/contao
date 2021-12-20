@@ -608,7 +608,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                 ->end()
                 ->integerNode('keep_max')
-                    ->info('The maximum number of backups to keep.')
+                    ->info('The maximum number of backups to keep. Use 0 to keep all the backups forever.')
                     ->defaultValue(5)
                 ->end()
             ->end()
