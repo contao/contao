@@ -96,7 +96,8 @@ class ModuleRegistration extends Module
 		// Purge expired registrations (#3709)
 		if (Input::post('FORM_SUBMIT') == $strFormId && $email = Input::post('email'))
 		{
-			foreach (MemberModel::findExpiredRegistrations(['column' => ['email = ?'], 'value' => [$email]]) ?? [] as $member) {
+			foreach (MemberModel::findExpiredRegistrations(array('column' => array('email = ?'), 'value' => array($email))) ?? array() as $member)
+			{
 				$member->delete();
 			}
 		}

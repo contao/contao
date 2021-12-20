@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\Cron;
 use Contao\CoreBundle\Cron\PurgeOptInTokensCron;
 use Contao\CoreBundle\OptIn\OptIn;
 use Contao\CoreBundle\Tests\TestCase;
-use Doctrine\DBAL\Connection;
 
 class PurgeOptInTokensCronTest extends TestCase
 {
