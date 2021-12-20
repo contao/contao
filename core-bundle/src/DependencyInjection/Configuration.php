@@ -613,7 +613,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('keep_periods')
                     ->info('The latest backup plus the oldest of every configured period will be kept.')
-                    ->defaultValue([1, 7, 30])
+                    ->defaultValue([1, 7, 14, 30])
                     ->integerPrototype()->end()
                 ->end()
             ->end()

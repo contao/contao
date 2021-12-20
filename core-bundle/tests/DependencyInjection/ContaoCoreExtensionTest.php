@@ -341,7 +341,7 @@ class ContaoCoreExtensionTest extends TestCase
         $retentionPolicy = $definition->getArgument(4);
         $this->assertInstanceOf(RetentionPolicy::class, $retentionPolicy);
         $this->assertSame(5, $retentionPolicy->getKeepMax());
-        $this->assertSame([1, 7, 30], $retentionPolicy->getKeepPeriods());
+        $this->assertSame([1, 7, 14, 30], $retentionPolicy->getKeepPeriods());
 
         $extension->load(
             [
