@@ -1459,53 +1459,39 @@ class PageModel extends Model
 	{
 		if (null === self::$prefixes || null === self::$suffixes)
 		{
-			self::$prefixes = array();
-			self::$suffixes = array();
-
 			$rows = Database::getInstance()->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")->fetchAllAssoc();
 
-			if (0 === ($prefixLength = \strlen($urlPrefix)))
-			{
-				self::$prefixes = array_column($rows, 'urlPrefix');
-			}
-			else
-			{
-				foreach (array_column($rows, 'urlPrefix') as $prefix)
-				{
-					if (0 === substr_compare($prefix, $urlPrefix, 0, $prefixLength, true))
-					{
-						$prefix = trim(substr($prefix, $prefixLength), '/');
+			self::$prefixes = [];
+			self::$suffixes = [];
 
-						if ('' !== $prefix)
-						{
-							self::$prefixes[] = $prefix . '/';
-						}
-					}
+			foreach (array_column($rows, 'urlPrefix') as $prefix)
+			{
+				$prefix = trim($prefix, '/');
+
+				if ('' !== $prefix)
+				{
+					self::$prefixes[] = $prefix . '/';
 				}
 			}
 
-			if (0 === ($suffixLength = \strlen($urlSuffix)))
+			foreach (array_column($rows, 'urlSuffix') as $suffix)
 			{
-				self::$suffixes = array_column($rows, 'urlSuffix');
-			}
-			else
-			{
-				foreach (array_column($rows, 'urlSuffix') as $suffix)
-				{
-					if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, $suffixLength, true))
-					{
-						self::$suffixes[] = substr($suffix, 0, -$suffixLength);
-					}
-				}
+				self::$suffixes[] = $suffix;
 			}
 		}
 
-		if (null !== ($prefixRegex = self::regexArray(self::$prefixes)))
+		$prefixes = self::$prefixes;
+
+		if (!empty($urlPrefix)) {
+			$prefixes[] = $urlPrefix.'/';
+		}
+
+		if (null !== ($prefixRegex = self::regexArray($prefixes)))
 		{
 			$alias = preg_replace('/^' . $prefixRegex . '/i', '', $alias);
 		}
 
-		if (null !== ($suffixRegex = self::regexArray(self::$suffixes)))
+		if (null !== ($suffixRegex = self::regexArray(array_merge([$urlSuffix], self::$suffixes))))
 		{
 			$alias = preg_replace('/' . $suffixRegex . '$/i', '', $alias);
 		}
@@ -1521,6 +1507,8 @@ class PageModel extends Model
 		{
 			return null;
 		}
+
+		usort($data, fn ($v, $k) => strlen($v));
 
 		foreach ($data as $k => $v)
 		{
