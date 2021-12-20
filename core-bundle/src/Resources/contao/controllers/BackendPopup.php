@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -130,6 +131,15 @@ class BackendPopup extends Backend
 				$objTemplate->height = $objFile->height;
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
+			}
+			else {
+				$objTemplate->hasPreview = true;
+				$image = System::getContainer()->get('contao.image.preview_factory')->createPreviewImage($projectDir . '/' . $this->strFile, (new ResizeConfiguration())->setWidth(864));
+				$objTemplate->src = $image->getUrl($projectDir);
+				if (!$image->getDimensions()->isUndefined() && !$image->getDimensions()->isRelative()) {
+					$objTemplate->width = $image->getDimensions()->getSize()->getWidth();
+					$objTemplate->height = $image->getDimensions()->getSize()->getHeight();
+				}
 			}
 
 			// Metadata

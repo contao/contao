@@ -101,6 +101,13 @@
           </div>
         </div>
       <?php endif; ?>
+      <?php if ($this->hasPreview): ?>
+        <div id="preview">
+          <div class="checkerbox"<?php if ($this->width && $this->height): ?> style="width:<?= $this->width ?>px;height:<?= $this->height ?>px"<?php endif; ?>>
+            <img src="<?= $this->src ?>" alt="">
+          </div>
+        </div>
+      <?php endif; ?>
     </main>
   </div>
 

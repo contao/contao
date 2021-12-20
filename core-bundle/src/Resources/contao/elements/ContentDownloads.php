@@ -177,7 +177,7 @@ class ContentDownloads extends ContentElement
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
 					'path'      => $objFile->dirname,
-					'preview'   => $this->showPreview ? System::getContainer()->get('contao.image.preview.factory')->createPreviewFigureBuilder(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData() : null,
+					'preview'   => $this->showPreview ? System::getContainer()->get('contao.image.preview_factory')->createPreviewFigureBuilder(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData() : null,
 				);
 
 				$auxDate[] = $objFile->mtime;
@@ -255,7 +255,7 @@ class ContentDownloads extends ContentElement
 						'meta'      => $arrMeta,
 						'extension' => $objFile->extension,
 						'path'      => $objFile->dirname,
-						'preview'   => $this->showPreview ? System::getContainer()->get('contao.image.preview.factory')->createPreviewFigureBuilder(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData() : null,
+						'preview'   => $this->showPreview ? System::getContainer()->get('contao.image.preview_factory')->createPreviewFigureBuilder(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData() : null,
 					);
 
 					$auxDate[] = $objFile->mtime;
