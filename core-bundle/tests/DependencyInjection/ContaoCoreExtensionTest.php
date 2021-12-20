@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
@@ -338,10 +339,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
 
-        $retentionPolicy = $definition->getArgument(4);
-        $this->assertInstanceOf(RetentionPolicy::class, $retentionPolicy);
-        $this->assertSame(5, $retentionPolicy->getKeepMax());
-        $this->assertSame([1, 7, 14, 30], $retentionPolicy->getKeepPeriods());
+        $retentionPolicyDefinition = $definition->getArgument(4);
+        $this->assertInstanceOf(Definition::class, $retentionPolicyDefinition);
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(5, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame([1, 7, 14, 30], $retentionPolicyDefinition->getArgument(1));
 
         $extension->load(
             [
@@ -364,10 +366,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('somewhere/else', $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
 
-        $retentionPolicy = $definition->getArgument(4);
-        $this->assertInstanceOf(RetentionPolicy::class, $retentionPolicy);
-        $this->assertSame(10, $retentionPolicy->getKeepMax());
-        $this->assertSame([1, 2, 7, 14, 30, 60], $retentionPolicy->getKeepPeriods());
+        $retentionPolicyDefinition = $definition->getArgument(4);
+        $this->assertInstanceOf(Definition::class, $retentionPolicyDefinition);
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame([1, 2, 7, 14, 30, 60], $retentionPolicyDefinition->getArgument(1));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void

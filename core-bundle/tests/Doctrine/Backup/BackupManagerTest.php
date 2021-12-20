@@ -187,7 +187,7 @@ class BackupManagerTest extends ContaoTestCase
      * @dataProvider retentionPolicyProvider
      *
      * @param array<\DateTime> $existingBackupDates
-     * @param array<Backup>    $expectedRemainingBackups
+     * @param array<string>    $expectedRemainingBackups
      */
     public function testRetentionPolicy(array $existingBackupDates, \DateTime $newBackupDate, RetentionPolicy $retentionPolicy, array $expectedRemainingBackups): void
     {

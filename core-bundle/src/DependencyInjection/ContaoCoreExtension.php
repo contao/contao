@@ -381,7 +381,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
         $dbDumper->replaceArgument(2, $config['backup']['directory']);
         $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
-        $dbDumper->replaceArgument(4, new RetentionPolicy($config['backup']['keep_max'], $config['backup']['keep_periods']));
+        $dbDumper->replaceArgument(
+            4,
+            (new Definition(RetentionPolicy::class))
+            ->setArgument(0, $config['backup']['keep_max'])
+            ->setArgument(1, $config['backup']['keep_periods'])
+        );
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
