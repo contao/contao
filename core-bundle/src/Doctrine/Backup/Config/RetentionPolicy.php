@@ -15,12 +15,12 @@ namespace Contao\CoreBundle\Doctrine\Backup\Config;
 class RetentionPolicy
 {
     private int $keepMax;
-    private array $keepDays;
+    private array $keepPeriods;
 
-    public function __construct(int $keepMax, array $keepDays = [])
+    public function __construct(int $keepMax, array $keepPeriods = [])
     {
         $this->keepMax = $keepMax;
-        $this->keepDays = $this->validateAndSortKeepDays($keepDays);
+        $this->keepPeriods = $this->validateAndSortKeepPeriods($keepPeriods);
     }
 
     public function getKeepMax(): int
@@ -28,21 +28,21 @@ class RetentionPolicy
         return $this->keepMax;
     }
 
-    public function getKeepDays(): array
+    public function getKeepPeriods(): array
     {
-        return $this->keepDays;
+        return $this->keepPeriods;
     }
 
-    private function validateAndSortKeepDays(array $keepDays): array
+    private function validateAndSortKeepPeriods(array $keepPeriods): array
     {
-        foreach ($keepDays as $numberOfDays) {
+        foreach ($keepPeriods as $numberOfDays) {
             if (!\is_int($numberOfDays)) {
-                throw new \InvalidArgumentException('$keepDays must be an array of integers.');
+                throw new \InvalidArgumentException('$keepPeriods must be an array of integers.');
             }
         }
 
-        sort($keepDays);
+        sort($keepPeriods);
 
-        return $keepDays;
+        return $keepPeriods;
     }
 }
