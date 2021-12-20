@@ -91,7 +91,7 @@ class PreviewFactory
                     $provider->generatePreview($path, $size, $targetPath);
 
                     return $targetPath;
-                } catch (\Throwable) {
+                } catch (\Throwable $exception) {
                     // Ignore
                 }
             }
