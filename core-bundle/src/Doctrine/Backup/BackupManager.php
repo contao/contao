@@ -233,15 +233,44 @@ class BackupManager
 
     private function tidyDirectory(): void
     {
-        $i = 0;
         $keepMax = $this->retentionPolicy->getKeepMax();
+        $keepPeriods = $this->retentionPolicy->getKeepPeriods();
 
-        foreach ($this->listBackups() as $backup) {
-            if ($keepMax > 0 && $i >= $keepMax) {
-                (new Filesystem())->remove($backup->getFilepath());
+        // Cleanup according to days retention policy first
+        if (0 !== \count($keepPeriods) && ($latestBackup = $this->getLatestBackup())) {
+            $latestDateTime = $latestBackup->getCreatedAt();
+            $assignedPerPeriod = array_fill_keys($keepPeriods, null);
+
+            foreach ($this->listBackups() as $backup) {
+                foreach (array_keys($assignedPerPeriod) as $period) {
+                    $diffDays = (int) $latestDateTime->diff($backup->getCreatedAt())->format('%a');
+
+                    if ($diffDays <= $period) {
+                        $assignedPerPeriod[$period] = $backup->getFilepath();
+                    }
+                }
             }
 
-            ++$i;
+            $toKeep = array_merge([$latestBackup->getFilepath()], $assignedPerPeriod);
+
+            foreach ($this->listBackups() as $backup) {
+                if (!\in_array($backup->getFilepath(), $toKeep, true)) {
+                    (new Filesystem())->remove($backup->getFilepath());
+                }
+            }
+        }
+
+        // Then cleanup according to maximum amount of backups to keep
+        if ($keepMax > 0) {
+            $i = 0;
+
+            foreach ($this->listBackups() as $backup) {
+                if ($i >= $keepMax) {
+                    (new Filesystem())->remove($backup->getFilepath());
+                }
+
+                ++$i;
+            }
         }
     }
 

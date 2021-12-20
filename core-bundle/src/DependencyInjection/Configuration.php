@@ -611,6 +611,11 @@ class Configuration implements ConfigurationInterface
                     ->info('The maximum number of backups to keep. Use 0 to keep all the backups forever.')
                     ->defaultValue(5)
                 ->end()
+                ->arrayNode('keep_periods')
+                    ->info('The latest backup plus the oldest of every configured period will be kept.')
+                    ->defaultValue([1, 7, 30])
+                    ->integerPrototype()->end()
+                ->end()
             ->end()
         ;
     }

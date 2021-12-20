@@ -200,6 +200,7 @@ class BackupManagerTest extends ContaoTestCase
         }
 
         $config = new CreateConfig(Backup::createNewAtPath($this->getBackupDir(), $newBackupDate));
+
         $manager->create($config);
 
         $this->assertSame(
@@ -244,6 +245,47 @@ class BackupManagerTest extends ContaoTestCase
                 'backup__20211114133600.sql.gz',
                 'backup__20211113133600.sql.gz',
                 'backup__20211112133600.sql.gz',
+            ],
+        ];
+
+        yield 'Test keepMax configured to 0 and keepPeriods correctly keeps the correct backups' => [
+            [
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T08:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T06:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-09-07T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T18:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-11T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
+            ],
+            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
+            new RetentionPolicy(0, [1, 7, 30]), // Should keep the latest plus the oldest of the periods 1 day ago, 7 days ago, 30 days ago
+            [
+                'backup__20211116133600.sql.gz', // This is the latest
+                'backup__20211116063600.sql.gz', // This is the oldest for -1 day ago
+                'backup__20211111133600.sql.gz', // This is the oldest for -7 days ago
+                'backup__20211107133600.sql.gz', // This is the oldest for -30 days ago
+            ],
+        ];
+
+        yield 'Test keepMax configured to 2 and keepPeriods correctly keeps the correct backups' => [
+            [
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T08:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T06:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-09-07T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T18:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-11T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
+            ],
+            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
+            new RetentionPolicy(2, [1, 7, 30]), // Should keep the latest plus the oldest of the periods 1 day ago, 7 days ago, 30 days ago
+            [
+                'backup__20211116133600.sql.gz', // This is the latest
+                'backup__20211116063600.sql.gz', // This is the oldest for -1 day ago
+                // According to keepPeriods, we'd keep more backups but we are limited by the total
             ],
         ];
     }

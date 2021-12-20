@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -336,7 +337,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
-        $this->assertSame(5, $definition->getArgument(4));
+
+        $retentionPolicy = $definition->getArgument(4);
+        $this->assertInstanceOf(RetentionPolicy::class, $retentionPolicy);
+        $this->assertSame(5, $retentionPolicy->getKeepMax());
+        $this->assertSame([1, 7, 30], $retentionPolicy->getKeepPeriods());
 
         $extension->load(
             [
@@ -345,6 +350,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'directory' => 'somewhere/else',
                         'ignore_tables' => ['foobar'],
                         'keep_max' => 10,
+                        'keep_periods' => [1, 2, 7, 14, 30, 60],
                     ],
                 ],
             ],
@@ -357,7 +363,11 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('somewhere/else', $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
-        $this->assertSame(10, $definition->getArgument(4));
+
+        $retentionPolicy = $definition->getArgument(4);
+        $this->assertInstanceOf(RetentionPolicy::class, $retentionPolicy);
+        $this->assertSame(10, $retentionPolicy->getKeepMax());
+        $this->assertSame([1, 2, 7, 14, 30, 60], $retentionPolicy->getKeepPeriods());
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void

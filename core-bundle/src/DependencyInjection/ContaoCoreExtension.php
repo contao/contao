@@ -20,6 +20,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -380,7 +381,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
         $dbDumper->replaceArgument(2, $config['backup']['directory']);
         $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
-        $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
+        $dbDumper->replaceArgument(4, new RetentionPolicy($config['backup']['keep_max'], $config['backup']['keep_periods']));
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
