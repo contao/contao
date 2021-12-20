@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
+use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -29,15 +30,15 @@ class BackupManager
     private DumperInterface $dumper;
     private string $backupDir;
     private array $tablesToIgnore;
-    private int $keepMax;
+    private RetentionPolicy $retentionPolicy;
 
-    public function __construct(Connection $connection, DumperInterface $dumper, string $backupDir, array $tablesToIgnore, int $keepMax)
+    public function __construct(Connection $connection, DumperInterface $dumper, string $backupDir, array $tablesToIgnore, RetentionPolicy $retentionPolicy)
     {
         $this->connection = $connection;
         $this->dumper = $dumper;
         $this->backupDir = $backupDir;
         $this->tablesToIgnore = $tablesToIgnore;
-        $this->keepMax = $keepMax;
+        $this->retentionPolicy = $retentionPolicy;
     }
 
     public function createCreateConfig(): CreateConfig
@@ -233,9 +234,10 @@ class BackupManager
     private function tidyDirectory(): void
     {
         $i = 0;
+        $keepMax = $this->retentionPolicy->getKeepMax();
 
         foreach ($this->listBackups() as $backup) {
-            if ($i >= $this->keepMax) {
+            if ($i >= $keepMax) {
                 (new Filesystem())->remove($backup->getFilepath());
             }
 

@@ -17,6 +17,7 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
+use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
@@ -431,6 +432,6 @@ class BackupManagerTest extends ContaoTestCase
         $connection ??= $this->createMock(Connection::class);
         $dumper ??= $this->createMock(DumperInterface::class);
 
-        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], 5);
+        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], new RetentionPolicy(5));
     }
 }
