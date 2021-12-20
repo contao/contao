@@ -182,23 +182,50 @@ class BackupManagerTest extends ContaoTestCase
         yield [false];
     }
 
-    public function testDirectoryIsCleanedUpAfterSuccessfulCreate(): void
+    /**
+     * @dataProvider retentionPolicyProvider
+     *
+     * @param array<\DateTime> $existingBackupDates
+     * @param array<Backup>    $expectedRemainingBackups
+     */
+    public function testRetentionPolicy(array $existingBackupDates, \DateTime $newBackupDate, RetentionPolicy $retentionPolicy, array $expectedRemainingBackups): void
     {
         $connection = $this->mockConnection(true);
         $dumper = $this->mockDumper($connection);
-        $manager = $this->getBackupManager($connection, $dumper);
-        $config = $manager->createCreateConfig();
+        $manager = $this->getBackupManager($connection, $dumper, $retentionPolicy);
 
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-3 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-4 days'));
-        $oldest = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
+        foreach ($existingBackupDates as $backupDate) {
+            Backup::createNewAtPath($this->getBackupDir(), $backupDate);
+        }
 
+        $config = new CreateConfig(Backup::createNewAtPath($this->getBackupDir(), $newBackupDate));
         $manager->create($config);
 
-        $this->assertCount(5, $manager->listBackups());
-        $this->assertNotSame($oldest->getFilepath(), $manager->listBackups()[4]->getFilepath());
+        $this->assertSame(
+            $expectedRemainingBackups,
+            array_map(fn (Backup $backup) => Path::makeRelative($backup->getFilepath(), $this->getBackupDir()), $manager->listBackups()),
+        );
+    }
+
+    public function retentionPolicyProvider(): \Generator
+    {
+        yield 'Test should delete oldest when only keepMax is configured' => [
+            [
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-15T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-14T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
+            ],
+            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
+            new RetentionPolicy(5),
+            [
+                'backup__20211116133600.sql.gz',
+                'backup__20211115133600.sql.gz',
+                'backup__20211114133600.sql.gz',
+                'backup__20211113133600.sql.gz',
+                'backup__20211112133600.sql.gz',
+            ],
+        ];
     }
 
     public function testDirectoryIsNotCleanedUpAfterUnsuccessfulCreate(): void
@@ -427,11 +454,12 @@ class BackupManagerTest extends ContaoTestCase
         return Path::join($this->getTempDir(), 'backups');
     }
 
-    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null): BackupManager
+    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicy $retentionPolicy = null): BackupManager
     {
         $connection ??= $this->createMock(Connection::class);
         $dumper ??= $this->createMock(DumperInterface::class);
+        $retentionPolicy ??= new RetentionPolicy(5);
 
-        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], new RetentionPolicy(5));
+        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], $retentionPolicy);
     }
 }
