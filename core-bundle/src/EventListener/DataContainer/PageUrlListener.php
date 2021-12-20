@@ -41,17 +41,17 @@ class PageUrlListener
     private TranslatorInterface $translator;
     private Connection $connection;
     private PageRegistry $pageRegistry;
-    private RouterInterface $router;
+    private UrlGeneratorInterface $urlGenerator;
     private FinalMatcherInterface $routeMatcher;
 
-    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, PageRegistry $pageRegistry, RouterInterface $router, FinalMatcherInterface $routeMatcher)
+    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, PageRegistry $pageRegistry, UrlGeneratorInterface $urlGenerator, FinalMatcherInterface $routeMatcher)
     {
         $this->framework = $framework;
         $this->slug = $slug;
         $this->translator = $translator;
         $this->connection = $connection;
         $this->pageRegistry = $pageRegistry;
-        $this->router = $router;
+        $this->urlGenerator = $urlGenerator;
         $this->routeMatcher = $routeMatcher;
     }
 
@@ -210,7 +210,7 @@ class PageUrlListener
         $currentRoute = $this->pageRegistry->getRoute($currentPage);
 
         try {
-            $currentUrl = $this->router->generate(
+            $currentUrl = $this->urlGenerator->generate(
                 RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
                 UrlGeneratorInterface::ABSOLUTE_URL
