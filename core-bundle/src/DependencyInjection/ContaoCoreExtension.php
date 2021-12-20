@@ -384,8 +384,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $dbDumper->replaceArgument(
             4,
             (new Definition(RetentionPolicy::class))
-            ->setArgument(0, $config['backup']['keep_max'])
-            ->setArgument(1, $config['backup']['keep_periods'])
+                ->setArgument(0, $config['backup']['keep_max'])
+                ->setArgument(1, $config['backup']['keep_periods'])
         );
     }
 
