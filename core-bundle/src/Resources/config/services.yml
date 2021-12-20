@@ -288,14 +288,14 @@ services:
     contao.image.fallback_preview_provider:
         class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
         tags:
-            - { name: 'contao.preview_provider', priority: -1024 }
+            - { name: contao.preview_provider, priority: -1024 }
 
     contao.image.imagine_preview_provider:
         class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
         arguments:
             - '@contao.image.imagine'
         tags:
-            - { name: 'contao.preview_provider', priority: 0 }
+            - { name: contao.preview_provider, priority: 0 }
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
