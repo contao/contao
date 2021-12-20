@@ -84,9 +84,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
+        <target>Omogoči zakasnjeno nalaganje</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Sliko naloži šele takrat, ko je vidna na zaslonu.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -150,9 +152,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,png">
         <source>WEBP to PNG</source>
+        <target>WEBP v PNG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,jpg">
         <source>WEBP to JPG</source>
+        <target>WEBP v JPG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

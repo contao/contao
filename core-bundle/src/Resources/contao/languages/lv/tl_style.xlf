@@ -459,19 +459,19 @@
       </trans-unit>
       <trans-unit id="tl_style.background_legend">
         <source>Background settings</source>
-        <target>Fona uzstādījumi</target>
+        <target>Fona iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_style.border_legend">
         <source>Border settings</source>
-        <target>Malas uzstādījumi</target>
+        <target>Malas iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_style.font_legend">
         <source>Font settings</source>
-        <target>Fonta uzstādījumi</target>
+        <target>Fonta iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_style.list_legend">
         <source>List settings</source>
-        <target>Sraksta uzstādījumi</target>
+        <target>Saraksta iestatījumi</target>
       </trans-unit>
       <trans-unit id="tl_style.custom_legend">
         <source>Custom code</source>

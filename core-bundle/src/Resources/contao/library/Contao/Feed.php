@@ -142,15 +142,7 @@ class Feed
 			// Add the GUID
 			if ($objItem->guid)
 			{
-				// Add the isPermaLink attribute if the guid is not a link (see #4930)
-				if (strncmp($objItem->guid, 'http://', 7) !== 0 && strncmp($objItem->guid, 'https://', 8) !== 0)
-				{
-					$xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
-				}
-				else
-				{
-					$xml .= '<guid>' . $objItem->guid . '</guid>';
-				}
+				$xml .= '<guid isPermaLink="false">' . $objItem->guid . '</guid>';
 			}
 			else
 			{

@@ -386,7 +386,7 @@ abstract class Backend extends Controller
 			{
 				foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $k=>$v)
 				{
-					if ($v['exclude'] && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
+					if (($v['exclude'] ?? null) && $this->User->hasAccess($strTable . '::' . $k, 'alexf'))
 					{
 						if ($strTable == 'tl_user_group')
 						{

@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.invisible.1">
         <source>Do not use the image size definition.</source>
+        <target>Ne uporabi definirane velikosti slike.</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.tstamp.0">
         <source>Revision date</source>

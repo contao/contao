@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.0">
         <source>Import</source>
+        <target>Importēt</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.import.1">
         <source>Import a style sheet</source>
+        <target>Importēt stila lapu</target>
       </trans-unit>
       <trans-unit id="tl_style_sheet.new.0">
         <source>New</source>

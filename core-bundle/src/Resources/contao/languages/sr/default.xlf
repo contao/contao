@@ -1451,6 +1451,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Потврди лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1974,7 +1975,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileManager">
         <source>File manager</source>
-        <target>Менаџер фајлова - File manager</target>
+        <target>Управљање фајловима</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
         <source>Site structure</source>
@@ -2614,6 +2615,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Постоји барем једна корисничка група са одобрењем приступа Фронт Енд модулу &quot;Листинг&quot; и припадајућим пољима &quot;list_*&quot;. С обзиром да та поља могу да садрже арбитрарне SQL корисници ових група имплицитно имају приступ систему!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2669,6 +2671,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Непозната опција: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
