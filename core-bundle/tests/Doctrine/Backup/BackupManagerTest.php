@@ -31,6 +31,7 @@ class BackupManagerTest extends ContaoTestCase
     {
         parent::setUp();
 
+        (new Filesystem())->remove($this->getBackupDir());
         (new Filesystem())->mkdir($this->getBackupDir());
     }
 
@@ -215,6 +216,7 @@ class BackupManagerTest extends ContaoTestCase
                 \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-14T13:36:00+00:00'),
                 \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
                 \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
+                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-11T13:36:00+00:00'),
             ],
             \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
             new RetentionPolicy(5),
