@@ -89,10 +89,17 @@ class ModuleRegistration extends Module
 			}
 		}
 
-		// Purge expired opt-in tokens (#3709)
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
-		$optIn->purgeTokens();
+		$strFormId = 'tl_registration_' . $this->id;
+
+		// Purge expired registrations (#3709)
+		if (Input::post('FORM_SUBMIT') == $strFormId && $email = Input::post('email'))
+		{
+			foreach (MemberModel::findExpiredRegistrations(['column' => ['email = ?'], 'value' => [$email]]) ?? [] as $member) {
+				$member->delete();
+			}
+		}
 
 		// Activate account
 		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
@@ -112,7 +119,6 @@ class ModuleRegistration extends Module
 
 		$objCaptcha = null;
 		$doNotSubmit = false;
-		$strFormId = 'tl_registration_' . $this->id;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array

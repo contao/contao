@@ -27,13 +27,6 @@ class PurgeOptInTokensCronTest extends TestCase
             ->method('purgeTokens')
         ;
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->exactly(2))
-            ->method('fetchOne')
-            ->willReturn('1')
-        ;
-
-        (new PurgeOptInTokensCron($optIn, $connection))();
+        (new PurgeOptInTokensCron($optIn))();
     }
 }

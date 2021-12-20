@@ -217,7 +217,6 @@ services:
         class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
         arguments:
             - '@contao.opt-in'
-            - '@database_connection'
             - '@?logger'
 
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
