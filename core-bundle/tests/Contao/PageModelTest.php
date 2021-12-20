@@ -203,7 +203,8 @@ class PageModelTest extends ContaoTestCase
 
         $result = PageModel::findSimilarByAlias($sourcePage);
 
-        $this->assertSame(42, $result->id);
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertSame(42, $result->first()->id);
     }
 
     public function similarAliasProvider(): \Generator
