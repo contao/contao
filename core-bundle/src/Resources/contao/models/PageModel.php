@@ -1461,8 +1461,8 @@ class PageModel extends Model
 		{
 			$rows = Database::getInstance()->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")->fetchAllAssoc();
 
-			self::$prefixes = [];
-			self::$suffixes = [];
+			self::$prefixes = array();
+			self::$suffixes = array();
 
 			foreach (array_column($rows, 'urlPrefix') as $prefix)
 			{
@@ -1482,7 +1482,8 @@ class PageModel extends Model
 
 		$prefixes = self::$prefixes;
 
-		if (!empty($urlPrefix)) {
+		if (!empty($urlPrefix))
+		{
 			$prefixes[] = $urlPrefix.'/';
 		}
 
@@ -1491,7 +1492,7 @@ class PageModel extends Model
 			$alias = preg_replace('/^' . $prefixRegex . '/i', '', $alias);
 		}
 
-		if (null !== ($suffixRegex = self::regexArray(array_merge([$urlSuffix], self::$suffixes))))
+		if (null !== ($suffixRegex = self::regexArray(array_merge(array($urlSuffix), self::$suffixes))))
 		{
 			$alias = preg_replace('/' . $suffixRegex . '$/i', '', $alias);
 		}
@@ -1508,7 +1509,7 @@ class PageModel extends Model
 			return null;
 		}
 
-		usort($data, fn ($v, $k) => strlen($v));
+		usort($data, static fn ($v, $k) => strlen($v));
 
 		foreach ($data as $k => $v)
 		{
