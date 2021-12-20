@@ -984,7 +984,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&Adapter&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->once())
@@ -1119,7 +1119,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&Adapter&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1219,7 +1219,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&Adapter&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(2))
@@ -1467,7 +1467,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var PageModel&Adapter&MockObject $pageAdapter */
+        /** @var Adapter<PageModel>&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))

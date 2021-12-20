@@ -705,7 +705,7 @@ class PageModel extends Model
 
 		$alias = '%' . self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix) . '%';
 
-		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), [$alias, $pageModel->id]);
+		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), array($alias, $pageModel->id));
 	}
 
 	/**
@@ -1459,8 +1459,8 @@ class PageModel extends Model
 	{
 		if (null === self::$prefixes || null === self::$suffixes)
 		{
-			self::$prefixes = [];
-			self::$suffixes = [];
+			self::$prefixes = array();
+			self::$suffixes = array();
 
 			$rows = Database::getInstance()->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")->fetchAllAssoc();
 
@@ -1472,12 +1472,13 @@ class PageModel extends Model
 			{
 				foreach (array_column($rows, 'urlPrefix') as $prefix)
 				{
-					if (0 === substr_compare($prefix, $urlPrefix, 0, $prefixLength, true)) {
+					if (0 === substr_compare($prefix, $urlPrefix, 0, $prefixLength, true))
+					{
 						$prefix = trim(substr($prefix, $prefixLength), '/');
 
 						if ('' !== $prefix)
 						{
-							self::$prefixes[] = $prefix.'/';
+							self::$prefixes[] = $prefix . '/';
 						}
 					}
 				}
@@ -1491,7 +1492,8 @@ class PageModel extends Model
 			{
 				foreach (array_column($rows, 'urlSuffix') as $suffix)
 				{
-					if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, $suffixLength, true)) {
+					if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, $suffixLength, true))
+					{
 						self::$suffixes[] = substr($suffix, 0, -$suffixLength);
 					}
 				}
@@ -1500,12 +1502,12 @@ class PageModel extends Model
 
 		if (null !== ($prefixRegex = self::regexArray(self::$prefixes)))
 		{
-			$alias = preg_replace('/^'.$prefixRegex.'/i', '', $alias);
+			$alias = preg_replace('/^' . $prefixRegex . '/i', '', $alias);
 		}
 
 		if (null !== ($suffixRegex = self::regexArray(self::$suffixes)))
 		{
-			$alias = preg_replace('/'.$suffixRegex.'$/i', '', $alias);
+			$alias = preg_replace('/' . $suffixRegex . '$/i', '', $alias);
 		}
 
 		return $alias;
