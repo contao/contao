@@ -266,8 +266,8 @@ class PageUrlListener
         $request = Request::create($currentUrl);
 
         try {
-            $parameters = $this->routeMatcher->finalMatch($routeCollection, $request);
-            // TODO $parameters['pageModel'] is the which page conflicts, should we display that?
+            $this->routeMatcher->finalMatch($routeCollection, $request);
+            // TODO return value is the which page conflicts, should we display that?
         } catch (ResourceNotFoundException $exception) {
             return false;
         }

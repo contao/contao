@@ -698,14 +698,14 @@ class PageModel extends Model
 	 *
 	 * @return Collection|PageModel[]|null A collection of models or null if there are no pages
 	 */
-	public static function findSimilarByAlias(PageModel $pageModel)
+	public static function findSimilarByAlias(self $pageModel)
 	{
 		$t = static::$strTable;
 		$pageModel->loadDetails();
 
-		$alias = '%'.self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix).'%';
+		$alias = '%' . self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix) . '%';
 
-		return static::findBy(["$t.alias LIKE ?", "$t.id!=?"], [$alias, $pageModel->id]);
+		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), [$alias, $pageModel->id]);
 	}
 
 	/**
@@ -1457,30 +1457,40 @@ class PageModel extends Model
 
 	private static function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string
 	{
-		if (null === self::$prefixes || null === self::$suffixes) {
+		if (null === self::$prefixes || null === self::$suffixes)
+		{
 			self::$prefixes = [];
 			self::$suffixes = [];
 
 			$rows = Database::getInstance()->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")->fetchAllAssoc();
 
-			if (0 === ($prefixLength = \strlen($urlPrefix))) {
+			if (0 === ($prefixLength = \strlen($urlPrefix)))
+			{
 				self::$prefixes = array_column($rows, 'urlPrefix');
-			} else {
-				foreach (array_column($rows, 'urlPrefix') as $prefix) {
+			}
+			else
+			{
+				foreach (array_column($rows, 'urlPrefix') as $prefix)
+				{
 					if (0 === substr_compare($prefix, $urlPrefix, 0, $prefixLength, true)) {
 						$prefix = trim(substr($prefix, $prefixLength), '/');
 
-						if ('' !== $prefix) {
+						if ('' !== $prefix)
+						{
 							self::$prefixes[] = $prefix.'/';
 						}
 					}
 				}
 			}
 
-			if (0 === ($suffixLength = \strlen($urlSuffix))) {
+			if (0 === ($suffixLength = \strlen($urlSuffix)))
+			{
 				self::$suffixes = array_column($rows, 'urlSuffix');
-			} else {
-				foreach (array_column($rows, 'urlSuffix') as $suffix) {
+			}
+			else
+			{
+				foreach (array_column($rows, 'urlSuffix') as $suffix)
+				{
 					if (0 === substr_compare($suffix, $urlSuffix, -$suffixLength, $suffixLength, true)) {
 						self::$suffixes[] = substr($suffix, 0, -$suffixLength);
 					}
@@ -1488,11 +1498,13 @@ class PageModel extends Model
 			}
 		}
 
-		if (null !== ($prefixRegex = self::regexArray(self::$prefixes))) {
+		if (null !== ($prefixRegex = self::regexArray(self::$prefixes)))
+		{
 			$alias = preg_replace('/^'.$prefixRegex.'/i', '', $alias);
 		}
 
-		if (null !== ($suffixRegex = self::regexArray(self::$suffixes))) {
+		if (null !== ($suffixRegex = self::regexArray(self::$suffixes)))
+		{
 			$alias = preg_replace('/'.$suffixRegex.'$/i', '', $alias);
 		}
 
@@ -1503,15 +1515,17 @@ class PageModel extends Model
 	{
 		$data = array_filter(array_unique($data));
 
-		if (0 === \count($data)) {
+		if (0 === \count($data))
+		{
 			return null;
 		}
 
-		foreach ($data as $k => $v) {
+		foreach ($data as $k => $v)
+		{
 			$data[$k] = preg_quote($v, '/');
 		}
 
-		return '('.implode('|', $data).')';
+		return '(' . implode('|', $data).')';
 	}
 }
 
