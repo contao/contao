@@ -1752,6 +1752,7 @@ class PageUrlListenerTest extends TestCase
 
     /**
      * @param PageRoute|int|null $route
+     *
      * @return MockObject|RouterInterface
      */
     private function mockRouter($route = null)
@@ -1770,7 +1771,7 @@ class PageUrlListenerTest extends TestCase
                 $path = '/'.$route->getUrlPrefix().$path;
             }
 
-            $path = $path.$route->getUrlSuffix();
+            $path .= $route->getUrlSuffix();
 
             $router
                 ->expects($this->atLeastOnce())
@@ -1791,19 +1792,21 @@ class PageUrlListenerTest extends TestCase
                     $this->isType('array'), //[RouteObjectInterface::ROUTE_OBJECT => $this->isInstanceOf(PageRoute::class)],
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )
-                ->willReturnCallback(function (string $routeName, array $params) {
-                    $this->assertArrayHasKey(RouteObjectInterface::ROUTE_OBJECT, $params);
-                    $this->assertInstanceOf(PageRoute::class, $params[RouteObjectInterface::ROUTE_OBJECT]);
+                ->willReturnCallback(
+                    function (string $routeName, array $params) {
+                        $this->assertArrayHasKey(RouteObjectInterface::ROUTE_OBJECT, $params);
+                        $this->assertInstanceOf(PageRoute::class, $params[RouteObjectInterface::ROUTE_OBJECT]);
 
-                    $route = $params[RouteObjectInterface::ROUTE_OBJECT];
-                    $path = '/'.$route->getPageModel()->alias;
+                        $route = $params[RouteObjectInterface::ROUTE_OBJECT];
+                        $path = '/'.$route->getPageModel()->alias;
 
-                    if ('' !== $route->getUrlPrefix()) {
-                        $path = '/'.$route->getUrlPrefix().$path;
+                        if ('' !== $route->getUrlPrefix()) {
+                            $path = '/'.$route->getUrlPrefix().$path;
+                        }
+
+                        return $path.$route->getUrlSuffix();
                     }
-
-                    return $path.$route->getUrlSuffix();
-                })
+                )
             ;
         }
 

@@ -70,6 +70,7 @@ class PageRoutingListener
         }
 
         $conflicts = [];
+
         foreach ($aliasPages as $aliasPage) {
             $aliasPage->loadDetails();
             $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasPage->urlPrefix, $aliasPage->urlSuffix);

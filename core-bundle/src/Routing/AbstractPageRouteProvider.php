@@ -177,7 +177,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
-        if ($pageA->routePriority <> $pageB->routePriority) {
+        if ($pageA->routePriority !== $pageB->routePriority) {
             return $pageB->routePriority <=> $pageA->routePriority;
         }
 
