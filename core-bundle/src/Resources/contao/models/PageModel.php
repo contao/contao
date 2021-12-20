@@ -1527,7 +1527,7 @@ class PageModel extends Model
 			$data[$k] = preg_quote($v, '/');
 		}
 
-		return '(' . implode('|', $data).')';
+		return '(' . implode('|', $data) . ')';
 	}
 }
 
