@@ -274,6 +274,29 @@ services:
             - '@contao.image.legacy_resizer'
             - '@?contao.image.resize_calculator'
 
+    contao.image.preview_factory:
+        class: Contao\CoreBundle\Image\Preview\PreviewFactory
+        public: true
+        arguments:
+            - !tagged_iterator contao.preview_provider
+            - '@contao.image.factory'
+            - '@contao.image.picture_factory'
+            - '@contao.image.studio'
+            - '%contao.image.target_dir%/previews'
+            - '%contao.image.valid_extensions%'
+
+    contao.image.fallback_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
+        tags:
+            - { name: 'contao.preview_provider', priority: -1024 }
+
+    contao.image.imagine_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
+        arguments:
+            - '@contao.image.imagine'
+        tags:
+            - { name: 'contao.preview_provider', priority: 0 }
+
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
 
