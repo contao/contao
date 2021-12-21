@@ -150,6 +150,12 @@ services:
             - '@contao.doctrine.backup.dumper'
             - ~
             - ~
+            - '@contao.doctrine.backup.retention_policy'
+
+    contao.doctrine.backup.retention_policy:
+        class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
+        arguments:
+            - ~
             - ~
 
     contao.doctrine.dca_schema_provider:

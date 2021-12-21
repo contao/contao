@@ -17,8 +17,9 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
-use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -183,111 +184,32 @@ class BackupManagerTest extends ContaoTestCase
         yield [false];
     }
 
-    /**
-     * @dataProvider retentionPolicyProvider
-     *
-     * @param array<\DateTime> $existingBackupDates
-     * @param array<string>    $expectedRemainingBackups
-     */
-    public function testRetentionPolicy(array $existingBackupDates, \DateTime $newBackupDate, RetentionPolicy $retentionPolicy, array $expectedRemainingBackups): void
+    public function testCleanup(): void
     {
         $connection = $this->mockConnection(true);
         $dumper = $this->mockDumper($connection);
+
+        $backupNew = Backup::createNewAtPath($this->getBackupDir());
+        $backupExisting = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
+
+        $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
+        $retentionPolicy
+            ->expects($this->once())
+            ->method('apply')
+            ->with(
+                $backupNew,
+                [$backupNew, $backupExisting]
+            )
+            ->willReturn([$backupNew])
+        ;
+
         $manager = $this->getBackupManager($connection, $dumper, $retentionPolicy);
-
-        foreach ($existingBackupDates as $backupDate) {
-            Backup::createNewAtPath($this->getBackupDir(), $backupDate);
-        }
-
-        $config = new CreateConfig(Backup::createNewAtPath($this->getBackupDir(), $newBackupDate));
+        $config = $manager->createCreateConfig();
 
         $manager->create($config);
 
-        $this->assertSame(
-            $expectedRemainingBackups,
-            array_map(fn (Backup $backup) => Path::makeRelative($backup->getFilepath(), $this->getBackupDir()), $manager->listBackups()),
-        );
-    }
-
-    public function retentionPolicyProvider(): \Generator
-    {
-        yield 'Test should delete oldest when only keepMax is configured' => [
-            [
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-15T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-14T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-11T13:36:00+00:00'),
-            ],
-            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
-            new RetentionPolicy(5),
-            [
-                'backup__20211116133600.sql.gz',
-                'backup__20211115133600.sql.gz',
-                'backup__20211114133600.sql.gz',
-                'backup__20211113133600.sql.gz',
-                'backup__20211112133600.sql.gz',
-            ],
-        ];
-
-        yield 'Test keepMax configured to 0 does not clean up at all' => [
-            [
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-15T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-14T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
-            ],
-            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
-            new RetentionPolicy(0),
-            [
-                'backup__20211116133600.sql.gz',
-                'backup__20211115133600.sql.gz',
-                'backup__20211114133600.sql.gz',
-                'backup__20211113133600.sql.gz',
-                'backup__20211112133600.sql.gz',
-            ],
-        ];
-
-        yield 'Test keepMax configured to 0 and keepPeriods correctly keeps the correct backups' => [
-            [
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T08:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T06:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-09-07T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T18:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-11T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
-            ],
-            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
-            new RetentionPolicy(0, [1, 7, 30]), // Should keep the latest plus the oldest of the periods 1 day ago, 7 days ago, 30 days ago
-            [
-                'backup__20211116133600.sql.gz', // This is the latest
-                'backup__20211116063600.sql.gz', // This is the oldest for -1 day ago
-                'backup__20211111133600.sql.gz', // This is the oldest for -7 days ago
-                'backup__20211107133600.sql.gz', // This is the oldest for -30 days ago
-            ],
-        ];
-
-        yield 'Test keepMax configured to 2 and keepPeriods correctly keeps the correct backups' => [
-            [
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T08:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T06:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-09-07T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-07T18:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-12T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-11T13:36:00+00:00'),
-                \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-13T13:36:00+00:00'),
-            ],
-            \DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-16T13:36:00+00:00'),
-            new RetentionPolicy(2, [1, 7, 30]), // Should keep the latest plus the oldest of the periods 1 day ago, 7 days ago, 30 days ago
-            [
-                'backup__20211116133600.sql.gz', // This is the latest
-                'backup__20211116063600.sql.gz', // This is the oldest for -1 day ago
-                // According to keepPeriods, we'd keep more backups but we are limited by the total
-            ],
-        ];
+        $this->assertCount(1, $manager->listBackups());
+        $this->assertSame($backupNew->getFilepath(), $manager->getLatestBackup()->getFilepath());
     }
 
     public function testDirectoryIsNotCleanedUpAfterUnsuccessfulCreate(): void
@@ -298,24 +220,20 @@ class BackupManagerTest extends ContaoTestCase
             ->method('dump')
             ->willThrowException(new BackupManagerException('Error!'))
         ;
+        $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
+        $retentionPolicy
+            ->expects($this->never())
+            ->method('apply')
+        ;
 
-        $manager = $this->getBackupManager($this->mockConnection(true), $dumper);
+        $manager = $this->getBackupManager($this->mockConnection(true), $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
-
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-3 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-4 days'));
-        $oldest = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
 
         try {
             $manager->create($config);
         } catch (BackupManagerException $exception) {
             // irrelevant for this test
         }
-
-        $this->assertCount(5, $manager->listBackups());
-        $this->assertSame($oldest->getFilepath(), $manager->listBackups()[4]->getFilepath());
     }
 
     /**
@@ -516,7 +434,7 @@ class BackupManagerTest extends ContaoTestCase
         return Path::join($this->getTempDir(), 'backups');
     }
 
-    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicy $retentionPolicy = null): BackupManager
+    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicyInterface $retentionPolicy = null): BackupManager
     {
         $connection ??= $this->createMock(Connection::class);
         $dumper ??= $this->createMock(DumperInterface::class);

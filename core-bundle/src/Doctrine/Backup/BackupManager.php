@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
-use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -30,9 +29,9 @@ class BackupManager
     private DumperInterface $dumper;
     private string $backupDir;
     private array $tablesToIgnore;
-    private RetentionPolicy $retentionPolicy;
+    private RetentionPolicyInterface $retentionPolicy;
 
-    public function __construct(Connection $connection, DumperInterface $dumper, string $backupDir, array $tablesToIgnore, RetentionPolicy $retentionPolicy)
+    public function __construct(Connection $connection, DumperInterface $dumper, string $backupDir, array $tablesToIgnore, RetentionPolicyInterface $retentionPolicy)
     {
         $this->connection = $connection;
         $this->dumper = $dumper;
@@ -151,7 +150,7 @@ class BackupManager
             }
 
             $this->finishWriting($fileHandle, $deflateContext);
-            $this->tidyDirectory();
+            $this->tidyDirectory($config->getBackup());
         } catch (BackupManagerException $exception) {
             (new Filesystem())->remove($backup->getFilepath());
 
@@ -231,47 +230,14 @@ class BackupManager
         }
     }
 
-    private function tidyDirectory(): void
+    private function tidyDirectory(Backup $currentBackup): void
     {
-        $keepMax = $this->retentionPolicy->getKeepMax();
-        $keepPeriods = $this->retentionPolicy->getKeepPeriods();
+        $allBackups = $this->listBackups();
+        $backupsToKeep = $this->retentionPolicy->apply($currentBackup, $allBackups);
 
-        // Cleanup according to days retention policy first
-        if (0 !== \count($keepPeriods) && ($latestBackup = $this->getLatestBackup())) {
-            $latestDateTime = $latestBackup->getCreatedAt();
-            $assignedPerPeriod = array_fill_keys($keepPeriods, null);
-
-            foreach ($this->listBackups() as $backup) {
-                foreach (array_keys($assignedPerPeriod) as $period) {
-                    $diffDays = (int) $latestDateTime->diff($backup->getCreatedAt())->format('%a');
-
-                    if ($diffDays <= $period) {
-                        $assignedPerPeriod[$period] = $backup->getFilepath();
-                    }
-                }
-            }
-
-            $toKeep = array_merge([$latestBackup->getFilepath()], $assignedPerPeriod);
-
-            foreach ($this->listBackups() as $backup) {
-                if (!\in_array($backup->getFilepath(), $toKeep, true)) {
-                    (new Filesystem())->remove($backup->getFilepath());
-                }
-            }
-        }
-
-        // Then cleanup according to maximum amount of backups to keep
-        if ($keepMax > 0) {
-            $i = 0;
-
-            foreach ($this->listBackups() as $backup) {
-                if ($i >= $keepMax) {
-                    (new Filesystem())->remove($backup->getFilepath());
-                }
-
-                ++$i;
-            }
-        }
+        (new Filesystem())->remove(
+            array_map(static fn (Backup $backup) => $backup->getFilepath(), array_diff($allBackups, $backupsToKeep))
+        );
     }
 
     private function executeWrappedQuery(string $query): void
