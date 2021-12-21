@@ -28,6 +28,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\ReplaceTwigEnvironmentPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -118,5 +119,6 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RewireTwigPathsPass());
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
+        $container->addCompilerPass(new ReplaceTwigEnvironmentPass());
     }
 }
