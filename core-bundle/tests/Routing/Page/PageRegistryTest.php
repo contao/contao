@@ -362,40 +362,6 @@ class PageRegistryTest extends TestCase
         $registry->supportsContentComposition($pageModel);
     }
 
-    /**
-     * @dataProvider errorPageTypeProvider
-     */
-    public function testDoesNotGenerateRoutableRoutesForErrorPages(string $type): void
-    {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'type' => $type,
-                'rootLanguage' => 'en',
-            ]
-        );
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-        $registry->add($type, new RouteConfig());
-
-        $this->assertFalse($registry->isRoutable($pageModel));
-    }
-
-    public function errorPageTypeProvider(): \Generator
-    {
-        yield 'Does not generate route for error_401' => [
-            'error_401',
-        ];
-
-        yield 'Does not generate route for error_403' => [
-            'error_403',
-        ];
-
-        yield 'Does not generate route for error_404' => [
-            'error_404',
-        ];
-    }
-
     public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
     {
         $pageModel = $this->mockClassWithProperties(
