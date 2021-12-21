@@ -312,8 +312,8 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
-        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
 
+        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
             ->expects($this->exactly(2))
             ->method('supportsContentComposition')
@@ -377,8 +377,8 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->getContainer($framework);
-        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
 
+        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
             ->expects($this->exactly(2))
             ->method('supportsContentComposition')
