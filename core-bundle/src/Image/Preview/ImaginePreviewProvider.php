@@ -29,6 +29,11 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         $this->imagine = $imagine;
     }
 
+    public function getFileHeaderSize(): int
+    {
+        return 0;
+    }
+
     public function supports(string $path, string $fileHeader = ''): bool
     {
         $format = strtolower(pathinfo($path, PATHINFO_EXTENSION));

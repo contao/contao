@@ -19,6 +19,11 @@ use Imagine\Image\Box;
 
 class FallbackPreviewProvider implements PreviewProviderInterface
 {
+    public function getFileHeaderSize(): int
+    {
+        return 0;
+    }
+
     public function supports(string $path, string $fileHeader = ''): bool
     {
         return true;

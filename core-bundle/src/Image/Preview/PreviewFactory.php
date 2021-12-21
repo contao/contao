@@ -96,14 +96,18 @@ class PreviewFactory
             }
         }
 
-        $first1024Bytes = file_get_contents($path, false, null, 0, 1024);
-
-        $provider = null;
+        $headerSize = 0;
 
         foreach ($this->previewProviders as $provider) {
-            if ($provider->supports($path, $first1024Bytes)) {
+            $headerSize = max($headerSize, $provider->getFileHeaderSize());
+        }
+
+        $header = $headerSize > 0 ? file_get_contents($path, false, null, 0, $headerSize) : '';
+
+        foreach ($this->previewProviders as $provider) {
+            if ($provider->supports($path, $header)) {
                 try {
-                    $format = $provider->getImageFormat($path, $size, $first1024Bytes);
+                    $format = $provider->getImageFormat($path, $size, $header);
                     $targetPath = Path::join($this->cacheDir, "$cachePath.$format");
 
                     if (!is_dir(\dirname($targetPath))) {

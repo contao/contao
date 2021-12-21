@@ -16,6 +16,8 @@ use Contao\Image\ImageDimensions;
 
 interface PreviewProviderInterface
 {
+    public function getFileHeaderSize(): int;
+
     public function supports(string $path, string $fileHeader = ''): bool;
 
     /**
