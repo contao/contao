@@ -40,9 +40,9 @@ class RetentionPolicyTest extends ContaoTestCase
      *
      * @param array<int>    $keepIntervals
      * @param array<Backup> $allBackups
-     * @param array<Backup> $expectedBackupsToKeep
+     * @param array<string> $expectedBackupFilePathsToKeep
      */
-    public function testPolicy(int $keepMax, array $keepIntervals, Backup $latestBackup, array $allBackups, array $expectedBackupsToKeep): void
+    public function testPolicy(int $keepMax, array $keepIntervals, Backup $latestBackup, array $allBackups, array $expectedBackupFilePathsToKeep): void
     {
         $retentionPolicy = new RetentionPolicy($keepMax, $keepIntervals);
 
@@ -51,7 +51,7 @@ class RetentionPolicyTest extends ContaoTestCase
 
         $toKeep = array_map(static fn (Backup $backup) => $backup->getFilepath(), $retentionPolicy->apply($latestBackup, $allBackups));
 
-        $this->assertSame($expectedBackupsToKeep, $toKeep);
+        $this->assertSame($expectedBackupFilePathsToKeep, $toKeep);
     }
 
     public function policyProvider(): \Generator
