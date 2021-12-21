@@ -43,13 +43,17 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
     public function generatePreview(string $sourcePath, int $size, string $targetPath): void
     {
-        $image = $this->imagine->open($sourcePath);
-        $targetSize = $this->getDimensionsFromImageSize($image->getSize(), $size)->getSize();
+        try {
+            $image = $this->imagine->open($sourcePath);
+            $targetSize = $this->getDimensionsFromImageSize($image->getSize(), $size)->getSize();
 
-        $image
-            ->resize($targetSize)
-            ->save($targetPath, ['format' => 'png'])
-        ;
+            $image
+                ->resize($targetSize)
+                ->save($targetPath, ['format' => 'png'])
+            ;
+        } catch (\Throwable $exception) {
+            throw new UnableToGeneratePreviewException('', 0, $exception);
+        }
     }
 
     public function getDimensions(string $path, int $size = 0, string $fileHeader = ''): ImageDimensions

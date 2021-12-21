@@ -24,6 +24,8 @@ interface PreviewProviderInterface
      * @param int $size Minimal size the preview image should have in each
      *                  dimension. Can be larger for implementation reasons or
      *                  smaller if there is not enough data.
+     *
+     * @throws UnableToGeneratePreviewException
      */
     public function generatePreview(string $sourcePath, int $size, string $targetPath): void;
 

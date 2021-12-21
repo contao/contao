@@ -74,6 +74,9 @@ class PreviewFactory
         $this->predefinedSizes = $predefinedSizes;
     }
 
+    /**
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
+     */
     public function createPreviewFile(string $path, int $size = 0): string
     {
         // Supported image formats do not need an extra preview image
@@ -103,6 +106,7 @@ class PreviewFactory
         }
 
         $header = $headerSize > 0 ? file_get_contents($path, false, null, 0, $headerSize) : '';
+        $lastProviderException = null;
 
         foreach ($this->previewProviders as $provider) {
             if ($provider->supports($path, $header)) {
@@ -117,14 +121,13 @@ class PreviewFactory
                     $provider->generatePreview($path, $size, $targetPath);
 
                     return $targetPath;
-                } catch (\Throwable $exception) {
-                    // Ignore
+                } catch (UnableToGeneratePreviewException $exception) {
+                    $lastProviderException = $exception;
                 }
             }
         }
 
-        // TODO: throw custom exception
-        throw new \RuntimeException('no provider able to preview');
+        throw $lastProviderException ?? new MissingPreviewProviderException();
     }
 
     /**
