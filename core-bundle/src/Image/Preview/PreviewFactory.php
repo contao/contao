@@ -82,7 +82,7 @@ class PreviewFactory
             if ($provider->supports($path, $first1024Bytes)) {
                 try {
                     $format = $provider->getImageFormat($path, $size, $first1024Bytes);
-                    $targetPath = $this->cacheDir.'/'.$cachePath.'.'.$format;
+                    $targetPath = Path::join($this->cacheDir, "$cachePath.$format");
 
                     if (!is_dir(\dirname($targetPath))) {
                         (new Filesystem())->mkdir(\dirname($targetPath));
