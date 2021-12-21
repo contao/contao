@@ -32,6 +32,8 @@ use Webmozart\PathUtil\Path;
 
 class PreviewFactory
 {
+    private const MINIMUM_SIZE = 256;
+
     /**
      * @var iterable<int,PreviewProviderInterface>
      */
@@ -82,8 +84,8 @@ class PreviewFactory
         // Round up to the next highest power of two
         $size = (int) (2 ** log($size, 2));
 
-        // Minimum size for previews is 256
-        $size = max(256, $size);
+        // Minimum size for previews
+        $size = max(self::MINIMUM_SIZE, $size);
 
         $cachePath = $this->createCachePath($path, $size);
         $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $this->cacheDir.'/'.$cachePath).'.*';
