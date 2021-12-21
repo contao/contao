@@ -1484,7 +1484,7 @@ class PageModel extends Model
 
 		if (!empty($urlPrefix))
 		{
-			$prefixes[] = $urlPrefix.'/';
+			$prefixes[] = $urlPrefix . '/';
 		}
 
 		if (null !== ($prefixRegex = self::regexArray($prefixes)))
@@ -1509,7 +1509,7 @@ class PageModel extends Model
 			return null;
 		}
 
-		usort($data, static fn ($v, $k) => strlen($v));
+		usort($data, static fn ($v, $k) => \strlen($v));
 
 		foreach ($data as $k => $v)
 		{
