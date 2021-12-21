@@ -22,8 +22,6 @@ final class ContaoModuleBundle extends Bundle
 {
     /**
      * Sets the module name and application root directory.
-     *
-     * @throws \LogicException
      */
     public function __construct(string $name, string $projectDir)
     {
