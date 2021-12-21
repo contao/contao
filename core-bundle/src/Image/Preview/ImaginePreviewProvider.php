@@ -41,7 +41,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return $this->imagineSupportsFormat($format);
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath): void
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void
     {
         try {
             $image = $this->imagine->open($sourcePath);
@@ -56,7 +56,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         }
     }
 
-    public function getDimensions(string $path, int $size = 0, string $fileHeader = ''): ImageDimensions
+    public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions
     {
         $imageSize = null;
 
@@ -77,7 +77,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return $this->getDimensionsFromImageSize($imageSize, $size);
     }
 
-    public function getImageFormat(string $path, int $size = 0, string $fileHeader = ''): string
+    public function getImageFormat(string $path, int $size = 0, string $fileHeader = '', array $options = []): string
     {
         return 'png';
     }

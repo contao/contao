@@ -77,7 +77,7 @@ class PreviewFactory
     /**
      * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
      */
-    public function createPreviewFile(string $path, int $size = 0): string
+    public function createPreviewFile(string $path, int $size = 0, array $previewOptions = []): string
     {
         // Supported image formats do not need an extra preview image
         if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), $this->validImageExtensions, true)) {
@@ -90,7 +90,7 @@ class PreviewFactory
         // Minimum size for previews
         $size = max(self::MINIMUM_SIZE, $size);
 
-        $cachePath = $this->createCachePath($path, $size);
+        $cachePath = $this->createCachePath($path, $size, $previewOptions);
         $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $this->cacheDir.'/'.$cachePath).'.*';
 
         foreach (glob($globPattern) as $cacheFile) {
@@ -111,14 +111,14 @@ class PreviewFactory
         foreach ($this->previewProviders as $provider) {
             if ($provider->supports($path, $header)) {
                 try {
-                    $format = $provider->getImageFormat($path, $size, $header);
+                    $format = $provider->getImageFormat($path, $size, $header, $previewOptions);
                     $targetPath = Path::join($this->cacheDir, "$cachePath.$format");
 
                     if (!is_dir(\dirname($targetPath))) {
                         (new Filesystem())->mkdir(\dirname($targetPath));
                     }
 
-                    $provider->generatePreview($path, $size, $targetPath);
+                    $provider->generatePreview($path, $size, $targetPath, $previewOptions);
 
                     return $targetPath;
                 } catch (UnableToGeneratePreviewException $exception) {
@@ -133,13 +133,13 @@ class PreviewFactory
     /**
      * @param int|string|array|ResizeConfiguration|null $size
      */
-    public function createPreviewImage(string $path, $size = null, ResizeOptions $options = null): ImageInterface
+    public function createPreviewImage(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): ImageInterface
     {
         return $this->imageFactory
             ->create(
-                $this->createPreviewFile($path, $this->getPreviewSizeFromImageSize($size)),
+                $this->createPreviewFile($path, $this->getPreviewSizeFromImageSize($size), $previewOptions),
                 $size,
-                $options,
+                $resizeOptions,
             )
         ;
     }
@@ -147,7 +147,7 @@ class PreviewFactory
     /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewPicture(string $path, $size = null, ResizeOptions $options = null): PictureInterface
+    public function createPreviewPicture(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): PictureInterface
     {
         // Unlike the Contao\Image\PictureFactory the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third
@@ -171,10 +171,10 @@ class PreviewFactory
             return $type instanceof \ReflectionNamedType && ResizeOptions::class === $type->getName();
         };
 
-        $arguments = [$this->createPreviewFile($path, $this->getPreviewSizeFromImageSize($size)), $size];
+        $arguments = [$this->createPreviewFile($path, $this->getPreviewSizeFromImageSize($size), $previewOptions), $size];
 
-        if (null !== $options && $canHandleResizeOptions($this->pictureFactory)) {
-            $arguments[] = $options;
+        if (null !== $resizeOptions && $canHandleResizeOptions($this->pictureFactory)) {
+            $arguments[] = $resizeOptions;
         }
 
         return $this->pictureFactory->create(...$arguments);
@@ -183,21 +183,21 @@ class PreviewFactory
     /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewFigure(string $path, $size = null, ResizeOptions $options = null): Figure
+    public function createPreviewFigure(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): Figure
     {
-        return $this->createPreviewFigureBuilder($path, $size, $options)->build();
+        return $this->createPreviewFigureBuilder($path, $size, $resizeOptions, $previewOptions)->build();
     }
 
     /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $options = null): FigureBuilder
+    public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): FigureBuilder
     {
         return $this->imageStudio
             ->createFigureBuilder()
-            ->fromPath($this->createPreviewFile($path, $this->getPreviewSizeFromImageSize($size)))
+            ->fromPath($this->createPreviewFile($path, $this->getPreviewSizeFromImageSize($size), $previewOptions))
             ->setSize($size)
-            ->setResizeOptions($options)
+            ->setResizeOptions($resizeOptions)
         ;
     }
 
@@ -311,12 +311,16 @@ class PreviewFactory
         return (int) round(max(...$dimensions) * max(...$scaleFactors));
     }
 
-    private function createCachePath(string $path, int $size): string
+    private function createCachePath(string $path, int $size, array $previewOptions): string
     {
+        ksort($previewOptions);
+
         $hashData = [
             Path::makeRelative($path, $this->cacheDir),
             (string) $size,
             (string) filemtime($path),
+            ...array_keys($previewOptions),
+            ...array_values($previewOptions),
         ];
 
         $hash = substr(md5(implode('|', $hashData)), 0, 9);

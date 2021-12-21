@@ -27,7 +27,7 @@ interface PreviewProviderInterface
      *
      * @throws UnableToGeneratePreviewException
      */
-    public function generatePreview(string $sourcePath, int $size, string $targetPath): void;
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void;
 
     /**
      * Calculate the exact dimensions the preview image will have when generated.
@@ -35,7 +35,7 @@ interface PreviewProviderInterface
      * @param int    $size       See self::generatePreview()
      * @param string $fileHeader First X bytes of the source file
      */
-    public function getDimensions(string $path, int $size = 0, string $fileHeader = ''): ImageDimensions;
+    public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions;
 
     /**
      * Lowercase image format file extension (e.g. jpg, png or gif) the preview
@@ -44,5 +44,5 @@ interface PreviewProviderInterface
      * @param int    $size       See self::generatePreview()
      * @param string $fileHeader First X bytes of the source file
      */
-    public function getImageFormat(string $path, int $size = 0, string $fileHeader = ''): string;
+    public function getImageFormat(string $path, int $size = 0, string $fileHeader = '', array $options = []): string;
 }

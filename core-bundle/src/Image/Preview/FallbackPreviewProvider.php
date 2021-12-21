@@ -29,7 +29,7 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         return true;
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath): void
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void
     {
         $svgCode = '<?xml version="1.0"?>'."\n";
         $svgCode .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 30 30">';
@@ -51,7 +51,7 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         ;
     }
 
-    public function getDimensions(string $path, int $size = 0, string $fileHeader = ''): ImageDimensions
+    public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions
     {
         if ($size > 0) {
             return new ImageDimensions(new Box($size, $size));
@@ -60,7 +60,7 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         return new ImageDimensions(SvgBox::createTypeAspectRatio(1, 1));
     }
 
-    public function getImageFormat(string $path, int $size = 0, string $fileHeader = ''): string
+    public function getImageFormat(string $path, int $size = 0, string $fileHeader = '', array $options = []): string
     {
         return 'svg';
     }
