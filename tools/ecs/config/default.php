@@ -37,5 +37,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ;
 
     $parameters->set(Option::LINE_ENDING, "\n");
-    //$parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_default_cache');
+    $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_default_cache');
 };
