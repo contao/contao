@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Doctrine\Backup;
 
-class RetentionPolicy implements RetentionPolicyInterface
+final class RetentionPolicy implements RetentionPolicyInterface
 {
     private int $keepMax;
 
@@ -27,26 +27,14 @@ class RetentionPolicy implements RetentionPolicyInterface
         $this->keepIntervals = $this->createKeepIntervals($keepIntervals);
     }
 
-    public function getKeepMax(): int
-    {
-        return $this->keepMax;
-    }
-
-    public function getKeepIntervals(): array
-    {
-        return $this->keepIntervals;
-    }
-
     public function apply(Backup $latestBackup, array $allBackups): array
     {
         $toKeep = $allBackups;
-        $keepMax = $this->getKeepMax();
-        $keepIntervals = $this->getKeepIntervals();
 
         // Cleanup according to days retention policy first
-        if (0 !== \count($keepIntervals)) {
+        if (0 !== \count($this->keepIntervals)) {
             $latestDateTime = $latestBackup->getCreatedAt();
-            $assignedPerInterval = array_fill_keys(array_keys($keepIntervals), null);
+            $assignedPerInterval = array_fill_keys(array_keys($this->keepIntervals), null);
 
             foreach ($allBackups as $k => $backup) {
                 // Do not assign the latest
@@ -71,8 +59,8 @@ class RetentionPolicy implements RetentionPolicyInterface
         }
 
         // Then cleanup according to maximum amount of backups to keep
-        if ($keepMax > 0) {
-            $toKeep = \array_slice($toKeep, 0, $keepMax);
+        if ($this->keepMax > 0) {
+            $toKeep = \array_slice($toKeep, 0, $this->keepMax);
         }
 
         return $toKeep;
