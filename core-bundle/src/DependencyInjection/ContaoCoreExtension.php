@@ -271,7 +271,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
-        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory', 'contao.image.preview_factory'];
 
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {

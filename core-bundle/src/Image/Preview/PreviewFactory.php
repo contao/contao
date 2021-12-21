@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Preview;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
@@ -23,6 +24,9 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
 use Contao\Image\ResizeConfiguration;
 use Contao\Image\ResizeOptions;
+use Contao\ImageSizeItemModel;
+use Contao\ImageSizeModel;
+use Contao\StringUtil;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -36,20 +40,36 @@ class PreviewFactory
     private ImageFactoryInterface $imageFactory;
     private PictureFactoryInterface $pictureFactory;
     private Studio $imageStudio;
+    private ContaoFramework $framework;
     private string $cacheDir;
     private array $validImageExtensions;
+    private string $defaultDensities = '';
+    private array $predefinedSizes = [];
 
     /**
      * @param iterable<int,PreviewProviderInterface> $previewProviders
      */
-    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, string $cacheDir, array $validImageExtensions)
+    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $cacheDir, array $validImageExtensions)
     {
         $this->previewProviders = $previewProviders;
         $this->imageFactory = $imageFactory;
         $this->pictureFactory = $pictureFactory;
         $this->imageStudio = $imageStudio;
+        $this->framework = $framework;
         $this->cacheDir = $cacheDir;
         $this->validImageExtensions = $validImageExtensions;
+    }
+
+    public function setDefaultDensities(string $densities): self
+    {
+        $this->defaultDensities = $densities;
+
+        return $this;
+    }
+
+    public function setPredefinedSizes(array $predefinedSizes): void
+    {
+        $this->predefinedSizes = $predefinedSizes;
     }
 
     public function createPreviewFile(string $path, int $size = 0): string
@@ -62,8 +82,8 @@ class PreviewFactory
         // Round up to the next highest power of two
         $size = (int) (2 ** log($size, 2));
 
-        // Minimum size for previews is 512
-        $size = max(512, $size);
+        // Minimum size for previews is 256
+        $size = max(256, $size);
 
         $cachePath = $this->createCachePath($path, $size);
         $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $this->cacheDir.'/'.$cachePath).'.*';
@@ -173,12 +193,113 @@ class PreviewFactory
     }
 
     /**
-     * @param int|string|array|PictureConfiguration|null $size
+     * @param int|string|array|ResizeConfiguration|PictureConfiguration|null $size
      */
     private function getPreviewSizeFromImageSize($size): int
     {
-        // TODO: get correct size from size config
-        return 1024;
+        if ($size instanceof ResizeConfiguration) {
+            return max($size->getWidth(), $size->getHeight());
+        }
+
+        if ($size instanceof PictureConfiguration) {
+            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
+                $size->getSize()->getResizeConfig()->getWidth(),
+                $size->getSize()->getResizeConfig()->getHeight(),
+                $size->getSize()->getDensities(),
+            );
+
+            foreach ($size->getSizeItems() as $sizeItem) {
+                $previewSize = max(
+                    $previewSize,
+                    $this->getPreviewSizeFromWidthHeightDensities(
+                        $size->getSize()->getResizeConfig()->getWidth(),
+                        $size->getSize()->getResizeConfig()->getHeight(),
+                        $size->getSize()->getDensities(),
+                    ),
+                );
+            }
+
+            return $previewSize;
+        }
+
+        // Support arrays in a serialized form
+        $size = StringUtil::deserialize($size);
+
+        if (!\is_array($size)) {
+            $size = [0, 0, $size];
+        }
+
+        if ($predefinedSize = $this->predefinedSizes[$size[2] ?? null] ?? null) {
+            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
+                $predefinedSize['width'] ?? 0,
+                $predefinedSize['height'] ?? 0,
+                $predefinedSize['densities'],
+            );
+
+            foreach ($predefinedSize['items'] ?? [] as $sizeItem) {
+                $previewSize = max(
+                    $previewSize,
+                    $this->getPreviewSizeFromWidthHeightDensities(
+                        $sizeItem['width'] ?? 0,
+                        $sizeItem['height'] ?? 0,
+                        $sizeItem['densities'],
+                    ),
+                );
+            }
+
+            return $previewSize;
+        }
+
+        if (is_numeric($size[2])) {
+            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
+
+            if (null === $imageSize) {
+                return 0;
+            }
+
+            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
+                (int) $imageSize->width,
+                (int) $imageSize->height,
+                $imageSize->densities,
+            );
+
+            $imageSizeItems = $this->framework->getAdapter(ImageSizeItemModel::class)->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+
+            foreach ($imageSizeItems ?? [] as $sizeItem) {
+                $previewSize = max(
+                    $previewSize,
+                    $this->getPreviewSizeFromWidthHeightDensities(
+                        (int) $sizeItem->width,
+                        (int) $sizeItem->height,
+                        $sizeItem->densities,
+                    ),
+                );
+            }
+
+            return $previewSize;
+        }
+
+        return $this->getPreviewSizeFromWidthHeightDensities(
+            (int) ($size[0] ?? 0),
+            (int) ($size[1] ?? 0),
+            $this->defaultDensities,
+        );
+    }
+
+    private function getPreviewSizeFromWidthHeightDensities(int $width, int $height, string $densities): int
+    {
+        $dimensions = [$width, $height];
+        $scaleFactors = [1];
+
+        foreach (explode(',', $densities) as $density) {
+            if ('w' === substr(trim($density), -1)) {
+                $dimensions[] = (int) $density;
+            } else {
+                $scaleFactors[] = (float) $density;
+            }
+        }
+
+        return (int) round(max(...$dimensions) * max(...$scaleFactors));
     }
 
     private function createCachePath(string $path, int $size): string

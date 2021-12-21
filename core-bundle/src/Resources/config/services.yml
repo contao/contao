@@ -282,6 +282,7 @@ services:
             - '@contao.image.factory'
             - '@contao.image.picture_factory'
             - '@contao.image.studio'
+            - '@contao.framework'
             - '%contao.image.target_dir%/previews'
             - '%contao.image.valid_extensions%'
 
