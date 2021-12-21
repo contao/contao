@@ -15,12 +15,16 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 class RetentionPolicy implements RetentionPolicyInterface
 {
     private int $keepMax;
-    private array $keepPeriods;
 
-    public function __construct(int $keepMax, array $keepPeriods = [])
+    /**
+     * @var array<string, \DateInterval>
+     */
+    private array $keepIntervals;
+
+    public function __construct(int $keepMax, array $keepIntervals = [])
     {
         $this->keepMax = $keepMax;
-        $this->keepPeriods = $this->validateAndSortKeepPeriods($keepPeriods);
+        $this->keepIntervals = $this->createKeepIntervals($keepIntervals);
     }
 
     public function getKeepMax(): int
@@ -28,21 +32,21 @@ class RetentionPolicy implements RetentionPolicyInterface
         return $this->keepMax;
     }
 
-    public function getKeepPeriods(): array
+    public function getKeepIntervals(): array
     {
-        return $this->keepPeriods;
+        return $this->keepIntervals;
     }
 
     public function apply(Backup $latestBackup, array $allBackups): array
     {
         $toKeep = $allBackups;
         $keepMax = $this->getKeepMax();
-        $keepPeriods = $this->getKeepPeriods();
+        $keepIntervals = $this->getKeepIntervals();
 
         // Cleanup according to days retention policy first
-        if (0 !== \count($keepPeriods)) {
+        if (0 !== \count($keepIntervals)) {
             $latestDateTime = $latestBackup->getCreatedAt();
-            $assignedPerPeriod = array_fill_keys($keepPeriods, null);
+            $assignedPerInterval = array_fill_keys(array_keys($keepIntervals), null);
 
             foreach ($allBackups as $k => $backup) {
                 // Do not assign the latest
@@ -50,17 +54,17 @@ class RetentionPolicy implements RetentionPolicyInterface
                     continue;
                 }
 
-                foreach (array_keys($assignedPerPeriod) as $period) {
-                    $diffDays = (int) $latestDateTime->diff($backup->getCreatedAt())->format('%a');
+                foreach (array_keys($assignedPerInterval) as $intervalReadable) {
+                    $interval = $this->keepIntervals[$intervalReadable];
 
-                    if ($diffDays <= $period) {
-                        $assignedPerPeriod[$period] = $backup;
+                    if (-1 === $this->compareDateIntervals($latestDateTime->diff($backup->getCreatedAt(), true), $interval)) {
+                        $assignedPerInterval[$intervalReadable] = $backup;
                     }
                 }
             }
 
             // Always keep the latest
-            $toKeep = array_merge([$latestBackup], array_filter($assignedPerPeriod));
+            $toKeep = array_merge([$latestBackup], array_filter($assignedPerInterval));
 
             // Ensure sorting again
             usort($toKeep, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
@@ -74,16 +78,30 @@ class RetentionPolicy implements RetentionPolicyInterface
         return $toKeep;
     }
 
-    private function validateAndSortKeepPeriods(array $keepPeriods): array
+    /**
+     * @throws \Exception
+     */
+    private function createKeepIntervals(array $keepIntervals): array
     {
-        foreach ($keepPeriods as $numberOfDays) {
-            if (!\is_int($numberOfDays)) {
-                throw new \InvalidArgumentException('$keepPeriods must be an array of integers.');
-            }
+        $intervalsNew = [];
+
+        foreach ($keepIntervals as $interval) {
+            $intervalsNew[$interval] = new \DateInterval('P'.$interval);
         }
 
-        sort($keepPeriods);
+        uasort($intervalsNew, fn (\DateInterval $a, \DateInterval $b) => $this->compareDateIntervals($a, $b));
 
-        return $keepPeriods;
+        return $intervalsNew;
+    }
+
+    private function compareDateIntervals(\DateInterval $a, \DateInterval $b): int
+    {
+        $ref = new \DateTime();
+        $aRef = clone $ref;
+        $bRef = clone $ref;
+        $aRef->add($a);
+        $bRef->add($b);
+
+        return $aRef->getTimestamp() <=> $bRef->getTimestamp();
     }
 }

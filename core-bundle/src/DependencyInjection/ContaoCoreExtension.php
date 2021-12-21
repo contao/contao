@@ -20,7 +20,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
-use Contao\CoreBundle\Doctrine\Backup\Config\RetentionPolicy;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -384,7 +383,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $retentionPolicy = $container->getDefinition('contao.doctrine.backup.retention_policy');
         $retentionPolicy->setArgument(0, $config['backup']['keep_max']);
-        $retentionPolicy->setArgument(1, $config['backup']['keep_periods']);
+        $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
 
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
         $dbDumper->setArgument(2, $config['backup']['directory']);

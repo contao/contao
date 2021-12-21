@@ -343,7 +343,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertInstanceOf(Definition::class, $retentionPolicyDefinition);
         $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
         $this->assertSame(5, $retentionPolicyDefinition->getArgument(0));
-        $this->assertSame([1, 7, 14, 30], $retentionPolicyDefinition->getArgument(1));
+        $this->assertSame(['1D', '7D', '14D', '1M'], $retentionPolicyDefinition->getArgument(1));
 
         $extension->load(
             [
@@ -352,7 +352,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'directory' => 'somewhere/else',
                         'ignore_tables' => ['foobar'],
                         'keep_max' => 10,
-                        'keep_periods' => [1, 2, 7, 14, 30, 60],
+                        'keep_intervals' => ['1D', '2D', '7D', '14D', '1M', '1Y'],
                     ],
                 ],
             ],
@@ -370,7 +370,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertInstanceOf(Definition::class, $retentionPolicyDefinition);
         $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
         $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
-        $this->assertSame([1, 2, 7, 14, 30, 60], $retentionPolicyDefinition->getArgument(1));
+        $this->assertSame(['1D', '2D', '7D', '14D', '1M', '1Y'], $retentionPolicyDefinition->getArgument(1));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void
