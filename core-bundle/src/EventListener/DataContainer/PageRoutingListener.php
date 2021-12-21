@@ -55,14 +55,12 @@ class PageRoutingListener
     public function generateRouteConflicts(DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $currentPage = $pageAdapter->findByPk($dc->id);
+        $currentPage = $pageAdapter->findWithDetails($dc->id);
 
         if (null === $currentPage) {
             return '';
         }
 
-        $currentPage->loadDetails();
-        $currentUrl = $this->buildUrl($currentPage->alias, $currentPage->urlPrefix, $currentPage->urlSuffix);
         $aliasPages = $pageAdapter->findSimilarByAlias($currentPage);
 
         if (null === $aliasPages) {
@@ -70,6 +68,8 @@ class PageRoutingListener
         }
 
         $conflicts = [];
+        $currentUrl = $this->buildUrl($currentPage->alias, $currentPage->urlPrefix, $currentPage->urlSuffix);
+        $backendAdapter = $this->framework->getAdapter(Backend::class);
 
         foreach ($aliasPages as $aliasPage) {
             $aliasPage->loadDetails();
@@ -82,7 +82,7 @@ class PageRoutingListener
             $conflicts[] = [
                 'page' => $aliasPage,
                 'route' => $this->pageRegistry->getRoute($aliasPage),
-                'editUrl' => Backend::addToUrl(sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
+                'editUrl' => $backendAdapter->addToUrl(sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }
 
