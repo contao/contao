@@ -192,6 +192,6 @@ class PreviewFactory
         $hash = substr(md5(implode('|', $hashData)), 0, 9);
         $pathinfo = pathinfo($path);
 
-        return $hash[0].'/'.$pathinfo['filename'].'-'.substr($hash, 1);
+        return Path::join($hash[0], $pathinfo['filename'].'-'.substr($hash, 1));
     }
 }
