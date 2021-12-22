@@ -123,7 +123,7 @@ class DefaultIndexer implements IndexerInterface
     }
 
     /**
-     * @throws IndexerException
+     * @return never
      */
     private function throwBecause(string $message, bool $onlyWarning = true): void
     {

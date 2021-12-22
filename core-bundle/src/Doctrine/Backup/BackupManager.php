@@ -109,9 +109,6 @@ class BackupManager
         $this->executeTransactional(fn () => $this->doRestore($config));
     }
 
-    /**
-     * @throws BackupManagerException
-     */
     private function executeTransactional(\Closure $func): void
     {
         $isAutoCommit = $this->connection->isAutoCommit();
@@ -133,9 +130,6 @@ class BackupManager
         }
     }
 
-    /**
-     * @throws BackupManagerException
-     */
     private function doCreate(CreateConfig $config): void
     {
         $backup = $config->getBackup();

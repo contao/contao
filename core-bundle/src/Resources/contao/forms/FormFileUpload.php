@@ -17,6 +17,8 @@ use Contao\CoreBundle\Monolog\ContaoContext;
  *
  * @property boolean $mandatory
  * @property integer $maxlength
+ * @property integer $maxImageWidth
+ * @property integer $maxImageHeight
  * @property integer $fSize
  * @property string  $extensions
  * @property string  $uploadFolder
@@ -181,23 +183,23 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 
 		if ($arrImageSize = @getimagesize($file['tmp_name']))
 		{
-			$intImageWidth = Config::get('imageWidth');
+			$intImageWidth = $this->maxImageWidth ?: Config::get('imageWidth');
 
 			// Image exceeds maximum image width
 			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], Config::get('imageWidth')));
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], $intImageWidth));
 				unset($_FILES[$this->strName]);
 
 				return;
 			}
 
-			$intImageHeight = Config::get('imageHeight');
+			$intImageHeight = $this->maxImageHeight ?: Config::get('imageHeight');
 
 			// Image exceeds maximum image height
 			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], Config::get('imageHeight')));
+				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], $intImageHeight));
 				unset($_FILES[$this->strName]);
 
 				return;
