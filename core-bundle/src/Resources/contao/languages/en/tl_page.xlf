@@ -42,7 +42,7 @@
         <source>Enable maintenance mode</source>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.1">
-        <source>Shows a page to all visitors that this website is currently under maintenance.</source>
+        <source>Show visitors a page that this website is currently being maintained.</source>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
