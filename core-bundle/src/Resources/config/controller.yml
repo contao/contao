@@ -95,14 +95,18 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\Page\Error4xxPageController:
+        arguments:
+            - '@contao.framework'
+
+    Contao\CoreBundle\Controller\Page\RootPageController: ~
+
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
             - '@contao.framework'
             - '@event_dispatcher'
         tags:
             - controller.service_arguments
-
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
 
     Contao\CoreBundle\Controller\SitemapController:
         arguments:

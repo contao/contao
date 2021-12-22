@@ -183,8 +183,6 @@ class BackendController extends AbstractController
      * It will determine the current provider URL based on the value, which is usually
      * read dynamically via JavaScript.
      *
-     * @throws BadRequestHttpException
-     *
      * @Route("/picker", name="contao_backend_picker")
      */
     public function pickerAction(Request $request): RedirectResponse

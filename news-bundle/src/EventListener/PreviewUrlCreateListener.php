@@ -34,8 +34,6 @@ class PreviewUrlCreateListener
 
     /**
      * Adds the news ID to the front end preview URL.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
