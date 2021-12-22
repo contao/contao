@@ -82,8 +82,17 @@ class ModuleFaqReader extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-		$this->Template->referer = 'javascript:history.go(-1)';
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['faqOverview'];
+		}
+		else
+		{
+			// Backwards compatibility
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+			$this->Template->referer = 'javascript:history.go(-1)';
+		}
 
 		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->faq_categories);
 

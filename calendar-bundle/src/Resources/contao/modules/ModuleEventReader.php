@@ -87,8 +87,18 @@ class ModuleEventReader extends Events
 		global $objPage;
 
 		$this->Template->event = '';
-		$this->Template->referer = 'javascript:history.go(-1)';
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['eventOverview'];
+		}
+		else
+		{
+			// Backwards compatibility
+			$this->Template->referer = 'javascript:history.go(-1)';
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+		}
 
 		// Get the current event
 		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
