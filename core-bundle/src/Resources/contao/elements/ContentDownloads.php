@@ -321,7 +321,8 @@ class ContentDownloads extends ContentElement
 		{
 			return $container->get('contao.image.preview_factory')->createPreviewFigureBuilder($container->getParameter('kernel.project_dir') . '/' . $path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData();
 		}
-		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception) {
+		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+		{
 			return null;
 		}
 	}
