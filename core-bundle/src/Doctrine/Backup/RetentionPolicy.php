@@ -24,7 +24,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
     public function __construct(int $keepMax, array $keepIntervals = [])
     {
         $this->keepMax = $keepMax;
-        $this->keepIntervals = $this->createKeepIntervals($keepIntervals);
+        $this->keepIntervals = self::validateAndSortIntervals($keepIntervals);
     }
 
     public function apply(Backup $latestBackup, array $allBackups): array
@@ -45,7 +45,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
                 foreach (array_keys($assignedPerInterval) as $intervalReadable) {
                     $interval = $this->keepIntervals[$intervalReadable];
 
-                    if (-1 === $this->compareDateIntervals($latestDateTime->diff($backup->getCreatedAt(), true), $interval)) {
+                    if (-1 === self::compareDateIntervals($latestDateTime->diff($backup->getCreatedAt(), true), $interval)) {
                         $assignedPerInterval[$intervalReadable] = $backup;
                     }
                 }
@@ -69,7 +69,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
     /**
      * @throws \Exception
      */
-    private function createKeepIntervals(array $keepIntervals): array
+    public static function validateAndSortIntervals(array $keepIntervals): array
     {
         $intervalsNew = [];
 
@@ -77,12 +77,12 @@ final class RetentionPolicy implements RetentionPolicyInterface
             $intervalsNew[$interval] = new \DateInterval('P'.$interval);
         }
 
-        uasort($intervalsNew, fn (\DateInterval $a, \DateInterval $b) => $this->compareDateIntervals($a, $b));
+        uasort($intervalsNew, static fn (\DateInterval $a, \DateInterval $b) => self::compareDateIntervals($a, $b));
 
         return $intervalsNew;
     }
 
-    private function compareDateIntervals(\DateInterval $a, \DateInterval $b): int
+    private static function compareDateIntervals(\DateInterval $a, \DateInterval $b): int
     {
         $ref = new \DateTime();
         $aRef = clone $ref;
