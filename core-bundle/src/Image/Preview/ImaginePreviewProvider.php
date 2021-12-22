@@ -44,7 +44,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
     public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void
     {
         try {
-            $image = $this->imagine->open($sourcePath);
+            $image = $this->imagine->open($sourcePath)->layers()->get(0);
             $targetSize = $this->getDimensionsFromImageSize($image->getSize(), $size)->getSize();
 
             $image

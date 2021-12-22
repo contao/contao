@@ -88,7 +88,7 @@ class PreviewFactory
         $size = (int) (2 ** log($size, 2));
 
         // Minimum size for previews
-        $size = max(self::MINIMUM_SIZE, $size);
+        $size = 0 === $size ? 0 : max(self::MINIMUM_SIZE, $size);
 
         $cachePath = $this->createCachePath($path, $size, $previewOptions);
         $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $this->cacheDir.'/'.$cachePath).'.*';
