@@ -149,7 +149,7 @@ class News extends Frontend
 		{
 			$arrUrls = array();
 
-			/** @var RequestStack */
+			/** @var RequestStack $requestStack */
 			$requestStack = $container->get('request_stack');
 
 			$origObjPage = $GLOBALS['objPage'] ?? null;
