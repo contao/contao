@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
+use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 use Contao\Model\Collection;
 
 /**
@@ -177,7 +179,7 @@ class ContentDownloads extends ContentElement
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
 					'path'      => $objFile->dirname,
-					'preview'   => $this->showPreview ? System::getContainer()->get('contao.image.preview_factory')->createPreviewFigureBuilder(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData() : null,
+					'preview'   => $this->getPreview($objFile->path),
 				);
 
 				$auxDate[] = $objFile->mtime;
@@ -255,7 +257,7 @@ class ContentDownloads extends ContentElement
 						'meta'      => $arrMeta,
 						'extension' => $objFile->extension,
 						'path'      => $objFile->dirname,
-						'preview'   => $this->showPreview ? System::getContainer()->get('contao.image.preview_factory')->createPreviewFigureBuilder(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFile->path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData() : null,
+						'preview'   => $this->getPreview($objFile->path),
 					);
 
 					$auxDate[] = $objFile->mtime;
@@ -304,6 +306,24 @@ class ContentDownloads extends ContentElement
 		}
 
 		$this->Template->files = array_values($files);
+	}
+
+	private function getPreview(string $path): ?array
+	{
+		if (!$this->showPreview)
+		{
+			return null;
+		}
+
+		$container = System::getContainer();
+
+		try
+		{
+			return $container->get('contao.image.preview_factory')->createPreviewFigureBuilder($container->getParameter('kernel.project_dir') . '/' . $path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData();
+		}
+		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception) {
+			return null;
+		}
 	}
 }
 
