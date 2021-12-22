@@ -13,11 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Preview;
 
 use Contao\Image\ImageDimensions;
+use Imagine\Factory\ClassFactoryInterface;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Gmagick\Imagine as GmagickImagine;
 use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
+use Imagine\Image\Palette\CMYK;
+use Imagine\Image\Palette\Grayscale;
+use Imagine\Image\Palette\RGB;
 use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
@@ -44,7 +49,12 @@ class ImaginePreviewProvider implements PreviewProviderInterface
     public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void
     {
         try {
-            $image = $this->imagine->open($sourcePath)->layers()->get(0);
+            if ($this->imagine instanceof ImagickImagine && 'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))) {
+                $image = $this->openImagickPdf($sourcePath);
+            } else {
+                $image = $this->imagine->open($sourcePath)->layers()->get(0);
+            }
+
             $targetSize = $this->getDimensionsFromImageSize($image->getSize(), $size)->getSize();
 
             $image
@@ -58,20 +68,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
     public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions
     {
-        $imageSize = null;
-
-        // Try to get the size from the file header to increase performance
-        if ('' !== $fileHeader) {
-            try {
-                $imageSize = $this->imagine->load($fileHeader)->getSize();
-            } catch (\Throwable $exception) {
-                // Unable to get the size from the file header, need to load
-                // the whole file instead
-            }
-        }
-
-        if (null === $imageSize) {
-            $imageSize = $this->imagine->open($path)->getSize();
+        if ($this->imagine instanceof ImagickImagine && 'pdf' === strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
+            $imageSize = $this->openImagickPdf($path)->getSize();
+        } else {
+            $imageSize = $this->imagine->open($path)->layers()->get(0)->getSize();
         }
 
         return $this->getDimensionsFromImageSize($imageSize, $size);
@@ -119,5 +119,27 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         }
 
         throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', \get_class($this->imagine)));
+    }
+
+    private function openImagickPdf(string $sourcePath): ImageInterface
+    {
+        $imagick = new \Imagick();
+        $imagick->setResolution(144, 144);
+        $imagick->readImage($sourcePath.'[0]');
+
+        $palette = new RGB();
+
+        if (\Imagick::COLORSPACE_CMYK === $imagick->getImageColorspace()) {
+            $palette = new CMYK();
+        } elseif (\Imagick::COLORSPACE_GRAY === $imagick->getImageColorspace()) {
+            $palette = new Grayscale();
+        }
+
+        return $this->imagine->getClassFactory()->createImage(
+            ClassFactoryInterface::HANDLE_IMAGICK,
+            $imagick,
+            $palette,
+            $this->imagine->getMetadataReader()->readFile($sourcePath),
+        );
     }
 }
