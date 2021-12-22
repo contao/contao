@@ -59,6 +59,44 @@ class ServiceUnavailableListenerTest extends TestCase
         $listener($event);
     }
 
+    public function testDoesNotThrowExceptionInPreviewEntryPoint(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel
+            ->expects($this->never())
+            ->method('loadDetails')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+        $request->attributes->set('_preview', true);
+        $request->attributes->set('pageModel', $pageModel);
+
+        $event = $this->mockEvent($request);
+
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $this->mockJwtManager(null));
+        $listener($event);
+    }
+
+    public function testDoesNotThrowExceptionIfRouteBypassesMaintenance(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel
+            ->expects($this->never())
+            ->method('loadDetails')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('_scope', 'frontend');
+        $request->attributes->set('_bypass_maintenance', true);
+        $request->attributes->set('pageModel', $pageModel);
+
+        $event = $this->mockEvent($request);
+
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $this->mockJwtManager(null));
+        $listener($event);
+    }
+
     public function testDoesNotThrowExceptionIfMaintenanceIsDisabledByJwt(): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);

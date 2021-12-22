@@ -40,6 +40,7 @@ class ServiceUnavailableListener
         if (
             !$this->scopeMatcher->isFrontendMainRequest($event)
             || $request->attributes->get('_preview', false)
+            || $request->attributes->get('_bypass_maintenance', false)
             || $this->isDisabledByJwt($request)
         ) {
             return;
