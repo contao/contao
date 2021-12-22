@@ -20,21 +20,16 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfig;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
-use Contao\CoreBundle\Filesystem\Dbafs;
-use Contao\CoreBundle\Filesystem\DbafsFilesystem;
-use Contao\CoreBundle\Filesystem\DbafsFilesystemOperator;
-use Contao\CoreBundle\Filesystem\Hashing\HashGenerator;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
-use Doctrine\DBAL\Connection;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
-use League\Flysystem\FilesystemOperator;
-use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -44,12 +39,11 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoCoreExtension extends Extension implements PrependExtensionInterface
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
     public function getAlias(): string
     {
@@ -146,7 +140,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
-        $this->handleVirtualFilesystemConfig($config['virtual_filesystem'], $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -206,6 +199,24 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 $definition->addTag('contao.picker_provider', get_object_vars($attribute));
             }
         );
+    }
+
+    public function configureFilesystem(FilesystemConfig $config): void
+    {
+        // 'files' storage
+        $config
+            ->addDefaultDbafs(
+                'files',
+                'tl_files',
+                'md5',
+                214783648,
+                100,
+                true,
+                'files'
+            )
+            ->mountLocalAdapter('files', '%kernel.project_dir%/files')
+            ->addVirtualFilesystem('files', 'files')
+        ;
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void

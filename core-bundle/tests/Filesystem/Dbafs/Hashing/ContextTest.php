@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Filesystem\Hashing;
+namespace Contao\CoreBundle\Tests\Filesystem\Dbafs\Hashing;
 
-use Contao\CoreBundle\Filesystem\Hashing\Context;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Tests\TestCase;
 
 class ContextTest extends TestCase

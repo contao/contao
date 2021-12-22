@@ -10,16 +10,17 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem;
+namespace Contao\CoreBundle\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
-use Contao\CoreBundle\Filesystem\Hashing\Context;
-use Contao\CoreBundle\Filesystem\Hashing\HashGeneratorInterface;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Doctrine\DBAL\Connection;
-use League\Flysystem\FileAttributes;
-use League\Flysystem\FilesystemAdapter;
+use Doctrine\DBAL\Schema\Column;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
@@ -28,15 +29,13 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @phpstan-type DatabasePaths array<string, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
  * @phpstan-type FilesystemPaths \Generator<string, self::RESOURCE_*>
+ * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: array<string, mixed>}
  *
  * @phpstan-import-type CreateItemDefinition from ChangeSet
  * @phpstan-import-type UpdateItemDefinition from ChangeSet
  * @phpstan-import-type DeleteItemDefinition from ChangeSet
- *
- * @phpstan-import-type Record from DbafsInterface
- * @phpstan-import-type ExtraMetadata from DbafsInterface
  */
-class Dbafs implements ResetInterface, DbafsInterface
+class Dbafs implements DbafsInterface, ResetInterface
 {
     public const FILE_MARKER_EXCLUDED = '.nosync';
     public const FILE_MARKER_PUBLIC = '.public';
@@ -46,6 +45,7 @@ class Dbafs implements ResetInterface, DbafsInterface
     private const RESOURCE_DOES_NOT_EXIST = -1;
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
+    private VirtualFilesystemInterface $filesystem;
     private HashGeneratorInterface $hashGenerator;
     private Connection $connection;
     private EventDispatcherInterface $eventDispatcher;
@@ -72,20 +72,19 @@ class Dbafs implements ResetInterface, DbafsInterface
      */
     private array $pathById = [];
 
-    public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher, string $table)
+    /**
+     * @internal Use the "contao.filesystem.dbafs.dbafs_factory" service to create new instances. // todo service name
+     */
+    public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher, VirtualFilesystemInterface $filesystem, string $table)
     {
         $this->hashGenerator = $hashGenerator;
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
 
+        $this->filesystem = $filesystem;
         $this->table = $table;
     }
 
-    /**
-     * @internal
-     *
-     * This is used as a BC layer, do not use a prefix in your own DBAFS tables
-     */
     public function setDatabasePathPrefix(string $prefix): void
     {
         $this->dbPathPrefix = Path::canonicalize($prefix);
@@ -126,13 +125,17 @@ class Dbafs implements ResetInterface, DbafsInterface
         return $this->pathById[$id];
     }
 
-    public function getRecord(string $path): ?array
+    public function getRecord(string $path): ?FilesystemItem
     {
         if (!\array_key_exists($path, $this->records)) {
             $this->loadRecordByPath($path);
         }
 
-        return $this->records[$path];
+        if (null !== ($record = $this->records[$path])) {
+            return $this->toFilesystemItem($record);
+        }
+
+        return null;
     }
 
     public function getRecords(string $path, bool $deep = false): \Generator
@@ -159,7 +162,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 $this->populateRecord($row);
             }
 
-            yield $this->records[$itemPath];
+            yield $this->toFilesystemItem($this->records[$itemPath]);
         }
     }
 
@@ -170,7 +173,7 @@ class Dbafs implements ResetInterface, DbafsInterface
         }
 
         if (!$record['isFile']) {
-            throw new \InvalidArgumentException("Can only set extra metadata for files, directory given under $path.");
+            throw new \LogicException("Can only set extra metadata for files, directory given under $path.");
         }
 
         $row = [
@@ -178,7 +181,17 @@ class Dbafs implements ResetInterface, DbafsInterface
             'path' => $path,
         ];
 
-        $event = new StoreDbafsMetadataEvent($this->table, $row, $metadata);
+        $availableColumns = array_map(
+            static fn (Column $column): string => $column->getName(),
+            $this->connection->createSchemaManager()->listTableColumns($this->table)
+        );
+
+        $event = new StoreDbafsMetadataEvent(
+            $this->table,
+            $row,
+            array_intersect_key(array_flip($availableColumns), $metadata)
+        );
+
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::STORE_DBAFS_METADATA);
 
         $this->connection->update(
@@ -198,15 +211,15 @@ class Dbafs implements ResetInterface, DbafsInterface
         $this->pathById = [];
     }
 
-    public function sync(FilesystemAdapter $filesystem, string ...$scope): ChangeSet
+    public function sync(string ...$paths): ChangeSet
     {
-        [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$scope);
+        [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$paths);
 
         // Gather all needed information from the database and filesystem
         [$dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $allUuidsByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
-        $filesystemIterator = $this->getFilesystemPaths($filesystem, $searchPaths, $parentPaths);
+        $filesystemIterator = $this->getFilesystemPaths($searchPaths, $parentPaths);
 
-        $changeSet = $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $filesystem, $searchPaths);
+        $changeSet = $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $searchPaths);
         $this->applyChangeSet($changeSet, $allUuidsByPath);
 
         // Update previously cached items
@@ -234,19 +247,18 @@ class Dbafs implements ResetInterface, DbafsInterface
     }
 
     /**
-     * Computes the change set between the database and a given filesystem
-     * adapter. @See DbafsInterface::sync() for more details on the $scope
-     * parameter.
+     * Computes the current change set. @See DbafsInterface::sync() for more
+     * details on the $paths parameter.
      */
-    public function computeChangeSet(FilesystemAdapter $filesystem, string ...$scope): ChangeSet
+    public function computeChangeSet(string ...$paths): ChangeSet
     {
-        [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$scope);
+        [$searchPaths, $parentPaths] = $this->getNormalizedSearchPaths(...$paths);
 
         // Gather all needed information from the database and filesystem
         [$dbPaths, $allDbHashesByPath, $allLastModifiedByPath] = $this->getDatabaseEntries($searchPaths, $parentPaths);
-        $filesystemIterator = $this->getFilesystemPaths($filesystem, $searchPaths, $parentPaths);
+        $filesystemIterator = $this->getFilesystemPaths($searchPaths, $parentPaths);
 
-        return $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $filesystem, $searchPaths);
+        return $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $searchPaths);
     }
 
     public function supportsLastModified(): bool
@@ -265,6 +277,21 @@ class Dbafs implements ResetInterface, DbafsInterface
     }
 
     /**
+     * @phpstan-param Record $record
+     */
+    private function toFilesystemItem(array $record): FilesystemItem
+    {
+        return new FilesystemItem(
+            $record['isFile'],
+            $record['path'],
+            $record['lastModified'] ?? 0,
+            $record['fileSize'] ?? 0,
+            $record['mimeType'] ?? '',
+            $record['extra']
+        );
+    }
+
+    /**
      * @param array<string, int>      $dbPaths
      * @param array<string, string>   $allDbHashesByPath
      * @param array<string, int|null> $allLastModifiedByPath
@@ -274,7 +301,7 @@ class Dbafs implements ResetInterface, DbafsInterface
      * @phpstan-param DatabasePaths $dbPaths
      * @phpstan-param FilesystemPaths $filesystemIterator
      */
-    private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, FilesystemAdapter $filesystem, array $searchPaths): ChangeSet
+    private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, array $searchPaths): ChangeSet
     {
         // We're identifying items by their (old) path and store any detected
         // changes as an array of definitions
@@ -314,7 +341,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 $fallback = $this->useLastModified && null !== $oldLastModified ? $oldHash : null;
 
                 $hashContext = new Context($fallback, $oldLastModified);
-                $this->hashGenerator->hashFileContent($filesystem, $path, $hashContext);
+                $this->hashGenerator->hashFileContent($this->filesystem, $path, $hashContext);
 
                 if ($this->useLastModified && $hashContext->lastModifiedChanged()) {
                     $lastModifiedUpdates[$path] = $hashContext->getLastModified();
@@ -693,17 +720,18 @@ class Dbafs implements ResetInterface, DbafsInterface
      * @return \Generator<string, int>
      * @phpstan-return FilesystemPaths
      */
-    private function getFilesystemPaths(FilesystemAdapter $filesystem, array $searchPaths, array $parentDirectories): \Generator
+    private function getFilesystemPaths(array $searchPaths, array $parentDirectories): \Generator
     {
-        $traverseRecursively = function (string $directory, bool $shallow = false) use (&$traverseRecursively, $filesystem): \Generator {
-            if ($filesystem->fileExists(Path::join($directory, self::FILE_MARKER_EXCLUDED))) {
+        $traverseRecursively = function (string $directory, bool $shallow = false) use (&$traverseRecursively): \Generator {
+            if ($this->filesystem->fileExists(Path::join($directory, self::FILE_MARKER_EXCLUDED), VirtualFilesystemInterface::BYPASS_DBAFS)) {
                 return;
             }
 
-            foreach ($filesystem->listContents($directory, false) as $entry) {
-                $path = $entry->path();
+            /** @var FilesystemItem $item */
+            foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
+                $path = $item->getPath();
 
-                if (!$entry instanceof FileAttributes) {
+                if (!$item->isFile()) {
                     if (!$shallow) {
                         yield from $traverseRecursively($path);
                     }
@@ -717,7 +745,7 @@ class Dbafs implements ResetInterface, DbafsInterface
                 }
 
                 // Ignore files that are too big
-                if ($entry->fileSize() > $this->maxFileSize) {
+                if ($item->getFileSize() > $this->maxFileSize) {
                     continue;
                 }
 
@@ -730,11 +758,12 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
         };
 
-        $analyzeDirectory = static function (string $path) use ($filesystem): array {
+        $analyzeDirectory = function (string $path): array {
             $paths = [];
 
-            foreach ($filesystem->listContents($path, false) as $entry) {
-                $paths[$entry->path()] = $entry->isDir();
+            /** @var FilesystemItem $entry */
+            foreach ($this->filesystem->listContents($path, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $entry) {
+                $paths[$entry->getPath()] = !$entry->isFile();
             }
 
             return $paths;
@@ -762,7 +791,7 @@ class Dbafs implements ResetInterface, DbafsInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                if (!$shallow && $filesystem->fileExists($searchPath)) {
+                if (!$shallow && $this->filesystem->fileExists($searchPath, VirtualFilesystemInterface::BYPASS_DBAFS)) {
                     // Yield file
                     yield $searchPath => self::RESOURCE_FILE;
 
@@ -787,6 +816,50 @@ class Dbafs implements ResetInterface, DbafsInterface
         foreach ($parentDirectories as $parentDirectory) {
             yield $parentDirectory => self::RESOURCE_DIRECTORY;
         }
+    }
+
+    /**
+     * Returns true if a path is inside any of the given base paths. All
+     * provided paths are expected to be normalized and may contain a double
+     * slash (//) as suffix.
+     *
+     * If $considerShallowDirectories is set to false, paths that are directly
+     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
+     * truthy result.
+     *
+     * @param array<string> $basePaths
+     */
+    private function inPath(string $path, array $basePaths, bool $considerShallowDirectories = true): bool
+    {
+        foreach ($basePaths as $basePath) {
+            // Any sub path
+            if (0 === mb_strpos($path.'/', $basePath.'/')) {
+                return true;
+            }
+
+            if (!$considerShallowDirectories) {
+                continue;
+            }
+
+            // Direct child of shallow directory
+            $basePath = preg_quote(rtrim($basePath, '/'), '@');
+
+            if ($path === $basePath || 1 === preg_match("@^$basePath/[^/]*(//)?$@", $path)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function convertToDatabasePath(string $filesystemPath): string
+    {
+        return Path::join($this->dbPathPrefix, $filesystemPath);
+    }
+
+    private function convertToFilesystemPath(string $databasePath): string
+    {
+        return Path::makeRelative($databasePath, $this->dbPathPrefix);
     }
 
     /**
@@ -882,49 +955,5 @@ class Dbafs implements ResetInterface, DbafsInterface
         rsort($parentPaths);
 
         return [$searchPaths, $parentPaths];
-    }
-
-    /**
-     * Returns true if a path is inside any of the given base paths. All
-     * provided paths are expected to be normalized and may contain a double
-     * slash (//) as suffix.
-     *
-     * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
-     * truthy result.
-     *
-     * @param array<string> $basePaths
-     */
-    private function inPath(string $path, array $basePaths, bool $considerShallowDirectories = true): bool
-    {
-        foreach ($basePaths as $basePath) {
-            // Any sub path
-            if (0 === mb_strpos($path.'/', $basePath.'/')) {
-                return true;
-            }
-
-            if (!$considerShallowDirectories) {
-                continue;
-            }
-
-            // Direct child of shallow directory
-            $basePath = preg_quote(rtrim($basePath, '/'), '@');
-
-            if ($path === $basePath || 1 === preg_match("@^$basePath/[^/]*(//)?$@", $path)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private function convertToDatabasePath(string $filesystemPath): string
-    {
-        return Path::join($this->dbPathPrefix, $filesystemPath);
-    }
-
-    private function convertToFilesystemPath(string $databasePath): string
-    {
-        return Path::makeRelative($databasePath, $this->dbPathPrefix);
     }
 }

@@ -10,16 +10,18 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Filesystem;
+namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
-use Contao\CoreBundle\Filesystem\ChangeSet;
-use Contao\CoreBundle\Filesystem\Dbafs;
-use Contao\CoreBundle\Filesystem\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -56,7 +58,7 @@ class DbafsTest extends TestCase
         // Subsequent calls (no matter which identifier) should be served from cache
         $this->assertSame('foo/bar1', $dbafs->getPathFromId(1));
         $this->assertSame('foo/bar1', $dbafs->getPathFromUuid($uuid1));
-        $this->assertSame('foo/bar1', $dbafs->getRecord('foo/bar1')['path']);
+        $this->assertSame('foo/bar1', $dbafs->getRecord('foo/bar1')->getPath());
         $this->assertSame('foo/bar2', $dbafs->getPathFromId(2));
     }
 
@@ -100,9 +102,9 @@ class DbafsTest extends TestCase
         $record = $dbafs->getRecord('foo/bar');
 
         $this->assertNotNull($record);
-        $this->assertSame('foo/bar', $record['path']);
-        $this->assertTrue($record['isFile']);
-        $this->assertSame(['foo' => 'bar'], $record['extra']); // defined via event
+        $this->assertSame('foo/bar', $record->getPath());
+        $this->assertTrue($record->isFile());
+        $this->assertSame(['foo' => 'bar'], $record->getExtraMetadata()); // defined via event
     }
 
     public function testGetUnknownRecord(): void
@@ -146,14 +148,14 @@ class DbafsTest extends TestCase
         $this->assertCount(3, $records);
         [$record1, $record2, $record3] = $records;
 
-        $this->assertSame('foo/first', $record1['path']);
-        $this->assertTrue($record1['isFile']);
+        $this->assertSame('foo/first', $record1->getPath());
+        $this->assertTrue($record1->isFile());
 
-        $this->assertSame('foo/second', $record2['path']);
-        $this->assertTrue($record2['isFile']);
+        $this->assertSame('foo/second', $record2->getPath());
+        $this->assertTrue($record2->isFile());
 
-        $this->assertSame('foo/bar', $record3['path']);
-        $this->assertFalse($record3['isFile']);
+        $this->assertSame('foo/bar', $record3->getPath());
+        $this->assertFalse($record3->isFile());
     }
 
     public function testGetMultipleRecordsNested(): void
@@ -181,17 +183,17 @@ class DbafsTest extends TestCase
         $this->assertCount(4, $records);
         [$record1, $record2, $record3, $record4] = $records;
 
-        $this->assertSame('foo/first', $record1['path']);
-        $this->assertTrue($record1['isFile']);
+        $this->assertSame('foo/first', $record1->getPath());
+        $this->assertTrue($record1->isFile());
 
-        $this->assertSame('foo/second', $record2['path']);
-        $this->assertTrue($record2['isFile']);
+        $this->assertSame('foo/second', $record2->getPath());
+        $this->assertTrue($record2->isFile());
 
-        $this->assertSame('foo/bar', $record3['path']);
-        $this->assertFalse($record3['isFile']);
+        $this->assertSame('foo/bar', $record3->getPath());
+        $this->assertFalse($record3->isFile());
 
-        $this->assertSame('foo/bar/third', $record4['path']);
-        $this->assertTrue($record4['isFile']);
+        $this->assertSame('foo/bar/third', $record4->getPath());
+        $this->assertTrue($record4->isFile());
     }
 
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
@@ -215,7 +217,7 @@ class DbafsTest extends TestCase
 
         $record = $dbafs->getRecord('foo/bar');
         $this->assertNotNull($record);
-        $this->assertSame('foo/bar', $record['path']);
+        $this->assertSame('foo/bar', $record->getPath());
 
         $this->assertSame('foo/bar', $dbafs->getPathFromId(1));
         $this->assertSame('foo/bar', $dbafs->getPathFromUuid($uuid));
@@ -241,13 +243,13 @@ class DbafsTest extends TestCase
 
         $this->assertSame('foo/bar', $dbafs->getPathFromId(1));
         $this->assertSame('foo/bar', $dbafs->getPathFromUuid($uuid1));
-        $this->assertSame('foo/bar', $dbafs->getRecord('foo/bar')['path']);
+        $this->assertSame('foo/bar', $dbafs->getRecord('foo/bar')->getPath());
 
         $dbafs->reset();
 
         $this->assertSame('other/path', $dbafs->getPathFromId(1));
         $this->assertSame('other/path', $dbafs->getPathFromUuid($uuid2));
-        $this->assertSame('other/path', $dbafs->getRecord('other/path')['path']);
+        $this->assertSame('other/path', $dbafs->getRecord('other/path')->getPath());
     }
 
     /**
@@ -331,12 +333,11 @@ class DbafsTest extends TestCase
     public function testRejectsInvalidPaths(array $paths, string $expectedException): void
     {
         $dbafs = $this->getDbafs();
-        $filesystem = $this->createMock(FilesystemAdapter::class);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($expectedException);
 
-        $dbafs->computeChangeSet($filesystem, ...$paths);
+        $dbafs->computeChangeSet(...$paths);
     }
 
     public function provideInvalidSearchPaths(): \Generator
@@ -367,7 +368,7 @@ class DbafsTest extends TestCase
      *
      * @param string|array<int, string> $scope
      */
-    public function testComputeChangeSet(FilesystemAdapter $filesystem, $scope, ChangeSet $expected): void
+    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, $scope, ChangeSet $expected): void
     {
         /*
          * Demo file structure present in the database:
@@ -407,12 +408,12 @@ class DbafsTest extends TestCase
             ])
         ;
 
-        $dbafs = $this->getDbafs($connection);
+        $dbafs = $this->getDbafs($connection, $filesystem);
 
         // Lower max file size, so that we can test the limit without excessive memory usage
         $dbafs->setMaxFileSize(100);
 
-        $changeSet = $dbafs->computeChangeSet($filesystem, ...((array) $scope));
+        $changeSet = $dbafs->computeChangeSet(...((array) $scope));
 
         $this->assertSame(
             $expected->getItemsToCreate(),
@@ -435,9 +436,11 @@ class DbafsTest extends TestCase
 
     public function provideFilesystemsAndExpectedChangeSets(): \Generator
     {
-        $getFilesystemWithChanges = static function (callable ...$modifications): FilesystemAdapter {
-            $adapter = new InMemoryFilesystemAdapter();
-            $filesystem = new Filesystem($adapter);
+        $getFilesystem = function (): VirtualFilesystemInterface {
+            $filesystem = new VirtualFilesystem(
+                new MountManager(new InMemoryFilesystemAdapter()),
+                $this->createMock(DbafsManager::class)
+            );
 
             $filesystem->write('file1', 'fly');
             $filesystem->write('file2', 'me');
@@ -450,24 +453,19 @@ class DbafsTest extends TestCase
             $filesystem->write('bar/file5b', '');
             $filesystem->createDirectory('empty-dir');
 
-            foreach ($modifications as $modification) {
-                $modification($filesystem);
-            }
-
-            return $adapter;
+            return $filesystem;
         };
 
-        $adapter1 = $getFilesystemWithChanges();
+        $filesystem1 = $getFilesystem();
         $emptyChangeSet = new ChangeSet([], [], []);
 
-        yield 'no changes; full sync' => [$adapter1, '', $emptyChangeSet];
-        yield 'no changes; partial sync with directory' => [$adapter1, 'foo/**', $emptyChangeSet];
-        yield 'no changes; partial sync with file' => [$adapter1, 'foo/file3', $emptyChangeSet];
-        yield 'no changes; partial sync with multiple' => [$adapter1, ['foo/*', 'bar/**'], $emptyChangeSet];
+        yield 'no changes; full sync' => [$filesystem1, '', $emptyChangeSet];
+        yield 'no changes; partial sync with directory' => [$filesystem1, 'foo/**', $emptyChangeSet];
+        yield 'no changes; partial sync with file' => [$filesystem1, 'foo/file3', $emptyChangeSet];
+        yield 'no changes; partial sync with multiple' => [$filesystem1, ['foo/*', 'bar/**'], $emptyChangeSet];
 
-        $adapter2 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->write('bar/new-file', 'new')
-        );
+        $filesystem2 = $getFilesystem();
+        $filesystem2->write('bar/new-file', 'new');
 
         $changeSet2 = new ChangeSet(
             [
@@ -479,15 +477,14 @@ class DbafsTest extends TestCase
             []
         );
 
-        yield 'added file; full sync' => [$adapter2, '', $changeSet2];
-        yield 'added file; partial sync with directory' => [$adapter2, 'bar/**', $changeSet2];
-        yield 'added file; partial sync with file' => [$adapter2, 'bar/new-file', $changeSet2];
-        yield 'added file outside scope' => [$adapter2, 'foo/**', $emptyChangeSet];
+        yield 'added file; full sync' => [$filesystem2, '', $changeSet2];
+        yield 'added file; partial sync with directory' => [$filesystem2, 'bar/**', $changeSet2];
+        yield 'added file; partial sync with file' => [$filesystem2, 'bar/new-file', $changeSet2];
+        yield 'added file outside scope' => [$filesystem2, 'foo/**', $emptyChangeSet];
 
-        $adapter3 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->delete('file1'),
-            static fn (Filesystem $fs) => $fs->delete('foo/baz/file4'),
-        );
+        $filesystem3 = $getFilesystem();
+        $filesystem3->delete('file1');
+        $filesystem3->delete('foo/baz/file4');
 
         $changeSet3 = new ChangeSet(
             [],
@@ -501,11 +498,11 @@ class DbafsTest extends TestCase
             ]
         );
 
-        yield 'removed files; full sync' => [$adapter3, '', $changeSet3];
-        yield 'removed files; partial sync with all affected' => [$adapter3, ['file1', 'foo/baz/file4'], $changeSet3];
+        yield 'removed files; full sync' => [$filesystem3, '', $changeSet3];
+        yield 'removed files; partial sync with all affected' => [$filesystem3, ['file1', 'foo/baz/file4'], $changeSet3];
 
         yield 'removed files; partial sync with directory' => [
-            $adapter3,
+            $filesystem3,
             'foo/**',
             new ChangeSet(
                 [],
@@ -520,7 +517,7 @@ class DbafsTest extends TestCase
         ];
 
         yield 'removed files; partial sync with single file' => [
-            $adapter3,
+            $filesystem3,
             'file1',
             new ChangeSet(
                 [],
@@ -531,9 +528,8 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter4 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->move('foo/file3', 'bar/file3'),
-        );
+        $filesystem4 = $getFilesystem();
+        $filesystem4->move('foo/file3', 'bar/file3');
 
         $changeSet4 = new ChangeSet(
             [],
@@ -545,11 +541,11 @@ class DbafsTest extends TestCase
             []
         );
 
-        yield 'moved file; full sync' => [$adapter4, '', $changeSet4];
-        yield 'moved file; partial sync with source and target' => [$adapter4, ['foo/file3', 'bar/file3'], $changeSet4];
+        yield 'moved file; full sync' => [$filesystem4, '', $changeSet4];
+        yield 'moved file; partial sync with source and target' => [$filesystem4, ['foo/file3', 'bar/file3'], $changeSet4];
 
         yield 'file moved outside scope' => [
-            $adapter4,
+            $filesystem4,
             'foo/**',
             new ChangeSet(
                 [],
@@ -562,9 +558,8 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter5 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->move('foo/file3', 'foo/baz/track-me'),
-        );
+        $filesystem5 = $getFilesystem();
+        $filesystem5->move('foo/file3', 'foo/baz/track-me');
 
         $changeSet5 = new ChangeSet(
             [],
@@ -576,16 +571,15 @@ class DbafsTest extends TestCase
             []
         );
 
-        yield 'moved and renamed file (full sync)' => [$adapter5, '', $changeSet5];
-        yield 'moved and renamed file (partial sync)' => [$adapter5, 'foo/**', $changeSet5];
+        yield 'moved and renamed file (full sync)' => [$filesystem5, '', $changeSet5];
+        yield 'moved and renamed file (partial sync)' => [$filesystem5, 'foo/**', $changeSet5];
 
-        $adapter6 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->write('file1', 'new-content'),
-            static fn (Filesystem $fs) => $fs->write('foo/file3', 'new-content'),
-        );
+        $filesystem6 = $getFilesystem();
+        $filesystem6->write('file1', 'new-content');
+        $filesystem6->write('foo/file3', 'new-content');
 
         yield 'changed contents (full sync)' => [
-            $adapter6,
+            $filesystem6,
             '',
             new ChangeSet(
                 [],
@@ -599,7 +593,7 @@ class DbafsTest extends TestCase
         ];
 
         yield 'changed contents (partial sync)' => [
-            $adapter6,
+            $filesystem6,
             'foo/**',
             new ChangeSet(
                 [],
@@ -611,15 +605,14 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter7 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->write('large', str_pad('A', 100)),
-            static fn (Filesystem $fs) => $fs->write('too-large', str_pad('A', 101)),
-            static fn (Filesystem $fs) => $fs->write('bar/'.Dbafs::FILE_MARKER_EXCLUDED, ''),
-            static fn (Filesystem $fs) => $fs->write('foo/'.Dbafs::FILE_MARKER_PUBLIC, '')
-        );
+        $filesystem7 = $getFilesystem();
+        $filesystem7->write('large', str_pad('A', 100));
+        $filesystem7->write('too-large', str_pad('A', 101));
+        $filesystem7->write('bar/'.Dbafs::FILE_MARKER_EXCLUDED, '');
+        $filesystem7->write('foo/'.Dbafs::FILE_MARKER_PUBLIC, '');
 
         yield 'large and ignored files' => [
-            $adapter7,
+            $filesystem7,
             '',
             new ChangeSet(
                 [
@@ -634,16 +627,15 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter8 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->createDirectory('bar/foo'),
-            static fn (Filesystem $fs) => $fs->createDirectory('bar/foo/baz'),
-            static fn (Filesystem $fs) => $fs->move('foo/file3', 'bar/foo/file3'),
-            static fn (Filesystem $fs) => $fs->move('foo/baz/file4', 'bar/foo/baz/file4'),
-            static fn (Filesystem $fs) => $fs->deleteDirectory('foo'),
-        );
+        $filesystem8 = $getFilesystem();
+        $filesystem8->createDirectory('bar/foo');
+        $filesystem8->createDirectory('bar/foo/baz');
+        $filesystem8->move('foo/file3', 'bar/foo/file3');
+        $filesystem8->move('foo/baz/file4', 'bar/foo/baz/file4');
+        $filesystem8->deleteDirectory('foo');
 
         yield 'moved folder' => [
-            $adapter8,
+            $filesystem8,
             '',
             new ChangeSet(
                 [],
@@ -658,13 +650,12 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter9 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->move('bar/file5a', 'file5a'),
-            static fn (Filesystem $fs) => $fs->move('bar/file5b', 'file5b'),
-        );
+        $filesystem9 = $getFilesystem();
+        $filesystem9->move('bar/file5a', 'file5a');
+        $filesystem9->move('bar/file5b', 'file5b');
 
         yield 'tracking by name for files of same hash' => [
-            $adapter9,
+            $filesystem9,
             '',
             new ChangeSet(
                 [],
@@ -677,13 +668,12 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter10 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->delete('foo/file3'),
-            static fn (Filesystem $fs) => $fs->createDirectory('foo/file3'),
-        );
+        $filesystem10 = $getFilesystem();
+        $filesystem10->delete('foo/file3');
+        $filesystem10->createDirectory('foo/file3');
 
         yield 'replacing a file with a folder of the same name' => [
-            $adapter10,
+            $filesystem10,
             '',
             new ChangeSet(
                 [
@@ -698,20 +688,19 @@ class DbafsTest extends TestCase
             ),
         ];
 
-        $adapter11 = $getFilesystemWithChanges(
-            static fn (Filesystem $fs) => $fs->createDirectory('new'),
-            static fn (Filesystem $fs) => $fs->write('new/thing', 'abc'),
-            static fn (Filesystem $fs) => $fs->write('new/'.Dbafs::FILE_MARKER_PUBLIC, ''),
-            static fn (Filesystem $fs) => $fs->createDirectory('ignored'),
-            static fn (Filesystem $fs) => $fs->write('ignored/'.Dbafs::FILE_MARKER_EXCLUDED, ''),
-            static fn (Filesystem $fs) => $fs->move('file1', 'new/file1'),
-            static fn (Filesystem $fs) => $fs->move('file2', 'new/new-name'),
-            static fn (Filesystem $fs) => $fs->delete('bar/file5a'),
-            static fn (Filesystem $fs) => $fs->write('foo/file3', 'new-content'),
-        );
+        $filesystem11 = $getFilesystem();
+        $filesystem11->createDirectory('new');
+        $filesystem11->write('new/thing', 'abc');
+        $filesystem11->write('new/'.Dbafs::FILE_MARKER_PUBLIC, '');
+        $filesystem11->createDirectory('ignored');
+        $filesystem11->write('ignored/'.Dbafs::FILE_MARKER_EXCLUDED, '');
+        $filesystem11->move('file1', 'new/file1');
+        $filesystem11->move('file2', 'new/new-name');
+        $filesystem11->delete('bar/file5a');
+        $filesystem11->write('foo/file3', 'new-content');
 
         yield 'various operations (full sync)' => [
-            $adapter11,
+            $filesystem11,
             '',
             new ChangeSet(
                 [
@@ -732,7 +721,7 @@ class DbafsTest extends TestCase
         ];
 
         yield 'various operations (partial sync)' => [
-            $adapter11,
+            $filesystem11,
             'foo/**',
             new ChangeSet(
                 [],
@@ -861,15 +850,10 @@ class DbafsTest extends TestCase
             )
         ;
 
-        $dbafs = $this->getDbafs($connection);
-        $dbafs->setDatabasePathPrefix('files');
-
-        // Lower bulk insert size so that we do not need excessive amounts of
-        // operations when testing
-        $dbafs->setBulkInsertSize(2);
-
-        $adapter = new InMemoryFilesystemAdapter();
-        $filesystem = new Filesystem($adapter);
+        $filesystem = new VirtualFilesystem(
+            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
 
         $filesystem->createDirectory('foo');
         $filesystem->createDirectory('foo/sub');
@@ -877,10 +861,17 @@ class DbafsTest extends TestCase
         $filesystem->write('foo/file2.dat', 'stuff');
         $filesystem->delete('bar.file');
 
-        $dbafs->sync($adapter);
+        $dbafs = $this->getDbafs($connection, $filesystem);
+        $dbafs->setDatabasePathPrefix('files');
+
+        // Lower bulk insert size so that we do not need excessive amounts of
+        // operations when testing
+        $dbafs->setBulkInsertSize(2);
+
+        $dbafs->sync();
     }
 
-    private function getDbafs(Connection $connection = null): Dbafs
+    private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null): Dbafs
     {
         $connection ??= $this->createMock(Connection::class);
 
@@ -904,7 +895,15 @@ class DbafsTest extends TestCase
             )
         ;
 
-        return new Dbafs(new HashGenerator('md5'), $connection, $eventDispatcher, 'tl_files');
+        $filesystem ??= $this->createMock(VirtualFilesystemInterface::class);
+
+        return new Dbafs(
+            new HashGenerator('md5'),
+            $connection,
+            $eventDispatcher,
+            $filesystem,
+            'tl_files'
+        );
     }
 
     /**

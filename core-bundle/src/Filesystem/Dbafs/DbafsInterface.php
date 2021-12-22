@@ -10,15 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem;
+namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use League\Flysystem\FilesystemAdapter;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @phpstan-type ExtraMetadata array<string, mixed>
- * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: ExtraMetadata}
- */
 interface DbafsInterface
 {
     /**
@@ -28,31 +24,30 @@ interface DbafsInterface
 
     /**
      * Returns a record or null if none was found.
-     *
-     * @phpstan-return Record|null
      */
-    public function getRecord(string $path): ?array;
+    public function getRecord(string $path): ?FilesystemItem;
 
     /**
      * Returns an iterator over all records inside $path. If $deep is true,
      * this also includes all subdirectories (recursively).
      *
-     * @return \Generator<array>
-     * @phpstan-return \Generator<Record>
+     * @return iterable<FilesystemItem>
      */
-    public function getRecords(string $path, bool $deep = false): \Generator;
+    public function getRecords(string $path, bool $deep = false): iterable;
 
     /**
-     * Sets extra metadata for a record.
+     * Sets extra metadata for a record. The given array may contain additional
+     * keys that simply will be ignored if they do not match the internal data
+     * structure.
      *
-     * @phpstan-param ExtraMetadata $metadata
+     * @param array<string, mixed> $metadata
      *
-     * @throws \InvalidArgumentException if provided $path or $metadata is invalid
+     * @throws \InvalidArgumentException if provided $path is invalid
      */
     public function setExtraMetadata(string $path, array $metadata): void;
 
     /**
-     * Synchronizes the database with a given filesystem adapter. If $scope
+     * Synchronizes the database with the configured filesystem. If $scope
      * paths are provided only certain files/directories will be synchronized.
      *
      * Paths can have the following forms:
@@ -61,9 +56,9 @@ interface DbafsInterface
      *   'foo/**' = foo and all resources in all subdirectories
      *   'foo/*' = foo and only direct child resources of foo
      *
-     * @param string ...$scope relative paths inside the filesystem root
+     * @param string ...$paths relative paths inside the filesystem root
      */
-    public function sync(FilesystemAdapter $filesystem, string ...$scope): ChangeSet;
+    public function sync(string ...$paths): ChangeSet;
 
     /**
      * Returns true if this DBAFS sets the key 'lastModified' in the returned records.

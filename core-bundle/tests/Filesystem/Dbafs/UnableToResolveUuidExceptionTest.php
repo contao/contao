@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Filesystem;
+namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Filesystem\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Uid\Uuid;
 

@@ -10,12 +10,15 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Filesystem\Hashing;
+namespace Contao\CoreBundle\Tests\Filesystem\Dbafs\Hashing;
 
-use Contao\CoreBundle\Filesystem\Hashing\Context;
-use Contao\CoreBundle\Filesystem\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
-use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 
 class HashGeneratorTest extends TestCase
@@ -35,13 +38,12 @@ class HashGeneratorTest extends TestCase
      */
     public function testHashFileContent(string $algorithm, string $hash): void
     {
-        $adapter = new InMemoryFilesystemAdapter();
-        $adapter->write('foo.txt', "foo\0bar", new Config());
+        $filesystem = $this->getDemoFilesystem();
 
         $context = new Context();
 
         $generator = new HashGenerator($algorithm);
-        $generator->hashFileContent($adapter, 'foo.txt', $context);
+        $generator->hashFileContent($filesystem, 'foo.txt', $context);
 
         $this->assertSame($hash, $context->getResult());
     }
@@ -59,41 +61,38 @@ class HashGeneratorTest extends TestCase
 
     public function testSkipsHashingIfLastModifiedTimeMatches(): void
     {
-        $adapter = new InMemoryFilesystemAdapter();
-        $adapter->write('foo.txt', "foo\0bar", new Config());
-        $lastModified = $adapter->lastModified('foo.txt')->lastModified();
+        $filesystem = $this->getDemoFilesystem();
+        $lastModified = $filesystem->getLastModified('foo.txt');
 
         $context = new Context('fallback', $lastModified);
 
         $generator = new HashGenerator('md5', true);
-        $generator->hashFileContent($adapter, 'foo.txt', $context);
+        $generator->hashFileContent($filesystem, 'foo.txt', $context);
 
         $this->assertSame('fallback', $context->getResult());
     }
 
     public function testDoesNotSkipHashingIfLastModifiedTimeDiffers(): void
     {
-        $adapter = new InMemoryFilesystemAdapter();
-        $adapter->write('foo.txt', "foo\0bar", new Config());
+        $filesystem = $this->getDemoFilesystem();
 
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', true);
-        $generator->hashFileContent($adapter, 'foo.txt', $context);
+        $generator->hashFileContent($filesystem, 'foo.txt', $context);
 
         $this->assertSame('f6f5f8cd0cb63668898ba29025ae824e', $context->getResult());
     }
 
     public function testUpdatesLastModifiedEntry(): void
     {
-        $adapter = new InMemoryFilesystemAdapter();
-        $adapter->write('foo.txt', "foo\0bar", new Config());
-        $lastModified = $adapter->lastModified('foo.txt')->lastModified();
+        $filesystem = $this->getDemoFilesystem();
+        $lastModified = $filesystem->getLastModified('foo.txt');
 
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', true);
-        $generator->hashFileContent($adapter, 'foo.txt', $context);
+        $generator->hashFileContent($filesystem, 'foo.txt', $context);
 
         $this->assertTrue($context->lastModifiedChanged());
         $this->assertSame($lastModified, $context->getLastModified());
@@ -101,16 +100,27 @@ class HashGeneratorTest extends TestCase
 
     public function testDoesNotUpdateLastModifiedEntryIfDisabled(): void
     {
-        $adapter = new InMemoryFilesystemAdapter();
-        $adapter->write('foo.txt', "foo\0bar", new Config());
-        $lastModified = $adapter->lastModified('foo.txt')->lastModified();
+        $filesystem = $this->getDemoFilesystem();
+        $lastModified = $filesystem->getLastModified('foo.txt');
 
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5');
-        $generator->hashFileContent($adapter, 'foo.txt', $context);
+        $generator->hashFileContent($filesystem, 'foo.txt', $context);
 
         $this->assertFalse($context->lastModifiedChanged());
         $this->assertNotSame($lastModified, $context->getLastModified());
+    }
+
+    private function getDemoFilesystem(): VirtualFilesystemInterface
+    {
+        $filesystem = new VirtualFilesystem(
+            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->write('foo.txt', "foo\0bar");
+
+        return $filesystem;
     }
 }

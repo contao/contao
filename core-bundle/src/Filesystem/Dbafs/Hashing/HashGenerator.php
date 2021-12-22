@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem\Hashing;
+namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 
-use League\Flysystem\FilesystemAdapter;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 
 class HashGenerator implements HashGeneratorInterface
 {
@@ -25,10 +25,10 @@ class HashGenerator implements HashGeneratorInterface
         $this->useLastModified = $useLastModified;
     }
 
-    public function hashFileContent(FilesystemAdapter $filesystem, string $path, Context $context): void
+    public function hashFileContent(VirtualFilesystemInterface $filesystem, string $path, Context $context): void
     {
         if ($this->useLastModified) {
-            $context->updateLastModified($filesystem->lastModified($path)->lastModified());
+            $context->updateLastModified($filesystem->getLastModified($path));
 
             // Skip generating hashes if possible
             if ($context->canSkipHashing() && !$context->lastModifiedChanged()) {
@@ -46,7 +46,7 @@ class HashGenerator implements HashGeneratorInterface
         return hash($this->hashAlgorithm, $string);
     }
 
-    private function generateFileContentHash(FilesystemAdapter $filesystem, string $path): string
+    private function generateFileContentHash(VirtualFilesystemInterface $filesystem, string $path): string
     {
         $hashContext = hash_init($this->hashAlgorithm);
         hash_update_stream($hashContext, $filesystem->readStream($path));

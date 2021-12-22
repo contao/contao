@@ -20,6 +20,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
@@ -121,6 +122,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
+        $container->addCompilerPass(new ConfigureFilesystemPass());
     }
 
     public static function getVersion(): string

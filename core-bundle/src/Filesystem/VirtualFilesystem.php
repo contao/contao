@@ -12,367 +12,267 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use League\Flysystem\DirectoryListing;
-use League\Flysystem\FilesystemException;
-use League\Flysystem\FilesystemOperator;
-use League\Flysystem\StorageAttributes;
-use League\Flysystem\UnableToCheckFileExistence;
-use League\Flysystem\UnableToCopyFile;
-use League\Flysystem\UnableToCreateDirectory;
-use League\Flysystem\UnableToDeleteDirectory;
-use League\Flysystem\UnableToDeleteFile;
-use League\Flysystem\UnableToMoveFile;
-use League\Flysystem\UnableToReadFile;
-use League\Flysystem\UnableToResolveFilesystemMount;
-use League\Flysystem\UnableToRetrieveMetadata;
-use League\Flysystem\UnableToWriteFile;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * A virtual filesystem is Contao's version of a MountManager. You can operate
- * on it like on any other FilesystemOperator but under the hood calls are
- * redirected to other FilesystemOperator instances depending on the path
- * prefix. A more specific prefix always wins over a more general one.
+ * Use the VirtualFilesystem to access resources from mounted adapters and
+ * registered DBAFS instances. The class can be instantiated with a path
+ * prefix (e.g. 'assets/images') to get a different root and/or as a readonly
+ * view to prevent accidental mutations.
  *
- * Example:
- *   If operator A is mounted to 'files' and operator B to 'files/media',
- *   calling read('files/media/foo') will issue a call to B->read('foo')
- *   while calling fileExists('files/bar/baz') will issue a call to
- *   A->fileExists('bar/baz') instead.
+ * In each method you can either pass in a path (string) or a @see Uuid to
+ * target resources. For operations that can be short-circuited via a DBAFS,
+ * you can optionally set access flags to bypass the DBAFS or to force a
+ * (partial) synchronization beforehand.
  */
-class VirtualFilesystem implements DbafsFilesystemOperator
+class VirtualFilesystem implements VirtualFilesystemInterface
 {
-    /**
-     * @var array<string, FilesystemOperator>
-     */
-    private array $operators;
+    private MountManager $mountManager;
+    private DbafsManager $dbafsManager;
+
+    private string $prefix;
+    private bool $readonly;
 
     /**
-     * @var array<string, DbafsFilesystemOperator>
+     * @internal Use the "contao.filesystem.virtual_filesystem_factory" service to create new instances. // todo: name
      */
-    private array $dbafsOperators;
-
-    /**
-     * @param iterable<FilesystemOperator> $operators
-     */
-    public function __construct(iterable $operators)
+    public function __construct(MountManager $mountManager, DbafsManager $dbafsManager, string $prefix = '', bool $readonly = false)
     {
-        $this->operators = $operators instanceof \Traversable ? iterator_to_array($operators) : $operators;
-        $this->dbafsOperators = array_filter($this->operators, static fn (FilesystemOperator $operator): bool => $operator instanceof DbafsFilesystemOperator);
+        $this->mountManager = $mountManager;
+        $this->dbafsManager = $dbafsManager;
+
+        $this->prefix = $prefix;
+        $this->readonly = $readonly;
     }
 
-    public function fileExists($location, int $accessType = self::SYNCED_ONLY): bool
+    public function fileExists($location, int $accessFlags = self::NONE): bool
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
+        if ($location instanceof Uuid) {
+            if ($accessFlags & self::BYPASS_DBAFS) {
+                throw new \LogicException('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a file exists.');
+            }
 
-        // If an operator could be resolved with a UUID, we already know the target exists
-        if ($resolvedLocation instanceof Uuid) {
+            try {
+                $this->dbafsManager->resolveUuid($location, $this->prefix);
+            } catch (UnableToResolveUuidException $e) {
+                return false;
+            }
+
             return true;
         }
 
-        try {
-            return $operator instanceof DbafsFilesystemOperator ?
-                $operator->fileExists($resolvedLocation, $accessType) :
-                $operator->fileExists($resolvedLocation);
-        } catch (UnableToCheckFileExistence $e) {
-            throw UnableToCheckFileExistence::forLocation((string) $location, $e);
+        $path = $this->resolve($location);
+
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
         }
+
+        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
+            return $this->dbafsManager->resourceExists($location);
+        }
+
+        return $this->mountManager->fileExists($location);
     }
 
     public function read($location): string
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
-
-        try {
-            return $operator->read($resolvedLocation);
-        } catch (UnableToReadFile $e) {
-            throw UnableToReadFile::fromLocation((string) $location, $e->reason(), $e);
-        }
+        return $this->mountManager->read($this->resolve($location));
     }
 
     public function readStream($location)
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
-
-        try {
-            return $operator->readStream($resolvedLocation);
-        } catch (UnableToReadFile $e) {
-            throw UnableToReadFile::fromLocation((string) $location, $e->reason(), $e);
-        }
+        return $this->mountManager->readStream($this->resolve($location));
     }
 
-    public function listContents($location, bool $deep = self::LIST_SHALLOW, int $accessType = self::SYNCED_ONLY): DirectoryListing
+    public function write($location, string $contents, array $options = []): void
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation, $resolvedPrefix] = $this->findOperatorAndLocation($location);
+        $this->ensureNotReadonly();
 
-        $contents = $operator instanceof DbafsFilesystemOperator ?
-            $operator->listContents($resolvedLocation, $deep, $accessType) :
-            $operator->listContents($resolvedLocation, $deep)
-        ;
+        $path = $this->resolve($location);
 
-        if (null === $resolvedPrefix) {
-            return $contents;
-        }
-
-        return $contents->map(
-            static fn (StorageAttributes $attributes): StorageAttributes => $attributes->withPath(Path::join($resolvedPrefix, $attributes->path()))
-        );
+        $this->mountManager->write($path, $contents, $options);
+        $this->dbafsManager->sync($path);
     }
 
-    public function lastModified($path, int $accessType = self::SYNCED_ONLY): int
+    public function writeStream($location, $contents, array $options = []): void
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($path);
+        $this->ensureNotReadonly();
+        FilesystemUtil::assertIsResource($contents);
 
-        try {
-            return $operator instanceof DbafsFilesystemOperator ?
-                $operator->lastModified($resolvedLocation, $accessType) :
-                $operator->lastModified($resolvedLocation);
-        } catch (UnableToRetrieveMetadata $e) {
-            throw UnableToRetrieveMetadata::lastModified((string) $path, $e->reason(), $e);
-        }
-    }
+        $path = $this->resolve($location);
 
-    public function fileSize($path, int $accessType = self::SYNCED_ONLY): int
-    {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($path);
-
-        try {
-            return $operator instanceof DbafsFilesystemOperator ?
-                $operator->fileSize($resolvedLocation, $accessType) :
-                $operator->fileSize($resolvedLocation);
-        } catch (UnableToRetrieveMetadata $e) {
-            throw UnableToRetrieveMetadata::fileSize((string) $path, $e->reason(), $e);
-        }
-    }
-
-    public function mimeType($path, int $accessType = self::SYNCED_ONLY): string
-    {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($path);
-
-        try {
-            return $operator instanceof DbafsFilesystemOperator ?
-                $operator->mimeType($resolvedLocation, $accessType) :
-                $operator->mimeType($resolvedLocation);
-        } catch (UnableToRetrieveMetadata $e) {
-            throw UnableToRetrieveMetadata::mimeType((string) $path, $e->reason(), $e);
-        }
-    }
-
-    public function visibility($path): string
-    {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($path);
-
-        try {
-            return $operator->visibility($resolvedLocation);
-        } catch (UnableToRetrieveMetadata $e) {
-            throw UnableToRetrieveMetadata::mimeType((string) $path, $e->reason(), $e);
-        }
-    }
-
-    public function write($location, string $contents, array $config = []): void
-    {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
-
-        try {
-            $operator->write($resolvedLocation, $contents, $config);
-        } catch (UnableToWriteFile $e) {
-            throw UnableToWriteFile::atLocation((string) $location, $e->reason(), $e);
-        }
-    }
-
-    public function writeStream($location, $contents, array $config = []): void
-    {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
-
-        try {
-            $operator->writeStream($resolvedLocation, $contents, $config);
-        } catch (UnableToWriteFile $e) {
-            throw UnableToWriteFile::atLocation((string) $location, $e->reason(), $e);
-        }
-    }
-
-    public function setVisibility($path, string $visibility): void
-    {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($path);
-
-        $operator->setVisibility($resolvedLocation, $visibility);
+        $this->mountManager->writeStream($path, $contents, $options);
+        $this->dbafsManager->sync($path);
     }
 
     public function delete($location): void
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
+        $this->ensureNotReadonly();
 
-        try {
-            $operator->delete($resolvedLocation);
-        } catch (UnableToDeleteFile $e) {
-            throw UnableToDeleteFile::atLocation((string) $location, $e->reason(), $e);
-        }
+        $path = $this->resolve($location);
+
+        $this->mountManager->delete($path);
+        $this->dbafsManager->sync($path);
     }
 
     public function deleteDirectory($location): void
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
+        $this->ensureNotReadonly();
 
-        try {
-            $operator->deleteDirectory($resolvedLocation);
-        } catch (UnableToDeleteDirectory $e) {
-            throw UnableToDeleteDirectory::atLocation((string) $location, $e->reason(), $e);
+        $path = $this->resolve($location);
+
+        $this->mountManager->deleteDirectory($path);
+        $this->dbafsManager->sync($path);
+    }
+
+    public function createDirectory($location, array $options = []): void
+    {
+        $this->ensureNotReadonly();
+
+        $path = $this->resolve($location);
+
+        $this->mountManager->createDirectory($path, $options);
+        $this->dbafsManager->sync($path);
+    }
+
+    public function copy($source, string $destination, array $options = []): void
+    {
+        $this->ensureNotReadonly();
+
+        $pathFrom = $this->resolve($source);
+        $pathTo = $this->resolve($destination);
+
+        $this->mountManager->copy($pathFrom, $pathTo, $options);
+        $this->dbafsManager->sync($pathFrom, $pathTo);
+    }
+
+    public function move($source, string $destination, array $options = []): void
+    {
+        $this->ensureNotReadonly();
+
+        $pathFrom = $this->resolve($source);
+        $pathTo = $this->resolve($destination);
+
+        $this->mountManager->move($pathFrom, $pathTo, $options);
+        $this->dbafsManager->sync($pathFrom, $pathTo);
+    }
+
+    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): iterable
+    {
+        $path = $this->resolve($location);
+
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
+        }
+
+        // Read from DBAFS
+        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
+            yield from $this->dbafsManager->listContents($path, $deep);
+
+            return;
+        }
+
+        // Read from adapter, but enhance result with extra metadata on demand
+        /** @var FilesystemItem $item */
+        foreach ($this->mountManager->listContents($path, $deep) as $item) {
+            yield $item->withExtraMetadata(
+                fn () => $this->dbafsManager->getExtraMetadata($item->getPath())
+            );
         }
     }
 
-    public function createDirectory($location, array $config = []): void
+    public function getLastModified($location, int $accessFlags = self::NONE): int
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
+        $path = $this->resolve($location);
 
-        try {
-            $operator->createDirectory($resolvedLocation, $config);
-        } catch (UnableToCreateDirectory $e) {
-            throw UnableToCreateDirectory::dueToFailure((string) $location, $e);
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
         }
+
+        if (!($accessFlags & self::BYPASS_DBAFS) && null !== ($lastModified = $this->dbafsManager->getLastModified($path))) {
+            return $lastModified;
+        }
+
+        return $this->mountManager->getLastModified($path);
     }
 
-    public function move($source, string $destination, array $config = []): void
+    public function getFileSize($location, int $accessFlags = self::NONE): int
     {
-        /** @var FilesystemOperator $operatorFrom */
-        [$operatorFrom, $locationFrom] = $this->findOperatorAndLocation($source);
+        $path = $this->resolve($location);
 
-        /** @var FilesystemOperator $operatorTo */
-        /** @var string $pathTo */
-        [$operatorTo, $pathTo] = $this->findOperatorAndLocation($destination);
-
-        try {
-            if ($operatorFrom === $operatorTo) {
-                $operatorFrom->move($locationFrom, $pathTo);
-
-                return;
-            }
-
-            $this->copyAcrossOperators($operatorFrom, $locationFrom, $operatorTo, $pathTo, $config);
-            $operatorFrom->delete($locationFrom);
-        } catch (UnableToMoveFile|UnableToReadFile|UnableToDeleteFile $e) {
-            throw UnableToMoveFile::fromLocationTo((string) $source, $destination, $e);
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
         }
+
+        if (!($accessFlags & self::BYPASS_DBAFS) && null !== ($fileSize = $this->dbafsManager->getFileSize($path))) {
+            return $fileSize;
+        }
+
+        return $this->mountManager->getFileSize($path);
     }
 
-    public function copy($source, string $destination, array $config = []): void
+    public function getMimeType($location, int $accessFlags = self::NONE): string
     {
-        /** @var FilesystemOperator $operatorFrom */
-        [$operatorFrom, $locationFrom] = $this->findOperatorAndLocation($source);
+        $path = $this->resolve($location);
 
-        /** @var FilesystemOperator $operatorTo */
-        /** @var string $pathTo */
-        [$operatorTo, $pathTo] = $this->findOperatorAndLocation($destination);
-
-        try {
-            if ($operatorFrom === $operatorTo) {
-                $operatorFrom->copy($locationFrom, $pathTo);
-
-                return;
-            }
-
-            $this->copyAcrossOperators($operatorFrom, $locationFrom, $operatorTo, $pathTo, $config);
-        } catch (UnableToCopyFile|UnableToReadFile $e) {
-            throw UnableToCopyFile::fromLocationTo((string) $source, $destination, $e);
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
         }
+
+        if (!($accessFlags & self::BYPASS_DBAFS) && null !== ($mimeType = $this->dbafsManager->getMimeType($path))) {
+            return $mimeType;
+        }
+
+        return $this->mountManager->getMimeType($path);
     }
 
-    public function extraMetadata($location, int $accessType = self::SYNCED_ONLY): array
+    public function getExtraMetadata($location, int $accessFlags = self::NONE): array
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
+        $path = $this->resolve($location);
 
-        if (!$operator instanceof DbafsFilesystemOperator) {
-            throw new \LogicException(sprintf('The bucket "%s" does not support retrieving extra metadata.', $this->getOperatorName($operator)));
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
         }
 
-        try {
-            return $operator->extraMetadata($resolvedLocation, $accessType);
-        } catch (UnableToRetrieveMetadata $e) {
-            throw UnableToRetrieveMetadata::create((string) $location, StorageAttributes::ATTRIBUTE_EXTRA_METADATA, $e->reason(), $e);
+        if ($accessFlags & self::BYPASS_DBAFS) {
+            return [];
         }
+
+        return $this->dbafsManager->getExtraMetadata($path);
     }
 
     public function setExtraMetadata($location, array $metadata): void
     {
-        /** @var FilesystemOperator $operator */
-        [$operator, $resolvedLocation] = $this->findOperatorAndLocation($location);
+        $this->ensureNotReadonly();
 
-        if (!$operator instanceof DbafsFilesystemOperator) {
-            throw new \LogicException(sprintf('The bucket "%s" does not support setting extra metadata.', $this->getOperatorName($operator)));
-        }
-
-        try {
-            $operator->setExtraMetadata($resolvedLocation, $metadata);
-        } catch (UnableToSetExtraMetadataException $e) {
-            throw new UnableToSetExtraMetadataException((string) $location, $e);
-        }
+        $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
     }
 
     /**
      * @param string|Uuid $location
-     * @phpstan-return array{0: FilesystemOperator, 1: string|Uuid, 2: string|null}
-     *
-     * @throws UnableToResolveUuidException
      */
-    private function findOperatorAndLocation($location): array
+    private function resolve($location): string
     {
         if ($location instanceof Uuid) {
-            foreach ($this->dbafsOperators as $dbafsOperator) {
-                try {
-                    if ($dbafsOperator->fileExists($location)) {
-                        return [$dbafsOperator, $location, null];
-                    }
-                } catch (FilesystemException $e) {
-                    // ignore
-                }
-            }
-
-            throw new UnableToResolveUuidException($location, sprintf('Searched in DBAFS-capable mounts: "%s"', implode('", "', array_keys($this->dbafsOperators))));
+            return $this->dbafsManager->resolveUuid($location, $this->prefix);
         }
 
-        $prefix = Path::canonicalize($location);
+        $path = Path::canonicalize($location);
 
-        // Find operator with the longest (= most specific) matching prefix
-        while ('.' !== ($prefix = Path::getDirectory($prefix))) {
-            if (null !== ($operator = $this->operators[$prefix] ?? null)) {
-                return [$operator, Path::makeRelative($location, $prefix), $prefix];
-            }
+        if (str_starts_with($path, '..')) {
+            throw new \OutOfBoundsException("Relative paths that escape the filesystem boundary are not allowed, got '$location'.");
         }
 
-        throw new UnableToResolveFilesystemMount(sprintf('No bucket was mounted for path "%s". Available mounts: "%s"', $location, implode('", "', array_keys($this->operators))));
+        return Path::join($this->prefix, $path);
     }
 
-    private function getOperatorName(FilesystemOperator $operator): string
+    private function ensureNotReadonly(): void
     {
-        foreach ($this->operators as $name => $search) {
-            if ($search === $operator) {
-                return $name;
-            }
+        if ($this->readonly) {
+            throw new \LogicException('Tried to mutate a readonly filesystem instance.');
         }
-
-        return '';
-    }
-
-    private function copyAcrossOperators(FilesystemOperator $operatorFrom, string $pathFrom, FilesystemOperator $operatorTo, string $pathTo, array $config): void
-    {
-        $visibility = $config['visibility'] ?? $operatorFrom->visibility($pathFrom);
-
-        $stream = $operatorFrom->readStream($pathFrom);
-        $operatorTo->writeStream($pathTo, $stream, compact('visibility'));
     }
 }

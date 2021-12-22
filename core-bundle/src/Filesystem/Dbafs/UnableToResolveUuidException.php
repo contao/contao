@@ -10,12 +10,11 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem;
+namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use League\Flysystem\FilesystemException;
 use Symfony\Component\Uid\Uuid;
 
-class UnableToResolveUuidException extends \RuntimeException implements FilesystemException
+class UnableToResolveUuidException extends \RuntimeException
 {
     private Uuid $uuid;
 

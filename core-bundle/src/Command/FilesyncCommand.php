@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Filesystem\ChangeSet;
-use Contao\CoreBundle\Filesystem\DbafsFilesystem;
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\Table;
@@ -31,13 +31,11 @@ class FilesyncCommand extends Command
 {
     protected static $defaultName = 'contao:filesync';
 
-    private DbafsFilesystem $filesystem;
+    private DbafsManager $dbafsManager;
 
-    public function __construct(DbafsFilesystem $filesystem)
+    public function __construct(DbafsManager $dbafsManager)
     {
-        // todo: consider injecting all dbafs filesystems and letting the user
-        //       chose which one to synchronize
-        $this->filesystem = $filesystem;
+        $this->dbafsManager = $dbafsManager;
 
         parent::__construct();
     }
@@ -45,8 +43,8 @@ class FilesyncCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Synchronizes the file system with the database.')
-            ->addArgument('dir', InputArgument::IS_ARRAY, 'Optional subdirectory for partial synchronization.')
+            ->setDescription('Synchronizes the registered DBAFS with the virtual filesystem.')
+            ->addArgument('paths', InputArgument::IS_ARRAY, 'Optional path(s) for partial synchronization.')
         ;
     }
 
@@ -55,7 +53,7 @@ class FilesyncCommand extends Command
         $output->writeln('Synchronizing…');
 
         $time = microtime(true);
-        $changeSet = $this->filesystem->sync(...$input->getArgument('dir'));
+        $changeSet = $this->dbafsManager->sync(...$input->getArgument('paths'));
         $timeTotal = round(microtime(true) - $time, 2);
 
         $this->renderStats($changeSet, $output);

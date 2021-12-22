@@ -10,7 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem;
+namespace Contao\CoreBundle\Filesystem\Dbafs;
+
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @phpstan-type CreateItemDefinition array{hash: string, path: string, type: self::TYPE_*}
@@ -69,6 +71,57 @@ class ChangeSet
         $this->itemsToDelete = $itemsToDelete;
 
         $this->lastModifiedUpdates = $lastModifiedUpdates;
+    }
+
+    /**
+     * Returns a copy of this ChangeSet with another one appended. Optionally
+     * all paths of the appended ChangeSet will be prefixed with $pathPrefix.
+     */
+    public function withOther(self $changeSet, string $pathPrefix = ''): self
+    {
+        $itemsToCreate = array_combine(
+            array_column($this->itemsToCreate, self::ATTR_PATH),
+            $this->itemsToCreate
+        );
+
+        $itemsToUpdate = $this->itemsToUpdate;
+        $itemsToDelete = $this->itemsToDelete;
+        $lastModifiedUpdates = $this->lastModifiedUpdates;
+
+        foreach ($changeSet->itemsToCreate as $item) {
+            $prefixedPath = Path::join($pathPrefix, $item[self::ATTR_PATH]);
+            $itemsToCreate[$prefixedPath] = array_merge($item, [self::ATTR_PATH => $prefixedPath]);
+        }
+
+        foreach ($changeSet->itemsToUpdate as $path => $item) {
+            $prefixedPath = Path::join($pathPrefix, $path);
+
+            if (null !== ($newPath = $item[self::ATTR_PATH] ?? null)) {
+                $item = array_merge($item, [self::ATTR_PATH => Path::join($pathPrefix, $newPath)]);
+            }
+
+            $itemsToUpdate[$prefixedPath] = array_merge($itemsToUpdate[$prefixedPath] ?? [], $item);
+        }
+
+        foreach ($changeSet->itemsToDelete as $path => $type) {
+            $itemsToDelete[Path::join($pathPrefix, $path)] = $type;
+        }
+
+        foreach ($changeSet->lastModifiedUpdates as $path => $lastModified) {
+            $lastModifiedUpdates[Path::join($pathPrefix, $path)] = $lastModified;
+        }
+
+        return new self(
+            array_values($itemsToCreate),
+            $itemsToUpdate,
+            $itemsToDelete,
+            $lastModifiedUpdates
+        );
+    }
+
+    public static function createEmpty(): self
+    {
+        return new self([], [], []);
     }
 
     /**

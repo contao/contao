@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem\Hashing;
+namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 
-use League\Flysystem\FilesystemAdapter;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 
 interface HashGeneratorInterface
 {
@@ -21,7 +21,7 @@ interface HashGeneratorInterface
      * check if hashing may be skipped, to get additional metadata and to set
      * the actual result of the operation.
      */
-    public function hashFileContent(FilesystemAdapter $filesystem, string $path, Context $context): void;
+    public function hashFileContent(VirtualFilesystemInterface $filesystem, string $path, Context $context): void;
 
     /**
      * Generates the hash for a string, preferably with the same hash function

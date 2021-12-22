@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem\Hashing;
+namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 
 final class Context
 {
