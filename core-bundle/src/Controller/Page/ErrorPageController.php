@@ -14,15 +14,21 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\FrontendIndex;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * @Page("error_401", path=false)
+ * @Page("error_403", path=false)
+ * @Page("error_404", path=false)
  * @Page("error_503", path=false)
+ *
+ * @internal
  */
-class Error503PageController extends AbstractController
+class ErrorPageController extends AbstractController implements ContentCompositionInterface
 {
     private ContaoFramework $framework;
 
@@ -39,5 +45,10 @@ class Error503PageController extends AbstractController
             ->createInstance(FrontendIndex::class)
             ->renderPage($pageModel)
         ;
+    }
+
+    public function supportsContentComposition(PageModel $pageModel): bool
+    {
+        return 'error_503' === $pageModel->type || !$pageModel->autoforward;
     }
 }
