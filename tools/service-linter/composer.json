@@ -1,8 +1,8 @@
 {
     "name": "contao/service-id-linter",
-    "type": "library",
     "description": "Contao service ID linter",
     "license": "LGPL-3.0-or-later",
+    "type": "library",
     "authors": [
         {
             "name": "Leo Feyer",

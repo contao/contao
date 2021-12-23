@@ -45,6 +45,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $staticPlugins
  * @property string|boolean         $fallback
  * @property string|boolean         $disableLanguageRedirect
+ * @property string|boolean         $maintenanceMode
  * @property string|null            $favicon
  * @property string|null            $robotsTxt
  * @property string                 $mailerTransport
@@ -1204,6 +1205,7 @@ class PageModel extends Model
 			$this->mailerTransport = $objParentPage->mailerTransport;
 			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->useAutoItem = Config::get('useAutoItem');
+			$this->maintenanceMode = $objParentPage->maintenanceMode;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));

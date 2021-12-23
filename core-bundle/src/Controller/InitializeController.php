@@ -57,8 +57,6 @@ class InitializeController
 
     /**
      * Initializes the Contao framework.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(): InitializeControllerResponse
     {

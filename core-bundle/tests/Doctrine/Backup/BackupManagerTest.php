@@ -18,6 +18,8 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
 use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +32,9 @@ class BackupManagerTest extends ContaoTestCase
     {
         parent::setUp();
 
-        (new Filesystem())->mkdir($this->getBackupDir());
+        $fs = new Filesystem();
+        $fs->remove($this->getBackupDir());
+        $fs->mkdir($this->getBackupDir());
     }
 
     protected function tearDown(): void
@@ -181,23 +185,32 @@ class BackupManagerTest extends ContaoTestCase
         yield [false];
     }
 
-    public function testDirectoryIsCleanedUpAfterSuccessfulCreate(): void
+    public function testCleanup(): void
     {
         $connection = $this->mockConnection(true);
         $dumper = $this->mockDumper($connection);
-        $manager = $this->getBackupManager($connection, $dumper);
-        $config = $manager->createCreateConfig();
 
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-3 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-4 days'));
-        $oldest = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
+        $backupNew = Backup::createNewAtPath($this->getBackupDir());
+        $backupExisting = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
+
+        $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
+        $retentionPolicy
+            ->expects($this->once())
+            ->method('apply')
+            ->with(
+                $backupNew,
+                [$backupNew, $backupExisting]
+            )
+            ->willReturn([$backupNew])
+        ;
+
+        $manager = $this->getBackupManager($connection, $dumper, $retentionPolicy);
+        $config = $manager->createCreateConfig();
 
         $manager->create($config);
 
-        $this->assertCount(5, $manager->listBackups());
-        $this->assertNotSame($oldest->getFilepath(), $manager->listBackups()[4]->getFilepath());
+        $this->assertCount(1, $manager->listBackups());
+        $this->assertSame($backupNew->getFilepath(), $manager->getLatestBackup()->getFilepath());
     }
 
     public function testDirectoryIsNotCleanedUpAfterUnsuccessfulCreate(): void
@@ -208,24 +221,20 @@ class BackupManagerTest extends ContaoTestCase
             ->method('dump')
             ->willThrowException(new BackupManagerException('Error!'))
         ;
+        $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
+        $retentionPolicy
+            ->expects($this->never())
+            ->method('apply')
+        ;
 
-        $manager = $this->getBackupManager($this->mockConnection(true), $dumper);
+        $manager = $this->getBackupManager($this->mockConnection(true), $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
-
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 day'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-2 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-3 days'));
-        Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-4 days'));
-        $oldest = Backup::createNewAtPath($this->getBackupDir(), new \DateTime('-1 week'));
 
         try {
             $manager->create($config);
         } catch (BackupManagerException $exception) {
             // irrelevant for this test
         }
-
-        $this->assertCount(5, $manager->listBackups());
-        $this->assertSame($oldest->getFilepath(), $manager->listBackups()[4]->getFilepath());
     }
 
     /**
@@ -426,11 +435,12 @@ class BackupManagerTest extends ContaoTestCase
         return Path::join($this->getTempDir(), 'backups');
     }
 
-    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null): BackupManager
+    private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicyInterface $retentionPolicy = null): BackupManager
     {
         $connection ??= $this->createMock(Connection::class);
         $dumper ??= $this->createMock(DumperInterface::class);
+        $retentionPolicy ??= new RetentionPolicy(5);
 
-        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], 5);
+        return new BackupManager($connection, $dumper, $this->getBackupDir(), ['foobar'], $retentionPolicy);
     }
 }

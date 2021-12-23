@@ -29,6 +29,11 @@ class Backup
         $this->createdAt = self::extractDatetime($filepath);
     }
 
+    public function __toString(): string
+    {
+        return sprintf('[Backup]: %s', $this->getFilepath());
+    }
+
     /**
      * Returns the size in bytes.
      */
@@ -73,9 +78,6 @@ class Backup
         ];
     }
 
-    /**
-     * @throws BackupManagerException
-     */
     private static function extractDatetime(string $filepath): \DateTimeInterface
     {
         preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);
