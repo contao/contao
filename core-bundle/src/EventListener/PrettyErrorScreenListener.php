@@ -107,7 +107,9 @@ class PrettyErrorScreenListener
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
-                if (!$this->renderErrorScreenByType(503, $event)) {
+                $this->renderErrorScreenByType(503, $event);
+
+                if (!$event->hasResponse()) {
                     $this->renderTemplate('service_unavailable', 503, $event);
                 }
                 break;
@@ -130,12 +132,12 @@ class PrettyErrorScreenListener
         $this->renderTemplate('backend', $this->getStatusCodeForException($exception), $event);
     }
 
-    private function renderErrorScreenByType(int $type, ExceptionEvent $event): bool
+    private function renderErrorScreenByType(int $type, ExceptionEvent $event): void
     {
         static $processing;
 
         if (true === $processing) {
-            return false;
+            return;
         }
 
         $processing = true;
@@ -147,14 +149,14 @@ class PrettyErrorScreenListener
             $pageModel = $request->attributes->get('pageModel');
 
             if (!$pageModel instanceof PageModel) {
-                return false;
+                return;
             }
 
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
             $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
 
             if (null === $errorPage) {
-                return false;
+                return;
             }
 
             $route = $this->pageRegistry->getRoute($errorPage);
@@ -163,16 +165,10 @@ class PrettyErrorScreenListener
             try {
                 $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
                 $event->setResponse($response);
-
-                return true;
             } catch (ResponseException $e) {
                 $event->setResponse($e->getResponse());
-
-                return true;
             } catch (\Throwable $e) {
                 $event->setThrowable($e);
-
-                return false;
             }
         } finally {
             $processing = false;
