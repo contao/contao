@@ -140,7 +140,7 @@ class ServiceUnavailableListenerTest extends TestCase
         $event = $this->mockEvent($request);
 
         $this->expectException(ServiceUnavailableException::class);
-        $this->expectExceptionMessage('Domain  is in maintenance mode');
+        $this->expectExceptionMessage('This website is in maintenance mode.');
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
