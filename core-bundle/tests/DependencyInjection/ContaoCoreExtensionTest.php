@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
@@ -336,7 +337,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
-        $this->assertSame(5, $definition->getArgument(4));
+        $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
+
+        $retentionPolicyDefinition = $container->getDefinition('contao.doctrine.backup.retention_policy');
+
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(5, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame(['1D', '7D', '14D', '1M'], $retentionPolicyDefinition->getArgument(1));
 
         $extension->load(
             [
@@ -345,6 +352,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'directory' => 'somewhere/else',
                         'ignore_tables' => ['foobar'],
                         'keep_max' => 10,
+                        'keep_intervals' => ['1D', '2D', '7D', '14D', '1M', '1Y'],
                     ],
                 ],
             ],
@@ -357,7 +365,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('somewhere/else', $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
-        $this->assertSame(10, $definition->getArgument(4));
+        $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
+
+        $retentionPolicyDefinition = $container->getDefinition('contao.doctrine.backup.retention_policy');
+
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame(['1D', '2D', '7D', '14D', '1M', '1Y'], $retentionPolicyDefinition->getArgument(1));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void

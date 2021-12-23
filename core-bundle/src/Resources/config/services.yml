@@ -140,15 +140,21 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
-    contao.doctrine.backup.dumper:
-        class: Contao\CoreBundle\Doctrine\Backup\Dumper
-
     contao.doctrine.backup_manager:
         class: Contao\CoreBundle\Doctrine\Backup\BackupManager
         arguments:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
             - ~
+            - ~
+            - '@contao.doctrine.backup.retention_policy'
+
+    contao.doctrine.backup.dumper:
+        class: Contao\CoreBundle\Doctrine\Backup\Dumper
+
+    contao.doctrine.backup.retention_policy:
+        class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
+        arguments:
             - ~
             - ~
 
