@@ -46,8 +46,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return $this->imagineSupportsFormat($format);
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): string
     {
+        $targetPath = "$targetPath.png";
+
         try {
             if ($this->imagine instanceof ImagickImagine && 'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))) {
                 $image = $this->openImagickPdf($sourcePath);
@@ -64,22 +66,8 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         } catch (\Throwable $exception) {
             throw new UnableToGeneratePreviewException('', 0, $exception);
         }
-    }
 
-    public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions
-    {
-        if ($this->imagine instanceof ImagickImagine && 'pdf' === strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
-            $imageSize = $this->openImagickPdf($path)->getSize();
-        } else {
-            $imageSize = $this->imagine->open($path)->layers()->get(0)->getSize();
-        }
-
-        return $this->getDimensionsFromImageSize($imageSize, $size);
-    }
-
-    public function getImageFormat(string $path, int $size = 0, string $fileHeader = '', array $options = []): string
-    {
-        return 'png';
+        return $targetPath;
     }
 
     private function getDimensionsFromImageSize(BoxInterface $imageSize, int $size): ImageDimensions

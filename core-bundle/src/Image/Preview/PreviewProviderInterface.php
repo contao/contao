@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Preview;
 
-use Contao\Image\ImageDimensions;
-
 interface PreviewProviderInterface
 {
     public function getFileHeaderSize(): int;
@@ -21,28 +19,15 @@ interface PreviewProviderInterface
     public function supports(string $path, string $fileHeader = ''): bool;
 
     /**
-     * @param int $size Minimal size the preview image should have in each
-     *                  dimension. Can be larger for implementation reasons or
-     *                  smaller if there is not enough data.
+     * @param int    $size       Minimal size the preview image should have in
+     *                           each dimension. Can be larger for
+     *                           implementation reasons or smaller if there is
+     *                           not enough data.
+     * @param string $targetPath Target path without file extension
      *
      * @throws UnableToGeneratePreviewException
-     */
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void;
-
-    /**
-     * Calculate the exact dimensions the preview image will have when generated.
      *
-     * @param int    $size       See self::generatePreview()
-     * @param string $fileHeader First X bytes of the source file
+     * @return string Target path including the file extension
      */
-    public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions;
-
-    /**
-     * Lowercase image format file extension (e.g. jpg, png or gif) the preview
-     * image will have when generated.
-     *
-     * @param int    $size       See self::generatePreview()
-     * @param string $fileHeader First X bytes of the source file
-     */
-    public function getImageFormat(string $path, int $size = 0, string $fileHeader = '', array $options = []): string;
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): string;
 }

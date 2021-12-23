@@ -19,8 +19,6 @@ use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
-use Contao\Image\DeferredImageStorageInterface;
-use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureInterface;
@@ -29,7 +27,6 @@ use Contao\Image\ResizeOptions;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\StringUtil;
-use Imagine\Image\Box;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -42,7 +39,6 @@ class PreviewFactory
      */
     private iterable $previewProviders;
 
-    private DeferredImageStorageInterface $deferredStorage;
     private ImageFactoryInterface $imageFactory;
     private PictureFactoryInterface $pictureFactory;
     private Studio $imageStudio;
@@ -55,10 +51,9 @@ class PreviewFactory
     /**
      * @param iterable<int,PreviewProviderInterface> $previewProviders
      */
-    public function __construct(iterable $previewProviders, DeferredImageStorageInterface $deferredStorage, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $cacheDir, array $validImageExtensions)
+    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $cacheDir, array $validImageExtensions)
     {
         $this->previewProviders = $previewProviders;
-        $this->deferredStorage = $deferredStorage;
         $this->imageFactory = $imageFactory;
         $this->pictureFactory = $pictureFactory;
         $this->imageStudio = $imageStudio;
@@ -95,21 +90,22 @@ class PreviewFactory
             return $this->imageFactory->create($cachedPreview);
         }
 
-        $cachePath = $this->createCachePath($path, $size, $previewOptions);
+        $targetPath = Path::join(
+            $this->cacheDir,
+            $this->createCachePath($path, $size, $previewOptions)
+        );
+
+        if (!is_dir(\dirname($targetPath))) {
+            (new Filesystem())->mkdir(\dirname($targetPath));
+        }
+
         $header = $this->getHeader($path);
         $lastProviderException = null;
 
         foreach ($this->previewProviders as $provider) {
             if ($provider->supports($path, $header)) {
                 try {
-                    $format = $provider->getImageFormat($path, $size, $header, $previewOptions);
-                    $targetPath = Path::join($this->cacheDir, "$cachePath.$format");
-
-                    if (!is_dir(\dirname($targetPath))) {
-                        (new Filesystem())->mkdir(\dirname($targetPath));
-                    }
-
-                    $provider->generatePreview($path, $size, $targetPath, $previewOptions);
+                    $targetPath = $provider->generatePreview($path, $size, $targetPath, $previewOptions);
 
                     return $this->imageFactory->create($targetPath);
                 } catch (UnableToGeneratePreviewException $exception) {
@@ -119,110 +115,6 @@ class PreviewFactory
         }
 
         throw $lastProviderException ?? new MissingPreviewProviderException();
-    }
-
-    /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
-     */
-    public function createDeferredPreview(string $path, int $size = 0, array $previewOptions = []): ImageInterface
-    {
-        $size = $this->normalizeSize($size);
-
-        if (null !== ($cachedPreview = $this->getCachedPreview($path, $size, $previewOptions))) {
-            return $this->imageFactory->create($cachedPreview);
-        }
-
-        $cachePath = $this->createCachePath($path, $size, $previewOptions);
-
-        if ($this->deferredStorage->has($cachePath)) {
-            $data = $this->deferredStorage->get($cachePath);
-
-            return new DeferredPreview(
-                Path::join($this->cacheDir, "$cachePath.{$data['format']}"),
-                new ImageDimensions(
-                    new Box($data['dimensions']['width'], $data['dimensions']['height']),
-                    $data['dimensions']['relative'],
-                    $data['dimensions']['undefined'],
-                    $data['dimensions']['orientation'],
-                ),
-            );
-        }
-
-        $header = $this->getHeader($path);
-        $lastProviderException = null;
-
-        foreach ($this->previewProviders as $provider) {
-            if ($provider->supports($path, $header)) {
-                try {
-                    $format = $provider->getImageFormat($path, $size, $header, $previewOptions);
-                    $dimensions = $provider->getDimensions($path, $size, $header, $previewOptions);
-
-                    $this->deferredStorage->set($cachePath, [
-                        'path' => Path::makeRelative($path, $this->cacheDir),
-                        'format' => $format,
-                        'size' => $size,
-                        'options' => $previewOptions,
-                        'dimensions' => [
-                            'width' => $dimensions->getSize()->getWidth(),
-                            'height' => $dimensions->getSize()->getHeight(),
-                            'relative' => $dimensions->isRelative(),
-                            'undefined' => $dimensions->isUndefined(),
-                            'orientation' => $dimensions->getOrientation(),
-                        ],
-                        'provider' => \get_class($provider),
-                    ]);
-
-                    return new DeferredPreview(
-                        Path::join($this->cacheDir, "$cachePath.$format"),
-                        $dimensions,
-                    );
-                } catch (UnableToGeneratePreviewException $exception) {
-                    $lastProviderException = $exception;
-                }
-            }
-        }
-
-        throw $lastProviderException ?? new MissingPreviewProviderException();
-    }
-
-    /**
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
-     */
-    public function createPreviewFromDeferred(DeferredPreview $image): ImageInterface
-    {
-        $cachePath = preg_replace(
-            '(\.(?:'.implode('|', array_map('preg_quote', $this->validImageExtensions)).')$)',
-            '',
-            Path::makeRelative($image->getPath(), $this->cacheDir),
-        );
-
-        $data = $this->deferredStorage->getLocked($cachePath);
-        $path = Path::makeAbsolute($data['path'], $this->cacheDir);
-        $targetPath = Path::join($this->cacheDir, "$cachePath.{$data['format']}");
-        $size = $data['size'];
-        $previewOptions = $data['options'];
-
-        foreach ($this->previewProviders as $provider) {
-            if (\get_class($provider) !== $data['provider']) {
-                continue;
-            }
-
-            try {
-                $provider->generatePreview($path, $size, $targetPath, $previewOptions);
-            } catch (\Throwable $exception) {
-                $this->deferredStorage->releaseLock($targetPath);
-
-                throw $exception;
-            }
-
-            $this->deferredStorage->delete($cachePath);
-
-            return $this->imageFactory->create($targetPath);
-        }
-
-        $this->deferredStorage->releaseLock($targetPath);
-
-        throw new MissingPreviewProviderException();
     }
 
     /**

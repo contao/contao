@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Preview;
 
-use Contao\Image\ImageDimensions;
 use Contao\ImagineSvg\Imagine;
-use Contao\ImagineSvg\SvgBox;
 use Imagine\Image\Box;
 
 class FallbackPreviewProvider implements PreviewProviderInterface
@@ -29,8 +27,10 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         return true;
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): void
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): string
     {
+        $targetPath = "$targetPath.svg";
+
         $svgCode = '<?xml version="1.0"?>'."\n";
         $svgCode .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 30 30">';
         $svgCode .= '<rect x="-6" y="-6" width="30" height="30" fill="#f3f3f5"/>';
@@ -44,24 +44,14 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         $svgCode .= '</text>';
         $svgCode .= '</svg>';
 
-        (new Imagine())
-            ->load($svgCode)
-            ->resize($this->getDimensions($sourcePath, $size)->getSize())
-            ->save($targetPath, ['format' => 'svg'])
-        ;
-    }
+        $image = (new Imagine())->load($svgCode);
 
-    public function getDimensions(string $path, int $size = 0, string $fileHeader = '', array $options = []): ImageDimensions
-    {
         if ($size > 0) {
-            return new ImageDimensions(new Box($size, $size));
+            $image->resize(new Box($size, $size));
         }
 
-        return new ImageDimensions(SvgBox::createTypeAspectRatio(1, 1));
-    }
+        $image->save($targetPath, ['format' => 'svg']);
 
-    public function getImageFormat(string $path, int $size = 0, string $fileHeader = '', array $options = []): string
-    {
-        return 'svg';
+        return $targetPath;
     }
 }

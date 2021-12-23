@@ -220,12 +220,6 @@ services:
             - '%contao.image.target_dir%'
             - '@?filesystem'
 
-    contao.image.deferred_preview_storage:
-        class: Contao\Image\DeferredImageStorageFilesystem
-        arguments:
-            - '%contao.image.target_dir%/previews'
-            - '@?filesystem'
-
     contao.image.factory:
         class: Contao\CoreBundle\Image\ImageFactory
         public: true
@@ -285,7 +279,6 @@ services:
         public: true
         arguments:
             - !tagged_iterator contao.preview_provider
-            - '@contao.image.deferred_preview_storage'
             - '@contao.image.factory'
             - '@contao.image.picture_factory'
             - '@contao.image.studio'
