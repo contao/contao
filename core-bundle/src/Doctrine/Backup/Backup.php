@@ -73,9 +73,6 @@ class Backup
         ];
     }
 
-    /**
-     * @throws BackupManagerException
-     */
     private static function extractDatetime(string $filepath): \DateTimeInterface
     {
         preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath, $matches);

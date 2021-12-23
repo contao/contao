@@ -277,7 +277,6 @@ class SitemapControllerTest extends TestCase
             'type' => 'forward',
             'groups' => [],
             'published' => '1',
-            'requireItem' => '1',
             'rootLanguage' => 'en',
         ]);
 
@@ -313,7 +312,21 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, $articles);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+
+        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
+        $registry
+            ->expects($this->exactly(2))
+            ->method('supportsContentComposition')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(false, true)
+        ;
+
+        $registry
+            ->expects($this->once())
+            ->method('isRoutable')
+            ->withConsecutive([$page1])
+            ->willReturn(true)
+        ;
 
         $controller = new SitemapController($registry);
         $controller->setContainer($container);
@@ -324,7 +337,7 @@ class SitemapControllerTest extends TestCase
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page2.html']), $response->getContent());
     }
 
-    public function testSkipsNonRegularPages(): void
+    public function testSkipsUnroutablePages(): void
     {
         $page1 = $this->mockClassWithProperties(PageModel::class, [
             'id' => 43,
@@ -364,7 +377,21 @@ class SitemapControllerTest extends TestCase
 
         $framework = $this->mockFrameworkWithPages($pages, [44 => null]);
         $container = $this->getContainer($framework);
-        $registry = new PageRegistry($this->createMock(Connection::class));
+
+        $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
+        $registry
+            ->expects($this->exactly(2))
+            ->method('supportsContentComposition')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(true, true)
+        ;
+
+        $registry
+            ->expects($this->exactly(2))
+            ->method('isRoutable')
+            ->withConsecutive([$page1], [$page2])
+            ->willReturn(false, true)
+        ;
 
         $controller = new SitemapController($registry);
         $controller->setContainer($container);

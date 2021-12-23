@@ -1,9 +1,8 @@
 {
     "name": "contao/installation-bundle",
-    "type": "contao-bundle",
     "description": "Required to install and update Contao",
-    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
+    "type": "contao-bundle",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,6 +13,13 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/installation-bundle",
+        "docs": "https://docs.contao.org"
+    },
     "require": {
         "php": "^7.4 || ^8.0",
         "contao/core-bundle": "self.version",
@@ -33,21 +39,15 @@
         "symfony/polyfill-mbstring": "^1.0",
         "symfony/yaml": "^5.4"
     },
-    "conflict": {
-        "contao/core": "*",
-        "contao/manager-plugin": "<2.0 || >=3.0"
-    },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "phpunit/phpunit": "^8.5",
         "symfony/http-client": "^5.4",
         "symfony/phpunit-bridge": "^5.4"
     },
-    "extra": {
-        "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^5.4"
-        }
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
     },
     "autoload": {
         "psr-4": {
@@ -59,10 +59,7 @@
             "Contao\\InstallationBundle\\Tests\\": "tests/"
         }
     },
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/installation-bundle",
-        "docs": "https://docs.contao.org"
+    "extra": {
+        "contao-manager-plugin": "Contao\\InstallationBundle\\ContaoManager\\Plugin"
     }
 }

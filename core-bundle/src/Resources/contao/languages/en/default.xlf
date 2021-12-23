@@ -593,6 +593,12 @@
       <trans-unit id="PTY.error_404.1">
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
       </trans-unit>

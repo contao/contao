@@ -25,7 +25,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractController extends SymfonyAbstractController
 {
-    public static function getSubscribedServices()
+    public static function getSubscribedServices()/*: array*/
     {
         $services = parent::getSubscribedServices();
 

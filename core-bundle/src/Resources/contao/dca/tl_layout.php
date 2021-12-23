@@ -156,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -164,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -181,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -189,7 +189,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -430,7 +430,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),

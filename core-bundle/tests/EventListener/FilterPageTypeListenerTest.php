@@ -81,7 +81,7 @@ class FilterPageTypeListenerTest extends TestCase
         ;
 
         $event = new FilterPageTypeEvent(
-            ['foo', 'root', 'error_401', 'error_403', 'error_404'],
+            ['foo', 'root', 'error_401', 'error_403', 'error_404', 'error_503'],
             $this->mockDataContainer(17)
         );
 

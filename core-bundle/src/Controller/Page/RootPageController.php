@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Page(contentComposition=false)
+ *
+ * @internal
  */
 class RootPageController extends AbstractController
 {

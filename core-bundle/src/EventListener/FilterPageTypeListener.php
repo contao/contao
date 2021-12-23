@@ -51,6 +51,7 @@ class FilterPageTypeListener
             $event->removeOption('error_401');
             $event->removeOption('error_403');
             $event->removeOption('error_404');
+            $event->removeOption('error_503');
 
             return;
         }
@@ -60,7 +61,7 @@ class FilterPageTypeListener
             [$dc->activeRecord->pid, $dc->activeRecord->id]
         );
 
-        foreach (array_intersect(['error_401', 'error_403', 'error_404'], $siblingTypes) as $type) {
+        foreach (array_intersect(['error_401', 'error_403', 'error_404', 'error_503'], $siblingTypes) as $type) {
             $event->removeOption($type);
         }
     }

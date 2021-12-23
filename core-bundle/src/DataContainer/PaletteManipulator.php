@@ -35,8 +35,10 @@ class PaletteManipulator
      *
      * @param string|array $parent
      * @param bool         $hide
+     *
+     * @throws PalettePositionException
      */
-    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, $hide = false): self
+    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, /*bool */$hide = false): self
     {
         $this->validatePosition($position);
 
@@ -60,7 +62,7 @@ class PaletteManipulator
      *
      * @throws PalettePositionException
      */
-    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, $fallbackPosition = self::POSITION_APPEND): self
+    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 
