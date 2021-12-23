@@ -1252,7 +1252,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlPrefixIfTheRootPageIsNotFound(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -1483,7 +1483,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlSuffixIfTheRootPageIsNotFound(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findWithDetails']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
