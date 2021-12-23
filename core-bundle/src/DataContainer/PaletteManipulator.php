@@ -35,6 +35,8 @@ class PaletteManipulator
      *
      * @param string|array $parent
      * @param bool         $hide
+     *
+     * @throws PalettePositionException
      */
     public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, /*bool */$hide = false): self
     {

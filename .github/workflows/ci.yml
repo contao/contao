@@ -21,7 +21,6 @@ jobs:
               with:
                   php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: pcov
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +50,6 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -77,7 +75,6 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -105,7 +102,6 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -131,7 +127,6 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -157,7 +152,6 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -182,7 +176,6 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -205,14 +198,13 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.4, 8.0]
+                php: [7.4, 8.0, 8.1]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -237,7 +229,7 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     nightly:
-        name: PHP 8.1
+        name: PHP 8.2
         runs-on: ubuntu-18.04
         if: github.event_name != 'push'
         continue-on-error: true
@@ -245,9 +237,8 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.1
+                  php-version: 8.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -284,7 +275,6 @@ jobs:
               with:
                   php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -318,7 +308,6 @@ jobs:
               with:
                   php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -359,7 +348,6 @@ jobs:
                   php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
-                  tools: flex
                   coverage: none
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}

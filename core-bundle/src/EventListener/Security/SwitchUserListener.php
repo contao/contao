@@ -33,8 +33,6 @@ class SwitchUserListener
 
     /**
      * Logs successful user impersonations.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(SwitchUserEvent $event): void
     {

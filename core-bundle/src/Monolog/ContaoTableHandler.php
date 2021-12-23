@@ -91,8 +91,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
     /**
      * Verifies the database connection and prepares the statement.
-     *
-     * @throws \RuntimeException
      */
     private function createStatement(): void
     {
