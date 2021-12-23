@@ -6,5 +6,10 @@
     },
     "conflict": {
         "symfony/framework-bundle": ">=6"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
     }
 }
