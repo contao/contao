@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\ServiceUnavailableListener;
 use Contao\CoreBundle\Exception\ServiceUnavailableException;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\ManagerBundle\HttpKernel\JwtManager;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +36,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request);
 
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $this->mockJwtManager(null));
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -55,7 +54,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request, false);
 
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $this->mockJwtManager(null));
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -74,7 +73,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request);
 
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $this->mockJwtManager(null));
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -93,27 +92,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request);
 
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $this->mockJwtManager(null));
-        $listener($event);
-    }
-
-    public function testDoesNotThrowExceptionIfMaintenanceIsDisabledByJwt(): void
-    {
-        $pageModel = $this->mockClassWithProperties(PageModel::class);
-        $pageModel
-            ->expects($this->never())
-            ->method('loadDetails')
-        ;
-
-        $request = new Request();
-        $request->attributes->set('_scope', 'frontend');
-        $request->attributes->set('pageModel', $pageModel);
-
-        $event = $this->mockEvent($request);
-
-        $jwtManager = $this->mockJwtManager(['bypass_maintenance' => true]);
-
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $jwtManager);
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -124,9 +103,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request);
 
-        $jwtManager = $this->mockJwtManager([]);
-
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $jwtManager);
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -144,9 +121,7 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request);
 
-        $jwtManager = $this->mockJwtManager([]);
-
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $jwtManager);
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -164,12 +139,10 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $event = $this->mockEvent($request);
 
-        $jwtManager = $this->mockJwtManager([]);
-
         $this->expectException(ServiceUnavailableException::class);
         $this->expectExceptionMessage('Domain  is in maintenance mode');
 
-        $listener = new ServiceUnavailableListener($this->mockScopeMatcher(), $jwtManager);
+        $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
     }
 
@@ -191,21 +164,5 @@ class ServiceUnavailableListenerTest extends TestCase
         ;
 
         return $event;
-    }
-
-    /**
-     * @return JwtManager&MockObject
-     */
-    private function mockJwtManager(?array $cookieData): JwtManager
-    {
-        $jwtManager = $this->createMock(JwtManager::class);
-
-        $jwtManager
-            ->expects(null === $cookieData ? $this->never() : $this->atLeastOnce())
-            ->method('parseRequest')
-            ->willReturn($cookieData)
-        ;
-
-        return $jwtManager;
     }
 }
