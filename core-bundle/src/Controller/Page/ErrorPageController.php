@@ -24,10 +24,11 @@ use Symfony\Component\HttpFoundation\Response;
  * @Page("error_401", path=false)
  * @Page("error_403", path=false)
  * @Page("error_404", path=false)
+ * @Page("error_503", path=false)
  *
  * @internal
  */
-class Error4xxPageController extends AbstractController implements ContentCompositionInterface
+class ErrorPageController extends AbstractController implements ContentCompositionInterface
 {
     private ContaoFramework $framework;
 
@@ -48,6 +49,6 @@ class Error4xxPageController extends AbstractController implements ContentCompos
 
     public function supportsContentComposition(PageModel $pageModel): bool
     {
-        return !$pageModel->autoforward;
+        return 'error_503' === $pageModel->type || !$pageModel->autoforward;
     }
 }

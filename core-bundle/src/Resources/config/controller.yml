@@ -95,7 +95,7 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\Page\Error4xxPageController:
+    Contao\CoreBundle\Controller\Page\ErrorPageController:
         arguments:
             - '@contao.framework'
 
