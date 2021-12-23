@@ -102,8 +102,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Adds the parameters to the alias.
-     *
-     * @throws MissingMandatoryParametersException
      */
     private function prepareAlias(string $alias, array &$parameters): void
     {

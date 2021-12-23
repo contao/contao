@@ -50,9 +50,6 @@ class UserChecker implements UserCheckerInterface
     {
     }
 
-    /**
-     * @throws LockedException
-     */
     private function checkIfAccountIsLocked(User $user): void
     {
         $lockedSeconds = $user->locked - time();

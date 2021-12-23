@@ -714,7 +714,7 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404'), true) ? $objPage->type : 'regular';
+		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404', 'error_503'), true) ? $objPage->type : 'regular';
 		$image = $type . '.svg';
 
 		// Page not published or not active
@@ -724,13 +724,13 @@ abstract class Controller extends System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404', 'error_503')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404', 'error_503')))
 		{
 			$sub += 4;
 		}
