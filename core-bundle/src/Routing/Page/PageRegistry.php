@@ -18,7 +18,6 @@ use Doctrine\DBAL\Connection;
 class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
-    private const DISABLE_ROUTING = ['error_401', 'error_403', 'error_404'];
 
     private Connection $connection;
     private ?array $urlPrefixes = null;
@@ -61,7 +60,7 @@ class PageRegistry
         $options = $config->getOptions();
         $path = $config->getPath();
 
-        if (false === $path || \in_array($type, self::DISABLE_ROUTING, true)) {
+        if (false === $path) {
             $path = '';
             $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         } elseif (null === $path) {
@@ -183,11 +182,6 @@ class PageRegistry
     {
         $type = $page->type;
 
-        // Check for non-routable legacy error pages
-        if (\in_array($type, self::DISABLE_ROUTING, true)) {
-            return false;
-        }
-
         // Any legacy page without route config is routable by default
         if (!isset($this->routeConfigs[$type])) {
             return true;
@@ -202,7 +196,7 @@ class PageRegistry
      */
     public function getUnroutableTypes(): array
     {
-        $types = self::DISABLE_ROUTING;
+        $types = [];
 
         foreach ($this->routeConfigs as $type => $config) {
             if (false === $config->getPath()) {
