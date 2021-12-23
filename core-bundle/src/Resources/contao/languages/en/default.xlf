@@ -1466,9 +1466,6 @@
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
       </trans-unit>
