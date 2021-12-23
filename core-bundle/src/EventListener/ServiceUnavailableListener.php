@@ -50,7 +50,7 @@ class ServiceUnavailableListener
         $pageModel->loadDetails();
 
         if ($pageModel->maintenanceMode) {
-            throw new ServiceUnavailableException(sprintf('Domain %s is in maintenance mode', $pageModel->dns));
+            throw new ServiceUnavailableException('This website is in maintenance mode.');
         }
     }
 }

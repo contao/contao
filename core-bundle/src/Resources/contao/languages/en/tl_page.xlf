@@ -39,7 +39,7 @@
         <source>Here you can define how search engines handle the page.</source>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
-        <source>Enable maintenance mode</source>
+        <source>Maintenance mode</source>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.1">
         <source>Show visitors a page that this website is currently being maintained.</source>

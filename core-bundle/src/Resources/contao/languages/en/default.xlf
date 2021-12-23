@@ -597,7 +597,7 @@
         <source>503 Service unavailable</source>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>If the maintenance mode is enabled in the root page, a 503 error page will be shown for all requests.</source>
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
