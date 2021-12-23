@@ -20,20 +20,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
  */
 class MaintenanceModeCommand extends Command
 {
-    private string $webDir;
+    private string $maintenanceFilePath;
     private Environment $twig;
     private Filesystem $filesystem;
 
-    public function __construct(string $webDir, Environment $twig, Filesystem $filesystem = null)
+    public function __construct(string $maintenanceFilePath, Environment $twig, Filesystem $filesystem = null)
     {
-        $this->webDir = $webDir;
+        $this->maintenanceFilePath = $maintenanceFilePath;
         $this->twig = $twig;
         $this->filesystem = $filesystem ?? new Filesystem();
 
@@ -71,7 +70,7 @@ class MaintenanceModeCommand extends Command
     {
         // Render the template and write it to maintenance.html
         $this->filesystem->dumpFile(
-            Path::join($this->webDir, 'maintenance.html'),
+            $this->maintenanceFilePath,
             $this->twig->render($templateName, array_merge(
                 [
                     'statusCode' => 503,
@@ -85,6 +84,6 @@ class MaintenanceModeCommand extends Command
 
     private function disable(): void
     {
-        $this->filesystem->remove(Path::join($this->webDir, 'maintenance.html'));
+        $this->filesystem->remove($this->maintenanceFilePath);
     }
 }

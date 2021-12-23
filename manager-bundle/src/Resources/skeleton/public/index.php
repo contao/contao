@@ -24,8 +24,8 @@ if (in_array('phar', stream_get_wrappers(), true)) {
 }
 
 // System maintenance mode comes first as it has to work even if the vendor directory does not exist
-if (file_exists(__DIR__.'/maintenance.html')) {
-    $contents = file_get_contents(__DIR__.'/maintenance.html');
+if (file_exists(__DIR__.'/../var/maintenance.html')) {
+    $contents = file_get_contents(__DIR__.'/../var/maintenance.html');
 
     header('HTTP/1.1 503 Service Unavailable', true, 503);
     header('Content-Type: text/html; charset=UTF-8', true, 503);

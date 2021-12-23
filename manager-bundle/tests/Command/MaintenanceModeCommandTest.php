@@ -37,7 +37,7 @@ class MaintenanceModeCommandTest extends TestCase
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
-            ->with('/path/to/webdir/maintenance.html', 'parsed-template')
+            ->with('/path/to/var/maintenance.html', 'parsed-template')
         ;
 
         $params = ['state' => 'enable'];
@@ -50,7 +50,7 @@ class MaintenanceModeCommandTest extends TestCase
             $params['--templateVars'] = $customTemplateVars;
         }
 
-        $command = new MaintenanceModeCommand('/path/to/webdir', $twig, $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($params);
@@ -64,10 +64,10 @@ class MaintenanceModeCommandTest extends TestCase
         $filesystem
             ->expects($this->once())
             ->method('remove')
-            ->with('/path/to/webdir/maintenance.html')
+            ->with('/path/to/var/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/webdir', $this->getTwigMock(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);

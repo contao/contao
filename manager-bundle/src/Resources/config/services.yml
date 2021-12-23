@@ -20,7 +20,7 @@ services:
     contao_manager.command.maintenance_mode:
         class: Contao\ManagerBundle\Command\MaintenanceModeCommand
         arguments:
-            - '%contao.web_dir%'
+            - '%kernel.project_dir%/var/maintenance.html'
             - '@twig'
 
     contao_manager.command.setup:
