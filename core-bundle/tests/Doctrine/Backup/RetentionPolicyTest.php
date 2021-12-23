@@ -138,7 +138,7 @@ class RetentionPolicyTest extends ContaoTestCase
             [
                 'backup__20211116133600.sql.gz', // This is the latest
                 'backup__20211116063600.sql.gz', // This is the oldest for -1 day ago
-                // According to keepIntervals, we'd keep more backups but we are limited by the total
+                // According to keepIntervals, we'd keep more backups, but we are limited by the total
             ],
         ];
     }

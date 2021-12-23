@@ -620,11 +620,11 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-
-                                    return false;
                                 } catch (\Exception $e) {
                                     return true;
                                 }
+
+                                return false;
                             }
                         )
                     ->thenInvalid('%s')

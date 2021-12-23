@@ -32,8 +32,9 @@ class BackupManagerTest extends ContaoTestCase
     {
         parent::setUp();
 
-        (new Filesystem())->remove($this->getBackupDir());
-        (new Filesystem())->mkdir($this->getBackupDir());
+        $fs = new Filesystem();
+        $fs->remove($this->getBackupDir());
+        $fs->mkdir($this->getBackupDir());
     }
 
     protected function tearDown(): void

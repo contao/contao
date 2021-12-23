@@ -340,6 +340,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
 
         $retentionPolicyDefinition = $definition->getArgument(4);
+
         $this->assertInstanceOf(Definition::class, $retentionPolicyDefinition);
         $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
         $this->assertSame(5, $retentionPolicyDefinition->getArgument(0));
@@ -367,6 +368,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame(['foobar'], $definition->getArgument(3));
 
         $retentionPolicyDefinition = $definition->getArgument(4);
+
         $this->assertInstanceOf(Definition::class, $retentionPolicyDefinition);
         $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
         $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
