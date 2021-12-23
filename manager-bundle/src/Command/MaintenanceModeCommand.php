@@ -20,9 +20,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -57,7 +54,6 @@ class MaintenanceModeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $shouldEnable = \in_array($input->getArgument('state'), ['enable', 'on'], true);
-
         $io = new SymfonyStyle($input, $output);
 
         if ($shouldEnable) {
@@ -71,21 +67,19 @@ class MaintenanceModeCommand extends Command
         return 0;
     }
 
-    /**
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     */
     private function enable(string $templateName, string $templateVars): void
     {
         // Render the template and write it to maintenance.html
         $this->filesystem->dumpFile(
             Path::join($this->webDir, 'maintenance.html'),
-            $this->twig->render($templateName, array_merge([
-                'statusCode' => 503,
-                'language' => 'en',
-                'template' => $templateName,
-            ], json_decode($templateVars, true)))
+            $this->twig->render($templateName, array_merge(
+                [
+                    'statusCode' => 503,
+                    'language' => 'en',
+                    'template' => $templateName,
+                ],
+                json_decode($templateVars, true)
+            ))
         );
     }
 

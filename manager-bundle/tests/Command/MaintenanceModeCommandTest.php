@@ -29,10 +29,7 @@ class MaintenanceModeCommandTest extends TestCase
         $twig
             ->expects($this->once())
             ->method('render')
-            ->with(
-                $expectedTemplateName,
-                $expectedTemplateVars
-            )
+            ->with($expectedTemplateName, $expectedTemplateVars)
             ->willReturn('parsed-template')
         ;
 
@@ -40,13 +37,8 @@ class MaintenanceModeCommandTest extends TestCase
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
-            ->with(
-                '/path/to/webdir/maintenance.html',
-                'parsed-template'
-            )
+            ->with('/path/to/webdir/maintenance.html', 'parsed-template')
         ;
-
-        $command = new MaintenanceModeCommand('/path/to/webdir', $twig, $filesystem);
 
         $params = ['state' => 'enable'];
 
@@ -57,6 +49,8 @@ class MaintenanceModeCommandTest extends TestCase
         if ($customTemplateVars) {
             $params['--templateVars'] = $customTemplateVars;
         }
+
+        $command = new MaintenanceModeCommand('/path/to/webdir', $twig, $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($params);
@@ -73,11 +67,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->with('/path/to/webdir/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand(
-            '/path/to/webdir',
-            $this->getTwigMock(),
-            $filesystem
-        );
+        $command = new MaintenanceModeCommand('/path/to/webdir', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);
@@ -122,7 +112,7 @@ class MaintenanceModeCommandTest extends TestCase
     private function getFilesystemMock()
     {
         return $this->getMockBuilder(Filesystem::class)
-            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method other than the ones we mock
+            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method than the ones we mock
             ->getMock()
         ;
     }
@@ -131,7 +121,7 @@ class MaintenanceModeCommandTest extends TestCase
     {
         return $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
-            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method other than the ones we mock
+            ->disableAutoReturnValueGeneration() // Ensure we don't call any other method than the ones we mock
             ->getMock()
         ;
     }
