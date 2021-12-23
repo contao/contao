@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-
-class ServiceUnavailableException extends ServiceUnavailableHttpException
+class ServiceUnavailableException extends \RuntimeException
 {
 }
