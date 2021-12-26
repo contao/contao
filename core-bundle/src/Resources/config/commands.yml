@@ -90,6 +90,11 @@ services:
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
 
+    contao.command.send_mail:
+        class: Contao\CoreBundle\Command\SendMailCommand
+        arguments:
+            - '@mailer'
+
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
         public: true
