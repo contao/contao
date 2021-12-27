@@ -588,6 +588,6 @@ class tl_layout extends Contao\Backend
 			array_insert($array, $i, 'layout.css');
 		}
 
-		return $array;
+		return serialize($array);
 	}
 }
