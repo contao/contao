@@ -107,7 +107,11 @@ class PrettyErrorScreenListener
                 break;
 
             case $exception instanceof ServiceUnavailableHttpException:
-                $this->renderTemplate('service_unavailable', 503, $event);
+                $this->renderErrorScreenByType(503, $event);
+
+                if (!$event->hasResponse()) {
+                    $this->renderTemplate('service_unavailable', 503, $event);
+                }
                 break;
 
             default:
