@@ -15,7 +15,6 @@ namespace Contao\InstallationBundle\Database;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -108,10 +107,15 @@ class Installer
         $order = [];
 
         // Create the from and to schema
-        $fromSchema = $this->connection->createSchemaManager()->createSchema();
+        $schemaManager = $this->connection->createSchemaManager();
+        $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
-        $diff = (new Comparator())->compareSchemas($fromSchema, $toSchema)->toSql($this->connection->getDatabasePlatform());
+        $diff = $schemaManager
+            ->createComparator()
+            ->compareSchemas($fromSchema, $toSchema)
+            ->toSql($this->connection->getDatabasePlatform())
+        ;
 
         foreach ($diff as $sql) {
             switch (true) {
