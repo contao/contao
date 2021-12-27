@@ -81,6 +81,9 @@ services:
             - '@database_connection'
             - '@translator'
 
+    contao.listener.data_container.navigation_module_alias:
+        class: Contao\CoreBundle\EventListener\DataContainer\NavigationModuleAliasListener
+
     contao.listener.data_container.page_search:
         class: Contao\CoreBundle\EventListener\DataContainer\PageSearchListener
         public: true
