@@ -17,18 +17,21 @@ use Contao\ModuleCustomnav;
 use Contao\ModuleModel;
 use Contao\ModuleSitemap;
 use Contao\PageModel;
+use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Provider\MenuProviderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class NavigationModuleProvider implements MenuProviderInterface
 {
+    private FactoryInterface $factory;
     private FrontendMenuBuilder $builder;
     private ContaoFramework $framework;
     private RequestStack $requestStack;
 
-    public function __construct(FrontendMenuBuilder $builder, ContaoFramework $framework, RequestStack $requestStack)
+    public function __construct(FactoryInterface $factory, FrontendMenuBuilder $builder, ContaoFramework $framework, RequestStack $requestStack)
     {
+        $this->factory = $factory;
         $this->builder = $builder;
         $this->framework = $framework;
         $this->requestStack = $requestStack;
@@ -45,6 +48,7 @@ class NavigationModuleProvider implements MenuProviderInterface
 
         $currentPage = null !== $request ? $request->attributes->get('pageModel') : null;
 
+        $menu = $this->factory->createItem('root');
         $options = array_merge($module->row(), $options);
         $options += ['isSitemap' => $module instanceof ModuleSitemap];
         $options += ['isCustomNav' => $module instanceof ModuleCustomnav];
@@ -72,7 +76,7 @@ class NavigationModuleProvider implements MenuProviderInterface
             $host = $rootPage->domain;
         }
 
-        return $this->builder->getMenu((int) $trail[$level], 1, $host ?? null, $options);
+        return $this->builder->getMenu($menu, (int) $trail[$level], 1, $host ?? null, $options);
     }
 
     public function has(string $name, array $options = []): bool
