@@ -22,6 +22,13 @@ final class ContaoCoreEvents
     public const BACKEND_MENU_BUILD = 'contao.backend_menu_build';
 
     /**
+     * The contao.frontend_menu_build event is triggered when a frontend navigation module menu is built.
+     *
+     * @see FrontendMenuEvent
+     */
+    public const FRONTEND_MENU_BUILD = 'contao.frontend_menu_build';
+
+    /**
      * The contao.generate_symlinks event is triggered when the symlinks are generated.
      *
      * @see GenerateSymlinksEvent

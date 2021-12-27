@@ -12,7 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Menu;
 
-use Contao\CoreBundle\Event\MenuEvent;
+use Contao\CoreBundle\Event\ContaoCoreEvents;
+use Contao\CoreBundle\Event\FrontendMenuEvent;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -133,9 +134,8 @@ class FrontendMenuBuilder
             $root->addChild($item);
         }
 
-        // TODO this is the same event as for the backend. must introduce new event
-        $menuEvent = new MenuEvent($this->factory, $root);
-        $this->dispatcher->dispatch($menuEvent);
+        $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $level, $options);
+        $this->dispatcher->dispatch($menuEvent, ContaoCoreEvents::FRONTEND_MENU_BUILD);
 
         return $root;
     }
