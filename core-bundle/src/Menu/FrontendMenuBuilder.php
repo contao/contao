@@ -59,12 +59,12 @@ class FrontendMenuBuilder
     public function getMenu(ItemInterface $root, int $pid, int $level = 1, string $host = null, array $options = []): ItemInterface
     {
         $options = array_replace([
-             'showHidden' => false,
-             'showProtected' => false,
-             'showLevel' => 0,
-             'hardLimit' => false,
-             'isSitemap' => false,
-         ], $options);
+            'showHidden' => false,
+            'showProtected' => false,
+            'showLevel' => 0,
+            'hardLimit' => false,
+            'isSitemap' => false,
+        ], $options);
 
         if (null === ($pages = $this->getPages($pid, $options))) {
             return $root;
@@ -109,17 +109,16 @@ class FrontendMenuBuilder
                 continue;
             }
 
-            ++$level;
-
             // Check whether there will be subpages
             if ($hasSubpages) {
-                $this->getMenu($item, (int) $page->id, $level, $host, $options);
+                $nextLevel = $level + 1;
+                $this->getMenu($item, (int) $page->id, $nextLevel, $host, $options);
 
                 $childRecords = Database::getInstance()->getChildRecords($page->id, 'tl_page');
 
                 if (
                     !$options['showLevel']
-                    || $options['showLevel'] >= $level
+                    || $nextLevel > $options['showLevel']
                     || (!$options['hardLimit'] && (($requestPage->id === $page->id) || \in_array($requestPage->id, $childRecords, false)))
                 ) {
                     $item->setDisplayChildren(false);
