@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Menu;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\ModuleCustomnav;
+use Contao\LayoutModel;
 use Contao\ModuleModel;
 use Contao\ModuleSitemap;
 use Contao\PageModel;
@@ -41,12 +41,20 @@ class NavigationModuleProvider implements MenuProviderInterface
     {
         $request = $this->requestStack->getCurrentRequest();
         $moduleAdapter = $this->framework->getAdapter(ModuleModel::class);
+        $layoutAdapter = $this->framework->getAdapter(LayoutModel::class);
 
-        if (null === $module = $moduleAdapter->findBy('menuAlias', $name)) {
+        $t = ModuleModel::getTable();
+        $currentPage = null !== $request ? $request->attributes->get('pageModel') : null;
+        $layout = null !== $currentPage ? $layoutAdapter->findByPk($currentPage->layout) : null;
+        $module = $moduleAdapter->findBy('menuAlias', $name, [
+            'return' => 'Model',
+            'limit' => 1,
+            'order' => null !== $layout ? "$t.pid={$layout->pid} DESC" : null,
+        ]);
+
+        if (null === $module) {
             throw new \InvalidArgumentException(sprintf('The menu "%s" is not defined.', $name));
         }
-
-        $currentPage = null !== $request ? $request->attributes->get('pageModel') : null;
 
         $menu = $this->factory->createItem('root');
         $options = array_merge($module->row(), $options);

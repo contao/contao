@@ -188,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'menuAlias' => array(
 			'exclude'   => true,
 			'inputType' => 'text',
-			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50 clr', 'unique' => true),
+			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50 clr'),
 			'sql'       => "varchar(255) NOT NULL default ''",
 		),
 		'levelOffset' => array
