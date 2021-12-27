@@ -19,7 +19,6 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
@@ -560,14 +559,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
-
-        // To find out whether we need to run the ResolvePrivatesPass, we take
-        // a private service and check the isPublic() return value. In Symfony
-        // 4.4, it will be "true", whereas in Symfony 5, it will be "false".
-        if (true === $container->findDefinition('contao.routing.page_router')->isPublic()) {
-            $pass = new ResolvePrivatesPass();
-            $pass->process($container);
-        }
 
         return $container;
     }

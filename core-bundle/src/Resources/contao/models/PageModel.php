@@ -19,6 +19,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -1290,6 +1291,8 @@ class PageModel extends Model
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string A URL that can be used in the front end
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
@@ -1331,6 +1334,8 @@ class PageModel extends Model
 	 *
 	 * @param string $strParams An optional string of URL parameters
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
 	public function getAbsoluteUrl($strParams=null)
@@ -1347,6 +1352,8 @@ class PageModel extends Model
 	 * Generate the front end preview URL
 	 *
 	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @throws RouteNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */

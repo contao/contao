@@ -52,7 +52,7 @@
         "contao/image": "^1.0",
         "contao/imagine-svg": "^1.0",
         "contao/manager-plugin": "^2.6.2",
-        "doctrine/dbal": "^3.1",
+        "doctrine/dbal": "^3.2",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.10",
         "doctrine/persistence": "^2.0",
