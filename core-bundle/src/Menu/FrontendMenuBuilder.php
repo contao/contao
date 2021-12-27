@@ -58,8 +58,15 @@ class FrontendMenuBuilder
 
     public function getMenu(int $pid, int $level = 1, string $host = null, array $options = []): ItemInterface
     {
-        $root = $this->factory->createItem('root');
+        $options = array_replace([
+            'showHidden' => false,
+            'showProtected' => false,
+            'showLevel' => 0,
+            'hardLimit' => false,
+            'isSitemap' => false,
+        ], $options);
 
+        $root = $this->factory->createItem('root');
         if (null === ($pages = $this->getPages($pid, $options))) {
             return $root;
         }
@@ -71,7 +78,7 @@ class FrontendMenuBuilder
 
         foreach ($pages as ['page' => $page, 'hasSubpages' => $hasSubpages]) {
             // Skip hidden sitemap pages
-            if (($options['isSitemap'] ?? false) && 'map_never' === $page->sitemap) {
+            if ($options['isSitemap'] && 'map_never' === $page->sitemap) {
                 continue;
             }
 
@@ -151,6 +158,10 @@ class FrontendMenuBuilder
     {
         // Get all active pages and also include root pages if the language is added to the URL (see #72)
         $pages = PageModel::findPublishedRegularByIds($pageIds, ['includeRoot' => true]);
+
+        if (null === $pages) {
+            return null;
+        }
 
         return array_map(
             static fn (PageModel $page): array => [
