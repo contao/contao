@@ -51,7 +51,6 @@ class NavigationModuleProvider implements MenuProviderInterface
         $menu = $this->factory->createItem('root');
         $options = array_merge($module->row(), $options);
         $options += ['isSitemap' => $module instanceof ModuleSitemap];
-        $options += ['isCustomNav' => $module instanceof ModuleCustomnav];
 
         // Set the trail and level
         if ($options['defineRoot'] && $options['rootPage'] > 0) {
