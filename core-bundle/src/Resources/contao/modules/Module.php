@@ -341,7 +341,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Will be removed in Contao 5.0
+	 * @deprecated Will be removed in Contao 5.0. Navigation modules are now compiled with KnpMenuBundle. Use the FrontendMenuEvent and alter the $item->getExtra(), if needed.
 	 */
 	protected function compileNavigationRow(PageModel $objPage, PageModel $objSubpage, $subitems, $href)
 	{
@@ -418,6 +418,8 @@ abstract class Module extends Frontend
 	 * Prepare menu item for usage in nav_* templates.
 	 *
 	 * @return array
+	 *
+	 * @internal use the parseTemplate hook if you want to alter the nav_* templates
 	 */
 	protected function compileMenuItem(ItemInterface $menuItem, string $subitems = ''): array
 	{
@@ -443,7 +445,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 *
-	 * @deprecated Will be removed in Contao 5.0
+	 * @deprecated Will be removed in Contao 5.0, no replacement is given. This method was moved to FrontendMenuBuilder#findPagesByPid().
 	 */
 	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
 	{

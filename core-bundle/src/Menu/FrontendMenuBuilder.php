@@ -20,7 +20,6 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\Date;
-use Contao\Environment;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
@@ -29,6 +28,7 @@ use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Security\Core\Security;
@@ -72,6 +72,7 @@ class FrontendMenuBuilder
         }
 
         $request = $this->requestStack->getCurrentRequest();
+        /** @var PageModel|null $requestPage */
         $requestPage = $request->attributes->get('pageModel');
 
         $isMember = $this->security->isGranted('ROLE_MEMBER');
@@ -130,7 +131,7 @@ class FrontendMenuBuilder
                 continue;
             }
 
-            $this->populateMenuItem($item, $requestPage, $page, $href, $options);
+            $this->populateMenuItem($item, $request, $page, $href, $options);
             $root->addChild($item);
         }
 
@@ -142,6 +143,7 @@ class FrontendMenuBuilder
 
     private function getPages(int $pid, array $options): ?array
     {
+        // Custom page choice like, e.g., for the custom navigation module
         if (0 === $pid && $options['pages']) {
             return $this->findPagesByIds($options['pages']);
         }
@@ -252,15 +254,18 @@ class FrontendMenuBuilder
         }
     }
 
-    private function populateMenuItem(MenuItem $item, PageModel $requestPage, PageModel $page, ?string $href, array $options = []): void
+    private function populateMenuItem(MenuItem $item, Request $request, PageModel $page, ?string $href, array $options = []): void
     {
+        /** @var PageModel|null $requestPage */
+        $requestPage = $request->attributes->get('pageModel');
+
         $extra = $page->row();
         $isTrail = \in_array($page->id, $requestPage->trail, false);
 
         $item->setUri($href);
 
         // Use the path without query string to check for active pages (see #480)
-        $path = current(explode('?', Environment::get('request'), 2));
+        $path = ltrim($request->getPathInfo(), '/');
 
         $isActive = $href === $path
             && !($options['isSitemap'] ?? false)
