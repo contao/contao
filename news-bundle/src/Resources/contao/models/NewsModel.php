@@ -244,8 +244,10 @@ class NewsModel extends Model
 			$arrColumns[] = "$t.featured=''";
 		}
 
+		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+
 		// Never return unpublished elements in the back end, so they don't end up in the RSS feed
-		if (!BE_USER_LOGGED_IN || TL_MODE == 'BE')
+		if (!$blnShowUnpublished || TL_MODE == 'BE')
 		{
 			$time = Date::floorToMinute();
 			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";

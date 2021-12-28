@@ -5,7 +5,7 @@ $MatomoSite = 0;
 $MatomoPath = '//www.example.com/matomo/';
 
 // DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
-if ($MatomoSite > 0 && '//www.example.com/matomo/' != $MatomoPath && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
+if ($MatomoSite > 0 && '//www.example.com/matomo/' != $MatomoPath && !$this->hasAuthenticatedBackendUser()): ?>
 
 <script>
   var _paq = window._paq = window._paq || [];
