@@ -37,7 +37,7 @@ class PublishedFilter implements RouteFilterInterface
 
     public function filter(RouteCollection $collection, Request $request): RouteCollection
     {
-        if ($this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode()) {
+        if ($this->tokenChecker->isPreviewMode()) {
             return $collection;
         }
 

@@ -85,7 +85,7 @@ class ModuleArticle extends Module
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 
 		// Preview mode is enabled, so show the article
-		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		if ($tokenChecker->isPreviewMode())
 		{
 			return false;
 		}
