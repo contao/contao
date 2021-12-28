@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -140,15 +142,28 @@ class BackendPopup extends Backend
 
 				try
 				{
-					$image = System::getContainer()->get('contao.image.preview_factory')->createPreviewImage($projectDir . '/' . $this->strFile, (new ResizeConfiguration())->setWidth(864));
+					$pictureSize = (new PictureConfiguration())
+						->setSize(
+							(new PictureConfigurationItem())
+								->setResizeConfig((new ResizeConfiguration())->setWidth(864))
+								->setDensities('1x, 2x')
+						)
+					;
 
-					$objTemplate->src = $image->getUrl($projectDir);
+					$previewPictures = array();
+					$container = System::getContainer();
+					$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
+					$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
-					if (!$image->getDimensions()->isUndefined() && !$image->getDimensions()->isRelative())
+					foreach ($pictures as $picture)
 					{
-						$objTemplate->width = $image->getDimensions()->getSize()->getWidth();
-						$objTemplate->height = $image->getDimensions()->getSize()->getHeight();
+						$previewPictures[] = array(
+							'img' => $picture->getImg($projectDir, $staticUrl),
+							'sources' => $picture->getSources($projectDir, $staticUrl),
+						);
 					}
+
+					$objTemplate->previewPictures = $previewPictures;
 				}
 				catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
 				{

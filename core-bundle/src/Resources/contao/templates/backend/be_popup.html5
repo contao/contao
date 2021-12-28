@@ -103,9 +103,11 @@
       <?php endif; ?>
       <?php if ($this->hasPreview): ?>
         <div id="preview">
-          <div class="checkerbox"<?php if ($this->width && $this->height): ?> style="width:<?= $this->width ?>px;height:<?= $this->height ?>px"<?php endif; ?>>
-            <img src="<?= $this->src ?>" alt="">
-          </div>
+          <?php foreach ($this->previewPictures as $picture): ?>
+            <div class="checkerbox"<?php if (!empty($picture['img']['width']) && !empty($picture['img']['height'])): ?> style="width:<?= $picture['img']['width'] ?>px;height:<?= $picture['img']['height'] ?>px"<?php endif; ?>>
+              <?php $this->insert('picture_default', $picture) ?>
+            </div>
+          <?php endforeach ?>
         </div>
       <?php endif; ?>
     </main>

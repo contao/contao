@@ -27,9 +27,11 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         return true;
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): string
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, int $page = 1, array $options = []): string
     {
-        $targetPath = "$targetPath.svg";
+        if (1 !== $page) {
+            throw new UnableToGeneratePreviewException(sprintf('There is no page %s in "%s"', $page, $sourcePath));
+        }
 
         $svgCode = '<?xml version="1.0"?>'."\n";
         $svgCode .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 30 30">';
@@ -44,14 +46,23 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         $svgCode .= '</text>';
         $svgCode .= '</svg>';
 
-        $image = (new Imagine())->load($svgCode);
+        $targetPath = "$targetPath.svg";
 
-        if ($size > 0) {
-            $image->resize(new Box($size, $size));
-        }
-
-        $image->save($targetPath, ['format' => 'svg']);
+        (new Imagine())
+            ->load($svgCode)
+            ->resize(new Box($size, $size))
+            ->save($targetPath, ['format' => 'svg'])
+        ;
 
         return $targetPath;
+    }
+
+    public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): \Generator
+    {
+        if (1 !== $firstPage || $lastPage < 1) {
+            return;
+        }
+
+        yield $this->generatePreview($sourcePath, $size, $targetPathCallback(1), 1, $options);
     }
 }

@@ -46,15 +46,17 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return $this->imagineSupportsFormat($format);
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): string
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, int $page = 1, array $options = []): string
     {
-        $targetPath = "$targetPath.png";
+        $targetPath .= '.png';
 
         try {
-            if ($this->imagine instanceof ImagickImagine && 'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))) {
-                $image = $this->openImagickPdf($sourcePath);
+            if ($this->imagine instanceof ImagickImagine) {
+                $image = $this->openImagick($sourcePath, $page, $page);
+            } elseif ($this->imagine instanceof GmagickImagine) {
+                $image = $this->openGmagick($sourcePath, $page, $page);
             } else {
-                $image = $this->imagine->open($sourcePath)->layers()->get(0);
+                $image = $this->imagine->open($sourcePath)->layers()->get($page - 1);
             }
 
             $targetSize = $this->getDimensionsFromImageSize($image->getSize(), $size)->getSize();
@@ -68,6 +70,46 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         }
 
         return $targetPath;
+    }
+
+    public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): iterable
+    {
+        try {
+            $images = [];
+
+            if ($this->imagine instanceof ImagickImagine) {
+                $images = iterator_to_array($this->openImagick($sourcePath, $firstPage, $lastPage)->layers(), false);
+            } elseif ($this->imagine instanceof GmagickImagine) {
+                $images = iterator_to_array($this->openGmagick($sourcePath, $firstPage, $lastPage)->layers(), false);
+            } else {
+                $layers = $this->imagine->open($sourcePath)->layers();
+
+                for ($page = $firstPage; $page <= $lastPage; ++$page) {
+                    if (!$layers->has($page - 1)) {
+                        break;
+                    }
+                    $images[] = $layers->get($page - 1);
+                }
+            }
+
+            $targetPaths = [];
+            $page = $firstPage;
+
+            foreach ($images as $image) {
+                $image
+                    ->resize($this->getDimensionsFromImageSize($image->getSize(), $size)->getSize())
+                    ->save($targetPaths[] = $targetPathCallback($page).'.png', ['format' => 'png'])
+                ;
+
+                if (++$page > $lastPage) {
+                    break;
+                }
+            }
+        } catch (\Throwable $exception) {
+            throw new UnableToGeneratePreviewException('', 0, $exception);
+        }
+
+        return $targetPaths;
     }
 
     private function getDimensionsFromImageSize(BoxInterface $imageSize, int $size): ImageDimensions
@@ -109,23 +151,50 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', \get_class($this->imagine)));
     }
 
-    private function openImagickPdf(string $sourcePath): ImageInterface
+    private function openImagick(string $sourcePath, int $firstPage, int $lastPage): ImageInterface
     {
-        $imagick = new \Imagick();
-        $imagick->setResolution(144, 144);
-        $imagick->readImage($sourcePath.'[0]');
+        /** @psalm-suppress UndefinedClass */
+        return $this->openMagick(\Imagick::class, $sourcePath, $firstPage, $lastPage);
+    }
+
+    private function openGmagick(string $sourcePath, int $firstPage, int $lastPage): ImageInterface
+    {
+        /** @psalm-suppress UndefinedClass */
+        return $this->openMagick(\Gmagick::class, $sourcePath, $firstPage, $lastPage);
+    }
+
+    /**
+     * @param class-string<\Gmagick|\Imagick> $magickClass
+     */
+    private function openMagick(string $magickClass, string $sourcePath, int $firstPage, int $lastPage): ImageInterface
+    {
+        $magick = new $magickClass();
+
+        if (
+            'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
+            && \is_callable([$magick, 'setResolution'])
+        ) {
+            $magick->setResolution(144, 144);
+            // TODO: use Imagick::pingImage() to retrieve the smallest size and set the correct resolution
+        }
+
+        if (PHP_INT_MAX === $lastPage) {
+            $lastPage = 0x7FFFFF; // 32bit PDF limit
+        }
+
+        $magick->readImage($sourcePath.'['.($firstPage - 1).'-'.($lastPage - 1).']');
 
         $palette = new RGB();
 
-        if (\Imagick::COLORSPACE_CMYK === $imagick->getImageColorspace()) {
+        if ($magickClass::COLORSPACE_CMYK === $magick->getImageColorspace()) {
             $palette = new CMYK();
-        } elseif (\Imagick::COLORSPACE_GRAY === $imagick->getImageColorspace()) {
+        } elseif ($magickClass::COLORSPACE_GRAY === $magick->getImageColorspace()) {
             $palette = new Grayscale();
         }
 
         return $this->imagine->getClassFactory()->createImage(
-            ClassFactoryInterface::HANDLE_IMAGICK,
-            $imagick,
+            \constant(ClassFactoryInterface::class.'::HANDLE_'.strtoupper($magickClass)),
+            $magick,
             $palette,
             $this->imagine->getMetadataReader()->readFile($sourcePath),
         );

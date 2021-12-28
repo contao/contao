@@ -32,7 +32,7 @@ use Webmozart\PathUtil\Path;
 
 class PreviewFactory
 {
-    private const MINIMUM_SIZE = 256;
+    private const DEFAULT_SIZE = 128;
 
     /**
      * @var iterable<int,PreviewProviderInterface>
@@ -77,8 +77,12 @@ class PreviewFactory
     /**
      * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
      */
-    public function createPreview(string $path, int $size = 0, array $previewOptions = []): ImageInterface
+    public function createPreview(string $path, int $size = self::DEFAULT_SIZE, int $page = 1, array $previewOptions = []): ImageInterface
     {
+        if ($page < 1) {
+            throw new \InvalidArgumentException();
+        }
+
         // Supported image formats do not need an extra preview image
         if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), $this->validImageExtensions, true)) {
             return $this->imageFactory->create($path);
@@ -86,14 +90,14 @@ class PreviewFactory
 
         $size = $this->normalizeSize($size);
 
-        if (null !== ($cachedPreview = $this->getCachedPreview($path, $size, $previewOptions))) {
-            return $this->imageFactory->create($cachedPreview);
-        }
-
         $targetPath = Path::join(
             $this->cacheDir,
-            $this->createCachePath($path, $size, $previewOptions)
+            $this->createCachePath($path, $size, $previewOptions).$this->getPageSuffix($page)
         );
+
+        if (null !== ($cachedPreview = $this->getCachedPreview($targetPath))) {
+            return $this->imageFactory->create($cachedPreview);
+        }
 
         if (!is_dir(\dirname($targetPath))) {
             (new Filesystem())->mkdir(\dirname($targetPath));
@@ -105,7 +109,7 @@ class PreviewFactory
         foreach ($this->previewProviders as $provider) {
             if ($provider->supports($path, $header)) {
                 try {
-                    $targetPath = $provider->generatePreview($path, $size, $targetPath, $previewOptions);
+                    $targetPath = $provider->generatePreview($path, $size, $targetPath, $page, $previewOptions);
 
                     return $this->imageFactory->create($targetPath);
                 } catch (UnableToGeneratePreviewException $exception) {
@@ -118,13 +122,82 @@ class PreviewFactory
     }
 
     /**
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
+     *
+     * @return iterable<ImageInterface>
+     */
+    public function createPreviews(string $path, int $size = 0, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    {
+        // Supported image formats do not need an extra preview image
+        if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), $this->validImageExtensions, true)) {
+            return [$this->imageFactory->create($path)];
+        }
+
+        $size = $this->normalizeSize($size);
+
+        $targetPath = Path::join(
+            $this->cacheDir,
+            $this->createCachePath($path, $size, $previewOptions)
+        );
+
+        if (null !== ($cachedPreviews = $this->getCachedPreviews($targetPath, $firstPage, $lastPage))) {
+            return array_map(fn ($path) => $this->imageFactory->create($path), $cachedPreviews);
+        }
+
+        if (!is_dir(\dirname($targetPath))) {
+            (new Filesystem())->mkdir(\dirname($targetPath));
+        }
+
+        $header = $this->getHeader($path);
+        $lastProviderException = null;
+        $targetPathCallback = fn (int $page) => $targetPath.$this->getPageSuffix($page);
+
+        foreach ($this->previewProviders as $provider) {
+            if ($provider->supports($path, $header)) {
+                try {
+                    $previews = $provider->generatePreviews(
+                        $path,
+                        $size,
+                        $targetPathCallback,
+                        $lastPage,
+                        $firstPage,
+                        $previewOptions
+                    );
+
+                    if (!\is_array($previews)) {
+                        $previews = iterator_to_array($previews, false);
+                    }
+
+                    // We reached the last page if the number of returned
+                    // previews was less than the number of pages requested
+                    if (\count($previews) > 0 && \count($previews) <= $lastPage - $firstPage) {
+                        $lastPreview = $previews[array_key_last($previews)];
+                        $fileExtension = pathinfo($lastPreview, PATHINFO_EXTENSION);
+                        $this->symlink($lastPreview, "$targetPath-last.$fileExtension");
+                    }
+
+                    if (\count($previews) > 1 + $lastPage - $firstPage) {
+                        throw new \LogicException(sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', \get_class($provider), \count($previews), 1 + $lastPage - $firstPage));
+                    }
+
+                    return array_map(fn ($path) => $this->imageFactory->create($path), $previews);
+                } catch (UnableToGeneratePreviewException $exception) {
+                    $lastProviderException = $exception;
+                }
+            }
+        }
+
+        throw $lastProviderException ?? new MissingPreviewProviderException();
+    }
+
+    /**
      * @param int|string|array|ResizeConfiguration|null $size
      */
-    public function createPreviewImage(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): ImageInterface
+    public function createPreviewImage(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
     {
         return $this->imageFactory
             ->create(
-                $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $previewOptions),
+                $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions),
                 $size,
                 $resizeOptions,
             )
@@ -132,9 +205,109 @@ class PreviewFactory
     }
 
     /**
+     * @param int|string|array|ResizeConfiguration|null $size
+     *
+     * @return iterable<ImageInterface>
+     */
+    public function createPreviewImages(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    {
+        $previews = $this->createPreviews(
+            $path,
+            $this->getPreviewSizeFromImageSize($size),
+            $lastPage,
+            $firstPage,
+            $previewOptions,
+        );
+
+        return array_map(
+            fn ($preview) => $this->imageFactory->create($preview, $size, $resizeOptions),
+            \is_array($previews) ? $previews : iterator_to_array($previews, false),
+        );
+    }
+
+    /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewPicture(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): PictureInterface
+    public function createPreviewPicture(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
+    {
+        $previewPath = $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions);
+
+        return $this->convertPreviewsToPictures([$previewPath], $size, $resizeOptions)[0];
+    }
+
+    /**
+     * @param int|string|array|PictureConfiguration|null $size
+     *
+     * @return iterable<PictureInterface>
+     */
+    public function createPreviewPictures(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    {
+        return $this->convertPreviewsToPictures(
+            $this->createPreviews(
+                $path,
+                $this->getPreviewSizeFromImageSize($size),
+                $lastPage,
+                $firstPage,
+                $previewOptions,
+            ),
+            $size,
+            $resizeOptions,
+        );
+    }
+
+    /**
+     * @param int|string|array|PictureConfiguration|null $size
+     */
+    public function createPreviewFigure(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
+    {
+        return $this->createPreviewFigureBuilder($path, $size, $resizeOptions, $page, $previewOptions)->build();
+    }
+
+    /**
+     * @param int|string|array|PictureConfiguration|null $size
+     *
+     * @return iterable<Figure>
+     */
+    public function createPreviewFigures(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    {
+        $figures = [];
+        $previews = $this->createPreviews(
+            $path,
+            $this->getPreviewSizeFromImageSize($size),
+            $lastPage,
+            $firstPage,
+            $previewOptions,
+        );
+
+        $builder = $this->imageStudio->createFigureBuilder()->setSize($size)->setResizeOptions($resizeOptions);
+
+        foreach ($previews as $preview) {
+            $figures[] = $builder->fromImage($preview)->build();
+        }
+
+        return $figures;
+    }
+
+    /**
+     * @param int|string|array|PictureConfiguration|null $size
+     */
+    public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
+    {
+        return $this->imageStudio
+            ->createFigureBuilder()
+            ->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions))
+            ->setSize($size)
+            ->setResizeOptions($resizeOptions)
+        ;
+    }
+
+    /**
+     * @param iterable<ImageInterface>                   $previews
+     * @param int|string|array|PictureConfiguration|null $size
+     *
+     * @return iterable<PictureInterface>
+     */
+    private function convertPreviewsToPictures(iterable $previews, $size, ResizeOptions $resizeOptions = null): iterable
     {
         // Unlike the Contao\Image\PictureFactory the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third
@@ -158,49 +331,36 @@ class PreviewFactory
             return $type instanceof \ReflectionNamedType && ResizeOptions::class === $type->getName();
         };
 
-        $arguments = [$this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $previewOptions), $size];
+        $commonArguments = [$size];
 
         if (null !== $resizeOptions && $canHandleResizeOptions($this->pictureFactory)) {
-            $arguments[] = $resizeOptions;
+            $commonArguments[] = $resizeOptions;
         }
 
-        return $this->pictureFactory->create(...$arguments);
-    }
-
-    /**
-     * @param int|string|array|PictureConfiguration|null $size
-     */
-    public function createPreviewFigure(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): Figure
-    {
-        return $this->createPreviewFigureBuilder($path, $size, $resizeOptions, $previewOptions)->build();
-    }
-
-    /**
-     * @param int|string|array|PictureConfiguration|null $size
-     */
-    public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, array $previewOptions = []): FigureBuilder
-    {
-        return $this->imageStudio
-            ->createFigureBuilder()
-            ->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $previewOptions))
-            ->setSize($size)
-            ->setResizeOptions($resizeOptions)
-        ;
+        return array_map(
+            fn ($path) => $this->pictureFactory->create($path, ...$commonArguments),
+            \is_array($previews) ? $previews : iterator_to_array($previews, false),
+        );
     }
 
     private function normalizeSize(int $size): int
     {
-        // Minimum size for previews
-        $size = 0 === $size ? 0 : max(self::MINIMUM_SIZE, $size);
+        if ($size < 1) {
+            throw new \InvalidArgumentException('Preview size must larger than zero');
+        }
 
-        // Round up to the next highest power of two
-        return (int) (2 ** ceil(log($size, 2)));
+        $newSize = self::DEFAULT_SIZE;
+
+        while ($newSize < $size) {
+            $newSize *= 2;
+        }
+
+        return $newSize;
     }
 
-    private function getCachedPreview(string $path, int $size, array $previewOptions): ?string
+    private function getCachedPreview(string $targetPath): ?string
     {
-        $cachePath = $this->createCachePath($path, $size, $previewOptions);
-        $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $this->cacheDir.'/'.$cachePath).'.*';
+        $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $targetPath).'.*';
 
         foreach (glob($globPattern) as $cacheFile) {
             if (\in_array(pathinfo($cacheFile, PATHINFO_EXTENSION), $this->validImageExtensions, true)) {
@@ -209,6 +369,46 @@ class PreviewFactory
         }
 
         return null;
+    }
+
+    private function getCachedPreviews(string $targetPath, int $firstPage, int $lastPage): ?array
+    {
+        $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $targetPath).'*.*';
+
+        $filesFound = [];
+
+        foreach (glob($globPattern) as $cacheFile) {
+            if (\in_array(pathinfo($cacheFile, PATHINFO_EXTENSION), $this->validImageExtensions, true)) {
+                $filesFound[pathinfo($cacheFile, PATHINFO_FILENAME)] = $cacheFile;
+            }
+        }
+
+        $previews = [];
+        $fileName = pathinfo($targetPath, PATHINFO_BASENAME);
+
+        for ($page = $firstPage; $page <= $lastPage; ++$page) {
+            $cacheFileName = $fileName.$this->getPageSuffix($page);
+
+            if (isset($filesFound[$cacheFileName])) {
+                $previews[] = $filesFound[$cacheFileName];
+                continue;
+            }
+
+            if (!isset($filesFound["$fileName-last"])) {
+                return null;
+            }
+
+            $lastName = pathinfo((new Filesystem())->readlink($filesFound["$fileName-last"]), PATHINFO_FILENAME);
+            $lastFound = $fileName.$this->getPageSuffix($page - 1);
+
+            if ($lastName !== $lastFound) {
+                return null;
+            }
+
+            break;
+        }
+
+        return $previews;
     }
 
     private function getHeader(string $path): string
@@ -348,5 +548,19 @@ class PreviewFactory
         $pathinfo = pathinfo($path);
 
         return Path::join($hash[0], $pathinfo['filename'].'-'.substr($hash, 1));
+    }
+
+    private function getPageSuffix(int $page): string
+    {
+        return $page < 2 ? '' : '-'.$page;
+    }
+
+    private function symlink(string $linkToPath, string $linkPath): void
+    {
+        if ('\\' !== \DIRECTORY_SEPARATOR) {
+            $linkToPath = Path::makeRelative($linkToPath, \dirname($linkPath));
+        }
+
+        (new Filesystem())->symlink($linkToPath, $linkPath);
     }
 }

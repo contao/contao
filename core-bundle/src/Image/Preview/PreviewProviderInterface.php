@@ -29,5 +29,14 @@ interface PreviewProviderInterface
      *
      * @return string Target path including the file extension
      */
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, array $options = []): string;
+    public function generatePreview(string $sourcePath, int $size, string $targetPath, int $page = 1, array $options = []): string;
+
+    /**
+     * @param \Closure(int): string $targetPathCallback
+     *
+     * @throws UnableToGeneratePreviewException
+     *
+     * @return iterable<string>
+     */
+    public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): iterable;
 }
