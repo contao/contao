@@ -52,7 +52,7 @@ class ContaoCsrfTokenManagerTest extends TestCase
         );
 
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('The Contao CSRF token manager was not initialized with a frontend token name.');
+        $this->expectExceptionMessage('The Contao CSRF token manager was not initialized with a default token name.');
 
         $tokenManager->getDefaultTokenValue();
     }
