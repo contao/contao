@@ -53,7 +53,7 @@ class RequestToken
 	{
 		$container = System::getContainer();
 
-		return $container->get('contao.csrf.token_manager')->getFrontendTokenValue();
+		return $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**
