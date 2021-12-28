@@ -255,49 +255,22 @@ class FrontendMenuBuilder
     private function populateMenuItem(MenuItem $item, PageModel $requestPage, PageModel $page, ?string $href, array $options = []): void
     {
         $extra = $page->row();
-        $trail = \in_array($page->id, $requestPage->trail, false);
+        $isTrail = \in_array($page->id, $requestPage->trail, false);
 
         $item->setUri($href);
 
         // Use the path without query string to check for active pages (see #480)
         $path = current(explode('?', Environment::get('request'), 2));
 
-        $hasSubmenu = $item->hasChildren() && $item->getDisplayChildren();
-
-        if (
-            $href === $path
+        $isActive = $href === $path
             && !($options['isSitemap'] ?? false)
-            && (($requestPage->id === $page->id) || ('forward' === $page->type && $requestPage->id === $page->jumpTo))
-        ) {
-            $extra['isActive'] = true;
-            $extra['isTrail'] = false;
+            && (($requestPage->id === $page->id) || ('forward' === $page->type && $requestPage->id === $page->jumpTo));
 
-            $cssClass = implode('', [
-                'forward' === $page->type && $requestPage->id === $page->jumpTo ? 'forward'.($trail ? ' trail' : '') : 'active',
-                $hasSubmenu ? ' submenu' : '',
-                $page->protected ? ' protected' : '',
-                $page->cssClass ? ' '.$page->cssClass : '',
-            ]);
+        $item->setCurrent($isActive);
 
-            $item->setCurrent(true);
-        } else {
-            $cssClass = implode('', [
-                $hasSubmenu ? 'submenu' : '',
-                $page->protected ? ' protected' : '',
-                $trail ? ' trail' : '',
-                $page->cssClass ? ' '.$page->cssClass : '',
-            ]);
-
-            // Mark pages on the same level (see #2419)
-            if ($page->pid === $requestPage->pid) {
-                $cssClass .= ' sibling';
-            }
-
-            $extra['isActive'] = false;
-            $extra['isTrail'] = $trail;
-        }
-
-        $extra['class'] = trim($cssClass);
+        $extra['isActive'] = $isActive;
+        $extra['isTrail'] = $isActive ? false : $isTrail;
+        $extra['class'] = trim(implode(' ', $this->getCssClasses($item, $page, $requestPage, $isActive, $isTrail)));
         $extra['title'] = StringUtil::specialchars($page->title, true);
         $extra['pageTitle'] = StringUtil::specialchars($page->pageTitle, true);
         $extra['description'] = str_replace(["\n", "\r"], [' ', ''], (string) $page->description);
@@ -338,5 +311,44 @@ class FrontendMenuBuilder
         }
 
         $item->setExtra('pageModel', $page);
+    }
+
+    private function getCssClasses(ItemInterface $item, PageModel $page, PageModel $requestPage, bool $isActive, bool $isTrail): array
+    {
+        $classes = [];
+
+        $hasSubmenu = $item->hasChildren() && $item->getDisplayChildren();
+        $isForward = 'forward' === $page->type && $requestPage->id === $page->jumpTo;
+
+        if ($hasSubmenu) {
+            $classes[] = 'submenu';
+        }
+
+        if ($page->protected) {
+            $classes[] = 'protected';
+        }
+
+        if ($page->cssClass) {
+            $classes[] = $page->cssClass;
+        }
+
+        // Mark pages on the same level (see #2419)
+        if (!$isActive && $page->pid === $requestPage->pid) {
+            $classes[] = 'sibling';
+        }
+
+        if (($isActive && $isForward && $isTrail) || (!$isActive && $isTrail)) {
+            $classes[] = 'trail';
+        }
+
+        if ($isActive && $isForward) {
+            $classes[] = 'forward';
+        }
+
+        if ($isActive && !$isForward) {
+            $classes[] = 'active';
+        }
+
+        return $classes;
     }
 }
