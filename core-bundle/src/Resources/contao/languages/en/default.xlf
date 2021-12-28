@@ -2051,6 +2051,9 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
       </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

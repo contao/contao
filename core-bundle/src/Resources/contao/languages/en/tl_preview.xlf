@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_preview.php" source-language="en">
+    <body>
+      <trans-unit id="tl_preview.url.0">
+        <source>Target URL</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.url.1">
+        <source>Please enter the front end URL to be shared.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.showUnpublished.0">
+        <source>Show unpublished</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.showUnpublished.1">
+        <source>Check here to show unpublished pages and content when sharing this link.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.expires.0">
+        <source>Expires after</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.expires.1">
+        <source>Select how long this preview link should be available.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.dateAdded.0">
+        <source>Date added</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.dateAdded.1">
+        <source>Date and time this preview link was created.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.validUntil.0">
+        <source>Valid until</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.validUntil.1">
+        <source>Preview of the final date until this share link is available.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.published.0">
+        <source>Enabled</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.published.1">
+        <source>Make this link available for sharing.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.url_legend">
+        <source>URL</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.expire_legend">
+        <source>Expiration</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.publishing_legend">
+        <source>Publishing</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.expire_options.1">
+        <source>1 day</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.expire_options.7">
+        <source>7 days</source>
+      </trans-unit>
+      <trans-unit id="tl_preview.expire_options.30">
+        <source>30 days</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

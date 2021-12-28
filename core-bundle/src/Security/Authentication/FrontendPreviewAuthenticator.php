@@ -42,10 +42,6 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return false;
-        }
-
         $user = $this->loadFrontendUser($username);
 
         if (null === $user) {
@@ -61,10 +57,6 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendGuest(bool $showUnpublished): bool
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return false;
-        }
-
         $token = new FrontendPreviewToken(null, $showUnpublished);
 
         $this->session->set('_security_contao_frontend', serialize($token));

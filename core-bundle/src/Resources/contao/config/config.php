@@ -216,6 +216,10 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_files')
 		),
+		'preview' => array
+		(
+			'tables'                  => array('tl_preview')
+		),
 		'settings' => array
 		(
 			'tables'                  => array('tl_settings')

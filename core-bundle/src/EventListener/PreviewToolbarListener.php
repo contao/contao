@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -33,13 +34,15 @@ use Twig\Environment as TwigEnvironment;
 class PreviewToolbarListener
 {
     private ScopeMatcher $scopeMatcher;
+    private TokenChecker $tokenChecker;
     private TwigEnvironment $twig;
     private RouterInterface $router;
     private string $previewScript;
 
-    public function __construct(ScopeMatcher $scopeMatcher, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
+    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
     {
         $this->scopeMatcher = $scopeMatcher;
+        $this->tokenChecker = $tokenChecker;
         $this->twig = $twig;
         $this->router = $router;
         $this->previewScript = $previewScript;
@@ -47,7 +50,7 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
-        if ($this->scopeMatcher->isBackendMainRequest($event)) {
+        if ($this->scopeMatcher->isBackendMainRequest($event) || !$this->tokenChecker->hasBackendUser()) {
             return;
         }
 

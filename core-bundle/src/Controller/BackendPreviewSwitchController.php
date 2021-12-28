@@ -96,6 +96,12 @@ class BackendPreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
 
+        $shareLink = $this->router->generate('contao_backend', [
+            'do' => 'preview',
+            'act' => 'create',
+            'rt' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
+        ]);
+
         try {
             return $this->twig->render(
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
@@ -105,6 +111,7 @@ class BackendPreviewSwitchController
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
+                    'share' => $shareLink,
                 ]
             );
         } catch (TwigError $e) {
