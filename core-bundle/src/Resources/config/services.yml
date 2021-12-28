@@ -392,16 +392,6 @@ services:
             - '@logger'
         public: true
 
-    contao.menu.navigation_module_provider:
-        class: Contao\CoreBundle\Menu\NavigationModuleProvider
-        arguments:
-            - '@Knp\Menu\FactoryInterface'
-            - '@contao.menu.frontend_builder'
-            - '@contao.framework'
-            - '@request_stack'
-        tags:
-            - { name: knp_menu.provider }
-
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
         arguments:

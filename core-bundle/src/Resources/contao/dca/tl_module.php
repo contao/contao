@@ -102,8 +102,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	(
 		'__selector__'                => array('type', 'defineRoot', 'protected', 'reg_assignDir', 'reg_activate'),
 		'default'                     => '{title_legend},name,type',
-		'navigation'                  => '{title_legend},name,headline,type;{nav_legend},levelOffset,showLevel,hardLimit,showProtected,showHidden,menuAlias;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
-		'customnav'                   => '{title_legend},name,headline,type;{nav_legend},pages,showProtected,menuAlias;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
+		'navigation'                  => '{title_legend},name,headline,type;{nav_legend},levelOffset,showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
+		'customnav'                   => '{title_legend},name,headline,type;{nav_legend},pages,showProtected;{template_legend:hide},customTpl,navigationTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'breadcrumb'                  => '{title_legend},name,headline,type;{nav_legend},showHidden;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'quicknav'                    => '{title_legend},name,headline,type;{label_legend},customLabel;{nav_legend},showLevel,hardLimit,showProtected,showHidden;{reference_legend:hide},rootPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'quicklink'                   => '{title_legend},name,headline,type;{label_legend},customLabel;{nav_legend},pages,showProtected;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
@@ -184,12 +184,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NOT NULL default 'navigation'"
-		),
-		'menuAlias' => array(
-			'exclude'   => true,
-			'inputType' => 'text',
-			'eval'      => array('maxlength' => 255, 'tl_class' => 'w50 clr'),
-			'sql'       => "varchar(255) NOT NULL default ''",
 		),
 		'levelOffset' => array
 		(
