@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DataCollector;
 use Contao\ContentImage;
 use Contao\ContentText;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
@@ -106,6 +107,49 @@ class ContaoDataCollectorTest extends TestCase
         unset($GLOBALS['objPage']);
     }
 
+    public function testSetsTheFrontendPreviewFromTokenChecker(): void
+    {
+        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout->name = 'Default';
+        $layout->id = 2;
+        $layout->template = 'fe_page';
+
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
+
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 2;
+
+        $GLOBALS['objPage'] = $page;
+
+        $tokenChecker = $this->createMock(TokenChecker::class);
+        $tokenChecker
+            ->expects($this->once())
+            ->method('isPreviewMode')
+            ->willReturn(true)
+        ;
+
+        $collector = $this->getDataCollector(false, false, '.html', $tokenChecker);
+        $collector->setFramework($framework);
+        $collector->collect(new Request(), new Response());
+
+        $this->assertSame(
+            [
+                'version' => PackageUtil::getContaoVersion(),
+                'framework' => false,
+                'models' => 0,
+                'frontend' => true,
+                'preview' => true,
+                'layout' => 'Default (ID 2)',
+                'template' => 'fe_page',
+                'legacy_routing' => false,
+            ],
+            $collector->getSummary()
+        );
+
+        unset($GLOBALS['objPage']);
+    }
+
     public function testStoresTheLegacyRoutingData(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): void
     {
         $collector = $this->getDataCollector($legacyRouting, $prependLocale, $urlSuffix);
@@ -179,8 +223,14 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }
 
-    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): ContaoDataCollector
+    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html', TokenChecker $tokenChecker = null): ContaoDataCollector
     {
-        return new ContaoDataCollector($legacyRouting, \dirname(__DIR__).'/Fixtures/DataCollector', $prependLocale, $urlSuffix);
+        return new ContaoDataCollector(
+            $tokenChecker ?? $this->createMock(TokenChecker::class),
+            $legacyRouting,
+            \dirname(__DIR__).'/Fixtures/DataCollector',
+            $prependLocale,
+            $urlSuffix
+        );
     }
 }
