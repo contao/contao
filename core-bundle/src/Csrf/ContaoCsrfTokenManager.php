@@ -66,7 +66,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
     public function getDefaultTokenValue(): string
     {
         if (null === $this->defaultTokenName) {
-            throw new \RuntimeException('The Contao CSRF token manager was not initialized with a frontend token name.');
+            throw new \RuntimeException('The Contao CSRF token manager was not initialized with a default token name.');
         }
 
         return $this->getToken($this->defaultTokenName)->getValue();
