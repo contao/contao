@@ -179,7 +179,13 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             && \defined("$magickClass::ALPHACHANNEL_REMOVE")
         ) {
             // Fix white PDF background
-            $magick->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
+            if (is_iterable($magick)) {
+                foreach ($magick as $magickPage) {
+                    $magickPage->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
+                }
+            } else {
+                $magick->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
+            }
         }
 
         $palette = new RGB();
