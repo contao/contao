@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Menu;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\FrontendMenuEvent;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -136,7 +135,7 @@ class FrontendMenuBuilder
         }
 
         $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $level, $options);
-        $this->dispatcher->dispatch($menuEvent, ContaoCoreEvents::FRONTEND_MENU_BUILD);
+        $this->dispatcher->dispatch($menuEvent);
 
         return $root;
     }
