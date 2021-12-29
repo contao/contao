@@ -83,7 +83,7 @@ class DcaTest extends TestCase
 
         // TODO: Make this mockable / spyable!
         $callbackConsumer = new class() {
-            public function __call(mixed $method, mixed $arguments): void
+            public function __call(string $method, array $arguments): void
             {
             }
         };

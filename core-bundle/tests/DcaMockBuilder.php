@@ -21,6 +21,7 @@ use Contao\CoreBundle\Dca\SchemaFactory;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -142,7 +143,7 @@ final class DcaMockBuilder
 
         foreach ($mocks as $method => $mock) {
             if (!empty($mock['_mocks'] ?? null)) {
-                /** @var Dca $originalSchema */
+                /** @var SchemaInterface $originalSchema */
                 $originalSchema = $original ? $original->{$method}() : $dca->{$method}();
 
                 if (isset($mock['_mock'])) {
@@ -243,6 +244,9 @@ final class DcaMockBuilder
         return $mocks;
     }
 
+    /**
+     * @param array<MockObject>|MockObject $mock
+     */
     private function addMock(array $mocks, string $path, mixed $mock): array
     {
         if (\is_array($mock)) {
@@ -265,7 +269,10 @@ final class DcaMockBuilder
         return $mocks;
     }
 
-    private function parseSpies(array $spies, string $path, mixed $spy): array
+    /**
+     * @param array<InvocationOrder>|InvocationOrder $spy
+     */
+    private function parseSpies(array $spies, string $path, $spy): array
     {
         if (\is_array($spy)) {
             foreach ($spy as $k => $v) {

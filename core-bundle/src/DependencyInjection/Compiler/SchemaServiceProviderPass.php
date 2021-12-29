@@ -38,6 +38,7 @@ class SchemaServiceProviderPass implements CompilerPassInterface
                 throw new \LogicException(sprintf('Service "%s" must implement interface "%s".', $provider, SchemaProviderInterface::class));
             }
 
+            /** @var SchemaProviderInterface $provider */
             $schemas[] = $provider::getServiceSubscribingSchemas();
         }
 
@@ -50,9 +51,15 @@ class SchemaServiceProviderPass implements CompilerPassInterface
                 throw new \LogicException(sprintf('Schema "%s" must implement interface "%s".', $class, ServiceSubscriberSchemaInterface::class));
             }
 
-            foreach ($class::getSubscribedServices() as $key => $type) {
+            $services = $class::getSubscribedServices();
+
+            if (empty($services)) {
+                continue;
+            }
+
+            foreach ($services as $key => $type) {
                 if (!\is_string($type) || !preg_match('/(?(DEFINE)(?<cn>[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+))(?(DEFINE)(?<fqcn>(?&cn)(?:\\\\(?&cn))*+))^\??(?&fqcn)(?:(?:\|(?&fqcn))*+|(?:&(?&fqcn))*+)$/', $type)) {
-                    throw new InvalidArgumentException(sprintf('"%s::getSubscribedServices()" must return valid PHP types for service "%s", "%s" returned.', $class, $key, \is_string($type) ? $type : get_debug_type($type)));
+                    throw new InvalidArgumentException(sprintf('"%s::getSubscribedServices()" must return valid PHP types for service "%s", "%s" returned.', $class, $key, get_debug_type($type)));
                 }
 
                 if (\is_int($name = $key)) {

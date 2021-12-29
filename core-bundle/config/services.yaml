@@ -181,7 +181,7 @@ services:
         arguments:
             - '@contao.framework'
         tags:
-            - 'contao.dca.driver'
+            - contao.dca.driver
 
     contao.dca.schema_factory:
         class: Contao\CoreBundle\Dca\SchemaFactory
