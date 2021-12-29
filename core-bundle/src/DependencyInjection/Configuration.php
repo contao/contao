@@ -426,7 +426,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('allowed_url_protocols')
                     ->prototype('scalar')->end()
-                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data'])
+                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data', 'skype', 'whatsapp'])
                     ->validate()
                         ->always(
                             static function (array $protocols): array {
