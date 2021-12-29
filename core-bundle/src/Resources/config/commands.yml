@@ -90,7 +90,7 @@ services:
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
 
-    contao.command.send_mail:
+    contao.command.mailer_send:
         class: Contao\CoreBundle\Command\MailerSendCommand
         arguments:
             - '@mailer'
