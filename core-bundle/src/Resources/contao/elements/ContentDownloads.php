@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
-use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 use Contao\Model\Collection;
 
 /**

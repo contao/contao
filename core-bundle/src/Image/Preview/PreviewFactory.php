@@ -273,6 +273,100 @@ class PreviewFactory
     }
 
     /**
+     * @param int|string|array|ResizeConfiguration|PictureConfiguration|null $size
+     */
+    public function getPreviewSizeFromImageSize($size): int
+    {
+        if ($size instanceof ResizeConfiguration) {
+            return max($size->getWidth(), $size->getHeight());
+        }
+
+        if ($size instanceof PictureConfiguration) {
+            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
+                $size->getSize()->getResizeConfig()->getWidth(),
+                $size->getSize()->getResizeConfig()->getHeight(),
+                $size->getSize()->getDensities(),
+            );
+
+            foreach ($size->getSizeItems() as $sizeItem) {
+                $previewSize = max(
+                    $previewSize,
+                    $this->getPreviewSizeFromWidthHeightDensities(
+                        $size->getSize()->getResizeConfig()->getWidth(),
+                        $size->getSize()->getResizeConfig()->getHeight(),
+                        $size->getSize()->getDensities(),
+                    ),
+                );
+            }
+
+            return $previewSize;
+        }
+
+        // Support arrays in a serialized form
+        $size = StringUtil::deserialize($size);
+
+        if (!\is_array($size)) {
+            $size = [0, 0, $size];
+        }
+
+        if ($predefinedSize = $this->predefinedSizes[$size[2] ?? null] ?? null) {
+            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
+                $predefinedSize['width'] ?? 0,
+                $predefinedSize['height'] ?? 0,
+                $predefinedSize['densities'],
+            );
+
+            foreach ($predefinedSize['items'] ?? [] as $sizeItem) {
+                $previewSize = max(
+                    $previewSize,
+                    $this->getPreviewSizeFromWidthHeightDensities(
+                        $sizeItem['width'] ?? 0,
+                        $sizeItem['height'] ?? 0,
+                        $sizeItem['densities'],
+                    ),
+                );
+            }
+
+            return $previewSize;
+        }
+
+        if (is_numeric($size[2])) {
+            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
+
+            if (null === $imageSize) {
+                return 0;
+            }
+
+            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
+                (int) $imageSize->width,
+                (int) $imageSize->height,
+                $imageSize->densities,
+            );
+
+            $imageSizeItems = $this->framework->getAdapter(ImageSizeItemModel::class)->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
+
+            foreach ($imageSizeItems ?? [] as $sizeItem) {
+                $previewSize = max(
+                    $previewSize,
+                    $this->getPreviewSizeFromWidthHeightDensities(
+                        (int) $sizeItem->width,
+                        (int) $sizeItem->height,
+                        $sizeItem->densities,
+                    ),
+                );
+            }
+
+            return $previewSize;
+        }
+
+        return $this->getPreviewSizeFromWidthHeightDensities(
+            (int) ($size[0] ?? 0),
+            (int) ($size[1] ?? 0),
+            $this->defaultDensities,
+        );
+    }
+
+    /**
      * @param iterable<ImageInterface>                   $previews
      * @param int|string|array|PictureConfiguration|null $size
      *
@@ -378,100 +472,6 @@ class PreviewFactory
         }
 
         return $size > 0 ? file_get_contents($path, false, null, 0, $size) : '';
-    }
-
-    /**
-     * @param int|string|array|ResizeConfiguration|PictureConfiguration|null $size
-     */
-    public function getPreviewSizeFromImageSize($size): int
-    {
-        if ($size instanceof ResizeConfiguration) {
-            return max($size->getWidth(), $size->getHeight());
-        }
-
-        if ($size instanceof PictureConfiguration) {
-            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
-                $size->getSize()->getResizeConfig()->getWidth(),
-                $size->getSize()->getResizeConfig()->getHeight(),
-                $size->getSize()->getDensities(),
-            );
-
-            foreach ($size->getSizeItems() as $sizeItem) {
-                $previewSize = max(
-                    $previewSize,
-                    $this->getPreviewSizeFromWidthHeightDensities(
-                        $size->getSize()->getResizeConfig()->getWidth(),
-                        $size->getSize()->getResizeConfig()->getHeight(),
-                        $size->getSize()->getDensities(),
-                    ),
-                );
-            }
-
-            return $previewSize;
-        }
-
-        // Support arrays in a serialized form
-        $size = StringUtil::deserialize($size);
-
-        if (!\is_array($size)) {
-            $size = [0, 0, $size];
-        }
-
-        if ($predefinedSize = $this->predefinedSizes[$size[2] ?? null] ?? null) {
-            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
-                $predefinedSize['width'] ?? 0,
-                $predefinedSize['height'] ?? 0,
-                $predefinedSize['densities'],
-            );
-
-            foreach ($predefinedSize['items'] ?? [] as $sizeItem) {
-                $previewSize = max(
-                    $previewSize,
-                    $this->getPreviewSizeFromWidthHeightDensities(
-                        $sizeItem['width'] ?? 0,
-                        $sizeItem['height'] ?? 0,
-                        $sizeItem['densities'],
-                    ),
-                );
-            }
-
-            return $previewSize;
-        }
-
-        if (is_numeric($size[2])) {
-            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
-
-            if (null === $imageSize) {
-                return 0;
-            }
-
-            $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
-                (int) $imageSize->width,
-                (int) $imageSize->height,
-                $imageSize->densities,
-            );
-
-            $imageSizeItems = $this->framework->getAdapter(ImageSizeItemModel::class)->findVisibleByPid($size[2], ['order' => 'sorting ASC']);
-
-            foreach ($imageSizeItems ?? [] as $sizeItem) {
-                $previewSize = max(
-                    $previewSize,
-                    $this->getPreviewSizeFromWidthHeightDensities(
-                        (int) $sizeItem->width,
-                        (int) $sizeItem->height,
-                        $sizeItem->densities,
-                    ),
-                );
-            }
-
-            return $previewSize;
-        }
-
-        return $this->getPreviewSizeFromWidthHeightDensities(
-            (int) ($size[0] ?? 0),
-            (int) ($size[1] ?? 0),
-            $this->defaultDensities,
-        );
     }
 
     private function getPreviewSizeFromWidthHeightDensities(int $width, int $height, string $densities): int

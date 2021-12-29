@@ -149,7 +149,7 @@ class ContentDownload extends ContentElement
 	{
 		if (!$this->showPreview)
 		{
-			return [];
+			return array();
 		}
 
 		$container = System::getContainer();
@@ -171,14 +171,14 @@ class ContentDownload extends ContentElement
 
 		try
 		{
-			$lightboxPreviews = [];
+			$lightboxPreviews = array();
 			$previews = $factory->createPreviews($sourcePath, $factory->getPreviewSizeFromImageSize($this->size), $numberOfItems ?: PHP_INT_MAX);
-			$previews = is_array($previews) ? array_values($previews) : iterator_to_array($previews, false);
+			$previews = \is_array($previews) ? array_values($previews) : iterator_to_array($previews, false);
 
 			if ($this->fullsize)
 			{
 				$lightboxPreviews = $factory->createPreviews($sourcePath, $factory->getPreviewSizeFromImageSize($lightboxSize), $numberOfItems ?: PHP_INT_MAX);
-				$lightboxPreviews = is_array($lightboxPreviews) ? array_values($lightboxPreviews) : iterator_to_array($lightboxPreviews, false);
+				$lightboxPreviews = \is_array($lightboxPreviews) ? array_values($lightboxPreviews) : iterator_to_array($lightboxPreviews, false);
 			}
 
 			foreach ($previews as $index => $preview)
@@ -197,7 +197,7 @@ class ContentDownload extends ContentElement
 		}
 		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
 		{
-			return [];
+			return array();
 		}
 	}
 }
