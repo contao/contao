@@ -54,10 +54,6 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
             return $this->framework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}(...$arguments);
         }
 
-        if (!\is_callable($callback)) {
-            throw new \LogicException('This callback is not callable.');
-        }
-
         return $callback(...$arguments);
     }
 
@@ -84,7 +80,7 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
             }
         }
 
-        if (!\is_callable($data)) {
+        if (!\is_callable($data) && (!method_exists($data[0], $data[1]))) {
             throw new \InvalidArgumentException(sprintf('Callback %s is not callable', implode('::', $data)));
         }
     }

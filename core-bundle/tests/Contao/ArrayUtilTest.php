@@ -143,7 +143,7 @@ class ArrayUtilTest extends TestCase
     }
 
     /**
-     * @param mixed $expected
+     * @param mixed        $expected
      * @param string|array $path
      *
      * @dataProvider getDataProvider
@@ -206,8 +206,8 @@ class ArrayUtilTest extends TestCase
 
     /**
      * @param string|array $path
-     * @param mixed $value
-     * @param mixed $expected
+     * @param mixed        $value
+     * @param mixed        $expected
      *
      * @dataProvider setDataProvider
      */

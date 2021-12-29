@@ -65,16 +65,11 @@ class DcaTest extends TestCase
         $this->assertFalse($dca->config()->usesVersioning());
     }
 
-    public function testSchemaNodes(): void
+    public function testCallbackNodes(): void
     {
         $dca = $this->getDcaFactory()->get('tl_test');
 
         $dca->config()->callback('onload')->call();
-
-        $GLOBALS['TL_DCA']['tl_test']['config']['enableVersioning'] = false;
-
-        $this->assertFalse($dca->get('config.enableVersioning'));
-        $this->assertFalse($dca->config()->usesVersioning());
     }
 
     protected function getDcaFactory(): DcaFactory
