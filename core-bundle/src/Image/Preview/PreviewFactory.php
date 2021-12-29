@@ -81,46 +81,11 @@ class PreviewFactory
      */
     public function createPreview(string $path, int $size = 0, int $page = 1, array $previewOptions = []): ImageInterface
     {
-        if ($page < 1) {
-            throw new \InvalidArgumentException();
+        foreach ($this->createPreviews($path, $size, $page, $page, $previewOptions) as $preview) {
+            return $preview;
         }
 
-        // Supported image formats do not need an extra preview image
-        if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), $this->validImageExtensions, true)) {
-            return $this->imageFactory->create($path);
-        }
-
-        $size = $this->normalizeSize($size);
-
-        $targetPath = Path::join(
-            $this->cacheDir,
-            $this->createCachePath($path, $size, $previewOptions).$this->getPageSuffix($page)
-        );
-
-        if (null !== ($cachedPreview = $this->getCachedPreview($targetPath))) {
-            return $this->imageFactory->create($cachedPreview);
-        }
-
-        if (!is_dir(\dirname($targetPath))) {
-            (new Filesystem())->mkdir(\dirname($targetPath));
-        }
-
-        $header = $this->getHeader($path);
-        $lastProviderException = null;
-
-        foreach ($this->previewProviders as $provider) {
-            if ($provider->supports($path, $header)) {
-                try {
-                    $targetPath = $provider->generatePreview($path, $size, $targetPath, $page, $previewOptions);
-
-                    return $this->imageFactory->create($targetPath);
-                } catch (UnableToGeneratePreviewException $exception) {
-                    $lastProviderException = $exception;
-                }
-            }
-        }
-
-        throw $lastProviderException ?? new MissingPreviewProviderException();
+        throw new UnableToGeneratePreviewException();
     }
 
     /**
@@ -130,6 +95,10 @@ class PreviewFactory
      */
     public function createPreviews(string $path, int $size = 0, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
+        if ($firstPage < 1 || $lastPage < 1 || $firstPage > $lastPage) {
+            throw new \InvalidArgumentException();
+        }
+
         // Supported image formats do not need an extra preview image
         if (\in_array(strtolower(pathinfo($path, PATHINFO_EXTENSION)), $this->validImageExtensions, true)) {
             return [$this->imageFactory->create($path)];
@@ -358,19 +327,6 @@ class PreviewFactory
         }
 
         return min($newSize, $this->maxSize);
-    }
-
-    private function getCachedPreview(string $targetPath): ?string
-    {
-        $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $targetPath).'.*';
-
-        foreach (glob($globPattern) as $cacheFile) {
-            if (\in_array(pathinfo($cacheFile, PATHINFO_EXTENSION), $this->validImageExtensions, true)) {
-                return $cacheFile;
-            }
-        }
-
-        return null;
     }
 
     private function getCachedPreviews(string $targetPath, int $firstPage, int $lastPage): ?array

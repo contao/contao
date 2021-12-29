@@ -46,32 +46,6 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return $this->imagineSupportsFormat($format);
     }
 
-    public function generatePreview(string $sourcePath, int $size, string $targetPath, int $page = 1, array $options = []): string
-    {
-        $targetPath .= '.png';
-
-        try {
-            if ($this->imagine instanceof ImagickImagine) {
-                $image = $this->openImagick($sourcePath, $size, $page, $page);
-            } elseif ($this->imagine instanceof GmagickImagine) {
-                $image = $this->openGmagick($sourcePath, $size, $page, $page);
-            } else {
-                $image = $this->imagine->open($sourcePath)->layers()->get($page - 1);
-            }
-
-            $targetSize = $this->getDimensionsFromImageSize($image->getSize(), $size)->getSize();
-
-            $image
-                ->resize($targetSize)
-                ->save($targetPath, ['format' => 'png'])
-            ;
-        } catch (\Throwable $exception) {
-            throw new UnableToGeneratePreviewException('', 0, $exception);
-        }
-
-        return $targetPath;
-    }
-
     public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): iterable
     {
         try {
@@ -176,7 +150,6 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         $magick = new $magickClass();
 
         if (\is_callable([$magick, 'setResolution'])) {
-
             // Default to retina resolution
             $resolution = 72 * 2;
             $magick->setResolution($resolution, $resolution);
@@ -204,7 +177,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         if (
             'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
             && \is_callable([$magick, 'setImageAlphaChannel'])
-            && defined("$magickClass::ALPHACHANNEL_REMOVE")
+            && \defined("$magickClass::ALPHACHANNEL_REMOVE")
         ) {
             // Fix white PDF background
             $magick->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
