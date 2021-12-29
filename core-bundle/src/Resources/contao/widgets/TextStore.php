@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\TextStore" widget has been deprecated and will no longer work in Contao 5.0. Use the password widget instead.');
+
 /**
  * A TextStore field is used to enter data only. It will not show the
  * currently stored value (useful e.g. to store passwords).
@@ -17,6 +19,9 @@ namespace Contao;
  * @property integer $maxlength
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+ *             Use the password widget instead.
  */
 class TextStore extends Widget
 {

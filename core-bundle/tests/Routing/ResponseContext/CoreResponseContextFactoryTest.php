@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
@@ -22,6 +24,8 @@ use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -39,7 +43,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder()
+            new HtmlDecoder($this->createMock(InsertTagParser::class)),
+            $this->createMock(RequestStack::class),
+            $this->createMock(InsertTagParser::class)
         );
 
         $responseContext = $factory->createResponseContext();
@@ -59,7 +65,9 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder()
+            new HtmlDecoder($this->createMock(InsertTagParser::class)),
+            $this->createMock(RequestStack::class),
+            $this->createMock(InsertTagParser::class)
         );
 
         $responseContext = $factory->createWebpageResponseContext();
@@ -88,25 +96,37 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testContaoWebpageResponseContext(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
-
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
             ->expects($this->once())
             ->method('setResponseContext')
         ;
 
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->method('replaceInline')
+            ->withConsecutive(['My title'], ['My description'], ['{{link_url::42}}'])
+            ->willReturnOnConsecutiveCalls('My title', 'My description', 'de/foobar.html')
+        ;
+
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('https://example.com/'));
+
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
+        $pageModel->enableCanonical = '1';
+        $pageModel->canonicalLink = '{{link_url::42}}';
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder()
+            new HtmlDecoder($insertTagsParser),
+            $requestStack,
+            $insertTagsParser
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);
@@ -115,6 +135,7 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
         $this->assertSame('My title', $responseContext->get(HtmlHeadBag::class)->getTitle());
         $this->assertSame('My description', $responseContext->get(HtmlHeadBag::class)->getMetaDescription());
         $this->assertSame('noindex,nofollow', $responseContext->get(HtmlHeadBag::class)->getMetaRobots());
+        $this->assertSame('https://example.com/de/foobar.html', $responseContext->get(HtmlHeadBag::class)->getCanonicalUriForRequest(new Request()));
 
         $this->assertTrue($responseContext->has(JsonLdManager::class));
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
@@ -139,18 +160,29 @@ class CoreResponseContextFactoryTest extends ContaoTestCase
 
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
 
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $insertTagsParser
+            ->method('replaceInline')
+            ->willReturnArgument(0)
+        ;
+
         $factory = new CoreResponseContextFactory(
             $this->createMock(ResponseContextAccessor::class),
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(TokenChecker::class),
-            new HtmlDecoder()
+            new HtmlDecoder($insertTagsParser),
+            $this->createMock(RequestStack::class),
+            $insertTagsParser
         );
 
         $responseContext = $factory->createContaoWebpageResponseContext($pageModel);

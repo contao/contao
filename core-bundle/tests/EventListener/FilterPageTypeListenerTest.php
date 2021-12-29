@@ -81,7 +81,7 @@ class FilterPageTypeListenerTest extends TestCase
         ;
 
         $event = new FilterPageTypeEvent(
-            ['foo', 'root', 'error_401', 'error_403', 'error_404'],
+            ['foo', 'root', 'error_401', 'error_403', 'error_404', 'error_503'],
             $this->mockDataContainer(17)
         );
 
@@ -126,7 +126,6 @@ class FilterPageTypeListenerTest extends TestCase
     {
         $activeRecord = array_filter(compact('id', 'pid'), static fn ($v): bool => null !== $v);
 
-        /** @var DataContainer&MockObject */
         return $this->mockClassWithProperties(
             DataContainer::class,
             ['activeRecord' => empty($activeRecord) ? null : (object) $activeRecord]

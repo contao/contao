@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Idna;
@@ -20,7 +21,6 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -269,7 +269,6 @@ class tl_newsletter_recipients extends Backend
 				$objRecipient = $this->Database->prepare("SELECT id FROM tl_newsletter_recipients WHERE pid=?")
 											 ->execute($id);
 
-				/** @var SessionInterface $objSession */
 				$objSession = System::getContainer()->get('session');
 
 				$session = $objSession->all();
@@ -392,7 +391,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_newsletter_recipients::active', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
 		{
 			return '';
 		}
@@ -445,7 +444,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_newsletter_recipients::active', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_newsletter_recipients::active'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish newsletter recipient ID ' . $intId . '.');
 		}

@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -182,7 +183,7 @@ class FileUpload extends Backend
 
 						// Notify the user
 						Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['fileUploaded'], $file['name']));
-						$this->log('File "' . $strNewFile . '" has been uploaded', __METHOD__, TL_FILES);
+						$this->log('File "' . $strNewFile . '" has been uploaded', __METHOD__, ContaoContext::FILES);
 
 						// Resize the uploaded image if necessary
 						$this->resizeUploadedImage($strNewFile);
@@ -307,7 +308,7 @@ class FileUpload extends Backend
 		if ($objFile->isGdImage && ($arrImageSize[0] > Config::get('gdMaxImgWidth') || $arrImageSize[1] > Config::get('gdMaxImgHeight')))
 		{
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileExceeds'], $objFile->basename));
-			$this->log('File "' . $strImage . '" is too big to be resized automatically', __METHOD__, TL_FILES);
+			$this->log('File "' . $strImage . '" is too big to be resized automatically', __METHOD__, ContaoContext::FILES);
 
 			return false;
 		}
@@ -337,7 +338,7 @@ class FileUpload extends Backend
 		{
 			$objFile->resizeTo($arrImageSize[0], $arrImageSize[1]);
 			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
-			$this->log('File "' . $strImage . '" was scaled down to the maximum dimensions', __METHOD__, TL_FILES);
+			$this->log('File "' . $strImage . '" was scaled down to the maximum dimensions', __METHOD__, ContaoContext::FILES);
 			$this->blnHasResized = true;
 
 			return true;

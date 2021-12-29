@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * A class to access the file system
  *
@@ -206,14 +208,18 @@ class Files
 			$this->delete($strNewName);
 		}
 
+		$fs = new Filesystem();
+
 		// Unix fix: rename case sensitively
 		if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0)
 		{
-			rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strOldName . '__');
+			$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strOldName . '__', true);
 			$strOldName .= '__';
 		}
 
-		return rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strNewName);
+		$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strNewName, true);
+
+		return true;
 	}
 
 	/**

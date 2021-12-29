@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -24,8 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment;
 
 class BackendPreviewSwitchControllerTest extends TestCase
@@ -40,7 +39,6 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
         );
 
         $request = $this->createMock(Request::class);
@@ -64,7 +62,6 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
         );
 
         $request = $this->createMock(Request::class);
@@ -85,22 +82,33 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame('CONTAO', $response->getContent());
     }
 
-    public function testProcessesAuthentication(): void
+    /**
+     * @dataProvider getAuthenticationScenarios
+     */
+    public function testProcessesAuthentication(?string $username, string $authenticateMethod): void
     {
+        $frontendPreviewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
+        $frontendPreviewAuthenticator
+            ->expects($this->once())
+            ->method($authenticateMethod)
+        ;
+
         $controller = new BackendPreviewSwitchController(
-            $this->createMock(FrontendPreviewAuthenticator::class),
-            $this->mockTokenChecker(),
+            $frontendPreviewAuthenticator,
+            $this->mockTokenChecker($username),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
         );
 
         $request = new Request(
             [],
-            ['FORM_SUBMIT' => 'tl_switch'],
+            [
+                'FORM_SUBMIT' => 'tl_switch',
+                'user' => $username,
+            ],
             [],
             [],
             [],
@@ -110,6 +118,13 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
+
+    public function getAuthenticationScenarios(): \Generator
+    {
+        yield [null, 'authenticateFrontendGuest'];
+        yield ['', 'authenticateFrontendGuest'];
+        yield ['k.jones', 'authenticateFrontendUser'];
     }
 
     public function testReturnsEmptyMemberList(): void
@@ -122,7 +137,6 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $this->getTwigMock(),
             $this->mockRouter(),
             $this->mockTokenManager(),
-            'csrf'
         );
 
         $request = new Request(
@@ -206,16 +220,16 @@ class BackendPreviewSwitchControllerTest extends TestCase
     }
 
     /**
-     * @return CsrfTokenManagerInterface&MockObject
+     * @return ContaoCsrfTokenManager&MockObject
      */
-    private function mockTokenManager(): CsrfTokenManagerInterface
+    private function mockTokenManager(): ContaoCsrfTokenManager
     {
-        $twig = $this->createMock(CsrfTokenManagerInterface::class);
-        $twig
-            ->method('getToken')
-            ->willReturn(new CsrfToken('csrf', 'csrf'))
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->method('getDefaultTokenValue')
+            ->willReturn('csrf')
         ;
 
-        return $twig;
+        return $tokenManager;
     }
 }

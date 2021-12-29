@@ -239,6 +239,24 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
+    public function testFailsOnInvalidBackupKeepIntervals(): void
+    {
+        $params = [
+            'contao' => [
+                'backup' => [
+                    'keep_intervals' => [
+                        'foobar',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.backup.keep_intervals": ["foobar"]');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).

@@ -34,8 +34,6 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
     /**
      * Logs the security exception to the Contao back end.
-     *
-     * @throws \RuntimeException
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
@@ -53,7 +51,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         $username = 'anon.';
 
         if ($exception instanceof AccountStatusException && ($user = $exception->getUser()) instanceof UserInterface) {
-            $username = $user->getUsername();
+            $username = $user->getUserIdentifier();
         }
 
         $this->logger->info(

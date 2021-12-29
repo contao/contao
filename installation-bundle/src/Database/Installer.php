@@ -26,7 +26,7 @@ class Installer
     private SchemaProvider $schemaProvider;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.installer" service instead
+     * @internal Do not inherit from this class; decorate the "contao_installation.database.installer" service instead
      */
     public function __construct(Connection $connection, SchemaProvider $schemaProvider)
     {
@@ -107,10 +107,15 @@ class Installer
         $order = [];
 
         // Create the from and to schema
-        $fromSchema = $this->connection->createSchemaManager()->createSchema();
+        $schemaManager = $this->connection->createSchemaManager();
+        $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
-        $diff = $fromSchema->getMigrateToSql($toSchema, $this->connection->getDatabasePlatform());
+        $diff = $schemaManager
+            ->createComparator()
+            ->compareSchemas($fromSchema, $toSchema)
+            ->toSql($this->connection->getDatabasePlatform())
+        ;
 
         foreach ($diff as $sql) {
             switch (true) {

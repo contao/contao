@@ -53,7 +53,7 @@ var AjaxRequest =
 	/**
 	 * Toggle the site structure tree
 	 *
-	 * @param {object} el    The DOM lement
+	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
 	 * @param {int}    level The indentation level
 	 * @param {int}    mode  The insert mode
@@ -1017,10 +1017,10 @@ var Backend =
 	 */
 	initScrollOffset: function() {
 		// Kill the legacy cookie here; this way it can be sent by the server
-		// but it wont be resent by the client in the next request
+		// but it won't be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
-		// Add events to the submit buttons so they can reset the offset
+		// Add events to the submit buttons, so they can reset the offset
 		// (except for "save", which always stays on the same page)
 		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
 			button.addEvent('click', function() {
@@ -2496,7 +2496,7 @@ var Backend =
 	},
 
 	/**
-	 * Allow to toggle checkboxes or radio buttons by clicking a row
+	 * Allow toggling checkboxes or radio buttons by clicking a row
 	 *
 	 * @author Kamil Kuzminski
 	 */
@@ -2594,7 +2594,7 @@ var Backend =
 		var inputs = edit
 			.getElements('input, textarea')
 			.filter(function(item) {
-				return !item.get('disabled') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image';
+				return !item.get('disabled') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
 			});
 
 		if (inputs[0]) inputs[0].focus();
@@ -2873,9 +2873,14 @@ var Backend =
 			}
 		}
 
-		function execRequest() {
+		function execRequest(onlyStatusUpdate) {
+			var onlyStatusUpdate = onlyStatusUpdate || false;
+
 			new Request({
 				url: window.location.href,
+				headers: {
+					'Only-Status-Update': onlyStatusUpdate
+				},
 				onSuccess: function(responseText) {
 					var response = JSON.decode(responseText);
 
@@ -2888,7 +2893,7 @@ var Backend =
 			}).send();
 		}
 
-		execRequest();
+		execRequest(true);
 	}
 };
 

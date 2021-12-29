@@ -23,10 +23,13 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
 class PageModelTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,11 +122,11 @@ class PageModelTest extends ContaoTestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s
      */
     public function testFindPublishedSubpagesWithoutGuestsByPid(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s');
+
         $databaseResultData = [
             ['id' => '1', 'alias' => 'alias1', 'subpages' => '0'],
             ['id' => '2', 'alias' => 'alias2', 'subpages' => '3'],

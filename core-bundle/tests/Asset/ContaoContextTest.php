@@ -315,9 +315,7 @@ class ContaoContextTest extends TestCase
 
     private function getContaoContext(string $field, RequestStack $requestStack = null): ContaoContext
     {
-        if (null === $requestStack) {
-            $requestStack = new RequestStack();
-        }
+        $requestStack ??= new RequestStack();
 
         $framework = $this->mockContaoFramework();
         $framework

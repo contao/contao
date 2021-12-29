@@ -22,8 +22,6 @@ class InsecureInstallationListener
 {
     /**
      * Throws an exception if the document root is insecure.
-     *
-     * @throws InsecureInstallationException
      */
     public function __invoke(RequestEvent $event): void
     {

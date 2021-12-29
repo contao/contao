@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class PurgeData extends Backend implements \executable
+class PurgeData extends Backend implements MaintenanceModuleInterface
 {
 	/**
 	 * Return true if the module is active

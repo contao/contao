@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authentication;
 
+use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -39,7 +39,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $session = $this->mockSession();
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->createPartialMock(FrontendUser::class, ['getRoles']);
         $user
             ->expects($this->once())
@@ -47,9 +46,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -96,10 +95,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
             ->expects($this->once())
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willThrowException(new UserNotFoundException())
         ;
 
@@ -124,7 +123,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturnOnConsecutiveCalls(true, false)
         ;
 
-        /** @var FrontendUser&MockObject $user */
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user
             ->expects($this->never())
@@ -132,9 +130,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->willReturn(['ROLE_MEMBER'])
         ;
 
-        $userProvider = $this->createMock(UserProviderInterface::class);
+        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
         $userProvider
-            ->method('loadUserByUsername')
+            ->method('loadUserByIdentifier')
             ->willReturn($user)
         ;
 
@@ -164,7 +162,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertSame('anon.', $token->getUser());
+        $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
         $this->assertSame($showUnpublished, $token->showUnpublished());
     }
 
@@ -252,10 +250,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
     private function getAuthenticator(Security $security = null, SessionInterface $session = null, UserProviderInterface $userProvider = null, LoggerInterface $logger = null): FrontendPreviewAuthenticator
     {
-        if (null === $security) {
-            $security = $this->createMock(Security::class);
-        }
-
         if (null === $session) {
             $session = $this->createMock(SessionInterface::class);
             $session
@@ -264,13 +258,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ;
         }
 
-        if (null === $userProvider) {
-            $userProvider = $this->createMock(UserProviderInterface::class);
-        }
-
-        if (null === $logger) {
-            $logger = $this->createMock(LoggerInterface::class);
-        }
+        $security ??= $this->createMock(Security::class);
+        $userProvider ??= $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $logger ??= $this->createMock(LoggerInterface::class);
 
         return new FrontendPreviewAuthenticator($security, $session, $userProvider, $logger);
     }

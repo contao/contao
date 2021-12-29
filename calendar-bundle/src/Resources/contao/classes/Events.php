@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Provide methods to get all events of a certain period from the database.
@@ -491,7 +490,7 @@ abstract class Events extends Module
 	 */
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
-		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 		$jsonLd = array(
 			'@type' => 'Event',
@@ -526,7 +525,7 @@ abstract class Events extends Module
 	}
 
 	/**
-	 * Return the begin and end timestamp and an error message as array
+	 * Return the beginning and end timestamp and an error message as array
 	 *
 	 * @param Date   $objDate
 	 * @param string $strFormat

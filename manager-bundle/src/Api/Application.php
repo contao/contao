@@ -70,11 +70,7 @@ class Application extends BaseApplication
 
     public function getManagerConfig(): ManagerConfig
     {
-        if (null === $this->managerConfig) {
-            $this->managerConfig = new ManagerConfig($this->projectDir);
-        }
-
-        return $this->managerConfig;
+        return $this->managerConfig ??= new ManagerConfig($this->projectDir);
     }
 
     public function setManagerConfig(ManagerConfig $managerConfig): void

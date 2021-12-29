@@ -20,7 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -138,7 +137,6 @@ class FaqPickerProviderTest extends ContaoTestCase
 
     public function testAddsTableAndIdIfThereIsAValue(): void
     {
-        /** @var FaqCategoryModel&MockObject $model */
         $model = $this->mockClassWithProperties(FaqCategoryModel::class);
         $model->id = 1;
 

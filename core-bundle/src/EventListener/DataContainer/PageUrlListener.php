@@ -14,31 +14,36 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Exception\DuplicateAliasException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Slug\Slug;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
-use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class PageUrlListener implements ResetInterface
 {
     private ContaoFramework $framework;
     private Slug $slug;
     private TranslatorInterface $translator;
     private Connection $connection;
+    private PageRegistry $pageRegistry;
     private ?array $prefixes = null;
     private ?array $suffixes = null;
 
-    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection)
+    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, PageRegistry $pageRegistry)
     {
         $this->framework = $framework;
         $this->slug = $slug;
         $this->translator = $translator;
         $this->connection = $connection;
+        $this->pageRegistry = $pageRegistry;
     }
 
     /**
@@ -46,21 +51,26 @@ class PageUrlListener implements ResetInterface
      */
     public function generateAlias(string $value, DataContainer $dc): string
     {
-        /** @var PageModel $pageAdapter */
-        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $pageModel = $this->framework->getAdapter(PageModel::class)->findWithDetails($dc->id);
 
-        /** @var PageModel $pageModel */
-        $pageModel = $pageAdapter->findWithDetails($dc->id);
+        if (null === $pageModel) {
+            return $value;
+        }
+
+        $this->addInputToPage($pageModel);
+        $isRoutable = $this->pageRegistry->isRoutable($pageModel);
 
         if ('' !== $value) {
             if (preg_match('/^[1-9]\d*$/', $value)) {
                 throw new \RuntimeException($this->translator->trans('ERR.aliasNumeric', [], 'contao_default'));
             }
 
-            try {
-                $this->aliasExists($value, (int) $pageModel->id, $pageModel, true);
-            } catch (DuplicateAliasException $exception) {
-                throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
+            if ($isRoutable) {
+                try {
+                    $this->aliasExists($value, (int) $pageModel->id, $pageModel, true);
+                } catch (DuplicateAliasException $exception) {
+                    throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
+                }
             }
 
             return $value;
@@ -70,7 +80,7 @@ class PageUrlListener implements ResetInterface
         $value = $this->slug->generate(
             $dc->activeRecord->title,
             $dc->activeRecord->id,
-            fn ($alias) => $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel)
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, (int) $pageModel->id, $pageModel)
         );
 
         // Generate folder URL aliases (see #4933)
@@ -79,32 +89,6 @@ class PageUrlListener implements ResetInterface
         }
 
         return $value;
-    }
-
-    /**
-     * @Callback(table="tl_page", target="fields.alias.save")
-     */
-    public function purgeSearchIndexOnAliasChange(string $value, DataContainer $dc): string
-    {
-        if ($value === $dc->activeRecord->alias) {
-            return $value;
-        }
-
-        $this->purgeSearchIndex((int) $dc->id);
-
-        return $value;
-    }
-
-    /**
-     * @Callback(table="tl_page", target="config.ondelete", priority=16)
-     */
-    public function purgeSearchIndexOnDelete(DataContainer $dc): void
-    {
-        if (!$dc->id) {
-            return;
-        }
-
-        $this->purgeSearchIndex((int) $dc->id);
     }
 
     /**
@@ -130,13 +114,14 @@ class PageUrlListener implements ResetInterface
             throw new \RuntimeException($this->translator->trans('ERR.urlPrefixExists', [$value], 'contao_default'));
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findByPk($dc->id);
+        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
         if (null === $rootPage) {
             return $value;
         }
+
+        $this->addInputToPage($rootPage);
 
         try {
             $this->recursiveValidatePages((int) $rootPage->id, $rootPage);
@@ -149,6 +134,10 @@ class PageUrlListener implements ResetInterface
 
     /**
      * @Callback(table="tl_page", target="fields.urlSuffix.save")
+     *
+     * @param mixed $value
+     *
+     * @return mixed
      */
     public function validateUrlSuffix($value, DataContainer $dc)
     {
@@ -156,13 +145,14 @@ class PageUrlListener implements ResetInterface
             return $value;
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findByPk($dc->id);
+        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
         if (null === $rootPage) {
             return $value;
         }
+
+        $this->addInputToPage($rootPage);
 
         try {
             $this->recursiveValidatePages((int) $rootPage->id, $rootPage);
@@ -179,24 +169,8 @@ class PageUrlListener implements ResetInterface
         $this->suffixes = null;
     }
 
-    public function purgeSearchIndex(int $pageId): void
-    {
-        $urls = $this->connection->fetchFirstColumn(
-            'SELECT url FROM tl_search WHERE pid=:pageId',
-            ['pageId' => $pageId]
-        );
-
-        /** @var Search $search */
-        $search = $this->framework->getAdapter(Search::class);
-
-        foreach ($urls as $url) {
-            $search->removeEntry($url);
-        }
-    }
-
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $pages = $pageAdapter->findByPid($pid);
 
@@ -206,7 +180,7 @@ class PageUrlListener implements ResetInterface
 
         /** @var PageModel $page */
         foreach ($pages as $page) {
-            if ($page->alias) {
+            if ($page->alias && $this->pageRegistry->isRoutable($page)) {
                 $this->aliasExists($page->alias, (int) $page->id, $rootPage, true);
             }
 
@@ -225,23 +199,6 @@ class PageUrlListener implements ResetInterface
         $currentPrefix = $currentPage->urlPrefix;
         $currentSuffix = $currentPage->urlSuffix;
 
-        if ('root' === $currentPage->type) {
-            /** @var Input $input */
-            $input = $this->framework->getAdapter(Input::class);
-
-            if (null !== ($dns = $input->post('dns'))) {
-                $currentDomain = $dns;
-            }
-
-            if (null !== ($urlPrefix = $input->post('urlPrefix'))) {
-                $currentPrefix = $urlPrefix;
-            }
-
-            if (null !== ($urlSuffix = $input->post('urlSuffix'))) {
-                $currentSuffix = $urlSuffix;
-            }
-        }
-
         $aliasIds = $this->connection->fetchFirstColumn(
             'SELECT id FROM tl_page WHERE alias LIKE :alias AND id!=:id',
             [
@@ -254,7 +211,6 @@ class PageUrlListener implements ResetInterface
             return false;
         }
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $currentUrl = $this->buildUrl($currentAlias, $currentPrefix, $currentSuffix);
 
@@ -262,6 +218,10 @@ class PageUrlListener implements ResetInterface
             $aliasPage = $pageAdapter->findWithDetails($aliasId);
 
             if (null === $aliasPage) {
+                continue;
+            }
+
+            if (!$this->pageRegistry->isRoutable($aliasPage)) {
                 continue;
             }
 
@@ -290,6 +250,29 @@ class PageUrlListener implements ResetInterface
         }
 
         return false;
+    }
+
+    private function addInputToPage(PageModel $pageModel): void
+    {
+        $input = $this->framework->getAdapter(Input::class);
+
+        if (null !== ($type = $input->post('type'))) {
+            $pageModel->type = $type;
+        }
+
+        if ('root' === $pageModel->type) {
+            if (null !== ($dns = $input->post('dns'))) {
+                $pageModel->domain = $dns;
+            }
+
+            if (null !== ($urlPrefix = $input->post('urlPrefix'))) {
+                $pageModel->urlPrefix = $urlPrefix;
+            }
+
+            if (null !== ($urlSuffix = $input->post('urlSuffix'))) {
+                $pageModel->urlSuffix = $urlSuffix;
+            }
+        }
     }
 
     private function buildUrl(string $alias, string $urlPrefix, string $urlSuffix): string

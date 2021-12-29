@@ -39,16 +39,11 @@ class PreviewUrlConvertListener
             return;
         }
 
-        $request = $event->getRequest();
-
-        if (null === $request || null === ($eventModel = $this->getEventModel($request))) {
+        if (null === ($eventModel = $this->getEventModel($event->getRequest()))) {
             return;
         }
 
-        /** @var Events $eventsAdapter */
-        $eventsAdapter = $this->framework->getAdapter(Events::class);
-
-        $event->setUrl($eventsAdapter->generateEventUrl($eventModel, true));
+        $event->setUrl($this->framework->getAdapter(Events::class)->generateEventUrl($eventModel, true));
     }
 
     private function getEventModel(Request $request): ?CalendarEventsModel
@@ -57,9 +52,6 @@ class PreviewUrlConvertListener
             return null;
         }
 
-        /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
-
-        return $adapter->findByPk($request->query->get('calendar'));
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($request->query->get('calendar'));
     }
 }

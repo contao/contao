@@ -14,9 +14,6 @@
       <trans-unit id="tl_maintenance.description">
         <source>Description</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceMode">
-        <source>Maintenance mode</source>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
       </trans-unit>
@@ -124,9 +121,6 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawlMaintenance">
-        <source>Crawling is not possible while the maintenance mode is enabled.</source>
       </trans-unit>
     </body>
   </file>

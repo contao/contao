@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -21,7 +22,6 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Versions;
 use Contao\Widget;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 $GLOBALS['TL_DCA']['tl_form_field'] = array
 (
@@ -128,7 +128,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},options;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'radio'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'checkbox'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'upload'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'upload'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,maxImageWidth,maxImageHeight;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'range'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory;{expert_legend:hide},class,value,minval,maxval,step,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hidden'                      => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hiddencustom'                => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp,customRgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -266,6 +266,20 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'maxlength' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'maxImageWidth' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'maxImageHeight' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
@@ -459,7 +473,6 @@ class tl_form_field extends Backend
 			return;
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Set root IDs
@@ -588,7 +601,6 @@ class tl_form_field extends Backend
 			$GLOBALS['TL_DCA']['tl_form_field']['fields']['type']['default'] = $this->User->fields[0];
 		}
 
-		/** @var SessionInterface $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing form fields with not allowed types
@@ -731,10 +743,11 @@ class tl_form_field extends Backend
 	public function getFields()
 	{
 		$fields = array();
+		$security = System::getContainer()->get('security.helper');
 
 		foreach ($GLOBALS['TL_FFL'] as $k=>$v)
 		{
-			if ($this->User->hasAccess($k, 'fields'))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $k))
 			{
 				$fields[] = $k;
 			}
@@ -790,7 +803,7 @@ class tl_form_field extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'fields') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -813,14 +826,16 @@ class tl_form_field extends Backend
 			$this->redirect($this->getReferer());
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_form_field::invisible'))
 		{
 			return '';
 		}
 
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'fields'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -844,6 +859,8 @@ class tl_form_field extends Backend
 	 */
 	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
 	{
+		$security = System::getContainer()->get('security.helper');
+
 		// Set the ID and action
 		Input::setGet('id', $intId);
 		Input::setGet('act', 'toggle');
@@ -871,7 +888,7 @@ class tl_form_field extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_form_field::invisible', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_form_field::invisible'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish form field ID ' . $intId . '.');
 		}
@@ -885,7 +902,7 @@ class tl_form_field extends Backend
 			throw new AccessDeniedException('Invalid form field ID ' . $intId . '.');
 		}
 
-		if (!$this->User->hasAccess($objRow->type, 'fields'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $objRow->type))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify form fields of type "' . $objRow->type . '".');
 		}

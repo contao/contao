@@ -21,21 +21,21 @@ interface PickerProviderInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName()/*: string*/;
 
     /**
      * Returns the URL to the picker based on the current value.
      *
      * @return string
      */
-    public function getUrl(PickerConfig $config);
+    public function getUrl(PickerConfig $config)/*: string*/;
 
     /**
      * Creates the menu item for this picker.
      *
      * @return ItemInterface
      */
-    public function createMenuItem(PickerConfig $config);
+    public function createMenuItem(PickerConfig $config)/*: ItemInterface*/;
 
     /**
      * Returns whether the picker supports the given context.
@@ -44,19 +44,19 @@ interface PickerProviderInterface
      *
      * @return bool
      */
-    public function supportsContext($context);
+    public function supportsContext(/*string */$context)/*: bool*/;
 
     /**
      * Returns whether the picker supports the given value.
      *
      * @return bool
      */
-    public function supportsValue(PickerConfig $config);
+    public function supportsValue(PickerConfig $config)/*: bool*/;
 
     /**
      * Returns whether the picker is currently active.
      *
      * @return bool
      */
-    public function isCurrent(PickerConfig $config);
+    public function isCurrent(PickerConfig $config)/*: bool*/;
 }

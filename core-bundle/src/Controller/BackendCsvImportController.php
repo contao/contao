@@ -20,12 +20,12 @@ use Contao\DataContainer;
 use Contao\FileUpload;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Webmozart\PathUtil\Path;
 
 class BackendCsvImportController
 {
@@ -99,9 +99,6 @@ class BackendCsvImportController
         );
     }
 
-    /**
-     * @throws InternalServerErrorException
-     */
     private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -112,7 +109,6 @@ class BackendCsvImportController
 
         $this->framework->initialize();
 
-        /** @var FileUpload $uploader */
         $uploader = $this->framework->createInstance(FileUpload::class);
         $template = $this->prepareTemplate($request, $uploader, $allowLinebreak);
 
@@ -122,9 +118,8 @@ class BackendCsvImportController
 
         if ($request->request->get('FORM_SUBMIT') === $this->getFormId($request)) {
             try {
-                $data = $this->fetchData($uploader, $request->request->get('separator', ''), $callback);
+                $data = $this->fetchData($uploader, (string) $request->request->get('separator', ''), $callback);
             } catch (\RuntimeException $e) {
-                /** @var Message $message */
                 $message = $this->framework->getAdapter(Message::class);
                 $message->addError($e->getMessage());
 
@@ -146,8 +141,6 @@ class BackendCsvImportController
     private function prepareTemplate(Request $request, FileUpload $uploader, bool $allowLinebreak = false): BackendTemplate
     {
         $template = new BackendTemplate('be_csv_import');
-
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         $template->formId = $this->getFormId($request);
@@ -232,9 +225,6 @@ class BackendCsvImportController
         return $separators;
     }
 
-    /**
-     * @throws \RuntimeException
-     */
     private function getDelimiter(string $separator): string
     {
         $separators = $this->getSeparators(true);
@@ -248,8 +238,6 @@ class BackendCsvImportController
 
     /**
      * Returns the uploaded files from a FileUpload instance.
-     *
-     * @throws \RuntimeException
      *
      * @return array<string>
      */
