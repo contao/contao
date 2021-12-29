@@ -285,6 +285,8 @@ services:
             - '@contao.framework'
             - '%contao.image.target_dir%/previews'
             - '%contao.image.valid_extensions%'
+            - '%contao.image.preview.default_size%'
+            - '%contao.image.preview.max_size%'
 
     contao.image.fallback_preview_provider:
         class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider

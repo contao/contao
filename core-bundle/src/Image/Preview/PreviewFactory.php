@@ -32,8 +32,6 @@ use Webmozart\PathUtil\Path;
 
 class PreviewFactory
 {
-    private const DEFAULT_SIZE = 128;
-
     /**
      * @var iterable<int,PreviewProviderInterface>
      */
@@ -47,11 +45,13 @@ class PreviewFactory
     private array $validImageExtensions;
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
+    private int $defaultSize;
+    private int $maxSize;
 
     /**
      * @param iterable<int,PreviewProviderInterface> $previewProviders
      */
-    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $cacheDir, array $validImageExtensions)
+    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $cacheDir, array $validImageExtensions, int $defaultSize, int $maxSize)
     {
         $this->previewProviders = $previewProviders;
         $this->imageFactory = $imageFactory;
@@ -60,6 +60,8 @@ class PreviewFactory
         $this->framework = $framework;
         $this->cacheDir = $cacheDir;
         $this->validImageExtensions = $validImageExtensions;
+        $this->defaultSize = $defaultSize;
+        $this->maxSize = $maxSize;
     }
 
     public function setDefaultDensities(string $densities): self
@@ -77,7 +79,7 @@ class PreviewFactory
     /**
      * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
      */
-    public function createPreview(string $path, int $size = self::DEFAULT_SIZE, int $page = 1, array $previewOptions = []): ImageInterface
+    public function createPreview(string $path, int $size = 0, int $page = 1, array $previewOptions = []): ImageInterface
     {
         if ($page < 1) {
             throw new \InvalidArgumentException();
@@ -345,17 +347,17 @@ class PreviewFactory
 
     private function normalizeSize(int $size): int
     {
-        if ($size < 1) {
-            throw new \InvalidArgumentException('Preview size must larger than zero');
+        if ($size < 0) {
+            throw new \InvalidArgumentException('Preview size must not be negative');
         }
 
-        $newSize = self::DEFAULT_SIZE;
+        $newSize = $this->defaultSize;
 
         while ($newSize < $size) {
             $newSize *= 2;
         }
 
-        return $newSize;
+        return min($newSize, $this->maxSize);
     }
 
     private function getCachedPreview(string $targetPath): ?string

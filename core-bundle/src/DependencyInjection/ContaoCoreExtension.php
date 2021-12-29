@@ -97,6 +97,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
+        $container->setParameter('contao.image.preview.default_size', $config['image']['preview']['default_size']);
+        $container->setParameter('contao.image.preview.max_size', $config['image']['preview']['max_size']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
         $container->setParameter('contao.backend.attributes', $config['backend']['attributes']);
