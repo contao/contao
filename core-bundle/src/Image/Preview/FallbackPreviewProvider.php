@@ -46,12 +46,12 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         $svgCode .= '</text>';
         $svgCode .= '</svg>';
 
-        $targetPath = $targetPathCallback(1).'.svgz';
+        $targetPath = $targetPathCallback(1).'.svg';
 
         (new Imagine())
             ->load($svgCode)
             ->resize(new Box($size, $size))
-            ->save($targetPath, ['format' => 'svgz'])
+            ->save($targetPath, ['format' => 'svg'])
         ;
 
         return [$targetPath];
