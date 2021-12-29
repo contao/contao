@@ -145,7 +145,7 @@ class BackendPopup extends Backend
 					$pictureSize = (new PictureConfiguration())
 						->setSize(
 							(new PictureConfigurationItem())
-								->setResizeConfig((new ResizeConfiguration())->setWidth(864))
+								->setResizeConfig((new ResizeConfiguration())->setWidth(864 / 4))
 								->setDensities('1x, 2x')
 						)
 					;
@@ -153,6 +153,13 @@ class BackendPopup extends Backend
 					$previewPictures = array();
 					$container = System::getContainer();
 					$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
+
+					if (($previewCount = \count(is_countable($pictures) ? $pictures : iterator_to_array($pictures))) < 4)
+					{
+						$pictureSize->getSize()->getResizeConfig()->setWidth((int) floor(864 / ($previewCount ?: 1)));
+						$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
+					}
+
 					$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
 
 					foreach ($pictures as $picture)
