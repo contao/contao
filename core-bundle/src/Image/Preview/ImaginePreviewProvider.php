@@ -52,9 +52,9 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
         try {
             if ($this->imagine instanceof ImagickImagine) {
-                $image = $this->openImagick($sourcePath, $page, $page);
+                $image = $this->openImagick($sourcePath, $size, $page, $page);
             } elseif ($this->imagine instanceof GmagickImagine) {
-                $image = $this->openGmagick($sourcePath, $page, $page);
+                $image = $this->openGmagick($sourcePath, $size, $page, $page);
             } else {
                 $image = $this->imagine->open($sourcePath)->layers()->get($page - 1);
             }
@@ -78,9 +78,9 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             $images = [];
 
             if ($this->imagine instanceof ImagickImagine) {
-                $images = iterator_to_array($this->openImagick($sourcePath, $firstPage, $lastPage)->layers(), false);
+                $images = iterator_to_array($this->openImagick($sourcePath, $size, $firstPage, $lastPage)->layers(), false);
             } elseif ($this->imagine instanceof GmagickImagine) {
-                $images = iterator_to_array($this->openGmagick($sourcePath, $firstPage, $lastPage)->layers(), false);
+                $images = iterator_to_array($this->openGmagick($sourcePath, $size, $firstPage, $lastPage)->layers(), false);
             } else {
                 $layers = $this->imagine->open($sourcePath)->layers();
 
@@ -116,7 +116,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
     {
         $width = $imageSize->getWidth();
         $height = $imageSize->getHeight();
-        $scaleFactor = 0 === $size ? 1 : min(1, $size / min($width, $height));
+        $scaleFactor = min(1, $size / min($width, $height));
 
         return new ImageDimensions(
             new Box(
@@ -151,38 +151,64 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', \get_class($this->imagine)));
     }
 
-    private function openImagick(string $sourcePath, int $firstPage, int $lastPage): ImageInterface
+    private function openImagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
         /** @psalm-suppress UndefinedClass */
-        return $this->openMagick(\Imagick::class, $sourcePath, $firstPage, $lastPage);
+        return $this->openMagick(\Imagick::class, $sourcePath, $size, $firstPage, $lastPage);
     }
 
-    private function openGmagick(string $sourcePath, int $firstPage, int $lastPage): ImageInterface
+    private function openGmagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
         /** @psalm-suppress UndefinedClass */
-        return $this->openMagick(\Gmagick::class, $sourcePath, $firstPage, $lastPage);
+        return $this->openMagick(\Gmagick::class, $sourcePath, $size, $firstPage, $lastPage);
     }
 
     /**
      * @param class-string<\Gmagick|\Imagick> $magickClass
      */
-    private function openMagick(string $magickClass, string $sourcePath, int $firstPage, int $lastPage): ImageInterface
+    private function openMagick(string $magickClass, string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
-        $magick = new $magickClass();
-
-        if (
-            'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
-            && \is_callable([$magick, 'setResolution'])
-        ) {
-            $magick->setResolution(144, 144);
-            // TODO: use Imagick::pingImage() to retrieve the smallest size and set the correct resolution
-        }
-
         if (PHP_INT_MAX === $lastPage) {
             $lastPage = 0x7FFFFF; // 32bit PDF limit
         }
 
-        $magick->readImage($sourcePath.'['.($firstPage - 1).'-'.($lastPage - 1).']');
+        $pagedPath = $sourcePath.'['.($firstPage - 1).'-'.($lastPage - 1).']';
+        $magick = new $magickClass();
+
+        if (\is_callable([$magick, 'setResolution'])) {
+
+            // Default to retina resolution
+            $resolution = 72 * 2;
+            $magick->setResolution($resolution, $resolution);
+
+            if (
+                'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
+                && \is_callable([$magick, 'pingImage'])
+            ) {
+                $magick->pingImage($pagedPath);
+
+                // Set the resolution so that the PDF gets rendered in the requested size
+                if ($magick->getImageWidth() > 0 && $magick->getImageHeight() > 0) {
+                    $resolution = $size * $resolution / min($magick->getImageWidth(), $magick->getImageHeight());
+                }
+
+                $magick->clear();
+
+                $magick = new $magickClass();
+                $magick->setResolution($resolution, $resolution);
+            }
+        }
+
+        $magick->readImage($pagedPath);
+
+        if (
+            'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
+            && \is_callable([$magick, 'setImageAlphaChannel'])
+            && defined("$magickClass::ALPHACHANNEL_REMOVE")
+        ) {
+            // Fix white PDF background
+            $magick->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
+        }
 
         $palette = new RGB();
 
