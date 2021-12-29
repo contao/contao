@@ -91,7 +91,7 @@ services:
             - '@?filesystem'
 
     contao.command.send_mail:
-        class: Contao\CoreBundle\Command\SendMailCommand
+        class: Contao\CoreBundle\Command\MailerSendCommand
         arguments:
             - '@mailer'
 

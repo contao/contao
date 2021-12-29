@@ -23,9 +23,10 @@ use Symfony\Component\Mime\Email;
 /**
  * A console command to send an email via Symfony Mailer.
  */
-final class SendMailCommand extends Command
+final class MailerSendCommand extends Command
 {
-    protected static $defaultName = 'contao:sendmail';
+    protected static $defaultName = 'contao:mailer:send';
+    protected static $defaultDescription = 'Sends an email message';
 
     private SymfonyStyle $io;
     private MailerInterface $mailer;
@@ -40,7 +41,6 @@ final class SendMailCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Sends an email message')
             ->addOption('from', null, InputOption::VALUE_REQUIRED, 'The sender of the message')
             ->addOption('to', null, InputOption::VALUE_REQUIRED, 'The recipient of the message')
             ->addOption('subject', null, InputOption::VALUE_REQUIRED, 'The subject of the message')

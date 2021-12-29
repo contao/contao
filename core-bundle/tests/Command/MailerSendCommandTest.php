@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command;
 
-use Contao\CoreBundle\Command\SendMailCommand;
+use Contao\CoreBundle\Command\MailerSendCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class SendMailCommandTest extends TestCase
+class MailerSendCommandTest extends TestCase
 {
     public function testSendsEmail(): void
     {
@@ -43,7 +43,7 @@ class SendMailCommandTest extends TestCase
             ))
         ;
 
-        $command = new SendMailCommand($mailer);
+        $command = new MailerSendCommand($mailer);
 
         $tester = new CommandTester($command);
         $tester->execute([
@@ -65,7 +65,7 @@ class SendMailCommandTest extends TestCase
             ->with($this->callback(static fn (Email $message): bool => $message->getHeaders()->getHeaderBody('X-Transport') === $transport))
         ;
 
-        $command = new SendMailCommand($mailer);
+        $command = new MailerSendCommand($mailer);
 
         $tester = new CommandTester($command);
         $tester->execute([
