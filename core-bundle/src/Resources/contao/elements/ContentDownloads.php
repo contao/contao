@@ -319,7 +319,22 @@ class ContentDownloads extends ContentElement
 
 		try
 		{
-			return $container->get('contao.image.preview_factory')->createPreviewFigureBuilder($container->getParameter('kernel.project_dir') . '/' . $path, StringUtil::deserialize($this->size, true))->enableLightbox((bool) $this->fullsize)->build()->getLegacyTemplateData();
+			$factory = $container->get('contao.image.preview_factory');
+			$sourcePath = $container->getParameter('kernel.project_dir') . '/' . $path;
+			$builder = $factory->createPreviewFigureBuilder($sourcePath, StringUtil::deserialize($this->size, true));
+
+			if ($this->fullsize)
+			{
+				$lightboxSize = null;
+
+				if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findByPk($layoutId)))
+				{
+					$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
+				}
+				$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxResourceOrUrl($factory->createPreviewImage($sourcePath, $lightboxSize))->setLightboxSize($lightboxSize);
+			}
+
+			return $builder->build()->getLegacyTemplateData();
 		}
 		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
 		{
