@@ -181,10 +181,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             // Fix white PDF background
             if (is_iterable($magick)) {
                 foreach ($magick as $magickPage) {
-                    $magickPage->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
+                    $magickPage->setImageAlphaChannel($magickClass::ALPHACHANNEL_REMOVE);
                 }
             } else {
-                $magick->setImageAlphaChannel($magick::ALPHACHANNEL_REMOVE);
+                $magick->setImageAlphaChannel($magickClass::ALPHACHANNEL_REMOVE);
             }
         }
 
