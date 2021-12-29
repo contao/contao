@@ -20,7 +20,7 @@ use Contao\Model\Collection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentDownloads extends ContentElement
+class ContentDownloads extends ContentDownload
 {
 	/**
 	 * Files object
@@ -91,7 +91,7 @@ class ContentDownloads extends ContentElement
 			$this->objFiles->reset();
 		}
 
-		return parent::generate();
+		return ContentElement::generate();
 	}
 
 	/**
@@ -179,7 +179,7 @@ class ContentDownloads extends ContentElement
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
 					'path'      => $objFile->dirname,
-					'preview'   => $this->getPreview($objFile->path),
+					'previews'  => $this->getPreviews($objFile->path),
 				);
 
 				$auxDate[] = $objFile->mtime;
@@ -257,7 +257,7 @@ class ContentDownloads extends ContentElement
 						'meta'      => $arrMeta,
 						'extension' => $objFile->extension,
 						'path'      => $objFile->dirname,
-						'preview'   => $this->getPreview($objFile->path),
+						'previews'  => $this->getPreviews($objFile->path),
 					);
 
 					$auxDate[] = $objFile->mtime;
@@ -306,40 +306,6 @@ class ContentDownloads extends ContentElement
 		}
 
 		$this->Template->files = array_values($files);
-	}
-
-	private function getPreview(string $path): ?array
-	{
-		if (!$this->showPreview)
-		{
-			return null;
-		}
-
-		$container = System::getContainer();
-
-		try
-		{
-			$factory = $container->get('contao.image.preview_factory');
-			$sourcePath = $container->getParameter('kernel.project_dir') . '/' . $path;
-			$builder = $factory->createPreviewFigureBuilder($sourcePath, StringUtil::deserialize($this->size, true));
-
-			if ($this->fullsize)
-			{
-				$lightboxSize = null;
-
-				if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findByPk($layoutId)))
-				{
-					$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
-				}
-				$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxResourceOrUrl($factory->createPreviewImage($sourcePath, $lightboxSize))->setLightboxSize($lightboxSize);
-			}
-
-			return $builder->build()->getLegacyTemplateData();
-		}
-		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
-		{
-			return null;
-		}
 	}
 }
 

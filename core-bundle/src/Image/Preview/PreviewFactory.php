@@ -383,7 +383,7 @@ class PreviewFactory
     /**
      * @param int|string|array|ResizeConfiguration|PictureConfiguration|null $size
      */
-    private function getPreviewSizeFromImageSize($size): int
+    public function getPreviewSizeFromImageSize($size): int
     {
         if ($size instanceof ResizeConfiguration) {
             return max($size->getWidth(), $size->getHeight());
